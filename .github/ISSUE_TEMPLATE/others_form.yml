@@ -1,6 +1,6 @@
 name: Other Issue Form
 description: Use this form for issues that don't fit other categories
-labels: ["other", "low priority"]
+labels: ["low priority"]
 body:
   - type: textarea
     id: issue-description
