@@ -10,7 +10,7 @@ const logger = winston.createLogger({
   ),
 });
 
-if (process.env.NEW_RELIC_LOG_ENABLED === "true") {
+if (process.env.NODE_ENV === "prod") {
   logger.add(new NewRelicTransport({
     level: "error",
   }));
