@@ -15,7 +15,7 @@ const getSearchQuerySchema = Joi.object({
 async function demoSearchLogoController(req, res, next) {
   try {
     const { error, value } = getSearchQuerySchema.validate(req.query);
-    if (!!error) {
+    if (error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,
@@ -25,7 +25,7 @@ async function demoSearchLogoController(req, res, next) {
 
     const { domainKey } = value;
     let companyNameBeginsWith = domainKey
-      .replace(/^(?:https?:\/\/)?(?:www\.)?|(\.[a-z]{2,})+$/g)
+      .replace(/^(?:(?:https?:\/\/)?(?:www\.)?)|((?:\.[a-z]{2,})+)$/g, "")
       .toUpperCase();
 
     if (companyNameBeginsWith === "") {

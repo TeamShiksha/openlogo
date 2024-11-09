@@ -23,7 +23,7 @@ class ImagesService {
       return `${process.env.KEY}/${extension}/${imageName}`;
     } catch (error) {
       console.error(error);
-      throw error;
+      next(error);
     }
   }
 
@@ -48,7 +48,7 @@ class ImagesService {
       const cloudFrontUrl = cloudFrontSignedURL(`/${imageUrl}`).data;
       return cloudFrontUrl;
     } catch (err) {
-      throw err;
+      next(err);
     }
   }
 
@@ -64,7 +64,7 @@ class ImagesService {
         updatedAt: image.updatedAt,
       }));
     } catch (error) {
-      throw error;
+      next(error);
     }
   }
 
@@ -84,7 +84,7 @@ class ImagesService {
       };
     } catch (error) {
       console.error(`Failed to create image data: ${error}`);
-      throw error;
+      next(error);
     }
   }
 
@@ -100,7 +100,7 @@ class ImagesService {
       };
     } catch (error) {
       console.error(`Failed to update image data: ${error}`);
-      throw error;
+      next(error);
     }
   }
 
