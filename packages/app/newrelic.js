@@ -1,9 +1,5 @@
-const appName = process.env.NEW_RELIC_APP_NAME || "LogoExecutive";
+const appName = process.env.NEW_RELIC_APP_NAME || "OpenLogo";
 const licenseKey = process.env.NEW_RELIC_LICENSE_KEY;
-
-if (!licenseKey) {
-  console.warn("New Relic license key not found. New Relic monitoring will be disabled.");
-}
 
 exports.config = {
   app_name: appName,

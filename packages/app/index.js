@@ -1,15 +1,13 @@
-require("dotenv").config();
-
-process.env.NODE_ENV = process.env.NODE_ENV || "dev";
-if(process.env.NODE_ENV === "prod") {
-  require("newrelic");
-}
-
+const dotenv = require("dotenv");
 const express = require("express");
 const { validateEnv } = require("./utils/scripts/envSchema");
 const logger = require("./utils/logger");
 
+/* 
+ * If the `NODE_ENV` is not test, we validate the environment variables.
+ */
 if (process.env.NODE_ENV !== "test") {
+  dotenv.config();
   const { error } = validateEnv(process.env);
   if (error) {
     console.log(`Config validation error: ${error.message}`);
