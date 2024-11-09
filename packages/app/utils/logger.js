@@ -1,6 +1,5 @@
 const winston = require("winston");
 const NewRelicTransport = require("newrelic-winston-transport");
-require("dotenv").config();
 
 const logger = winston.createLogger({
   level: "error",

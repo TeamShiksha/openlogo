@@ -1,6 +1,3 @@
-"use strict";
-require("dotenv").config();
-
 const appName = process.env.NEW_RELIC_APP_NAME || "LogoExecutive";
 const licenseKey = process.env.NEW_RELIC_LICENSE_KEY;
 
