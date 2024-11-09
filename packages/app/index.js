@@ -18,6 +18,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const app = express();
+app.disable("x-powered-by");
 app.get("/", (req, res) => {
   res.json({ message: "Hello, this is your JSON response!" });
 });
