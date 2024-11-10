@@ -4,7 +4,7 @@ const ImagesService = require("../../services/Images");
 
 const getSearchQuerySchema = Joi.object({
   domainKey: Joi.string()
-    .regex(/^[A-Za-z0-9&-/:.]+$/)
+    .regex(/^[A-Za-z0-9&/:.-]+$/)
     .required()
     .messages({
       "any.required": "domainKey is required",
@@ -25,7 +25,7 @@ async function demoSearchLogoController(req, res, next) {
 
     const { domainKey } = value;
     let companyNameBeginsWith = domainKey
-      .replace(/^(?:(?:https?:\/\/)?(?:www\.)?)|((?:\.[a-z]{2,})+)$/g, "")
+      .replace(/^(?:(?:https?:\/\/)?(?:www\.)?)|(?:\.[a-z]{2,})+$/g)
       .toUpperCase();
 
     if (companyNameBeginsWith === "") {
