@@ -25,8 +25,8 @@ async function demoSearchLogoController(req, res, next) {
 
     const { domainKey } = value;
     let companyNameBeginsWith = domainKey
-      .replace(/^(?:(?:https?:\/\/)?(?:www\.)?)|(?:\.[a-z]{2,})+$/g)
-      .toUpperCase();
+      .replace()
+      .toUpperCase(/.+\/\/|www.|\..+/g, "");
 
     if (companyNameBeginsWith === "") {
       return res.status(422).json({
