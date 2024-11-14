@@ -5,7 +5,7 @@ const KeyService = require("../../services/Keys");
 const SubscriptionService = require("../../services/Subscription")
 
 const generateKeyPayloadSchema = Joi.object().keys({
-  keyDescription: Joi.string()
+  key_description: Joi.string()
     .trim()
     .required()
     .max(20)
@@ -25,8 +25,8 @@ async function generateKeyController(req, res, next) {
     const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
 
-    const { keyDescription } = req.body;
-    const { error } = generateKeyPayloadSchema.validate({ keyDescription });
+    const { key_description } = req.body;
+    const { error } = generateKeyPayloadSchema.validate({ key_description });
     if (error) {
       return res.status(422).json({
         message: error.message,
@@ -48,9 +48,9 @@ async function generateKeyController(req, res, next) {
       });
     }
 
-    const duplicateKeyDescription = userKeys.length > 0 && userKeys.some(async (key) => {
-      return keyDescription === key.key_description;
-    });
+    const duplicateKeyDescription = userKeys.length > 0 && userKeys.some((keys) =>
+      req.body.key_description.toLowerCase() === keys.key_description.toLowerCase()
+    );
     if (duplicateKeyDescription) {
       return res.status(409).json({
         message: "Please provide a different key description",
@@ -61,7 +61,7 @@ async function generateKeyController(req, res, next) {
 
     const newKey = {
       user: userId,
-      key_description: req.body.keyDescription,
+      key_description: req.body.key_description,
     };
     const newUserKey = await keyService.createNewKey(newKey);
     user.keys.push(newUserKey._id);
