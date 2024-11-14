@@ -12,6 +12,16 @@ class KeysRepository extends BaseRepository {
     super(Keys);
   }
 
+  /**
+   * Get Multiple Keys at once from db.
+   * @param {Array<Object>} keyIds - Array of keyId.
+   * @returns {Array<Object>} - Keys Object Array.
+   */
+  async getMultipleKeys(keyIds) {
+    return await this.model.find({
+      '_id': { $in: keyIds }
+    });
+  }
 }
 
 module.exports = KeysRepository;

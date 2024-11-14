@@ -1,27 +1,29 @@
 const KeyRepository = require("../repositories/Keys");
 
 class KeyService {
+    constructor() {
+        this.keyRepository = new KeyRepository();
+    }
+
     /**
-   * Gets User Keys by UserId.
-   * @param {string} userId - The userId of the user.
-   * @param {string} keyLimit - The maximum number of keys that a user can have.
-   * @returns {boolean} - If the number of keys user has, is withing limits, then true else false.
+   * Gets Key by Id.
+   * @param {string} keyId
+   * @returns {Object} - Key Object.
    */
-    async getUserKeysById(userId, keyLimit) {
-        const keysObject = KeyRepository.getById(userId);
-        if(keysObject.length >= keyLimit) {
-            return false;
+    async getAllUserKeys(keyIds) {
+        if(keyIds.length === 0) {
+            return [];
         }
-        return true;
+        return await this.keyRepository.getMultipleKeys(keyIds);
     }
 
     /**
    * Create a New Key.
-   * @param {string} newKey - The userId of the user.
-   * @returns {boolean} - If the number of keys user has, is withing limits, then true else false.
+   * @param {string} keyDescription - The Key Description of the user.
+   * @returns {Object} - Newly created Key.
    */
-    async createNewKey(newKey) {
-        return KeyRepository.create(newKey);
+    async createNewKey(keyDescription) {
+        return await this.keyRepository.create(keyDescription);
     }
 }
 

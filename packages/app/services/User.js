@@ -1,13 +1,16 @@
 const UserRepository = require("../repositories/Users");
-
 class UserService {
+    constructor() {
+        this.userRepository = new UserRepository();
+    }
+
     /**
-     * Gets User subscription by UserId.
+     * Gets User by Id.
      * @param {string} userId - The userId of the user.
-     * @returns {Object} - Subscription details of the user.
+     * @returns {Object} - User Object.
     */
-    async getUserSubscriptionById(userId) {
-        return UserRepository.getById(userId);
+    async getUser(userId) {
+        return await this.userRepository.getById(userId);
     }
 
     /**
