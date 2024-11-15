@@ -61,6 +61,12 @@ class UserService {
         }
     }
 
+    /**
+     * Updates the user's password and saves the changes to the database.
+     * @param {Object} user - The user object whose password is to be updated.
+     * @param {string} hashNewPassword - The new hashed password to replace the existing one.
+     * @returns {boolean} - Returns `true` if the password was successfully updated, otherwise `false`.
+     */
     async updateUserPassword(user, hashNewPassword) {
         user.password = hashNewPassword;
         user.updated_at = Date.now();
@@ -81,6 +87,16 @@ class UserService {
             await user.save();
         }
         return destroyedKey;
+    }
+
+    /**
+   * Delete a User Account.
+   * @param {string} userId - The user id to delete.
+   * @returns {boolean} - true if user was successfully deleted.
+   */
+    async deleteUserAccount(userId) {
+        const deletedUser = await this.userRepository.delete(userId);
+        return deletedUser ? true : false;
     }
 }
 
