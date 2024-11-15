@@ -25,6 +25,15 @@ class KeyService {
     async createNewKey(keyDescription) {
         return await this.keyRepository.create(keyDescription);
     }
+
+    /**
+   * Destroy a Key.
+   * @param {string} keyId - The Key Id to destroy.
+   * @returns {Object} - The destroyed key object.
+   */
+    async destroyKey(keyId) {
+        return await this.keyRepository.delete(keyId);
+    }
 }
 
 module.exports = KeyService;

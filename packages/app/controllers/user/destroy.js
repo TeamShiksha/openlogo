@@ -1,8 +1,7 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
-const userService = require("../../services/User");
+const UserService = require("../../services/User");
 const { isValidObjectId } = require("mongoose");
-
 
 const destroyKeyPayloadSchema = Joi.object({
   keyId: Joi.string().custom((value, helpers) => {
@@ -18,6 +17,8 @@ const destroyKeyPayloadSchema = Joi.object({
 
 async function destroyKeyController(req, res, next) { 
   try {
+    const userService = new UserService();
+
     const { error, value } = destroyKeyPayloadSchema.validate(req.query);
     if (error) {
       return res.status(422).json({
@@ -27,8 +28,11 @@ async function destroyKeyController(req, res, next) {
       });
     }
 
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+
     const { keyId } = value;
-    const destroyed = await userService.destroyKey(keyId);
+    const destroyed = await userService.destroyUserKey(keyId, user);
     if (destroyed) {
       return res.status(200).json({
         message: "Key deleted successfully",   

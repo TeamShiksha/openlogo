@@ -3,6 +3,7 @@ const authMiddleware = require("../middlewares/auth");
 const generateKeyController = require("../controllers/user/generate");
 const updateProfileController = require("../controllers/user/updateProfile");
 const updatePasswordController = require("../controllers/user/update-password");
+const destroyKeyController = require("../controllers/user/destroy");
 
 /**
  * POST /generate
@@ -17,5 +18,6 @@ const updatePasswordController = require("../controllers/user/update-password");
 router.post("/generate", authMiddleware(), generateKeyController);
 router.patch("/update-profile", authMiddleware(), updateProfileController);
 router.post("/update-password", authMiddleware(), updatePasswordController);
+router.delete("/destroy", authMiddleware(), destroyKeyController);
 
 module.exports = router;

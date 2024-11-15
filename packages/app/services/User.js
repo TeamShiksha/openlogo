@@ -67,6 +67,21 @@ class UserService {
         const updatedUser = await user.save();
         return updatedUser ? true : false;
     };
+
+    /**
+   * Destroy a User Key.
+   * @param {string} keyId - The Key Id to destroy.
+   * @param {string} user - The user Object.
+   * @returns {boolean} - true if key was successfully destroyed.
+   */
+    async destroyUserKey(keyId, user) {
+        const destroyedKey = await this.keyService.destroyKey(keyId);
+        if(destroyedKey) {
+            user.keys.pull(destroyedKey._id);
+            await user.save();
+        }
+        return destroyedKey;
+    }
 }
 
 module.exports = UserService;
