@@ -20,24 +20,29 @@ async function getUserDataController(req, res, next) {
     }
 
     const data = {};
-
-    const [subscriptionData, userKeys] = await Promise.allSettled([subscriptionService.getSubscription(user.subscription_id), 
-        keyService.getAllUserKeys(user.keys)]);
-    Object.assign(data, user.data());
-
-    let statusCode = 200;
-    if(subscriptionData.status === "fulfilled" && subscriptionData.value) {
-      Object.assign(data, { subscription: subscriptionData.value });
-    } else {
-      statusCode = 206;
-    }
-    if(userKeys.status === "fulfilled" && userKeys.value) {
-      Object.assign(data, { keys: userKeys.value});
-    } else {
-      statusCode = 206;
+    const subscriptionData = await subscriptionService.getSubscription(user.subscription_id);
+    if (!subscriptionData) {
+        return res.status(206).json({
+            statusCode: 206,
+            error: "Failed to fetch subscription data.",
+            data: null
+        });
     }
 
-    return res.status(statusCode).json({ data });
+    const keysData = await keyService.getAllUserKeys(user.keys);
+    if (!keysData) {
+        return res.status(206).json({
+            statusCode: 206,
+            error: "Failed to fetch user keys.",
+            data: null
+        });
+    }
+
+    Object.assign(data, user.data(), { subscription: subscriptionData, keys: keysData });
+    return res.status(200).json({ 
+        statusCode: 200,
+        data 
+    });
   } catch (err) {
     next(err);
   }

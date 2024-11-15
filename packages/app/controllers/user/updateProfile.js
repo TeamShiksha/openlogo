@@ -3,7 +3,7 @@ const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 
 const changeNameEmailSchema = Joi.object().keys({
-  first_name: Joi.string()
+  name: Joi.string()
     .trim()
     .required()
     .min(1)
@@ -16,26 +16,13 @@ const changeNameEmailSchema = Joi.object().keys({
       "any.required": "First name is required",
       "string.pattern.base": "First name should only contain alphabets",
     }),
-  last_name: Joi.string()
-    .trim()
-    .required()
-    .min(1)
-    .max(20)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
-    .messages({
-      "string.base": "Last name must be string",
-      "string.min": "Last name cannot be empty",
-      "string.max": "Last name must be 20 or fewer characters",
-      "any.required": "Last name is required",
-      "string.pattern.base": "Last name should only contain alphabets",
-    }),
 });
 
 async function updateProfileController(req, res, next) {
   try {
     const userService = new UserService();
 
-    const { first_name, last_name } = req.body;
+    const { name } = req.body;
     const { error } = changeNameEmailSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -54,7 +41,7 @@ async function updateProfileController(req, res, next) {
       });
     }
 
-    const profileUpdatedSuccessfully = userService.updateUser(first_name, last_name, user._id);
+    const profileUpdatedSuccessfully = userService.updateUser(name, user._id);
     if (!profileUpdatedSuccessfully) {
       return res.status(500).json({
         statusCode: 500,

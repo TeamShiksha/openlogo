@@ -32,18 +32,18 @@ async function destroyKeyController(req, res, next) {
     const user = await userService.getUser(userId);
 
     const { keyId } = value;
-    const destroyed = await userService.destroyUserKey(keyId, user);
-    if (destroyed) {
-      return res.status(200).json({
-        message: "Key deleted successfully",   
-        statusCode: STATUS_CODES[200],       
-      });
-    } else {
+    const destroyedKey = await userService.destroyUserKey(keyId, user);
+    if (!destroyedKey) {
       return res.status(404).json({
         message: "Key not found or could not be deleted",
         statusCode: STATUS_CODES[404],
       });
     }
+
+    return res.status(200).json({
+      message: "Key deleted successfully",   
+      statusCode: STATUS_CODES[200],       
+    });
   } catch (err) {
     next(err);
   }

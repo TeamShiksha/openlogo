@@ -27,8 +27,8 @@ const getUserDataController = require("../controllers/user/data");
  * - Calls the `getUserDataController` to get User Data.
  */
 router.post("/generate", authMiddleware(), generateKeyController);
-router.patch("/update-profile", authMiddleware(), updateProfileController);
-router.post("/update-password", authMiddleware(), updatePasswordController);
+router.patch("/profile", authMiddleware(), updateProfileController);
+router.post("/password", authMiddleware(), updatePasswordController);
 router.delete("/destroy", authMiddleware(), destroyKeyController);
 router.delete("/delete", authMiddleware(), deleteUserAccountController);
 router.get("/data", authMiddleware(), getUserDataController);

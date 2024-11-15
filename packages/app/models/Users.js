@@ -15,11 +15,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  first_name: {
-    type: String,
-    required: true
-  },
-  last_name: {
+  name: {
     type: String,
     required: true
   },
@@ -68,15 +64,14 @@ userSchema.methods.generateJWT = function() {
 };
 
 userSchema.statics.NewUser = async function(userData) {
-  const { email, first_name, last_name, password } = userData;
-  if (!email || !first_name || !last_name || !password) {
+  const { email, name, password } = userData;
+  if (!email || !name || !password) {
     return null;
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new this({
     email,
-    first_name,
-    last_name,
+    name,
     password: hashedPassword,
     role: UserType.CUSTOMER,
     is_verified: false,
@@ -87,8 +82,7 @@ userSchema.statics.NewUser = async function(userData) {
 
 userSchema.methods.data =function(){
   return {
-    first_name: this.first_name,
-    last_name: this.last_name,
+    name: this.name,
     email: this.email,
     role: this.role,
     is_verified: this.is_verified,

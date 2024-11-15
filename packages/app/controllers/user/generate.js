@@ -1,7 +1,6 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-const KeyService = require("../../services/Keys");
 const SubscriptionService = require("../../services/Subscription")
 
 const generateKeyPayloadSchema = Joi.object().keys({
@@ -22,7 +21,6 @@ const generateKeyPayloadSchema = Joi.object().keys({
 async function generateKeyController(req, res, next) {
   try {
     const userService = new UserService();
-    const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
 
     const { key_description } = req.body;
@@ -39,23 +37,11 @@ async function generateKeyController(req, res, next) {
     const user = await userService.getUser(userId);
     const subscription = await subscriptionService.getSubscription(user.subscription_id);
 
-    const userKeys = await keyService.getAllUserKeys(user.keys);
-    if (userKeys.length >= subscription.key_limit) {
+    if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
         statusCode: 403,
         error: STATUS_CODES[403],
-      });
-    }
-
-    const duplicateKeyDescription = userKeys.length > 0 && userKeys.some((keys) =>
-      req.body.key_description.toLowerCase() === keys.key_description.toLowerCase()
-    );
-    if (duplicateKeyDescription) {
-      return res.status(409).json({
-        message: "Please provide a different key description",
-        statusCode: 409,
-        error: STATUS_CODES[409],
       });
     }
 

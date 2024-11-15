@@ -46,18 +46,18 @@ async function updatePasswordController(req, res, next) {
 
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
     const userUpdateSuccessful = await userService.updateUserPassword(user, hashNewPassword);
-    if (userUpdateSuccessful) {
-      return res.status(200).json({
-        message: "Password updated successfully",  
-        statusCode: 200,                           
-      });
-    } else {
+    if (!userUpdateSuccessful) {
       return res.status(500).json({
         message: "Unexpected error occured while updating password",
         statusCode: 500,
         error: STATUS_CODES[500],
       });
     }
+
+    return res.status(200).json({
+      message: "Password updated successfully",  
+      statusCode: 200,                           
+    });
   } catch (err) {
     next(err);
   }

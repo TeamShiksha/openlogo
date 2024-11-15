@@ -21,10 +21,9 @@ class UserService {
      * @param {String} userId - The userId of the user.
      * @returns {boolean} - True if User Details are updated successfully else false.
      */
-    async updateUser(firstName, lastName, userId) {
+    async updateUser(updatedName, userId) {
         const updatedData  = {
-            first_name: firstName,
-            last_name: lastName
+            name: updatedName
         };
         const updatedUser = await this.userRepository.update(userId, updatedData);
         if(updatedUser == null) {
@@ -51,15 +50,11 @@ class UserService {
      * @throws {Error} - Throws an error if the key creation or user update fails.
      */
     async createNewUserKey(newKey, user) {
-        try {
-            const newUserKey = await this.keyService.createNewKey(newKey);
-            user.keys.push(newUserKey._id);
-            await user.save();
-            return newUserKey;
-        } catch(error) {
-            throw new Error("Unable to create new key. Please try again later.");
-        }
-    }
+        const newUserKey = await this.keyService.createNewKey(newKey);
+        user.keys.push(newUserKey._id);
+        await user.save();
+        return newUserKey;
+    }    
 
     /**
      * Updates the user's password and saves the changes to the database.
