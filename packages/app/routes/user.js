@@ -5,6 +5,7 @@ const updateProfileController = require("../controllers/user/updateProfile");
 const updatePasswordController = require("../controllers/user/update-password");
 const destroyKeyController = require("../controllers/user/destroy");
 const deleteUserAccountController = require("../controllers/user/delete");
+const getUserDataController = require("../controllers/user/data");
 
 /**
  * POST /generate
@@ -21,11 +22,15 @@ const deleteUserAccountController = require("../controllers/user/delete");
  * 
  * DELETE /delete
  * - Calls the `deleteUserAccountController` to delete a User Account.
+ * 
+ * GET /data
+ * - Calls the `getUserDataController` to get User Data.
  */
 router.post("/generate", authMiddleware(), generateKeyController);
 router.patch("/update-profile", authMiddleware(), updateProfileController);
 router.post("/update-password", authMiddleware(), updatePasswordController);
 router.delete("/destroy", authMiddleware(), destroyKeyController);
 router.delete("/delete", authMiddleware(), deleteUserAccountController);
+router.get("/data", authMiddleware(), getUserDataController);
 
 module.exports = router;
