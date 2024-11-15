@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
-const userService = require("../../services/User");
-
+const UserService = require("../../services/User");
 
 const updatePasswordPayloadSchema = Joi.object().keys({
   currPassword: Joi.string().trim().required().messages({
@@ -21,6 +20,8 @@ const updatePasswordPayloadSchema = Joi.object().keys({
 
 async function updatePasswordController(req, res, next) { 
   try {
+    const userService = new UserService();
+
     const { error, value } = updatePasswordPayloadSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -32,7 +33,7 @@ async function updatePasswordController(req, res, next) {
 
     const { currPassword, newPassword } = value;
     const { email } = req.userData;
-    const user = await userService.fetchUserByEmail(email);
+    const user = await userService.getUserByEmail(email);
 
     const matchPassword = await user.matchPassword(currPassword);
     if (!matchPassword) {
@@ -44,8 +45,8 @@ async function updatePasswordController(req, res, next) {
     }
 
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
-    const result = await userService.updatePasswordbyUser(user, hashNewPassword);
-    if (result) {
+    const userUpdateSuccessful = await userService.updateUserPassword(user, hashNewPassword);
+    if (userUpdateSuccessful) {
       return res.status(200).json({
         message: "Password updated successfully",  
         statusCode: 200,                           

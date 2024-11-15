@@ -63,9 +63,8 @@ async function generateKeyController(req, res, next) {
       user: userId,
       key_description: req.body.key_description,
     };
-    const newUserKey = await keyService.createNewKey(newKey);
-    user.keys.push(newUserKey._id);
-    await user.save();
+
+    const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({
       statusCode: 200,
       data: newUserKey,

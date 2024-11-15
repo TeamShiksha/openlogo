@@ -1,7 +1,9 @@
 const UserRepository = require("../repositories/Users");
+const KeyService = require("../services/Keys");
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
+        this.keyService = new KeyService();
     }
 
     /**
@@ -39,6 +41,32 @@ class UserService {
     async getUserByEmail(email) {
         return this.userRepository.findUserByEmail(email);
     }
+
+    /**
+     * Creates a new user key and updates the user's key list.
+     *
+     * @param {Object} newKey - The new key details to be created.
+     * @param {Object} user - The user object to which the new key should be associated.
+     * @returns {Object|null} - Returns the created key object on success, or null if creation failed.
+     * @throws {Error} - Throws an error if the key creation or user update fails.
+     */
+    async createNewUserKey(newKey, user) {
+        try {
+            const newUserKey = await this.keyService.createNewKey(newKey);
+            user.keys.push(newUserKey._id);
+            await user.save();
+            return newUserKey;
+        } catch(error) {
+            throw new Error("Unable to create new key. Please try again later.");
+        }
+    }
+
+    async updateUserPassword(user, hashNewPassword) {
+        user.password = hashNewPassword;
+        user.updated_at = Date.now();
+        const updatedUser = await user.save();
+        return updatedUser ? true : false;
+    };
 }
 
 module.exports = UserService;
