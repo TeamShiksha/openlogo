@@ -37,7 +37,6 @@ async function getUserDataController(req, res, next) {
       statusCode = 206;
     }
 
-    console.log(data);
     return res.status(statusCode).json({ data });
   } catch (err) {
     next(err);
