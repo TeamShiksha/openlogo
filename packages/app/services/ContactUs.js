@@ -1,9 +1,9 @@
 const ContactUsRepository = require('./ContactUs');
 
 class ContactUsService {
-  /* constructor() {
+  constructor() {
     this.contactUsRepository = new ContactUsRepository();
-  } */
+  }
 
   /**
    * Checks if a form exists in the database with the given email and active status.
@@ -12,7 +12,7 @@ class ContactUsService {
    */
   async formExists(email) {
     try {
-      const formQuery = await ContactUsRepository.findByEmailAndStatus(email, true);
+      const formQuery = await this.contactUsRepository.findByEmailAndStatus(email, true);
       return !!formQuery;
     } catch (error) {
       throw error;
@@ -71,6 +71,22 @@ class ContactUsService {
         email: currentForm.email,
         message: currentForm.message
       };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches paginated operator data based on the given criteria.
+   * @param {string} type - The type of data to filter.
+   * @param {number} page - Page number for pagination.
+   * @param {number} limit - Limit per page.
+   * @param {Object} filter - Additional filter criteria.
+   * @returns {Promise<Object>} - Paginated data result.
+   */
+  async fetchOperatorData(type, page, limit, filter = {}) {
+    try {
+      return await this.contactUsRepository.fetchWithPagination(type, page, limit, filter);
     } catch (error) {
       throw error;
     }
