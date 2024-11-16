@@ -90,6 +90,7 @@ async function signupController(req, res, next) {
             statusCode: 201,
         });
     }
+    console.log(verificationToken.tokenURL());
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
