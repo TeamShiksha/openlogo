@@ -9,6 +9,8 @@ class RequestService {
         const newRaiseRequest = this.requestRepository.create({
             user_id: formData.user_id,
             companyUrl: formData.companyUrl,
+            comment: null,
+            operator: null
         });
         return newRaiseRequest;
     }
