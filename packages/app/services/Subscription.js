@@ -20,8 +20,7 @@ class SubscriptionService {
      * @returns {Object} - Subscription Object.
     */
     async createSubscription() {
-        const subscription = await this.subscriptionRepository.create(DefaultSubscriptionPlan);
-        return subscription;
+        return await this.subscriptionRepository.create(DefaultSubscriptionPlan);
     }
     
 }
