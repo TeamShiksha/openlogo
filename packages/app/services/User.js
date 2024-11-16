@@ -84,6 +84,15 @@ class UserService {
         const deletedUser = await this.userRepository.delete(userId);
         return deletedUser ? true : false;
     }
+
+    /**
+   * Finds a user by their email address.
+   * @param {string} email - The email address to search for.
+   * @returns {Promise<Object>} - The user document if found, otherwise null.
+   */
+    async getUserByEmail(email) {
+        return UserRepository.findByEmail(email);
+    }
 }
 
 module.exports = UserService;

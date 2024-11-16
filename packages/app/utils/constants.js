@@ -23,5 +23,11 @@ const ContactUsStatus = {
   PENDING: "PENDING",
   RESOLVED: "RESOLVED"
 };
+
+const StatusTypes = {
+  PENDING: "PENDING",
+  REJECTED: "REJECTED",
+  COMPLETED: "COMPLETED",
+};
   
-module.exports = { UserTokenTypes, UserType, SubscriptionTypes, ContactUsStatus };
+module.exports = { UserTokenTypes, UserType, SubscriptionTypes, ContactUsStatus, StatusTypes };
