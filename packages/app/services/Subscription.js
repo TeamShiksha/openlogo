@@ -21,8 +21,7 @@ class SubscriptionService {
    **/
   async isApiUsageLimitExceed(userId) {
     const subscription = await this.subscriptionRepository.fetchApiUsage(userId);
-    if (subscription.usage_count >= subscription.usage_limit) return true;
-    else return false;
+    return subscription.usage_count >= subscription.usage_limit;
   }
 
   /**
@@ -32,7 +31,7 @@ class SubscriptionService {
    **/
   async updateApiUsageCount(userId) {
     const subscription = await this.subscriptionRepository.updateApiUsageCount(userId);
-    if (!subscription.matchedCount === 0) return null;
+    if (!subscription.matchedCount == 0) return null;
     return subscription.modifiedCount;
   }
 

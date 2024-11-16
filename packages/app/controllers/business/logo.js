@@ -7,7 +7,7 @@ const SubscriptionServices = require("../../services/Subscription");
 
 const getLogoQuerySchema = Joi.object({
   domain: Joi.string()
-    .regex(/^[A-Za-z0-9&-/:.]+$/)
+    .regex(/^[A-Za-z0-9&:.-/]+$/)
     .required()
     .messages({
       "any.required": "Domain is required",
@@ -16,7 +16,14 @@ const getLogoQuerySchema = Joi.object({
   API_KEY: Joi.string().guid({ version: "uuidv4" }).required().messages({
     "any.required": "API key is required",
   }),
-});
+}).custom((value, helpers) => {
+  const { domain } = value;
+  const company = domain.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/(\.[A-Za-z]{2,})+$/, '').toUpperCase();
+  if (company == "") {
+    return helpers.error("Domain cannot be empty");
+  }
+  return { ...value, company };
+})
 
 /**
  * Handles requests for fetching a company's logo based on a domain and API key.
@@ -38,7 +45,7 @@ async function getLogoController(req, res, next) {
       });
     }
 
-    const { domain, API_KEY } = value;
+    const { company, API_KEY } = value;
     const userId = await keyServices.fetchUser(API_KEY);
     const isExceed = await subscriptionServices.isApiUsageLimitExceed(userId);
     if (isExceed) {
@@ -49,7 +56,6 @@ async function getLogoController(req, res, next) {
       });
     }
 
-    let company = domain.replace(/.+\/\/|www.|\..+/g, "").toUpperCase();
     const imageUrl = await imageServices.fetchImageByCompanyFree(company);
     await subscriptionServices.updateApiUsageCount(userId);
     if (!imageUrl) {
