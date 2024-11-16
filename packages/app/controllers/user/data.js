@@ -21,19 +21,11 @@ async function getUserDataController(req, res, next) {
 
     const data = {};
     const subscriptionData = await subscriptionService.getSubscription(user.subscription_id);
-    if (!subscriptionData) {
-        return res.status(206).json({
-            statusCode: 206,
-            error: "Failed to fetch subscription data.",
-            data: null
-        });
-    }
-
     const keysData = await keyService.getAllUserKeys(user.keys);
-    if (!keysData) {
+    if (!keysData || !subscriptionData) {
         return res.status(206).json({
             statusCode: 206,
-            error: "Failed to fetch user keys.",
+            error: "Failed to fetch user data.",
             data: null
         });
     }
