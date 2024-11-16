@@ -27,6 +27,17 @@
   max-width: 400px;
 }
 
+.features-container-body-item img {
+  background: linear-gradient(
+    135deg,
+    rgba(41, 32, 198, 0.8),
+    rgba(86, 81, 178, 0.5)
+  );
+  border-radius: 50%; /* Optional: Makes the background circular */
+  padding: 10px; /* Optional: Adds spacing around the logo */
+  display: block; /* Ensures the image behaves like a block for consistent spacing */
+}
+
 .features-container-body-item > h3 {
   padding: 16px 0;
 }
