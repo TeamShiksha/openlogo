@@ -1,0 +1,32 @@
+.features-container {
+  margin: 16px 32px;
+  font-family: Inter;
+}
+
+.features-container-head {
+  padding: 16px 0;
+  margin-bottom: 24px;
+}
+
+.features-container-head > h2 {
+  margin: 12px 0;
+}
+
+.features-container-head > p {
+  max-width: 750px;
+}
+
+.features-container-body {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.features-container-body-item {
+  flex: 1 1 350px;
+  max-width: 400px;
+}
+
+.features-container-body-item > h3 {
+  padding: 16px 0;
+}
