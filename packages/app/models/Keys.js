@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
 const mongoose = require("mongoose");
 
@@ -7,13 +7,8 @@ const mongoose = require("mongoose");
  * This model manages the creation, storage, and validation of API keys.
  * It efficient manages and retrieves API key-related information in the application.
 */
-
 const keySchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-  },
-  key: { 
+  api_key: { 
     type: String,
     required: true,
     default: () => v4().replaceAll("-", "").toUpperCase()
@@ -29,12 +24,12 @@ const keySchema = new mongoose.Schema({
 });
 
 keySchema.methods.matchKey = async function(key) {
-  return await bcrypt.compare(key, this.key);
+  return await bcrypt.compare(key, this.api_key);
 };
 
 keySchema.pre("save", async function(next) {
-  if (this.isModified("key")) {
-    this.key = await bcrypt.hash(this.key, 10);
+  if (this.isModified("api_key")) {
+    this.api_key = await bcrypt.hash(this.api_key, 10);
   }
   next();
 });
@@ -42,9 +37,8 @@ keySchema.pre("save", async function(next) {
 keySchema.methods.data = function() {
   return {
     _id: this._id,
-    user: this.user,
     key_description: this.key_description,
-    key: this.key,
+    api_key: this.api_key,
     created_at: this._id.getTimestamp(),
     updated_at: this.updated_at,
   };
