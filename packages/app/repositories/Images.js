@@ -15,15 +15,25 @@ class ImagesRepository extends BaseRepository {
     super(Image);
   }
 
+  /**
+   * Fetches an image for a given company with a specified file extension.
+   * @param {string} company - Name of the company.
+   * @param {string} [default_extension="png"] - File extension to look for (default is "png").
+   * @returns {Promise<Object|null>} - Image object if found, otherwise null.
+  */
   async fetchImage(company, default_extension = "png") {
-      const image = await Image.findOne({
-        company_name: company,
-        extension: default_extension,
-      });
-
-      return image;
+    const image = await Image.findOne({
+      company_name: company,
+      extension: default_extension,
+    });
+    return image;
   }
-  
+
+  /**
+   * Fetches a list of companies matching a specified regex pattern.
+   * @param {RegExp} regexPattern - Regular expression to match company names.
+   * @returns {Promise<Array<Object>>} - Array of company objects matching the pattern returns an empty array if no matches are found.
+   */
   async fetchCompanyList(regexPattern) {
     const companyList = await Image.find({
       company_name: { $regex: regexPattern },
@@ -31,6 +41,11 @@ class ImagesRepository extends BaseRepository {
     return companyList;
   }
 
+  /**
+   * Generates a signed CloudFront URL for the given image URL.
+   * @param {string} imageUrl - Path or identifier for the image.
+   * @returns {Promise<string>} - Signed CloudFront URL.
+   */
   async fetchCloudFrontURL(imageUrl) {
     const cloudFrontUrl = cloudFrontSignedURL(`/${imageUrl}`).data;
     return cloudFrontUrl;

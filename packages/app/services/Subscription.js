@@ -1,8 +1,17 @@
-const SubscriptionsRepository = require("../repositories/Subscriptions");
+const SubscriptionRepository = require("../repositories/Subscriptions");
 
-class SubscriptionServices {
+class SubscriptionService {
   constructor() {
-    this.subscriptionsRepository = new SubscriptionsRepository();
+    this.subscriptionRepository = new SubscriptionRepository();
+  }
+
+  /**
+   * Gets Subscription by Id.
+   * @param {string} subscriptionId - The subscription_id of the user.
+   * @returns {Object} - Subscription Object.
+  */
+  async getSubscription(subscriptionId) {
+    return await this.subscriptionRepository.getById(subscriptionId);
   }
 
   /**
@@ -11,13 +20,9 @@ class SubscriptionServices {
    * @returns {Promise<boolean>} - True if it exceeds the limit, otherwise false
    **/
   async isApiUsageLimitExceed(userId) {
-    try {
-      const subscription = await this.subscriptionsRepository.fetchApiUsage(userId);
-      if (subscription.usage_count >= subscription.usage_limit) return true;
-      else return false;
-    } catch (error) {
-      throw error
-    }
+    const subscription = await this.subscriptionRepository.fetchApiUsage(userId);
+    if (subscription.usage_count >= subscription.usage_limit) return true;
+    else return false;
   }
 
   /**
@@ -26,13 +31,9 @@ class SubscriptionServices {
    *  @returns {Promise<number|null>} - The number of documents modified, or null if no document was found to update.
    **/
   async updateApiUsageCount(userId) {
-    try {
-      const subscription = await this.subscriptionsRepository.updateApiUsageCount(userId);
-      if (!subscription.matchedCount === 0) return null;
-      return subscription.modifiedCount;
-    } catch (error) {
-      throw error
-    }
+    const subscription = await this.subscriptionRepository.updateApiUsageCount(userId);
+    if (!subscription.matchedCount === 0) return null;
+    return subscription.modifiedCount;
   }
 
   /**
@@ -41,13 +42,9 @@ class SubscriptionServices {
    *  @returns {Promise<Object>} - The subscription details.
    **/
   async incrementUsageCount(subscriptionId) {
-    try {
-      const subscription = await this.subscriptionsRepository.incrementUsageCount(subscriptionId);
-      return subscription;
-    } catch (error) {
-      throw error
-    }
+    const subscription = await this.subscriptionRepository.incrementUsageCount(subscriptionId);
+    return subscription;
   }
 }
 
-module.exports = SubscriptionServices;
+module.exports = SubscriptionService; 

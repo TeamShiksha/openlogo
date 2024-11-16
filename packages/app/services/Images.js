@@ -15,20 +15,16 @@ class ImageServices {
     default_extension = "png",
     checkDb = true
   ) {
-    try {
-      let domainName = company;
-      if (checkDb) {
-        const image = await this.imageRepository.fetchImage(company);
-        if (!image) return null;
-        domainName = image.domainame;
-      }
-
-      const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
-      const cloudFrontUrl = await this.imageRepository.fetchCloudFrontURL(imageUrl);
-      return cloudFrontUrl;
-    } catch (error) {
-      throw error
+    let domainName = company;
+    if (checkDb) {
+      const image = await this.imageRepository.fetchImage(company);
+      if (!image) return null;
+      domainName = image.domainame;
     }
+
+    const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
+    const cloudFrontUrl = await this.imageRepository.fetchCloudFrontURL(imageUrl);
+    return cloudFrontUrl;
   }
 
   /**
@@ -37,12 +33,8 @@ class ImageServices {
    * @returns {Promise<Object>} - List of matching companies.
    **/
   async fetchCompanyList(regexPattern) {
-    try {
-      const companyList = await this.imageRepository.fetchCompanyList(regexPattern);
-      return companyList;
-    } catch (error) {
-      throw error
-    }
+    const companyList = await this.imageRepository.fetchCompanyList(regexPattern);
+    return companyList;
   }
 
   /**
@@ -51,24 +43,20 @@ class ImageServices {
    * @returns {Promise<Array<Object>>} - List of objects containing company names and their signed image URLs.
    **/
   async getDataList(companyList) {
-    try {
-      const dataList = [];
-      for (const company of companyList) {
-        const signedUrl = await this.fetchImageByCompanyFree(
-          company.domainame,
-          undefined,
-          false
-        );
-        if (!signedUrl) continue;
-        dataList.push({
-          companyName: company.domainame,
-          image: signedUrl,
-        });
-      }
-      return dataList;
-    } catch (error) {
-      throw error
+    const dataList = [];
+    for (const company of companyList) {
+      const signedUrl = await this.fetchImageByCompanyFree(
+        company.domainame,
+        undefined,
+        false
+      );
+      if (!signedUrl) continue;
+      dataList.push({
+        companyName: company.domainame,
+        image: signedUrl,
+      });
     }
+    return dataList;
   }
 }
 

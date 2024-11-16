@@ -40,7 +40,7 @@ async function searchLogoController(req, res, next) {
   const subscriptionServices = new SubscriptionServices();
   try {
     const { error, value } = getSearchQuerySchema.validate(req.query);
-    if (!!error) {
+    if (!error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,

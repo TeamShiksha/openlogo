@@ -30,7 +30,7 @@ async function getLogoController(req, res, next) {
 
   try {
     const { error, value } = getLogoQuerySchema.validate(req.query);
-    if (!!error) {
+    if (!error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,
