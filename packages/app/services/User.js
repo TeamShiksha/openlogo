@@ -1,5 +1,6 @@
 const UserRepository = require("../repositories/Users");
 const KeyService = require("../services/Keys");
+const bcrypt = require("bcrypt");
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
@@ -91,7 +92,23 @@ class UserService {
    * @returns {Promise<Object>} - The user document if found, otherwise null.
    */
     async getUserByEmail(email) {
-        return UserRepository.findByEmail(email);
+        return this.userRepository.findUserByEmail(email);
+    }
+
+    /**
+   * Create a New User.
+   * @param {Object} userDetails - User Information.
+   * @returns {Promise<Object>} - The user document if found, otherwise null.
+   */
+    async createUser(userDetails) {
+        return await this.userRepository.create({
+            name: userDetails.name,
+            password: await bcrypt.hash(userDetails.password, 10),
+            email: userDetails.email,
+            is_verified: false,
+            subscription_id: (userDetails.subscription_id),
+            is_deleted: false
+        });
     }
 }
 

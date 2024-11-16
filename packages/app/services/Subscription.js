@@ -1,4 +1,5 @@
 const SubscriptionRepository = require("../repositories/Subscriptions");
+const { DefaultSubscriptionPlan } = require("../utils/constants");
 
 class SubscriptionService {
     constructor() {
@@ -12,6 +13,15 @@ class SubscriptionService {
     */
     async getSubscription(subscriptionId) {
         return await this.subscriptionRepository.getById(subscriptionId);
+    }
+
+    /**
+     * Create a new Default Subscription Plan for User.
+     * @returns {Object} - Subscription Object.
+    */
+    async createSubscription() {
+        const subscription = await this.subscriptionRepository.create(DefaultSubscriptionPlan);
+        return subscription;
     }
     
 }
