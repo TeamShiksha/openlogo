@@ -1,6 +1,6 @@
 .features-container {
   margin: 16px 32px;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
 }
 
 .features-container-head {
@@ -33,9 +33,9 @@
     rgba(41, 32, 198, 0.8),
     rgba(86, 81, 178, 0.5)
   );
-  border-radius: 50%; /* Optional: Makes the background circular */
-  padding: 10px; /* Optional: Adds spacing around the logo */
-  display: block; /* Ensures the image behaves like a block for consistent spacing */
+  border-radius: 50%;
+  padding: 10px;
+  display: block;
 }
 
 .features-container-body-item > h3 {
