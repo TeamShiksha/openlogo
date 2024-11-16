@@ -1,8 +1,5 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
-/* const fs = require("fs");
-const handlebars = require("handlebars"); */
-/* const { sendEmail } = require("../../utils/sendEmail"); */
 const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
 const UserTokenService = require("../../services/UserToken");
@@ -70,40 +67,31 @@ async function signupController(req, res, next) {
 
     const newSubscription = await subscriptionService.createSubscription();
     if (!newSubscription) {
-      return res.status(500).json(
-        {
+      return res.status(500).json({
           message: "Something went wrong. Please Try again later!",
           statusCode: 500,
-        },
-      );
+        });
     }
+    
     Object.assign(value, { subscription_id: newSubscription._id });
-
     const newUser = await userService.createUser(value);
     if (!newUser) {
-      return res.status(500).json(
-        {
+      return res.status(500).json({
           message: "Something went wrong. Try again later!",
           error: STATUS_CODES[500],
           statusCode: 500,
-        },
-      );
+        });
     }
 
     const verificationToken = await userTokenService.createUserToken(newUser._id);
-    if (!verificationToken)
-        return res.status(206).json(
-        {
-            message: "user created successfully. Verification email failed to send. Please visit our contact page for assistance. We're here to help.",
+    if (!verificationToken){
+        return res.status(206).json({
+            message: "User registeration successfully. Verification email failed to send. Please visit our contact page for assistance. We're here to help.",
             statusCode: 201,
-        },
-    );
+        });
+    }
 
-    return res.status(200).json(
-      {
-        statusCode: 200,
-      },
-    );
+    return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
   }
