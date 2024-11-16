@@ -34,7 +34,6 @@ async function updatePasswordController(req, res, next) {
     const { currPassword, newPassword } = value;
     const { email } = req.userData;
     const user = await userService.getUserByEmail(email);
-
     const matchPassword = await user.matchPassword(currPassword);
     if (!matchPassword) {
       return res.status(400).json({
@@ -48,15 +47,14 @@ async function updatePasswordController(req, res, next) {
     const userUpdateSuccessful = await userService.updateUserPassword(user, hashNewPassword);
     if (!userUpdateSuccessful) {
       return res.status(500).json({
-        message: "Unexpected error occured while updating password",
+        message: "Something went wrong. Try again later!s",
         statusCode: 500,
         error: STATUS_CODES[500],
       });
     }
 
     return res.status(200).json({
-      message: "Password updated successfully",  
-      statusCode: 200,                           
+      statusCode: 200                           
     });
   } catch (err) {
     next(err);

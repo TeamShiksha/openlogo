@@ -32,7 +32,8 @@ async function updateProfileController(req, res, next) {
       });
     }
 
-    const user = await userService.getUserByEmail(req.userData.email);
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
     if (!user) {
       return res.status(404).json({
         statusCode: 404,
@@ -50,8 +51,7 @@ async function updateProfileController(req, res, next) {
       });
     }
     return res.status(200).json({
-      statusCode: 200,
-      message: "User Profile Updated Successfully!",
+      statusCode: 200
     });
   } catch (error) {
     next(error);

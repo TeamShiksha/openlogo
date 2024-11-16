@@ -18,7 +18,6 @@ const destroyKeyPayloadSchema = Joi.object({
 async function destroyKeyController(req, res, next) { 
   try {
     const userService = new UserService();
-
     const { error, value } = destroyKeyPayloadSchema.validate(req.query);
     if (error) {
       return res.status(422).json({
@@ -30,19 +29,17 @@ async function destroyKeyController(req, res, next) {
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
-
     const { keyId } = value;
     const destroyedKey = await userService.destroyUserKey(keyId, user);
     if (!destroyedKey) {
       return res.status(404).json({
-        message: "Key not found or could not be deleted",
+        message: "Invalid Key",
         statusCode: STATUS_CODES[404],
       });
     }
 
     return res.status(200).json({
-      message: "Key deleted successfully",   
-      statusCode: STATUS_CODES[200],       
+      statusCode: 200,       
     });
   } catch (err) {
     next(err);

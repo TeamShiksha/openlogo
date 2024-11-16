@@ -15,7 +15,7 @@ async function getUserDataController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User document not found",
+        message: "User not found",
       });
     }
 
@@ -25,8 +25,8 @@ async function getUserDataController(req, res, next) {
     if (!keysData || !subscriptionData) {
         return res.status(206).json({
             statusCode: 206,
-            error: "Failed to fetch user data.",
-            data: null
+            error: STATUS_CODES[206],
+            message: "User Data not found"
         });
     }
 

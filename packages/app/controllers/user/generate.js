@@ -36,7 +36,6 @@ async function generateKeyController(req, res, next) {
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
     const subscription = await subscriptionService.getSubscription(user.subscription_id);
-
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
@@ -46,10 +45,8 @@ async function generateKeyController(req, res, next) {
     }
 
     const newKey = {
-      user: userId,
-      key_description: req.body.key_description,
+      key_description: req.body.key_description
     };
-
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({
       statusCode: 200,

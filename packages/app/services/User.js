@@ -33,15 +33,6 @@ class UserService {
     }
 
     /**
-   * Finds a user by their email address.
-   * @param {string} email - The email address to search for.
-   * @returns {Promise<Object>} - The user document if found, otherwise null.
-   */
-    async getUserByEmail(email) {
-        return this.userRepository.findUserByEmail(email);
-    }
-
-    /**
      * Creates a new user key and updates the user's key list.
      *
      * @param {Object} newKey - The new key details to be created.
