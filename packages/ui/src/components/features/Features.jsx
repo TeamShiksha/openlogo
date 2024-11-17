@@ -7,9 +7,8 @@ function Features() {
       <div className={styles["features-container-head"]}>
         <h2>Features</h2>
         <p>
-          LogoExecutive provides fast API access to a vast, regularly updated
-          logo library with search-driven insights for complete branding
-          support.
+          OpenLogo provides fast API access to a vast, regularly updated logo
+          library with search-driven insights for complete branding support.
         </p>
       </div>
       <div className={styles["features-container-body"]}>
