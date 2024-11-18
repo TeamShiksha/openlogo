@@ -92,12 +92,9 @@ async function adminReUploadController(req, res, next) {
         message: "Failed to update record",
       });
     }
-    try {
-      const invalidationPath = `/${Extension}/${Imagename}.${Extension}`;
-      await cloudFrontInvalidate([invalidationPath]);
-    } catch (err) {
-      throw err;
-    }
+
+    const invalidationPath = `/${Extension}/${Imagename}.${Extension}`;
+    await cloudFrontInvalidate([invalidationPath]);
 
     res.status(200).json({
       statusCode: 200,
