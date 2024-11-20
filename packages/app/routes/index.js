@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const operatorRouter = require("./operator");
-const cors = require("cors");
+const userRouter = require("./user");
+/* const cors = require("cors"); */
 
 /* const privateRouteCORS = {
     origin: (origin, callback) => {
@@ -14,6 +15,7 @@ const cors = require("cors");
 }; */
 
 router.use("/operator", operatorRouter);
+router.use("/user", userRouter);
 
 module.exports = router;
 

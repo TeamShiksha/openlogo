@@ -1,5 +1,8 @@
 import searchIcon from '../assets/searchIcon.svg'
 import curvedArrow from '../assets/curvedArrow.svg'
+import rapidLogo from "../assets/rapid.svg";
+import searchLogo from "../assets/search.svg";
+import databaseLogo from "../assets/database.svg";
 
 export const svgs = {
   searchIcon,
@@ -10,3 +13,24 @@ export const svgs = {
   google: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
   microsoft: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg'
 }
+
+export const featureItems = [
+  {
+    icon: databaseLogo,
+    title: "Comprehensive Database",
+    content:
+      "Tap into a vast logo library with thousands of brands, continuously refreshed and expanding.",
+  },
+  {
+    icon: searchLogo,
+    title: "Customizable Search Insights",
+    content:
+      "Gain insights on search patterns to spot missing logos and keep collections comprehensive.",
+  },
+  {
+    icon: rapidLogo,
+    title: "Fast & Reliable API Access",
+    content:
+      "Access logos instantly with fast, dependable APIs built to minimize downtime and maximize efficiency.",
+  },
+];
