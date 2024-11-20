@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import '../demo/Demo.css';
+import styles from './Demo.module.css';
 import { svgs } from '../../utils/constants';
 const Demo = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,35 +51,35 @@ const Demo = () => {
   );
 
   return (
-    <div className="api-container">
-      <div className="api-content">
+    <div className={styles.apiContainer}>
+      <div className={styles.apiContent}>
         <h1>See API In Action</h1>
         <p>
           Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.
         </p>
       </div>
-      <div className={`search-box ${showResults ? 'expanded' : ''}`}>
-        <div className='search-content'>
+      <div className={`${styles.searchBox} ${showResults ? styles.expanded : ''}`}>
+        <div className={styles.searchContent}>
           <form 
             onSubmit={handleSearch} 
-            className={`search-input-container ${showResults ? 'has-results' : ''}`}
+            className={`${styles.searchInputContainer} ${showResults ? styles.hasResults : ''}`}
           >
             <input 
               type="text" 
               placeholder="Search" 
-              className="search-input"
+              className={styles.searchInput}
               value={searchTerm}
               onChange={handleInputChange}
             />
-            <button type="submit" className="search-button">
+            <button type="submit" className={styles.searchButton}>
               <img src={svgs.searchIcon} alt="Search" />
             </button>
           </form>
-          <div className={`results-container ${showResults && searchTerm ? 'show' : ''}`}>
+          <div className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ''}`}>
             {filteredCompanies.map((company, index) => (
               <div 
                 key={company.id} 
-                className={`result-item ${showResults && searchTerm ? 'show' : ''}`}
+                className={`${styles.resultItem} ${showResults && searchTerm ? styles.show : ''}`}
                 style={{ transitionDelay: `${index * 0.1}s` }}
               >
                 <img src={company.logo} alt={`${company.name} Logo`} />
@@ -89,8 +89,7 @@ const Demo = () => {
           </div>
         </div>
       </div>
-      <img src={svgs.curvedArrow} alt="curved-arrow" className='curved-arrow' width="336" height="323" />
-
+      <img src={svgs.curvedArrow} alt="curved-arrow" className={styles.curvedArrow} width="336" height="323" />
     </div>
   );
 };
