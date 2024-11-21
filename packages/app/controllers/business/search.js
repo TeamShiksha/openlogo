@@ -18,7 +18,7 @@ const getSearchQuerySchema = Joi.object({
   }),
 }).custom((value, helpers) => {
   const { domainKey } = value;
-  const companyNameBeginsWith = domainKey
+  const companyNameBeginsWith = domainKey.replace(/^(https?:\/\/)?(www\.)?/, '')
     .match(/([A-Za-z0-9-]+)/)[1]
     .toUpperCase();
 
@@ -40,7 +40,7 @@ async function searchLogoController(req, res, next) {
   const subscriptionServices = new SubscriptionServices();
   try {
     const { error, value } = getSearchQuerySchema.validate(req.query);
-    if (!error) {
+    if (!!error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,
@@ -50,8 +50,8 @@ async function searchLogoController(req, res, next) {
 
     const { API_KEY, companyNameBeginsWith } = value;
 
-    const userWithSubscription =
-      await keyServices.fetchUserWithSubscription(API_KEY);
+    // API Key to user reference does not exist 
+    const userWithSubscription = await keyServices.fetchUserWithSubscription(API_KEY);
 
     if (userWithSubscription.length === 0) {
       return res.status(403).json({
@@ -83,9 +83,7 @@ async function searchLogoController(req, res, next) {
 
     const dataList = await imageServices.getDataList(companyList);
 
-    const res = await subscriptionServices.incrementUsageCount(
-      subscriptionDetails._id
-    );
+    await subscriptionServices.incrementUsageCount(subscriptionDetails._id);
 
     return res.status(200).json({
       statusCode: 200,

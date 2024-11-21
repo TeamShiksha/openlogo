@@ -1,8 +1,7 @@
 const BaseRepository = require("./base");
 const Image = require("../models/Images");
 
-// not yet there in monorepo
-// const { cloudFrontSignedURL } = require("../utils/cloudFront");
+const { cloudFrontSignedURL } = require("../utils/cloudFront");
 
 /**
  * The ImageRepository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..

@@ -37,7 +37,7 @@ async function getLogoController(req, res, next) {
 
   try {
     const { error, value } = getLogoQuerySchema.validate(req.query);
-    if (!error) {
+    if (!!error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,
@@ -46,7 +46,18 @@ async function getLogoController(req, res, next) {
     }
 
     const { company, API_KEY } = value;
+
+    // API Key to user reference does not exists
     const userId = await keyServices.fetchUser(API_KEY);
+    if (!userId) {
+      return res.status(403).json({
+        message: "User with this API Key does not exist.",
+        statusCode: 403,
+        error: STATUS_CODES[403],
+      });
+    }
+
+    // Subscription to user reference does not exists
     const isExceed = await subscriptionServices.isApiUsageLimitExceed(userId);
     if (isExceed) {
       return res.status(403).json({
@@ -57,7 +68,10 @@ async function getLogoController(req, res, next) {
     }
 
     const imageUrl = await imageServices.fetchImageByCompanyFree(company);
+
+    // Subscription to user reference does not exists
     await subscriptionServices.updateApiUsageCount(userId);
+
     if (!imageUrl) {
       return res.status(404).json({
         message: "Logo not available",
