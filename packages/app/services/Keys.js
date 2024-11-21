@@ -64,7 +64,7 @@ class KeyService {
   async fetchUser(apiKey) {
     const key = await this.keyRepository.fetchUser(apiKey);
     if (!key) return null;
-    return key.user.toString();
+    return key.user;
   }
 }
 

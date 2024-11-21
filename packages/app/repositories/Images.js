@@ -18,13 +18,11 @@ class ImagesRepository extends BaseRepository {
   /**
    * Fetches an image for a given company with a specified file extension.
    * @param {string} company - Name of the company.
-   * @param {string} [default_extension="png"] - File extension to look for (default is "png").
    * @returns {Promise<Object|null>} - Image object if found, otherwise null.
   */
-  async fetchImage(company, default_extension = "png") {
+  async fetchImage(company) {
     const image = await Image.findOne({
       company_name: company,
-      extension: default_extension,
     });
     return image;
   }

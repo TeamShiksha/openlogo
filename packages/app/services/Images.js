@@ -19,7 +19,7 @@ class ImageServices {
     if (checkDb) {
       const image = await this.imageRepository.fetchImage(company);
       if (!image) return null;
-      domainName = image.domainame;
+      domainName = image.company_name;
     }
 
     const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
@@ -46,13 +46,13 @@ class ImageServices {
     const dataList = [];
     for (const company of companyList) {
       const signedUrl = await this.fetchImageByCompanyFree(
-        company.domainame,
+        company.company_name,
         undefined,
         false
       );
       if (!signedUrl) continue;
       dataList.push({
-        companyName: company.domainame,
+        companyName: company.company_name,
         image: signedUrl,
       });
     }

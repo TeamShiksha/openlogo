@@ -30,7 +30,7 @@ class KeysRepository extends BaseRepository {
    */
   async fetchUserWithSubscription(apiKeys) {
     const userWithSubscription = await Keys.aggregate([
-      { $match: { key: apiKeys } },
+      { $match: { api_key: apiKeys } },
       {
         $lookup: {
           from: "subscriptions",
@@ -51,7 +51,7 @@ class KeysRepository extends BaseRepository {
    *                                   - Returns an empty array if no matches are found.
    */
   async isAPIKeyPresent(apiKey) {
-    const keyRef = await Keys.find({ key: apiKey });
+    const keyRef = await Keys.find({ api_key: apiKey });
     return keyRef;
   }
 
@@ -61,7 +61,7 @@ class KeysRepository extends BaseRepository {
    * @returns {Promise<Object|null>} - User object if found, otherwise null.
   */
   async fetchUser(apiKey) {
-    const key = await Keys.findOne({ key: apiKey });
+    const key = await Keys.findOne({ api_key: apiKey });
     return key;
   }
 }
