@@ -1,52 +1,24 @@
 import {useState} from 'react';
 import styles from './Demo.module.css';
-import { svgs } from '../../utils/constants';
+import { SVGS, COMPANIES } from '../../utils/constants';
 const Demo = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
 
-  const companies = [
-    {
-      id: 1,
-      name: 'Amazon',
-      logo: svgs.amazon
-    },
-    {
-      id: 2,
-      name: 'Apple',
-      logo: svgs.apple
-    },
-    {
-      id: 3,
-      name: 'Adobe',
-      logo: svgs.adobe
-    },
-    {
-      id: 4,
-      name: 'Google',
-      logo: svgs.google
-    },
-    {
-      id: 5,
-      name: 'Microsoft',
-      logo: svgs.microsoft
-    }
-  ];
-
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = (searchEvent) => {
+    searchEvent.preventDefault();
     setShowResults(searchTerm.length > 0);
   };
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
+  const handleInputChange = (inputChangeEvent) => {
+    const value = inputChangeEvent.target.value;
     setSearchTerm(value);
     if(!value){
       setShowResults(false);
     }
   }
 
-  const filteredCompanies = companies.filter(company =>
+  const filteredCompanies = COMPANIES.filter(company =>
     company.name.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
@@ -72,7 +44,7 @@ const Demo = () => {
               onChange={handleInputChange}
             />
             <button type="submit" className={styles.searchButton}>
-              <img src={svgs.searchIcon} alt="Search" />
+              <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
           <div className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ''}`}>
@@ -89,7 +61,7 @@ const Demo = () => {
           </div>
         </div>
       </div>
-      <img src={svgs.curvedArrow} alt="curved-arrow" className={styles.curvedArrow} width="336" height="323" />
+      <img src={SVGS.curvedArrow} alt="curved-arrow" className={styles.curvedArrow} width="336" height="323" />
     </div>
   );
 };
