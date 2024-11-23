@@ -9,10 +9,13 @@ const UserToken = require('../models/UserToken');
 */
 
 class UserTokenRepository extends BaseRepository{
-    constructor() {
-        super(UserToken); 
-      }
-      
+  constructor() {
+      super(UserToken); 
+  }
+
+  async fetchUserToken(token) {
+    return await UserToken.findOne({ token: token, is_deleted: false });
+  } 
 }
 
 module.exports = UserTokenRepository;

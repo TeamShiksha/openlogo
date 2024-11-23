@@ -2,9 +2,11 @@ const router = require("express").Router();
 const signupController = require("../controllers/auth/signup");
 const signinController = require("../controllers/auth/signin");
 const signoutController = require("../controllers/auth/signout");
+const verifyTokenController = require("../controllers/auth/verify");
 
 router.post("/signup", signupController);
 router.post("/signin", signinController);
 router.get("/signout", signoutController);
+router.get("/verify", verifyTokenController);
 
 module.exports = router;

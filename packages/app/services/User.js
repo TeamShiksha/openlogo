@@ -110,6 +110,22 @@ class UserService {
             is_deleted: false
         });
     }
+
+    /**
+     * Verifies the given user.
+     * @param {Object} userId - The userId of the user.
+     * @returns {Promise<Object>} - The verification result.
+     */
+    async verifyUser(userId) {
+        const verifyUserData  = {
+            is_verified: true
+        };
+        const userVerifed = await this.userRepository.update(userId, verifyUserData);
+        if(userVerifed == null) {
+            return false;
+        }
+        return true;
+    }
 }
 
 module.exports = UserService;

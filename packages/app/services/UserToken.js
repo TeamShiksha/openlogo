@@ -14,6 +14,17 @@ class UserTokenService {
             type: UserTokenTypes.VERIFY
         });
     }
+
+    async fetchUserToken(userId) {
+        return await this.userTokenRepository.fetchUserToken(userId);
+    }
+
+    async deleteUserToken(userToken) {
+        const deleteUserTokenData = {
+            is_deleted: true
+        };
+        return await this.userTokenRepository.update(userToken._id, deleteUserTokenData);
+    }
 }
 
 module.exports = UserTokenService;
