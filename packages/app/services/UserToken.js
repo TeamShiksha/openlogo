@@ -25,6 +25,14 @@ class UserTokenService {
         };
         return await this.userTokenRepository.update(userToken._id, deleteUserTokenData);
     }
+
+    async createForgotToken(userId) {
+        return await this.userTokenRepository.create({
+            user_id: userId,
+            token: v4().replaceAll("-", ""),
+            type: UserTokenTypes.FORGOT
+        });
+    }
 }
 
 module.exports = UserTokenService;
