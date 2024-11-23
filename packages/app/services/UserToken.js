@@ -15,8 +15,8 @@ class UserTokenService {
         });
     }
 
-    async fetchUserToken(userId) {
-        return await this.userTokenRepository.fetchUserToken(userId);
+    async fetchUserToken(token) {
+        return await this.userTokenRepository.fetchUserToken(token);
     }
 
     async deleteUserToken(userToken) {
