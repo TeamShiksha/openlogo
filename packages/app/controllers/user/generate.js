@@ -45,7 +45,8 @@ async function generateKeyController(req, res, next) {
     }
 
     const newKey = {
-      key_description: req.body.key_description
+      key_description: req.body.key_description,
+      subscription_id: subscription._id
     };
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({

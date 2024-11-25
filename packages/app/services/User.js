@@ -1,5 +1,6 @@
 const UserRepository = require("../repositories/Users");
 const KeyService = require("../services/Keys");
+const bcrypt = require("bcrypt");
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
@@ -83,6 +84,47 @@ class UserService {
     async deleteUserAccount(userId) {
         const deletedUser = await this.userRepository.delete(userId);
         return deletedUser ? true : false;
+    }
+
+    /**
+   * Finds a user by their email address.
+   * @param {string} email - The email address to search for.
+   * @returns {Promise<Object>} - The user document if found, otherwise null.
+   */
+    async getUserByEmail(email) {
+        return this.userRepository.findUserByEmail(email);
+    }
+
+    /**
+   * Create a New User.
+   * @param {Object} userDetails - User Information.
+   * @returns {Promise<Object>} - The user document if found, otherwise null.
+   */
+    async createUser(userDetails) {
+        return await this.userRepository.create({
+            name: userDetails.name,
+            password: await bcrypt.hash(userDetails.password, 10),
+            email: userDetails.email,
+            is_verified: false,
+            subscription_id: (userDetails.subscription_id),
+            is_deleted: false
+        });
+    }
+
+    /**
+     * Verifies the given user.
+     * @param {Object} userId - The userId of the user.
+     * @returns {Promise<Object>} - The verification result.
+     */
+    async verifyUser(userId) {
+        const verifyUserData  = {
+            is_verified: true
+        };
+        const userVerifed = await this.userRepository.update(userId, verifyUserData);
+        if(userVerifed == null) {
+            return false;
+        }
+        return true;
     }
 }
 

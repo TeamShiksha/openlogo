@@ -18,7 +18,7 @@ class UsersRepository extends BaseRepository {
    * @returns {Promise<Object|null>} - Returns the user document if found, otherwise null.
    */
   async findUserByEmail(emailId) {
-    return await this.model.findOne({ email: emailId });
+    return await this.model.findOne({ email: emailId, is_deleted: false });
   }
 }
 
