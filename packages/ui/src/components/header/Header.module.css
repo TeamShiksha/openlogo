@@ -32,11 +32,6 @@
 }
 
 .header-hamburger {
-  display: flex;
-  align-items: center;
-}
-
-.header-hamburger {
   display: none;
 }
 
