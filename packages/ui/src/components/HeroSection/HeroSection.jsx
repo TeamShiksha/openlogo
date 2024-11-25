@@ -23,7 +23,13 @@ const HeroSection = () => {
         </div>
       </div>
       <div className={styles["right-section"]}>
-        <img alt="Logo Images" src="logo-images.png" height={358} width={326} />
+        <img
+          alt="Logo Images"
+          src="logo-images.png"
+          height={358}
+          width={326}
+          className={styles["logo-images"]}
+        />
       </div>
     </div>
   );
