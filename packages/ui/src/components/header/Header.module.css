@@ -30,3 +30,29 @@
   flex-direction: row;
   align-items: center;
 }
+
+.header-hamburger {
+  display: flex;
+  align-items: center;
+}
+
+.header-hamburger {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .header-container {
+    justify-content: space-between;
+    padding: 20px 24px;
+  }
+  .header-items {
+    display: none;
+  }
+  .header-button {
+    display: none;
+  }
+  .header-hamburger {
+    display: flex;
+    align-items: center;
+  }
+}

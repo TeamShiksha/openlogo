@@ -19,6 +19,9 @@ const Header = () => {
       <div className={styles["header-button"]}>
         <Button variant="primary">Get started for free</Button>
       </div>
+      <div className={styles["header-hamburger"]}>
+        <img src="hamburger.svg" height={16} width={21.33} />
+      </div>
     </header>
   );
 };
