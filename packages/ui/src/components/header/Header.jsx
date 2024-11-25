@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <header className={styles["header-container"]}>
       <div className={styles["header-logo"]}>
-        <img src="openlogo.svg" alt="Logo" width={30} height={30} />
+        <img alt="Logo Icon" src="openlogo.svg" width={30} height={30} />
         <h4>Openlogo</h4>
       </div>
       <div className={styles["header-items"]}>
@@ -20,7 +20,12 @@ const Header = () => {
         <Button variant="primary">Get started for free</Button>
       </div>
       <div className={styles["header-hamburger"]}>
-        <img src="hamburger.svg" height={16} width={21.33} />
+        <img
+          alt="Hamburger Icon"
+          src="hamburger.svg"
+          height={16}
+          width={21.33}
+        />
       </div>
     </header>
   );

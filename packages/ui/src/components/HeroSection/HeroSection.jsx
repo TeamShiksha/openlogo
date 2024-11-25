@@ -15,7 +15,7 @@ const HeroSection = () => {
         <div className={styles["button-section"]}>
           <Button variant="secondary">
             <div className={styles["button-text"]}>
-              <img src="play-icon.svg" height={20} width={20} />
+              <img alt="Play Icon" src="play-icon.svg" height={20} width={20} />
               <span>Documentation</span>
             </div>
           </Button>
@@ -23,7 +23,7 @@ const HeroSection = () => {
         </div>
       </div>
       <div className={styles["right-section"]}>
-        <img src="logo-images.png" height={358} width={326} />
+        <img alt="Logo Images" src="logo-images.png" height={358} width={326} />
       </div>
     </div>
   );
