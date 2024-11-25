@@ -49,5 +49,9 @@
   .header-hamburger {
     display: flex;
     align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
   }
 }

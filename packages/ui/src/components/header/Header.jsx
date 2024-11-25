@@ -17,6 +17,8 @@ const Header = () => {
     alt: "Close Icon",
   };
 
+  const menuIcon = showMenu ? closeIcon : hamburgerIcon;
+
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
   };
@@ -37,13 +39,9 @@ const Header = () => {
       <div className={styles["header-button"]}>
         <Button variant="primary">Get started for free</Button>
       </div>
-      <div className={styles["header-hamburger"]} onClick={toggleMenu}>
-        <img
-          {...(showMenu ? closeIcon : hamburgerIcon)}
-          height={16}
-          width={21.33}
-        />
-      </div>
+      <button className={styles["header-hamburger"]} onClick={toggleMenu}>
+        <img src={menuIcon.src} alt={menuIcon.alt} height={16} width={21.33} />
+      </button>
       {showMenu ? <MobileHeaderMenu /> : null}
     </header>
   );
