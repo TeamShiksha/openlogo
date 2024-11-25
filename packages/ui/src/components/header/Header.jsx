@@ -1,8 +1,26 @@
+import { useState } from "react";
 import { headerItems } from "../../utils/constants";
 import Button from "../common/button/Button";
+import MobileHeaderMenu from "../MobileHeaderMenu/MobileHeaderMenu";
 import styles from "./Header.module.css";
 
 const Header = () => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const hamburgerIcon = {
+    src: "hamburger.svg",
+    alt: "Hamburger Icon",
+  };
+
+  const closeIcon = {
+    src: "close-icon.svg",
+    alt: "Close Icon",
+  };
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
   return (
     <header className={styles["header-container"]}>
       <div className={styles["header-logo"]}>
@@ -19,14 +37,14 @@ const Header = () => {
       <div className={styles["header-button"]}>
         <Button variant="primary">Get started for free</Button>
       </div>
-      <div className={styles["header-hamburger"]}>
+      <div className={styles["header-hamburger"]} onClick={toggleMenu}>
         <img
-          alt="Hamburger Icon"
-          src="hamburger.svg"
+          {...(showMenu ? closeIcon : hamburgerIcon)}
           height={16}
           width={21.33}
         />
       </div>
+      {showMenu ? <MobileHeaderMenu /> : null}
     </header>
   );
 };
