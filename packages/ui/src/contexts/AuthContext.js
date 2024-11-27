@@ -12,7 +12,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthCheckComplete, setAuthCheckComplete] = useState(false);
+  const [isAuthCheckComplete, setIsAuthCheckComplete] = useState(false);
 
   useEffect(() => {
     const checkCookieExists = () => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         .split(";")
         .some((item) => item.trim().startsWith("jwt="));
       setIsAuthenticated(jwtCookie);
-      setAuthCheckComplete(true);
+      setIsAuthCheckComplete(true);
     };
 
     checkCookieExists();
