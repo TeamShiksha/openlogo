@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { instance } from "../api/api_instance";
 
 export const AuthContext = createContext();
@@ -20,18 +26,21 @@ export const AuthProvider = ({ children }) => {
     checkCookieExists();
   }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await instance.get(`api/auth/signout`);
       setIsAuthenticated(false);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [setIsAuthenticated]);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, logout }}
+      value={useMemo(
+        () => ({ isAuthenticated, setIsAuthenticated, logout }),
+        [isAuthenticated, setIsAuthenticated, logout]
+      )}
     >
       {isAuthCheckComplete ? children : null}
     </AuthContext.Provider>

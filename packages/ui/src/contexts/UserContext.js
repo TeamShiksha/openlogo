@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { createContext, useState } from "react";
+import { createContext, useState, useMemo, useCallback } from "react";
 import { instance } from "../api/api_instance";
 
 export const UserContext = createContext();
@@ -9,7 +9,7 @@ export function UserProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await instance.get("/api/user/data");
@@ -20,10 +20,20 @@ export function UserProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setError, setLoading]);
 
   return (
-    <UserContext.Provider value={{ userData, loading, error, fetchUserData }}>
+    <UserContext.Provider
+      value={useMemo(
+        () => ({
+          userData,
+          loading,
+          error,
+          fetchUserData,
+        }),
+        [userData, loading, error, fetchUserData]
+      )}
+    >
       {children}
     </UserContext.Provider>
   );
