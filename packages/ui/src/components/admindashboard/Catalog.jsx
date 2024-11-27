@@ -5,6 +5,7 @@ import searchLogo from "../../assets/searchIcon.svg";
 import { companies } from "../../utils/constants";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
+import ImageUploadModal from "./ImageUploadModal";
 
 function Catalog() {
   const limit = 10;
@@ -31,6 +32,8 @@ function Catalog() {
     }
     setPageNum((prevPageNum) => prevPageNum + 1);
   };
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  
 
   return (
     <div className={styles["catalog-wrapper"]}>
@@ -42,7 +45,9 @@ function Catalog() {
           className={styles["search-icon"]}
         />
         <input type="text" placeholder="Search" />
-        <button>Add image</button>
+        <button onClick={()=> setIsModalOpen(true)}>Add image</button>
+        <ImageUploadModal isOpen={isModalOpen}
+        onClose={()=>setIsModalOpen(false)}/>
       </div>
       {/* catalog table */}
       <div className={styles["catalog-table-wrapper"]}>

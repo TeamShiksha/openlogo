@@ -32,6 +32,7 @@
   background-color: #4f46e5;
   border: 1px #4f46e5;
   font-weight: 600;
+  cursor: pointer;
 }
 
 /* catalog table styles */
