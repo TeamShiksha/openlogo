@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const operatorRouter = require("./operator");
 const userRouter = require("./user");
+const authRouter = require("./auth");
 const businessRouter = require("./business")
+
 /* const cors = require("cors"); */
 
 /* const privateRouteCORS = {
@@ -17,7 +19,8 @@ const businessRouter = require("./business")
 
 router.use("/operator", operatorRouter);
 router.use("/user", userRouter);
-router.use('/business', businessRouter)
+router.use("/auth", authRouter);
+router.use('/business', businessRouter);
 
 module.exports = router;
 
