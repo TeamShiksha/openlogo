@@ -110,7 +110,7 @@
     padding: 0 15px;
   }
   .cardValue {
-    color: var(--Primary-blue, #4f46e5);
+    color: var(--Primary-blue,#4f46e5);
     font-family: Inter;
     font-size: 36px;
     font-style: normal;
