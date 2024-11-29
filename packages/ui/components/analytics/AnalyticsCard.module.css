@@ -8,12 +8,6 @@
   gap: 40px;
   flex: 1 0 0;
 }
-.cardGroup {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  align-self: stretch;
-}
 .cardContent {
   display: flex;
   width: 100%;
@@ -22,51 +16,44 @@
   align-items: last baseline;
   gap: 40px;
 }
+.cardTitle, .cardValue, .changeValuePositive, .changeValueNegative, .trackingText {
+  font-family: Inter;
+  font-style: normal;
+  line-height: normal;
+}
 .cardTitle {
   color: #475467;
-  font-family: Inter;
   font-size: 24px;
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
   letter-spacing: 0.48px;
 }
 .cardValue {
   color: var(--Primary-blue, #4f46e5);
-  font-family: Inter;
   font-size: 64px;
-  font-style: normal;
   font-weight: 600;
-  line-height: normal;
+}
+.changeValuePositive, .changeValueNegative {
+  font-size: 20px;
+  font-weight: 600;
 }
 .changeValuePositive {
   color: #00b69b;
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
 }
 .changeValueNegative {
   color: #f93c65;
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
 }
 .trackingText {
   color: #667085;
-  font-family: Inter;
   font-size: 16px;
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  white-space: nowrap;
 }
-.leftContent {
+.leftContent, .rightContent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+.leftContent {
   gap: 16px;
 }
 .rightContent {
@@ -74,6 +61,8 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  min-width: 100px;
+  text-align: right;
 }
 .changeGraph {
   width: 50px;
@@ -83,78 +72,33 @@
 /* Mobile styles */
 @media (max-width: 768px) {
   .card {
-    border-radius: 16px;
-    background: #f8f8f9;
-    display: flex;
     padding: 32px 0px;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    align-self: stretch;
     height: auto;
   }
-  .cardTitle {
-    color: #475467;
-    font-family: Inter;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 0.4px;
-  }
   .cardContent {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 40px;
     padding: 0 15px;
   }
+  .cardTitle {
+    font-size: 20px;
+    letter-spacing: 0.4px;
+  }
   .cardValue {
-    color: var(--Primary-blue,#4f46e5);
-    font-family: Inter;
     font-size: 36px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
     min-width: 100px;
-    text-align: left;
   }
-  .changeValueNegative {
-    color: #f93c65;
-    font-family: Inter;
+  .changeValuePositive, .changeValueNegative {
     font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-  }
-  .changeValuePositive {
-    color: #00b69b;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
   }
   .trackingText {
-    color: #667085;
-    font-family: Inter;
     font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
   }
   .leftContent {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     gap: 4px;
     width: 150px;
   }
   .rightContent {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     gap: 4px;
+    min-width: 80px;
   }
   .changeGraph {
     width: 39.429px;
