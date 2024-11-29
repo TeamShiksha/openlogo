@@ -11,6 +11,7 @@
   flex-direction: row;
   gap: 7px;
   align-items: center;
+  font-size: 1.5rem;
 }
 
 .header-items {
@@ -39,6 +40,9 @@
   .header-container {
     justify-content: space-between;
     padding: 20px 24px;
+  }
+  .header-logo {
+    font-size: 1.125rem;
   }
   .header-items {
     display: none;
