@@ -4,7 +4,6 @@ import tickIcon from "../../src/assets/Icon.svg";
 
 function PricingCard({ name, pricing, tagline, index, keypoints }) {
   let planPricing = `$${pricing}/mth`;
-  console.log(keypoints);
   return (
     <div
       className={`${styles.cardMainDiv} ${index == 1 ? styles.secondCard : ""}`}
