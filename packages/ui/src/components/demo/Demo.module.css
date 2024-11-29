@@ -1,5 +1,5 @@
 .apiContainer {
-  background: #4F46E5;
+  background: #4f46e5;
   padding: 6rem 8rem;
   color: white;
   position: relative;
@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: flex-start;
   min-height: 300px;
-  width: 70vw;
+  width: 100%;
   border-radius: 10px;
 }
 
@@ -145,9 +145,15 @@
   font-weight: 500;
 }
 
-.resultItem:nth-child(1) { transition-delay: 0.1s; }
-.resultItem:nth-child(2) { transition-delay: 0.15s; }
-.resultItem:nth-child(3) { transition-delay: 0.2s; }
+.resultItem:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.resultItem:nth-child(2) {
+  transition-delay: 0.15s;
+}
+.resultItem:nth-child(3) {
+  transition-delay: 0.2s;
+}
 
 .curvedArrow {
   position: absolute;
@@ -172,7 +178,6 @@
     max-width: 400px;
   }
 }
-
 
 @media (max-width: 1024px) {
   .apiContainer {
