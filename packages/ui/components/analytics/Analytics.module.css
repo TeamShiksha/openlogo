@@ -1,49 +1,30 @@
 .container {
 	background: var(--White, #fff);
 	display: flex;
-	padding: 16px 120px;
+	padding: 16px 40px;
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 16px;
 	align-self: stretch;
+	max-width: 1200px;
+	margin: 0 auto;
 }
 .analyticSection {
 	opacity: 0.99;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
 	gap: 16px;
 	align-self: stretch;
-}
-.cardGroup {
-	display: flex;
-	align-items: flex-start;
-	gap: 16px;
-	align-self: stretch;
+	width: 100%;
 }
 /* Mobile styles */
 @media (max-width: 768px) {
 	.container {
-		background: var(--White, #fff);
-		display: flex;
 		padding: 16px;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 16px;
-		align-self: stretch;
 	}
 	.analyticSection {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 8px;
-		align-self: stretch;
-	}
-	.cardGroup {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 8px;
-		align-self: stretch;
+		grid-template-columns: 1fr;
+		gap: 16px;
+		width: 100%;
 	}
 }
