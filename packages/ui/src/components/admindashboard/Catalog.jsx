@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import searchLogo from "../../assets/searchIcon.svg";
@@ -8,17 +8,31 @@ import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
 
 function Catalog() {
+  const [pageNum, setPageNum] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const limit = 10;
   const totalPages = Math.floor(companies.length / 10);
-  const [pageNum, setPageNum] = useState(0);
 
   const skip = pageNum;
   const skipCount = skip * limit;
+
+  useEffect(() => {
+    setSearchTerm("");
+  }, [pageNum]);
 
   const companiesInfo = companies.slice(
     skipCount,
     Math.min(skipCount + limit, companies.length)
   );
+  const filteredCompanies = companiesInfo.filter((company) =>
+    company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearchTermChange = (inputChangeEvent) => {
+    setSearchTerm(inputChangeEvent.target.value);
+  };
 
   const handlePreviousBtnClick = () => {
     if (pageNum == 0) {
@@ -32,8 +46,6 @@ function Catalog() {
     }
     setPageNum((prevPageNum) => prevPageNum + 1);
   };
-  const [isModalOpen,setIsModalOpen] = useState(false);
-  
 
   return (
     <div className={styles["catalog-wrapper"]}>
@@ -44,10 +56,17 @@ function Catalog() {
           alt="search-logo"
           className={styles["search-icon"]}
         />
-        <input type="text" placeholder="Search" />
-        <button onClick={()=> setIsModalOpen(true)}>Add image</button>
-        <ImageUploadModal isOpen={isModalOpen}
-        onClose={()=>setIsModalOpen(false)}/>
+        <input
+          value={searchTerm}
+          type="text"
+          placeholder="Search"
+          onChange={(e) => handleSearchTermChange(e)}
+        />
+        <button onClick={() => setIsModalOpen(true)}>Add image</button>
+        <ImageUploadModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
       {/* catalog table */}
       <div className={styles["catalog-table-wrapper"]}>
@@ -67,9 +86,15 @@ function Catalog() {
           <div className={styles["catalog-table-column-last"]}></div>
         </div>
         {/* catalog table */}
-        {companiesInfo.map((company) => {
-          return <CatalogItem key={company.id} company={company} />;
-        })}
+        {filteredCompanies.length > 0 &&
+          filteredCompanies.map((company) => {
+            return <CatalogItem key={company.id} company={company} />;
+          })}
+        {filteredCompanies.length === 0 && (
+          <p className={styles["catalog-table-no-content"]}>
+            No results found matching your query!
+          </p>
+        )}
         {/* catalog table footer */}
         <div className={styles["catalog-table-footer"]}>
           <button

@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import styles from './ImageUploadModal.module.css';
-import { SVGS } from '../../utils/constants';
-import Modal from '../common/Modal';
+import PropTypes from "prop-types";
+import { useState, useRef } from "react";
+import styles from "./ImageUploadModal.module.css";
+import { SVGS } from "../../utils/constants";
+import Modal from "../common/Modal";
 
 const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   const [dragActive, setDragActive] = useState(false);
@@ -24,7 +25,7 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
     dropEvent.preventDefault();
     dropEvent.stopPropagation();
     setDragActive(false);
-    
+
     const file = dropEvent.dataTransfer.files[0];
     handleFile(file);
   };
@@ -35,17 +36,20 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   };
 
   const handleFile = (file) => {
-    if (file && ['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)) {
+    if (
+      file &&
+      ["image/jpeg", "image/png", "image/svg+xml"].includes(file.type)
+    ) {
       const reader = new FileReader();
       reader.onload = (fileRead) => {
         setSelectedImage({
           preview: fileRead.target.result,
-          file: file
+          file: file,
         });
       };
       reader.readAsDataURL(file);
     } else {
-      alert('Please upload a valid image file (JPG, PNG, or SVG)');
+      alert("Please upload a valid image file (JPG, PNG, or SVG)");
     }
   };
 
@@ -55,23 +59,23 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
       onClose();
     }
   };
-  const onCloseModal=()=>{
+  const onCloseModal = () => {
     onClose();
     setSelectedImage(null);
-  }
+  };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onClose={onCloseModal}
-      customClass={`${styles.imageUploadModal} ${selectedImage ? styles.modalWithImage : ''}`}
+      customClass={`${styles.imageUploadModal} ${selectedImage ? styles.modalWithImage : ""}`}
       size="custom"
       customWidth="500px"
       customHeight="400px"
     >
       {!selectedImage ? (
-        <div 
-          className={`${styles.dropzone} ${dragActive ? styles.dragActive : ''}`}
+        <div
+          className={`${styles.dropzone} ${dragActive ? styles.dragActive : ""}`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
@@ -88,9 +92,9 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
               type="file"
               accept=".jpg,.jpeg,.png,.svg"
               onChange={handleChange}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
-            <button 
+            <button
               className={styles.selectButton}
               onClick={() => inputRef.current.click()}
             >
@@ -100,22 +104,25 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
         </div>
       ) : (
         <div className={styles.previewContainer}>
-          <img 
-            src={selectedImage.preview} 
-            alt="Preview" 
+          <img
+            src={selectedImage.preview}
+            alt="Preview"
             className={styles.imagePreview}
           />
           <p>{selectedImage.file.name}</p>
-          <button 
-            className={styles.uploadButton}
-            onClick={handleUpload}
-          >
+          <button className={styles.uploadButton} onClick={handleUpload}>
             Upload
           </button>
         </div>
       )}
     </Modal>
   );
+};
+
+ImageUploadModal.propTypes = {
+  isOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onUpload: PropTypes.func,
 };
 
 export default ImageUploadModal;

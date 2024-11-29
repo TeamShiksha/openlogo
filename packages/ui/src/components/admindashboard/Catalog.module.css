@@ -40,6 +40,10 @@
   padding: 24px 14px;
   padding-bottom: 8px;
 }
+.catalog-table-no-content {
+  text-align: center;
+  padding: 24px 0;
+}
 
 /* catalog table header */
 .catalog-table-header {
