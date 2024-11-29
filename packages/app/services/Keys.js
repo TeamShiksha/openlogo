@@ -51,20 +51,9 @@ class KeyService {
    * @param {string} apiKey - key uuid()
    * @returns {Promise<boolean>} - True if key exists, otherwise false
    **/
-  async isAPIKeyPresent(apiKey) {
-    const apiKeys = await this.keyRepository.isAPIKeyPresent(apiKey);
-    return apiKeys.length > 0;
-  }
-
-  /**
-   * Fetches user by API key
-   * @param {string} apiKey of user
-   * @returns {Promise<Object>} - User details
-   **/
-  async fetchUser(apiKey) {
-    const key = await this.keyRepository.fetchUser(apiKey);
-    if (!key) return null;
-    return key.user;
+  async getApiKey(apiKey) {
+    const keyRef = await this.keyRepository.getApiKey(apiKey);
+    return keyRef;
   }
 }
 

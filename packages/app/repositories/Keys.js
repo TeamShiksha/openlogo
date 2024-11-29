@@ -45,24 +45,13 @@ class KeysRepository extends BaseRepository {
   }
 
   /**
-   * Checks if a given API key is present in the database.
+   * Gets a given API key from the database.
    * @param {string} apiKey - API key to check.
-   * @returns {Promise<Array<Object>>} - Array of matching keys.
-   *                                   - Returns an empty array if no matches are found.
+   * @returns {Promise<Array<Object>>} - Array of matching keys. Returns an empty array if no matches are found.
    */
-  async isAPIKeyPresent(apiKey) {
-    const keyRef = await Keys.find({ api_key: apiKey });
+  async getApiKey(apiKey) {
+    const keyRef = await Keys.findOne({ api_key: apiKey });
     return keyRef;
-  }
-
-  /**
-   * Fetches a single user based on their API key.
-   * @param {string} apiKey - API key of the user.
-   * @returns {Promise<Object|null>} - User object if found, otherwise null.
-  */
-  async fetchUser(apiKey) {
-    const key = await Keys.findOne({ api_key: apiKey });
-    return key;
   }
 }
 

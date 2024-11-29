@@ -1,9 +1,8 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
-
-const ImageServices = require("../../services/Images");
-const KeyServices = require("../../services/Keys");
-const SubscriptionServices = require("../../services/Subscription");
+const ImageService = require("../../services/Images");
+const KeyService = require("../../services/Keys");
+const SubscriptionService = require("../../services/Subscription");
 
 const getLogoQuerySchema = Joi.object({
   domain: Joi.string()
@@ -23,7 +22,7 @@ const getLogoQuerySchema = Joi.object({
     return helpers.error("Domain cannot be empty");
   }
   return { ...value, company };
-})
+});
 
 /**
  * Handles requests for fetching a company's logo based on a domain and API key.
@@ -31,35 +30,32 @@ const getLogoQuerySchema = Joi.object({
  * Responds with the logo URL or appropriate error messages.
  */
 async function getLogoController(req, res, next) {
-  const imageServices = new ImageServices();
-  const keyServices = new KeyServices();
-  const subscriptionServices = new SubscriptionServices();
-
   try {
+    const imageService = new ImageService();
+    const keyService = new KeyService();
+    const subscriptionService = new SubscriptionService();
+
     const { error, value } = getLogoQuerySchema.validate(req.query);
-    if (!!error) {
+    if (error) {
       return res.status(422).json({
         message: error.message,
         statusCode: 422,
         error: STATUS_CODES[422],
       });
     }
-
     const { company, API_KEY } = value;
 
-    // API Key to user reference does not exists
-    const userId = await keyServices.fetchUser(API_KEY);
-    if (!userId) {
+    const keyRef = await keyService.getApiKey(API_KEY);
+    if (!keyRef) {
       return res.status(403).json({
-        message: "User with this API Key does not exist.",
+        message: "Invalid API_KEY.",
         statusCode: 403,
         error: STATUS_CODES[403],
       });
     }
 
-    // Subscription to user reference does not exists
-    const isExceed = await subscriptionServices.isApiUsageLimitExceed(userId);
-    if (isExceed) {
+    const userSubscription = await subscriptionService.getSubscription(keyRef.subscription_id);
+    if(userSubscription.usage_count>=userSubscription.usage_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
         statusCode: 403,
@@ -67,11 +63,8 @@ async function getLogoController(req, res, next) {
       });
     }
 
-    const imageUrl = await imageServices.fetchImageByCompanyFree(company);
-
-    // Subscription to user reference does not exists
-    await subscriptionServices.updateApiUsageCount(userId);
-
+    const imageUrl = await imageService.fetchImageByCompanyFree(company);
+    await subscriptionService.incrementUsageCount(userSubscription);
     if (!imageUrl) {
       return res.status(404).json({
         message: "Logo not available",
