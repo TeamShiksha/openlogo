@@ -23,7 +23,6 @@
 .closeButton {
   position: absolute;
   right: 1rem;
-  top: 1rem;
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -66,12 +65,20 @@
   font-size: 1rem;
 }
 
-.modalWithImage {
-  background: #f8f8f9;
+.imageUploadModal{
+  background-color: #f8f8f9;
 }
 
 .previewContainer {
   text-align: center;
+  justify-items: center;
+  align-content: center;
+  background-color: #f8f8f9;
+  margin: -42px;
+  padding: 32px;
+  border-radius: 8px;
+  min-height: 390px;
+  height: 100%;
 }
 
 .imagePreview {

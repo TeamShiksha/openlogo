@@ -3,6 +3,7 @@ import curvedArrow from "../assets/curvedArrow.svg";
 import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
+import dragAndDropBg from "../assets/DragAndDropBg.svg"
 
 export const SVGS = {
   searchIcon,
@@ -16,6 +17,7 @@ export const SVGS = {
     "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
   microsoft:
     "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+  dragAndDropBg,
 };
 
 export const COMPANIES = [

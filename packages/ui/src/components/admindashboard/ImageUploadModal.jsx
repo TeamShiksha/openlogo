@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styles from './ImageUploadModal.module.css';
 import { SVGS } from '../../utils/constants';
+import Modal from '../common/Modal';
 
 const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   const [dragActive, setDragActive] = useState(false);
@@ -60,57 +61,60 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   }
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={`${styles.modal} ${selectedImage?styles.modalWithImage:''}`}>
-        <button className={styles.closeButton} onClick={onCloseModal}>×</button>
-        
-        {!selectedImage ? (
-          <div 
-            className={`${styles.dropzone} ${dragActive ? styles.dragActive : ''}`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-          >
-            <div className={styles.dropzoneContent}>
-              <div className={styles.imageIcon}>
-                <img src={SVGS.dragAndDropBg}/>
-              </div>
-              <p>Drop and drop image</p>
-              <p>OR</p>
-              <input
-                ref={inputRef}
-                type="file"
-                accept=".jpg,.jpeg,.png,.svg"
-                onChange={handleChange}
-                style={{ display: 'none' }}
-              />
-              <button 
-                className={styles.selectButton}
-                onClick={() => inputRef.current.click()}
-              >
-                Select an image
-              </button>
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onCloseModal}
+      customClass={`${styles.imageUploadModal} ${selectedImage ? styles.modalWithImage : ''}`}
+      size="custom"
+      customWidth="500px"
+      customHeight="400px"
+    >
+      {!selectedImage ? (
+        <div 
+          className={`${styles.dropzone} ${dragActive ? styles.dragActive : ''}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
+          <div className={styles.dropzoneContent}>
+            <div className={styles.imageIcon}>
+              <img src={SVGS.dragAndDropBg} alt="Upload icon" />
             </div>
-          </div>
-        ) : (
-          <div className={styles.previewContainer}>
-            <img 
-              src={selectedImage.preview} 
-              alt="Preview" 
-              className={styles.imagePreview}
+            <p>Drop and drop image</p>
+            <p>OR</p>
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".jpg,.jpeg,.png,.svg"
+              onChange={handleChange}
+              style={{ display: 'none' }}
             />
-            <p>{selectedImage.file.name}</p>
             <button 
-              className={styles.uploadButton}
-              onClick={handleUpload}
+              className={styles.selectButton}
+              onClick={() => inputRef.current.click()}
             >
-              Upload
+              Select an image
             </button>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      ) : (
+        <div className={styles.previewContainer}>
+          <img 
+            src={selectedImage.preview} 
+            alt="Preview" 
+            className={styles.imagePreview}
+          />
+          <p>{selectedImage.file.name}</p>
+          <button 
+            className={styles.uploadButton}
+            onClick={handleUpload}
+          >
+            Upload
+          </button>
+        </div>
+      )}
+    </Modal>
   );
 };
 
