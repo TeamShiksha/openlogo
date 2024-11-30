@@ -63,6 +63,34 @@ export const featureItems = [
   },
 ];
 
+export const headerItems = [
+  {
+    name: "demo",
+    title: "Demo",
+    url: "/demo",
+  },
+  {
+    name: "docs",
+    title: "Docs",
+    url: "/docs",
+  },
+  {
+    name: "features",
+    title: "Features",
+    url: "/features",
+  },
+  {
+    name: "pricing",
+    title: "Pricing",
+    url: "/pricing",
+  },
+  {
+    name: "about",
+    title: "About Us",
+    url: "/about",
+  },
+]
+
 export const INFO = [
 	{title: 'Users', api: 5.2},
 	{title: 'Keys', api: -6.8},

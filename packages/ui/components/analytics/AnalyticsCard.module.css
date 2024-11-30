@@ -7,6 +7,15 @@
   align-items: center;
   gap: 40px;
   flex: 1 0 0;
+  font-family: Inter;
+  font-style: normal;
+  line-height: normal;
+}
+.cardGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
 }
 .cardContent {
   display: flex;
@@ -14,12 +23,6 @@
   padding: 0 100px;
   justify-content: space-between;
   align-items: last baseline;
-  gap: 40px;
-}
-.cardTitle, .cardValue, .changeValuePositive, .changeValueNegative, .trackingText {
-  font-family: Inter;
-  font-style: normal;
-  line-height: normal;
 }
 .cardTitle {
   color: #475467;
@@ -32,28 +35,25 @@
   font-size: 64px;
   font-weight: 600;
 }
-.changeValuePositive, .changeValueNegative {
+.changeValuePositive {
+  color: #00b69b;
   font-size: 20px;
   font-weight: 600;
 }
-.changeValuePositive {
-  color: #00b69b;
-}
 .changeValueNegative {
   color: #f93c65;
+  font-size: 20px;
+  font-weight: 600;
 }
 .trackingText {
   color: #667085;
   font-size: 16px;
   font-weight: 400;
-  white-space: nowrap;
 }
-.leftContent, .rightContent {
+.leftContent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-}
-.leftContent {
   gap: 16px;
 }
 .rightContent {
@@ -61,8 +61,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  min-width: 100px;
-  text-align: right;
 }
 .changeGraph {
   width: 50px;
@@ -72,33 +70,52 @@
 /* Mobile styles */
 @media (max-width: 768px) {
   .card {
-    padding: 32px 0px;
+    border-radius: 16px;
+    background: #f8f8f9;
+    display: flex;
+    padding: 32px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    align-self: stretch;
     height: auto;
   }
-  .cardContent {
-    padding: 0 15px;
-  }
   .cardTitle {
+    color: #475467;
     font-size: 20px;
     letter-spacing: 0.4px;
   }
-  .cardValue {
-    font-size: 36px;
-    min-width: 100px;
+  .cardContent {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 24px;
   }
-  .changeValuePositive, .changeValueNegative {
+  .cardValue {
+    color: var(--Primary-blue,#4f46e5);
+    font-size: 36px;
+  }
+  .changeValueNegative,
+  .changeValuePositive {
     font-size: 16px;
   }
   .trackingText {
+    color: #667085;
     font-size: 14px;
   }
   .leftContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
-    width: 150px;
+    width: auto;
   }
   .rightContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
-    min-width: 80px;
   }
   .changeGraph {
     width: 39.429px;
