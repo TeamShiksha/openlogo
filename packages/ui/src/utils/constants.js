@@ -3,7 +3,7 @@ import curvedArrow from "../assets/curvedArrow.svg";
 import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
-import dragAndDropBg from "../assets/DragAndDropBg.svg"
+import dragAndDropBg from "../assets/DragAndDropBg.svg";
 
 export const SVGS = {
   searchIcon,
@@ -66,6 +66,34 @@ export const featureItems = [
     title: "Fast & Reliable API Access",
     content:
       "Access logos instantly with fast, dependable APIs built to minimize downtime and maximize efficiency.",
+  },
+];
+
+export const headerItems = [
+  {
+    name: "demo",
+    title: "Demo",
+    url: "/demo",
+  },
+  {
+    name: "docs",
+    title: "Docs",
+    url: "/docs",
+  },
+  {
+    name: "features",
+    title: "Features",
+    url: "/features",
+  },
+  {
+    name: "pricing",
+    title: "Pricing",
+    url: "/pricing",
+  },
+  {
+    name: "about",
+    title: "About Us",
+    url: "/about",
   },
 ];
 

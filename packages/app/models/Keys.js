@@ -20,6 +20,10 @@ const keySchema = new mongoose.Schema({
   updated_at: { 
     type: Date,
     default: Date.now 
+  },
+  subscription_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "subscriptions",
   }
 });
 
@@ -39,6 +43,7 @@ keySchema.methods.data = function() {
     _id: this._id,
     key_description: this.key_description,
     api_key: this.api_key,
+    subscription_id: this.subscription_id,
     created_at: this._id.getTimestamp(),
     updated_at: this.updated_at,
   };
