@@ -98,7 +98,7 @@ function Catalog() {
         {/* catalog table footer */}
         <div className={styles["catalog-table-footer"]}>
           <button
-            onClick={(e) => handlePreviousBtnClick(e)}
+            onClick={handlePreviousBtnClick}
             className={`${pageNum === 0 && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-left-arrow"]}`}
           >
             <img src={leftArrow} alt="left-arrow" />
@@ -107,7 +107,7 @@ function Catalog() {
             Page {pageNum + 1} of {totalPages + 1}
           </div>
           <button
-            onClick={(e) => handleNextBtnClick(e)}
+            onClick={handleNextBtnClick}
             className={`${pageNum === totalPages && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-right-arrow"]}`}
           >
             <img src={rightArrow} alt="right-arrow" />
