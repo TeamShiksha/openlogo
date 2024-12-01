@@ -12,7 +12,7 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/about" element={<Navigate to="/about" />} />
+        <Route path="/about" element={<About />} />
         <Route
           path="/admin"
           element={
