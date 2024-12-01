@@ -57,7 +57,6 @@ async function searchLogoController(req, res, next) {
     }
 
     const userSubscription = await subscriptionService.getSubscription(keyRef.subscription_id);
-    console.log(userSubscription);
     if(userSubscription.usage_count>=userSubscription.usage_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
