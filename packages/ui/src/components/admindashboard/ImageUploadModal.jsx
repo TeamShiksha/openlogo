@@ -120,7 +120,7 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
 };
 
 ImageUploadModal.propTypes = {
-  isOpen: PropTypes.func.isRequired,
+  isOpen: PropTypes.boolean.isRequired,
   onClose: PropTypes.func.isRequired,
   onUpload: PropTypes.func,
 };
