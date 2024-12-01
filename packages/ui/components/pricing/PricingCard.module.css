@@ -1,0 +1,112 @@
+.cardMainDiv{
+    background: rgba(255, 255, 255, 1);
+    border-radius: 16px;
+    overflow: hidden;
+    width: 23vw;
+    margin-top: 40px;
+}
+
+.secondCard{
+    margin-top: 12px;
+}
+
+.cardSubDiv{
+    padding: 0px 75px;
+}
+
+.planPrice{
+    color: rgba(16, 24, 40, 1);
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.planName{
+    color: rgba(16, 24, 40, 1);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0px;
+}
+
+.planTagline{
+    color: rgba(71, 84, 103, 1);
+    font-size: 16px;
+    margin: 5px 0px 15px 0px;
+}
+
+.planKeypoints{
+    color: rgba(71, 84, 103, 1);
+    text-align: left;
+    margin-top: 6px;
+}
+
+.planKeypoints>div{
+    display: flex;
+}
+
+.tickIcon{
+    margin-right: 10px;
+}
+
+.popularPlan{
+    background-color: rgba(225, 231, 239, 1);
+    color: rgba(79, 70, 229, 1);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 0px;
+}
+
+.getStartedBtn{
+    background-color: rgba(79, 70, 229, 1);
+    margin: 20px 0px 30px 0px;
+    width: 100%;
+    outline: none;
+    padding: 12px 0px;
+}
+
+.cardMainDiv:nth-child(2) .getStartedBtn {
+    margin: 10px 0px 30px 0px;
+}
+
+
+
+/* Media Queries for Responsive Design */
+
+/* For Phones */
+@media (max-width: 576px) {
+    .cardMainDiv{
+        width: 100%;
+    }
+
+    .cardSubDiv{
+        padding: 0px 15px;
+    }
+}
+
+/* For Large Phones */
+@media (min-width: 576px) and (max-width: 768px) {
+    .cardMainDiv{
+        width: 100%;
+    }
+
+    .cardSubDiv{
+        padding: 0px 15px;
+    }
+}
+
+/* For Tablets */
+@media (min-width: 768px) and (max-width:1250px){
+    .cardMainDiv{
+        width: 40vw;
+    }
+
+    .cardSubDiv{
+        padding: 0px 15px;
+    }
+}
+
+
+@media (min-width: 1250px) and (max-width:1700px){
+    .cardSubDiv{
+        padding: 0px 22px;
+    }
+}

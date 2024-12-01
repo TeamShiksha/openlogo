@@ -41,7 +41,6 @@ const subscriptionSchema = new mongoose.Schema({
 
 subscriptionSchema.statics.NewSubscription = function (userId) {
   return {
-    user: userId,
     subscriptionType: SubscriptionTypes.HOBBY,
     key_limit: 2,
     usage_limit: 500,
@@ -53,7 +52,6 @@ subscriptionSchema.statics.NewSubscription = function (userId) {
 subscriptionSchema.methods.data = function () {
   return {
     _id: this._id,
-    user:this.user,
     type: this.type,
     key_limit: this.key_limit,
     usage_limit: this.usage_limit,
