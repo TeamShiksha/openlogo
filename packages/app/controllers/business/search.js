@@ -47,21 +47,21 @@ async function searchLogoController(req, res, next) {
     }
     const { API_KEY, companyNameBeginsWith } = value;
 
-    const keyRef = await keyService.getApiKey(API_KEY);
-    if (!keyRef) {
+    const key = await keyService.getApiKey(API_KEY);
+    if (!key) {
       return res.status(403).json({
-        message: "Invalid API_KEY.",
-        statusCode: 403,
+        message: "Invalid API KEY.",
         error: STATUS_CODES[403],
+        statusCode: 403,
       });
     }
 
-    const userSubscription = await subscriptionService.getSubscription(keyRef.subscription_id);
-    if(userSubscription.usage_count>=userSubscription.usage_limit) {
+    const subscription = await subscriptionService.getSubscription(key.subscription_id);
+    if(subscription.usage_count>=subscription.usage_limit) {
       return res.status(403).json({
-        message: "Limit reached. Consider upgrading your plan",
-        statusCode: 403,
+        message: "Subscription Limit reached. Consider upgrading your plan",
         error: STATUS_CODES[403],
+        statusCode: 403,
       });
     }
 
@@ -76,7 +76,7 @@ async function searchLogoController(req, res, next) {
     }
 
     const dataList = await imageServices.getDataList(companyList);
-    await subscriptionService.incrementUsageCount(userSubscription);
+    await subscriptionService.incrementUsageCount(subscription);
     return res.status(200).json({
       statusCode: 200,
       data: dataList,
