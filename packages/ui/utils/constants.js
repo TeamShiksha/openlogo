@@ -41,3 +41,16 @@ const PLANS = [
   ]
 
   export default PLANS
+
+  export const SETTING = [
+    {
+      title: 'Download account data',
+      subtitle: 'Download your account data and move to other device with ease.',
+      buttontitle: 'Download',
+    },
+    {
+      title: 'Delete account',
+      subtitle: 'This will permanently delete your account and all associated data.',
+      buttontitle: 'Delete Account',
+    },
+  ];
