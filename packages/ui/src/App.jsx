@@ -1,17 +1,17 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import Demo from "./components/demo/Demo";
-import HeroSection from "./components/HeroSection/HeroSection";
 import AdminDashboard from "./pages/admin/Admin";
 import About from "./pages/about/About";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import "./App.css";
+import Home from "./pages/home/Home";
 
 function App() {
   return (
     <>
       <Header />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"
