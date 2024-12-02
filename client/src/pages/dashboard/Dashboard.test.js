@@ -51,7 +51,7 @@ describe('Dashboard Component', () => {
 		expect(usageComponent).toBeInTheDocument();
 		const apiKeyFormComponent = screen.getByText('Generate your API key');
 		expect(apiKeyFormComponent).toBeInTheDocument();
-		const apiKeyTableComponent = screen.getByText('DESCRIPTION');
+		const apiKeyTableComponent = screen.getByText('Description');
 		expect(apiKeyTableComponent).toBeInTheDocument();
 	});
 

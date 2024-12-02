@@ -248,7 +248,7 @@
 .api-key-table {
 	padding: 0px;
 	width: 100%;
-	text-align: center;
+	text-align: start;
 }
 
 .api-key-table .content-item-heading {
@@ -259,22 +259,26 @@
 .api-key-table table {
 	font-style: normal;
 	font-size: var(--medium-text);
+	background-color: rgb(247, 245, 247);
 	line-height: 175%;
 	border-spacing: 0;
 	white-space: nowrap;
 }
 
 .api-key-table thead tr th {
-	background-color: rgb(226, 224, 224);
 	padding: 8px;
-	font-weight: 500;
+	padding-left: 15px;
+	background-color: rgb(247, 245, 247);
+	font-weight: 400;
+	text-align: start;
 	color: var(--smooth-gray);
 }
 
 .api-key-table tbody tr td {
 	padding: 8px;
+	padding-left: 15px;
 	font-weight: 400;
-	color: var(--smooth-gray);
+	color: black;
 	border-top: var(--border);
 }
 
@@ -287,7 +291,9 @@
 .api-key-delete-button {
 	margin: 0 auto;
 	border: none;
-	border-radius: 99px;
+	color: red;
+	background-color: #fff;
+	border-radius: 5px;
 	display: flex;
 	align-items: center;
 	padding: 8px 12px;

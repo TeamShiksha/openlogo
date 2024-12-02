@@ -25,9 +25,9 @@ function ApiKeyTable({keys, deleteKey, handleCloseKey}) {
 				<table>
 					<thead>
 						<tr>
-							<th>DESCRIPTION</th>
-							<th>ACTION</th>
-							<th>CREATE DATE</th>
+							<th>Description</th>
+							<th>Created </th>
+							{/* <th>CREATE DATE</th> */}
 						</tr>
 					</thead>
 					<tbody>
@@ -42,16 +42,17 @@ function ApiKeyTable({keys, deleteKey, handleCloseKey}) {
 						{keys.map((key, index) => (
 							<tr key={index}>
 								<td>{key.keyDescription}</td>
+								<td>{formatDate(key?.createdAt)}</td>
 								<td>
 									<button
 										className='api-key-delete-button'
 										data-testid='api-key-delete'
 										onClick={() => showConfirmationModal(key.keyId)}
 									>
-										<MdDeleteOutline />
+										{/* <MdDeleteOutline /> */}
+										Delete
 									</button>
 								</td>
-								<td>{formatDate(key?.createdAt)}</td>
 							</tr>
 						))}
 					</tbody>
