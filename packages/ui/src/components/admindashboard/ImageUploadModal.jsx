@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState, useRef } from "react";
 import styles from "./ImageUploadModal.module.css";
 import { SVGS } from "../../utils/constants";
-import Modal from "../common/Modal";
+import Modal from "../common/modal/Modal";
 
 const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   const [dragActive, setDragActive] = useState(false);
@@ -120,7 +120,7 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
 };
 
 ImageUploadModal.propTypes = {
-  isOpen: PropTypes.boolean.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onUpload: PropTypes.func,
 };
