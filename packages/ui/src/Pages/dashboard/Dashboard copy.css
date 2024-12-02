@@ -148,14 +148,6 @@
 	border: var(--border);
 }
 
-.content-item-heading {
-	color: var(--black);
-	font-size: var(--large-text);
-	font-weight: 500;
-	line-height: 20px;
-	margin: 0;
-}
-
 .usage-body-container {
 	display: flex;
 	gap: 4px;
