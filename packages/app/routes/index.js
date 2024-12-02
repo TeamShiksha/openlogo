@@ -16,6 +16,8 @@ const authRouter = require("./auth");
 }; */
 
 router.use("/operator", operatorRouter);
+
+
 router.use("/user", userRouter);
 router.use("/auth", authRouter);
 

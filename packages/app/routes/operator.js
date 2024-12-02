@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const revertToCustomerController = require("../controllers/operator/revert");
+const getOperatorDataController = require("../controllers/operator/data");
 //const authMiddleware = require("../middlewares/auth");
 
 router.put(
@@ -8,6 +9,7 @@ router.put(
     revertToCustomerController
   );
 
+  router.get('/', getOperatorDataController);  
 
-  
+
   module.exports = router;

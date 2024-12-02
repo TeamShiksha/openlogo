@@ -58,15 +58,16 @@ class ContactUsService {
   async updateForm(formId, reply, operatorId) {
     try {
       const currentForm = await this.contactUsRepository.getById(formId);  // Updated to use getById
+      console.log("currentForm",currentForm)
       if (!currentForm) throw new Error('Form not found');
-      if (currentForm.activityStatus) {
+      if (currentForm.status==="RESOLVED") {
         return { alreadyReplied: true };
       }
 
       const updateData = {
-        reply,
-        activityStatus: true,
-        assignedTo: operatorId
+        comment:reply,
+        status: "RESOLVED"
+       // assignedTo: operatorId
       };
 
       const result = await this.contactUsRepository.updateFormStatus(formId, updateData);

@@ -27,9 +27,7 @@ async function getOperatorDataController(req, res, next) {
         error: STATUS_CODES[422],
       });
     }
-
     const { page, limit } = req.query;
-
     // Retrieve paginated data using the repository
     const { data, total, currentPage, totalPages } = await contactUsRepository.getAll(
       parseInt(page),
