@@ -441,3 +441,10 @@ export const companies = [
     updatedAt: "05 May 2024",
   },
 ];
+
+export const INFO = [
+  { title: "Users", api: 5.2 },
+  { title: "Keys", api: -6.8 },
+  { title: "Hits", api: 9.2 },
+  { title: "Requests", api: -5.3 },
+];
