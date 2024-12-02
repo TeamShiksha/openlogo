@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import {MdDeleteOutline} from 'react-icons/md';
 import {formatDate} from '../../utils/helpers';
 import Modal from '../common/modal/Modal';
 import {useRef, useState} from 'react';
