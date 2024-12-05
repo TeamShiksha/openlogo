@@ -1,6 +1,6 @@
 import styles from "./CurrentPlan.module.css";
 
-function CurrentPlan({}) {
+function CurrentPlan() {
   return (
     <div className={styles.dashboardContentItem}>
       <div className={styles.currentPlanHeader}>

@@ -24,7 +24,6 @@
 	font-size: var(--medium-text);
 	line-height: 20px;
 	font-weight: 400;
-	/* margin-bottom: 30px; */
 	margin-bottom: 20px;
 }
 
@@ -48,7 +47,6 @@
 	padding: 12px;
 	font-size: 16px;
 	font-weight: 500;
-	/* width: 70%; */
 	border-radius: var(--bradius);
 	box-shadow: var(--shadow);
 	border: var(--border);

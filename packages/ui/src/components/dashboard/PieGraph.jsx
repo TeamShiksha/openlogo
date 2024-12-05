@@ -27,10 +27,10 @@ const Circle = ({colour, pct, strokeWidth, fill}) => {
 };
 
 Circle.propTypes = {
-	colour: PropTypes.string.isRequired,
-	pct: PropTypes.number.isRequired,
-	strokeWidth: PropTypes.number.isRequired,
-	fill: PropTypes.string.isRequired,
+	colour: PropTypes.string,
+	pct: PropTypes.number,
+	strokeWidth: PropTypes.number,
+	fill: PropTypes.string,
 };
   
 Circle.defaultProps = {
@@ -55,8 +55,8 @@ const Text = ({percentage, fontSize}) => {
 };
 
 Text.propTypes = {
-	percentage: PropTypes.number.isRequired,
-	fontSize: PropTypes.string.isRequired
+	percentage: PropTypes.number,
+	fontSize: PropTypes.string
 };
   
 Text.defaultProps = {
@@ -95,10 +95,10 @@ PieGraph.defaultProps = {
 };
 
 PieGraph.propTypes = {
-	percentage: PropTypes.number.isRequired,
-	colour: PropTypes.string.isRequired,
-	strokeWidth: PropTypes.number.isRequired,
-	fontSize: PropTypes.string.isRequired
+	percentage: PropTypes.number,
+	colour: PropTypes.string,
+	strokeWidth: PropTypes.number,
+	fontSize: PropTypes.string
 };
 
 export default PieGraph;
