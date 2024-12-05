@@ -1,33 +1,30 @@
-import './CustomInput.css';
+import styles from "./CustomInput.module.css";
+import PropTypes from 'prop-types';
 
-function CustomInput({
-	type,
-	label,
-	value,
-	name,
-	onChange,
-	error,
-	className,
-	...rest
-}) {
-	return (
-		<div className='custom-input-group'>
-			<input
-				type={type}
-				id={label}
-				name={name}
-				value={value}
-				onChange={onChange}
-				required
-				className={`custom-input ${className}`}
-				{...rest}
-			/>
-			<label className='custom-input-label' htmlFor={label}>
-				{label}
-			</label>
-			{error && <p className='custom-input-error'>{error}</p>}
-		</div>
-	);
+function CustomInput({ type, name, label, error, className }) {
+  return (
+    <div className={styles.customInputGroup}>
+      <input
+        type={type}
+        id={label}
+        name={name}
+        className={`${styles.customInput} ${className}`}
+      />
+      <label className={styles.customInputLabel} htmlFor={label}>
+        {label}
+      </label>
+      {error && <p className={styles.customInputError}>{error}</p>}
+    </div>
+  );
 }
+
+
+CustomInput.propTypes = {
+	type: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	error: PropTypes.number.isRequired,
+	className: PropTypes.string.isRequired
+};
 
 export default CustomInput;

@@ -1,7 +1,11 @@
+import PropTypes from 'prop-types';
+
 const cleanPercentage = (percentage) => {
 	const tooLow = !Number.isFinite(+percentage) || percentage < 0;
 	const tooHigh = percentage > 100;
-	return tooLow ? 0 : tooHigh ? 100 : +percentage;
+	if (tooLow) return 0;
+	if (tooHigh) return 100;
+	return +percentage;
 };
 
 const Circle = ({colour, pct, strokeWidth, fill}) => {
@@ -22,6 +26,20 @@ const Circle = ({colour, pct, strokeWidth, fill}) => {
 	);
 };
 
+Circle.propTypes = {
+	colour: PropTypes.string.isRequired,
+	pct: PropTypes.number.isRequired,
+	strokeWidth: PropTypes.number.isRequired,
+	fill: PropTypes.string.isRequired,
+};
+  
+Circle.defaultProps = {
+	colour: "#000",
+	pct: 0,
+	strokeWidth: 5,
+	fill: "none",
+};
+
 const Text = ({percentage, fontSize}) => {
 	return (
 		<text
@@ -36,7 +54,17 @@ const Text = ({percentage, fontSize}) => {
 	);
 };
 
-function PieGraph({percentage, colour, strokeWidth, fontSize, fill}) {
+Text.propTypes = {
+	percentage: PropTypes.number.isRequired,
+	fontSize: PropTypes.string.isRequired
+};
+  
+Text.defaultProps = {
+	percentage: 20,
+	fontSize: '1.5em'
+};
+
+function PieGraph({percentage, colour, strokeWidth, fontSize}) {
 	const pct = cleanPercentage(percentage);
 	return (
 		<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
@@ -64,6 +92,13 @@ function PieGraph({percentage, colour, strokeWidth, fontSize, fill}) {
 PieGraph.defaultProps = {
 	strokeWidth: 12,
 	fontSize: '1.5em',
+};
+
+PieGraph.propTypes = {
+	percentage: PropTypes.number.isRequired,
+	colour: PropTypes.string.isRequired,
+	strokeWidth: PropTypes.number.isRequired,
+	fontSize: PropTypes.string.isRequired
 };
 
 export default PieGraph;

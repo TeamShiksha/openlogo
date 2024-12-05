@@ -1,8 +1,7 @@
 import PieGraph from '../PieGraph';
 import styles from './Usage.module.css'
 
-function Usage({usedCalls, totalCalls}) {
-	const percentage = (usedCalls / totalCalls) * 100;
+function Usage() {
 
 	return (
 		<div className={styles.dashboardContentItem}>

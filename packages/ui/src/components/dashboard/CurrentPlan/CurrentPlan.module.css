@@ -35,6 +35,13 @@
 	border-radius: var(--bradius);
 	box-shadow: var(--shadow);
 	border: var(--border);
+	cursor: pointer;
+	min-height: 39px;
+	padding: 12px;
+	margin-top: 12px;
+	font-size: 16px;
+	font-weight: 500;
+	width: 100%;
 }
 
 .dashboardContentItem .apikeyInput {
@@ -79,17 +86,4 @@
     padding: 8px 14px;
     font-size: 13px;
 	font-weight: 500;
-}
-
-.dashboardContentItem > button {
-    border: var(--border);
-    box-shadow: var(--shadow);
-    color: var(--black);
-    cursor: pointer;
-    min-height: 39px;
-    padding: 12px;
-	margin-top: 12px;
-    font-size: 16px;
-    font-weight: 500;
-    width: 100%;
 }
