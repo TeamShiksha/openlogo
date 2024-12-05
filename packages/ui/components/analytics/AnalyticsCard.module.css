@@ -1,0 +1,108 @@
+.card {
+  border-radius: 16px;
+  background: #f8f8f9;
+  display: flex;
+  padding: 96px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex: 1 0 0;
+  font-family: Inter;
+  font-style: normal;
+  line-height: normal;
+}
+.cardGroup, 
+.leftContent, 
+.rightContent {
+  display: flex;
+  align-items: flex-start;
+}
+.cardContent {
+  display: flex;
+  width: 100%;
+  padding: 0 100px;
+  justify-content: space-between;
+  align-items: last baseline;
+}
+.cardTitle, 
+.trackingText {
+  color: #475467;
+  font-weight: 400;
+}
+.cardTitle {
+  font-size: 24px;
+  letter-spacing: 0.48px;
+}
+.cardValue {
+  color: var(--Primary-blue, #4f46e5);
+  font-size: 64px;
+  font-weight: 600;
+}
+.changeValuePositive,
+.changeValueNegative {
+  font-size: 20px;
+  font-weight: 600;
+}
+.changeValuePositive { color: #00b69b; }
+.changeValueNegative { color: #f93c65; }
+.trackingText {
+  font-size: 16px;
+}
+.leftContent {
+  flex-direction: column;
+  gap: 16px;
+}
+.rightContent {
+  flex-direction: column;
+  gap: 8px;
+}
+.changeGraph {
+  width: 50px;
+  height: 30px;
+}
+
+/* Separate Mobile Styles */
+@media (max-width: 768px) {
+  .card {
+      padding: 32px 16px;
+      height: auto;
+  }
+
+  .cardContent {
+      align-items: flex-start;
+      gap: 8px;
+      padding: 0 24px;
+  }
+
+  .cardTitle {
+      font-size: 20px;
+      letter-spacing: 0.4px;
+  }
+
+  .cardValue {
+      font-size: 36px;
+  }
+
+  .changeValuePositive,
+  .changeValueNegative {
+      font-size: 16px;
+  }
+
+  .trackingText {
+      font-size: 14px;
+  }
+
+  .leftContent {
+      gap: 4px;
+      width: auto;
+  }
+
+  .rightContent {
+      gap: 4px;
+  }
+
+  .changeGraph {
+      width: 39.429px;
+      height: 24px;
+  }
+}
