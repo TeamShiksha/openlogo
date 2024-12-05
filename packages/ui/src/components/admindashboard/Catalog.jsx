@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import searchLogo from "../../assets/searchIcon.svg";
@@ -18,10 +18,6 @@ function Catalog() {
   const skip = pageNum;
   const skipCount = skip * limit;
 
-  useEffect(() => {
-    setSearchTerm("");
-  }, [pageNum]);
-
   const companiesInfo = companies.slice(
     skipCount,
     Math.min(skipCount + limit, companies.length)
@@ -38,12 +34,15 @@ function Catalog() {
     if (pageNum == 0) {
       return;
     }
+    setSearchTerm("");
     setPageNum((prevPageNum) => prevPageNum - 1);
   };
+
   const handleNextBtnClick = () => {
     if (pageNum == totalPages) {
       return;
     }
+    setSearchTerm("");
     setPageNum((prevPageNum) => prevPageNum + 1);
   };
 
@@ -58,7 +57,7 @@ function Catalog() {
         />
         <input
           value={searchTerm}
-          type="text"
+          type="search"
           placeholder="Search"
           onChange={(e) => handleSearchTermChange(e)}
         />
@@ -104,7 +103,8 @@ function Catalog() {
             <img src={leftArrow} alt="left-arrow" />
           </button>
           <div>
-            Page {pageNum + 1} of {totalPages + 1}
+            Page <span className={styles["cur-page"]}>{pageNum + 1}</span> of{" "}
+            {totalPages + 1}
           </div>
           <button
             onClick={handleNextBtnClick}

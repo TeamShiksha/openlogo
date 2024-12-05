@@ -1,7 +1,7 @@
 /* catalog wrapper styles */
 .catalog-wrapper {
   margin: 16px;
-  background-color: #f8f8f9;
+  background-color: var(--gray-drag-drop-background);
   padding: 8px;
   border-radius: 16px;
 }
@@ -29,8 +29,8 @@
   color: white;
   padding: 12px;
   border-radius: 8px;
-  background-color: #4f46e5;
-  border: 1px #4f46e5;
+  background-color: var(--smooth-purple);
+  border: 1px var(--smooth-purple);
   font-weight: 600;
   cursor: pointer;
 }
@@ -50,8 +50,8 @@
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 2px solid #eaecf0;
-  color: #667085;
+  border-bottom: var(--border);
+  color: var(--smooth-gray);
   gap: 16px;
 }
 .catalog-table-header-inner {
@@ -81,14 +81,14 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  color: #344054;
+  color: var(--description);
 }
 
 .catalog-footer-nav-btn {
   padding: 8px 14px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid var(--table-heading-bg);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--white);
   display: flex;
   gap: 8px;
   align-items: center;
@@ -105,6 +105,11 @@
 .catalog-footer-nav-btn-disable {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.cur-page {
+  color: var(--black);
+  font-weight: bolder;
 }
 
 /* mobile layout styles for catalog header and footer */
