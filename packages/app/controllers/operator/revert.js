@@ -30,9 +30,13 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
       "string.pattern.base": "Reply should only contain alphabets",
     }),
 });
-
+/**
+* Controller responsible for responding back to customer.
+* Based on there queries. Uses `id` to identify the queries
+* and on sending the reponse the customer receives an email.
+*/
 async function revertToCustomerController(req, res, next) {
-  console.log('User data in controller:', req.userData); // Check if userData is available
+  console.log('User data in controller:', req.userData); 
 
   const contactUsService = new ContactUsService();
   try {
@@ -44,11 +48,8 @@ async function revertToCustomerController(req, res, next) {
         statusCode: 422,
       });
     }
-
     const { id, reply } = value;
-
-    // Check if the form with provided ID exists
-    const formExists = await contactUsService.getById(id);  // Use getById here
+    const formExists = await contactUsService.getForm(id); 
     if (!formExists) {
       return res.status(404).json({
         statusCode: 404,
@@ -56,8 +57,7 @@ async function revertToCustomerController(req, res, next) {
         message: "Form not found",
       });
     }
-
-    const revertForm = await contactUsService.updateForm(id, reply); // Proceed to update form
+    const revertForm = await contactUsService.updateForm(id, reply); 
     if (revertForm?.alreadyReplied) {
       return res.status(409).json({
         statusCode: 409,
@@ -65,7 +65,6 @@ async function revertToCustomerController(req, res, next) {
         message: "Already sent the response for this query!",
       });
     }
-
     return res.status(200).json({
       message: "Form updated successfully",
       data: revertForm,
@@ -74,5 +73,4 @@ async function revertToCustomerController(req, res, next) {
     next(error);
   }
 }
-
 module.exports = revertToCustomerController;

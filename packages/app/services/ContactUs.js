@@ -1,10 +1,8 @@
 const ContactUsRepository = require('../repositories/ContactUs');
-
 class ContactUsService {
   constructor() {
     this.contactUsRepository = new ContactUsRepository();
   }
-
   /**
    * Checks if a form already exists for a given email and is active.
    * @param {string} email - The email to search for in the contact forms.
@@ -19,10 +17,8 @@ class ContactUsService {
       throw error;
     }
   }
-
   /**
    * Creates a new contact form.
-   * 
    * @param {Object} formData - The data for the new contact form.
    * @param {string} formData.name - The name of the user submitting the form.
    * @param {string} formData.email - The email of the user submitting the form.
@@ -45,10 +41,8 @@ class ContactUsService {
       throw error;
     }
   }
-
   /**
    * Updates the contact form with a reply and assigns it to an operator.
-   * 
    * @param {string} formId - The ID of the contact form to update.
    * @param {string} reply - The reply message to associate with the form.
    * @param {string} operatorId - The ID of the operator handling the form.
@@ -57,7 +51,7 @@ class ContactUsService {
    */
   async updateForm(formId, reply, operatorId) {
     try {
-      const currentForm = await this.contactUsRepository.getById(formId);  // Updated to use getById
+      const currentForm = await this.contactUsRepository.getById(formId);  
       console.log("currentForm",currentForm)
       if (!currentForm) throw new Error('Form not found');
       if (currentForm.status==="RESOLVED") {
@@ -84,14 +78,14 @@ class ContactUsService {
       throw error;
     }
   }
-
   /**
    * Retrieves a form by its ID.
    * @param {string} formId - The ID of the form to retrieve.
    * @returns {Object|null} - The form object if found, otherwise null.
    * @throws {Error} - Throws an error if there is an issue querying the database.
    */
-  async getById(formId) {
+  async getForm(formId) {
+    //getForm - check it again for try-catch 
     try {
       return await this.contactUsRepository.getById(formId);  // Fetches form by ID
     } catch (error) {

@@ -13,13 +13,17 @@ const querySchema = Joi.object({
     "number.base": "Limit number is required",
   }),
 });
-
+/**
+ * Controller responsible for handling data fetching with pagination.
+ * This controller is designed to fetch a subset of data based on pagination parameters 
+ * (`page` and `limit`) provided in the query string of the request. It validates the 
+ * incoming query parameters to ensure correctness using Joi, and handles potential 
+ * errors gracefully by returning appropriate HTTP status codes and error messages.
+*/
 async function getOperatorDataController(req, res, next) {
   const contactUsRepository = new ContactUsRepository();
-
   try {
     const { error } = querySchema.validate(req.query);
-
     if (error) {
       return res.status(422).json({
         message: error.message,
@@ -28,12 +32,10 @@ async function getOperatorDataController(req, res, next) {
       });
     }
     const { page, limit } = req.query;
-    // Retrieve paginated data using the repository
     const { data, total, currentPage, totalPages } = await contactUsRepository.getAll(
       parseInt(page),
       parseInt(limit)
     );
-
     if (!data || data.length === 0) {
       return res.status(404).json({
         statusCode: 404,
@@ -41,7 +43,6 @@ async function getOperatorDataController(req, res, next) {
         message: "Data not found!",
       });
     }
-
     return res.status(200).json({
       message: "Successful",
       statusCode: 200,
@@ -55,5 +56,4 @@ async function getOperatorDataController(req, res, next) {
     next(err);
   }
 }
-
 module.exports = getOperatorDataController;
