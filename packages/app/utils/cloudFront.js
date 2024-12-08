@@ -25,9 +25,9 @@ function cloudFrontSignedURL(path) {
   };
 }
 
-/*
+/* 
  * Function to invalidate CloudFront cache
- *
+ * 
  * Steps:
  * 1. Initialize the CloudFront Client using AWS SDK.
  * 2. Ensure DISTRIBUTION_ID is set in your environment or passed explicitly.
@@ -46,26 +46,29 @@ const config = {
     secretAccessKey: process.env.SECRET_ACCESS_KEY,
   },
 };
-const client = new CloudFrontClient(config);
+const client = new CloudFrontClient(config); 
 
 async function cloudFrontInvalidate(paths) {
-  const distributionId = process.env.DISTRIBUTION_ID;
-
-  const input = {
-    DistributionId: distributionId,
-    InvalidationBatch: {
-      Paths: {
-        Quantity: paths.length,
-        Items: paths,
+  const distributionId = process.env.DISTRIBUTION_ID; 
+  try {
+    const input = {
+      DistributionId: distributionId,
+      InvalidationBatch: {
+        Paths: {
+          Quantity: paths.length,
+          Items: paths, 
+        },
+        CallerReference: Date.now().toString(), 
       },
-      CallerReference: Date.now().toString(),
-    },
-  };
+    };
 
-  const command = new CreateInvalidationCommand(input);
-  const response = await client.send(command);
+    const command = new CreateInvalidationCommand(input);
+    const response = await client.send(command);
 
-  return response;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 module.exports = { cloudFrontSignedURL, cloudFrontInvalidate };
