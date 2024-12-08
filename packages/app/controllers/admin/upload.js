@@ -46,4 +46,4 @@ async function adminUploadController(req, res, next) {
   }
 }
 
-module.exports = { adminUploadController };
+module.exports = adminUploadController;

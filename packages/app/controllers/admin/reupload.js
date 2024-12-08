@@ -88,4 +88,4 @@ async function adminReUploadController(req, res, next) {
   }
 }
 
-module.exports = { adminReUploadController };
+module.exports = adminReUploadController;
