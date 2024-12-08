@@ -95,6 +95,7 @@ class ImageServices {
       updatedAt: result.updatedAt,
     };
   }
+  
   async updateImageById(id, updateObj) {
     const updatingImage = await this.imageRepository.update(id, updateObj);
     return {
@@ -102,6 +103,10 @@ class ImageServices {
       createdAt: updatingImage.createdAt,
       updatedAt: updatingImage.updatedAt,
     };
+  }
+
+  async getImagesByUserId(userId) {
+    return await this.imageRepository.getAllImageByUserId(userId);
   }
 }
 
