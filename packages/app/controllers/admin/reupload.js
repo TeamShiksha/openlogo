@@ -1,4 +1,4 @@
-const { uploadToS3, updateImageById } = require("../../services/Images");
+const ImageServices = require("../../services/Images");
 const { STATUS_CODES } = require("http");
 const Joi = require("joi");
 const Image = require("../../models/Images");
@@ -10,6 +10,7 @@ const imageReuploadSchema = Joi.object().keys({
 
 async function adminReUploadController(req, res, next) {
   try {
+    const imageServices = new ImageServices();
     let { userId } = req.userData;
     let { id } = req.body;
     const file = req.file;
@@ -56,7 +57,11 @@ async function adminReUploadController(req, res, next) {
       });
     }
 
-    const key = await uploadToS3(file, Imagename + "." + Extension, Extension);
+    const key = await imageServices.uploadToS3(
+      file,
+      Imagename + "." + Extension,
+      Extension
+    );
     if (!key) {
       res.status(500).json({
         error: STATUS_CODES[500],
@@ -65,7 +70,7 @@ async function adminReUploadController(req, res, next) {
       });
     }
 
-    const imageData = await updateImageById(id, {
+    const imageData = await imageServices.updateImageById(id, {
       uploadedBy: userId,
       updatedAt: Date.now(),
     });

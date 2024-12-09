@@ -17,6 +17,8 @@ const getImagesController = async (req, res, next) => {
     }
     
     const imageData = await imageService.getImagesByUserId(userId);
+    console.log(userId);
+    
     if (!imageData)
       return res.status(200).json({
         statusCode: 200,
