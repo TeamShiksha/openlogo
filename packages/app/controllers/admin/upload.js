@@ -14,15 +14,12 @@ async function adminUploadController(req, res, next) {
         error: STATUS_CODES[422],
       });
     }
-    console.log(userId);
 
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-    console.log(imageName);
 
     const key = await imageServices.uploadToS3(file, Imagename + "." + Extension, Extension);
-    console.log(key);
     if (!key) {
       res.status(500).json({
         error: STATUS_CODES[500],
@@ -31,7 +28,6 @@ async function adminUploadController(req, res, next) {
       });
     }
     const imageData = await imageServices.createImageData(Imagename, userId, Extension);
-    console.log(imageData);
     if (!imageData) {
       res.status(500).json({
         error: STATUS_CODES[500],
