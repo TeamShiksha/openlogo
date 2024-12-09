@@ -76,7 +76,6 @@ function PieGraph({percentage, colour, strokeWidth, fontSize}) {
 					pct={100} 
 					fill="white" 
 				/>
-				{/* Foreground circle for the actual progress */}
 				<Circle
 					colour={colour}
 					pct={pct}
