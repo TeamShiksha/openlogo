@@ -12,12 +12,14 @@
   margin: 12px 0;
   color: #101828;
   font-weight: 600;
+  font-size: 36px;
 }
 
 .features-container-head > p {
   max-width: 768px;
   color: #475467;
   font-size: 20px;
+  font-weight: 400;
   line-height: 30px;
 }
 
@@ -52,4 +54,17 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
+}
+
+@media only screen and (max-width: 768px) {
+  .features-container-head > p {
+    font-size: 16px;
+    line-height: 21.6px;
+  }
+  features-container-body-item img {
+    border-width: 6px;
+  }
+  .features-container-body-item > h3 {
+    font-size: 18px;
+  }
 }
