@@ -10,16 +10,21 @@
 
 .features-container-head > h2 {
   margin: 12px 0;
+  color: #101828;
+  font-weight: 600;
 }
 
 .features-container-head > p {
-  max-width: 750px;
+  max-width: 768px;
+  color: #475467;
+  font-size: 20px;
+  line-height: 30px;
 }
 
 .features-container-body {
   display: flex;
-  gap: 32px;
   flex-wrap: wrap;
+  gap: 32px;
 }
 
 .features-container-body-item {
@@ -28,11 +33,8 @@
 }
 
 .features-container-body-item img {
-  background: linear-gradient(
-    135deg,
-    rgba(41, 32, 198, 0.8),
-    rgba(86, 81, 178, 0.5)
-  );
+  background-color: #F4EBFF;
+  border: solid 8px #F9F5FF;
   border-radius: 50%;
   padding: 10px;
   display: block;
@@ -40,4 +42,14 @@
 
 .features-container-body-item > h3 {
   padding: 16px 0;
+  color: #101828;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.features-container-body-item > p {
+  color: #475467;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
 }
