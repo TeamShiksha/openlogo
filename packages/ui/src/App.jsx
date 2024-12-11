@@ -6,6 +6,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import Home from "./pages/home/Home";
 import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
+import Signup from "./Pages/signup/Signup";
 
 function App() {
 
@@ -16,12 +17,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/admin"
           element={
             <ProtectedRoute adminOnly={true}>
               <AdminDashboard />
-            </ProtectedRoute>
+            </ProtectedRoute> 
           }
         />
       </Routes>
