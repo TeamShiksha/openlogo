@@ -1,0 +1,77 @@
+.footer-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 28px 0;
+    border-top: 1px solid #c4c4c4;
+}
+  
+.footer-logo {
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.footer-items {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+}
+
+.footer-item {
+    text-decoration: none;
+    color: unset;
+}
+
+.footer-copyright {
+    color: #667085;
+}
+
+@media only screen and (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: start;
+        padding: 20px 24px;
+    }
+
+    .footer-logo {
+        font-size: 1.125rem;
+    }
+
+    .footer-logo img {
+        width: 28px; 
+        height: 28px;
+    }
+    .footer-logo::after {
+        content: "© Openlogo 2024";
+        color: #667085;
+        font-size: 16px;
+        position: absolute; 
+        right: 24px;
+    }
+
+    .footer-copyright {
+        display: none;
+    }
+
+    .footer-items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: start;
+        margin-top: 16px;
+        margin-left: 4px;
+    }
+
+    .footer-item {
+        text-decoration: none;
+        color: unset;
+    }
+}
+
+
