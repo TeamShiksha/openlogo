@@ -99,7 +99,7 @@ export const headerItems = [
 export const footerItems = [
   {
     name: "overview",
-    title: "OverView",
+    title: "Overview",
     url: "/overview",
   },
   {

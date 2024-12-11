@@ -17,6 +17,8 @@
 
 .footer-items {
     display: flex;
+    color: #667085;
+    font-weight: 600;
     flex-direction: row;
     gap: 24px;
     align-items: center;
@@ -62,7 +64,9 @@
     .footer-items {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        color: #667085;
+        font-weight: 500;
+        gap: 4px;
         align-items: start;
         margin-top: 16px;
         margin-left: 4px;
