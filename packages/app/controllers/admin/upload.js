@@ -1,25 +1,23 @@
-const ImageServices = require("../../services/Images")
+const ImageServices = require("../../services/Images");
 const { STATUS_CODES } = require("http");
 
 async function adminUploadController(req, res, next) {
   try {
-    const imageServices = new ImageServices();
+    const imageServices = new ImageServices();    
     let { userId } = req.userData;
     const file = req.file;
-
-    if (!file) {
-      return res.status(422).json({
-        statusCode: 422,
-        message: "Image file is required",
-        error: STATUS_CODES[422],
-      });
-    }
+    const imageSize = file.size;
+    const companyUri = " ";    
 
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-
-    const key = await imageServices.uploadToS3(file, Imagename + "." + Extension, Extension);
+    const companyName = Imagename + "." + Extension
+    const key = await imageServices.uploadToS3(
+      file,
+      companyName,
+      Extension
+    );
     if (!key) {
       res.status(500).json({
         error: STATUS_CODES[500],
@@ -27,7 +25,14 @@ async function adminUploadController(req, res, next) {
         message: "Image Upload Failed, try again later",
       });
     }
-    const imageData = await imageServices.createImageData(Imagename, userId, Extension);
+    
+    const imageData = await imageServices.createImageData(
+      userId,      
+      imageSize,   
+      companyUri,  
+      companyName  
+    );
+    
     if (!imageData) {
       res.status(500).json({
         error: STATUS_CODES[500],

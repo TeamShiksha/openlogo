@@ -81,32 +81,33 @@ class ImageServices {
     return `${process.env.KEY}/${extension}/${imageName}`;
   }
 
-  async createImageData(domainame, uploadedBy, extension) {
-    const newImage = this.imageRepository.newImage({
-      domainame,
-      uploadedBy,
-      extension,
+  async createImageData(uploadedBy, imageSize, companyUri, companyName) {
+    const result = await this.imageRepository.create({
+      user_id: uploadedBy,
+      company_name: companyName,
+      company_uri: companyUri,
+      image_size: Number(imageSize),
     });
-    if (!newImage) return null;
-    const result = await this.imageRepository.create(newImage);
     return {
       _id: result._id,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
+      updatedAt: result.updated_at,
     };
   }
-  
+
   async updateImageById(id, updateObj) {
     const updatingImage = await this.imageRepository.update(id, updateObj);
     return {
       _id: updatingImage._id,
-      createdAt: updatingImage.createdAt,
       updatedAt: updatingImage.updatedAt,
     };
   }
 
   async getImagesByUserId(userId) {
     return await this.imageRepository.getAllImageByUserId(userId);
+  }
+
+  async getImageById(id) {
+    return await this.imageRepository.getById(id);
   }
 }
 

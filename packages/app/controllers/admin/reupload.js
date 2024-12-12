@@ -1,7 +1,6 @@
 const ImageServices = require("../../services/Images");
 const { STATUS_CODES } = require("http");
 const Joi = require("joi");
-const Image = require("../../models/Images");
 const imageReuploadSchema = Joi.object().keys({
   id: Joi.string().trim().required().messages({
     "any.required": "Id is required",
@@ -33,23 +32,13 @@ async function adminReUploadController(req, res, next) {
       });
     }
 
-    const exsitingImage = await Image.findById(id);
-
-    if (!exsitingImage) {
-      res.status(404).json({
-        error: STATUS_CODES[404],
-        statusCode: 404,
-        message: "Image Not Found",
-      });
-    }
+    const exsitingImage = await imageServices.getImageById(id);
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
+    const companyName = Imagename + "." + Extension;
 
-    if (
-      Extension !== exsitingImage?.extension ||
-      Imagename !== exsitingImage?.domainame
-    ) {
+    if (companyName !== exsitingImage.company_name) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         statusCode: 400,
@@ -57,11 +46,7 @@ async function adminReUploadController(req, res, next) {
       });
     }
 
-    const key = await imageServices.uploadToS3(
-      file,
-      Imagename + "." + Extension,
-      Extension
-    );
+    const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
       res.status(500).json({
         error: STATUS_CODES[500],
