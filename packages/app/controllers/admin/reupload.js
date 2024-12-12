@@ -7,6 +7,25 @@ const imageReuploadSchema = Joi.object().keys({
   }),
 });
 
+/**
+ * @function adminReUploadController
+ * @description Handles re-uploading an image for admin users.
+ *
+ * Steps:
+ * 1. Validates the presence of the image file and the `id` parameter using Joi schema.
+ * 2. Fetches the existing image data by ID to ensure the name and extension match.
+ * 3. Uploads the new image file to Amazon S3 with the same name and extension.
+ * 4. Updates the image record in the database with the new metadata.
+ * 5. Sends a success response on successful re-upload or appropriate error messages.
+ * 6. Passes unexpected errors to the global error handler.
+ *
+ * @param {Object} req - Request object containing userData, file, and body (id).
+ * @param {Object} res - Response object to send status and data.
+ * @param {Function} next - Middleware for error handling.
+ *
+ * @returns {JSON} - Success or error response.
+ */
+
 async function adminReUploadController(req, res, next) {
   try {
     const imageServices = new ImageServices();
