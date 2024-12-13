@@ -54,10 +54,9 @@ body {
 }
 
 .content-wrapper {
-  flex-grow: 1; /* This will make the content area grow to take available space */
+  flex-grow: 1;
 }
 
 footer {
-  /* Ensure the footer is always at the bottom */
   margin-top: auto;
 }
