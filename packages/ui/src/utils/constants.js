@@ -4,6 +4,22 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
+import notion from "../assets/notion.png";
+import slack from "../assets/slack.png";
+import google_drive from "../assets/google_drive.png";
+import whatsapp from "../assets/whatsapp.png";
+import g_calendar from "../assets/g_calendar.png";
+import mailchimp from "../assets/mailchimp.png";
+import zapier from "../assets/zapier.png";
+import zendesk from "../assets/zendesk.png";
+import stripe from "../assets/stripe.png";
+import jira from "../assets/jira.png";
+import intercom from "../assets/intercom.png";
+import figma from "../assets/figma.png";
+import discord from "../assets/discord.png";
+import bitbucket from "../assets/bitbucket.png";
+import confluence from "../assets/confluence.png";
+import dropbox from "../assets/dropbox.png";
 
 export const SVGS = {
   searchIcon,
@@ -447,4 +463,23 @@ export const INFO = [
   { title: "Keys", api: -6.8 },
   { title: "Hits", api: 9.2 },
   { title: "Requests", api: -5.3 },
+];
+
+export const INTEGRATIONS = [
+  { id: 1, src: notion, alt: 'Notion' },
+  { id: 2, src: slack, alt: 'Slack' },
+  { id: 3, src: google_drive, alt: 'Google Drive' },
+  { id: 4, src: intercom, alt: 'Intercom' },
+  { id: 5, src: stripe, alt: 'Stripe' },
+  { id: 6, src: dropbox, alt: 'Dropbox' },
+  { id: 7, src: jira, alt: 'Jira' },
+  { id: 8, src: zapier, alt: 'Zapier' },
+  { id: 9, src: figma, alt: 'Figma' },
+  { id: 10, src: confluence, alt: 'Confluence' },
+  { id: 11, src: mailchimp, alt: 'Mailchimp' },
+  { id: 12, src: zendesk, alt: 'Zendesk' },
+  { id: 13, src: g_calendar, alt: 'Google Calendar' },
+  { id: 14, src: whatsapp, alt: 'WhatsApp' },
+  { id: 15, src: discord, alt: 'Discord' },
+  { id: 16, src: bitbucket, alt: 'Bitbucket' }
 ];

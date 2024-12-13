@@ -1,0 +1,84 @@
+.container {
+  padding: 4rem;
+  max-width: 1200px;
+  margin: 0 0;
+}
+
+.aboutUs {
+  color: #4F46E5;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  color: #111827;
+}
+
+.description {
+  font-size: 1.125rem;
+  color: #4B5563;
+  margin-bottom: 1rem;
+  max-width: 1000px;
+}
+
+.subDescription {
+  font-size: 1.125rem;
+  color: #4B5563;
+  margin-bottom: 3rem;
+  max-width: 1000px;
+}
+
+.logoGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 70px);
+  gap: 32px;
+  margin-top: 6rem;
+  margin: 6rem auto 0;
+  padding-left: 200px;
+  justify-content: center;
+  width: fit-content;
+}
+
+.logoItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoItem img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+@media (max-width: 1024px) {
+  .logoGrid {
+    grid-template-columns: repeat(6, 1fr);
+    padding-left: 0;
+    gap:24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logoGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .container {
+    padding: 2rem;
+  }
+  .logoItem img{
+    width: 50px;
+    height: 50px;
+  }
+}
