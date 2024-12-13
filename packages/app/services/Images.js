@@ -1,8 +1,16 @@
 const ImageRepository = require("../repositories/Images");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 class ImageServices {
   constructor() {
     this.imageRepository = new ImageRepository();
+    this.s3 = new S3Client({
+      region: process.env.BUCKET_REGION,
+      credentials: {
+        accessKeyId: process.env.ACCESS_KEY,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      },
+    });
   }
 
   /**
@@ -10,6 +18,7 @@ class ImageServices {
    * @param {string} company company name
    * @returns {string} - Image Cloudfront URL
    **/
+
   async fetchImageByCompanyFree(
     company,
     default_extension = "png",
@@ -23,7 +32,8 @@ class ImageServices {
     }
 
     const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
-    const cloudFrontUrl = await this.imageRepository.fetchCloudFrontURL(imageUrl);
+    const cloudFrontUrl =
+      await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
   }
 
@@ -33,7 +43,8 @@ class ImageServices {
    * @returns {Promise<Object>} - List of matching companies.
    **/
   async fetchCompanyList(regexPattern) {
-    const companyList = await this.imageRepository.fetchCompanyList(regexPattern);
+    const companyList =
+      await this.imageRepository.fetchCompanyList(regexPattern);
     return companyList;
   }
 
@@ -57,6 +68,46 @@ class ImageServices {
       });
     }
     return dataList;
+  }
+
+  async uploadToS3(file, imageName, extension) {
+    const uploadParams = {
+      Bucket: process.env.BUCKET_NAME,
+      Body: file.buffer,
+      Key: `${process.env.KEY}/${extension}/${imageName}`,
+    };
+
+    await this.s3.send(new PutObjectCommand(uploadParams));
+    return `${process.env.KEY}/${extension}/${imageName}`;
+  }
+
+  async createImageData(uploadedBy, imageSize, companyUri, companyName) {
+    const result = await this.imageRepository.create({
+      user_id: uploadedBy,
+      company_name: companyName,
+      company_uri: companyUri,
+      image_size: Number(imageSize),
+    });
+    return {
+      _id: result._id,
+      updatedAt: result.updated_at,
+    };
+  }
+
+  async updateImageById(id, updateObj) {
+    const updatingImage = await this.imageRepository.update(id, updateObj);
+    return {
+      _id: updatingImage._id,
+      updatedAt: updatingImage.updatedAt,
+    };
+  }
+
+  async getImagesByUserId(userId) {
+    return await this.imageRepository.getAllImageByUserId(userId);
+  }
+
+  async getImageById(id) {
+    return await this.imageRepository.getById(id);
   }
 }
 

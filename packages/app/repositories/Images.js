@@ -47,6 +47,10 @@ class ImagesRepository extends BaseRepository {
     const cloudFrontUrl = cloudFrontSignedURL(`/${imageUrl}`).data;
     return cloudFrontUrl;
   }
+  
+  async getAllImageByUserId(userId) {
+    return await this.model.find({user_id: userId});
+  }
 }
 
 module.exports = ImagesRepository;

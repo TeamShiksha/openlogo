@@ -2,7 +2,7 @@ const cloudfrontSigner = require("@aws-sdk/cloudfront-signer");
 const {
   CloudFrontClient,
   CreateInvalidationCommand,
-} = require("@aws-sdk/client-cloudfront");
+} = require("@aws-sdk/client-cloudfront"); // CommonJS import
 
 const getSignedUrl = cloudfrontSigner.getSignedUrl;
 

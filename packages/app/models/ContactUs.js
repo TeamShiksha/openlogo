@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const {ContactUsStatus}= require("../utils/constants")
+
 
 /**
  * ContactUs Model: Represents user inquiries and support requests.

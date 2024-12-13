@@ -9,7 +9,16 @@ const ContactUs = require('../models/ContactUs');
 
 class ContactUsRepository extends BaseRepository {
   constructor() {
-    super(ContactUs); 
+    super(ContactUs);
+  }
+
+  async findByEmailAndStatus(email, isActive) {
+    return this.model.findOne({ email, activityStatus: isActive });
+  }
+
+  
+  async updateFormStatus(id, updateData) {
+    return this.model.updateOne({ _id: id }, updateData);
   }
   
 }

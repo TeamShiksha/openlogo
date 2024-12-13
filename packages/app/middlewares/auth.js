@@ -1,7 +1,6 @@
 const JWT = require("jsonwebtoken");
 const { STATUS_CODES } = require("http");
 const { UserType } = require("../utils/constants");
-
 /**
  * @param {Object} options
  * @param {boolean} options.adminOnly
@@ -17,7 +16,6 @@ module.exports = (options = {}) => {
           statusCode: 401
         });
       }
-
       const decodedData = JWT.verify(jwt, process.env.JWT_SECRET);
       const { data } = decodedData;
       if (!data || !data.email || !data.userId)
@@ -37,10 +35,13 @@ module.exports = (options = {}) => {
           statusCode: 401
         });
 
-      Object.assign(req, { userData: decodedData.data });
+     Object.assign(req, { userData: decodedData.data });
       next();
     } catch (err) {
       next(err);
     }
   };
 };
+
+
+

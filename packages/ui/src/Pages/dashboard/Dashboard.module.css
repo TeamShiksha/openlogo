@@ -1,0 +1,60 @@
+.dashboardContainer {
+	display: flex;
+	max-width: 1440px;
+	margin: 0 auto;
+}
+
+.dashboardContentContainer {
+	padding: 64px 32px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 55px;
+}
+
+.dashboardContentContainer .divider {
+	border-bottom: var(--border);
+}
+
+.dashboardContentSection {
+	display: flex;
+	gap: 32px;
+}
+
+.generateApi {
+	border-radius: 8px;
+	border: var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0.1, .1, .1);
+	background-color: var(--white);
+	padding: 24px 32px;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.contentItemHeading {
+	color: var(--black);
+	font-size: var(--large-text);
+	font-weight: 500;
+	line-height: 20px;
+	margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+	.dashboardContainer {
+		flex-direction: column;
+	}
+
+	.dashboardContainer > aside {
+		width: 100%;
+	}
+
+	.dashboardContentContainer {
+		padding: 32px 16px;
+	}
+
+	.dashboardContentSection {
+		flex-direction: column;
+	}
+}

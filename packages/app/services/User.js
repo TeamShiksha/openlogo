@@ -1,6 +1,7 @@
 const UserRepository = require("../repositories/Users");
 const KeyService = require("../services/Keys");
 const bcrypt = require("bcrypt");
+const { UserType } = require("../utils/constants");
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
@@ -122,6 +123,23 @@ class UserService {
         };
         const userVerifed = await this.userRepository.update(userId, verifyUserData);
         if(userVerifed == null) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Updates the user's role to Admin
+     * @param {string} email - The email address of the user to be updated.
+     * @returns {Promise<boolean>} - Returns `true` if the user's role was successfully updated to Admin, otherwise `false`.
+     */
+    async updateUserToAdmin(email) {
+        const user = await this.getUserByEmail(email);
+        const updatedData  = {
+            role: UserType.ADMIN
+        };
+        const updatedUser = await this.userRepository.update(user._id, updatedData);
+        if(!updatedUser || updatedUser.role != UserType.ADMIN) {
             return false;
         }
         return true;

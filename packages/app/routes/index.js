@@ -3,6 +3,7 @@ const operatorRouter = require("./operator");
 const userRouter = require("./user");
 const authRouter = require("./auth");
 const businessRouter = require("./business")
+const adminRouter = require("./admin");
 
 /* const cors = require("cors"); */
 
@@ -21,6 +22,7 @@ router.use("/operator", operatorRouter);
 router.use("/user", userRouter);
 router.use("/auth", authRouter);
 router.use('/business', businessRouter);
+router.use("/admin", adminRouter);
 
 module.exports = router;
 

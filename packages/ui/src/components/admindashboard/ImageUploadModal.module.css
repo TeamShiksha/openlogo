@@ -1,0 +1,101 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal {
+  background: var(--white);
+  padding: 3rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.dropzone {
+  border: 2px dashed var(--table-heading-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dragActive {
+  border-color: var(--smooth-purple);
+  background-color: var(--light-purple);
+}
+
+.dropzoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.imageIcon {
+  color: var(--description);
+}
+
+.selectButton {
+  background-color: var(--smooth-purple);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.imageUploadModal {
+  background-color: var(--gray-drag-drop-background);
+}
+
+.previewContainer {
+  text-align: center;
+  justify-items: center;
+  align-content: center;
+  background-color: var(--gray-drag-drop-background);
+  margin: -42px;
+  padding: 32px;
+  border-radius: 8px;
+  min-height: 390px;
+  height: 100%;
+}
+
+.imagePreview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  background: var(--white);
+}
+
+.uploadButton {
+  background-color: var(--smooth-purple);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
