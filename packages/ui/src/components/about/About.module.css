@@ -35,7 +35,6 @@
   display: grid;
   grid-template-columns: repeat(8, 70px);
   gap: 32px;
-  margin-top: 6rem;
   margin: 6rem auto 0;
   padding-left: 200px;
   justify-content: center;
