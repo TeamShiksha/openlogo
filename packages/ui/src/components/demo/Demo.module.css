@@ -6,9 +6,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 300px;
-  width: 70vw;
+  min-height: 475px;
+  width: 90vw;
   border-radius: 10px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .apiContent {
@@ -42,6 +44,10 @@
   position: relative;
   margin-right: 50px;
   margin-top: 70px;
+  min-height: 100px;
+  max-height: 300px;
+  overflow: hidden;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .searchContent {
@@ -87,13 +93,13 @@
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: all 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out, max-height 0.3s;
   margin-top: 0.5rem;
 }
 
 .resultsContainer.show {
   opacity: 1;
-  max-height: 200px;
+  max-height: 140px;
   overflow-y: auto;
 }
 

@@ -12,7 +12,9 @@ class ImagesRepository extends BaseRepository {
     super(Image); 
   }
 
-  
+  async getAllImageByUserId(userId) {
+    return await this.model.find({user_id: userId});
+  }
 }
 
 module.exports = ImagesRepository;
