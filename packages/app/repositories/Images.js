@@ -21,7 +21,10 @@ class ImagesRepository extends BaseRepository {
   */
   async fetchImage(company) {
     const image = await Image.findOne({
-      company_name: company,
+      company_name: { 
+        $regex: `^${company}(\\.|$)`, 
+        $options: "i" 
+      }
     });
     return image;
   }

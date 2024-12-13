@@ -63,7 +63,7 @@ class ImageServices {
       );
       if (!signedUrl) continue;
       dataList.push({
-        companyName: company.company_name,
+        companyName: company.company_name.split('.')[0],
         image: signedUrl,
       });
     }
