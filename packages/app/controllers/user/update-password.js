@@ -18,10 +18,14 @@ const updatePasswordPayloadSchema = Joi.object().keys({
   }),
 });
 
+/**
+ * This controller validates the current and new passwords from the request body, 
+ * verifies the user's identity, and updates the password if the current password 
+ * is correct.
+ */
 async function updatePasswordController(req, res, next) { 
   try {
     const userService = new UserService();
-
     const { error, value } = updatePasswordPayloadSchema.validate(req.body);
     if (error) {
       return res.status(422).json({

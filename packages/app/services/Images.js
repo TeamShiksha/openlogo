@@ -31,7 +31,7 @@ class ImageServices {
       domainName = image.company_name;
     }
 
-    const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
+    const imageUrl = `${default_extension}/${domainName}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -63,7 +63,7 @@ class ImageServices {
       );
       if (!signedUrl) continue;
       dataList.push({
-        companyName: company.company_name,
+        companyName: company.company_name.split('.')[0],
         image: signedUrl,
       });
     }
@@ -81,7 +81,7 @@ class ImageServices {
     return `${process.env.KEY}/${extension}/${imageName}`;
   }
 
-  async createImageData(uploadedBy, imageSize, companyUri, companyName) {
+  async createImageData(uploadedBy, imageSize, companyName, companyUri = " ") {
     const result = await this.imageRepository.create({
       user_id: uploadedBy,
       company_name: companyName,

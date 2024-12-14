@@ -1,15 +1,17 @@
 const router = require("express").Router();
 const revertToCustomerController = require("../controllers/operator/revert");
 const getOperatorDataController = require("../controllers/operator/data");
-//const authMiddleware = require("../middlewares/auth");
+const authMiddleware = require("../middlewares/auth");
 
 router.put(
     "/revert",
-  //   authMiddleware({ operatorOnly: true }),
+    authMiddleware({ operatorOnly: true }),
     revertToCustomerController
   );
+router.get(
+    "/",
+    authMiddleware({ operatorOnly: true }),
+    getOperatorDataController
+  );
 
-  router.get('/', getOperatorDataController);  
-
-
-  module.exports = router;
+module.exports = router;

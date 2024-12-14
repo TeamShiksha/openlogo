@@ -11,6 +11,10 @@ const payloadSchema = Joi.object().keys({
   }),
 });
 
+/**
+ * This controller validates the query parameters, retrieves the user token, checks its validity,
+ * and creates a secure session cookie for resetting the user's password.
+ */
 async function get(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
@@ -45,6 +49,7 @@ async function get(req, res, next) {
         process.env.JWT_SECRET
       )
     );
+
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
@@ -70,6 +75,10 @@ const patchSchema = Joi.object().keys({
   }),
 });
 
+/**
+ * This controller validates the user's password reset session from cookies, verifies the provided token,
+ * updates the user's password with the new hashed password, and deletes the used token. 
+ */
 const patch = async (req, res, next) => {
   try {
     const userService = new UserService();

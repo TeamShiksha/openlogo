@@ -7,7 +7,7 @@ const adminUploadController = require("../controllers/admin/upload");
 const adminReUploadController = require("../controllers/admin/reupload");
 
 router.put(
-  "/add", 
+  "/promote", 
   authMiddleware({ adminOnly: true }), 
   addAdminController
 );
@@ -19,14 +19,14 @@ router.get(
 );
 
 router.post(
-  "/upload",
+  "/image",
   authMiddleware({adminOnly: true}),
   upload.single("logo"),
   adminUploadController
 );
 
 router.put(
-  "/reupload",
+  "/image",
   authMiddleware({ adminOnly: true }),
   upload.single("logo"),
   adminReUploadController

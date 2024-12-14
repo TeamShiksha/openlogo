@@ -41,6 +41,11 @@ const signupPayloadSchema = Joi.object().keys({
   }),
 });
 
+
+/**
+ * This controller validates the signup payload, checks if the email already exists,
+ * creates a new subscription, registers a new user, and send a verification email.
+ */
 async function signupController(req, res, next) {
   try {
     const userService = new UserService();
@@ -90,7 +95,8 @@ async function signupController(req, res, next) {
             statusCode: 201,
         });
     }
-    console.log(verificationToken.tokenURL());
+    // send email function to be added
+    console.log(verificationToken.tokenURL()); 
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
