@@ -21,7 +21,7 @@ function Footer() {
         ))}
       </div>
       <div className={styles["footer-copyright"]}>
-        © Openlogo 2024 | 
+        © Openlogo 2024 |&nbsp;
         <a
           href="https://team.shiksha"
           target="_blank"

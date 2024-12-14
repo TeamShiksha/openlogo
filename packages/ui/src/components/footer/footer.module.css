@@ -38,7 +38,6 @@
     color: var(--gray-text);
     font-size: 14px;
     text-decoration: none;
-    margin-left:4px;
 }
 
 .footer-powered:hover {
@@ -67,7 +66,6 @@
         margin-top: 10px;
         text-align: center;
         font-size: 12px;
-        margin-left: 4px;
     }
 
     .footer-items {
