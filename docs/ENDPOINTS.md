@@ -64,6 +64,7 @@ Endpoints specific to managing operator accounts.
 | **Method** | **Endpoint**               | **Action**                                             |
 |------------|----------------------------|--------------------------------------------------------|
 | `PUT`      | `/api/operator/revert`     | Downgrades an operator account to standard customer status. |
+| `GET`      | `/api/operator/`     | Get operator data. |
 
 > **Authentication Required:** Operator access
 
