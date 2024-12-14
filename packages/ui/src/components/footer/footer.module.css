@@ -17,7 +17,7 @@
 
 .footer-items {
     display: flex;
-    color: #667085;
+    color: var(--gray-text);
     font-weight: 600;
     flex-direction: row;
     gap: 24px;
@@ -30,7 +30,19 @@
 }
 
 .footer-copyright {
-    color: #667085;
+    color: var(--gray-text);
+    font-size: 14px;
+}
+
+.footer-powered {
+    color: var(--gray-text);
+    font-size: 14px;
+    text-decoration: none;
+    margin-left:4px;
+}
+
+.footer-powered:hover {
+    text-decoration: underline;
 }
 
 @media only screen and (max-width: 768px) {
@@ -49,33 +61,23 @@
         width: 28px; 
         height: 28px;
     }
-    .footer-logo::after {
-        content: "© Openlogo 2024";
-        color: #667085;
-        font-size: 16px;
-        position: absolute; 
-        right: 24px;
-    }
 
-    .footer-copyright {
-        display: none;
+    .footer-copyright, .footer-powered {
+        min-width: 100%;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 12px;
+        margin-left: 6x;
     }
 
     .footer-items {
         display: flex;
         flex-direction: column;
-        color: #667085;
+        color: var(--gray-text);
         font-weight: 500;
         gap: 4px;
         align-items: start;
         margin-top: 16px;
         margin-left: 4px;
     }
-
-    .footer-item {
-        text-decoration: none;
-        color: unset;
-    }
 }
-
-

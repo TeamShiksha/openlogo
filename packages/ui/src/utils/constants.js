@@ -98,9 +98,14 @@ export const headerItems = [
 ];
 export const footerItems = [
   {
-    name: "overview",
-    title: "Overview",
-    url: "/overview",
+    name: "home",
+    title: "Home",
+    url: "/",
+  },
+  {
+    name: "demo",
+    title: "Demo",
+    url: "/demo",
   },
   {
     name: "features",
@@ -113,14 +118,9 @@ export const footerItems = [
     url: "/pricing",
   },
   {
-    name: "careers",
-    title: "Careers",
-    url: "/careers",
-  },
-  {
-    name: "help",
-    title: "Help",
-    url: "/help",
+    name: "about",
+    title: "About",
+    url: "/about",
   },
   {
     name: "privacy",
