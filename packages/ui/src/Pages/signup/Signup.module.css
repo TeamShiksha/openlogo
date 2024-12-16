@@ -1,3 +1,17 @@
+.signupmodal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); 
+  backdrop-filter: blur(8px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+}
 .formTitle {
   width: 300px;
 	color: var(--black);
@@ -10,7 +24,9 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-  }
+  shape-outside: inset(20px 50px 10px 0 round 50px);
+  background-color:var(--white);
+}
   
   .formBox {
   width: 400px;
@@ -20,6 +36,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+  color: white;
   }
   
   .inputGroup {
@@ -84,6 +101,28 @@
     gap: 6px;
     justify-content: center;
     box-sizing: border-box;
+    color: var(--black);
   }
   
+  .closeButton {
+    position: absolute; 
+    top: 10px;
+    right: 10px; 
+    width: 32px;
+    height: 32px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8); 
+    color: #333;
+    font-size: 20px; 
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50%; 
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .closeButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); 
+    color: #000; 
+  }
   

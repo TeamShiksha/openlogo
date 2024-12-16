@@ -1,36 +1,31 @@
-
+import { useState } from 'react';
 import styles from './Signup.module.css';
 
-function Signup() {
+function Signup({onClose}) {
+	const backdropClick = (e) => {
+		if (e.target === e.currentTarget) {
+		  onClose();
+		}
+	  };
+	
 	return (
-		<>
+		<div className={styles.signupmodal} onClick={backdropClick}>
 			<div className={styles.pageDiv}>
 				<form  noValidate className={styles.formBox}>
 					<h2 className={styles.formTitle}>Sign up for free</h2>
 					<div className={styles.inputGroup}>
 						<input
 							type='text'
-							id='firstName'
-							name='firstName'
+							id='name'
+							name='name'
 							className={styles.input}
 							required
 						/>
-						<label className={styles.userLabel}  htmlFor='firstName'>
-							First Name
+						<label className={styles.userLabel}  htmlFor='name'>
+							 Name
 						</label>
 					</div>
-					<div className={styles.inputGroup}>
-						<input
-							type='text'
-							id='lastName'
-							name='lastName'
-							className={styles.input}
-							required
-						/>
-						<label className={styles.userLabel}  htmlFor='lastName'>
-							Last Name
-						</label>
-					</div>
+
 					<div className={styles.inputGroup}>
 						<input
 							type='text'
@@ -72,14 +67,16 @@ function Signup() {
 							Register
 						</button>
 					</div>
-					
 					<div className={styles.inputActiontext}>
 						<span>Already have an account?</span>
 							<span>Sign in</span>
-					</div>
+					</div>					
 				</form>
+				
+				<button className={styles.closeButton} onClick={onClose} >x</button>
+			
 			</div>
-		</>
+		</div>
 	);
 }
 

@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { headerItems } from "../../utils/constants";
 import Button from "../common/button/Button";
 import MobileHeaderMenu from "../MobileHeaderMenu/MobileHeaderMenu";
 import styles from "./Header.module.css";
+import Signup from "../../Pages/signup/Signup";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
+
+  const [signupModal , setSignupModal] = useState(false)
+
+  useEffect(() => {
+    if (signupModal) {
+      document.body.classList.add(styles.activemodal);
+    } else {
+      document.body.classList.remove(styles.activemodal);
+    }
+  });
 
   const hamburgerIcon = {
     src: "hamburger.svg",
@@ -36,9 +47,8 @@ const Header = () => {
           </a>
         ))}
       </div>
-      <div className={styles["header-button"]}>
-        <Button variant="primary">Get started for free</Button>
-      </div>
+           <button onClick={() => setSignupModal(true)} className={styles["header-button"]}>Get started for free</button>
+           {signupModal &&<Signup onClose={() => setSignupModal(false)} />}
       <button className={styles["header-hamburger"]} onClick={toggleMenu}>
         <img src={menuIcon.src} alt={menuIcon.alt} height={16} width={21.33} />
       </button>

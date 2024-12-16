@@ -1,3 +1,6 @@
+body.activemodal{
+  overflow: hidden;
+}
 .header-container {
   display: flex;
   flex-direction: row;
@@ -30,7 +33,14 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 16px 28px;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 8px;
 }
+
 
 .header-hamburger {
   display: none;
@@ -50,6 +60,11 @@
   .header-button {
     display: none;
   }
+
+  .signup-modal{
+    display: none;
+  }
+  
   .header-hamburger {
     display: flex;
     align-items: center;
