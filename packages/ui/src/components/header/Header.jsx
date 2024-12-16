@@ -1,6 +1,5 @@
 import { useState , useEffect} from "react";
 import { headerItems } from "../../utils/constants";
-import Button from "../common/button/Button";
 import MobileHeaderMenu from "../MobileHeaderMenu/MobileHeaderMenu";
 import styles from "./Header.module.css";
 import Signup from "../../Pages/signup/Signup";
@@ -34,6 +33,8 @@ const Header = () => {
     setShowMenu((prev) => !prev);
   };
 
+const closeSignupModal = () => { setSignupModal(false)};
+
   return (
     <header className={styles["header-container"]}>
       <div className={styles["header-logo"]}>
@@ -48,7 +49,7 @@ const Header = () => {
         ))}
       </div>
            <button onClick={() => setSignupModal(true)} className={styles["header-button"]}>Get started for free</button>
-           {signupModal &&<Signup onClose={() => setSignupModal(false)} />}
+           {signupModal &&<Signup onClose={closeSignupModal} />}
       <button className={styles["header-hamburger"]} onClick={toggleMenu}>
         <img src={menuIcon.src} alt={menuIcon.alt} height={16} width={21.33} />
       </button>
