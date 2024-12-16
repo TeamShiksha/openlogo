@@ -6,10 +6,10 @@ const About = () => {
       <span className={styles.aboutUs}>About us</span>
       <h1 className={styles.title}>What is Openlogo</h1>
       <p className={styles.description}>
-        Our RCM SaaS product seamlessly integrates with your existing healthcare systems and processes, allowing for efficient and accurate data exchange.
+        From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.
       </p>
       <p className={styles.subDescription}>
-        Our product pulls in data from electronic health records (EHRs), practice management systems, and billing software to streamline revenue cycle management.
+        Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business’s evolving branding requirements.
       </p>
       <div className={styles.logoGrid}>
         {INTEGRATIONS.map((integration) => (
