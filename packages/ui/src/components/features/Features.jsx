@@ -7,8 +7,7 @@ function Features() {
       <div className={styles["features-container-head"]}>
         <h2>Features</h2>
         <p>
-          OpenLogo provides fast API access to a vast, regularly updated logo
-          library with search-driven insights for complete branding support.
+        With Openlogo, integrate fresh, up-to-date company logos effortlessly and leverage smart search insights for professional branding.
         </p>
       </div>
       <div className={styles["features-container-body"]}>
