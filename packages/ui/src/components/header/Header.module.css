@@ -16,6 +16,8 @@
 
 .header-items {
   display: flex;
+  color:var(--gray-text);
+  font-weight: 600;
   flex-direction: row;
   gap: 24px;
   align-items: center;

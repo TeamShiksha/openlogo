@@ -96,7 +96,38 @@ export const headerItems = [
     url: "/about",
   },
 ];
-
+export const footerItems = [
+  {
+    name: "home",
+    title: "Home",
+    url: "/",
+  },
+  {
+    name: "demo",
+    title: "Demo",
+    url: "/demo",
+  },
+  {
+    name: "features",
+    title: "Features",
+    url: "/features",
+  },
+  {
+    name: "pricing",
+    title: "Pricing",
+    url: "/pricing",
+  },
+  {
+    name: "about",
+    title: "About",
+    url: "/about",
+  },
+  {
+    name: "privacy",
+    title: "Privacy",
+    url: "/privacy",
+  }
+];
 export const companies = [
   {
     id: "A1B2C3D4E5",
