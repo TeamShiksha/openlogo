@@ -62,14 +62,13 @@
   font-weight: 400;
   color: #475467;
   text-align: center;
-  /* margin-bottom: 20px; */
 }
 
 .planPrice {
   width: 300px;
   height: 60px;
   gap: 0px;
-  /* padding-top: px; */
+
   font-family: Inter;
   font-size: 48px;
   font-weight: 600;

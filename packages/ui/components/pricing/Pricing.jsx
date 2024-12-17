@@ -4,7 +4,6 @@ import PricingCard from "./PricingCard";
 import plans from "../../utils/constants";
 
 function Pricing() {
-  // Filter out plans where pricing is null
   const filteredPlans = plans.filter((plan) => plan.pricing !== null);
 
   return (
@@ -18,9 +17,9 @@ function Pricing() {
       </div>
 
       <div className={styles.cardsDiv}>
-        {filteredPlans.map((plan, index) => (
+        {filteredPlans.map((plan) => (
           <PricingCard
-            key={index}
+            key={plan.name}
             name={plan.name}
             pricing={plan.pricing}
             tagline={plan.tagline}

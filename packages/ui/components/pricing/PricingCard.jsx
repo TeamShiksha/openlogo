@@ -4,12 +4,10 @@ import styles from "./PricingCard.module.css";
 import tickIcon from "../../src/assets/Icon.svg";
 
 function PricingCard({ name, pricing, tagline, index, keypoints }) {
-  // Do not render the card if pricing is null (Custom Pricing)
   if (pricing === null) {
     return null;
   }
 
-  // Determine the plan pricing text
   const planPricing = pricing === 0 ? "Free" : `Coming Soon`;
 
   return (
