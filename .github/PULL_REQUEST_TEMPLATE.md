@@ -1,14 +1,8 @@
-### Summary
+### Summary and Approach
 
 <!-- Provide a general summary of your changes in the Title above -->
-
-### Approach
-
-<!-- Describe your changes in detail. Include the task or issue that this PR resolves, if applicable. -->
-
-### How to Test the Changes
-
-<!-- Describe the steps to test your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration. -->
+<!-- Make sure to link your PR with issue -->
+<!-- If you are integrating anything add proper documentation to get all environment variables used -->
 
 ### Screenshots or Recordings
 

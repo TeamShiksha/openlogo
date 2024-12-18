@@ -1,0 +1,140 @@
+/* catalog wrapper styles */
+.catalog-wrapper {
+  margin: 16px;
+  background-color: var(--gray-drag-drop-background);
+  padding: 8px;
+  border-radius: 16px;
+}
+
+/* catalog search bar styles */
+.catalog-search {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.search-icon {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+}
+.catalog-search > input {
+  flex: 1;
+  border-radius: 12px;
+  border: 0px;
+  padding: 12px;
+  padding-left: 28px;
+}
+.catalog-search > button {
+  min-width: 50px;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--smooth-purple);
+  border: 1px var(--smooth-purple);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* catalog table styles */
+.catalog-table-wrapper {
+  padding: 24px 14px;
+  padding-bottom: 8px;
+}
+.catalog-table-no-content {
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* catalog table header */
+.catalog-table-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: var(--border);
+  color: var(--smooth-gray);
+  gap: 16px;
+}
+.catalog-table-header-inner {
+  flex: 4;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.catalog-table-column-first {
+  flex: 2;
+}
+.catalog-table-column-last {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.companies-count {
+  background-color: white;
+  color: var(--smooth-purple);
+  padding: 4px;
+  margin-left: 4px;
+}
+
+/* catalog table footer styles */
+.catalog-table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  color: var(--description);
+}
+
+.catalog-footer-nav-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--table-heading-bg);
+  border-radius: 8px;
+  background-color: var(--white);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.catalog-nav-left-arrow:after {
+  content: " Previous";
+}
+.catalog-nav-right-arrow:before {
+  content: "Next ";
+}
+
+.catalog-footer-nav-btn-disable {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cur-page {
+  color: var(--black);
+  font-weight: bolder;
+}
+
+/* mobile layout styles for catalog header and footer */
+@media (max-width: 600px) {
+  .catalog-table-header {
+    display: none;
+  }
+  .catalog-search {
+    flex-direction: column;
+  }
+
+  .catalog-footer-nav-btn {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: inline;
+  }
+  .catalog-footer-nav-btn-disable {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .catalog-nav-left-arrow:after {
+    content: "";
+  }
+  .catalog-nav-right-arrow:before {
+    content: "";
+  }
+}

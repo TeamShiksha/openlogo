@@ -1,0 +1,56 @@
+.mainDiv{
+    background: var(--Primary-blue, rgba(79, 70, 229, 1));
+    border-radius: 16px;
+    padding: 10px 20px 70px 20px;
+    margin: 0px 25px;
+    
+}
+
+.cardsDiv{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0px 115px;
+    flex-wrap: wrap;
+}
+
+.heading{
+    font-size: 48px;
+    padding: 0px 12px;
+}
+
+.tagline{
+    margin: 35px 0px;
+    font-size: 20px;
+}
+
+
+@media (max-width: 576px) {
+    .heading{
+        font-size: 25px;
+        padding: 0px;
+    }
+
+    .tagline{
+        margin: 20px 0px;
+        font-size: 16px;
+    }
+
+    .cardsDiv{
+        padding: 0px;
+    }
+}
+
+
+
+@media (min-width: 576px) and (max-width: 768px) {
+    .cardsDiv{
+        padding: 0px 20px;
+    }
+}
+
+
+@media (min-width: 768px)  and (max-width:1254px){
+    .cardsDiv{
+        padding: 0px;
+    }
+}

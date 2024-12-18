@@ -1,0 +1,28 @@
+name: Documentation Issue
+description: Use this form to report documentation issues, improvements, or missing content
+labels: ["documentation", "low priority"]
+body:  
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe what's wrong or missing in the documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: change-reason
+    attributes:
+      label: Reason of Change
+      description: Please descibe why this change or addition is necessary.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched for similar issues before creating this one.
+        - label: I have provided all the necessary information to understand this documentation issue.
+    validations:
+      required: true
