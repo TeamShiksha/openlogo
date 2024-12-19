@@ -4,7 +4,6 @@ const PrivacyPolicy = () => {
   return (
     <div className="privacy-policy" style={{ padding: '20px', lineHeight: '1.6' }}>
       <h1>Privacy Policy for Openlogo</h1>
-      <p><strong>Last updated: December 19, 2024</strong></p>
       <p>This Privacy Policy describes Our policies and procedures on the collection, use, and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
       <p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.</p>
 
