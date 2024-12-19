@@ -9,6 +9,7 @@ import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
 import Pricing from "../components/pricing/Pricing";
 import Footer from "./components/footer/Footer";
+import PrivacyPolicy from "./pages/privacypolicy/privacypolicy";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/pricing" element={<Pricing />} />
 
         <Route
