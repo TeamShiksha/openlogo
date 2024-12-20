@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FAQ } from '../../utils/constants';
+import PropTypes from 'prop-types';
 import styles from './FAQs.module.css';
 import plusCircle from '../../assets/plusCircle.svg';
 import minusCircle from '../../assets/minusCircle.svg';
@@ -13,7 +14,7 @@ const FAQs = () => {
       </p>
       <div className={styles.faqList}>
         {FAQ.map((faq, index) => (
-          <CollapsibleFAQ key={index} question={faq.question} answer={faq.answer} />
+          <CollapsibleFAQ key={faq.question} question={faq.question} answer={faq.answer} />
         ))}
       </div>
     </div>
@@ -49,6 +50,11 @@ const CollapsibleFAQ = ({ question, answer }) => {
       </div>
     </div>
   );
+};
+
+CollapsibleFAQ.propTypes = {
+  question: PropTypes.string.isRequired,
+  answer: PropTypes.string.isRequired,
 };
 
 export default FAQs;

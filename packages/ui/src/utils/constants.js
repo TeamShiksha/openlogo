@@ -458,12 +458,8 @@ export const FAQ = [
     question: "How do I get started with Openlogo?",
     answer: "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos in different formats (e.g., PNG, SVG) and sizes tailored to your needs. Use our comprehensive documentation to guide your integration and testing process."
   },
-  {
-    question: "What payment methods do you support?",
-    answer: "We accept all major credit and debit cards, including Visa and Mastercard, through Razorpay. Additionally, you can make payments via PayPal, or other Razorpay-supported methods like UPI and NetBanking for added convenience."
-  },
-  {
-    question: "What is your cancellation policy?",
-    answer: "You can cancel your subscription at any time to avoid future charges. Once canceled, you will not be billed for the next payment cycle. Please note that charges incurred before cancellation are non-refundable."
-  }
+    {
+      question: "What payment methods do you support?",
+      answer: "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience."
+    }    
 ];
