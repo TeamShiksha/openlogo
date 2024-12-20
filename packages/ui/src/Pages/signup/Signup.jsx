@@ -28,10 +28,54 @@ function Signup({ isOpen, onClose }) {
     setIsSubmit(true);
   };
 
+  const PASSWORD_RULES = {
+    minLength: 6,
+    maxLength: 20,
+    requiresUppercase: true,
+    requiresLowercase: true,
+    requiresDigit: true,
+    requiresSpecialChar: true,
+    specialCharRegex: /[!@#$%^&*(),.?":{}|<>]/,  
+  };
+  
+  const validatePassword = (password) => {
+    const errors = {};
+  
+    if (!password) {
+      errors.password = "Password is required!";
+    } else {
+      if (password.length < PASSWORD_RULES.minLength) {
+        errors.password = `Password must be at least ${PASSWORD_RULES.minLength} characters long!`;
+      }
+  
+      if (password.length > PASSWORD_RULES.maxLength) {
+        errors.password = `Password cannot be more than ${PASSWORD_RULES.maxLength} characters!`;
+      }
+  
+      if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) {
+        errors.password = "Password must contain at least one uppercase letter!";
+      }
+  
+      if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) {
+        errors.password = "Password must contain at least one lowercase letter!";
+      }
+  
+      if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) {
+        errors.password = "Password must contain at least one digit!";
+      }
+  
+      if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) {
+        errors.password = "Password must contain at least one special character!";
+      }
+    }
+  
+    return errors;
+  };
+  
+
   const validate = (values) => {
     const errors = {};
-    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
 
     if (!values.name) {
       errors.name = "Name is required!";
@@ -45,13 +89,11 @@ function Signup({ isOpen, onClose }) {
       errors.email = "This is not a valid email format!";
     }
 
-    if (!values.password) {
-      errors.password = "Password is required!";
-    } else if (values.password.length < 6) {
-      errors.password = "Password must be at least 6 characters long!";
-    } else if (!regexPassword.test(values.password)) {
-      errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character!";
-    }
+    const passwordErrors = validatePassword(values.password);
+  if (Object.keys(passwordErrors).length > 0) {
+    errors.password = passwordErrors.password;
+  }
+
 
     if (!values.confirmPassword) {
       errors.confirmPassword = "Confirm password is required!";
