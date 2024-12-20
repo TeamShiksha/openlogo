@@ -7,7 +7,7 @@ import minusCircle from '../../assets/minusCircle.svg';
 const FAQs = () => {
   return (
     <div className={styles.container}>
-      <h1 className={styles.heading}>Frequently Asked Questions</h1>
+      <h1 className={styles.heading}>Frequently asked questions</h1>
       <p className={styles.description}>
         Everything you need to know about the product and billing.
       </p>
