@@ -1,12 +1,12 @@
 import { useState , useEffect} from "react";
 import { headerItems } from "../../utils/constants";
+import Button from "../common/button/Button";
 import MobileHeaderMenu from "../MobileHeaderMenu/MobileHeaderMenu";
 import styles from "./Header.module.css";
 import Signup from "../../Pages/signup/Signup";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
-
   const [signupModal , setSignupModal] = useState(false)
 
   useEffect(() => {
@@ -33,7 +33,14 @@ const Header = () => {
     setShowMenu((prev) => !prev);
   };
 
-const closeSignupModal = () => { setSignupModal(false)};
+  const openSignupModal = () => {
+    setSignupModal(true);
+  };
+
+  const closeSignupModal = () => {
+    setSignupModal(false);
+  };
+
 
   return (
     <header className={styles["header-container"]}>
@@ -48,12 +55,15 @@ const closeSignupModal = () => { setSignupModal(false)};
           </a>
         ))}
       </div>
-           <button onClick={() => setSignupModal(true)} className={styles["header-button"]}>Get started for free</button>
-           {signupModal &&<Signup onClose={closeSignupModal} />}
+      <div className={styles["header-button"]}>
+        <Button variant="primary" onClick={openSignupModal}>Get started for free</Button>
+        <Signup isOpen={signupModal} onClose={closeSignupModal} />
+      </div>
+
       <button className={styles["header-hamburger"]} onClick={toggleMenu}>
         <img src={menuIcon.src} alt={menuIcon.alt} height={16} width={21.33} />
       </button>
-      {showMenu ? <MobileHeaderMenu /> : null}
+      {showMenu && <MobileHeaderMenu onSignupClick={openSignupModal} />}
     </header>
   );
 };
