@@ -1,6 +1,7 @@
 .features-container {
   margin: 16px 32px;
   font-family: Inter, sans-serif;
+  padding-left: 77px;
 }
 
 .features-container-head {
@@ -57,6 +58,9 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .features-container {
+    padding-left: 0;
+  }
   .features-container-head > p {
     font-size: 16px;
     line-height: 21.6px;
