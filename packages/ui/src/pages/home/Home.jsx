@@ -3,6 +3,8 @@ import Demo from "../../components/demo/Demo";
 import Features from "../../components/features/Features";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import Pricing from "../../../components/pricing/Pricing";
+import FAQs from "../../components/faqs/FAQs";
+
 const Home = () => {
   return (
     <div>
@@ -10,6 +12,7 @@ const Home = () => {
       <Demo />
       <Features />
       <Pricing />
+      <FAQs />
     </div>
   );
 };
