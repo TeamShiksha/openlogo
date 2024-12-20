@@ -483,3 +483,8 @@ export const INTEGRATIONS = [
   { id: 15, src: discord, alt: 'Discord' },
   { id: 16, src: bitbucket, alt: 'Bitbucket' }
 ];
+
+export const ABOUT_TEXT = {
+  DESCRIPTION: "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.",
+  SUB_DESCRIPTION: "Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements."
+};

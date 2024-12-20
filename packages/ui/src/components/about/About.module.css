@@ -1,3 +1,5 @@
+@import '../../utils/color.css';
+
 .container {
   padding: 4rem;
   max-width: 1200px;
@@ -5,7 +7,7 @@
 }
 
 .aboutUs {
-  color: #4F46E5;
+  color:var(--primary);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -14,21 +16,21 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 1rem 0;
-  color: #111827;
+  color:var(--text-dark);
 }
 
-.description {
+.description, .subDescription {
   font-size: 1.125rem;
-  color: #4B5563;
-  margin-bottom: 1rem;
+  color: var(--text-gray);
   max-width: 1000px;
+}
+
+.description{
+  margin-bottom: 1rem;
 }
 
 .subDescription {
-  font-size: 1.125rem;
-  color: #4B5563;
   margin-bottom: 3rem;
-  max-width: 1000px;
 }
 
 .logoGrid {
