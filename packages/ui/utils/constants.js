@@ -1,7 +1,7 @@
 const PLANS = [
   {
     index: 0,
-    name: "HOBBIE",
+    name: "HOBBY",
     pricing: 0,
     tagline: "Ideal for small teams and startups.",
     keypoints: [
