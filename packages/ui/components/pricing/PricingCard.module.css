@@ -133,3 +133,10 @@
 .getStartedBtn:hover {
   background: #141232;
 }
+
+.getStartedBtn:disabled {
+  background: #e4e4e7;
+  color: #9ca3af;
+  cursor: not-allowed;
+  border: 1px solid #d1d5db;
+}

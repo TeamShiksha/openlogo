@@ -8,7 +8,7 @@ function PricingCard({ name, pricing, tagline, index, keypoints }) {
     return null;
   }
 
-  const planPricing = pricing === 0 ? "Free" : `Coming Soon`;
+  const planPricing = pricing === 0 ? "Free" : `₹1500/mth`;
 
   return (
     <div
@@ -34,7 +34,12 @@ function PricingCard({ name, pricing, tagline, index, keypoints }) {
           ))}
         </div>
 
-        <button className={styles.getStartedBtn}>Get Started</button>
+        <button
+          className={styles.getStartedBtn}
+          disabled={index === 1} // Disable button for most popular plan
+        >
+          {index === 1 ? "Coming Soon" : "Get Started"}
+        </button>
       </div>
     </div>
   );
