@@ -6,6 +6,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import Home from "./pages/home/Home";
 import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
+import GetInTouch from "./components/GetInTouch/GetInTouch";
 import Footer from "./components/footer/Footer";
 
 function App() {
@@ -26,7 +27,9 @@ function App() {
             }
           />
         </Routes>
+         <GetInTouch />
       </div>
+
       <Footer />
     </div>
   );
