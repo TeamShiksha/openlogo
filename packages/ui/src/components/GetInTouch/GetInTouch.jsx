@@ -4,11 +4,9 @@ import ContactForm from '../ContactForm/ContactForm';
 
 function GetInTouch() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   
   const openModal = () => setIsModalOpen(true);
 
-  
   const closeModal = () => setIsModalOpen(false);
 
   return (

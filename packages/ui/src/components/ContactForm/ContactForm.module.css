@@ -4,11 +4,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); 
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; 
+  z-index: 1000;
 }
 
 .modalContent {
@@ -25,9 +25,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
 }
-
 
 .contactForm {
   width: 100%;
@@ -37,22 +35,22 @@
   gap: 8px;
 }
 
-
 .inputField,
 .textArea {
   width: 100%;
-  max-width: 492px;
   padding: 0.8rem;
   border: 1px solid #d0d5dd;
   border-radius: 8px;
   box-shadow: 0px 1px 2px 0px #1018280d;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   color: #080809;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .textArea {
@@ -60,24 +58,15 @@
   height: 100px;
 }
 
-
 .inputField::placeholder,
 .textArea::placeholder {
-  color: #080809; 
+  color: #080809;
 }
 
 .inputField.invalid::placeholder,
 .textArea.invalid::placeholder {
-  color: red; 
+  color: red;
 }
-
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
-}
-
 
 .submitButton {
   width: 154px;
@@ -89,7 +78,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
@@ -100,12 +89,49 @@
   background-color: #3830d9;
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.successNotification {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  width: 40%;
+  text-align: center;
+  z-index: 1010;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation:
+    slideIn 0.5s ease-out,
+    fadeOut 2s 5s forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .modalContent {
     padding: 16px;
     width: 90%;
     gap: 12px;
-    overflow-y: auto; 
+    overflow-y: auto;
   }
 
   .contactForm {
@@ -116,7 +142,6 @@
   .inputField,
   .textArea {
     width: 100%;
-    max-width: 492px;
     padding: 0.8rem;
   }
 
@@ -130,7 +155,7 @@
 @media (max-width: 480px) {
   .modalContent {
     max-height: 80%;
-    overflow-y: auto; 
+    overflow-y: auto;
   }
 
   .submitButton {
@@ -143,9 +168,11 @@
   .inputField,
   .textArea {
     width: 100%;
-    max-width: 492px;
     font-size: 16px;
   }
+
+  .successNotification {
+    font-size: 12px;
+    width: 55%;
+  }
 }
-
-

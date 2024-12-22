@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styles from './ContactForm.module.css';
+import React, { useState } from "react";
+import styles from "./ContactForm.module.css";
 
 function ContactForm({ closeModal }) {
   const [formValues, setFormValues] = useState({
@@ -13,6 +13,8 @@ function ContactForm({ closeModal }) {
     email: "",
     message: "",
   });
+
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,9 +44,12 @@ function ContactForm({ closeModal }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      alert("Message sent successfully!");
+      setSuccessMessage("Message sent successfully!");
       setFormValues({ name: "", email: "", message: "" });
-      closeModal();
+      setTimeout(() => {
+        setSuccessMessage("");
+        closeModal();
+      }, 5000);
     }
   };
 
@@ -54,6 +59,13 @@ function ContactForm({ closeModal }) {
       onClick={(e) => e.target === e.currentTarget && closeModal()}
     >
       <div className={styles.modalContent}>
+      
+        {successMessage && (
+          <div className={styles.successNotification}>
+            <p>{successMessage}</p>
+          </div>
+        )}
+
         <h3>Contact Us</h3>
         <form className={styles.contactForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
