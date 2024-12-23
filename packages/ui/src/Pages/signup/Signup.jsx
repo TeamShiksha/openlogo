@@ -8,29 +8,27 @@ function Signup({ isOpen, onClose }) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [errorMessage, settErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "name") {
-      const filteredValue = value.replace(/[^a-zA-Z\s]/g, "");
-      setFormValues({ ...formValues, [name]: filteredValue });
-    } else {
-      setFormValues({ ...formValues, [name]: value });
-    }
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: name === "name" ? value.replace(/[^a-zA-Z\s]/g, "") : value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validate(formValues);
     setFormErrors(errors);
-    settErrorMessage(Object.values(errors)[0] || ""); 
+    setErrorMessage(Object.values(errors)[0] || ""); 
     setIsSubmit(true);
   };
 
   const PASSWORD_RULES = {
     minLength: 6,
-    maxLength: 20,
+    maxLength: 10,
     requiresUppercase: true,
     requiresLowercase: true,
     requiresDigit: true,
@@ -40,70 +38,37 @@ function Signup({ isOpen, onClose }) {
   
   const validatePassword = (password) => {
     const errors = {};
-  
-    if (!password) {
-      errors.password = "Password is required!";
-    } else {
-      if (password.length < PASSWORD_RULES.minLength) {
-        errors.password = `Password must be at least ${PASSWORD_RULES.minLength} characters long!`;
-      }
-  
-      if (password.length > PASSWORD_RULES.maxLength) {
-        errors.password = `Password cannot be more than ${PASSWORD_RULES.maxLength} characters!`;
-      }
-  
-      if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) {
-        errors.password = "Password must contain at least one uppercase letter!";
-      }
-  
-      if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) {
-        errors.password = "Password must contain at least one lowercase letter!";
-      }
-  
-      if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) {
-        errors.password = "Password must contain at least one digit!";
-      }
-  
-      if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) {
-        errors.password = "Password must contain at least one special character!";
-      }
+    if (!password) errors.password = "Password is required!";
+    else {
+      if (password.length < PASSWORD_RULES.minLength) errors.password = `Password must be at least ${PASSWORD_RULES.minLength} characters long!`;
+      if (password.length > PASSWORD_RULES.maxLength) errors.password = `Password cannot be more than ${PASSWORD_RULES.maxLength} characters!`;
+      if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) errors.password = "Password must contain at least one uppercase letter!";
+      if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) errors.password = "Password must contain at least one lowercase letter!";
+      if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) errors.password = "Password must contain at least one digit!";
+      if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) errors.password = "Password must contain at least one special character!";
     }
-  
     return errors;
   };
-  
 
   const validate = (values) => {
     const errors = {};
     const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
 
-    if (!values.name) {
-      errors.name = "Name is required!";
-    } else if (!/^[a-zA-Z\s]*$/.test(values.name)) {
-      errors.name = "Name can only contain letters and spaces!";
-    }
+    if (!values.name) errors.name = "Name is required!";
+    else if (!/^[a-zA-Z\s]*$/.test(values.name)) errors.name = "Name can only contain letters and spaces!";
 
-    if (!values.email) {
-      errors.email = "Email is required!";
-    } else if (!regexEmail.test(values.email)) {
-      errors.email = "This is not a valid email format!";
-    }
+    if (!values.email) errors.email = "Email is required!";
+    else if (!regexEmail.test(values.email)) errors.email = "This is not a valid email format!";
 
     const passwordErrors = validatePassword(values.password);
-  if (Object.keys(passwordErrors).length > 0) {
-    errors.password = passwordErrors.password;
-  }
+    if (Object.keys(passwordErrors).length > 0) errors.password = passwordErrors.password;
 
-
-    if (!values.confirmPassword) {
-      errors.confirmPassword = "Confirm password is required!";
-    } else if (values.confirmPassword !== values.password) {
-      errors.confirmPassword = "Passwords do not match!";
-    }
+    if (!values.confirmPassword) errors.confirmPassword = "Confirm password is required!";
+    else if (values.confirmPassword !== values.password) errors.confirmPassword = "Passwords do not match!";
 
     return errors;
   };
-  
+
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log("Form submitted successfully", formValues);
@@ -112,9 +77,7 @@ function Signup({ isOpen, onClose }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
+      if (e.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", handleKeyDown);
@@ -122,22 +85,19 @@ function Signup({ isOpen, onClose }) {
   }, [onClose]);
 
   const backdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="medium">
       <div className={styles.pageDiv} onClick={backdropClick}>
-        {Object.keys(formErrors).length === 0 && isSubmit ? (
-          <div className="ui message success">Signed up successfully</div>
-        ) : null}
-
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
-          <h2 id="signup-title" className={styles.formTitle}>
-            Sign up for free
-          </h2>
+          <h2 id="signup-title" className={styles.formTitle}>Sign up for free</h2>
+          
+          {Object.keys(formErrors).length === 0 && isSubmit && (
+            <div className="successMessage">Signed up successfully</div>
+          )}
+
           {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
 
           <div className={styles.inputGroup}>
@@ -149,10 +109,9 @@ function Signup({ isOpen, onClose }) {
               value={formValues.name}
               onChange={handleChange}
               required
+              aria-invalid={formErrors.name ? "true" : "false"}
             />
-            <label className={styles.userLabel} htmlFor="name">
-              Name
-            </label>
+            <label className={styles.userLabel} htmlFor="name">Name</label>
           </div>
 
           <div className={styles.inputGroup}>
@@ -164,10 +123,9 @@ function Signup({ isOpen, onClose }) {
               value={formValues.email}
               onChange={handleChange}
               required
+              aria-invalid={formErrors.email ? "true" : "false"}
             />
-            <label className={styles.userLabel} htmlFor="email">
-              Email
-            </label>
+            <label className={styles.userLabel} htmlFor="email">Email</label>
           </div>
 
           <div className={styles.inputGroup}>
@@ -179,10 +137,9 @@ function Signup({ isOpen, onClose }) {
               value={formValues.password}
               onChange={handleChange}
               required
+              aria-invalid={formErrors.password ? "true" : "false"}
             />
-            <label className={styles.userLabel} htmlFor="password">
-              Password
-            </label>
+            <label className={styles.userLabel} htmlFor="password">Password</label>
           </div>
 
           <div className={styles.inputGroup}>
@@ -194,16 +151,13 @@ function Signup({ isOpen, onClose }) {
               value={formValues.confirmPassword}
               onChange={handleChange}
               required
+              aria-invalid={formErrors.confirmPassword ? "true" : "false"}
             />
-            <label className={styles.userLabel} htmlFor="confirmPassword">
-              Confirm Password
-            </label>
+            <label className={styles.userLabel} htmlFor="confirmPassword">Confirm Password</label>
           </div>
 
           <div className={styles.inputGroup}>
-            <button type="submit" className={styles.submitButton}>
-              Sign up
-            </button>
+            <button type="submit" className={styles.submitButton}>Sign up</button>
           </div>
 
           <div className={styles.inputActiontext}>

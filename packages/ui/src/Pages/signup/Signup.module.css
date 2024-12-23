@@ -1,109 +1,166 @@
+.pageDiv {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  max-width: 100%;
+  gap: 0.5rem;
+}
 
 .formTitle {
-  width: 300px;
-	color: var(--black);
-	margin-top: 30px;
-	font-size: 2rem;
-  }
-
-.pageDiv {
-  margin: 60px 14px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-  shape-outside: inset(20px 50px 10px 0 round 50px);
-  background-color:var(--white);
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
+  color: var(--black);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom:0.5rem;
 }
-  
-  .formBox {
-  width: 400px;
-	border-radius: var(--bradius);
-	box-shadow: var(--shadow);
-	border: var(--border);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+
+.formBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  background: var(--white);
+}
+
+.inputGroup {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.input {
+  background: none;
+  padding: 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 16px;
+  transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.userLabel {
+  position: absolute;
+  left: 12px;
+  color: var(--smooth-gray);
+  font-size: 16px;
+  font-weight:500;
+  transform: translateY(12px);
+  transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus,
+.input:valid {
+  outline: none;
+  border: solid 2px var(--smooth-purple);
+}
+
+.input:focus ~ .userLabel,
+.input:valid ~ .userLabel {
+  color: var(--smooth-purple);
+  transform: translateY(-50%) scale(0.8);
+  background-color: var(--white);
+  padding: 0 0.2em;
+  font-weight: 600;
+}
+
+.submitButton {
+  padding:10px 20px;
+  font-size: 20px;
+  font-weight: bold;
   color: white;
-  max-height: 80vh; 
-  overflow-y: auto; 
-  padding-top: 30px; 
-  }
-  
-  .inputGroup {
-    position: relative;
-    margin: 16px 0;
-  }
-  
-  .input {
-    background: none;
-    padding: 12px;
-    font-size: 16px;
-    width: 300px;
-    box-sizing: border-box;
-    transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: var(--bradius);
-    box-shadow: var(--shadow);
-    border: var(--border);
-  }
-  
-  
-  .userLabel {
-    position: absolute;
-    left: 12px;
-    color:var(--smooth-gray);
-    font-size: 16px;
-    font-weight: 500;
-    transform: translateY(12px);
-    transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--smooth-purple);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: center; 
+  max-width: 400px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  max-width: 400px;
+}
+
+.submitButton:hover {
+  background-color:rgb(0, 48, 179); 
+}
+
+.inputActiontext {
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem ;
+  color: var(--black);
+}
+
+.errorMessage {
+  color: #ff3333;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 5px;
+  text-align: center; 
+  height: 1.2rem;
+  line-height: 1.2rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+.successMessage {
+  color: green;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px; 
+ height: 1.2rem; 
+  line-height: 1.2rem; 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+}
+
+@media (max-width: 768px) {
+  .formBox {
+    padding: 1rem;
+    width: 90%;
   }
 
-  .input:focus,
-  .input:valid {
-    outline: none;
-    border: solid 2px var(--smooth-purple);
+  .input, .submitButton {
+    width: 100%;
+    max-width: 100%;
   }
-  
-  .input:focus ~ .userLabel,
-  .input:valid ~ .userLabel{
-    color: var(--smooth-purple);
-    transform: translateY(-50%) scale(0.8);
-    background-color:var(--white);
-    padding: 0 0.2em;
-    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .formTitle {
+    font-size: 1.5rem;
   }
-  
-  .submitButton {
-    background-color:var(--smooth-purple);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
+
+  .formBox {
+    padding: 1rem;
+    width: 90%;
+    max-width: 350px;
   }
-  
-  
-  .inputActiontext {
-    margin: 10px 0px 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    box-sizing: border-box;
-    color: var(--black);
+
+  .input, .submitButton {
+    width: 100%;
+    max-width: 100%;
   }
-  
-  .errorMessage {
-    position: relative;
-    align-items: flex-end;
-    color: #f33;
-    display: flex;
-    height: auto;
-    margin-bottom: 10px;
-    margin-top: 16px;
-    width: 300px;
-  }
+}

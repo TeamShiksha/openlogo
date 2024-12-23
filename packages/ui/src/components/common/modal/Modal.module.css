@@ -26,12 +26,12 @@
 
 .modalSmall {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .modalMedium {
   width: 100%;
-  max-width: 600px;
+  max-width: 400px;
 }
 
 .modalLarge {
@@ -41,8 +41,8 @@
 
 .closeButton {
   position: absolute;
-  top: 2rem;
-  right: 1rem;
+  top: 0.2rem;
+  right: 0.5rem;
   background: none;
   border: none;
   font-size: 2rem;
@@ -65,7 +65,7 @@
   }
 
   .closeButton {
-    top: 2rem;
+    top: 0.5rem;
     right: 1rem;
     font-size: 2rem; 
     padding: 10px; 
