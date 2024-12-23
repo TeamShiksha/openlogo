@@ -6,21 +6,18 @@
   align-items: center;
   height: auto;
   max-width: 100%;
-  gap: 0.5rem;
 }
 
 .formTitle {
   color: var(--black);
   font-size: 2rem;
   text-align: center;
-  margin-bottom:0.5rem;
 }
 
 .formBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
   width: 100%;
   max-width: 400px;
   background: var(--white);
@@ -32,16 +29,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
+  margin: 16px 0;
 
-label {
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
 .input {
   background: none;
-  padding: 12px;
+  padding-top: 16px;
+	padding-bottom: 16px;
   font-size: 16px;
   box-sizing: border-box;
   border-radius: var(--bradius);
@@ -49,7 +44,6 @@ label {
   border: var(--border);
   width: 100%;
   max-width: 300px;
-  margin-bottom: 16px;
   transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -91,7 +85,6 @@ label {
   max-width: 400px;
   text-align: center;
   transition: background-color 0.3s ease;
-  max-width: 400px;
 }
 
 .submitButton:hover {
@@ -105,16 +98,25 @@ label {
   flex-wrap: wrap;
   gap: 1rem ;
   color: var(--black);
+  margin-top: 0.5rem;
 }
 
+.alertmessage{
+  height: 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: flex;
+  justify-content: center;  
+  align-items: center;    
+
+}
 .errorMessage {
   color: #ff3333;
   font-size: 1rem;
   width: 100%;
   max-width: 400px;
-  margin-bottom: 5px;
   text-align: center; 
-  height: 1.2rem;
   line-height: 1.2rem; 
   display: flex; 
   align-items: center; 
@@ -129,7 +131,6 @@ label {
   border-radius: 4px;
   width: 100%;
   max-width: 400px; 
- height: 1.2rem; 
   line-height: 1.2rem; 
   display: flex;
   align-items: center; 

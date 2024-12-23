@@ -15,7 +15,11 @@ const Header = () => {
     } else {
       document.body.classList.remove(styles.activemodal);
     }
-  });
+
+    return () => {
+      document.body.classList.remove(styles.activemodal);
+    };
+  }, [signupModal]);
 
   const hamburgerIcon = {
     src: "hamburger.svg",

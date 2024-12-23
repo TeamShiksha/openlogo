@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./Signup.module.css";
 import PropTypes from "prop-types";
 import Modal from "../../components/common/modal/Modal";
+import { isValidEmail, isValidPassword } from "../../utils/helpers";  
 
 function Signup({ isOpen, onClose }) {
   const initialValues = { name: "", email: "", password: "", confirmPassword: "" };
@@ -26,45 +27,32 @@ function Signup({ isOpen, onClose }) {
     setIsSubmit(true);
   };
 
-  const PASSWORD_RULES = {
-    minLength: 6,
-    maxLength: 10,
-    requiresUppercase: true,
-    requiresLowercase: true,
-    requiresDigit: true,
-    requiresSpecialChar: true,
-    specialCharRegex: /[!@#$%^&*(),.?":{}|<>]/,  
-  };
-  
-  const validatePassword = (password) => {
-    const errors = {};
-    if (!password) errors.password = "Password is required!";
-    else {
-      if (password.length < PASSWORD_RULES.minLength) errors.password = `Password must be at least ${PASSWORD_RULES.minLength} characters long!`;
-      if (password.length > PASSWORD_RULES.maxLength) errors.password = `Password cannot be more than ${PASSWORD_RULES.maxLength} characters!`;
-      if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) errors.password = "Password must contain at least one uppercase letter!";
-      if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) errors.password = "Password must contain at least one lowercase letter!";
-      if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) errors.password = "Password must contain at least one digit!";
-      if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) errors.password = "Password must contain at least one special character!";
-    }
-    return errors;
-  };
-
   const validate = (values) => {
     const errors = {};
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
 
-    if (!values.name) errors.name = "Name is required!";
-    else if (!/^[a-zA-Z\s]*$/.test(values.name)) errors.name = "Name can only contain letters and spaces!";
+    if (!values.name) {
+      errors.name = "Name is required!";
+    } else if (!/^[a-zA-Z\s]*$/.test(values.name)) {
+      errors.name = "Name can only contain letters and spaces!";
+    }
 
-    if (!values.email) errors.email = "Email is required!";
-    else if (!regexEmail.test(values.email)) errors.email = "This is not a valid email format!";
+    if (!values.email) {
+      errors.email = "Email is required!";
+    } else if (!isValidEmail(values.email)) {
+      errors.email = "This is not a valid email format!";
+    }
 
-    const passwordErrors = validatePassword(values.password);
-    if (Object.keys(passwordErrors).length > 0) errors.password = passwordErrors.password;
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (!isValidPassword(values.password)) {
+      errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character!";
+    }
 
-    if (!values.confirmPassword) errors.confirmPassword = "Confirm password is required!";
-    else if (values.confirmPassword !== values.password) errors.confirmPassword = "Passwords do not match!";
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm password is required!";
+    } else if (values.confirmPassword !== values.password) {
+      errors.confirmPassword = "Passwords do not match!";
+    }
 
     return errors;
   };
@@ -90,16 +78,25 @@ function Signup({ isOpen, onClose }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="medium">
-      <div className={styles.pageDiv} onClick={backdropClick}>
+      <div
+        className={styles.pageDiv}
+        role="button"
+        tabIndex="0"
+        onClick={backdropClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            backdropClick(e);
+          }
+        }}
+      >
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
           <h2 id="signup-title" className={styles.formTitle}>Sign up for free</h2>
-          
-          {Object.keys(formErrors).length === 0 && isSubmit && (
-            <div className="successMessage">Signed up successfully</div>
-          )}
-
-          {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-
+          <div className={styles.alertmessage}>
+            {Object.keys(formErrors).length === 0 && isSubmit && (
+              <p className={styles.successMessage}>Signed up successfully</p>
+            )}
+            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+          </div>
           <div className={styles.inputGroup}>
             <input
               type="text"

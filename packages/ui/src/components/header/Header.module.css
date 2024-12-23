@@ -1,6 +1,7 @@
 body.activemodal{
   overflow: hidden;
 }
+
 .header-container {
   display: flex;
   flex-direction: row;
