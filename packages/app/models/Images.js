@@ -52,7 +52,7 @@ imageSchema.statics.newImage = function(imageData) {
   if (!user_id || !company_name || !company_uri || !image_size) {
     return null;
   }
-  const image = new this({
+  const image = new Image({
     user_id,
     company_name,
     company_uri,

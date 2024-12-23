@@ -2,6 +2,11 @@ const { STATUS_CODES } = require("http");
 const UserTokenService = require("../../services/UserToken");
 const UserService = require("../../services/User");
 
+/**
+ * This controller processes a token provided in the request query. 
+ * It validates the token, checks its expiration,
+ * fetches the associated user, and attempts to verify the user's account.
+ */
 async function verifyTokenController(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
@@ -34,7 +39,7 @@ async function verifyTokenController(req, res, next) {
     if (!user)
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "User doesn't exists",
+        message: "Invalid token",
         statusCode: 404,
       });
 
@@ -42,7 +47,7 @@ async function verifyTokenController(req, res, next) {
     if (!verifyResult)
       return res.status(500).json({
         error: STATUS_CODES[500],
-        message: "Failed to verify user, try again",
+        message: "Verification failed",
         statusCode: 500,
       });
 

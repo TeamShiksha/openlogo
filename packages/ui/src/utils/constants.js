@@ -112,7 +112,38 @@ export const headerItems = [
     url: "/about",
   },
 ];
-
+export const footerItems = [
+  {
+    name: "home",
+    title: "Home",
+    url: "/",
+  },
+  {
+    name: "demo",
+    title: "Demo",
+    url: "/demo",
+  },
+  {
+    name: "features",
+    title: "Features",
+    url: "/features",
+  },
+  {
+    name: "pricing",
+    title: "Pricing",
+    url: "/pricing",
+  },
+  {
+    name: "about",
+    title: "About",
+    url: "/about",
+  },
+  {
+    name: "privacy",
+    title: "Privacy",
+    url: "/privacy",
+  },
+];
 export const companies = [
   {
     id: "A1B2C3D4E5",
@@ -488,3 +519,20 @@ export const ABOUT_TEXT = {
   DESCRIPTION: "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.",
   SUB_DESCRIPTION: "Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements."
 };
+export const FAQ = [
+  {
+    question: "Why should I use Openlogo?",
+    answer:
+      "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Customize logo sizes and formats to fit your needs effortlessly.",
+  },
+  {
+    question: "How do I get started with Openlogo?",
+    answer:
+      "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos in different formats (e.g., PNG, SVG) and sizes tailored to your needs. Use our comprehensive documentation to guide your integration and testing process.",
+  },
+  {
+    question: "What payment methods do you support?",
+    answer:
+      "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+  },
+];
