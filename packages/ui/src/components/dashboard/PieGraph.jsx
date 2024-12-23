@@ -8,7 +8,7 @@ const cleanPercentage = (percentage) => {
 	return +percentage;
 };
 
-const Circle = ({colour, pct, strokeWidth, fill}) => {
+const Circle = ({colour = "#000", pct = 0, strokeWidth = 5, fill = "none"}) => {
 	const r = 70 - strokeWidth / 2;
 	const circ = 2 * Math.PI * r;
 	const strokePct = ((100 - pct) * circ) / 100;
@@ -32,13 +32,6 @@ Circle.propTypes = {
 	strokeWidth: PropTypes.number,
 	fill: PropTypes.string,
 };
-  
-Circle.defaultProps = {
-	colour: "#000",
-	pct: 0,
-	strokeWidth: 5,
-	fill: "none",
-};
 
 const Text = ({percentage, fontSize}) => {
 	return (
@@ -58,13 +51,8 @@ Text.propTypes = {
 	percentage: PropTypes.number,
 	fontSize: PropTypes.string
 };
-  
-Text.defaultProps = {
-	percentage: 20,
-	fontSize: '1.5em'
-};
 
-function PieGraph({percentage, colour, strokeWidth, fontSize}) {
+function PieGraph({percentage = 20, colour, strokeWidth = 12, fontSize = '1.5em'}) {
 	const pct = cleanPercentage(percentage);
 	return (
 		<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
@@ -87,11 +75,6 @@ function PieGraph({percentage, colour, strokeWidth, fontSize}) {
 		</svg>
 	);
 }
-
-PieGraph.defaultProps = {
-	strokeWidth: 12,
-	fontSize: '1.5em',
-};
 
 PieGraph.propTypes = {
 	percentage: PropTypes.number,
