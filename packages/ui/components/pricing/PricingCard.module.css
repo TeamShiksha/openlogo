@@ -58,7 +58,7 @@
 
 .planTagline {
   font-family: "Inter", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 400;
   color: #475467;
   text-align: center;
@@ -139,4 +139,22 @@
   color: #9ca3af;
   cursor: not-allowed;
   border: 1px solid #d1d5db;
+}
+
+
+@media (max-width: 768px) {
+  .planKeypoints {
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .planKeypoints > div {
+    gap: 8px;
+  }
+  .cardSubDiv {
+    padding: 12px;
+    gap: 5px;
+  }
+  .getStartedBtn {
+    width: 250px;
+  }
 }
