@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./ContactForm.module.css";
 
-
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function ContactForm({ closeModal }) {
@@ -22,7 +21,7 @@ function ContactForm({ closeModal }) {
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    nameInputRef.current?.focus();
+    nameInputRef.current?.focus(); 
   }, []);
 
   const handleInputChange = (e) => {
@@ -63,7 +62,7 @@ function ContactForm({ closeModal }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Escape") closeModal();
+    if (e.key === "Escape") closeModal();  
   };
 
   return (
@@ -71,12 +70,12 @@ function ContactForm({ closeModal }) {
       className={styles.modalOverlay}
       onClick={closeModal}
       onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
+      tabIndex={0}  
+      role="dialog"  
     >
       <div
         className={styles.modalContent}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}  
       >
         {successMessage && (
           <div className={styles.successNotification}>
@@ -95,6 +94,7 @@ function ContactForm({ closeModal }) {
               value={formValues.name}
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.name ? styles.invalid : ""}`}
+              aria-invalid={!!errors.name}  
             />
           </div>
           <div className={styles.formGroup}>
@@ -105,6 +105,7 @@ function ContactForm({ closeModal }) {
               value={formValues.email}
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.email ? styles.invalid : ""}`}
+              aria-invalid={!!errors.email}
             />
           </div>
           <div className={styles.formGroup}>
@@ -114,6 +115,7 @@ function ContactForm({ closeModal }) {
               value={formValues.message}
               onChange={handleInputChange}
               className={`${styles.textArea} ${errors.message ? styles.invalid : ""}`}
+              aria-invalid={!!errors.message}
             ></textarea>
           </div>
           <div className={styles.buttonContainer}>
