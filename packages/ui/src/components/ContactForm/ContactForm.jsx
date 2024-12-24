@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./ContactForm.module.css";
+
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function ContactForm({ closeModal }) {
   const [formValues, setFormValues] = useState({
@@ -15,6 +18,12 @@ function ContactForm({ closeModal }) {
   });
 
   const [successMessage, setSuccessMessage] = useState("");
+
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +41,7 @@ function ContactForm({ closeModal }) {
     if (!formValues.name.trim()) newErrors.name = "Name is required.";
     if (!formValues.email.trim()) {
       newErrors.email = "Email is required.";
-    } else if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
+    } else if (!emailRegex.test(formValues.email)) {
       newErrors.email = "Enter a valid email address.";
     }
     if (!formValues.message.trim()) newErrors.message = "Message is required.";
@@ -53,13 +62,22 @@ function ContactForm({ closeModal }) {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") closeModal();
+  };
+
   return (
     <div
       className={styles.modalOverlay}
-      onClick={(e) => e.target === e.currentTarget && closeModal()}
+      onClick={closeModal}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
     >
-      <div className={styles.modalContent}>
-      
+      <div
+        className={styles.modalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
         {successMessage && (
           <div className={styles.successNotification}>
             <p>{successMessage}</p>
@@ -70,6 +88,7 @@ function ContactForm({ closeModal }) {
         <form className={styles.contactForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <input
+              ref={nameInputRef}
               type="text"
               name="name"
               placeholder={errors.name ? errors.name : "Your name"}

@@ -27,7 +27,7 @@ function App() {
             }
           />
         </Routes>
-         <GetInTouch />
+        <GetInTouch />
       </div>
 
       <Footer />

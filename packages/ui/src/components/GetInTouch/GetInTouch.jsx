@@ -4,10 +4,17 @@ import ContactForm from '../ContactForm/ContactForm';
 
 function GetInTouch() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const openModal = () => setIsModalOpen(true);
 
   const closeModal = () => setIsModalOpen(false);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openModal();
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -21,17 +28,30 @@ function GetInTouch() {
         <p className={styles.description}>
           Can't find the answer you're looking for? Please chat to our friendly team.
         </p>
-        <button onClick={openModal} className={styles.getInTouchBtn}>
+        <button
+          onClick={openModal}
+          onKeyDown={handleKeyDown}
+          tabIndex={0}
+          role="button"
+          className={styles.getInTouchBtn}
+        >
           Get in touch
         </button>
       </div>
 
-      
       {isModalOpen && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
+        <div
+          className={styles.modalOverlay}
+          onClick={closeModal}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') closeModal();
+          }}
+          tabIndex={0}
+        >
           <div
             className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <ContactForm closeModal={closeModal} />
           </div>
