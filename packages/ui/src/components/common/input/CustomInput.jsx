@@ -23,7 +23,7 @@ CustomInput.propTypes = {
 	type: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
-	error: PropTypes.number.isRequired,
+	error: PropTypes.string,
 	className: PropTypes.string.isRequired
 };
 

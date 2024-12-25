@@ -1,56 +1,36 @@
-.mainDiv{
-    background: var(--Primary-blue, rgba(79, 70, 229, 1));
-    border-radius: 16px;
-    padding: 10px 20px 70px 20px;
-    margin: 0px 25px;
-    
+.mainDiv {
+  background: var(--Primary-blue, rgba(79, 70, 229, 1));
+  border-radius: 16px;
+  padding: 48px 32px;
+  margin: 0 auto;
+  max-width: 1440px;
 }
 
-.cardsDiv{
-    display: flex;
-    justify-content: space-evenly;
-    padding: 0px 115px;
-    flex-wrap: wrap;
+.heading {
+  font-family: "Inter", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 56px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 16px;
 }
 
-.heading{
-    font-size: 48px;
-    padding: 0px 12px;
+.tagline {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  text-align: center;
+  color: #e4e4e7;
+  margin-bottom: 48px;
 }
 
-.tagline{
-    margin: 35px 0px;
-    font-size: 20px;
-}
-
-
-@media (max-width: 576px) {
-    .heading{
-        font-size: 25px;
-        padding: 0px;
-    }
-
-    .tagline{
-        margin: 20px 0px;
-        font-size: 16px;
-    }
-
-    .cardsDiv{
-        padding: 0px;
-    }
-}
-
-
-
-@media (min-width: 576px) and (max-width: 768px) {
-    .cardsDiv{
-        padding: 0px 20px;
-    }
-}
-
-
-@media (min-width: 768px)  and (max-width:1254px){
-    .cardsDiv{
-        padding: 0px;
-    }
+.cardsDiv {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin: 0 auto;
+  max-width: 1156px;
 }

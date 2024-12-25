@@ -4,6 +4,22 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
+import notion from "../assets/notion.png";
+import slack from "../assets/slack.png";
+import google_drive from "../assets/google_drive.png";
+import whatsapp from "../assets/whatsapp.png";
+import g_calendar from "../assets/g_calendar.png";
+import mailchimp from "../assets/mailchimp.png";
+import zapier from "../assets/zapier.png";
+import zendesk from "../assets/zendesk.png";
+import stripe from "../assets/stripe.png";
+import jira from "../assets/jira.png";
+import intercom from "../assets/intercom.png";
+import figma from "../assets/figma.png";
+import discord from "../assets/discord.png";
+import bitbucket from "../assets/bitbucket.png";
+import confluence from "../assets/confluence.png";
+import dropbox from "../assets/dropbox.png";
 
 export const SVGS = {
   searchIcon,
@@ -126,7 +142,7 @@ export const footerItems = [
     name: "privacy",
     title: "Privacy",
     url: "/privacy",
-  }
+  },
 ];
 export const companies = [
   {
@@ -478,4 +494,45 @@ export const INFO = [
   { title: "Keys", api: -6.8 },
   { title: "Hits", api: 9.2 },
   { title: "Requests", api: -5.3 },
+];
+
+export const INTEGRATIONS = [
+  { id: 1, src: notion, alt: 'Notion' },
+  { id: 2, src: slack, alt: 'Slack' },
+  { id: 3, src: google_drive, alt: 'Google Drive' },
+  { id: 4, src: intercom, alt: 'Intercom' },
+  { id: 5, src: stripe, alt: 'Stripe' },
+  { id: 6, src: dropbox, alt: 'Dropbox' },
+  { id: 7, src: jira, alt: 'Jira' },
+  { id: 8, src: zapier, alt: 'Zapier' },
+  { id: 9, src: figma, alt: 'Figma' },
+  { id: 10, src: confluence, alt: 'Confluence' },
+  { id: 11, src: mailchimp, alt: 'Mailchimp' },
+  { id: 12, src: zendesk, alt: 'Zendesk' },
+  { id: 13, src: g_calendar, alt: 'Google Calendar' },
+  { id: 14, src: whatsapp, alt: 'WhatsApp' },
+  { id: 15, src: discord, alt: 'Discord' },
+  { id: 16, src: bitbucket, alt: 'Bitbucket' }
+];
+
+export const ABOUT_TEXT = {
+  DESCRIPTION: "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.",
+  SUB_DESCRIPTION: "Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements."
+};
+export const FAQ = [
+  {
+    question: "Why should I use Openlogo?",
+    answer:
+      "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Customize logo sizes and formats to fit your needs effortlessly.",
+  },
+  {
+    question: "How do I get started with Openlogo?",
+    answer:
+      "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos in different formats (e.g., PNG, SVG) and sizes tailored to your needs. Use our comprehensive documentation to guide your integration and testing process.",
+  },
+  {
+    question: "What payment methods do you support?",
+    answer:
+      "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+  },
 ];
