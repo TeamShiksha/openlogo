@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import styles from './GetInTouch.module.css';
-import ContactForm from '../ContactForm/ContactForm';
+import React, { useState } from "react";
+import styles from "./GetInTouch.module.css";
+import ContactForm from "../ContactForm/ContactForm";
 
 function GetInTouch() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
-
   const closeModal = () => setIsModalOpen(false);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       openModal();
     }
@@ -20,19 +19,19 @@ function GetInTouch() {
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <div className={styles.circleContainer}>
-          <div className={`${styles.circle} ${styles.leftCircle}`}></div>
-          <div className={`${styles.circle} ${styles.centerCircle}`}></div>
-          <div className={`${styles.circle} ${styles.rightCircle}`}></div>
+          <div className={`${styles.circle} ${styles.leftCircle}`} />
+          <div className={`${styles.circle} ${styles.centerCircle}`} />
+          <div className={`${styles.circle} ${styles.rightCircle}`} />
         </div>
         <h2 className={styles.title}>Still have questions?</h2>
         <p className={styles.description}>
-          Can't find the answer you're looking for? Please chat to our friendly team.
+          Can't find the answer you're looking for? Please chat to our friendly
+          team.
         </p>
         <button
           onClick={openModal}
           onKeyDown={handleKeyDown}
           tabIndex={0}
-          role="button"
           className={styles.getInTouchBtn}
         >
           Get in touch
@@ -40,22 +39,15 @@ function GetInTouch() {
       </div>
 
       {isModalOpen && (
-        <div
+        <dialog
           className={styles.modalOverlay}
-          onClick={closeModal}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') closeModal();
-          }}
-          tabIndex={0}
+          open={isModalOpen}
+          onClose={closeModal}
         >
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-          >
+          <div className={styles.modalContent}>
             <ContactForm closeModal={closeModal} />
           </div>
-        </div>
+        </dialog>
       )}
     </div>
   );

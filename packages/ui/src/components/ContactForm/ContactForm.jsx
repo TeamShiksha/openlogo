@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types"; 
 import styles from "./ContactForm.module.css";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -17,12 +18,32 @@ function ContactForm({ closeModal }) {
   });
 
   const [successMessage, setSuccessMessage] = useState("");
-
+  const modalRef = useRef(null); 
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    nameInputRef.current?.focus(); 
-  }, []);
+    nameInputRef.current?.focus();
+
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    const handleEscKeyPress = (event) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscKeyPress);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscKeyPress);
+    };
+  }, [closeModal]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -61,28 +82,21 @@ function ContactForm({ closeModal }) {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") closeModal();  
-  };
-
   return (
-    <div
-      className={styles.modalOverlay}
-      onClick={closeModal}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}  
-      role="dialog"  
-    >
-      <div
-        className={styles.modalContent}
-        onClick={(e) => e.stopPropagation()}  
-      >
+    <dialog className={styles.modalOverlay} open>
+      <div ref={modalRef} className={styles.modalContent}>
         {successMessage && (
           <div className={styles.successNotification}>
             <p>{successMessage}</p>
           </div>
         )}
-
+        <button
+          onClick={closeModal}
+          className={styles.closeButton}
+          aria-label="Close"
+        >
+          &times;
+        </button>
         <h3>Contact Us</h3>
         <form className={styles.contactForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
@@ -90,18 +104,18 @@ function ContactForm({ closeModal }) {
               ref={nameInputRef}
               type="text"
               name="name"
-              placeholder={errors.name ? errors.name : "Your name"}
+              placeholder={errors.name || "Your name"}
               value={formValues.name}
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.name ? styles.invalid : ""}`}
-              aria-invalid={!!errors.name}  
+              aria-invalid={!!errors.name}
             />
           </div>
           <div className={styles.formGroup}>
             <input
               type="email"
               name="email"
-              placeholder={errors.email ? errors.email : "Your email"}
+              placeholder={errors.email || "Your email"}
               value={formValues.email}
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.email ? styles.invalid : ""}`}
@@ -111,7 +125,7 @@ function ContactForm({ closeModal }) {
           <div className={styles.formGroup}>
             <textarea
               name="message"
-              placeholder={errors.message ? errors.message : "Your message"}
+              placeholder={errors.message || "Your message"}
               value={formValues.message}
               onChange={handleInputChange}
               className={`${styles.textArea} ${errors.message ? styles.invalid : ""}`}
@@ -125,8 +139,12 @@ function ContactForm({ closeModal }) {
           </div>
         </form>
       </div>
-    </div>
+    </dialog>
   );
 }
+
+ContactForm.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+};
 
 export default ContactForm;
