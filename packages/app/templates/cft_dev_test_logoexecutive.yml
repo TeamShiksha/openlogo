@@ -29,6 +29,16 @@ Resources:
     Properties:
       BucketName: !Sub teamshiksha-openlogo-dev-test-${AWS::AccountId}-${AWS::Region}
       AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      LoggingConfiguration:
+        DestinationBucketName: !Sub logs-${AWS::AccountId}-${AWS::Region}
+        LogFilePrefix: logs/
 
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
