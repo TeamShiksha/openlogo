@@ -4,6 +4,7 @@ import Demo from "../../components/demo/Demo";
 import Features from "../../components/features/Features";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import Pricing from "../../../components/pricing/Pricing";
+import GetInTouch from "../../components/GetInTouch/GetInTouch";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <Features />
       <About/>
       <Pricing />
+      <GetInTouch />
   </div>
   );
 };

@@ -2,22 +2,22 @@
 	position: relative;
 	margin: 16px 0;
 	width: 100%;
-}
-
-.customInput {
+  }
+  
+  .customInput {
 	background: none;
 	padding-top: 16px;
 	padding-bottom: 16px;
 	font-size: 16px;
 	width: 100%;
 	box-sizing: border-box;
-	transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
 	border-radius: var(--bradius);
 	box-shadow: var(--shadow);
 	border: var(--border);
-}
-
-.customInputLabel {
+	transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .customInputLabel {
 	position: absolute;
 	left: 12px;
 	color: var(--smooth-gray);
@@ -27,21 +27,19 @@
 	transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 	text-transform: capitalize;
 	cursor: text;
-}
-
-.customInput:focus,
-.customInput:valid {
+  }
+  
+  .customInput:focus {
 	outline: none;
 	border: solid 2px var(--smooth-purple);
-}
-
-.customInput:focus ~ .customInputLabel,
-.customInput:valid ~ .customInputLabel,
-.customInput:disabled ~ .customInputLabel {
+  }
+  
+  .customInputGroup:focus-within .customInputLabel {
 	color: var(--smooth-purple);
 	transform: translateY(-50%) scale(0.8);
 	background-color: var(--white);
 	padding: 0 0.2em;
 	font-weight: 600;
 	cursor: default;
-}
+  }
+  

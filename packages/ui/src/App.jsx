@@ -4,10 +4,12 @@ import Header from "./components/header/Header";
 import AdminDashboard from "./pages/admin/Admin";
 import About from "./pages/about/About";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import Home from "./Pages/home/Home";
+import Home from "./pages/home/Home";
 import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
 import Pricing from "../components/pricing/Pricing";
+import Footer from "./components/footer/Footer";
+
 function App() {
   return (
     <>
@@ -27,7 +29,10 @@ function App() {
           }
         />
       </Routes>
+  
+      <Footer />
     </>
+     
   );
 }
 export default App;
