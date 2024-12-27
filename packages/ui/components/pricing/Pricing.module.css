@@ -5,7 +5,6 @@
   margin: 32px auto;
   max-width: 1440px;
   width: 85vw;
-  margin: 0 auto;
 }
 
 .heading {
@@ -46,16 +45,17 @@
     align-items: center;
     justify-content: center;
   }
-}
-
-@media (min-width: 1024px) and (max-width: 1280px) {
-  .mainDiv{
-    margin-top: 32px;
-    width: 80vw;
+  .heading {
+    font-size: 36px;
+    line-height: 43.2px;
+    font-weight: 600;
   }
-}
-@media (min-width: 1440px) and (max-width: 2560px) {
-  .mainDiv{
-    margin-top: 32px;
+  .tagline {
+    font-size: 16px;
+    line-height: 21.6px;
+    margin-bottom: 4px;
+  }
+  .cardsDiv {
+    gap: 16px;
   }
 }
