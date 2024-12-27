@@ -13,18 +13,18 @@ function CustomInput({ type, name, label, error, className }) {
       <label className={styles.customInputLabel} htmlFor={label}>
         {label}
       </label>
+
       {error && <p className={styles.customInputError}>{error}</p>}
     </div>
   );
 }
 
-
 CustomInput.propTypes = {
-	type: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired,
-	label: PropTypes.string.isRequired,
-	error: PropTypes.string,
-	className: PropTypes.string.isRequired
+        type: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        error: PropTypes.string,
+        className: PropTypes.string.isRequired,
 };
 
 export default CustomInput;

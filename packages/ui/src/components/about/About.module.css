@@ -1,9 +1,9 @@
 @import '../../utils/color.css';
 
 .container {
-  padding: 4rem;
+  padding-left: 77px;
   max-width: 1200px;
-  margin: 0 0;
+  margin: 60px 32px;
 }
 
 .aboutUs {
@@ -20,7 +20,7 @@
 }
 
 .description, .subDescription {
-  font-size: 1.125rem;
+  font-size: 20px;
   color: var(--text-gray);
   max-width: 1000px;
 }
@@ -64,6 +64,15 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding-left: 0px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .title {
+    font-size: 36px;
+    max-width: max-content;
+  }
   .logoGrid {
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
