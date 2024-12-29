@@ -13,13 +13,13 @@ import PrivacyPolicy from "./pages/privacypolicy/privacypolicy";
 
 function App() {
   return (
-    <>
+    <div className="app-container">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/pricing" element={<Pricing />} />
 
         <Route
@@ -33,7 +33,7 @@ function App() {
       </Routes>
   
       <Footer />
-    </>
+    </div>
      
   );
 }
