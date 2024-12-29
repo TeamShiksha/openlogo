@@ -6,12 +6,10 @@
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
 }
 
 .primary:hover {
   background: #4338ca; 
-  transform: translateY(-2px);
 }
 
 .secondary {
@@ -22,12 +20,10 @@
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
 }
 
 .secondary:hover {
   background: #4338ca;
-  transform: translateY(-2px); 
 }
 
 button:focus {

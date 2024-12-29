@@ -12,14 +12,20 @@ const mongoose = require("mongoose");
 if (process.env.NODE_ENV !== "test") {
   dotenv.config();
   require("newrelic");
-  mongoose.connect(process.env.MONGO_URL);
+  mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => {
+      console.error("MongoDB connection error:", err.message);
+      process.exit(1);
+    });
+
   const { error } = validateEnv(process.env);
   if (error) {
-    console.log(`Config validation error: ${error.message}`);
+    console.error(`Config validation error: ${error.message}`);
     process.exit(1);
   }
 }
-
 const app = express();
 app.use(cookieParser());
 const routes = require("./routes/index");
@@ -31,8 +37,12 @@ app.use(express.json());
  * This event is emitted when the response has been fully sent to the client.
 */
 app.use((req, res, next) => {
-  res.on('finish', () => {
-    logger.error(`${req.method} ${req.originalUrl} ${res.statusCode} - ${res.statusMessage}`);
+  res.on("finish", () => {
+    if (res.statusCode >= 400) {
+      logger.error(
+        `${req.method} ${req.originalUrl} ${res.statusCode} - ${res.statusMessage}`
+      );
+    }
   });
   next();
 });

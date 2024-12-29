@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; 
 import styles from "./Signup.module.css";
 import PropTypes from "prop-types";
 import Modal from "../../components/common/modal/Modal";
@@ -19,12 +19,37 @@ function Signup({ isOpen, onClose }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate(formValues);
     setFormErrors(errors);
     setErrorMessage(Object.values(errors)[0] || ""); 
-    setIsSubmit(true);
+
+    if (Object.keys(errors).length === 0) {
+      setIsSubmit(true);
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/signup",
+          formValues,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true, // Required for credentials
+          }
+        );
+        
+
+        if (response.status === 200) {
+          setSuccessMessage("Signed up successfully");
+          setFormValues(initialValues);
+        } else {
+          setErrorMessage(response.data.message || "Something went wrong");
+        }
+      } catch (error) {
+        setErrorMessage(error.response?.data?.message || "An error occurred during signup");
+      } finally {
+        setIsSubmit(false);
+      }
+    }
   };
 
   const validate = (values) => {
@@ -42,10 +67,9 @@ function Signup({ isOpen, onClose }) {
       errors.email = "This is not a valid email format!";
     }
 
-    if (!values.password) {
-      errors.password = "Password is required!";
-    } else if (!isValidPassword(values.password)) {
-      errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character!";
+    const passwordErrors = isValidPassword(values.password);
+    if (Object.keys(passwordErrors).length > 0) {
+      errors.password = passwordErrors.password;
     }
 
     if (!values.confirmPassword) {

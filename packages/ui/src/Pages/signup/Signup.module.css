@@ -37,6 +37,8 @@
   background: none;
   padding-top: 16px;
 	padding-bottom: 16px;
+  padding-left: 16px; 
+  padding-right: 16px; 
   font-size: 16px;
   box-sizing: border-box;
   border-radius: var(--bradius);
@@ -88,7 +90,7 @@
 }
 
 .submitButton:hover {
-  background-color:rgb(0, 48, 179); 
+  background: #4338ca;
 }
 
 .inputActiontext {
@@ -109,15 +111,15 @@
   display: flex;
   justify-content: center;  
   align-items: center;    
-
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 .errorMessage {
   color: #ff3333;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
   max-width: 400px;
   text-align: center; 
-  line-height: 1.2rem; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
@@ -127,7 +129,6 @@
   color: green;
   font-size: 1rem;
   text-align: center;
-  padding: 0.5rem;
   border-radius: 4px;
   width: 100%;
   max-width: 400px; 
@@ -141,9 +142,10 @@
   .formBox {
     padding: 1rem;
     width: 90%;
+    border:none;
   }
 
-  .input, .submitButton {
+  .input {
     width: 100%;
     max-width: 100%;
   }
@@ -158,9 +160,11 @@
     padding: 1rem;
     width: 90%;
     max-width: 350px;
+    border:none;
+
   }
 
-  .input, .submitButton {
+  .input {
     width: 100%;
     max-width: 100%;
   }
