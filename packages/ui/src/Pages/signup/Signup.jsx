@@ -114,24 +114,9 @@ function Signup({ isOpen, onClose }) {
     onClose();
   };
 
-  const backdropClick = (e) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="medium">
-       <div
-      className={styles.pageDiv}
-      onClick={backdropClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          backdropClick(e);
-        }
-      }}
-      aria-hidden={!isOpen}
-      role="region" 
-      aria-label="Backdrop"
-    >
+      <div className={styles.pageDiv}  >
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
           <h2 id="signup-title" className={styles.formTitle}>
             Sign up for free
@@ -182,7 +167,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.confirmPassword}
             onChange={handleChange}
-            required={true}
+             required={true}
           />
 
           <div className={styles.inputGroup}>
