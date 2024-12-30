@@ -48,7 +48,6 @@ function Signup({ isOpen, onClose }) {
   
         if (response.status === 200) {
           setSuccessMessage("Signed up successfully");
-          // Close the modal after a brief delay to show success message
           setTimeout(() => {
             resetForm();
             onClose();

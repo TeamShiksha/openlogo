@@ -448,3 +448,14 @@ export const INFO = [
   { title: "Hits", api: 9.2 },
   { title: "Requests", api: -5.3 },
 ];
+
+export const PASSWORD_VALIDATION_MESSAGES = {
+  required: "Password is required!",
+  minLength: (minLength) => `Password must be at least ${minLength} characters long.`,
+  maxLength: (maxLength) => `Password must be no more than ${maxLength} characters long.`,
+  uppercase: "Password must contain at least one uppercase letter.",
+  lowercase: "Password must contain at least one lowercase letter.",
+  digit: "Password must contain at least one digit.",
+  specialChar: "Password must contain at least one special character.",
+  generalError: "Password does not meet security requirements."
+};

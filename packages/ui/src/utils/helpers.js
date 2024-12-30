@@ -1,3 +1,5 @@
+import { PASSWORD_VALIDATION_MESSAGES } from "./constants"; // Import validation messages
+
 const PASSWORD_RULES = {
   minLength: 6,
   maxLength: 20,
@@ -12,35 +14,40 @@ export const isValidPassword = (password) => {
   const errors = {};
 
   if (!password) {
-    errors.password = "Password is required!";
+    errors.password = PASSWORD_VALIDATION_MESSAGES.required;
   } else {
     if (password.length < PASSWORD_RULES.minLength) {
-      errors.password = `Password must be at least ${PASSWORD_RULES.minLength} characters long!`;
+      errors.password = PASSWORD_VALIDATION_MESSAGES.minLength(PASSWORD_RULES.minLength);
     }
 
     if (password.length > PASSWORD_RULES.maxLength) {
-      errors.password = `Password cannot be more than ${PASSWORD_RULES.maxLength} characters!`;
+      errors.password = PASSWORD_VALIDATION_MESSAGES.maxLength(PASSWORD_RULES.maxLength);
     }
 
     if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) {
-      errors.password = "Password must contain at least one uppercase letter!";
+      errors.password = PASSWORD_VALIDATION_MESSAGES.uppercase;
     }
 
     if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) {
-      errors.password = "Password must contain at least one lowercase letter!";
+      errors.password = PASSWORD_VALIDATION_MESSAGES.lowercase;
     }
 
     if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) {
-      errors.password = "Password must contain at least one digit!";
+      errors.password = PASSWORD_VALIDATION_MESSAGES.digit;
     }
 
     if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) {
-      errors.password = "Password must contain at least one special character!";
+      errors.password = PASSWORD_VALIDATION_MESSAGES.specialChar;
     }
+  }
+
+  if (Object.keys(errors).length === 0) {
+    errors.password = PASSWORD_VALIDATION_MESSAGES.generalError; // Default generic error message
   }
 
   return errors;
 };
+
 
 export const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
