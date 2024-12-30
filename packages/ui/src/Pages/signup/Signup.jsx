@@ -122,7 +122,6 @@ function Signup({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={handleClose} size="medium">
       <div
         className={styles.pageDiv}
-        role="button"
         tabIndex="0"
         onClick={backdropClick}
         onKeyDown={(e) => {
@@ -130,6 +129,8 @@ function Signup({ isOpen, onClose }) {
             backdropClick(e);
           }
         }}
+         aria-label="Close Modal"
+         role="presentation" 
       >
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
           <h2 id="signup-title" className={styles.formTitle}>
@@ -151,7 +152,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.name}
             onChange={handleChange}
-            required
+            required={true}
           />
 
           <CustomInput
@@ -161,7 +162,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.email}
             onChange={handleChange}
-            required
+            required={true}
           />
 
           <CustomInput
@@ -171,7 +172,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.password}
             onChange={handleChange}
-            required
+            required={true}
           />
 
           <CustomInput
@@ -181,7 +182,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.confirmPassword}
             onChange={handleChange}
-            required
+            required={true}
           />
 
           <div className={styles.inputGroup}>

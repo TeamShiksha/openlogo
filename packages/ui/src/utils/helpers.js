@@ -1,4 +1,4 @@
-import { PASSWORD_VALIDATION_MESSAGES } from "./constants"; // Import validation messages
+import { PASSWORD_VALIDATION_MESSAGES } from "./constants"; 
 
 const PASSWORD_RULES = {
   minLength: 6,
@@ -16,38 +16,24 @@ export const isValidPassword = (password) => {
   if (!password) {
     errors.password = PASSWORD_VALIDATION_MESSAGES.required;
   } else {
-    if (password.length < PASSWORD_RULES.minLength) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.minLength(PASSWORD_RULES.minLength);
-    }
+    const checks = [
+      { condition: password.length < PASSWORD_RULES.minLength, message: PASSWORD_VALIDATION_MESSAGES.minLength(PASSWORD_RULES.minLength) },
+      { condition: password.length > PASSWORD_RULES.maxLength, message: PASSWORD_VALIDATION_MESSAGES.maxLength(PASSWORD_RULES.maxLength) },
+      { condition: PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password), message: PASSWORD_VALIDATION_MESSAGES.uppercase },
+      { condition: PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password), message: PASSWORD_VALIDATION_MESSAGES.lowercase },
+      { condition: PASSWORD_RULES.requiresDigit && !/\d/.test(password), message: PASSWORD_VALIDATION_MESSAGES.digit },
+      { condition: PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password), message: PASSWORD_VALIDATION_MESSAGES.specialChar }
+    ];
 
-    if (password.length > PASSWORD_RULES.maxLength) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.maxLength(PASSWORD_RULES.maxLength);
-    }
-
-    if (PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password)) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.uppercase;
-    }
-
-    if (PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password)) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.lowercase;
-    }
-
-    if (PASSWORD_RULES.requiresDigit && !/\d/.test(password)) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.digit;
-    }
-
-    if (PASSWORD_RULES.requiresSpecialChar && !PASSWORD_RULES.specialCharRegex.test(password)) {
-      errors.password = PASSWORD_VALIDATION_MESSAGES.specialChar;
-    }
+    checks.forEach(({ condition, message }) => {
+      if (condition) {
+        errors.password = message;
+      }
+    });
   }
 
-  if (Object.keys(errors).length === 0 && password) {
-    return {}; 
-  }
-
-  return errors;
+  return Object.keys(errors).length === 0 ? {} : errors;
 };
-
 
 export const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -60,7 +46,7 @@ export const isValidEmail = (email) => {
   };
   
   export const isValidMessage = (message) => {
-    const messageRegex = /^[^!@#$%^&*(){}[\]\\.;'",.<>/?`~|0-9]*$/;
+    const messageRegex = /^[^!@#$%^&*(){}[\];'",.<>/?`~|0-9]*$/;
     return messageRegex.test(message);
   };
   
