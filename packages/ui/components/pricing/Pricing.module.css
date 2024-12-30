@@ -2,8 +2,9 @@
   background: var(--Primary-blue, rgba(79, 70, 229, 1));
   border-radius: 16px;
   padding: 48px 32px;
-  margin: 0 auto;
+  margin: 32px auto;
   max-width: 1440px;
+  width: 85vw;
 }
 
 .heading {
@@ -33,4 +34,28 @@
   gap: 32px;
   margin: 0 auto;
   max-width: 1156px;
+}
+
+@media (max-width: 768px) {
+  .mainDiv {
+    margin: 16px auto;
+    padding: 3rem 1rem;
+    width: 80vw;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .heading {
+    font-size: 36px;
+    line-height: 43.2px;
+    font-weight: 600;
+  }
+  .tagline {
+    font-size: 16px;
+    line-height: 21.6px;
+    margin-bottom: 4px;
+  }
+  .cardsDiv {
+    gap: 16px;
+  }
 }
