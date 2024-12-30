@@ -33,14 +33,14 @@
 	outline: none;
 	border: solid 2px var(--smooth-purple);
   }
-  
-  .customInputGroup:focus-within .customInputLabel,
-  .customInputLabelActive {
-	color: var(--smooth-purple);
-	transform: translateY(-50%) scale(0.8);
-	background-color: var(--white);
-	padding: 0 0.2em;
-	font-weight: 600;
-	cursor: default;
-  }
+
+.customInputGroup:focus-within .customInputLabel,
+.customInputLabelActive {
+  color: var(--smooth-purple);
+  transform: translateY(-50%) scale(0.8);
+  background-color: var(--white);
+  padding: 0 0.2em;
+  font-weight: 600;
+  cursor: default;
+}
   

@@ -17,7 +17,12 @@ const generateKeyPayloadSchema = Joi.object().keys({
         "Description must contain only alphabets and spaces",
     }),
 });
-  
+
+/**
+ * This controller validates the request payload, checks the user's subscription key limit, 
+ * and creates a new API key if the user is eligible. If the key limit is reached or any 
+ * validation fails, appropriate error responses are returned.
+ */
 async function generateKeyController(req, res, next) {
   try {
     const userService = new UserService();

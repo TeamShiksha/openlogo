@@ -3,6 +3,12 @@ const UserService = require("../../services/User");
 const KeyService = require("../../services/Keys");
 const SubscriptionService = require("../../services/Subscription");
 
+/**
+ * This controller fetches the authenticated user's data from the database
+ * based on their `userId`. It also retrieves the user's subscription details
+ * and associated keys to provide a complete data set. If any data is missing, 
+ * an appropriate response is sent.
+ */
 async function getUserDataController(req, res, next) {
   try {
     const userService = new UserService();

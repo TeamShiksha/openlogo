@@ -19,6 +19,11 @@ const signinPayloadSchema = Joi.object().keys({
   }),
 });
 
+/**
+ * This controller validates the sign-in payload, checks if the email exists,
+ * verifies the user's email status, and compares the provided password with the stored one.
+ * If successful, it sets a JWT cookie and returns a successful response.
+ */
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
@@ -61,6 +66,7 @@ async function signinController(req, res, next) {
       sameSite: "none",
       secure: true,
     });
+    
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);

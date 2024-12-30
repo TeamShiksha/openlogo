@@ -28,6 +28,7 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
       >
         {label}
       </label>
+
       {error && <p className={styles.customInputError}>{error}</p>}
     </div>
   );
@@ -37,8 +38,8 @@ CustomInput.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired, 
-  onChange: PropTypes.func.isRequired, 
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   error: PropTypes.string,
   className: PropTypes.string.isRequired,
 };

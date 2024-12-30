@@ -1,7 +1,5 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
-const fs = require("fs");
-const handlebars = require("handlebars");
 const UserService = require("../../services/User");
 const UserTokenService = require("../../services/UserToken");
 /* const { fetchUserByEmail, createForgotToken } = require("../../services");
@@ -19,6 +17,11 @@ const forgotPasswordSchema = Joi.object().keys({
     }),
 });
 
+/**
+ * This controller processes a token provided in the request query. 
+ * It validates the token, checks its expiration, fetches the associated user, 
+ * and attempts to verify the user's account.
+ */
 async function forgotPasswordController(req, res, next) {
   try {
     const userService = new UserService();
@@ -44,10 +47,10 @@ async function forgotPasswordController(req, res, next) {
     if (!userToken)
       return res.status(503).json({
         error: STATUS_CODES[503],
-        message: "Unable to process forgot password request",
+        message: "Unable to process request",
         statusCode: 503,
     });
-    console.log(userToken.tokenURL());
+    console.log(userToken.tokenURL()); // send email function to be called
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
