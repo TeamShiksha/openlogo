@@ -120,18 +120,18 @@ function Signup({ isOpen, onClose }) {
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="medium">
-      <div
-        className={styles.pageDiv}
-        tabIndex="0"
-        onClick={backdropClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            backdropClick(e);
-          }
-        }}
-         aria-label="Close Modal"
-         role="presentation" 
-      >
+       <div
+      className={styles.pageDiv}
+      onClick={backdropClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          backdropClick(e);
+        }
+      }}
+      aria-hidden={!isOpen}
+      role="region" 
+      aria-label="Backdrop"
+    >
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
           <h2 id="signup-title" className={styles.formTitle}>
             Sign up for free
