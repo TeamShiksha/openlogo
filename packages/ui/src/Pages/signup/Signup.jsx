@@ -94,7 +94,7 @@ function Signup({ isOpen, onClose }) {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log("Form submitted successfully", formValues);
+      console.log("Form submitted successfully");
     }
   }, [formErrors, isSubmit]);
 
