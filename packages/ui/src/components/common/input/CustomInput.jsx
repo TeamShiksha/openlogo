@@ -2,13 +2,11 @@ import styles from "./CustomInput.module.css";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-function CustomInput({ type, name, label, error, className }) {
+function CustomInput({ type, name, label, value, onChange, error, className }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [value, setValue] = useState("");
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
-  const handleChange = (e) => setValue(e.target.value);
 
   return (
     <div className={styles.customInputGroup}>
@@ -17,10 +15,10 @@ function CustomInput({ type, name, label, error, className }) {
         id={label}
         name={name}
         className={`${styles.customInput} ${className}`}
-        value={value}
+        value={value} 
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={handleChange}
+        onChange={onChange} 
       />
       <label
         className={`${styles.customInputLabel} ${
@@ -39,6 +37,8 @@ CustomInput.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired, 
+  onChange: PropTypes.func.isRequired, 
   error: PropTypes.string,
   className: PropTypes.string.isRequired,
 };
