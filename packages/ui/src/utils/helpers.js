@@ -41,8 +41,8 @@ export const isValidPassword = (password) => {
     }
   }
 
-  if (Object.keys(errors).length === 0) {
-    errors.password = PASSWORD_VALIDATION_MESSAGES.generalError; // Default generic error message
+  if (Object.keys(errors).length === 0 && password) {
+    return {}; 
   }
 
   return errors;

@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const cors = require("cors");
-
 const operatorRouter = require("./operator");
 const userRouter = require("./user");
 const authRouter = require("./auth");
