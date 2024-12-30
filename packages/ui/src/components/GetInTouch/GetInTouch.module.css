@@ -1,0 +1,132 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 1220px;
+  height: 368px;
+  padding: 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: #f8f8f9;
+  position: relative;
+}
+
+.circleContainer {
+  display: flex;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.leftCircle {
+  width: 48px;
+  height: 48px;
+  background-color: #e3c6d1;
+  left: -60px;
+  z-index: 1;
+}
+
+.centerCircle {
+  width: 56px;
+  height: 56px;
+  background-color: #ddc0ce;
+  z-index: 2;
+}
+
+.rightCircle {
+  width: 48px;
+  height: 48px;
+  background-color: #c6d0cb;
+  left: 10px;
+  z-index: 1;
+}
+
+.title {
+  font-size: 1.3rem;
+  margin-top: 65px;
+  font-weight: 600;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #6b7179;
+  font-weight: 400;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.4;
+}
+
+.getInTouchBtn {
+  background-color: #4f46e5;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 35px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.getInTouchBtn:hover {
+  background-color: #4338ca;
+}
+
+.getInTouchBtn:focus,
+.getInTouchBtn:active {
+  background-color: #4338ca;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 90%;
+  }
+  .title {
+    font-size: 1.2rem;
+  }
+  .description {
+    font-size: 1rem;
+  }
+
+  .getInTouchBtn:hover {
+    background-color: #4338ca;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1rem;
+  }
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .getInTouchBtn:focus,
+  .getInTouchBtn:active {
+    background-color: #4338ca;
+  }
+}

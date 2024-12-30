@@ -15,6 +15,11 @@ const destroyKeyPayloadSchema = Joi.object({
   }),
 });
 
+/**
+ * This controller validates the request query for the key ID, verifies the user's identity,
+ * and deletes the specified API key if it exists. If the key ID is invalid or any validation
+ * fails, appropriate error responses are returned.
+ */
 async function destroyKeyController(req, res, next) { 
   try {
     const userService = new UserService();
@@ -29,8 +34,7 @@ async function destroyKeyController(req, res, next) {
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
-    const { keyId } = value;
-    const destroyedKey = await userService.destroyUserKey(keyId, user);
+    const destroyedKey = await userService.destroyUserKey(value.keyId, user);
     if (!destroyedKey) {
       return res.status(404).json({
         message: "Invalid Key",

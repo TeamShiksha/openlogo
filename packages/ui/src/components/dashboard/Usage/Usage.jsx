@@ -8,7 +8,7 @@ function Usage() {
 			<h6 className={styles.contentItemHeading}>Usage</h6>
 			<div className={styles.usageBodyContainer}>
 				<div className={styles.circularChart}>
-					<PieGraph percentage="21" colour='#4F46E5' fill='#E6E6FA' />
+					<PieGraph percentage={21} colour='#4F46E5' fill='#E6E6FA' />
 				</div>
 				<div className={styles.usageStatistics}>
 					<div className={styles.dataHeading}>Calls</div>

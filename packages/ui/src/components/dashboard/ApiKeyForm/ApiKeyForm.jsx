@@ -13,6 +13,7 @@ function ApiKeyForm() {
 					type='text'
 					name='apikey'
 					label='Add the description'
+					className='APIKeyInput'
 				/>
 				<button type='submit'>
 					Generate Key

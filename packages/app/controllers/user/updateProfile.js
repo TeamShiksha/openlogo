@@ -18,10 +18,13 @@ const changeNameEmailSchema = Joi.object().keys({
     }),
 });
 
+/**
+ * This controller validates the request payload, verifies the existence of the user, 
+ * and updates the user's profile with the provided name.
+ */
 async function updateProfileController(req, res, next) {
   try {
     const userService = new UserService();
-
     const { name } = req.body;
     const { error } = changeNameEmailSchema.validate(req.body);
     if (error) {
@@ -50,6 +53,7 @@ async function updateProfileController(req, res, next) {
         error: STATUS_CODES[500],
       });
     }
+
     return res.status(200).json({
       statusCode: 200
     });

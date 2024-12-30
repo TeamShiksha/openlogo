@@ -20,6 +20,11 @@ const postRaiseRequestPayloadSchema = Joi.object({
     }),
 });
 
+/**
+ * This controller accepts a payload from the client, validates it, and creates 
+ * a new raise request using the `RequestService`. If any step fails, an 
+ * appropriate error response is returned. Otherwise, it responds with a success status.
+ */
 async function raiseRequestController(req, res, next) {
   try {
     const requestService = new RequestService();

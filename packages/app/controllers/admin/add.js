@@ -16,6 +16,10 @@ const addAdminSchema = Joi.object().keys({
     }),
 });
 
+/**
+ * Promotes a user to admin or operator role using their email.
+ * Validates email input and updates user role if the user exists.
+ */
 const addAdminController = async (req, res, next) => {
   try {
     const userService = new UserService();
