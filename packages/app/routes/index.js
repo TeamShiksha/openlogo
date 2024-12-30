@@ -10,13 +10,12 @@ const privateRouteCORS = {
     if (origin === process.env.CLIENT_PROXY_URL || !origin) {
       callback(null, true);
     } else {
-      console.error(`Blocked by CORS: ${origin}`); 
-      callback(new Error(`CORS error: ${origin} is not allowed.`));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
 };
-// Apply CORS to specific routes
+
 router.use("/operator", cors(privateRouteCORS), operatorRouter);
 router.use("/user", cors(privateRouteCORS), userRouter);
 router.use("/auth", cors(privateRouteCORS), authRouter);

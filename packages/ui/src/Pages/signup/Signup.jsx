@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import styles from "./Signup.module.css";
 import PropTypes from "prop-types";
 import Modal from "../../components/common/modal/Modal";
-import { isValidEmail, isValidPassword } from "../../utils/helpers";  
+import { isValidEmail, isValidPassword } from "../../utils/helpers";
+import axios from "axios";
+import CustomInput from "../../components/common/input/CustomInput"
 
 function Signup({ isOpen, onClose }) {
-  const initialValues = { name: "", email: "", password: "", confirmPassword: "" };
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,34 +27,37 @@ function Signup({ isOpen, onClose }) {
     }));
   };
 
+  const resetForm = () => {
+    setFormValues(initialValues);
+    setFormErrors({});
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsSubmit(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate(formValues);
     setFormErrors(errors);
-    setErrorMessage(Object.values(errors)[0] || ""); 
-
+    setErrorMessage(Object.values(errors)[0] || "");
+  
     if (Object.keys(errors).length === 0) {
       setIsSubmit(true);
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/auth/signup",
-          formValues,
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true, // Required for credentials
-          }
-        );
-        
-
+        const response = await axios.post("/api/auth/signup", formValues);
+  
         if (response.status === 200) {
           setSuccessMessage("Signed up successfully");
-          setFormValues(initialValues);
-        } else {
-          setErrorMessage(response.data.message || "Something went wrong");
+          // Close the modal after a brief delay to show success message
+          setTimeout(() => {
+            resetForm();
+            onClose();
+          }, 1500);
         }
       } catch (error) {
-        setErrorMessage(error.response?.data?.message || "An error occurred during signup");
-      } finally {
+        setErrorMessage(
+          error.response?.data?.message || "An error occurred during signup"
+        );
         setIsSubmit(false);
       }
     }
@@ -89,19 +100,27 @@ function Signup({ isOpen, onClose }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        resetForm();
+        onClose();
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   const backdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget) handleClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="medium">
+    <Modal isOpen={isOpen} onClose={handleClose} size="medium">
       <div
         className={styles.pageDiv}
         role="button"
@@ -114,71 +133,62 @@ function Signup({ isOpen, onClose }) {
         }}
       >
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
-          <h2 id="signup-title" className={styles.formTitle}>Sign up for free</h2>
+          <h2 id="signup-title" className={styles.formTitle}>
+            Sign up for free
+          </h2>
           <div className={styles.alertmessage}>
-            {Object.keys(formErrors).length === 0 && isSubmit && (
-              <p className={styles.successMessage}>Signed up successfully</p>
+            {successMessage && (
+              <p className={styles.successMessage}>{successMessage}</p>
             )}
-            {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-          </div>
-          <div className={styles.inputGroup}>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className={styles.input}
-              value={formValues.name}
-              onChange={handleChange}
-              required
-              aria-invalid={formErrors.name ? "true" : "false"}
-            />
-            <label className={styles.userLabel} htmlFor="name">Name</label>
+            {errorMessage && (
+              <p className={styles.errorMessage}>{errorMessage}</p>
+            )}
           </div>
 
-          <div className={styles.inputGroup}>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              className={styles.input}
-              value={formValues.email}
-              onChange={handleChange}
-              required
-              aria-invalid={formErrors.email ? "true" : "false"}
-            />
-            <label className={styles.userLabel} htmlFor="email">Email</label>
-          </div>
+          <CustomInput
+            type="text"
+            name="name"
+            label="Name"
+            className={styles.input}
+            value={formValues.name}
+            onChange={handleChange}
+            required
+          />
+
+          <CustomInput
+            type="text"
+            name="email"
+            label="Email"
+            className={styles.input}
+            value={formValues.email}
+            onChange={handleChange}
+            required
+          />
+
+          <CustomInput
+            type="password"
+            name="password"
+            label="Password"
+            className={styles.input}
+            value={formValues.password}
+            onChange={handleChange}
+            required
+          />
+
+          <CustomInput
+            type="password"
+            name="confirmPassword"
+            label="Confirm Password"
+            className={styles.input}
+            value={formValues.confirmPassword}
+            onChange={handleChange}
+            required
+          />
 
           <div className={styles.inputGroup}>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className={styles.input}
-              value={formValues.password}
-              onChange={handleChange}
-              required
-              aria-invalid={formErrors.password ? "true" : "false"}
-            />
-            <label className={styles.userLabel} htmlFor="password">Password</label>
-          </div>
-
-          <div className={styles.inputGroup}>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              className={styles.input}
-              value={formValues.confirmPassword}
-              onChange={handleChange}
-              required
-              aria-invalid={formErrors.confirmPassword ? "true" : "false"}
-            />
-            <label className={styles.userLabel} htmlFor="confirmPassword">Confirm Password</label>
-          </div>
-
-          <div className={styles.inputGroup}>
-            <button type="submit" className={styles.submitButton}>Sign up</button>
+            <button type="submit" className={styles.submitButton}>
+              Sign up
+            </button>
           </div>
 
           <div className={styles.inputActiontext}>
