@@ -3,8 +3,10 @@ import About from "../../components/about/About";
 import Demo from "../../components/demo/Demo";
 import Features from "../../components/features/Features";
 import HeroSection from "../../components/HeroSection/HeroSection";
+import FAQs from "../../components/faqs/FAQs";
 import Pricing from "../../../components/pricing/Pricing";
 import GetInTouch from "../../components/GetInTouch/GetInTouch";
+
 
 const Home = () => {
   return (
@@ -14,6 +16,7 @@ const Home = () => {
       <Features />
       <About/>
       <Pricing />
+      <FAQs/>
       <GetInTouch />
   </div>
   );
