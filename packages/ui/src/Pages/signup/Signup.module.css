@@ -36,10 +36,8 @@
   max-width: 400px;
   text-align: center;
   transition: background-color 0.3s ease;
-}
-
-.submitButton:hover {
-  background: #4338ca;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .inputActiontext {
@@ -47,9 +45,13 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem ;
-  color: var(--black);
+  gap: 0.5rem ;
   margin-top: 0.5rem;
+  color: #475467;
+}
+
+.signIn {
+  color: #551A8B;
 }
 
 .alertmessage{
@@ -58,8 +60,8 @@
   max-width: 400px;
   text-align: center;
   display: flex;
-  justify-content: center;  
-  align-items: center;    
+  justify-content: center;
+  align-items: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
 }

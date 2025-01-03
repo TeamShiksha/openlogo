@@ -177,8 +177,8 @@ function Signup({ isOpen, onClose }) {
           </div>
 
           <div className={styles.inputActiontext}>
-            <span>Already have an account?</span>
-            <span>Sign in</span>
+          <span>Already have an account?</span>
+          <span className={styles.signIn}>Sign in</span>
           </div>
         </form>
       </div>
