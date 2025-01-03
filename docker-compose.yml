@@ -23,9 +23,6 @@ services:
       - "5000:5000"
     env_file:
       - ./packages/app/.env
-    volumes:
-      - ./packages/app:/usr/src/app
-      - /usr/src/app/node_modules
     depends_on:
       - mongodb
     networks:
@@ -40,7 +37,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./packages/app/.env
+      - ./packages/ui/.env
     depends_on:
       - backend
     networks:
