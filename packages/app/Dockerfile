@@ -8,7 +8,16 @@ COPY package*.json ./
 
 RUN pnpm install 
 
-COPY . .
+COPY aws ./aws
+COPY controllers ./controllers
+COPY middlewares ./middlewares
+COPY models ./models
+COPY repositories ./repositories
+COPY routes ./routes
+COPY services ./services
+COPY utils ./utils
+COPY index.js ./
+COPY newrelic.js ./
 
 EXPOSE 5000
 
