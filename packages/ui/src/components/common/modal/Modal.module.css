@@ -17,16 +17,21 @@
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 3rem;
+  z-index: 1100;
+  overflow: hidden;
+  margin: 1rem;
+  width: 100%;  
+  max-width: 800px;
 }
 
 .modalSmall {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .modalMedium {
   width: 100%;
-  max-width: 600px;
+  max-width: 400px;
 }
 
 .modalLarge {
@@ -36,11 +41,11 @@
 
 .closeButton {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 0.2rem;
+  right: 0.5rem;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 2rem;
   cursor: pointer;
   padding: 5px;
   color: #666;
@@ -50,4 +55,31 @@
 
 .closeButton:hover {
   color: #333;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 90%; 
+    max-width: none; 
+    padding: 2rem; 
+  }
+
+  .closeButton {
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 2rem; 
+    padding: 10px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    width: 95%; 
+    padding: 1.5rem; 
+  }
+
+  .closeButton {
+    font-size: 1.5rem; 
+    padding: 8px;
+  }
 }

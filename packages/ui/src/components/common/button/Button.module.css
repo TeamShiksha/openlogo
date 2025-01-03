@@ -5,6 +5,11 @@
   color: #ffffff;
   font-weight: 600;
   border-radius: 8px;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: #4338ca; 
 }
 
 .secondary {
@@ -14,4 +19,13 @@
   color: #344054;
   font-weight: 600;
   border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondary:hover {
+  background: #4338ca;
+}
+
+button:focus {
+  outline: none;
 }

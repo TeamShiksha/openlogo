@@ -1,7 +1,15 @@
+import { useState } from "react";
 import Button from "../common/button/Button";
 import styles from "./HeroSection.module.css";
+import Signup from "../../Pages/signup/Signup";
 
 const HeroSection = () => {
+    const [signupModal, setSignupModal] = useState(false);
+  
+    const closeSignupModal = () => {
+      setSignupModal(false);
+    };
+  
   return (
     <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
@@ -19,8 +27,11 @@ const HeroSection = () => {
               <span>Documentation</span>
             </div>
           </Button>
-          <Button variant="primary">Get started</Button>
-        </div>
+          <Button variant="primary" onClick={() => setSignupModal(true)}>
+            Get started 
+          </Button>
+           <Signup isOpen={signupModal} onClose={closeSignupModal} />    
+               </div>
       </div>
       <div className={styles["right-section"]}>
         <img
