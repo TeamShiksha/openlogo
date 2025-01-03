@@ -8,16 +8,7 @@ COPY package*.json ./
 
 RUN pnpm install 
 
-COPY src ./src
-COPY public ./public
-COPY components ./components
-COPY utils ./utils
-COPY vite.config.js ./
-COPY index.html ./
-COPY vite.config.js ./
-COPY vitest.config.js ./
-COPY eslint.config.js ./
-COPY babel.config.mjs ./
+COPY . .
 
 EXPOSE 3000
 
