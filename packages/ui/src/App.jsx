@@ -9,7 +9,7 @@ import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
 import Pricing from "../components/pricing/Pricing";
 import Footer from "./components/footer/Footer";
-import PrivacyPolicy from "./pages/privacypolicy/privacypolicy";
+import PrivacyPolicy from "./pages/privacypolicy/PrivacyPolicy";
 
 function App() {
   return (
