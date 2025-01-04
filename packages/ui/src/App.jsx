@@ -10,6 +10,7 @@ import Dashboard from "./Pages/dashboard/Dashboard";
 import Pricing from "../components/pricing/Pricing";
 import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./pages/privacypolicy/PrivacyPolicy";
+import Settings from "../components/settingsPage/SettingsPage"
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-
+        <Route path="/profile" element={<Settings />} />
         <Route
           path="/admin"
           element={
