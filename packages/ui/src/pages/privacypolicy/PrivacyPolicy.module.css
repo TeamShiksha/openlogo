@@ -1,0 +1,10 @@
+.text {
+  color: var(--text-gray);
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: 400;
+}
+.heading {
+  font-weight: 600;
+  color: var(--black);
+}

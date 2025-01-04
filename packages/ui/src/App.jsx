@@ -9,16 +9,18 @@ import "./App.css";
 import Dashboard from "./Pages/dashboard/Dashboard";
 import Pricing from "../components/pricing/Pricing";
 import Footer from "./components/footer/Footer";
+import PrivacyPolicy from "./pages/privacypolicy/PrivacyPolicy";
 
 function App() {
   return (
-    <>
+    <div className="app-container">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
         <Route
           path="/admin"
@@ -31,7 +33,7 @@ function App() {
       </Routes>
   
       <Footer />
-    </>
+    </div>
      
   );
 }
