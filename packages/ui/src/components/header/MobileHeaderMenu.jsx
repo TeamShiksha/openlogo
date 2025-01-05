@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { HEADER_ITEMS } from "../../utils/constants";
 import Button from "../common/button/Button";
-import Signup from "../signup/Signup";
-import { Link } from "react-router-dom";
 import styles from "./MobileHeaderMenu.module.css";
+import Signup from "../authmodal/AuthModal";
+import { Link } from "react-router-dom";
 
 const MobileHeaderMenu = () => {
   const [signupModal, setSignupModal] = useState(false);
