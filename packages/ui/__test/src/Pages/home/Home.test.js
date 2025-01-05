@@ -1,9 +1,9 @@
 import React from 'react';
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {describe, expect, it, vi} from 'vitest';
-import Dashboard from './Dashboard';
-import {UserContext} from '../../contexts/UserContext';
-import {formatDate} from '../../utils/helpers';
+import Dashboard from '../../../../src/page/dashboard/Dashboard';
+import {UserContext} from '../../../../src/contexts/UserContext';
+import {formatDate} from '../../../../src/utils/helpers';
 
 describe('Dashboard Component', () => {
 	const mockUserData = {

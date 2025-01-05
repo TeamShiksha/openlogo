@@ -1,10 +1,10 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import About from './About';
+import About from '../../../../src/page/about/About';
 import {BrowserRouter} from 'react-router-dom';
 import {describe, expect, it, vi} from 'vitest';
-import {AuthContext} from '../../contexts/AuthContext';
-import {UserContext} from '../../contexts/UserContext';
+import {AuthContext} from '../../../../src/contexts/AuthContext';
+import {UserContext} from '../../../../src/contexts/UserContext';
 
 describe('About Component', () => {
 	const mockUserData = {

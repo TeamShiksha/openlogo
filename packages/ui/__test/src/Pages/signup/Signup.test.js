@@ -1,8 +1,8 @@
 import {waitFor, fireEvent, render, screen} from '@testing-library/react';
 import {MemoryRouter, Navigate} from 'react-router-dom';
 import {vi, describe, expect, it} from 'vitest';
-import Signup from './Signup';
-import {AuthContext} from '../../contexts/AuthContext';
+import Signup from '../../../../src/page/signup/Signup';
+import {AuthContext} from '../../../../src/contexts/AuthContext';
 
 vi.mock('react-router-dom', () => ({
 	Navigate: vi.fn(() => null),

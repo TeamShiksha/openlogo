@@ -1,8 +1,9 @@
+import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import {rest} from 'msw';
 import {vi, describe, expect, it} from 'vitest';
-import {server} from '../../mocks/server.js';
-import AdminDashboard from './Admin.js';
+import {server} from '../../../../src/mocks/server.js';
+import AdminDashboard from '../../../../src/page/admin/Admin.jsx';
 
 describe('AdminDashboard', () => {
 	it('renders the "Add Image" heading', async () => {
