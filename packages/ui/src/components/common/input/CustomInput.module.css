@@ -6,7 +6,7 @@
 
 .customInput {
   color: var(--input-color);
-  background: white;
+  background: var(--white);
   padding: 12px;
   font-size: 1rem;
   width: 100%;
@@ -25,22 +25,23 @@
   position: absolute;
   left: 12px;
   color: var(--label-color);
-  font-size: 14px;
+  font-size: 1rem;
   transform: translateY(12px);
-  transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease-in-out;
   text-transform: capitalize;
   cursor: text;
 }
 
 .customInput:focus {
   outline: none;
-  border: solid 2px var(--smooth-purple);
+  border: solid 2px var(--primary);
 }
 
 .customInputGroup:focus-within .customInputLabel,
 .customInputLabelActive {
-  color: var(--smooth-purple);
+  color: var(--primary);
   transform: scale(0.8);
+  font-size: 0.8rem;
   transform: translateY(-50%) translateX(2px);
   background-color: var(--white);
   padding: 0 4px;

@@ -1,14 +1,7 @@
 import PropTypes from "prop-types";
-import {
-  createContext,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { instance } from "../api/api_instance";
-
-export const AuthContext = createContext();
+import { AuthContext } from "./Contexts";
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

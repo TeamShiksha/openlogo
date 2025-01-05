@@ -3,7 +3,6 @@ import { SVGS, COMPANIES } from "../../utils/constants";
 import CustomInput from "../common/input/CustomInput";
 import styles from "./Demo.module.css";
 
-
 const Demo = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
@@ -48,7 +47,7 @@ const Demo = () => {
               type="text"
               value={searchTerm}
               onChange={handleInputChange}
-             />
+            />
             <button type="submit" className={styles.searchButton}>
               <img src={SVGS.searchIcon} height={24} width={24} alt="Search" />
             </button>

@@ -1,43 +1,32 @@
-import React from "react";
 import styles from "./PrivacyPolicy.module.css";
+
 const PrivacyPolicy = () => {
   return (
-    <div
-      className={styles.privacyPolicy}
-      style={{ padding: "20px", lineHeight: "1.6" }}
-    >
-      {/* Introduction Section */}
-      <section>
+    <div className={styles.container}>
         <h2 className={styles.heading}>Openlogo Terms of Services</h2>
         <p className={styles.text}>
-          Thank you for choosing OpenLogo! We're excited to have you on board.
-          Before you begin using OpenLogo, please take a moment to review our
-          Terms of Service carefully. As this agreement is a crucial contract
-          between us and our users, we've made every effort to present it
-          clearly. To make it more convenient for you, we've provided a concise,
-          non-binding summary followed by the complete legal terms.
+          Thank you for choosing OpenLogo! Before using our services, please
+          review our Terms of Service carefully. This agreement is a crucial
+          contract between us and our users. We&apos;ve provided a concise
+          summary followed by the complete legal terms.
         </p>
-      </section>
       <br />
-
-      {/* Privacy Policy Section */}
-      <section>
         <h2 className={styles.heading}>Privacy Policy</h2>
         <p className={styles.text}>
           This Privacy Policy explains how Openlogo collects, uses, and protects
           your personal information when you use our website and services. By
-          using Openlogo's services, you agree to the terms of this Privacy
+          using Openlogo&apos;s services, you agree to the terms of this Privacy
           Policy. Your privacy is important to us, and we are committed to
           safeguarding your personal information.
         </p>
         <p className={styles.text}>
           Openlogo collects personal information such as your name, email
-          address, and other details when you register for an account or make
-          use of specific features on our platform. We also gather usage data
-          about how you interact with our website and services, including pages
-          viewed, features used, and your activity within our platform. If you
-          contact us for support or inquiries, we may collect the content of
-          those communications.
+          address, and other details when you register for an account or use
+          specific features on our platform. We also gather usage data about how
+          you interact with our website and services, including pages viewed,
+          features used, and your activity within our platform. If you contact
+          us for support or inquiries, we may collect the content of those
+          communications.
         </p>
         <p className={styles.text}>
           The information collected is used to provide and enhance our services,
@@ -66,9 +55,9 @@ const PrivacyPolicy = () => {
           fulfill its purposes or as required by law.
         </p>
         <p className={styles.text}>
-          Openlogo's services are not intended for children under 13, and we do
-          not knowingly collect personal information from children under this
-          age. If you believe that we have inadvertently collected personal
+          Openlogo&apos;s services are not intended for children under 13, and
+          we do not knowingly collect personal information from children under
+          this age. If you believe that we have inadvertently collected personal
           information from a child under 13, please contact us immediately, and
           we will take steps to delete such data.
         </p>
@@ -80,18 +69,15 @@ const PrivacyPolicy = () => {
           to stay informed about how we are protecting your personal
           information.
         </p>
-      </section>
       <br />
-
-      {/* Terms and Conditions Section */}
-      <section>
         <h2 className={styles.heading}>Terms and Conditions</h2>
         <p className={styles.text}>
-          By using Openlogo's website and services, you agree to comply with the
-          following terms and conditions. You must abide by all applicable laws
-          and regulations while using our services. You are responsible for
-          maintaining the confidentiality of your account credentials, including
-          your password, and for all activities that occur under your account.
+          By using Openlogo&apos;s website and services, you agree to comply
+          with the following terms and conditions. You must abide by all
+          applicable laws and regulations while using our services. You are
+          responsible for maintaining the confidentiality of your account
+          credentials, including your password, and for all activities that
+          occur under your account.
         </p>
         <p className={styles.text}>
           Openlogo reserves the right to modify or discontinue services, in
@@ -108,8 +94,8 @@ const PrivacyPolicy = () => {
           availability.
         </p>
         <p className={styles.text}>
-          You agree not to misuse Openlogo's services, including but not limited
-          to engaging in illegal activities, spamming, or violating the
+          You agree not to misuse Openlogo&apos;s services, including but not
+          limited to engaging in illegal activities, spamming, or violating the
           intellectual property rights of others. Failure to comply with these
           terms may result in the suspension or termination of your account.
         </p>
@@ -123,7 +109,6 @@ const PrivacyPolicy = () => {
           Conditions, please contact us through our contact page. We are here to
           help you understand and navigate our policies.
         </p>
-      </section>
       <br />
     </div>
   );

@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext, UserContext } from "../contexts/Contexts";
 import { Navigate, useLocation } from "react-router";
-import { UserContext } from "../contexts/UserContext";
 import Spinner from "../components/Spinner/Spinner";
 
 function ProtectedRoute({ adminOnly, children }) {
@@ -14,7 +13,7 @@ function ProtectedRoute({ adminOnly, children }) {
     if (adminOnly && isAuthenticated && (loading || !userData)) {
       fetchUserData();
     }
-  }, []);
+  }, [adminOnly, fetchUserData, isAuthenticated, loading, userData]);
 
   if (adminOnly && isAuthenticated && (loading || !userData)) {
     return <Spinner />;

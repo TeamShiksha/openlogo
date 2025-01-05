@@ -21,37 +21,27 @@
   width: 100%;
   max-width: 400px;
   background: var(--white);
+  border-bottom: var(--border);
 }
 
-.submitButton {
-  padding: 10px 20px;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  background-color: var(--smooth-purple);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  align-self: center;
-  max-width: 400px;
-  text-align: center;
-  transition: background-color 0.3s ease;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.signbutton {
+  margin: 1rem 0;
 }
 
 .inputActiontext {
+  padding-top: 1rem;
   font-size: 1rem;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  color: #475467;
+  gap: 3rem;
+  color: var(--description);
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.signIn {
-  color: #551a8b;
+.inputActiontext:hover {
+  color: var(--primary);
 }
 
 .alertmessage {

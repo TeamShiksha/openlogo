@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MobileHeaderMenu from "../MobileHeaderMenu/MobileHeaderMenu";
-import Signup from "../../page/signup/Signup";
+import MobileHeaderMenu from "./MobileHeaderMenu";
+import Signup from "../signup/Signup";
 import Button from "../common/button/Button";
 import { HEADER_ITEMS } from "../../utils/constants";
 import styles from "./Header.module.css";

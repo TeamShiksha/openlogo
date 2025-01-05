@@ -1,7 +1,6 @@
-import React from "react";
-import styles from "./Pricing.module.css";
 import PricingCard from "./PricingCard";
 import plans from "../../utils/constants";
+import styles from "./Pricing.module.css";
 
 function Pricing() {
   const filteredPlans = plans.filter((plan) => plan.pricing !== null);
@@ -21,7 +20,6 @@ function Pricing() {
           <PricingCard
             key={plan.name}
             name={plan.name}
-            pricing={plan.pricing}
             tagline={plan.tagline}
             index={plan.index}
             keypoints={plan.keypoints}

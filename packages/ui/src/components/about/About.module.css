@@ -1,41 +1,29 @@
-@import "../../utils/color.css";
-
 .container {
-  padding-left: 77px;
-  max-width: 1200px;
-  margin: 60px 32px;
+  margin: 1rem 2rem;
+  padding: 2rem 5rem;
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 1rem 0;
-  color: var(--text-dark);
-}
-
-.description,
-.subDescription {
-  font-size: 20px;
-  color: var(--text-gray);
-  max-width: 1000px;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--black);
 }
 
 .description {
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.8rem;
+  color: var(--description);
   margin-bottom: 1rem;
-}
-
-.subDescription {
-  margin-bottom: 3rem;
 }
 
 .logoGrid {
   display: grid;
   grid-template-columns: repeat(8, 70px);
   gap: 32px;
-  margin: 6rem auto 0;
-  padding-left: 200px;
   justify-content: center;
-  width: fit-content;
+  align-items: center;
+  margin: 3rem 0;
 }
 
 .logoItem {

@@ -1,5 +1,5 @@
-import styles from "./Features.module.css";
 import { featureItems } from "../../utils/constants";
+import styles from "./Features.module.css";
 
 function Features() {
   return (

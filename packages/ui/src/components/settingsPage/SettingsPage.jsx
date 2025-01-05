@@ -1,4 +1,3 @@
-import React from "react";
 import SettingCard from "./SettingCard";
 import styles from "./SettingsPage.module.css";
 import { SETTING } from "../../utils/constants";

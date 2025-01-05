@@ -1,11 +1,10 @@
 import { useState } from "react";
 import Button from "../common/button/Button";
 import styles from "./HeroSection.module.css";
-import Signup from "../../page/signup/Signup";
+import Signup from "../signup/Signup";
 
 const HeroSection = () => {
   const [signupModal, setSignupModal] = useState(false);
-
   const closeSignupModal = () => {
     setSignupModal(false);
   };
@@ -17,7 +16,7 @@ const HeroSection = () => {
           <h1>Access hundreds of logos with just one line of code</h1>
           <p>
             A collection of APIs designed to simplify the process of obtaining
-            company logos. Generate API keys in seconds
+            company logos. Generate API keys in seconds.
           </p>
         </div>
         <div className={styles["button-section"]}>
@@ -27,7 +26,11 @@ const HeroSection = () => {
               <span>Documentation</span>
             </div>
           </Button>
-          <Button type="button" variant="primary" onClick={() => setSignupModal(true)}>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => setSignupModal(true)}
+          >
             Get started
           </Button>
           <Signup isOpen={signupModal} onClose={closeSignupModal} />

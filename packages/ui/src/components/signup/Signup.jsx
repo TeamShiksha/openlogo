@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
-import styles from "./Signup.module.css";
-import PropTypes from "prop-types";
-import Modal from "../../components/common/modal/Modal";
-import { isValidEmail, isValidPassword } from "../../utils/helpers";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
-import CustomInput from "../../components/common/input/CustomInput";
+import PropTypes from "prop-types";
+import Modal from "../common/modal/Modal";
+import { isValidEmail, isValidPassword } from "../../utils/helpers";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
+import styles from "./Signup.module.css";
 
 function Signup({ isOpen, onClose }) {
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
+  const initialValues = useMemo(
+    () => ({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    }),
+    [],
+  );
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -27,13 +31,13 @@ function Signup({ isOpen, onClose }) {
     }));
   };
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormValues(initialValues);
     setFormErrors({});
     setErrorMessage("");
     setSuccessMessage("");
     setIsSubmit(false);
-  };
+  }, [initialValues]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,7 +111,7 @@ function Signup({ isOpen, onClose }) {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [onClose, resetForm]);
 
   const handleClose = () => {
     resetForm();
@@ -129,58 +133,49 @@ function Signup({ isOpen, onClose }) {
               <p className={styles.errorMessage}>{errorMessage}</p>
             )}
           </div>
-
           <CustomInput
             type="text"
             name="name"
             label="Name"
-            className={styles.input}
             value={formValues.name}
             onChange={handleChange}
             required={true}
           />
-
           <CustomInput
             type="text"
             name="email"
             label="Email"
-            className={styles.input}
             value={formValues.email}
             onChange={handleChange}
             required={true}
           />
-
           <CustomInput
             type="password"
             name="password"
             label="Password"
-            className={styles.input}
             value={formValues.password}
             onChange={handleChange}
             required={true}
           />
-
           <CustomInput
             type="password"
             name="confirmPassword"
             label="Confirm Password"
-            className={styles.input}
             value={formValues.confirmPassword}
             onChange={handleChange}
             required={true}
           />
-
           <div className={styles.inputGroup}>
-            <button type="submit" className={styles.submitButton}>
+            <Button
+              type="submit"
+              variant="primary"
+              className={styles.signbutton}
+            >
               Sign up
-            </button>
-          </div>
-
-          <div className={styles.inputActiontext}>
-            <span>Already have an account?</span>
-            <span className={styles.signIn}>Sign in</span>
+            </Button>
           </div>
         </form>
+        <p className={styles.inputActiontext}>Already have an account ?</p>
       </div>
     </Modal>
   );

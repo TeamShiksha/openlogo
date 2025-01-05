@@ -34,7 +34,7 @@ body.activemodal {
   color: unset;
 }
 
-.header-item:hover{
+.header-item:hover {
   color: var(--primary);
   transition: all 0.3s ease-in-out;
   text-decoration: underline;

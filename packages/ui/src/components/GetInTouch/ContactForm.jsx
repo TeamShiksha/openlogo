@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 import styles from "./ContactForm.module.css";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -23,7 +25,6 @@ function ContactForm({ closeModal }) {
 
   useEffect(() => {
     nameInputRef.current?.focus();
-
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         closeModal();
@@ -100,32 +101,29 @@ function ContactForm({ closeModal }) {
         <h3>Contact Us</h3>
         <form className={styles.contactForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <input
-              ref={nameInputRef}
+            <CustomInput
               type="text"
               name="name"
-              placeholder={errors.name || "Your name"}
               value={formValues.name}
+              label="Name"
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.name ? styles.invalid : ""}`}
-              aria-invalid={!!errors.name}
             />
           </div>
           <div className={styles.formGroup}>
-            <input
+            <CustomInput
               type="email"
               name="email"
-              placeholder={errors.email || "Your email"}
               value={formValues.email}
+              label="Email"
               onChange={handleInputChange}
               className={`${styles.inputField} ${errors.email ? styles.invalid : ""}`}
-              aria-invalid={!!errors.email}
             />
           </div>
           <div className={styles.formGroup}>
             <textarea
               name="message"
-              placeholder={errors.message || "Your message"}
+              placeholder={errors.message || "Type your message here ...."}
               value={formValues.message}
               onChange={handleInputChange}
               className={`${styles.textArea} ${errors.message ? styles.invalid : ""}`}
@@ -133,9 +131,13 @@ function ContactForm({ closeModal }) {
             ></textarea>
           </div>
           <div className={styles.buttonContainer}>
-            <button type="submit" className={styles.submitButton}>
+            <Button
+              type="submit"
+              variant="primary"
+              className={styles.submitButton}
+            >
               Send Message
-            </button>
+            </Button>
           </div>
         </form>
       </div>

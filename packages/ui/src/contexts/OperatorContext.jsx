@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import { createContext, useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { instance } from "../api/api_instance";
-
-export const OperatorContext = createContext();
+import { OperatorContext } from "./Contexts";
 
 export function OperatorProvider({ children }) {
   const [queries, setQueries] = useState([]);

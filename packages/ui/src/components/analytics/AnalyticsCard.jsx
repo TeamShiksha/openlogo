@@ -7,7 +7,7 @@ export default function AnalyticsCard({ title, api }) {
   const [value, setValue] = useState(1000);
   const [change, setChange] = useState(255);
 
-  async function fetchAndUpdateValue(api) {
+  async function fetchAndUpdateValue() {
     // get value from API
     setValue(1454); // Example value
   }
@@ -20,7 +20,7 @@ export default function AnalyticsCard({ title, api }) {
   useEffect(() => {
     fetchAndUpdateValue(api);
     fetchAndUpdatePercentageChange(api);
-  }, []);
+  }, [api]);
 
   return (
     <div className={styles.card}>

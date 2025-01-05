@@ -1,10 +1,18 @@
 .text {
-  color: var(--text-gray);
-  line-height: 30px;
-  font-size: 20px;
-  font-weight: 400;
+  color: var(--description);
+  line-height: 1.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
+
+.container {
+  margin: 1rem 2rem;
+  padding: 2rem 5rem;
+}
+
 .heading {
   font-weight: 600;
+  font-size: 3rem;
+  margin-bottom: 1rem;
   color: var(--black);
 }

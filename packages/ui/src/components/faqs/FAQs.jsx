@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { FAQ } from "../../utils/constants";
 import PropTypes from "prop-types";
-import styles from "./FAQs.module.css";
 import plusCircle from "../../assets/plusCircle.svg";
 import minusCircle from "../../assets/minusCircle.svg";
+import styles from "./FAQs.module.css";
 
 const FAQs = () => {
   return (
@@ -13,7 +13,7 @@ const FAQs = () => {
         Everything you need to know about the product and billing.
       </p>
       <div className={styles.faqList}>
-        {FAQ.map((faq, index) => (
+        {FAQ.map((faq) => (
           <CollapsibleFAQ
             key={faq.question}
             question={faq.question}
@@ -28,7 +28,6 @@ const FAQs = () => {
 const CollapsibleFAQ = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   const answerRef = useRef(null);
-
   const toggleFAQ = () => setIsOpen((prev) => !prev);
 
   return (

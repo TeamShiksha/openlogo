@@ -17,7 +17,7 @@
   max-height: 90%;
   padding: 24px;
   gap: 16px;
-  background: #f8f8f9;
+  background: var(--white);
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -51,59 +51,47 @@
   gap: 8px;
 }
 
-.inputField,
 .textArea {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  box-shadow: 0px 1px 2px 0px #1018280d;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  color: #080809;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: var(--white);
+  border: var(--border);
+  border-radius: var(--bradius);
   outline: none;
+  resize: vertical;
+  line-height: 1.5;
   transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    border 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+  color: var(--description);
+}
+
+h3 {
+  font-size: 2rem;
+  color: var(--black);
 }
 
 .textArea {
-  resize: none;
   height: 100px;
 }
 
-.inputField::placeholder,
 .textArea::placeholder {
-  color: #090808;
+  color: var(--label-color);
 }
 
-.inputField.invalid,
+.textArea:focus::placeholder {
+  color: var(--primary);
+}
+
+.textArea:focus {
+  border-color: var(--primary);
+}
+
 .textArea.invalid {
   color: rgb(230, 6, 6);
   border-color: rgb(230, 6, 6);
-}
-
-.submitButton {
-  width: 154px;
-  height: 48px;
-  background-color: #6366f1;
-  color: white;
-  padding: 0.8rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
-  text-align: center;
-}
-
-.submitButton:hover {
-  background-color: #3830d9;
 }
 
 .buttonContainer {
@@ -156,16 +144,9 @@
     gap: 8px;
   }
 
-  .inputField,
   .textArea {
     width: 100%;
     padding: 0.8rem;
-  }
-
-  .submitButton {
-    width: 154px;
-    max-width: 100%;
-    padding: 0.8rem 1.2rem;
   }
 }
 
@@ -175,14 +156,6 @@
     overflow-y: auto;
   }
 
-  .submitButton {
-    width: 154px;
-    max-width: 100%;
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 8px;
-  }
-
-  .inputField,
   .textArea {
     width: 100%;
     font-size: 16px;

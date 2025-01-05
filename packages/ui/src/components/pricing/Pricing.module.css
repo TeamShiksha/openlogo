@@ -1,37 +1,32 @@
 .mainDiv {
-  background: var(--Primary-blue, rgba(79, 70, 229, 1));
-  border-radius: 16px;
-  padding: 48px 32px;
-  margin: 32px auto;
+  background: var(--primary);
+  border-radius: 1rem;
+  padding: 5rem 2rem;
+  margin: 2rem auto;
   max-width: 1440px;
   width: 85vw;
 }
 
 .heading {
   font-family: "Inter", sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 56px;
+  font-size: 3rem;
   text-align: center;
-  color: #ffffff;
-  margin-bottom: 16px;
+  color: var(--white);
 }
 
 .tagline {
-  font-family: "Inter", sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.8rem;
   text-align: center;
-  color: #e4e4e7;
-  margin-bottom: 48px;
+  color: var(--white);
 }
 
 .cardsDiv {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: 2rem;
   margin: 0 auto;
   max-width: 1156px;
 }

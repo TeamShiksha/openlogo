@@ -1,5 +1,4 @@
-import React from "react";
-import { footerItems } from "../../utils/constants";
+import { FOOTER_ITEMS } from "../../utils/constants";
 import styles from "./footer.module.css";
 
 function Footer() {
@@ -10,14 +9,14 @@ function Footer() {
         <h4>Openlogo</h4>
       </div>
       <div className={styles["footer-items"]}>
-        {footerItems.map((item) => (
+        {FOOTER_ITEMS.map((item) => (
           <a key={item.name} className={styles["footer-item"]} href={item.url}>
             {item.title}
           </a>
         ))}
       </div>
       <div className={styles["footer-copyright"]}>
-        © Openlogo 2024 |&nbsp;
+        © Openlogo 2025 |&nbsp;
         <a
           href="https://team.shiksha"
           target="_blank"

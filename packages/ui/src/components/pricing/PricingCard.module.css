@@ -1,85 +1,42 @@
 .cardMainDiv {
-  width: 364px;
+  width: 380px;
   margin-top: 50px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow:
-    0px 1px 2px rgba(16, 24, 40, 0.05),
-    0px 4px 6px rgba(16, 24, 40, 0.1);
-  border: 1px solid #e4e4e7;
+  background: var(--white);
+  border-radius: 0.8rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  padding-bottom: 30px;
-}
-.secondCard {
-  gap: 0px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow:
-    0px 1px 2px 0px rgba(16, 24, 40, 0.05),
-    0px 4px 6px -2px rgba(16, 24, 40, 0.03),
-    0px 12px 16px -4px rgba(16, 24, 40, 0.08);
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-}
-
-.popularPlan {
-  background: #e1e7ef;
-
-  color: #4f46e5;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-
-  padding: 8px 0;
 }
 
 .cardSubDiv {
-  padding: 32px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 30px;
+  gap: 1rem;
+}
+
+.cardSubDiv h1 {
+  color: var(--black);
+}
+
+.cardSubDiv h3 {
+  color: var(--description);
 }
 
 .planName {
-  font-family: "Inter", sans-serif;
-  line-height: 30px;
-  font-size: 20px;
   font-weight: 600;
-  color: rgba(16, 24, 40, 1);
-  margin-bottom: 4px;
+  color: var(--description);
 }
 
 .planTagline {
-  font-family: "Inter", sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: #475467;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--description);
   text-align: center;
 }
 
-.planPrice {
-  width: 300px;
-  height: 60px;
-  gap: 0px;
-
-  font-family: "Inter", sans-serif;
-  font-size: 48px;
-  font-weight: 600;
-  line-height: 60px;
-  letter-spacing: -0.02em;
-  text-align: center;
-  color: #101828;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .planInfoContainer {
   gap: 4px;
   display: flex;
@@ -88,72 +45,26 @@
 }
 
 .planKeypoints {
-  color: #475467;
-
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  color: var(--description);
   text-align: left;
-  gap: 16px;
-  margin-bottom: 15px;
+  font-size: 1.2rem;
+  line-height: 2.4rem;
 }
 
 .planKeypoints > div {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 1rem;
 }
 
-.tickIcon {
-  width: 24px;
-  height: 24px;
-  padding: 2px;
-  gap: 0px;
-}
-
-.getStartedBtn {
-  font-family: "Inter", sans-serif;
-  width: 300px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
-  background: #4f46e5;
-  border: 1px solid #4f46e5;
-  border-radius: 8px;
-  padding: 12px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-  position: absolute;
-  bottom: 30px;
-}
-
-.getStartedBtn:hover {
-  background: #141232;
-}
-
-.getStartedBtn:disabled {
-  background: #e4e4e7;
-  color: #9ca3af;
-  cursor: not-allowed;
-  border: 1px solid #d1d5db;
+.width {
+  width: 90%;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {
-  .planKeypoints {
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .planKeypoints > div {
-    gap: 8px;
-  }
   .cardSubDiv {
     padding: 12px;
     gap: 5px;
-  }
-  .getStartedBtn {
-    width: 250px;
   }
 }

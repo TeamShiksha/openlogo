@@ -1,6 +1,6 @@
-import styles from "./CustomInput.module.css";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import styles from "./CustomInput.module.css";
 
 function CustomInput({ type, name, label, value, onChange, error, className }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -39,7 +39,7 @@ CustomInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   error: PropTypes.string,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default CustomInput;
