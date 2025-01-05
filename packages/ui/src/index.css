@@ -9,16 +9,19 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   --white: rgb(255, 255, 255);
-  --smooth-purple: rgb(79, 70, 229);
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --smooth-purple: rgb(79, 70, 229); /* remove */
   --black: rgb(17, 24, 39);
-  --gray-text:rgb(102, 112, 133);
+  --gray-text: rgb(102, 112, 133);
   --smooth-gray: rgb(107 114 128);
   --description: rgb(75, 85, 99);
   --light-purple: rgba(79, 70, 229, 0.1);
   --faded-purple: rgba(79, 70, 229, 0.5);
   --border: 2px solid rgb(229, 231, 235);
+  --label-color: rgb(194, 196, 199);
+  --input-color:var(--description);
   --bradius: 6px;
   --shadow: rgba(140, 152, 164, 0.125) 0px 6px 24px 0px;
   --small-text: 12px;

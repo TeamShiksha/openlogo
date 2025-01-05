@@ -32,10 +32,10 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
 });
 
 /**
-* Controller responsible for responding back to customer.
-* Based on there queries. Uses `id` to identify the queries
-* and on sending the reponse the customer receives an email.
-*/
+ * Controller responsible for responding back to customer.
+ * Based on there queries. Uses `id` to identify the queries
+ * and on sending the reponse the customer receives an email.
+ */
 async function revertToCustomerController(req, res, next) {
   try {
     const contactUsService = new ContactUsService();
@@ -49,7 +49,7 @@ async function revertToCustomerController(req, res, next) {
     }
 
     const { id, reply } = value;
-    const formExists = await contactUsService.getForm(id); 
+    const formExists = await contactUsService.getForm(id);
     if (!formExists) {
       return res.status(404).json({
         statusCode: 404,
@@ -58,7 +58,7 @@ async function revertToCustomerController(req, res, next) {
       });
     }
 
-    const revertForm = await contactUsService.updateForm(id, reply); 
+    const revertForm = await contactUsService.updateForm(id, reply);
     if (revertForm?.alreadyReplied) {
       return res.status(409).json({
         statusCode: 409,

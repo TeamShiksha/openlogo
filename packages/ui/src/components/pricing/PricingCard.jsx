@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./PricingCard.module.css";
-import tickIcon from "../../src/assets/Icon.svg";
+import tickIcon from "../../assets/Icon.svg";
 
 function PricingCard({ name, pricing, tagline, index, keypoints }) {
   if (pricing === null) {

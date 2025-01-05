@@ -10,17 +10,17 @@ class SubscriptionService {
    * Gets Subscription by Id.
    * @param {string} subscriptionId - The subscription_id of the user.
    * @returns {Object} - Subscription Object.
-  */
+   */
   async getSubscription(subscriptionId) {
     return await this.subscriptionRepository.getById(subscriptionId);
   }
-  
+
   /**
    * Create a new Default Subscription Plan for User.
    * @returns {Object} - Subscription Object.
-  */
+   */
   async createSubscription() {
-      return await this.subscriptionRepository.create(DefaultSubscriptionPlan);
+    return await this.subscriptionRepository.create(DefaultSubscriptionPlan);
   }
 
   /**
@@ -30,7 +30,7 @@ class SubscriptionService {
    **/
   async incrementUsageCount(subscription) {
     const data = {
-      usage_count: subscription.usage_count + 1
+      usage_count: subscription.usage_count + 1,
     };
     return await this.subscriptionRepository.update(subscription._id, data);
   }

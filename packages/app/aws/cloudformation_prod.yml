@@ -43,7 +43,8 @@ Resources:
         Version: 2012-10-17
         Statement:
           - Effect: Allow
-            Resource: !Join ["", [!GetAtt S3bucket.Arn, !Sub "/${CDNPathInS3}/*"]]
+            Resource:
+              !Join ["", [!GetAtt S3bucket.Arn, !Sub "/${CDNPathInS3}/*"]]
             Action:
               - s3:GetObject
             Principal:
@@ -52,7 +53,7 @@ Resources:
                   "",
                   [
                     "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ",
-                    !Ref CloudFrontOAI
+                    !Ref CloudFrontOAI,
                   ],
                 ]
 
@@ -103,13 +104,10 @@ Resources:
             Id: !Ref S3bucket
             OriginPath: !Join ["", [/, !Sub "${CDNPathInS3}"]]
             S3OriginConfig:
-              OriginAccessIdentity: 
+              OriginAccessIdentity:
                 !Join [
                   "",
-                  [
-                    "origin-access-identity/cloudfront/",
-                    !Ref CloudFrontOAI,
-                  ],
+                  ["origin-access-identity/cloudfront/", !Ref CloudFrontOAI],
                 ]
         Enabled: true
         HttpVersion: http2
@@ -149,13 +147,13 @@ Resources:
           - Effect: Allow
             Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontCDN}
             Action:
-              - 'cloudformation:Describe*'
-              - 'cloudformation:List*'
-              - 'cloudformation:Get*'
+              - "cloudformation:Describe*"
+              - "cloudformation:List*"
+              - "cloudformation:Get*"
           - Effect: Allow
             Resource: !Sub ${S3bucket.Arn}/${CDNPathInS3}/*
             Action:
-              - 's3:Put*'
+              - "s3:Put*"
       Users:
         - !Ref IAMUser
 

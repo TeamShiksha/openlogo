@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%; 
-  box-sizing: border-box; 
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .title {
@@ -27,11 +27,11 @@
 }
 
 .userDetails {
-  margin-top: auto; 
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height : 100%;
+  height: 100%;
   text-align: left;
 }
 
@@ -57,7 +57,7 @@
   border: 1px solid rgba(220, 220, 220, 1);
   border-radius: 6px;
   font-size: 18px;
-  color: black;  
+  color: black;
   background-color: white;
   transition: border-color 0.3s ease;
   box-sizing: border-box;

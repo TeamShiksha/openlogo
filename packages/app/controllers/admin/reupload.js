@@ -9,7 +9,7 @@ const imageReuploadSchema = Joi.object().keys({
 });
 
 /**
- * Manages re-uploading an image for admin users. 
+ * Manages re-uploading an image for admin users.
  * Validates input, uploads to S3, updates database.
  */
 async function adminReUploadController(req, res, next) {

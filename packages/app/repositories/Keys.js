@@ -19,7 +19,7 @@ class KeysRepository extends BaseRepository {
    */
   async getMultipleKeys(keyIds) {
     return await this.model.find({
-      '_id': { $in: keyIds }
+      _id: { $in: keyIds },
     });
   }
 

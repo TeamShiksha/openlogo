@@ -6,8 +6,8 @@ const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 
 /**
-  * Load environmental variables only if `NODE_ENV` is not "test"
-  * Also load newrelic and connect to database
+ * Load environmental variables only if `NODE_ENV` is not "test"
+ * Also load newrelic and connect to database
  */
 if (process.env.NODE_ENV !== "test") {
   dotenv.config();
@@ -33,14 +33,14 @@ app.disable("x-powered-by");
 app.use(express.json());
 
 /*
- * Defines the format of the error message for ingestion on the `finish` event of the response object (res). 
+ * Defines the format of the error message for ingestion on the `finish` event of the response object (res).
  * This event is emitted when the response has been fully sent to the client.
-*/
+ */
 app.use((req, res, next) => {
   res.on("finish", () => {
     if (res.statusCode >= 400) {
       logger.error(
-        `${req.method} ${req.originalUrl} ${res.statusCode} - ${res.statusMessage}`
+        `${req.method} ${req.originalUrl} ${res.statusCode} - ${res.statusMessage}`,
       );
     }
   });

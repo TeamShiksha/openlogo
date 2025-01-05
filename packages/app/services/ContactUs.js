@@ -1,4 +1,4 @@
-const ContactUsRepository = require('../repositories/ContactUs');
+const ContactUsRepository = require("../repositories/ContactUs");
 class ContactUsService {
   constructor() {
     this.contactUsRepository = new ContactUsRepository();
@@ -11,7 +11,10 @@ class ContactUsService {
    */
   async formExists(email) {
     try {
-      const formQuery = await this.contactUsRepository.findByEmailAndStatus(email, true);
+      const formQuery = await this.contactUsRepository.findByEmailAndStatus(
+        email,
+        true,
+      );
       return !!formQuery;
     } catch (error) {
       throw error;
@@ -34,7 +37,7 @@ class ContactUsService {
         message: formData.message,
         assignedTo: null,
         activityStatus: false,
-        reply: null
+        reply: null,
       };
       return await this.contactUsRepository.create(newForm);
     } catch (error) {
@@ -51,28 +54,32 @@ class ContactUsService {
    */
   async updateForm(formId, reply, operatorId) {
     try {
-      const currentForm = await this.contactUsRepository.getById(formId);  
-      console.log("currentForm",currentForm)
-      if (!currentForm) throw new Error('Form not found');
-      if (currentForm.status==="RESOLVED") {
+      const currentForm = await this.contactUsRepository.getById(formId);
+      console.log("currentForm", currentForm);
+      if (!currentForm) throw new Error("Form not found");
+      if (currentForm.status === "RESOLVED") {
         return { alreadyReplied: true };
       }
 
       const updateData = {
-        comment:reply,
-        status: "RESOLVED"
-       // assignedTo: operatorId
+        comment: reply,
+        status: "RESOLVED",
+        // assignedTo: operatorId
       };
 
-      const result = await this.contactUsRepository.updateFormStatus(formId, updateData);
-      if (result.modifiedCount === 0) throw new Error('MongoDB operation failed');
+      const result = await this.contactUsRepository.updateFormStatus(
+        formId,
+        updateData,
+      );
+      if (result.modifiedCount === 0)
+        throw new Error("MongoDB operation failed");
 
       return {
         reply,
         activityStatus: true,
         assignedTo: operatorId,
         email: currentForm.email,
-        message: currentForm.message
+        message: currentForm.message,
       };
     } catch (error) {
       throw error;
@@ -85,9 +92,9 @@ class ContactUsService {
    * @throws {Error} - Throws an error if there is an issue querying the database.
    */
   async getForm(formId) {
-    //getForm - check it again for try-catch 
+    //getForm - check it again for try-catch
     try {
-      return await this.contactUsRepository.getById(formId);  // Fetches form by ID
+      return await this.contactUsRepository.getById(formId); // Fetches form by ID
     } catch (error) {
       throw error;
     }

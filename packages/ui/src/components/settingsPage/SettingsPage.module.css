@@ -4,13 +4,13 @@
   gap: 16px;
   padding: 16px 120px;
   background-color: white;
-  max-width: 1440px; 
+  max-width: 1440px;
   margin: 0 auto;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   width: 100%;
 }
@@ -23,19 +23,19 @@
 }
 
 .fullWidth {
-  grid-column: 1 / -1; 
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: 16px; 
+    padding: 16px;
   }
 
   .grid {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
 
   .fullWidth {
-    grid-column: 1; 
+    grid-column: 1;
   }
 }

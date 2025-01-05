@@ -27,7 +27,7 @@ async function adminUploadController(req, res, next) {
     const imageData = await imageServices.createImageData(
       userId,
       imageSize,
-      companyName
+      companyName,
     );
     if (!imageData) {
       res.status(500).json({

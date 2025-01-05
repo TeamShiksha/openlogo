@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Button from "../common/button/Button";
 import styles from "./HeroSection.module.css";
-import Signup from "../../Pages/signup/Signup";
+import Signup from "../../page/signup/Signup";
 
 const HeroSection = () => {
-    const [signupModal, setSignupModal] = useState(false);
-  
-    const closeSignupModal = () => {
-      setSignupModal(false);
-    };
-  
+  const [signupModal, setSignupModal] = useState(false);
+
+  const closeSignupModal = () => {
+    setSignupModal(false);
+  };
+
   return (
     <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
@@ -21,17 +21,17 @@ const HeroSection = () => {
           </p>
         </div>
         <div className={styles["button-section"]}>
-          <Button variant="secondary">
+          <Button type="button" variant="secondary">
             <div className={styles["button-text"]}>
               <img alt="Play Icon" src="play-icon.svg" height={20} width={20} />
               <span>Documentation</span>
             </div>
           </Button>
-          <Button variant="primary" onClick={() => setSignupModal(true)}>
-            Get started 
+          <Button type="button" variant="primary" onClick={() => setSignupModal(true)}>
+            Get started
           </Button>
-           <Signup isOpen={signupModal} onClose={closeSignupModal} />    
-               </div>
+          <Signup isOpen={signupModal} onClose={closeSignupModal} />
+        </div>
       </div>
       <div className={styles["right-section"]}>
         <img

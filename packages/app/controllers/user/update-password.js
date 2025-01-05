@@ -19,11 +19,11 @@ const updatePasswordPayloadSchema = Joi.object().keys({
 });
 
 /**
- * This controller validates the current and new passwords from the request body, 
- * verifies the user's identity, and updates the password if the current password 
+ * This controller validates the current and new passwords from the request body,
+ * verifies the user's identity, and updates the password if the current password
  * is correct.
  */
-async function updatePasswordController(req, res, next) { 
+async function updatePasswordController(req, res, next) {
   try {
     const userService = new UserService();
     const { error, value } = updatePasswordPayloadSchema.validate(req.body);
@@ -48,7 +48,10 @@ async function updatePasswordController(req, res, next) {
     }
 
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
-    const userUpdateSuccessful = await userService.updateUserPassword(user, hashNewPassword);
+    const userUpdateSuccessful = await userService.updateUserPassword(
+      user,
+      hashNewPassword,
+    );
     if (!userUpdateSuccessful) {
       return res.status(500).json({
         message: "Something went wrong. Try again later!s",
@@ -58,7 +61,7 @@ async function updatePasswordController(req, res, next) {
     }
 
     return res.status(200).json({
-      statusCode: 200                           
+      statusCode: 200,
     });
   } catch (err) {
     next(err);

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import { footerItems } from "../../utils/constants";
-import styles from './footer.module.css';
+import styles from "./footer.module.css";
 
 function Footer() {
   return (
@@ -11,11 +11,7 @@ function Footer() {
       </div>
       <div className={styles["footer-items"]}>
         {footerItems.map((item) => (
-          <a
-            key={item.name}
-            className={styles["footer-item"]}
-            href={item.url}
-          >
+          <a key={item.name} className={styles["footer-item"]} href={item.url}>
             {item.title}
           </a>
         ))}

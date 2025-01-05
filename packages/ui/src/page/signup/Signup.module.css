@@ -24,7 +24,7 @@
 }
 
 .submitButton {
-  padding:10px 20px;
+  padding: 10px 20px;
   font-size: 20px;
   font-weight: bold;
   color: white;
@@ -32,7 +32,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  align-self: center; 
+  align-self: center;
   max-width: 400px;
   text-align: center;
   transition: background-color 0.3s ease;
@@ -45,16 +45,16 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem ;
+  gap: 0.5rem;
   margin-top: 0.5rem;
   color: #475467;
 }
 
 .signIn {
-  color: #551A8B;
+  color: #551a8b;
 }
 
-.alertmessage{
+.alertmessage {
   height: 2rem;
   width: 100%;
   max-width: 400px;
@@ -70,10 +70,10 @@
   font-size: 0.9rem;
   width: 100%;
   max-width: 400px;
-  text-align: center; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .successMessage {
@@ -82,18 +82,18 @@
   text-align: center;
   border-radius: 4px;
   width: 100%;
-  max-width: 400px; 
-  line-height: 1.2rem; 
+  max-width: 400px;
+  line-height: 1.2rem;
   display: flex;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
   .formBox {
     padding: 1rem;
     width: 90%;
-    border:none;
+    border: none;
   }
 
   .input {
@@ -111,8 +111,7 @@
     padding: 1rem;
     width: 90%;
     max-width: 350px;
-    border:none;
-
+    border: none;
   }
 
   .input {

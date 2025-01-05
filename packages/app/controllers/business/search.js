@@ -17,7 +17,8 @@ const getSearchQuerySchema = Joi.object({
   }),
 }).custom((value, helpers) => {
   const { domainKey } = value;
-  const companyNameBeginsWith = domainKey.replace(/^(https?:\/\/)?(www\.)?/, '')
+  const companyNameBeginsWith = domainKey
+    .replace(/^(https?:\/\/)?(www\.)?/, "")
     .match(/([A-Za-z0-9-]+)/)[1]
     .toUpperCase();
   if (companyNameBeginsWith === "") {
@@ -55,8 +56,10 @@ async function searchLogoController(req, res, next) {
       });
     }
 
-    const subscription = await subscriptionService.getSubscription(key.subscription_id);
-    if(subscription.usage_count>=subscription.usage_limit) {
+    const subscription = await subscriptionService.getSubscription(
+      key.subscription_id,
+    );
+    if (subscription.usage_count >= subscription.usage_limit) {
       return res.status(403).json({
         message: "Subscription Limit reached. Consider upgrading your plan",
         error: STATUS_CODES[403],
@@ -76,7 +79,7 @@ async function searchLogoController(req, res, next) {
 
     const dataList = await imageServices.getDataList(companyList);
     await subscriptionService.incrementUsageCount(subscription);
-    
+
     return res.status(200).json({
       statusCode: 200,
       data: dataList,

@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './SettingCard.module.css';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import styles from "./SettingCard.module.css";
 
 function SettingCard({
-  type, username, email, title, subtitle, buttontitle, index,
+  type,
+  username,
+  email,
+  title,
+  subtitle,
+  buttontitle,
+  index,
 }) {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-
-  const buttonClass = type === 'setting' && index === 0
-    ? styles.primaryButton
-    : styles.secondaryButton;
+  const buttonClass =
+    type === "setting" && index === 0
+      ? styles.primaryButton
+      : styles.secondaryButton;
 
   return (
     <div className={styles.card}>
-      {type === 'profile' && (
+      {type === "profile" && (
         <>
           <h2 className={styles.title}>Your profile</h2>
           <div className={styles.userDetails}>
-          <div className={styles.username}>{username}</div>
-          <div className={styles.email}>{email}</div>
+            <div className={styles.username}>{username}</div>
+            <div className={styles.email}>{email}</div>
           </div>
         </>
       )}
 
-      {type === 'changePassword' && (
+      {type === "changePassword" && (
         <>
           <h2 className={styles.title}>Change password</h2>
           <form>
@@ -38,7 +44,8 @@ function SettingCard({
                 onChange={(event) => setCurrentPassword(event.target.value)}
                 placeholder="Current Password"
                 label="Current Password"
-                required />
+                required
+              />
             </div>
             <div className={styles.textfield}>
               <input
@@ -48,7 +55,8 @@ function SettingCard({
                 onChange={(event) => setNewPassword(event.target.value)}
                 placeholder="New Password"
                 label="New Password"
-                required />
+                required
+              />
             </div>
             <div className={styles.textfield}>
               <input
@@ -58,7 +66,8 @@ function SettingCard({
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 placeholder="Confirm Password"
                 label="New Password"
-                required />
+                required
+              />
             </div>
             <button type="submit" className={styles.button}>
               Change
@@ -67,7 +76,7 @@ function SettingCard({
         </>
       )}
 
-      {type === 'setting' && (
+      {type === "setting" && (
         <>
           <div className={styles.content}>
             <h2 className={styles.title}>{title}</h2>
@@ -85,7 +94,7 @@ function SettingCard({
 }
 
 SettingCard.propTypes = {
-  type: PropTypes.oneOf(['profile', 'changePassword', 'setting']).isRequired,
+  type: PropTypes.oneOf(["profile", "changePassword", "setting"]).isRequired,
   username: PropTypes.string,
   email: PropTypes.string,
   title: PropTypes.string,

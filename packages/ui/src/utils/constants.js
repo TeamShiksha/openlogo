@@ -85,11 +85,11 @@ export const featureItems = [
   },
 ];
 
-export const headerItems = [
+export const HEADER_ITEMS = [
   {
-    name: "demo",
-    title: "Demo",
-    url: "/demo",
+    name: "home",
+    title: "Home",
+    url: "/",
   },
   {
     name: "docs",
@@ -498,8 +498,10 @@ export const INFO = [
 
 export const PASSWORD_VALIDATION_MESSAGES = {
   required: "Password is required!",
-  minLength: (minLength) => `Password must be at least ${minLength} characters long.`,
-  maxLength: (maxLength) => `Password must be no more than ${maxLength} characters long.`,
+  minLength: (minLength) =>
+    `Password must be at least ${minLength} characters long.`,
+  maxLength: (maxLength) =>
+    `Password must be no more than ${maxLength} characters long.`,
   uppercase: "Password must contain at least one uppercase letter.",
   lowercase: "Password must contain at least one lowercase letter.",
   digit: "Password must contain at least one digit.",
@@ -508,27 +510,29 @@ export const PASSWORD_VALIDATION_MESSAGES = {
 };
 
 export const INTEGRATIONS = [
-  { id: 1, src: notion, alt: 'Notion' },
-  { id: 2, src: slack, alt: 'Slack' },
-  { id: 3, src: google_drive, alt: 'Google Drive' },
-  { id: 4, src: intercom, alt: 'Intercom' },
-  { id: 5, src: stripe, alt: 'Stripe' },
-  { id: 6, src: dropbox, alt: 'Dropbox' },
-  { id: 7, src: jira, alt: 'Jira' },
-  { id: 8, src: zapier, alt: 'Zapier' },
-  { id: 9, src: figma, alt: 'Figma' },
-  { id: 10, src: confluence, alt: 'Confluence' },
-  { id: 11, src: mailchimp, alt: 'Mailchimp' },
-  { id: 12, src: zendesk, alt: 'Zendesk' },
-  { id: 13, src: g_calendar, alt: 'Google Calendar' },
-  { id: 14, src: whatsapp, alt: 'WhatsApp' },
-  { id: 15, src: discord, alt: 'Discord' },
-  { id: 16, src: bitbucket, alt: 'Bitbucket' },
+  { id: 1, src: notion, alt: "Notion" },
+  { id: 2, src: slack, alt: "Slack" },
+  { id: 3, src: google_drive, alt: "Google Drive" },
+  { id: 4, src: intercom, alt: "Intercom" },
+  { id: 5, src: stripe, alt: "Stripe" },
+  { id: 6, src: dropbox, alt: "Dropbox" },
+  { id: 7, src: jira, alt: "Jira" },
+  { id: 8, src: zapier, alt: "Zapier" },
+  { id: 9, src: figma, alt: "Figma" },
+  { id: 10, src: confluence, alt: "Confluence" },
+  { id: 11, src: mailchimp, alt: "Mailchimp" },
+  { id: 12, src: zendesk, alt: "Zendesk" },
+  { id: 13, src: g_calendar, alt: "Google Calendar" },
+  { id: 14, src: whatsapp, alt: "WhatsApp" },
+  { id: 15, src: discord, alt: "Discord" },
+  { id: 16, src: bitbucket, alt: "Bitbucket" },
 ];
 
 export const ABOUT_TEXT = {
-  DESCRIPTION: "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.",
-  SUB_DESCRIPTION: "Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
+  DESCRIPTION:
+    "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding.",
+  SUB_DESCRIPTION:
+    "Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
 };
 
 export const FAQ = [
@@ -546,5 +550,63 @@ export const FAQ = [
     question: "What payment methods do you support?",
     answer:
       "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+  },
+];
+
+const PLANS = [
+  {
+    index: 0,
+    name: "HOBBY",
+    pricing: 0,
+    tagline: "Ideal for small teams and startups.",
+    keypoints: [
+      "Fortune 500 company logo",
+      "500 API calls per month",
+      "2 API keys",
+      "Basic analytics",
+      "48-72 hour of response time",
+    ],
+  },
+  {
+    index: 1,
+    name: "PRO",
+    pricing: 1500,
+    tagline: "Growing teams up to 20 users.",
+    keypoints: [
+      "Fortune 500 company logo + private images",
+      "10000 API calls per month",
+      "5 API keys",
+      "Advance analytics",
+      "12-36 hours of response time",
+    ],
+  },
+  {
+    index: 2,
+    name: "CUSTOM PRICING",
+    pricing: null,
+    tagline: "Large teams with unlimited users.",
+    keypoints: [
+      "Fortune 500 company logo + unlimited private logos",
+      "Unlimited API calls per month",
+      "50 API keys",
+      "Advance analytics",
+      "Priority support",
+    ],
+  },
+];
+
+export default PLANS;
+
+export const SETTING = [
+  {
+    title: "Download account data",
+    subtitle: "Download your account data and move to other device with ease.",
+    buttontitle: "Download",
+  },
+  {
+    title: "Delete account",
+    subtitle:
+      "This will permanently delete your account and all associated data.",
+    buttontitle: "Delete Account",
   },
 ];

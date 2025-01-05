@@ -32,7 +32,7 @@ const addAdminController = async (req, res, next) => {
         error: STATUS_CODES[422],
       });
     }
-    
+
     const response = await userService.updateUserToAdmin(email);
     if (!response) {
       return res.status(404).json({

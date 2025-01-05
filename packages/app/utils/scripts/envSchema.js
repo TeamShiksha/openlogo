@@ -6,13 +6,13 @@ const EnvSchema = Joi.object()
     CLIENT_PROXY_URL: Joi.string().uri().required(),
     PORT: Joi.alternatives(
       Joi.string().regex(/^\d+$/),
-      Joi.number()
+      Joi.number(),
     ).required(),
     EMAIL_HOST: Joi.string().hostname().required(),
     EMAIL_SERVICE: Joi.string().required(),
     EMAIL_PORT: Joi.alternatives(
       Joi.string().regex(/^\d+$/),
-      Joi.number()
+      Joi.number(),
     ).required(),
     EMAIL_USER: Joi.string().email().required(),
     EMAIL_PASS: Joi.string().required(),
@@ -31,7 +31,7 @@ const EnvSchema = Joi.object()
     MONGO_URL: Joi.string().required(),
     NODE_ENV: Joi.string().valid("dev", "test", "prod"),
     NEW_RELIC_APP_NAME: Joi.string().required(),
-    NEW_RELIC_LICENSE_KEY: Joi.string().required()
+    NEW_RELIC_LICENSE_KEY: Joi.string().required(),
   })
   .unknown(true);
 

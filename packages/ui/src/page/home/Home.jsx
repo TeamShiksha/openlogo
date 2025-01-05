@@ -4,9 +4,8 @@ import Demo from "../../components/demo/Demo";
 import Features from "../../components/features/Features";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import FAQs from "../../components/faqs/FAQs";
-import Pricing from "../../../components/pricing/Pricing";
+import Pricing from "../../components/pricing/Pricing";
 import GetInTouch from "../../components/GetInTouch/GetInTouch";
-
 
 const Home = () => {
   return (
@@ -14,11 +13,11 @@ const Home = () => {
       <HeroSection />
       <Demo />
       <Features />
-      <About/>
       <Pricing />
-      <FAQs/>
+      <About />
+      <FAQs />
       <GetInTouch />
-  </div>
+    </div>
   );
 };
 

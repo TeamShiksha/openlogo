@@ -1,9 +1,9 @@
 const appName = process.env.NEW_RELIC_APP_NAME || "OpenLogo";
 const licenseKey = process.env.NEW_RELIC_LICENSE_KEY;
 
-/* 
+/*
  * This configuration will be used when newrelic is imported in `index.js`
-*/
+ */
 exports.config = {
   app_name: appName,
   license_key: licenseKey,
@@ -21,6 +21,6 @@ exports.config = {
     },
   },
   distributed_tracing: {
-    enabled: true
-  }
+    enabled: true,
+  },
 };

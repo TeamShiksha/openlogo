@@ -13,7 +13,7 @@ module.exports = (options = {}) => {
         return res.status(401).json({
           error: STATUS_CODES[401],
           message: "Invalid credentials",
-          statusCode: 401
+          statusCode: 401,
         });
       }
       const decodedData = JWT.verify(jwt, process.env.JWT_SECRET);
@@ -22,7 +22,7 @@ module.exports = (options = {}) => {
         return res.status(403).json({
           error: STATUS_CODES[403],
           message: "Invalid credentials",
-          statusCode: 403
+          statusCode: 403,
         });
 
       if (
@@ -32,16 +32,13 @@ module.exports = (options = {}) => {
         return res.status(401).json({
           error: STATUS_CODES[401],
           message: "Unauthorized",
-          statusCode: 401
+          statusCode: 401,
         });
 
-     Object.assign(req, { userData: decodedData.data });
+      Object.assign(req, { userData: decodedData.data });
       next();
     } catch (err) {
       next(err);
     }
   };
 };
-
-
-

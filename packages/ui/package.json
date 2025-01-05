@@ -1,24 +1,25 @@
 {
   "name": "ui",
-  "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
+  "repository": "https://github.com/TeamShiksha/openlogo.git",
   "type": "module",
   "proxy": "http://127.0.0.1:5000",
   "scripts": {
     "start": "vite",
     "build": "vite build",
+    "serve": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "vitest run --coverage --bail=3",
-    "preview": "vite preview",
-    "format": "prettier --write"
+    "test": "vitest run --bail=3",
+    "coverage": "vitest run --coverage",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "axios": "^1.7.9",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
-    "react-router": "7.1.1",
     "react-dom": "^18.3.1",
+    "react-router": "7.1.1",
     "react-router-dom": "^7.0.2"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
+    "@vitest/coverage-v8": "2.1.8",
     "eslint": "^9.11.1",
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",

@@ -3,9 +3,9 @@ const UserService = require("../../services/User");
 const ImageService = require("../../services/Images");
 
 /**
- * Retrieves the list of images uploaded by a specific user.  
- * Validates the user existence and fetches associated images from the database.  
- * Returns an empty array if no images are found.  
+ * Retrieves the list of images uploaded by a specific user.
+ * Validates the user existence and fetches associated images from the database.
+ * Returns an empty array if no images are found.
  */
 const getImagesController = async (req, res, next) => {
   try {
@@ -20,7 +20,7 @@ const getImagesController = async (req, res, next) => {
         message: "User document not found",
       });
     }
-    
+
     const imageData = await imageService.getImagesByUserId(userId);
     if (!imageData)
       return res.status(200).json({

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import styles from "./ContactForm.module.css";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -18,7 +18,7 @@ function ContactForm({ closeModal }) {
   });
 
   const [successMessage, setSuccessMessage] = useState("");
-  const modalRef = useRef(null); 
+  const modalRef = useRef(null);
   const nameInputRef = useRef(null);
 
   useEffect(() => {

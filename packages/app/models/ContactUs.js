@@ -1,56 +1,55 @@
 const mongoose = require("mongoose");
-const {ContactUsStatus}= require("../utils/constants")
-
+const { ContactUsStatus } = require("../utils/constants");
 
 /**
  * ContactUs Model: Represents user inquiries and support requests.
  * This model stores contact form submissions, allowing for efficient
  * management of customer service and issue tracking.
-*/
+ */
 
 const contactUsSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
   },
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   message: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   status: {
     type: String,
     enum: Object.values(ContactUsStatus),
-    default: ContactUsStatus.PENDING
+    default: ContactUsStatus.PENDING,
   },
   operator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    ref: "users",
   },
   is_deleted: {
     type: Boolean,
-    default: false
+    default: false,
   },
   updated_at: {
     type: Date,
     required: true,
-    default: Date.now
+    default: Date.now,
   },
   comment: {
     type: String,
     required: false,
-    trim: true
-  }
+    trim: true,
+  },
 });
 
-contactUsSchema.methods.data  = function() {
+contactUsSchema.methods.data = function () {
   return {
     _id: this._id,
     email: this.email,
@@ -60,9 +59,9 @@ contactUsSchema.methods.data  = function() {
     operator: this.operator,
     created_at: this._id.getTimestamp(),
     is_deleted: this.is_deleted,
-    updated_at: this.updated_at
-  }
-}
+    updated_at: this.updated_at,
+  };
+};
 
 const ContactUs = mongoose.model("contactus", contactUsSchema);
 

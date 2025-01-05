@@ -1,31 +1,30 @@
-.primary {
+button{
   padding: 16px 28px;
-  background: #4f46e5;
-  border: 1px solid #4f46e5;
-  color: #ffffff;
+  border: none;
+  font-size: 1rem;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.primary {
+  background: var(--primary);
+  color: var(--white);
 }
 
 .primary:hover {
-  background: #4338ca; 
+  background: var(--primary-hover);
 }
 
 .secondary {
-  padding: 14px 27px;
-  background: #ffffff;
-  border: 1px solid #d0d5dd;
-  color: #344054;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 14px 26px;
+  background: var(--white);
+  color: var(--input-color);
+  border: var(--border);
 }
 
 .secondary:hover {
-  background: #4338ca;
-}
-
-button:focus {
-  outline: none;
+  border-color: var(--primary);
+  color: var(--primary);
 }

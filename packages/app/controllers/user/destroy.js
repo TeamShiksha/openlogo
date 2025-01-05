@@ -4,15 +4,18 @@ const UserService = require("../../services/User");
 const { isValidObjectId } = require("mongoose");
 
 const destroyKeyPayloadSchema = Joi.object({
-  keyId: Joi.string().custom((value, helpers) => {
-    if (!isValidObjectId(value)) {
-      return helpers.error("any.invalid");
-    }
-    return value;
-  }).required().messages({
-    "any.invalid": "Key ID must be a valid mongodb objectId",
-    "any.required": "Key ID is required",
-  }),
+  keyId: Joi.string()
+    .custom((value, helpers) => {
+      if (!isValidObjectId(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .required()
+    .messages({
+      "any.invalid": "Key ID must be a valid mongodb objectId",
+      "any.required": "Key ID is required",
+    }),
 });
 
 /**
@@ -20,7 +23,7 @@ const destroyKeyPayloadSchema = Joi.object({
  * and deletes the specified API key if it exists. If the key ID is invalid or any validation
  * fails, appropriate error responses are returned.
  */
-async function destroyKeyController(req, res, next) { 
+async function destroyKeyController(req, res, next) {
   try {
     const userService = new UserService();
     const { error, value } = destroyKeyPayloadSchema.validate(req.query);
@@ -43,7 +46,7 @@ async function destroyKeyController(req, res, next) {
     }
 
     return res.status(200).json({
-      statusCode: 200,       
+      statusCode: 200,
     });
   } catch (err) {
     next(err);

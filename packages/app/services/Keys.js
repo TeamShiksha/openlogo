@@ -6,10 +6,10 @@ class KeyService {
   }
 
   /**
- * Gets Key by Id.
- * @param {string} keyId
- * @returns {Object} - Key Object.
- */
+   * Gets Key by Id.
+   * @param {string} keyId
+   * @returns {Object} - Key Object.
+   */
   async getAllUserKeys(keyIds) {
     if (keyIds.length === 0) {
       return [];
@@ -18,19 +18,19 @@ class KeyService {
   }
 
   /**
- * Create a New Key.
- * @param {string} keyDescription - The Key Description of the user.
- * @returns {Object} - Newly created Key.
- */
+   * Create a New Key.
+   * @param {string} keyDescription - The Key Description of the user.
+   * @returns {Object} - Newly created Key.
+   */
   async createNewKey(keyDescription) {
     return await this.keyRepository.create(keyDescription);
   }
 
   /**
- * Destroy a Key.
- * @param {string} keyId - The Key Id to destroy.
- * @returns {Object} - The destroyed key object.
- */
+   * Destroy a Key.
+   * @param {string} keyId - The Key Id to destroy.
+   * @returns {Object} - The destroyed key object.
+   */
   async destroyKey(keyId) {
     return await this.keyRepository.delete(keyId);
   }
@@ -41,9 +41,9 @@ class KeyService {
    * @returns {Promise<Object>} - Returns the user along with subscription details
    */
   async fetchUserWithSubscription(apiKeys) {
-    const userWithSubscription = await this.keyRepository.fetchUserWithSubscription(apiKeys);
+    const userWithSubscription =
+      await this.keyRepository.fetchUserWithSubscription(apiKeys);
     return userWithSubscription;
-
   }
 
   /**
@@ -57,4 +57,4 @@ class KeyService {
   }
 }
 
-module.exports = KeyService; 
+module.exports = KeyService;

@@ -1,4 +1,4 @@
-body.activemodal{
+body.activemodal {
   overflow: hidden;
 }
 
@@ -6,24 +6,26 @@ body.activemodal{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding: 20px 0;
-  border-bottom: 1px solid #c4c4c4;
+  padding: 1.2rem 0;
+  border-bottom: var(--border);
 }
 
 .header-logo {
   display: flex;
   flex-direction: row;
-  gap: 7px;
+  gap: 0.5rem;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
 .header-items {
+  font-size: 1rem;
   display: flex;
-  color:var(--gray-text);
+  color: var(--description);
   font-weight: 600;
   flex-direction: row;
-  gap: 24px;
+  gap: 1.5rem;
   align-items: center;
 }
 
@@ -32,12 +34,21 @@ body.activemodal{
   color: unset;
 }
 
+.header-item:hover{
+  color: var(--primary);
+  transition: all 0.3s ease-in-out;
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  transition: all 0.3s ease-in-out;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
 .header-button {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-
 
 .header-hamburger {
   display: none;
@@ -58,10 +69,10 @@ body.activemodal{
     display: none;
   }
 
-  .signup-modal{
+  .signup-modal {
     display: none;
   }
-  
+
   .header-hamburger {
     display: flex;
     align-items: center;

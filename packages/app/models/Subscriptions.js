@@ -1,4 +1,4 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 const { SubscriptionTypes } = require("../utils/constants");
 
 /**
@@ -11,7 +11,7 @@ const subscriptionSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: Object.values(SubscriptionTypes),
-    required: true
+    required: true,
   },
   key_limit: {
     type: Number,
@@ -23,15 +23,15 @@ const subscriptionSchema = new mongoose.Schema({
   },
   usage_count: {
     type: Number,
-    default: 0
+    default: 0,
   },
   is_active: {
     type: Boolean,
     required: true,
   },
-  payment:{
+  payment: {
     type: String,
-    required: false
+    required: false,
   },
   updated_at: {
     type: Date,

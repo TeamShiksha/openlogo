@@ -17,7 +17,10 @@ const getLogoQuerySchema = Joi.object({
   }),
 }).custom((value, helpers) => {
   const { domain } = value;
-  const company = domain.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/(\.[A-Za-z]{2,})+$/, '').toUpperCase();
+  const company = domain
+    .replace(/^(https?:\/\/)?(www\.)?/, "")
+    .replace(/(\.[A-Za-z]{2,})+$/, "")
+    .toUpperCase();
   if (company == "") {
     return helpers.error("Domain cannot be empty");
   }
@@ -53,8 +56,10 @@ async function getLogoController(req, res, next) {
       });
     }
 
-    const userSubscription = await subscriptionService.getSubscription(keyRef.subscription_id);
-    if(userSubscription.usage_count>=userSubscription.usage_limit) {
+    const userSubscription = await subscriptionService.getSubscription(
+      keyRef.subscription_id,
+    );
+    if (userSubscription.usage_count >= userSubscription.usage_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
         statusCode: 403,

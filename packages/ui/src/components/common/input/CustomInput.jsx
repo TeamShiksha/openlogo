@@ -4,7 +4,6 @@ import { useState } from "react";
 
 function CustomInput({ type, name, label, value, onChange, error, className }) {
   const [isFocused, setIsFocused] = useState(false);
-
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
@@ -15,10 +14,10 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
         id={label}
         name={name}
         className={`${styles.customInput} ${className}`}
-        value={value} 
+        value={value}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={onChange} 
+        onChange={onChange}
       />
       <label
         className={`${styles.customInputLabel} ${
@@ -28,7 +27,6 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
       >
         {label}
       </label>
-
       {error && <p className={styles.customInputError}>{error}</p>}
     </div>
   );

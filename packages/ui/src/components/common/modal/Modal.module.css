@@ -20,7 +20,7 @@
   z-index: 1100;
   overflow: hidden;
   margin: 1rem;
-  width: 100%;  
+  width: 100%;
   max-width: 800px;
 }
 
@@ -59,27 +59,27 @@
 
 @media (max-width: 768px) {
   .modal {
-    width: 90%; 
-    max-width: none; 
-    padding: 2rem; 
+    width: 90%;
+    max-width: none;
+    padding: 2rem;
   }
 
   .closeButton {
     top: 0.5rem;
     right: 1rem;
-    font-size: 2rem; 
-    padding: 10px; 
+    font-size: 2rem;
+    padding: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .modal {
-    width: 95%; 
-    padding: 1.5rem; 
+    width: 95%;
+    padding: 1.5rem;
   }
 
   .closeButton {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
     padding: 8px;
   }
 }

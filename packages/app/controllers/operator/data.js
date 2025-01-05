@@ -16,10 +16,10 @@ const querySchema = Joi.object({
 
 /**
  * Controller responsible for handling data fetching with pagination.
- * This controller is designed to fetch a subset of data based on pagination parameters 
- * (`page` and `limit`) provided in the query string of the request. It validates the 
+ * This controller is designed to fetch a subset of data based on pagination parameters
+ * (`page` and `limit`) provided in the query string of the request. It validates the
  * incoming query parameters to ensure correctness using Joi.
-*/
+ */
 async function getOperatorDataController(req, res, next) {
   try {
     const contactUsRepository = new ContactUsRepository();
@@ -33,10 +33,8 @@ async function getOperatorDataController(req, res, next) {
     }
 
     const { page, limit } = req.query;
-    const { data, total, currentPage, totalPages } = await contactUsRepository.getAll(
-      parseInt(page),
-      parseInt(limit)
-    );
+    const { data, total, currentPage, totalPages } =
+      await contactUsRepository.getAll(parseInt(page), parseInt(limit));
     if (!data || data.length === 0) {
       return res.status(404).json({
         statusCode: 404,

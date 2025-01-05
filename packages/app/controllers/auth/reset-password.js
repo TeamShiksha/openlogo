@@ -46,8 +46,8 @@ async function get(req, res, next) {
       "resetPasswordSession",
       jwt.sign(
         { userId: userToken.user_id.toString(), token: userToken.token },
-        process.env.JWT_SECRET
-      )
+        process.env.JWT_SECRET,
+      ),
     );
 
     return res.status(200).json({ statusCode: 200 });
@@ -77,7 +77,7 @@ const patchSchema = Joi.object().keys({
 
 /**
  * This controller validates the user's password reset session from cookies, verifies the provided token,
- * updates the user's password with the new hashed password, and deletes the used token. 
+ * updates the user's password with the new hashed password, and deletes the used token.
  */
 const patch = async (req, res, next) => {
   try {
@@ -94,7 +94,7 @@ const patch = async (req, res, next) => {
 
     const decodedData = jwt.verify(
       resetPasswordSession,
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
     );
     const { userId } = decodedData;
     const { error, value } = patchSchema.validate(req.body);
@@ -110,24 +110,23 @@ const patch = async (req, res, next) => {
     const user = await userService.getUser(userId);
     const result = await userService.updateUserPassword(user, hashedPassword);
     if (!result) {
-        return res.status(400).json({
-            error: STATUS_CODES[400],
-            message: "Failed to update password",
-            statusCode: 400,
-        });
-      
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: "Failed to update password",
+        statusCode: 400,
+      });
     }
 
     let userToken = await userTokenService.fetchUserToken(value.token);
     if (userToken === null || userToken.token !== value.token) {
-    return res.status(403).json({
+      return res.status(403).json({
         error: STATUS_CODES[403],
         message: "Invalid credentials",
         statusCode: 403,
-    });
+      });
     }
     await userTokenService.deleteUserToken(userToken);
-    
+
     return res.status(200).json({ statusCode: 200 });
   } catch (error) {
     next(error);

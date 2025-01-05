@@ -4,24 +4,24 @@
  **/
 const UserTokenTypes = {
   FORGOT: "FORGOT",
-  VERIFY: "VERIFY"
+  VERIFY: "VERIFY",
 };
-  
+
 const UserType = {
   ADMIN: "ADMIN",
   CUSTOMER: "CUSTOMER",
-  OPERATOR: "OPERATOR"
+  OPERATOR: "OPERATOR",
 };
-  
+
 const SubscriptionTypes = {
   HOBBY: "HOBBY",
   PRO: "PRO",
-  TEAMS: "TEAMS"
+  TEAMS: "TEAMS",
 };
 
 const ContactUsStatus = {
   PENDING: "PENDING",
-  RESOLVED: "RESOLVED"
+  RESOLVED: "RESOLVED",
 };
 
 const StatusTypes = {
@@ -36,6 +36,13 @@ const DefaultSubscriptionPlan = {
   usage_limit: 500,
   usage_count: 0,
   is_active: true,
-}
-  
-module.exports = { UserTokenTypes, UserType, SubscriptionTypes, ContactUsStatus, StatusTypes, DefaultSubscriptionPlan };
+};
+
+module.exports = {
+  UserTokenTypes,
+  UserType,
+  SubscriptionTypes,
+  ContactUsStatus,
+  StatusTypes,
+  DefaultSubscriptionPlan,
+};

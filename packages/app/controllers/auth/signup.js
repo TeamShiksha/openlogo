@@ -34,13 +34,12 @@ const signupPayloadSchema = Joi.object().keys({
     "string.base": "Password must be string",
     "string.min": "Password must be at least 8 characters",
     "string.max": "Password must be 30 characters or fewer",
-    "any.required": "Password is required"
+    "any.required": "Password is required",
   }),
   confirmPassword: Joi.any().required().equal(Joi.ref("password")).messages({
-    "any.only": "Password and confirm password do not match"
+    "any.only": "Password and confirm password do not match",
   }),
 });
-
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -66,37 +65,40 @@ async function signupController(req, res, next) {
       return res.status(400).json({
         message: "Email already exists",
         error: STATUS_CODES[400],
-        statusCode: 400
+        statusCode: 400,
       });
     }
 
     const newSubscription = await subscriptionService.createSubscription();
     if (!newSubscription) {
       return res.status(500).json({
-          message: "Something went wrong. Please Try again later!",
-          statusCode: 500,
-        });
+        message: "Something went wrong. Please Try again later!",
+        statusCode: 500,
+      });
     }
-    
+
     Object.assign(value, { subscription_id: newSubscription._id });
     const newUser = await userService.createUser(value);
     if (!newUser) {
       return res.status(500).json({
-          message: "Something went wrong. Try again later!",
-          error: STATUS_CODES[500],
-          statusCode: 500,
-        });
+        message: "Something went wrong. Try again later!",
+        error: STATUS_CODES[500],
+        statusCode: 500,
+      });
     }
 
-    const verificationToken = await userTokenService.createUserToken(newUser._id);
-    if (!verificationToken){
-        return res.status(206).json({
-            message: "Registration Successful. Email failed to send. Contact us for assistance.",
-            statusCode: 201,
-        });
+    const verificationToken = await userTokenService.createUserToken(
+      newUser._id,
+    );
+    if (!verificationToken) {
+      return res.status(206).json({
+        message:
+          "Registration Successful. Email failed to send. Contact us for assistance.",
+        statusCode: 201,
+      });
     }
     // send email function to be added
-    console.log(verificationToken.tokenURL()); 
+    console.log(verificationToken.tokenURL());
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {

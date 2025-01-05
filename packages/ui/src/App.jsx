@@ -1,15 +1,15 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import AdminDashboard from "./pages/admin/Admin";
-import About from "./pages/about/About";
+import AdminDashboard from "./page/admin/Admin";
+import About from "./page/about/About";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import Home from "./pages/home/Home";
-import "./App.css";
-import Dashboard from "./Pages/dashboard/Dashboard";
-import Pricing from "../components/pricing/Pricing";
+import Home from "./page/home/Home";
+import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
-import PrivacyPolicy from "./pages/privacypolicy/PrivacyPolicy";
+import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
+import SettingsPage from "./components/settingsPage/SettingsPage";
+// import Analytics from "./components/analytics/Analytics";
+import "./App.css";
 
 function App() {
   return (
@@ -19,22 +19,20 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/pricing" element={<Pricing />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-
+        <Route path="/profile" element={<SettingsPage />} />
+        {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"
           element={
             <ProtectedRoute adminOnly={true}>
               <AdminDashboard />
-            </ProtectedRoute> 
+            </ProtectedRoute>
           }
         />
       </Routes>
-  
       <Footer />
     </div>
-     
   );
 }
 export default App;

@@ -18,13 +18,13 @@ class ImagesRepository extends BaseRepository {
    * Fetches an image for a given company with a specified file extension.
    * @param {string} company - Name of the company.
    * @returns {Promise<Object|null>} - Image object if found, otherwise null.
-  */
+   */
   async fetchImage(company) {
     const image = await Image.findOne({
-      company_name: { 
-        $regex: `^${company}(\\.|$)`, 
-        $options: "i" 
-      }
+      company_name: {
+        $regex: `^${company}(\\.|$)`,
+        $options: "i",
+      },
     });
     return image;
   }
@@ -50,9 +50,9 @@ class ImagesRepository extends BaseRepository {
     const cloudFrontUrl = cloudFrontSignedURL(`/${imageUrl}`).data;
     return cloudFrontUrl;
   }
-  
+
   async getAllImageByUserId(userId) {
-    return await this.model.find({user_id: userId});
+    return await this.model.find({ user_id: userId });
   }
 }
 

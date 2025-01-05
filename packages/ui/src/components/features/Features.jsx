@@ -7,7 +7,8 @@ function Features() {
       <div className={styles["features-container-head"]}>
         <h2>Features</h2>
         <p>
-        With Openlogo, integrate fresh, up-to-date company logos effortlessly and leverage smart search insights for professional branding.
+          With Openlogo, integrate fresh, up-to-date company logos effortlessly
+          and leverage smart search insights for professional branding.
         </p>
       </div>
       <div className={styles["features-container-body"]}>

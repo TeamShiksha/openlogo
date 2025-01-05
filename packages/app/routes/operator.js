@@ -4,14 +4,14 @@ const getOperatorDataController = require("../controllers/operator/data");
 const authMiddleware = require("../middlewares/auth");
 
 router.put(
-    "/revert",
-    authMiddleware({ operatorOnly: true }),
-    revertToCustomerController
-  );
+  "/revert",
+  authMiddleware({ operatorOnly: true }),
+  revertToCustomerController,
+);
 router.get(
-    "/",
-    authMiddleware({ operatorOnly: true }),
-    getOperatorDataController
-  );
+  "/",
+  authMiddleware({ operatorOnly: true }),
+  getOperatorDataController,
+);
 
 module.exports = router;

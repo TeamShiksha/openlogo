@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-const SubscriptionService = require("../../services/Subscription")
+const SubscriptionService = require("../../services/Subscription");
 
 const generateKeyPayloadSchema = Joi.object().keys({
   key_description: Joi.string()
@@ -19,8 +19,8 @@ const generateKeyPayloadSchema = Joi.object().keys({
 });
 
 /**
- * This controller validates the request payload, checks the user's subscription key limit, 
- * and creates a new API key if the user is eligible. If the key limit is reached or any 
+ * This controller validates the request payload, checks the user's subscription key limit,
+ * and creates a new API key if the user is eligible. If the key limit is reached or any
  * validation fails, appropriate error responses are returned.
  */
 async function generateKeyController(req, res, next) {
@@ -40,7 +40,9 @@ async function generateKeyController(req, res, next) {
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
-    const subscription = await subscriptionService.getSubscription(user.subscription_id);
+    const subscription = await subscriptionService.getSubscription(
+      user.subscription_id,
+    );
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
         message: "Limit reached. Consider upgrading your plan",
@@ -51,7 +53,7 @@ async function generateKeyController(req, res, next) {
 
     const newKey = {
       key_description: req.body.key_description,
-      subscription_id: subscription._id
+      subscription_id: subscription._id,
     };
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({

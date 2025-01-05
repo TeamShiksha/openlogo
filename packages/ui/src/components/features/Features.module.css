@@ -13,7 +13,7 @@
   margin: 12px 0;
   color: #101828;
   font-weight: 600;
-  font-size: 36px;
+  font-size: 3rem;
 }
 
 .features-container-head > p {
@@ -36,8 +36,8 @@
 }
 
 .features-container-body-item img {
-  background-color: #F4EBFF;
-  border: solid 8px #F9F5FF;
+  background-color: #f4ebff;
+  border: solid 8px #f9f5ff;
   border-radius: 50%;
   padding: 10px;
   display: block;

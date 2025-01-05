@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Modal from "../../components/common/modal/Modal";
 import { isValidEmail, isValidPassword } from "../../utils/helpers";
 import axios from "axios";
-import CustomInput from "../../components/common/input/CustomInput"
+import CustomInput from "../../components/common/input/CustomInput";
 
 function Signup({ isOpen, onClose }) {
   const initialValues = {
@@ -40,12 +40,12 @@ function Signup({ isOpen, onClose }) {
     const errors = validate(formValues);
     setFormErrors(errors);
     setErrorMessage(Object.values(errors)[0] || "");
-  
+
     if (Object.keys(errors).length === 0) {
       setIsSubmit(true);
       try {
         const response = await axios.post("/api/auth/signup", formValues);
-  
+
         if (response.status === 200) {
           setSuccessMessage("Signed up successfully");
           setTimeout(() => {
@@ -55,7 +55,7 @@ function Signup({ isOpen, onClose }) {
         }
       } catch (error) {
         setErrorMessage(
-          error.response?.data?.message || "An error occurred during signup"
+          error.response?.data?.message || "An error occurred during signup",
         );
         setIsSubmit(false);
       }
@@ -116,7 +116,7 @@ function Signup({ isOpen, onClose }) {
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="medium">
-      <div className={styles.pageDiv}  >
+      <div className={styles.pageDiv}>
         <form noValidate className={styles.formBox} onSubmit={handleSubmit}>
           <h2 id="signup-title" className={styles.formTitle}>
             Sign up for free
@@ -167,7 +167,7 @@ function Signup({ isOpen, onClose }) {
             className={styles.input}
             value={formValues.confirmPassword}
             onChange={handleChange}
-             required={true}
+            required={true}
           />
 
           <div className={styles.inputGroup}>
@@ -177,8 +177,8 @@ function Signup({ isOpen, onClose }) {
           </div>
 
           <div className={styles.inputActiontext}>
-          <span>Already have an account?</span>
-          <span className={styles.signIn}>Sign in</span>
+            <span>Already have an account?</span>
+            <span className={styles.signIn}>Sign in</span>
           </div>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import rootConfig from '../../babel.config.mjs';
+import rootConfig from "../../babel.config.mjs";
 
 export default {
   ...rootConfig,

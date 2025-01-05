@@ -3,7 +3,7 @@ const UserTokenService = require("../../services/UserToken");
 const UserService = require("../../services/User");
 
 /**
- * This controller processes a token provided in the request query. 
+ * This controller processes a token provided in the request query.
  * It validates the token, checks its expiration,
  * fetches the associated user, and attempts to verify the user's account.
  */

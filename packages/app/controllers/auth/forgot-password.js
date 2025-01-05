@@ -18,8 +18,8 @@ const forgotPasswordSchema = Joi.object().keys({
 });
 
 /**
- * This controller processes a token provided in the request query. 
- * It validates the token, checks its expiration, fetches the associated user, 
+ * This controller processes a token provided in the request query.
+ * It validates the token, checks its expiration, fetches the associated user,
  * and attempts to verify the user's account.
  */
 async function forgotPasswordController(req, res, next) {
@@ -41,7 +41,7 @@ async function forgotPasswordController(req, res, next) {
         error: STATUS_CODES[404],
         message: "Email does not exist",
         statusCode: 404,
-    });
+      });
 
     const userToken = await userTokenService.createForgotToken(user._id);
     if (!userToken)
@@ -49,7 +49,7 @@ async function forgotPasswordController(req, res, next) {
         error: STATUS_CODES[503],
         message: "Unable to process request",
         statusCode: 503,
-    });
+      });
     console.log(userToken.tokenURL()); // send email function to be called
 
     return res.status(200).json({ statusCode: 200 });

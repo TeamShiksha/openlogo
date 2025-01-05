@@ -12,7 +12,7 @@ const postRaiseRequestPayloadSchema = Joi.object({
     .trim()
     .required()
     .regex(
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/
+      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/,
     )
     .messages({
       "any.required": "URL is required",
@@ -21,8 +21,8 @@ const postRaiseRequestPayloadSchema = Joi.object({
 });
 
 /**
- * This controller accepts a payload from the client, validates it, and creates 
- * a new raise request using the `RequestService`. If any step fails, an 
+ * This controller accepts a payload from the client, validates it, and creates
+ * a new raise request using the `RequestService`. If any step fails, an
  * appropriate error response is returned. Otherwise, it responds with a success status.
  */
 async function raiseRequestController(req, res, next) {
@@ -47,7 +47,7 @@ async function raiseRequestController(req, res, next) {
     }
 
     return res.status(200).json({
-      statusCode: 200
+      statusCode: 200,
     });
   } catch (error) {
     next(error);

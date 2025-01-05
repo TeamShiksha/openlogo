@@ -27,7 +27,6 @@
   justify-content: center;
 }
 
-
 .closeButton {
   position: absolute;
   top: 2px;
@@ -52,7 +51,6 @@
   gap: 8px;
 }
 
-
 .inputField,
 .textArea {
   width: 100%;
@@ -66,7 +64,9 @@
   line-height: 24px;
   color: #080809;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .textArea {
@@ -79,10 +79,9 @@
   color: #090808;
 }
 
-
 .inputField.invalid,
 .textArea.invalid {
-  color: rgb(230, 6, 6) ;
+  color: rgb(230, 6, 6);
   border-color: rgb(230, 6, 6);
 }
 
@@ -143,7 +142,6 @@
     transform: translateX(-50%) translateY(0);
   }
 }
-
 
 @media (max-width: 768px) {
   .modalContent {
