@@ -1,0 +1,215 @@
+.container {
+    min-height: 100vh;
+  }
+  
+  .content {
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 8px;
+  }
+  
+  .cardWrapper {
+    padding: 1rem;
+  }
+  
+  .heading2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #101828;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .heading3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #101828;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .heading4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #101828;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .paragraph {
+    color: #475467;
+    line-height: 1.625;
+    margin-bottom: 1rem;
+  }
+  
+  .codeBlockWrapper {
+    margin: 1rem 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: rgb(249 250 251) ;
+    color: white;
+      border: #4f46e5;
+  
+    
+  }
+  
+  .bgGrey {
+    padding: 8px;
+    background-color: #f9fafb;
+    border-radius: 4px;
+  }
+  
+  .codeBlockHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    padding-bottom: 0;
+    /* border-bottom: 1px solid #374151; */
+  }
+  
+  .codeLanguage {
+    font-size: 0.875rem;
+    color: white;
+  }
+  
+  .languageSelector {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .languageButton {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: #9ca3af;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+  }
+  
+  .languageButton:hover {
+    color: white;
+    background: rgba(229 231 235);
+  }
+  
+  .languageButtonActive {
+    background: rgba(229 231 235);
+    color: white;
+  }
+  
+  .copyButton {
+    background-color: rgb(249 250 251) ;
+  
+  }
+  
+  .copyButton:hover {
+  }
+  
+  .codeBlock {
+    padding: 16px;
+    margin: 12px;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #111827;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+  
+  .inlineCode {
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #111827;
+  }
+  
+  .tableWrapper {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    background-color: #f9fafb;
+  }
+  
+  .tableHeader {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .tableCell {
+    padding: 1rem 1.5rem;
+    font-size: 16px;
+    color: #344054;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .underline {
+    position: relative;
+    display: block;
+    margin-bottom: 2rem;
+  }
+  
+  .underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+  
+  .codeBox{
+    padding: 10px;
+    border: 2px solid gray;
+    color: black;
+  }
+  
+  .copyinside{
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    
+  }
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .cardWrapper {
+      padding: 1rem;
+    }
+  
+    .codeBlockHeader {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+  
+    .languageSelector {
+      flex-wrap: wrap;
+    }
+  }
+  
+  
+  

@@ -9,6 +9,8 @@ import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import SettingsPage from "./components/settingsPage/SettingsPage";
 // import Analytics from "./components/analytics/Analytics";
+import ApiDocs from "./page/docs/Apidocs";
+
 import "./App.css";
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/profile" element={<SettingsPage />} />
+        <Route path="/docs" element={<ApiDocs />} />
+
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"
