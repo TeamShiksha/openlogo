@@ -11,9 +11,8 @@
   z-index: 1000;
 }
 
-
 .modalContainer {
-  width: 370px;
+  width: 350px;
   height: 545px;
   background-color: white;
   border-radius: 15px;
@@ -25,11 +24,9 @@
   transition: transform 0.6s ease-in-out;
 }
 
-
 .flipped {
   transform: rotateY(180deg);
 }
-
 
 .modalFront,
 .modalBack {
@@ -45,20 +42,17 @@
   z-index: 0;
 }
 
-
 .modalFront {
   position: absolute;
   border-radius: 15px;
 }
 
-
 .modalBack {
-  background-color: #ffffff; 
+  background-color: #ffffff;
   transform: rotateY(180deg);
   z-index: 1;
   border-radius: 15px;
 }
-
 
 .logoWrapperFront {
   position: absolute;
@@ -70,7 +64,7 @@
 
 .logoWrapperBack {
   position: absolute;
-  top: 50px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -81,12 +75,11 @@
   height: auto;
 }
 
-
 .closeButtonFront,
 .closeButtonBack {
   position: absolute;
-  top: 1px;
-  right: 2px;
+  top: -10px;
+  right: -10px;
   background: none;
   border: none;
   font-size: 2rem;
@@ -104,9 +97,8 @@
   border: none;
   border-top: 2px solid #ccc; /* Light gray line */
   margin-bottom: 16px;
-  width: 80%;
+  width: 76%;
 }
-
 
 .toggleBtn {
   background: none;
@@ -119,36 +111,48 @@
 }
 
 
-
-
-
-@media (max-width: 480px) {
-
+@media (max-width: 768px) {
   .modalContainer {
-      width: 80%;
-      max-height: 80%;
+    width: 80%; 
+    max-height: 80%; 
   }
 
-
-  .logoWrapper {
-      top: 5px;
-      width: 80px;
-  }
-
-  .logo {
-      width: 80px;
-  }
-
+  
+  
 
   .closeButtonFront,
   .closeButtonBack {
-      font-size: 1.5rem;
-      top: 8px;
-      right: 8px;
+    font-size: 1.5rem;
+    top: 8px;
+    right: 8px;
+  }
+
+  .horizontalLine {
+    width: 90%; 
   }
 
 
-  .toggleBtn {
-      font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .modalContainer {
+    width: 90%; 
+    max-height: 80%;
   }
+
+
+
+ 
+  .closeButtonFront,
+  .closeButtonBack {
+    font-size: 1.4rem; 
+    top: 5px; 
+    right: 5px; 
+  }
+
+  .horizontalLine {
+    width: 71%; 
+  }
+
+  
 }

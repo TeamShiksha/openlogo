@@ -27,9 +27,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       >
  
         <div className={styles.modalFront}>
-          <div className={styles.logoWrapperFront}>
-            <img src="/openlogoname.svg" alt="Logo" className={styles.logo} />
-          </div>
+       
 
           <SignUpForm toggleForm={toggleForm} />
 
@@ -48,7 +46,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
         <div className={styles.modalBack}>
           <div className={styles.logoWrapperBack}>
-            <img src="/openlogoname.svg" alt="Logo" className={styles.logo} />
+            <img src="/logo-images.png" alt="Logo" className={styles.logo} />
           </div>
 
           <SignInForm />

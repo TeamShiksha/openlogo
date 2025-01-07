@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import CustomInput from "../common/input/CustomInput";
 import styles from "./SignForm.module.css";
 import Button from "../common/button/Button";
@@ -7,19 +7,25 @@ import { isValidEmail, isValidPassword } from "../../utils/helpers";
 import axios from "axios";
 
 function SignUpForm({ toggleForm }) {
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
+  // Initial values for the form
+  const initialValues = useMemo(
+    () => ({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    }),
+    [],
+  );
 
+  // State hooks
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Form value change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -28,41 +34,16 @@ function SignUpForm({ toggleForm }) {
     }));
   };
 
-  const resetForm = () => {
+  // Reset form state
+  const resetForm = useCallback(() => {
     setFormValues(initialValues);
     setFormErrors({});
     setErrorMessage("");
     setSuccessMessage("");
     setIsSubmit(false);
-  };
+  }, [initialValues]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errors = validate(formValues);
-    setFormErrors(errors);
-    setErrorMessage(Object.values(errors)[0] || "");
-
-    if (Object.keys(errors).length === 0) {
-      setIsSubmit(true);
-      try {
-        const response = await axios.post("/api/auth/signup", formValues);
-
-        if (response.status === 200) {
-          setSuccessMessage("Signed up successfully");
-          setTimeout(() => {
-            resetForm();
-            toggleForm();  // Switch to the sign-in form after success
-          }, 1500);
-        }
-      } catch (error) {
-        setErrorMessage(
-          error.response?.data?.message || "An error occurred during signup"
-        );
-        setIsSubmit(false);
-      }
-    }
-  };
-
+  // Form validation function
   const validate = (values) => {
     const errors = {};
 
@@ -91,6 +72,41 @@ function SignUpForm({ toggleForm }) {
 
     return errors;
   };
+
+  // Submit handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = validate(formValues);
+    setFormErrors(errors);
+    setErrorMessage(Object.values(errors)[0] || "");
+
+    if (Object.keys(errors).length === 0) {
+      setIsSubmit(true);
+      try {
+        const response = await axios.post("/api/auth/signup", formValues);
+
+        if (response.status === 200) {
+          setSuccessMessage("Signed up successfully");
+          setTimeout(() => {
+            resetForm();
+            toggleForm();  // Switch to the sign-in form after success
+          }, 1500);
+        }
+      } catch (error) {
+        setErrorMessage(
+          error.response?.data?.message || "An error occurred during signup"
+        );
+        setIsSubmit(false);
+      }
+    }
+  };
+
+  // Effect to track form submission
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log("Form submitted successfully");
+    }
+  }, [formErrors, isSubmit]);
 
   return (
     <div className={styles.pageDiv}>

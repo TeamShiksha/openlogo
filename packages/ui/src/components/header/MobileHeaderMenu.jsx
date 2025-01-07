@@ -2,7 +2,7 @@ import { useState } from "react";
 import { HEADER_ITEMS } from "../../utils/constants";
 import Button from "../common/button/Button";
 import styles from "./MobileHeaderMenu.module.css";
-import Signup from "../authmodal/AuthModal";
+import Signup from "../auth/AuthModal";
 import { Link } from "react-router-dom";
 
 const MobileHeaderMenu = () => {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../common/button/Button";
 import styles from "./HeroSection.module.css";
-import Signup from "../authmodal/AuthModal";
+import Signup from "../auth/AuthModal";
 
 const HeroSection = () => {
   const [signupModal, setSignupModal] = useState(false);

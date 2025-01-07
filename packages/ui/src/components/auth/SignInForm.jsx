@@ -67,10 +67,13 @@ const SignInForm = ({ onClose }) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <h2 className={styles.title}>Sign in to dashboard</h2>
+      <div className={styles.signintitle}>
+      <h2 className={styles.title}>Go to dashboard</h2>
+      </div>
       {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>} 
       {successMessage && <p className={styles.successMessage}>{successMessage}</p>} 
 
+      <div className={styles.cusomeinputcss}>
       <CustomInput
         type="email"
         name="email"
@@ -87,6 +90,11 @@ const SignInForm = ({ onClose }) => {
         onChange={handleChange}
         className={styles.input} // Ensure the className is passed
       />
+    </div>
+
+     <p className={styles.forgotPassword}>Forgot Password?</p>
+
+
         <div className={styles.inputGroup}>
             <Button
               type="submit"
@@ -96,7 +104,7 @@ const SignInForm = ({ onClose }) => {
               Sign in
             </Button>
           </div>
-      <p className={styles.forgotPassword}>Forgot Password?</p>
+          
     </form>
   );
 };
