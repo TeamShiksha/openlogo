@@ -7,7 +7,7 @@ import { isValidEmail, isValidPassword } from "../../utils/helpers";
 import axios from "axios";
 
 function SignUpForm({ toggleForm }) {
-  // Initial values for the form
+  
   const initialValues = useMemo(
     () => ({
       name: "",
@@ -18,14 +18,14 @@ function SignUpForm({ toggleForm }) {
     [],
   );
 
-  // State hooks
+
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Form value change handler
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -34,7 +34,7 @@ function SignUpForm({ toggleForm }) {
     }));
   };
 
-  // Reset form state
+
   const resetForm = useCallback(() => {
     setFormValues(initialValues);
     setFormErrors({});
@@ -43,7 +43,7 @@ function SignUpForm({ toggleForm }) {
     setIsSubmit(false);
   }, [initialValues]);
 
-  // Form validation function
+  
   const validate = (values) => {
     const errors = {};
 
@@ -73,7 +73,7 @@ function SignUpForm({ toggleForm }) {
     return errors;
   };
 
-  // Submit handler
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate(formValues);
@@ -89,7 +89,7 @@ function SignUpForm({ toggleForm }) {
           setSuccessMessage("Signed up successfully");
           setTimeout(() => {
             resetForm();
-            toggleForm();  // Switch to the sign-in form after success
+            toggleForm();  
           }, 1500);
         }
       } catch (error) {
@@ -101,7 +101,7 @@ function SignUpForm({ toggleForm }) {
     }
   };
 
-  // Effect to track form submission
+
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log("Form submitted successfully");

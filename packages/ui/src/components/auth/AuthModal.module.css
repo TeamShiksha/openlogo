@@ -54,24 +54,16 @@
   border-radius: 15px;
 }
 
-.logoWrapperFront {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
-
 .logoWrapperBack {
   position: absolute;
-  top: 10px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
 }
 
 .logo {
-  width: 140px;
+  width: 100px;
   height: auto;
 }
 
@@ -95,7 +87,7 @@
 
 .horizontalLine {
   border: none;
-  border-top: 2px solid #ccc; /* Light gray line */
+  border-top: 2px solid #ccc;
   margin-bottom: 16px;
   width: 76%;
 }
@@ -110,15 +102,11 @@
   margin-top: -1rem;
 }
 
-
 @media (max-width: 768px) {
   .modalContainer {
-    width: 80%; 
-    max-height: 80%; 
+    width: 80%;
+    max-height: 80%;
   }
-
-  
-  
 
   .closeButtonFront,
   .closeButtonBack {
@@ -128,31 +116,24 @@
   }
 
   .horizontalLine {
-    width: 90%; 
+    width: 90%;
   }
-
-
 }
 
 @media (max-width: 480px) {
   .modalContainer {
-    width: 90%; 
+    width: 90%;
     max-height: 80%;
   }
 
-
-
- 
   .closeButtonFront,
   .closeButtonBack {
-    font-size: 1.4rem; 
-    top: 5px; 
-    right: 5px; 
+    font-size: 1.4rem;
+    top: 5px;
+    right: 5px;
   }
 
   .horizontalLine {
-    width: 71%; 
+    width: 71%;
   }
-
-  
 }

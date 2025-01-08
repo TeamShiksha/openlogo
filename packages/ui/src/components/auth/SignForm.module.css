@@ -12,11 +12,9 @@
   color: var(--black);
 }
 
-.signintitle{
-margin-top: 8rem;
+.signintitle {
+  margin-top: 8rem;
 }
-
-
 
 .signbutton {
   margin: 1rem 0;
@@ -58,63 +56,52 @@ margin-top: 8rem;
 }
 
 .forgotPassword {
-  margin-left: 6rem;
-  color: #4b4bb5;
+  margin-left: auto;
+  color: var(--primary);
+  font-weight: 500;
 }
 
 .cusomeinputcss {
   width: 247px;
 }
 
-
-
-
-
-
-/* Mobile specific adjustments */
 @media (max-width: 768px) {
   .form {
-    width: 90%; /* Adjust form width for mobile */
-    padding: 1rem; /* Padding for better mobile design */
+    width: 90%;
+    padding: 1rem;
   }
 
- 
-
-  
-
   .submitButton {
-    width: 100%; /* Full-width button on mobile */
+    width: 100%;
     padding: 12px;
   }
 
- 
-
   .forgotPassword {
-    margin-left: 0; /* Remove left margin for mobile */
-    text-align: center; /* Center the "Forgot Password?" link */
+    margin-left: 0;
+    text-align: center;
   }
 
   .inputActiontext {
-    font-size: 0.9rem; /* Smaller text for action links */
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .form {
-    width: 90%; /* Full width for form on mobile */
+    width: 90%;
     padding: 15px;
   }
 
-  
+  .title {
+    font-size: 1.7rem;
+  }
 
   .submitButton {
     font-size: 16px;
     padding: 10px;
   }
 
-  
-
   .inputActiontext {
-    font-size: 0.9rem; /* Slightly smaller font for action texts */
+    font-size: 0.9rem;
   }
 }
