@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from 'prop-types';
 import SignUpForm from "./signup";
 import SignInForm from "./signin";
-import styles from "./AuthModal.module.css";
+import styles from "./Auth.module.css";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -44,7 +44,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalBackdrop}>
+
       <dialog className={styles.modalOverlay} ref={dialogRef}>
         <div className={`${styles.modalContainer} ${isFlipped ? styles.flipped : ""}`}>
           <div className={styles.modalFront}>
@@ -73,7 +73,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
         </div>
       </dialog>
-    </div>
+  
   );
 };
 
