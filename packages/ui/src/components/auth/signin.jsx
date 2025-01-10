@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
 import styles from "./SignForm.module.css";
 import Button from "../common/button/Button";
-import { isValidEmail } from "../../utils/helpers";
+import { isValidEmail, isValidPassword } from "../../utils/helpers";
 
 const SignInForm = ({ onClose }) => {
   const initialValues = { email: "", password: "" };
@@ -34,14 +34,16 @@ const SignInForm = ({ onClose }) => {
 
   const validate = (values) => {
     const errors = {};
+
     if (!values.email) {
       errors.email = "Email is required!";
     } else if (!isValidEmail(values.email)) {
       errors.email = "This is not a valid email format!";
     }
 
-    if (!values.password) {
-      errors.password = "Password is required!";
+    const passwordErrors = isValidPassword(values.password);
+    if (Object.keys(passwordErrors).length > 0) {
+      errors.password = passwordErrors.password; 
     }
 
     return errors;
@@ -98,7 +100,6 @@ const SignInForm = ({ onClose }) => {
     </form>
   );
 };
-
 
 SignInForm.propTypes = {
   onClose: PropTypes.func.isRequired,
