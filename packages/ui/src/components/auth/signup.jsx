@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 import { isValidEmail, isValidPassword } from "../../utils/helpers";
 import axios from "axios";
 
-function SignUpForm({ toggleForm }) {
-  
+function SignUpForm({ toggleForm, onClose }) {
   const initialValues = useMemo(
     () => ({
       name: "",
@@ -18,14 +17,12 @@ function SignUpForm({ toggleForm }) {
     [],
   );
 
-
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -33,7 +30,6 @@ function SignUpForm({ toggleForm }) {
       [name]: name === "name" ? value.replace(/[^a-zA-Z\s]/g, "") : value,
     }));
   };
-
 
   const resetForm = useCallback(() => {
     setFormValues(initialValues);
@@ -43,7 +39,6 @@ function SignUpForm({ toggleForm }) {
     setIsSubmit(false);
   }, [initialValues]);
 
-  
   const validate = (values) => {
     const errors = {};
 
@@ -73,7 +68,6 @@ function SignUpForm({ toggleForm }) {
     return errors;
   };
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate(formValues);
@@ -100,7 +94,6 @@ function SignUpForm({ toggleForm }) {
       }
     }
   };
-
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -131,7 +124,7 @@ function SignUpForm({ toggleForm }) {
         />
 
         <CustomInput
-          type="text"
+          type="email"
           name="email"
           label="Email"
           className={styles.input}
@@ -169,6 +162,27 @@ function SignUpForm({ toggleForm }) {
             Sign up
           </Button>
         </div>
+        <hr className={styles.horizontalLine} />
+        <span
+  onClick={toggleForm}
+  onKeyDown={(event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      toggleForm();
+    }
+  }}
+  role="button"
+  tabIndex={0}
+  className={styles.inputActiontext}
+  aria-label="Switch to Sign In"
+  style={{ cursor: 'pointer' }}
+>
+  Already have an account?
+</span>
+
+
+        <button onClick={onClose} className={styles.closeButton}>
+        ×
+      </button>
       </form>
     </div>
   );
@@ -176,6 +190,7 @@ function SignUpForm({ toggleForm }) {
 
 SignUpForm.propTypes = {
   toggleForm: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default SignUpForm;

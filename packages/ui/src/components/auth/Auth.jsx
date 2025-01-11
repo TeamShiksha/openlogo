@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import SignUpForm from "./signup";
 import SignInForm from "./signin";
 import styles from "./Auth.module.css";
@@ -18,11 +18,11 @@ const AuthModal = ({ isOpen, onClose }) => {
       dialog.showModal();
 
       const handleKeyDown = (event) => {
-        if (event.key === 'Escape') {
+        if (event.key === "Escape") {
           onClose();
         }
       };
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown);
 
       const handleClickOutside = (e) => {
         if (e.target === dialog) {
@@ -30,11 +30,11 @@ const AuthModal = ({ isOpen, onClose }) => {
         }
       };
 
-      dialog.addEventListener('click', handleClickOutside);
+      dialog.addEventListener("click", handleClickOutside);
 
       return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-        dialog.removeEventListener('click', handleClickOutside);
+        document.removeEventListener("keydown", handleKeyDown);
+        dialog.removeEventListener("click", handleClickOutside);
       };
     } else if (!isOpen && dialog) {
       dialog.close();
@@ -44,36 +44,19 @@ const AuthModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-
-      <dialog className={styles.modalOverlay} ref={dialogRef}>
-        <div className={`${styles.modalContainer} ${isFlipped ? styles.flipped : ""}`}>
-          <div className={styles.modalFront}>
-            <SignUpForm toggleForm={toggleForm} />
-            <hr className={styles.horizontalLine} />
-            <button onClick={toggleForm} className={styles.toggleBtn}>
-              Already have an account?
-            </button>
-            <button onClick={onClose} className={styles.closeButtonFront}>
-              ×
-            </button>
-          </div>
-
-          <div className={styles.modalBack}>
-            <div className={styles.logoWrapperBack}>
-              <img src="/logo-images.png" alt="Logo" className={styles.logo} />
-            </div>
-            <SignInForm />
-            <hr className={styles.horizontalLine} />
-            <button onClick={toggleForm} className={styles.toggleBtn}>
-              Don't have an account?
-            </button>
-            <button onClick={onClose} className={styles.closeButtonBack}>
-              ×
-            </button>
-          </div>
+    <dialog className={styles.modalOverlay} ref={dialogRef}>
+      <div
+        className={`${styles.modalContainer} ${isFlipped ? styles.flipped : ""}`}
+      >
+        <div className={styles.modalFront}>
+          <SignUpForm toggleForm={toggleForm} onClose={onClose} />
         </div>
-      </dialog>
-  
+
+        <div className={styles.modalBack}>
+          <SignInForm toggleForm={toggleForm} onClose={onClose} />
+        </div>
+      </div>
+    </dialog>
   );
 };
 

@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
-import styles from "./SignForm.module.css";
 import Button from "../common/button/Button";
+import styles from "./SignForm.module.css";
 import { isValidEmail, isValidPassword } from "../../utils/helpers";
 
-const SignInForm = ({ onClose }) => {
+const SignInForm = ({ toggleForm, onClose }) => {
   const initialValues = { email: "", password: "" };
   const [formData, setFormData] = useState(initialValues);
   const [feedbackMessage, setFeedbackMessage] = useState({ type: "", message: "" });
@@ -28,7 +28,7 @@ const SignInForm = ({ onClose }) => {
 
     setTimeout(() => {
       resetForm();
-      onClose();
+      onClose(); 
     }, 1500);
   };
 
@@ -43,7 +43,7 @@ const SignInForm = ({ onClose }) => {
 
     const passwordErrors = isValidPassword(values.password);
     if (Object.keys(passwordErrors).length > 0) {
-      errors.password = passwordErrors.password; 
+      errors.password = passwordErrors.password;
     }
 
     return errors;
@@ -56,52 +56,72 @@ const SignInForm = ({ onClose }) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+       <div className={styles.logoWrapperBack}>
+                  <img src="/logo-images.png" alt="Logo" className={styles.logo} />
+                </div>
       <div className={styles.signintitle}>
         <h2 className={styles.title}>Go to dashboard</h2>
       </div>
       {feedbackMessage.message && (
         <p
-          className={
-            feedbackMessage.type === "success"
-              ? styles.successMessage
-              : styles.errorMessage
-          }
+          className={feedbackMessage.type === "success" ? styles.successMessage : styles.errorMessage}
         >
           {feedbackMessage.message}
         </p>
       )}
-
-      <div className={styles.cusomeinputcss}>
-        <CustomInput
-          type="email"
-          name="email"
-          label="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className={styles.input}
-        />
-        <CustomInput
-          type="password"
-          name="password"
-          label="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className={styles.input}
-        />
+        <div className={styles.cusomeinputcss}>
+      <CustomInput
+        type="email"
+        name="email"
+        label="Email"
+        value={formData.email}
+        onChange={handleChange}
+        className={styles.input}
+      />
+      <CustomInput
+        type="password"
+        name="password"
+        label="Password"
+        value={formData.password}
+        onChange={handleChange}
+        className={styles.input}
+      />
       </div>
-
       <p className={styles.forgotPassword}>Forgot Password?</p>
-
       <div className={styles.inputGroup}>
         <Button type="submit" variant="primary" className={styles.signbutton}>
-          Sign in
+          Sign In
         </Button>
       </div>
+         <hr className={styles.horizontalLine} />
+   
+         <span
+  onClick={toggleForm}
+  onKeyDown={(event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      toggleForm();
+    }
+  }}
+  role="button"
+  tabIndex={0}
+  className={styles.inputActiontext}
+  aria-label="Switch to Sign Up"
+  style={{ cursor: 'pointer' }}
+>
+  Don't have an account?
+</span>
+
+ 
+      <button onClick={onClose} className={styles.closeButton}>
+        ×
+      </button>
+      
     </form>
   );
 };
 
 SignInForm.propTypes = {
+  toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
