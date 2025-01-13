@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import CustomInput from "../common/input/CustomInput";
 import styles from "./SignForm.module.css";
 import Button from "../common/button/Button";
@@ -83,12 +83,12 @@ function SignUpForm({ toggleForm, onClose }) {
           setSuccessMessage("Signed up successfully");
           setTimeout(() => {
             resetForm();
-            toggleForm();  
+            toggleForm();
           }, 1500);
         }
       } catch (error) {
         setErrorMessage(
-          error.response?.data?.message || "An error occurred during signup"
+          error.response?.data?.message || "An error occurred during signup",
         );
         setIsSubmit(false);
       }
@@ -109,9 +109,7 @@ function SignUpForm({ toggleForm, onClose }) {
         {successMessage && (
           <p className={styles.successMessage}>{successMessage}</p>
         )}
-        {errorMessage && (
-          <p className={styles.errorMessage}>{errorMessage}</p>
-        )}
+        {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
 
         <CustomInput
           type="text"
@@ -154,35 +152,30 @@ function SignUpForm({ toggleForm, onClose }) {
         />
 
         <div className={styles.inputGroup}>
-          <Button
-            type="submit"
-            variant="primary"
-            className={styles.signbutton}
-          >
+          <Button type="submit" variant="primary" className={styles.signbutton}>
             Sign up
           </Button>
         </div>
         <hr className={styles.horizontalLine} />
         <span
-  onClick={toggleForm}
-  onKeyDown={(event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      toggleForm();
-    }
-  }}
-  role="button"
-  tabIndex={0}
-  className={styles.inputActiontext}
-  aria-label="Switch to Sign In"
-  style={{ cursor: 'pointer' }}
->
-  Already have an account?
-</span>
-
+          onClick={toggleForm}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              toggleForm();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          className={styles.inputActiontext}
+          aria-label="Switch to Sign In"
+          style={{ cursor: "pointer" }}
+        >
+          Already have an account?
+        </span>
 
         <button onClick={onClose} className={styles.closeButton}>
-        ×
-      </button>
+          ×
+        </button>
       </form>
     </div>
   );
