@@ -11,7 +11,8 @@
     "coverage": "pnpm --parallel --filter ui --filter app coverage",
     "lint": "pnpm --parallel --filter ui --filter app lint",
     "format": "pnpm --filter ui format && pnpm --filter app format",
-    "lint:fix": "pnpm --filter ui \"lint:fix\" && pnpm --filter app \"lint:fix\""
+    "lint:fix": "pnpm --filter ui \"lint:fix\" && pnpm --filter app \"lint:fix\"",
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
