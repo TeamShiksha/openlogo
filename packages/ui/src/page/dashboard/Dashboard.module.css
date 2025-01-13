@@ -1,14 +1,14 @@
 .dashboardContainer {
   display: flex;
+  flex-direction: column;
   max-width: 1440px;
   margin: 0 auto;
 }
 
 .dashboardContentContainer {
-  padding: 64px 32px;
-  flex-grow: 1;
+  padding: 2rem ;
   display: flex;
-  flex-direction: column;
+  flex-grow: 1;
   gap: 55px;
 }
 
@@ -19,6 +19,7 @@
 .dashboardContentSection {
   display: flex;
   gap: 32px;
+  width: 100%;
 }
 
 .generateApi {

@@ -1,6 +1,7 @@
 import ApiKeyForm from "../../components/dashboard/ApiKeyForm/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/CurrentPlan/CurrentPlan";
 import Usage from "../../components/dashboard/Usage/Usage";
+import ChangePassword from "../../components/dashboard/ChangePassword/ChangePassword";
 import styles from "./Dashboard.module.css";
 
 function Dashboard() {
@@ -14,6 +15,11 @@ function Dashboard() {
             <ApiKeyForm />
           </div>
           <CurrentPlan />
+        </section>
+      </div>
+      <div className={styles.dashboardContentContainer}>
+        <section className={styles.dashboardContentSection}>
+          <ChangePassword />
         </section>
       </div>
     </div>
