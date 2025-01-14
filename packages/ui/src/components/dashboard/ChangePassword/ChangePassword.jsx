@@ -9,7 +9,6 @@ function ChangePassword() {
   const [formValues, setFormValues] = useState({
     currPassword: "",
     newPassword: "",
-    confirmPassword: "",
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -33,55 +32,46 @@ function ChangePassword() {
     return passwordErrors.password || "";
   };
 
-  const validateConfirmPassword = (newPassword, confirmPassword) => {
-    if (confirmPassword !== newPassword) return "Passwords do not match.";
-    return "";
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
+    // setErrorMessage("");
 
-    const currPasswordError = validateCurrentPassword(formValues.currPassword);
-    if (currPasswordError) return setErrorMessage(currPasswordError);
+    // const currPasswordError = validateCurrentPassword(formValues.currPassword);
+    // if (currPasswordError) return setErrorMessage(currPasswordError);
 
-    const newPasswordError = validateNewPassword(formValues.newPassword);
-    if (newPasswordError) return setErrorMessage(newPasswordError);
+    // const newPasswordError = validateNewPassword(formValues.newPassword);
+    // if (newPasswordError) return setErrorMessage(newPasswordError);
 
-    const confirmPasswordError = validateConfirmPassword(
-      formValues.newPassword,
-      formValues.confirmPassword
-    );
-    if (confirmPasswordError) return setErrorMessage(confirmPasswordError);
-
-    setIsSubmitting(true);
-    try {
-      const response = await axios.post("/api/user/update-password", formValues);
-      if (response.status === 200) {
-        setSuccessMessage("Password updated successfully.");
-        setFormValues({ currPassword: "", newPassword: "", confirmPassword: "" });
-      }
-    } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || "An error occurred while updating the password."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    // setIsSubmitting(true);
+    // try {
+    //   const response = await axios.post("/api/user/update-password", formValues);
+    //   if (response.status === 200) {
+    //     setSuccessMessage("Password updated successfully.");
+    //     setFormValues({ currPassword: "", newPassword: "" });
+    //   }
+    // } catch (error) {
+    //   setErrorMessage(
+    //     error.response?.data?.message || "An error occurred while updating the password."
+    //   );
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   return (
     <div className={styles.dashboardContentItem}>
       <h6 className={styles.contentItemHeading}>Change Password</h6>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.alertMessage}>
+      <form 
+      onSubmit={handleSubmit}
+      >
+        {/* <div className={styles.alertMessage}>
           {successMessage && (
             <p className={styles.successMessage}>{successMessage}</p>
           )}
           {errorMessage && (
             <p className={styles.errorMessage}>{errorMessage}</p>
           )}
-        </div>
+        </div> */}
 
         <CustomInput
           type="password"
@@ -96,14 +86,6 @@ function ChangePassword() {
           name="newPassword"
           label="New Password"
           value={formValues.newPassword}
-          onChange={handleChange}
-          required
-        />
-        <CustomInput
-          type="password"
-          name="confirmPassword"
-          label="Confirm New Password"
-          value={formValues.confirmPassword}
           onChange={handleChange}
           required
         />

@@ -13,9 +13,6 @@ const updatePasswordPayloadSchema = Joi.object().keys({
     "string.max": "New password must be 30 characters or fewer",
     "any.required": "New password is required",
   }),
-  confirmPassword: Joi.any().required().equal(Joi.ref("newPassword")).messages({
-    "any.only": "Password and confirm password do not match",
-  }),
 });
 
 /**
@@ -54,7 +51,7 @@ async function updatePasswordController(req, res, next) {
     );
     if (!userUpdateSuccessful) {
       return res.status(500).json({
-        message: "Something went wrong. Try again later!s",
+        message: "Something went wrong. Try again later!",
         statusCode: 500,
         error: STATUS_CODES[500],
       });
