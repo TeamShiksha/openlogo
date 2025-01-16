@@ -3,6 +3,7 @@ import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
 import Usage from "../../components/dashboard/usage/Usage";
 import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
 import styles from "./Dashboard.module.css";
+import UserInfo from "../../components/dashboard/UserInfo/UserInfo";
 
 function Dashboard() {
   return (
@@ -18,6 +19,9 @@ function Dashboard() {
         </section>
       </div>
       <div className={styles.dashboardContentContainer}>
+        <section className={styles.dashboardContentSection}>
+          <UserInfo />
+        </section>
         <section className={styles.dashboardContentSection}>
           <ChangePassword />
         </section>
