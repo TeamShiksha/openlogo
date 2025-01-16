@@ -613,3 +613,8 @@ export const SETTING = [
     buttontitle: "Delete Account",
   },
 ];
+
+export const UserInfoItems = {
+  NAME: "name",
+  EMAIL: "email",
+};
