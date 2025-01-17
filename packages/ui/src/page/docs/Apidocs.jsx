@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./ApiDocs.module.css";
 import pythonLogo from "../../assets/python.png";
-
+import { Link } from 'react-router-dom';
 
 // import jsLogo from "../../assets/js.png";
 // import javaLogo from "../../assets/java.png";
@@ -11,37 +11,6 @@ import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
 
 import tick from "../../assets/tick.png";
-
-
-// const codeExamples = {
-//   javascript: 
-//   `fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
-// {
-//   method: 'GET',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// }
-// )`,
-//   python: `import requests
-// response = requests.get('api/business/logo',
-//   params={
-//       'domain': 'domain',
-//       'API_KEY': 'api_key'
-//   },
-//   headers={
-//       'Content-Type': 'application/json'
-//   }
-// )`,
-//   java: `HttpClient client = HttpClient.newHttpClient();
-// HttpRequest request = HttpRequest.newBuilder()
-//   .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
-//   .header("Content-Type", "application/json")
-//   .GET()
-//   .build();  
-// HttpResponse<String> response = client.send(request, 
-// HttpResponse.BodyHandlers.ofString());`,
-// };
 
 
 const codeExamples = {
@@ -274,7 +243,9 @@ const ApiDocs = () => {
           <CodeBlock id="search-example" codeExamples={codeExamples} />
           <p className={styles.paragraph}>
             If you cannot find the desired logo, feel free to{" "}
-            <a href="/contact-us">contact us</a>, and we'll be happy to help.
+            {/* <a href="/contact-us">contact us</a> */}
+            <Link to="/get-in-touch">contact us</Link>
+            , and we'll be happy to help.
             For additional support, please refer to the provided examples or
             reach out to our support team for assistance.
           </p>
