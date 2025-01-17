@@ -1,0 +1,43 @@
+.dashboardContentItem {
+  border-radius: 8px;
+  border: var(--border);
+  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
+  background-color: var(--white);
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
+  flex: 1;
+}
+
+.contentItemHeading {
+  color: var(--black);
+  font-size: var(--large-text);
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+.actionButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center; 
+  margin-bottom: 16px;
+}
+
+.actionText {
+  font-size: var(--medium-text);
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--description);
+  text-align: center;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.actionButton {
+  width: 100%;
+}
+

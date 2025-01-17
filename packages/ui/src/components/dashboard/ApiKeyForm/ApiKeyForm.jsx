@@ -1,5 +1,6 @@
 import CustomInput from "../../common/input/CustomInput";
 import styles from "./ApiKeyForm.module.css";
+import Button from "../../common/button/Button";
 
 function ApiKeyForm() {
   return (
@@ -9,7 +10,7 @@ function ApiKeyForm() {
           Generate a new API key to use in your projects.
         </p>
         <CustomInput type="text" name="apikey" label="Add the description" />
-        <button type="submit">Generate Key</button>
+        <Button  variant="primary" type="submit"  className={styles.width}>Generate Key</Button>
       </form>
     </section>
   );
