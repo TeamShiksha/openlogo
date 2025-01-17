@@ -13,31 +13,82 @@ import copycodeicon from "../../assets/copy-code-icon.png";
 import tick from "../../assets/tick.png";
 
 
+// const codeExamples = {
+//   javascript: 
+//   `fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
+// {
+//   method: 'GET',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// }
+// )`,
+//   python: `import requests
+// response = requests.get('api/business/logo',
+//   params={
+//       'domain': 'domain',
+//       'API_KEY': 'api_key'
+//   },
+//   headers={
+//       'Content-Type': 'application/json'
+//   }
+// )`,
+//   java: `HttpClient client = HttpClient.newHttpClient();
+// HttpRequest request = HttpRequest.newBuilder()
+//   .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
+//   .header("Content-Type", "application/json")
+//   .GET()
+//   .build();  
+// HttpResponse<String> response = client.send(request, 
+// HttpResponse.BodyHandlers.ofString());`,
+// };
+
+
 const codeExamples = {
-  javascript: `fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
+  javascript: 
+  `// Initialize API request to fetch company logo
+// Required parameters: domain name and API key
+
+fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
 {
   method: 'GET',
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json',  // Set content type for JSON response
   },
 }
 )`,
-  python: `import requests
+
+  python: 
+  `# Import requests library for making HTTP requests
+
+import requests
+
+# Send GET request to fetch company logo
+# Required parameters: domain name and API key
+
 response = requests.get('api/business/logo',
   params={
-      'domain': 'domain',
-      'API_KEY': 'api_key'
+      'domain': 'domain',    # Company domain name
+      'API_KEY': 'api_key'   # Your API authentication key
   },
   headers={
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json'  # Set content type for JSON response
   }
 )`,
-  java: `HttpClient client = HttpClient.newHttpClient();
+
+  java: 
+  `// Create HTTP client instance
+HttpClient client = HttpClient.newHttpClient();
+
+// Build HTTP request with required parameters
+// Domain name and API key are required for authentication
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
-  .header("Content-Type", "application/json")
+  .header("Content-Type", "application/json")  // Set content type for JSON response
   .GET()
   .build();  
+
+// Send request and get response as String
 HttpResponse<String> response = client.send(request, 
 HttpResponse.BodyHandlers.ofString());`,
 };
@@ -117,9 +168,9 @@ const ApiDocs = () => {
             </p>
           </div>
 
-          <h2 className={`${styles.heading2} ${styles.underline}`}>
+          <h3 className={`${styles.heading2} ${styles.underline}`}>
             Logo Retrieval
-          </h2>
+          </h3>
           <p className={styles.paragraph}>
             Our Logo Retrieval service is a simple yet powerful API that fetches
             the logo of a specific company using its domain name. The logo
@@ -167,9 +218,9 @@ const ApiDocs = () => {
           <h3 className={styles.heading3}>Example Call:</h3>
           <CodeBlock id="logo-example" codeExamples={codeExamples} />
 
-          <h2 className={`${styles.heading2} ${styles.underline}`}>
+          <h3 className={`${styles.heading2} ${styles.underline}`}>
             Search (Now Available)
-          </h2>
+          </h3>
 
           <p className={styles.paragraph}>
             The Logo Search API allows users to fetch a list of logo URLs that
@@ -184,7 +235,7 @@ const ApiDocs = () => {
             </span>
           </p>
           <p className={styles.paragraph}>
-            <strong className={styles.heading4}>Access:</strong>Free for now,
+            <strong className={styles.heading4}>Access: </strong>Free for now,
             Flexible paid options arriving soon.
           </p>
 
