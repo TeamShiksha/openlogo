@@ -15,3 +15,5 @@ function CurrentPlan() {
     </div>
   );
 }
+
+export default CurrentPlan;
