@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
-import Signup from "../signup/Signup";
+import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
-import { HEADER_ITEMS } from "../../utils/constants";
+import { HEADER_ITEMS } from "../../utils/Constants";
 import styles from "./Header.module.css";
 
 const Header = () => {
@@ -64,7 +64,7 @@ const Header = () => {
         <Button variant="primary" onClick={openSignupModal}>
           Get started for free
         </Button>
-        <Signup isOpen={signupModal} onClose={closeSignupModal} />
+        <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
       </div>
 
       <button className={styles["header-hamburger"]} onClick={toggleMenu}>

@@ -11,7 +11,7 @@ async function verifyTokenController(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
     const userService = new UserService();
-    const { token } = req.query;
+    const { token } = req.params;
     if (!token) {
       return res.status(422).json({
         error: STATUS_CODES[422],

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { FAQ } from "../../utils/constants";
+import { FAQ } from "../../utils/Constants";
 import PropTypes from "prop-types";
 import plusCircle from "../../assets/plusCircle.svg";
 import minusCircle from "../../assets/minusCircle.svg";

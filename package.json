@@ -11,26 +11,22 @@
     "coverage": "pnpm --parallel --filter ui --filter app coverage",
     "lint": "pnpm --parallel --filter ui --filter app lint",
     "format": "pnpm --filter ui format && pnpm --filter app format",
-    "lint:fix": "pnpm --filter ui \"lint:fix\" && pnpm --filter app \"lint:fix\""
+    "lint:fix": "pnpm --filter ui \"lint:fix\" && pnpm --filter app \"lint:fix\"",
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+      "pnpm exec prettier --write"
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.9",
-    "@babel/core": "^7.25.9",
-    "@babel/preset-env": "^7.25.9",
     "@eslint/js": "^9.11.1",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.0",
     "globals": "^15.9.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "prettier": "3.3.3",
-    "vite": "^5.4.8"
+    "prettier": "3.3.3"
   },
   "dependencies": {
     "axios": "^1.7.9",

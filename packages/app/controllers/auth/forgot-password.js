@@ -1,21 +1,7 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 const UserTokenService = require("../../services/UserToken");
-/* const { fetchUserByEmail, createForgotToken } = require("../../services");
-const { sendEmail } = require("../../utils/sendEmail"); */
-
-const forgotPasswordSchema = Joi.object().keys({
-  email: Joi.string()
-    .trim()
-    .required()
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be string",
-      "any.required": "Email is required",
-      "string.pattern.base": "Invalid email",
-    }),
-});
+const { forgotPasswordSchema } = require("../../schemas/auth");
 
 /**
  * This controller processes a token provided in the request query.

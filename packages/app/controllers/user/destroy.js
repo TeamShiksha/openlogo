@@ -1,22 +1,6 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-const { isValidObjectId } = require("mongoose");
-
-const destroyKeyPayloadSchema = Joi.object({
-  keyId: Joi.string()
-    .custom((value, helpers) => {
-      if (!isValidObjectId(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
-    .required()
-    .messages({
-      "any.invalid": "Key ID must be a valid mongodb objectId",
-      "any.required": "Key ID is required",
-    }),
-});
+const { destroyKeyPayloadSchema } = require("../../schemas/user");
 
 /**
  * This controller validates the request query for the key ID, verifies the user's identity,

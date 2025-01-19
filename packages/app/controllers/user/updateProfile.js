@@ -1,22 +1,6 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-
-const changeNameEmailSchema = Joi.object().keys({
-  name: Joi.string()
-    .trim()
-    .required()
-    .min(1)
-    .max(20)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
-    .messages({
-      "string.base": "First name must be string",
-      "string.min": "First name cannot be empty",
-      "string.max": "First name length must be 20 or fewer",
-      "any.required": "First name is required",
-      "string.pattern.base": "First name should only contain alphabets",
-    }),
-});
+const { changeNameEmailSchema } = require("../../schemas/user");
 
 /**
  * This controller validates the request payload, verifies the existence of the user,

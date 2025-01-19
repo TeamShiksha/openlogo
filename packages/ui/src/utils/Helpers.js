@@ -1,4 +1,4 @@
-import { PASSWORD_VALIDATION_MESSAGES } from "./constants";
+import { PASSWORD_VALIDATION_MESSAGES } from "./Constants";
 
 const PASSWORD_RULES = {
   minLength: 6,

@@ -1,18 +1,6 @@
 const { STATUS_CODES } = require("http");
-const Joi = require("joi");
 const ContactUsRepository = require("../../repositories/ContactUs");
-
-const querySchema = Joi.object({
-  type: Joi.string().trim().required().messages({
-    "string.empty": "Type is required",
-  }),
-  page: Joi.number().required().messages({
-    "number.base": "Page number is required",
-  }),
-  limit: Joi.number().required().messages({
-    "number.base": "Limit number is required",
-  }),
-});
+const { querySchema } = require("../../schemas/operator");
 
 /**
  * Controller responsible for handling data fetching with pagination.

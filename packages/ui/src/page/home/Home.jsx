@@ -4,7 +4,7 @@ import Features from "../../components/features/Features";
 import HeroSection from "../../components/hero/HeroSection";
 import FAQs from "../../components/faqs/FAQs";
 import Pricing from "../../components/pricing/Pricing";
-import GetInTouch from "../../components/GetInTouch/GetInTouch";
+import GetInTouch from "../../components/contact/GetInTouch";
 
 const Home = () => {
   return (
