@@ -1,0 +1,136 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--black);
+}
+
+.signintitle {
+  margin-top: 8rem;
+}
+
+.signbutton {
+  margin: 1rem 0;
+}
+
+.submitButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.inputActiontext {
+  font-size: 1rem;
+  color: var(--description);
+  font-weight: 500;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.inputActiontext .signIn {
+  /* color: #007bff; */
+  cursor: pointer;
+}
+
+.inputActiontext .signIn:hover {
+  text-decoration: underline;
+}
+
+.forgotPassword {
+  margin-left: auto;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.cusomeinputcss {
+  width: 247px;
+}
+
+.logoWrapperBack {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.horizontalLine {
+  border: none;
+  border-top: 2px solid #ccc;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.closeButton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .form {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .submitButton {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .forgotPassword {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .closeButton {
+    font-size: 1.5rem;
+    top: 8px;
+    right: 8px;
+  }
+  .horizontalLine {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .title {
+    font-size: 1.7rem;
+  }
+
+  .submitButton {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .closeButton {
+    font-size: 1.4rem;
+    top: 5px;
+    right: 5px;
+  }
+
+  .horizontalLine {
+    width: 90%;
+  }
+}

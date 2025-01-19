@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState, useRef } from "react";
 import styles from "./ImageUploadModal.module.css";
-import { SVGS } from "../../utils/constants";
+import { SVGS } from "../../utils/Constants";
 import Modal from "../common/modal/Modal";
 
 const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {

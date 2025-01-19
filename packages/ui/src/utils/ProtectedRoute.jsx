@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useContext, useEffect } from "react";
 import { AuthContext, UserContext } from "../contexts/Contexts";
 import { Navigate, useLocation } from "react-router";
-import Spinner from "../components/Spinner/Spinner";
 
 function ProtectedRoute({ adminOnly, children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -16,7 +15,7 @@ function ProtectedRoute({ adminOnly, children }) {
   }, [adminOnly, fetchUserData, isAuthenticated, loading, userData]);
 
   if (adminOnly && isAuthenticated && (loading || !userData)) {
-    return <Spinner />;
+    console.log("spinner. needs to be implemented..");
   }
 
   if (adminOnly && isAuthenticated) {

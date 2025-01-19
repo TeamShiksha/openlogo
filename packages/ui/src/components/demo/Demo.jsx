@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SVGS, COMPANIES } from "../../utils/constants";
+import { SVGS, COMPANIES } from "../../utils/Constants";
 import CustomInput from "../common/input/CustomInput";
 import styles from "./Demo.module.css";
 

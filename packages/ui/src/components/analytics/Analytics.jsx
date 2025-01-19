@@ -1,6 +1,6 @@
 import styles from "./Analytics.module.css";
 import AnalyticsCard from "./AnalyticsCard";
-import { INFO } from "../../utils/constants";
+import { INFO } from "../../utils/Constants";
 
 export default function Analytics() {
   return (

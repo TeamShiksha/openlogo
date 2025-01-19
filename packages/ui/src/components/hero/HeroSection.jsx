@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../common/button/Button";
 import styles from "./HeroSection.module.css";
-import Signup from "../signup/Signup";
+import AuthModal from "../auth/Auth";
 
 const HeroSection = () => {
   const [signupModal, setSignupModal] = useState(false);
@@ -33,7 +33,7 @@ const HeroSection = () => {
           >
             Get started
           </Button>
-          <Signup isOpen={signupModal} onClose={closeSignupModal} />
+          <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
         </div>
       </div>
       <div className={styles["right-section"]}>

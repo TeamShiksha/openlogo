@@ -1,5 +1,5 @@
-import { FOOTER_ITEMS } from "../../utils/constants";
-import styles from "./footer.module.css";
+import { FOOTER_ITEMS } from "../../utils/Constants";
+import styles from "./Footer.module.css";
 
 function Footer() {
   return (

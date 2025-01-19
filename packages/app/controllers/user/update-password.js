@@ -1,22 +1,7 @@
 const bcrypt = require("bcrypt");
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-
-const updatePasswordPayloadSchema = Joi.object().keys({
-  currPassword: Joi.string().trim().required().messages({
-    "any.required": "Current password is required",
-  }),
-  newPassword: Joi.string().trim().required().min(8).max(30).messages({
-    "string.base": "New password must be string",
-    "string.min": "New password must be at least 8 characters",
-    "string.max": "New password must be 30 characters or fewer",
-    "any.required": "New password is required",
-  }),
-  confirmPassword: Joi.any().required().equal(Joi.ref("newPassword")).messages({
-    "any.only": "Password and confirm password do not match",
-  }),
-});
+const { updatePasswordPayloadSchema } = require("../../schemas/user");
 
 /**
  * This controller validates the current and new passwords from the request body,
@@ -54,7 +39,7 @@ async function updatePasswordController(req, res, next) {
     );
     if (!userUpdateSuccessful) {
       return res.status(500).json({
-        message: "Something went wrong. Try again later!s",
+        message: "Something went wrong. Try again later!",
         statusCode: 500,
         error: STATUS_CODES[500],
       });

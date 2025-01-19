@@ -1,45 +1,8 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
 const UserTokenService = require("../../services/UserToken");
-const UserTokenTypes = require("../../utils/constants");
-
-const signupPayloadSchema = Joi.object().keys({
-  name: Joi.string()
-    .trim()
-    .required()
-    .min(1)
-    .max(20)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
-    .messages({
-      "string.base": "Name must be string",
-      "string.min": "Name cannot be empty",
-      "string.max": "Name length must be 20 or fewer",
-      "any.required": "Name is required",
-      "string.pattern.base": "Name should only contain alphabets",
-    }),
-  email: Joi.string()
-    .trim()
-    .required()
-    .max(50)
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be a string",
-      "string.max": "Email lenght must be 50 or fewer",
-      "any.required": "Email is required",
-      "string.pattern.base": "Invalid email",
-    }),
-  password: Joi.string().trim().required().min(8).max(30).messages({
-    "string.base": "Password must be string",
-    "string.min": "Password must be at least 8 characters",
-    "string.max": "Password must be 30 characters or fewer",
-    "any.required": "Password is required",
-  }),
-  confirmPassword: Joi.any().required().equal(Joi.ref("password")).messages({
-    "any.only": "Password and confirm password do not match",
-  }),
-});
+const { signupPayloadSchema } = require("../../schemas/auth");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,

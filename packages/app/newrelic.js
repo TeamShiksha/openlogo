@@ -8,7 +8,7 @@ exports.config = {
   app_name: appName,
   license_key: licenseKey,
   logging: {
-    level: "error",
+    level: "info",
     enabled: true,
   },
   application_logging: {

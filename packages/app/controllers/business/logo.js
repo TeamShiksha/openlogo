@@ -1,31 +1,8 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const ImageService = require("../../services/Images");
 const KeyService = require("../../services/Keys");
 const SubscriptionService = require("../../services/Subscription");
-
-const getLogoQuerySchema = Joi.object({
-  domain: Joi.string()
-    .regex(/^[A-Za-z0-9&:.-/]+$/)
-    .required()
-    .messages({
-      "any.required": "Domain is required",
-      "string.pattern.base": "Invalid domain",
-    }),
-  API_KEY: Joi.string().guid({ version: "uuidv4" }).required().messages({
-    "any.required": "API key is required",
-  }),
-}).custom((value, helpers) => {
-  const { domain } = value;
-  const company = domain
-    .replace(/^(https?:\/\/)?(www\.)?/, "")
-    .replace(/(\.[A-Za-z]{2,})+$/, "")
-    .toUpperCase();
-  if (company == "") {
-    return helpers.error("Domain cannot be empty");
-  }
-  return { ...value, company };
-});
+const { getLogoQuerySchema } = require("../../schemas/business");
 
 /**
  * Handles requests for fetching a company's logo based on a domain and API key.

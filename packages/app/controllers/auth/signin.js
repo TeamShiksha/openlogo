@@ -1,23 +1,6 @@
-const Joi = require("joi");
-const dayjs = require("dayjs");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-
-const signinPayloadSchema = Joi.object().keys({
-  email: Joi.string()
-    .trim()
-    .required()
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be a string",
-      "any.required": "Email is required",
-      "string.pattern.base": "Invalid email",
-    }),
-  password: Joi.string().trim().required().messages({
-    "string.base": "Password must be string",
-    "any.required": "Password is required",
-  }),
-});
+const { signinPayloadSchema } = require("../../schemas/auth");
 
 /**
  * This controller validates the sign-in payload, checks if the email exists,
@@ -61,8 +44,10 @@ async function signinController(req, res, next) {
       });
     }
 
+    const currentDate = new Date();
+    const tomorrow = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
     res.cookie("jwt", user.generateJWT(), {
-      expires: dayjs().add(1, "day").toDate(),
+      expires: tomorrow,
       sameSite: "none",
       secure: true,
     });

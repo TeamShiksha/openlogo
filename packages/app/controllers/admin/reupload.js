@@ -1,12 +1,6 @@
 const ImageServices = require("../../services/Images");
 const { STATUS_CODES } = require("http");
-const Joi = require("joi");
-
-const imageReuploadSchema = Joi.object().keys({
-  id: Joi.string().trim().required().messages({
-    "any.required": "Id is required",
-  }),
-});
+const imageReuploadSchema = require("../../schemas/admin");
 
 /**
  * Manages re-uploading an image for admin users.
@@ -15,8 +9,8 @@ const imageReuploadSchema = Joi.object().keys({
 async function adminReUploadController(req, res, next) {
   try {
     const imageServices = new ImageServices();
-    let { userId } = req.userData;
-    let { id } = req.body;
+    const { userId } = req.userData;
+    const { id } = req.body;
     const file = req.file;
     if (!file) {
       return res.status(422).json({

@@ -1,4 +1,4 @@
-import { INTEGRATIONS, ABOUT_TEXT } from "../../utils/constants";
+import { INTEGRATIONS, ABOUT_TEXT } from "../../utils/Constants";
 import styles from "./About.module.css";
 
 const About = () => {

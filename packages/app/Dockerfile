@@ -4,12 +4,12 @@ WORKDIR /app
 
 RUN npm install -g pnpm
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN pnpm install 
+RUN pnpm install
 
 COPY . .
 
 EXPOSE 5000
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "serve"]

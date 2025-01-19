@@ -1,24 +1,6 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const RequestService = require("../../services/Request");
-
-const postRaiseRequestPayloadSchema = Joi.object({
-  user_id: Joi.string().trim().required().hex().length(24).messages({
-    "any.required": "User ID is required",
-    "string.length": "User ID must be exactly 24 characters long",
-    "string.hex": "User ID must be a valid hexadecimal string",
-  }),
-  companyUrl: Joi.string()
-    .trim()
-    .required()
-    .regex(
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/,
-    )
-    .messages({
-      "any.required": "URL is required",
-      "string.pattern.base": "Invalid URL",
-    }),
-});
+const { postRaiseRequestPayloadSchema } = require("../../schemas/user");
 
 /**
  * This controller accepts a payload from the client, validates it, and creates

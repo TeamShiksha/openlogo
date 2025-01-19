@@ -7,9 +7,7 @@ import Home from "./page/home/Home";
 import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
-import SettingsPage from "./components/settingsPage/SettingsPage";
 // import Analytics from "./components/analytics/Analytics";
-import "./App.css";
 
 function App() {
   return (
@@ -20,7 +18,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/profile" element={<SettingsPage />} />
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"
