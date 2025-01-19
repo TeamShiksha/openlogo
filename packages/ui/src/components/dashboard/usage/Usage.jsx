@@ -22,5 +22,3 @@ function Usage() {
     </div>
   );
 }
-
-export default Usage;
