@@ -1,0 +1,87 @@
+.dashboardContentItem {
+  border-radius: 8px;
+  border: var(--border);
+  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
+  background-color: var(--white);
+  padding: 24px 32px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dashboardContentItem .currentPlan {
+  color: rgb(17 24 39);
+  font-size: var(--large-text);
+  line-height: 28px;
+  font-weight: 600;
+  margin: 12px 0px;
+  padding-top: 16px;
+}
+
+.dashboardContentItem .currentPlanTagline {
+  color: var(--description);
+  font-size: var(--medium-text);
+  line-height: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.dashboardContentItem > button {
+  max-width: 100%;
+  color: var(--black);
+  background-color: var(--white);
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+  cursor: pointer;
+  min-height: 39px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.dashboardContentItem .apikeyInput {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+  width: calc(100% - 24px);
+  max-width: 450px;
+}
+
+.currentPlanHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contentItemHeading {
+  color: var(--black);
+  font-size: var(--large-text);
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+.active {
+  color: var(--smooth-purple);
+  font-weight: 600;
+}
+
+.upgradeButton {
+  background-color: var(--smooth-purple);
+  color: var(--white);
+  border: none;
+  border-radius: var(--bradius);
+  cursor: pointer;
+  text-wrap: nowrap;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
