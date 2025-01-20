@@ -19,6 +19,7 @@ dialog {
   max-width: none;
   max-height: none;
   display: block;
+  position: fixed;
 }
 
 .modalContainer {
