@@ -1,20 +1,7 @@
 const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
-
-const addAdminSchema = Joi.object().keys({
-  email: Joi.string()
-    .trim()
-    .required()
-    .max(50)
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be string",
-      "string.max": "Email length must be 50 or fewer",
-      "string.pattern.base": "Invalid email",
-      "any.required": "Email is required",
-    }),
-});
+const { addAdminSchema } = require("../../schemas/admin");
 
 /**
  * Promotes a user to admin or operator role using their email.

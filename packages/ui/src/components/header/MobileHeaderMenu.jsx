@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { HEADER_ITEMS } from "../../utils/constants";
+import { HEADER_ITEMS } from "../../utils/Constants";
 import Button from "../common/button/Button";
-import Signup from "../signup/Signup";
-import { Link } from "react-router-dom";
 import styles from "./MobileHeaderMenu.module.css";
+import AuthModal from "../auth/Auth";
+import { Link } from "react-router-dom";
 
 const MobileHeaderMenu = () => {
   const [signupModal, setSignupModal] = useState(false);
@@ -24,7 +24,7 @@ const MobileHeaderMenu = () => {
           <Button variant="secondary" onClick={() => setSignupModal(true)}>
             Get started
           </Button>
-          <Signup isOpen={signupModal} onClose={closeSignupModal} />
+          <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
         </div>
       </div>
     </div>

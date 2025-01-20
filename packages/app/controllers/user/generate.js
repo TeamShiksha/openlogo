@@ -1,22 +1,7 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
-
-const generateKeyPayloadSchema = Joi.object().keys({
-  key_description: Joi.string()
-    .trim()
-    .required()
-    .max(20)
-    .regex(/^[a-zA-Z\s]*$/)
-    .messages({
-      "string.base": "Description must be a string",
-      "any.required": "Description is required",
-      "string.max": "Description must be 20 characters or fewer",
-      "string.pattern.base":
-        "Description must contain only alphabets and spaces",
-    }),
-});
+const { generateKeyPayloadSchema } = require("../../schemas/user");
 
 /**
  * This controller validates the request payload, checks the user's subscription key limit,

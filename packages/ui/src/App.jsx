@@ -7,12 +7,9 @@ import Home from "./page/home/Home";
 import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
-import SettingsPage from "./components/settingsPage/SettingsPage";
 // import Analytics from "./components/analytics/Analytics";
-import ContactForm from "./components/GetInTouch/ContactForm";
+import ContactForm from "./components/contact/ContactForm";
 import ApiDocs from "./page/docs/Apidocs";
-
-import "./App.css";
 
 function App() {
   return (
@@ -23,7 +20,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/profile" element={<SettingsPage />} />
         <Route path="/docs" element={<ApiDocs />} />
         <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/analytics" element={<Analytics />} /> */}

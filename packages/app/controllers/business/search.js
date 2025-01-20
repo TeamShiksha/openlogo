@@ -1,31 +1,8 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const ImageService = require("../../services/Images");
 const KeyService = require("../../services/Keys");
 const SubscriptionService = require("../../services/Subscription");
-
-const getSearchQuerySchema = Joi.object({
-  domainKey: Joi.string()
-    .regex(/^[A-Za-z0-9&-/:.]+$/)
-    .required()
-    .messages({
-      "any.required": "domainKey is required",
-      "string.pattern.base": "Invalid domainKey",
-    }),
-  API_KEY: Joi.string().guid({ version: "uuidv4" }).required().messages({
-    "any.required": "API key is required",
-  }),
-}).custom((value, helpers) => {
-  const { domainKey } = value;
-  const companyNameBeginsWith = domainKey
-    .replace(/^(https?:\/\/)?(www\.)?/, "")
-    .match(/([A-Za-z0-9-]+)/)[1]
-    .toUpperCase();
-  if (companyNameBeginsWith === "") {
-    return helpers.error("domainKey cannot be empty");
-  }
-  return { ...value, companyNameBeginsWith };
-});
+const { getSearchQuerySchema } = require("../../schemas/business");
 
 /**
  * Handles logo search requests using a company name prefix and API key.

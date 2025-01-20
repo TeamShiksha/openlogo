@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb
+    container_name: openlogo-mongodb
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -13,11 +13,11 @@ services:
     networks:
       - app-network
 
-  backend:
+  express:
     build:
       context: ./packages/app
       dockerfile: Dockerfile
-    container_name: logoexecutive-backend
+    container_name: openlogo-express
     restart: always
     ports:
       - "5000:5000"
@@ -28,18 +28,18 @@ services:
     networks:
       - app-network
 
-  frontend:
+  react:
     build:
       context: ./packages/ui
       dockerfile: Dockerfile
-    container_name: logoexecutive-frontend
+    container_name: openlogo-react
     restart: always
     ports:
       - "3000:3000"
     env_file:
       - ./packages/ui/.env
     depends_on:
-      - backend
+      - express
     networks:
       - app-network
 

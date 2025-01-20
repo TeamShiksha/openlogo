@@ -1,5 +1,5 @@
 import PricingCard from "./PricingCard";
-import plans from "../../utils/constants";
+import plans from "../../utils/Constants";
 import styles from "./Pricing.module.css";
 
 function Pricing() {

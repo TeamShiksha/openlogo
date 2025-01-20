@@ -1,15 +1,9 @@
-const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { STATUS_CODES } = require("http");
 const UserTokenService = require("./../../services/UserToken");
 const UserService = require("./../../services/User");
-
-const payloadSchema = Joi.object().keys({
-  token: Joi.string().trim().required().messages({
-    "any.required": "Token is required",
-  }),
-});
+const { patchSchema } = require("../../schemas/auth");
 
 /**
  * This controller validates the query parameters, retrieves the user token, checks its validity,
@@ -18,7 +12,7 @@ const payloadSchema = Joi.object().keys({
 async function get(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
-    const { error, value } = payloadSchema.validate(req.query);
+    const { token } = req.params;
     if (error)
       return res.status(422).json({
         error: STATUS_CODES[422],
@@ -55,25 +49,6 @@ async function get(req, res, next) {
     next(err);
   }
 }
-
-const patchSchema = Joi.object().keys({
-  newPassword: Joi.string().trim().min(8).max(30).required().messages({
-    "any.required": "New password is required",
-    "string.max": "New password must be 30 characters or fewer",
-    "string.min": "New password must be at least 8 characters",
-  }),
-  confirmPassword: Joi.string()
-    .required()
-    .equal(Joi.ref("newPassword"))
-    .messages({
-      "any.only": "Password and confirm password do not match",
-      "any.required": "Confirm password is required",
-    }),
-  token: Joi.string().trim().required().messages({
-    "string.base": "Token must be a string",
-    "any.required": "Token is required",
-  }),
-});
 
 /**
  * This controller validates the user's password reset session from cookies, verifies the provided token,
@@ -126,7 +101,6 @@ const patch = async (req, res, next) => {
       });
     }
     await userTokenService.deleteUserToken(userToken);
-
     return res.status(200).json({ statusCode: 200 });
   } catch (error) {
     next(error);

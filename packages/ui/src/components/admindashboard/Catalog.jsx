@@ -2,7 +2,7 @@ import { useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import searchLogo from "../../assets/searchIcon.svg";
-import { companies } from "../../utils/constants";
+import { companies } from "../../utils/Constants";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
