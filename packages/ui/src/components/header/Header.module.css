@@ -8,6 +8,11 @@ body.activemodal {
   justify-content: space-around;
   padding: 1.2rem 0;
   border-bottom: var(--border);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
 }
 
 .header-logo {
@@ -80,5 +85,6 @@ body.activemodal {
     border: none;
     padding: 0;
     cursor: pointer;
+    justify-content: flex-end;
   }
 }
