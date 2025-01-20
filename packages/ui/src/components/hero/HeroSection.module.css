@@ -3,8 +3,9 @@
   flex-direction: row;
   align-items: center;
   gap: 94px;
-  background-image: url("hero-background.png");
+  background-image: url('hero-background.png');
   padding: 90px 110px;
+  background-position: center;
 }
 
 .left-section {
@@ -37,6 +38,7 @@
   flex-direction: row;
   align-items: center;
   gap: 1rem;
+  justify-content: center;
 }
 
 .button-section {
@@ -77,5 +79,10 @@
   .logo-images {
     height: 219.63px;
     width: 200px;
+  }
+  .button-section {
+    flex-direction: column-reverse;
+    align-items: center;
+    width: 100%;
   }
 }
