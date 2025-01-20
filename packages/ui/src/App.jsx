@@ -9,7 +9,7 @@ import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import SettingsPage from "./components/settingsPage/SettingsPage";
 // import Analytics from "./components/analytics/Analytics";
-import GetInTouch from "./components/GetInTouch/GetInTouch";
+import ContactForm from "./components/GetInTouch/ContactForm";
 import ApiDocs from "./page/docs/Apidocs";
 
 import "./App.css";
@@ -25,8 +25,7 @@ function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/profile" element={<SettingsPage />} />
         <Route path="/docs" element={<ApiDocs />} />
-        <Route path="/get-in-touch" component={GetInTouch} />
-
+        <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"

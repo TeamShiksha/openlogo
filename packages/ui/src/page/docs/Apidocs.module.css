@@ -1,9 +1,16 @@
 .container {
     min-height: 100vh;
+    padding: 2rem 0;
+  }
+  code{
+    font-size: 1.4rem;
+    color: var(--description);
+    background-color: white;
+    width: 100%;
   }
   
   .content {
-    max-width: 64rem;
+    max-width: 85%;
     margin: 0 auto;
   }
   
@@ -16,52 +23,56 @@
     padding: 1rem;
   }
   
-  .heading2 {
+  /* .heading2 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #101828;
     margin-top: 2rem;
     margin-bottom: 1rem;
-  }
+  } */
   
-  .heading3 {
-    font-size: 1.25rem;
+  h3 {
+    font-size: 3rem;
     font-weight: 600;
     color: #101828;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
   }
-  
+/*   
   .heading4 {
     font-size: 1.1rem;
     font-weight: 600;
     color: #101828;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
-  }
+  } */
   
-  .paragraph {
+  /* .paragraph {
     color: #475467;
     line-height: 1.625;
     margin-bottom: 1rem;
+  } */
+
+  p{
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    color: var(--description);
   }
-  
   .codeBlockWrapper {
     margin: 1rem 0;
     overflow: hidden;
-    border-radius: 0.5rem;
+    border-radius: 8px;
     background-color: rgb(249 250 251) ;
-    color: white;
-      border: #4f46e5;
+    /* color: white;
+      border: #4f46e5; */
   
     
   }
   
-  .bgGrey {
-    padding: 8px;
-    background-color: #f9fafb;
+  /* .bgGrey {
+    margin: 12px 0;
     border-radius: 4px;
-  }
+  } */
   
   .codeBlockHeader {
     display: flex;
@@ -110,6 +121,13 @@
   
   .copyButton:hover {
   }
+
+
+  .codeBlockHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
   
   .codeBlock {
     padding: 16px;
@@ -120,11 +138,12 @@
     font-size: 1rem;
     line-height: 1.5;
     color: #111827;
-    border: 2px solid #e5e7eb;
+    /* border: 2px solid #e5e7eb; */
     border-radius: 12px;
     font-weight: 500;
-  }
-  
+  }  
+
+
   .inlineCode {
     background-color: #f3f4f6;
     padding: 0.25rem 0.5rem;
@@ -150,24 +169,23 @@
   .tableHeader {
     padding: 0.75rem 1.5rem;
     text-align: left;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #111827;
+    font-size: 1.2rem;
+    color: var(--black);
   }
   
   .tableCell {
     padding: 1rem 1.5rem;
-    font-size: 16px;
+    font-size: 1.2rem;
     color: #344054;
-    border-top: 1px solid #e5e7eb;
+    /* border-top: 1px solid #e5e7eb; */
   }
   
-  .underline {
+  /* .underline {
     position: relative;
     display: block;
     margin-bottom: 2rem;
-  }
-  
+  } */
+/*   
   .underline::after {
     content: "";
     position: absolute;
@@ -178,10 +196,10 @@
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 2px;
   }
-  
+   */
   .codeBox{
-    padding: 10px;
-    border: 2px solid gray;
+    padding: 12px;
+    border: var(--border);
     color: black;
   }
   
@@ -189,6 +207,7 @@
     display: flex;
     justify-content: space-between;
     align-items: top;
+    background-color: white;
     
   }
   @media (max-width: 640px) {
@@ -200,11 +219,6 @@
       padding: 1rem;
     }
   
-    .codeBlockHeader {
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: flex-start;
-    }
   
     .languageSelector {
       flex-wrap: wrap;

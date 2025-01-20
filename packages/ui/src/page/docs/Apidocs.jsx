@@ -2,22 +2,15 @@ import { useState } from "react";
 import styles from "./ApiDocs.module.css";
 import pythonLogo from "../../assets/python.png";
 import { Link } from 'react-router-dom';
-
-// import jsLogo from "../../assets/js.png";
-// import javaLogo from "../../assets/java.png";
-// import copycodeicon from "../../assets/copy-code-icon.png";
 import jsLogo from "../../assets/js.png";
 import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
-
 import tick from "../../assets/tick.png";
 
 
 const codeExamples = {
   javascript: 
   `// Initialize API request to fetch company logo
-// Required parameters: domain name and API key
-
 fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
 {
   method: 'GET',
@@ -29,12 +22,8 @@ fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
 
   python: 
   `# Import requests library for making HTTP requests
-
 import requests
-
 # Send GET request to fetch company logo
-# Required parameters: domain name and API key
-
 response = requests.get('api/business/logo',
   params={
       'domain': 'domain',    # Company domain name
@@ -48,15 +37,12 @@ response = requests.get('api/business/logo',
   java: 
   `// Create HTTP client instance
 HttpClient client = HttpClient.newHttpClient();
-
 // Build HTTP request with required parameters
-// Domain name and API key are required for authentication
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
   .header("Content-Type", "application/json")  // Set content type for JSON response
   .GET()
   .build();  
-
 // Send request and get response as String
 HttpResponse<String> response = client.send(request, 
 HttpResponse.BodyHandlers.ofString());`,
@@ -184,7 +170,7 @@ const ApiDocs = () => {
             </table>
           </div>
 
-          <h3 className={styles.heading3}>Example Call:</h3>
+          {/* <h3 className={styles.heading3}>Example Call:</h3> */}
           <CodeBlock id="logo-example" codeExamples={codeExamples} />
 
           <h3 className={`${styles.heading2} ${styles.underline}`}>
@@ -239,12 +225,12 @@ const ApiDocs = () => {
             </table>
           </div>
 
-          <h3 className={styles.heading3}>Example Call:</h3>
+          {/* <h3 className={styles.heading3}>Example Call:</h3> */}
           <CodeBlock id="search-example" codeExamples={codeExamples} />
-          <p className={styles.paragraph}>
+      <p>
             If you cannot find the desired logo, feel free to{" "}
             {/* <a href="/contact-us">contact us</a> */}
-            <Link to="/get-in-touch">contact us</Link>
+            <Link to="/contact">contact us</Link>
             , and we'll be happy to help.
             For additional support, please refer to the provided examples or
             reach out to our support team for assistance.
