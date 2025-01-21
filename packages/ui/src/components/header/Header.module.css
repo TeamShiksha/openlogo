@@ -65,20 +65,20 @@
   display: none;
 }
 
-@media only screen and (max-width: 1024px){
-  .brand-img{
+@media only screen and (max-width: 1024px) {
+  .brand-img {
     width: 32px;
     height: 32px;
   }
-  
+
   .brand-name {
     font-size: 1.8rem;
   }
 
-  .nav-bar{
+  .nav-bar {
     gap: 1rem;
   }
-  
+
   .ml {
     margin-left: 12px;
   }
@@ -106,18 +106,18 @@
 }
 
 @media only screen and (max-width: 564px) {
-  .brand-img{
+  .brand-img {
     width: 28px;
     height: 28px;
   }
-  
+
   .brand-name {
     font-size: 1.6rem;
     font-weight: bold;
   }
 
-  .hamburger-img{
+  .hamburger-img {
     width: 20px;
     height: 20px;
-  } 
+  }
 }

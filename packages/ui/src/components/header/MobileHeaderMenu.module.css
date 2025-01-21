@@ -6,12 +6,12 @@
   top: 80px;
   width: 100%;
   border-bottom: var(--border);
-  box-shadow: 0px 30px 18px 2px rgba(0,0,0,0.3);
+  box-shadow: 0px 30px 18px 2px rgba(0, 0, 0, 0.3);
   z-index: 50;
   animation: slideInFromBottom 0.3s ease-in-out;
 }
 
-.mobile-header-exit{
+.mobile-header-exit {
   animation: slideOutToBottom 0.3s ease-in-out;
 }
 
@@ -29,7 +29,7 @@
   font-size: 1.4rem;
 }
 
-.nav:hover{
+.nav:hover {
   color: var(--primary);
   transition: all 0.3s ease-in-out;
 }
@@ -45,9 +45,9 @@
   }
 }
 
-@media only screen and (max-width: 564px){
+@media only screen and (max-width: 564px) {
   .mobile-header {
-    top: 72px
+    top: 72px;
   }
 
   .nav {
