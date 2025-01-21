@@ -25,14 +25,14 @@ const Header = () => {
   return (
     <div className={`container ${styles.block}`}>
       <header className={styles.header}>
-        <div className={styles.brand} onClick={() => { navigate("/"); }}>
+        <button type="button" className={styles.brand} onClick={()=> navigate("/")}>
           <img
             className={styles["brand-img"]}
             alt={branding.imageSrc}
             src={branding.imageSrc}
           />
           <span className={styles["brand-name"]}>{branding.brandName}</span>
-        </div>
+        </button>
         <div className={styles["nav-bar"]}>
           {HEADER_ITEMS.map((item) => (
             <a key={item.name} className={styles.nav} href={item.url}>

@@ -22,6 +22,8 @@
   gap: 0.5rem;
   align-items: center;
   cursor: pointer;
+  border: none;
+  background-color: var(--white);
 }
 
 .brand-img {
@@ -32,6 +34,7 @@
 .brand-name {
   font-size: 2rem;
   font-weight: bold;
+  color: var(--black);
 }
 
 .nav-bar {

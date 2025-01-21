@@ -3,7 +3,7 @@
   position: absolute;
   background-color: var(--white);
   left: 0;
-  top: 80px;
+  top: 70px;
   width: 100%;
   border-bottom: var(--border);
   box-shadow: var(--dark-shadow-menu);
@@ -47,7 +47,7 @@
 
 @media only screen and (max-width: 564px) {
   .mobile-header {
-    top: 72px;
+    top: 64px;
   }
 
   .nav {

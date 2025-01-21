@@ -12,7 +12,7 @@ const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${styles[variant]} ${className}`}
+      className={`${styles[variant]} ${className} ${styles.button}`}
     >
       {children}
     </button>

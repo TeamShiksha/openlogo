@@ -7,7 +7,6 @@ import styles from "./MobileHeaderMenu.module.css";
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   useEffect(() => {
     const handleResize = () => {
-      console.log(window.innerWidth);
       if (window.innerWidth > 780) {
         closeMenu(false);
       }
@@ -36,7 +35,7 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
 
 MobileHeaderMenu.propTypes = {
   closeMenu: PropTypes.func.isRequired,
-  isOpen: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
 };
 
 export default MobileHeaderMenu;
