@@ -100,7 +100,6 @@ const CodeBlock = ({ id, codeExamples }) => {
               src={copycodeicon}
               alt="Copy code"
               style={{ width: "24px", height: "24px", cursor: "pointer" }}
-              onClick={() => { copyToClipboard(codeExamples[selectedLanguage]); }}
             />
           )}
         </div>
