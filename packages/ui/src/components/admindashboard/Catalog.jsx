@@ -20,10 +20,10 @@ function Catalog() {
 
   const companiesInfo = companies.slice(
     skipCount,
-    Math.min(skipCount + limit, companies.length),
+    Math.min(skipCount + limit, companies.length)
   );
   const filteredCompanies = companiesInfo.filter((company) =>
-    company.companyImage.toLowerCase().includes(searchTerm.toLowerCase()),
+    company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSearchTermChange = (inputChangeEvent) => {

@@ -30,7 +30,7 @@ export function UserProvider({ children }) {
           error,
           fetchUserData,
         }),
-        [userData, loading, error, fetchUserData],
+        [userData, loading, error, fetchUserData]
       )}
     >
       {children}
