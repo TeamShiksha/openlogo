@@ -623,3 +623,12 @@ export const CROSS = {
   src: "close-icon.svg",
   alt: "Close Icon",
 };
+
+export const buttonText = {
+  getStarted: "Get started",
+};
+
+export const branding = {
+  imageSrc: "openlogo.svg",
+  brandName: "Openlogo",
+};

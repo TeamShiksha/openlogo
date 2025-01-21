@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
-import { HEADER_ITEMS, HAMBURGER, CROSS } from "../../utils/Constants";
+import {
+  HEADER_ITEMS,
+  HAMBURGER,
+  CROSS,
+  buttonText,
+  branding,
+} from "../../utils/Constants";
 import styles from "./Header.module.css";
 
 const Header = () => {
@@ -30,10 +36,10 @@ const Header = () => {
         <div className={styles.brand} onClick={() => navigate("/")}>
           <img
             className={styles["brand-img"]}
-            alt="openlogo.fyi"
-            src="openlogo.svg"
+            alt={branding.imageSrc}
+            src={branding.imageSrc}
           />
-          <span className={styles["brand-name"]}>Openlogo</span>
+          <span className={styles["brand-name"]}>{branding.brandName}</span>
         </div>
         <div className={styles["nav-bar"]}>
           {HEADER_ITEMS.map((item) => (
@@ -46,7 +52,7 @@ const Header = () => {
             className={styles.ml}
             onClick={openSignupModal}
           >
-            Get started
+            {buttonText.getStarted}
           </Button>
         </div>
         <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
