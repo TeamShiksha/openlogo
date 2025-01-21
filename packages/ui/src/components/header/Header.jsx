@@ -22,14 +22,6 @@ const Header = () => {
     setShowMenu((prev) => !prev);
   };
 
-  const openSignupModal = () => {
-    setSignupModal(true);
-  };
-
-  const closeSignupModal = () => {
-    setSignupModal(false);
-  };
-
   return (
     <div className={`container ${styles.block}`}>
       <header className={styles.header}>
@@ -50,12 +42,19 @@ const Header = () => {
           <Button
             variant="primary"
             className={styles.ml}
-            onClick={openSignupModal}
+            onClick={() => {
+              setSignupModal(true);
+            }}
           >
             {buttonText.getStarted}
           </Button>
         </div>
-        <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
+        <AuthModal
+          isOpen={signupModal}
+          onClose={() => {
+            setSignupModal(true);
+          }}
+        />
         <button className={styles.hamburger} onClick={toggleMenu}>
           <img
             className={styles["hamburger-img"]}

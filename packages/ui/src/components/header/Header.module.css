@@ -47,7 +47,6 @@
 .nav {
   font-size: 1rem;
   text-decoration: none;
-  color: unset;
   font-weight: 600;
   color: var(--description);
 }
