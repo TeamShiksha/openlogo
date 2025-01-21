@@ -72,7 +72,7 @@ const CodeBlock = ({ id, codeExamples }) => {
           {Object.keys(codeExamples).map((lang) => (
             <button
               key={`${id}-${lang}`}
-              onClick={() => setSelectedLanguage(lang)}
+              onClick={() => { setSelectedLanguage(lang); }}
               className={`${styles.languageButton} ${
                 selectedLanguage === lang ? styles.languageButtonActive : ""
               }`}
@@ -100,7 +100,7 @@ const CodeBlock = ({ id, codeExamples }) => {
               src={copycodeicon}
               alt="Copy code"
               style={{ width: "24px", height: "24px", cursor: "pointer" }}
-              onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
+              onClick={() => { copyToClipboard(codeExamples[selectedLanguage]); }}
             />
           )}
         </div>

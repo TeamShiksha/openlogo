@@ -25,7 +25,7 @@ const Header = () => {
   return (
     <div className={`container ${styles.block}`}>
       <header className={styles.header}>
-        <div className={styles.brand} onClick={() => navigate("/")}>
+        <div className={styles.brand} onClick={() => { navigate("/"); }}>
           <img
             className={styles["brand-img"]}
             alt={branding.imageSrc}
