@@ -1,0 +1,42 @@
+name: test
+
+on:
+  workflow_dispatch:
+  push: 
+    branches: 
+      - dev
+      - prod
+
+jobs:
+  test:
+    name: run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository content
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3 
+        with:
+            version: 10
+
+      - name: Install run dependencies
+        run: pnpm install
+
+      - name: Test ui and app
+        run: pnpm  test
+
+      - name: Get coverage report
+        run: pnpm coverage
+
+      - name: Run eslint check
+        run: pnpm lint
+
+      - name: Run prettier check
+        run: pnpm format --check
