@@ -23,13 +23,3 @@
   flex-direction: column;
   gap: 12px;
 }
-
-.saveUserInfoBtn {
-  background-color: var(--primary);
-  border-radius: 8px;
-}
-
-.saveUserInfoBtn:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}

@@ -614,7 +614,7 @@ export const SETTING = [
   },
 ];
 
-export const UserInfoItems = {
-  NAME: "name",
-  EMAIL: "email",
-};
+export const USER_INFO_FIELDS = [
+  { type: "text", name: "name", label: "Username" },
+  { type: "email", name: "email", label: "Email" },
+];

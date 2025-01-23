@@ -1,24 +1,25 @@
 import { useState } from "react";
-import { UserInfoItems } from "../../../utils/constants";
+import { USER_INFO_FIELDS } from "../../../utils/constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 
 function UserInfo() {
-  const [userInfo, setUserInfo] = useState({
+  const initialValues = {
     name: "John Doe",
-    email: "johndoe@gamil.com",
+    email: "johndoe@gmail.com",
     isBtnDisabled: true,
-  });
+  };
+  const [formData, setFormData] = useState(initialValues);
 
-  const handleUserInfoChange = (itemType, e) => {
-    const { value } = e.target;
+  const handleUserInfoChange = (e) => {
+    const { name, value } = e.target;
 
-    setUserInfo((prevUserInfo) => {
+    setFormData((prevFormData) => {
       return {
-        ...prevUserInfo,
+        ...prevFormData,
         isBtnDisabled: false,
-        [itemType]: value,
+        [name]: value,
       };
     });
   };
@@ -33,25 +34,21 @@ function UserInfo() {
     <div className={styles.dashboardContentItem}>
       <h6 className={styles.contentItemHeading}>User Info</h6>
       <form className={styles.userInfoInputGroup}>
-        <CustomInput
-          type="text"
-          name={UserInfoItems.NAME}
-          label="username"
-          value={userInfo.name}
-          onChange={(e) => handleUserInfoChange(UserInfoItems.NAME, e)}
-        />
-        <CustomInput
-          type="email"
-          name={UserInfoItems.EMAIL}
-          label="email"
-          value={userInfo.email}
-          onChange={(e) => handleUserInfoChange(UserInfoItems.EMAIL, e)}
-          disabled={true}
-        />
+        {USER_INFO_FIELDS.map((field) => (
+          <CustomInput
+            key={field.name}
+            type={field.type}
+            name={field.name}
+            label={field.label}
+            value={formData[field.name]}
+            onChange={handleUserInfoChange}
+            {...(field.name === "email" ? { disabled: true } : {})}
+          />
+        ))}
         <Button
           onClick={handleUserInfoUpdate}
-          disabled={userInfo.isBtnDisabled}
-          className={styles.saveUserInfoBtn}
+          disabled={formData.isBtnDisabled}
+          variant={"primary"}
         >
           Save
         </Button>
