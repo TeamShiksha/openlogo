@@ -2,7 +2,7 @@
     width: 100%;
     min-width: 100%;
     border-collapse: collapse;
-    background-color: #f9fafb;
+    background-color: var(--table-background);
 }
 
 .tableHeader {
@@ -15,5 +15,5 @@
 .tableCell {
     padding: 1rem 1.5rem;
     font-size: 1.2rem;
-    color: #344054;
+    color: var(--table-cell-color);
 }
