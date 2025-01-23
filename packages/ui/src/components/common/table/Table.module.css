@@ -1,0 +1,19 @@
+.table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    background-color: #f9fafb;
+}
+
+.tableHeader {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 1.2rem;
+    color: var(--black);
+}
+
+.tableCell {
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+    color: #344054;
+}
