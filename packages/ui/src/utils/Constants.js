@@ -108,7 +108,7 @@ export const HEADER_ITEMS = [
   },
   {
     name: "about",
-    title: "About Us",
+    title: "About",
     url: "/about",
   },
 ];
