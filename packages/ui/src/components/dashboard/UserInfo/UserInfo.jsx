@@ -11,6 +11,19 @@ function UserInfo() {
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({
+    type: "",
+    message: "",
+  });
+
+  const validate = (values) => {
+    const errors = {};
+
+    if (!values.name) {
+      errors.name = "Name is required!";
+    }
+    return errors;
+  };
 
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +40,23 @@ function UserInfo() {
   const handleUserInfoUpdate = (e) => {
     e.preventDefault();
 
+    const validationErrors = validate(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors({
+        type: "error",
+        message: Object.values(validationErrors)[0],
+      });
+      setFormData((prevFormData) => {
+        return {
+          ...prevFormData,
+          isBtnDisabled: true,
+        };
+      });
+      return;
+    }
     // to be implemented
+
+    setFormErrors({ type: "success", message: "Signed in successfully!" });
   };
 
   return (
@@ -43,6 +72,9 @@ function UserInfo() {
             value={formData[field.name]}
             onChange={handleUserInfoChange}
             {...(field.name === "email" ? { disabled: true } : {})}
+            {...(field.name === "name" && formErrors.type === "error"
+              ? { error: formErrors.message }
+              : {})}
           />
         ))}
         <Button
