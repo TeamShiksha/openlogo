@@ -23,9 +23,20 @@
     border: 1px solid var(--border-color);
 }
 
+.no-data {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1rem;
+    color: var(--description);
+    font-style: italic;
+    background-color: var(--table-background);
+    border: 1px solid var(--border-color);
+}
+
 @media (max-width: 768px) {
     .custom-table {
-        font-size: 0.9rem; /* Adjust font size for medium screens */
+        font-size: 0.9rem;
+        /* Adjust font size for medium screens */
     }
 
     .table-header {
@@ -39,7 +50,8 @@
 
 @media (max-width: 480px) {
     .custom-table {
-        font-size: 0.8rem; /* Further reduce font size for small screens */
+        font-size: 0.8rem;
+        /* Further reduce font size for small screens */
     }
 
     .table-header,
