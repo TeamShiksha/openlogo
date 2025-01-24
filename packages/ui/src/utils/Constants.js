@@ -108,7 +108,7 @@ export const HEADER_ITEMS = [
   },
   {
     name: "about",
-    title: "About Us",
+    title: "About",
     url: "/about",
   },
 ];
@@ -613,3 +613,22 @@ export const SETTING = [
     buttontitle: "Delete Account",
   },
 ];
+
+export const HAMBURGER = {
+  src: "hamburger.svg",
+  alt: "Hamburger Icon",
+};
+
+export const CROSS = {
+  src: "close-icon.svg",
+  alt: "Close Icon",
+};
+
+export const buttonText = {
+  getStarted: "Get started",
+};
+
+export const branding = {
+  imageSrc: "openlogo.svg",
+  brandName: "Openlogo",
+};

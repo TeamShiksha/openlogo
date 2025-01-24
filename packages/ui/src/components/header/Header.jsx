@@ -1,77 +1,74 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
-import { HEADER_ITEMS } from "../../utils/Constants";
+import {
+  HEADER_ITEMS,
+  HAMBURGER,
+  CROSS,
+  buttonText,
+  branding,
+} from "../../utils/Constants";
 import styles from "./Header.module.css";
 
 const Header = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
-
-  useEffect(() => {
-    if (signupModal) {
-      document.body.classList.add(styles.activemodal);
-    } else {
-      document.body.classList.remove(styles.activemodal);
-    }
-
-    return () => {
-      document.body.classList.remove(styles.activemodal);
-    };
-  }, [signupModal]);
-
-  const hamburgerIcon = {
-    src: "hamburger.svg",
-    alt: "Hamburger Icon",
-  };
-
-  const closeIcon = {
-    src: "close-icon.svg",
-    alt: "Close Icon",
-  };
-
-  const menuIcon = showMenu ? closeIcon : hamburgerIcon;
+  const menuIcon = showMenu ? CROSS : HAMBURGER;
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
   };
 
-  const openSignupModal = () => {
-    setSignupModal(true);
-  };
-
-  const closeSignupModal = () => {
-    setSignupModal(false);
-  };
-
   return (
-    <header className={styles["header-container"]}>
-      <div className={styles["header-logo"]} onClick={() => navigate("/")}>
-        <img alt="Logo Icon" src="openlogo.svg" width={36} height={36} />
-        <h4>Openlogo</h4>
-      </div>
-      <div className={styles["header-items"]}>
-        {HEADER_ITEMS.map((item) => (
-          <a key={item.name} className={styles["header-item"]} href={item.url}>
-            {item.title}
-          </a>
-        ))}
-      </div>
-      <div className={styles["header-button"]}>
-        <Button variant="primary" onClick={openSignupModal}>
-          Get started for free
-        </Button>
-        <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
-      </div>
-
-      <button className={styles["header-hamburger"]} onClick={toggleMenu}>
-        <img src={menuIcon.src} alt={menuIcon.alt} height={16} width={21.33} />
-      </button>
-      {showMenu && <MobileHeaderMenu onSignupClick={openSignupModal} />}
-    </header>
+    <div className={`container ${styles.block}`}>
+      <header className={styles.header}>
+        <button
+          type="button"
+          className={styles.brand}
+          onClick={() => navigate("/")}
+        >
+          <img
+            className={styles["brand-img"]}
+            alt={branding.imageSrc}
+            src={branding.imageSrc}
+          />
+          <span className={styles["brand-name"]}>{branding.brandName}</span>
+        </button>
+        <div className={styles["nav-bar"]}>
+          {HEADER_ITEMS.map((item) => (
+            <a key={item.name} className={styles.nav} href={item.url}>
+              {item.title}
+            </a>
+          ))}
+          <Button
+            variant="primary"
+            className={styles.ml}
+            onClick={() => {
+              setSignupModal(true);
+            }}
+          >
+            {buttonText.getStarted}
+          </Button>
+        </div>
+        <AuthModal
+          isOpen={signupModal}
+          onClose={() => {
+            setSignupModal(true);
+          }}
+        />
+        <button className={styles.hamburger} onClick={toggleMenu}>
+          <img
+            className={styles["hamburger-img"]}
+            src={menuIcon.src}
+            alt={menuIcon.alt}
+          />
+        </button>
+        <MobileHeaderMenu isOpen={showMenu} closeMenu={setShowMenu} />
+      </header>
+    </div>
   );
 };
 

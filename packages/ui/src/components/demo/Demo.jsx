@@ -21,7 +21,7 @@ const Demo = () => {
   };
 
   const filteredCompanies = COMPANIES.filter((company) =>
-    company.name.toLowerCase().startsWith(searchTerm.toLowerCase()),
+    company.name.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
   return (

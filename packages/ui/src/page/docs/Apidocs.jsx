@@ -1,16 +1,14 @@
 import { useState } from "react";
 import styles from "./ApiDocs.module.css";
 import pythonLogo from "../../assets/python.png";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import jsLogo from "../../assets/js.png";
 import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
 import tick from "../../assets/tick.png";
 
-
 const codeExamples = {
-  javascript: 
-  `// Initialize API request to fetch company logo
+  javascript: `// Initialize API request to fetch company logo
 fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
 {
   method: 'GET',
@@ -20,8 +18,7 @@ fetch('/api/business/logo?domain={domain}&API_KEY={api_key}',
 }
 )`,
 
-  python: 
-  `# Import requests library for making HTTP requests
+  python: `# Import requests library for making HTTP requests
 import requests
 # Send GET request to fetch company logo
 response = requests.get('api/business/logo',
@@ -34,8 +31,7 @@ response = requests.get('api/business/logo',
   }
 )`,
 
-  java: 
-  `// Create HTTP client instance
+  java: `// Create HTTP client instance
 HttpClient client = HttpClient.newHttpClient();
 // Build HTTP request with required parameters
 HttpRequest request = HttpRequest.newBuilder()
@@ -76,7 +72,9 @@ const CodeBlock = ({ id, codeExamples }) => {
           {Object.keys(codeExamples).map((lang) => (
             <button
               key={`${id}-${lang}`}
-              onClick={() => setSelectedLanguage(lang)}
+              onClick={() => {
+                setSelectedLanguage(lang);
+              }}
               className={`${styles.languageButton} ${
                 selectedLanguage === lang ? styles.languageButtonActive : ""
               }`}
@@ -91,18 +89,23 @@ const CodeBlock = ({ id, codeExamples }) => {
         </div>
       </div>
       <pre className={styles.codeBlock}>
-  <div className={styles.copyinside}>
-    <code>{codeExamples[selectedLanguage]}</code>
-    {copyMessage? <img src={tick} alt="tick" style={{ width: "24px", height: "24px" }} /> :
-    <img 
-      src={copycodeicon} 
-      alt="Copy code" 
-      style={{ width: "24px", height: "24px", cursor: "pointer" }} 
-      onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
-    />}
-  </div>
-</pre>
-
+        <div className={styles.copyinside}>
+          <code>{codeExamples[selectedLanguage]}</code>
+          {copyMessage ? (
+            <img
+              src={tick}
+              alt="tick"
+              style={{ width: "24px", height: "24px" }}
+            />
+          ) : (
+            <img
+              src={copycodeicon}
+              alt="Copy code"
+              style={{ width: "24px", height: "24px", cursor: "pointer" }}
+            />
+          )}
+        </div>
+      </pre>
     </div>
   );
 };
@@ -135,7 +138,8 @@ const ApiDocs = () => {
           <p className={styles.paragraph}>
             <strong className={styles.heading4}>Endpoint: </strong>
             <span className={styles.bgGrey}>
-            https://api-logoexecutive.vercel.app/api/business/logo?domain={"domain"}&API_KEY={"api_key"}
+              https://api-logoexecutive.vercel.app/api/business/logo?domain=
+              {"domain"}&API_KEY={"api_key"}
             </span>
           </p>
 
@@ -186,7 +190,8 @@ const ApiDocs = () => {
           <p className={styles.paragraph}>
             <strong className={styles.heading4}>Endpoint: </strong>
             <span className={styles.bgGrey}>
-            https://api-logoexecutive.vercel.app/api/business/search?domain={"domain"}&API_KEY={"api_key"}
+              https://api-logoexecutive.vercel.app/api/business/search?domain=
+              {"domain"}&API_KEY={"api_key"}
             </span>
           </p>
           <p className={styles.paragraph}>
@@ -227,11 +232,10 @@ const ApiDocs = () => {
 
           {/* <h3 className={styles.heading3}>Example Call:</h3> */}
           <CodeBlock id="search-example" codeExamples={codeExamples} />
-      <p>
+          <p>
             If you cannot find the desired logo, feel free to{" "}
             {/* <a href="/contact-us">contact us</a> */}
-            <Link to="/contact">contact us</Link>
-            , and we'll be happy to help.
+            <Link to="/contact">contact us</Link>, and we'll be happy to help.
             For additional support, please refer to the provided examples or
             reach out to our support team for assistance.
           </p>

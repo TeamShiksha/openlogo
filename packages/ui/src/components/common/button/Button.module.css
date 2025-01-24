@@ -1,4 +1,4 @@
-button {
+.button {
   padding: 16px 28px;
   border: none;
   font-size: 1rem;
@@ -6,17 +6,16 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  width: 100%;
 }
 
-button:disabled {
+.button:disabled {
   color: var(--white);
   cursor: not-allowed;
   opacity: 0.8;
   pointer-events: none;
 }
 
-button:disabled:hover {
+.button:disabled:hover {
   background-color: var(--white);
 }
 
@@ -39,4 +38,14 @@ button:disabled:hover {
 .secondary:hover {
   border-color: var(--primary);
   color: var(--primary);
+}
+
+.danger {
+  background-color: rgba(255, 69, 58, 1); 
+  color: var(--white);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.danger:hover {
+  background-color: rgba(220, 53, 53, 1); 
 }

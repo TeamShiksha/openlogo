@@ -12,7 +12,7 @@ const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${styles[variant]} ${className}`}
+      className={`${styles[variant]} ${className} ${styles.button}`}
     >
       {children}
     </button>
@@ -21,7 +21,7 @@ const Button = ({
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(["primary", "secondary"]).isRequired,
+  variant: PropTypes.oneOf(["primary", "secondary", "danger"]).isRequired,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   className: PropTypes.string,
