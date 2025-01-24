@@ -35,6 +35,10 @@ function UserInfo() {
         [name]: value,
       };
     });
+    setFormErrors({
+      type: "",
+      message: "",
+    });
   };
 
   const handleUserInfoUpdate = (e) => {
