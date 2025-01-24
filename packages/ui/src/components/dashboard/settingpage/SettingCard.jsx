@@ -6,7 +6,7 @@ import { SETTING } from "../../../utils/constants";
   function SettingCard()  {
   return (
       <div className={styles.dashboardContentItem}>
-        <h6 className={styles.contentItemHeading}>Profile</h6>
+        <h6 className={styles.contentItemHeading}>Setting</h6>
         {SETTING.map((setting, index) => (
           <div key={index} className={styles.actionButtonWrapper}>
             <p className={styles.actionText}>{setting.subtitle}</p>
