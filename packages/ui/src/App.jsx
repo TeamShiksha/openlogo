@@ -21,7 +21,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         {/* <Route path="/docs" element={<ApiDocs />} /> */}
-        <Route path="/contact" element={<ContactForm />} />
+        {/* <Route path="/contact" element={<ContactForm />} /> */}
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"

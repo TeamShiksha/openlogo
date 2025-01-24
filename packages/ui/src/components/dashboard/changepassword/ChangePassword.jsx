@@ -27,8 +27,8 @@ function ChangePassword() {
   };
 
   return (
-    <div className={styles.dashboardContentItem}>
-      <h6 className={styles.contentItemHeading}>Change Password</h6>
+    <div className={styles["dashboard-content-item"]}>
+      <h6 className={styles["content-item-heading"]}>Change Password</h6>
       <form onSubmit={handleSubmit}>
         {PASSWORD_FIELDS.map((field) => (
           <CustomInput
@@ -44,7 +44,7 @@ function ChangePassword() {
         <Button
           type="submit"
           variant="primary"
-          className={styles.changePasswordButton}
+          className={styles["change-password-button"]}
         >
           Change password
         </Button>

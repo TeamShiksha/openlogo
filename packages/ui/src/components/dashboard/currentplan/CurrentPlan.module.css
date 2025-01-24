@@ -1,4 +1,4 @@
-.dashboardContentItem {
+.dashboard-content-item {
   border-radius: 8px;
   border: var(--border);
   box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
@@ -10,7 +10,7 @@
   flex: 1;
 }
 
-.dashboardContentItem .currentPlan {
+.dashboard-content-item .current-plan {
   color: rgb(17 24 39);
   font-size: var(--large-text);
   line-height: 28px;
@@ -19,7 +19,7 @@
   padding-top: 16px;
 }
 
-.dashboardContentItem .currentPlanTagline {
+.dashboard-content-item .current-plan-tagline {
   color: var(--description);
   font-size: var(--medium-text);
   line-height: 20px;
@@ -27,7 +27,7 @@
   margin-bottom: 20px;
 }
 
-.dashboardContentItem > button {
+.dashboard-content-item > button {
   max-width: 100%;
   color: var(--black);
   background-color: var(--white);
@@ -43,7 +43,7 @@
   width: 100%;
 }
 
-.dashboardContentItem .apikeyInput {
+.dashboard-content-item .api-key-input {
   padding: 12px;
   font-size: 16px;
   font-weight: 500;
@@ -54,7 +54,7 @@
   max-width: 450px;
 }
 
-.currentPlanHeader {
+.current-plan-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,7 +62,7 @@
   gap: 12px;
 }
 
-.contentItemHeading {
+.content-item-heading {
   color: var(--black);
   font-size: var(--large-text);
   font-weight: 500;

@@ -1,25 +1,29 @@
 import React from "react";
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
-import { SETTING } from "../../../utils/constants";
+import { SETTING } from "../../../utils/Constants";
 
-  function SettingCard()  {
+function SettingCard() {
   return (
-      <div className={styles.dashboardContentItem}>
-        <h6 className={styles.contentItemHeading}>Setting</h6>
-        {SETTING.map((setting, index) => (
-          <div key={index} className={styles.actionButtonWrapper}>
-            <p className={styles.actionText}>{setting.subtitle}</p>
-            <Button
-              type="submit"
-              variant={setting.buttontitle.toLowerCase().includes("delete") ? "danger" : "primary"}
-              className={styles.actionButton}
-            >
-              {setting.buttontitle}
-            </Button>
-          </div>
-        ))}
-      </div>
+    <div className={styles["dashboard-content-item"]}>
+      <h6 className={styles["content-item-heading"]}>Setting</h6>
+      {SETTING.map((setting, index) => (
+        <div key={index} className={styles["action-button-wrapper"]}>
+          <p className={styles["action-text"]}>{setting.subtitle}</p>
+          <Button
+            type="submit"
+            variant={
+              setting.buttontitle.toLowerCase().includes("delete")
+                ? "danger"
+                : "primary"
+            }
+            className={styles["action-button"]}
+          >
+            {setting.buttontitle}
+          </Button>
+        </div>
+      ))}
+    </div>
   );
-};
+}
 export default SettingCard;

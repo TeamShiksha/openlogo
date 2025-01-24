@@ -1,4 +1,4 @@
-.dashboardContentItem {
+.dashboard-content-item {
   border-radius: 8px;
   border: var(--border);
   box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
@@ -10,7 +10,7 @@
   flex: 1;
 }
 
-.dashboardContentItem .currentPlan {
+.dashboard-content-item .current-plan {
   color: rgb(17 24 39);
   font-size: var(--large-text);
   line-height: 28px;
@@ -19,7 +19,7 @@
   padding-top: 16px;
 }
 
-.dashboardContentItem > button {
+.dashboard-content-item > button {
   max-width: 100%;
   color: var(--black);
   background-color: var(--white);
@@ -28,7 +28,7 @@
   border: var(--border);
 }
 
-.contentItemHeading {
+.content-item-heading {
   color: var(--black);
   font-size: var(--large-text);
   font-weight: 500;
@@ -36,7 +36,7 @@
   margin: 0;
 }
 
-.usageBodyContainer {
+.usage-body-container {
   display: flex;
   gap: 4px;
   align-items: center;
@@ -45,14 +45,14 @@
   padding-top: 16px;
 }
 
-.usageBodyContainer .dataHeading {
+.usage-body-container .data-heading {
   font-size: var(--medium-text);
   font-weight: 600;
   line-height: 28px;
   color: var(--smooth-gray);
 }
 
-.usageBodyContainer .data {
+.usage-body-container .data {
   font-size: 24px;
   font-weight: 800;
   line-height: 20px;
@@ -60,17 +60,17 @@
   margin-bottom: 12px;
 }
 
-.circularChart {
+.circular-chart {
   width: 160px;
   max-height: 250px;
 }
 
-.usageStatistics {
+.usage-statistics {
   width: 150px;
   max-height: 250px;
 }
 
-.dashboardResetDate {
+.dashboard-reset-date {
   font-size: var(--medium-text);
   font-weight: 400;
   line-height: 20px;
