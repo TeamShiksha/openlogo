@@ -6,23 +6,6 @@ import jsLogo from "../../assets/js.png";
 import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
 import tick from "../../assets/tick.png";
-import Table from "../../components/common/table/Table";
-import PropTypes from "prop-types";
-
-const headers = ["Parameter", "Type", "Description", "Required"];
-const logoRetrivalRows = [
-  ["domain", "string", "The domain name of the company.", "Yes"],
-  ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
-];
-const SearchRows = [
-  [
-    "domainKey",
-    "string",
-    "The starting prefix of the domain name to filter logo URLs.",
-    "Yes",
-  ],
-  ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
-];
 
 const codeExamples = {
   javascript: `// Initialize API request to fetch company logo
@@ -60,7 +43,6 @@ HttpRequest request = HttpRequest.newBuilder()
 HttpResponse<String> response = client.send(request, 
 HttpResponse.BodyHandlers.ofString());`,
 };
-
 const CodeBlock = ({ id, codeExamples }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [copyMessage, setCopyMessage] = useState("");
@@ -139,7 +121,7 @@ const ApiDocs = () => {
               domain name and searching logo URLs by domain prefixes. We offer
               features like bulk logo retrieval, high-resolution logos, and easy
               integration. Whether you need a logo for branding or marketing,
-              we&apos;re here to help.Contact us anytime!
+              we’re here to help.Contact us anytime!
             </p>
           </div>
 
@@ -161,7 +143,34 @@ const ApiDocs = () => {
           </p>
 
           <div className={styles.tableWrapper}>
-            <Table headers={headers} rows={logoRetrivalRows} />
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th className={styles.tableHeader}>Parameter</th>
+                  <th className={styles.tableHeader}>Type</th>
+                  <th className={styles.tableHeader}>Description</th>
+                  <th className={styles.tableHeader}>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={styles.tableCell}>domain</td>
+                  <td className={styles.tableCell}>string</td>
+                  <td className={styles.tableCell}>
+                    The domain name of the company.
+                  </td>
+                  <td className={styles.tableCell}>Yes</td>
+                </tr>
+                <tr>
+                  <td className={styles.tableCell}>API_KEY</td>
+                  <td className={styles.tableCell}>string</td>
+                  <td className={styles.tableCell}>
+                    The API Key generated from the dashboard.
+                  </td>
+                  <td className={styles.tableCell}>Yes</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* <h3 className={styles.heading3}>Example Call:</h3> */}
@@ -174,7 +183,7 @@ const ApiDocs = () => {
           <p className={styles.paragraph}>
             The Logo Search API allows users to fetch a list of logo URLs that
             start with the specified characters. This is particularly useful for
-            identifying logos based on a domain name&apos;s prefix.
+            identifying logos based on a domain name's prefix.
           </p>
 
           <p className={styles.paragraph}>
@@ -190,7 +199,34 @@ const ApiDocs = () => {
           </p>
 
           <div className={styles.tableWrapper}>
-            <Table headers={headers} rows={SearchRows} />
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th className={styles.tableHeader}>Parameter</th>
+                  <th className={styles.tableHeader}>Type</th>
+                  <th className={styles.tableHeader}>Description</th>
+                  <th className={styles.tableHeader}>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={styles.tableCell}>domainKey</td>
+                  <td className={styles.tableCell}>string</td>
+                  <td className={styles.tableCell}>
+                    The starting prefix of the domain name to filter logo URLs.
+                  </td>
+                  <td className={styles.tableCell}>Yes</td>
+                </tr>
+                <tr>
+                  <td className={styles.tableCell}>API_KEY</td>
+                  <td className={styles.tableCell}>string</td>
+                  <td className={styles.tableCell}>
+                    The API Key generated from the dashboard.
+                  </td>
+                  <td className={styles.tableCell}>Yes</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* <h3 className={styles.heading3}>Example Call:</h3> */}
@@ -198,19 +234,14 @@ const ApiDocs = () => {
           <p>
             If you cannot find the desired logo, feel free to{" "}
             {/* <a href="/contact-us">contact us</a> */}
-            <Link to="/contact">contact us</Link>, and we&apos;ll be happy to
-            help. For additional support, please refer to the provided examples
-            or reach out to our support team for assistance.
+            <Link to="/contact">contact us</Link>, and we'll be happy to help.
+            For additional support, please refer to the provided examples or
+            reach out to our support team for assistance.
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-CodeBlock.propTypes = {
-  id: PropTypes.string,
-  codeExamples: PropTypes.object,
 };
 
 export default ApiDocs;
