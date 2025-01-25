@@ -8,20 +8,20 @@ const Table = ({ headers, rows, emptyMessage }) => {
     <table className={classes["custom-table"]}>
       <thead>
         <tr>
-          {headers?.map(({ id, label }) => (
-            <th key={id} className={classes["table-header"]}>
-              {label}
+          {headers?.map((head, index) => (
+            <th key={`${head}-${index}`} className={classes["table-header"]}>
+              {head}
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
         {hasData ? (
-          rows.map(({ id, cells }) => (
-            <tr key={id}>
-              {cells.map(({ id, value }) => (
-                <td key={id} className={classes["table-cell"]}>
-                  {value}
+          rows.map((cells, index) => (
+            <tr key={`${cells[index]}-${index}`}>
+              {cells.map((cell, CIndex) => (
+                <td key={`${cell}-${CIndex}`} className={classes["table-cell"]}>
+                  {cell}
                 </td>
               ))}
             </tr>
