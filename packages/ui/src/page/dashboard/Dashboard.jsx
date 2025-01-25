@@ -2,9 +2,9 @@ import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
 import Usage from "../../components/dashboard/usage/Usage";
 import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
-import styles from "./Dashboard.module.css";
 import UserInfo from "../../components/dashboard/userinfo/UserInfo";
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   return (
