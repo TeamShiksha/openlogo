@@ -2,9 +2,9 @@
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    border-collapse: collapse;
     background-color: var(--table-background);
-    border: 1px solid var(--border-color);
+    border: var(--border);
+    border-radius: 0.5rem;
 }
 
 .table-header {

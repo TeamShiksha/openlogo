@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import classes from "./Table.module.css";
 
 const Table = ({ headers, rows, emptyMessage }) => {
@@ -35,6 +36,12 @@ const Table = ({ headers, rows, emptyMessage }) => {
       </tbody>
     </table>
   );
+};
+
+Table.propTypes = {
+  headers: PropTypes.array,
+  rows: PropTypes.array,
+  emptyMessage: PropTypes.string,
 };
 
 export default Table;
