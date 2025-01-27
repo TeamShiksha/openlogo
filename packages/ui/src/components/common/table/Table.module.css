@@ -17,7 +17,7 @@
 }
 
 .table-cell {
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1.5rem;
     font-size: 1rem;
     color: var(--description);
     border: 1px solid var(--border-color);
@@ -33,10 +33,15 @@
     border: 1px solid var(--border-color);
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
+    .custom-table {
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 780px) {
     .custom-table {
         font-size: 0.9rem;
-        /* Adjust font size for medium screens */
     }
 
     .table-header {
@@ -48,14 +53,15 @@
     }
 }
 
-@media (max-width: 480px) {
+@media only screen and (max-width: 564px) {
     .custom-table {
         font-size: 0.8rem;
-        /* Further reduce font size for small screens */
+        margin: 0.8rem;
     }
 
     .table-header,
     .table-cell {
         padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
     }
 }
