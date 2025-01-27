@@ -4,9 +4,9 @@ import Accordion from '../common/accordion/Accordion';
 import './FAQs.css';
 
 const FAQs = () => {
-	const [activeAccordian, setActiveAccordion] = useState(false);
+	const [activeAccordion, setActiveAccordion] = useState(false);
 	function handleChange(accordion) {
-		setActiveAccordion(activeAccordian === accordion ? false : accordion);
+		setActiveAccordion(activeAccordion === accordion ? false : accordion);
 	}
 
 	return (
@@ -17,7 +17,7 @@ const FAQs = () => {
 					return (
 						<Accordion
 							key={faq.title}
-							expanded={activeAccordian === faq.title}
+							expanded={activeAccordion === faq.title}
 							title={faq.title}
 							toggle={handleChange}
 						>
