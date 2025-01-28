@@ -17,7 +17,6 @@ describe("HeroSection Component", () => {
 
   it("renders the buttons correctly", () => {
     render(<HeroSection />);
-
     expect(screen.getByText("Documentation")).toBeInTheDocument();
     expect(screen.getByText("Get started")).toBeInTheDocument();
   });
@@ -37,13 +36,28 @@ describe("HeroSection Component", () => {
   it("opens the modal when the 'Get started' button is clicked", () => {
     render(<HeroSection />);
     fireEvent.click(screen.getByText("Get started"));
-    expect(screen.queryByText("AuthModal")).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it("closes the modal when the 'Close' button is clicked", () => {
+  it("closes the modal when the 'Escape' key is pressed", () => {
     render(<HeroSection />);
     fireEvent.click(screen.getByText("Get started"));
-    fireEvent.click(screen.getByText("signupModal"));
-    expect(screen.queryByText("AuthModal")).not.toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("closes the modal when clicking outside of it", () => {
+    render(<HeroSection />);
+    fireEvent.click(screen.getByText("Get started"));
+    fireEvent.click(screen.getByRole("dialog"));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("toggles between SignIn and SignUp forms when the toggle button is clicked", () => {
+    render(<HeroSection />);
+    fireEvent.click(screen.getByText("Get started"));
+    expect(screen.getByText("Sign up for free")).toBeInTheDocument();
+    expect(screen.getByText("Go to dashboard")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("Don't have an account?"));
   });
 });
