@@ -25,7 +25,11 @@ const Header = () => {
   return (
     <div className={`container ${styles.block}`}>
       <header className={styles.header}>
-        <button type="button" className={styles.brand} onClick={()=> navigate("/")}>
+        <button
+          type="button"
+          className={styles.brand}
+          onClick={() => navigate("/")}
+        >
           <img
             className={styles["brand-img"]}
             alt={branding.imageSrc}
