@@ -10,7 +10,6 @@ import {
   branding,
 } from "../src/utils/Constants";
 
-// Mock the dependencies
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -101,7 +100,7 @@ describe("Header", () => {
         <Header />
       </BrowserRouter>
     );
-    // Adjusting the query to match the actual accessible name
+
     const brandButton = screen.getByRole("button", {
       name: /openlogo\.svg Openlogo/i,
     });
