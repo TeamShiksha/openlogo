@@ -34,13 +34,6 @@
   flex: 1;
 }
 
-.contentItemHeading {
-  color: var(--black);
-  font-size: var(--large-text);
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
-}
 
 @media screen and (max-width: 768px) {
   .dashboardContainer {
