@@ -1,12 +1,12 @@
 import styles from "./CardWrapper.module.css";
 
-function CardWrapper({ title, children, status, statusStyle }) {
+function CardWrapper({ title, children, status, statusClass }) {
   return (
     <div className={styles.cardWrapper}>
       <div className={styles.cardHeader}>
         <h3 className={styles.cardTitle}>{title}</h3>
         {status && (
-          <span style={statusStyle} className={styles.cardStatus}>
+          <span className={`${styles.cardStatus} ${statusClass}`}>
             {status}
           </span>
         )}

@@ -5,7 +5,6 @@ import ChangePassword from "../../components/dashboard/changepassword/ChangePass
 import styles from "./Dashboard.module.css";
 import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
-import React from "react";
 
 function Dashboard() {
   return (
@@ -18,7 +17,11 @@ function Dashboard() {
           <CardWrapper title="Generate New API Key">
             <ApiKeyForm />
           </CardWrapper>
-          <CardWrapper title="Plan" status="Active">
+          <CardWrapper
+            title="Plan"
+            status="Active"
+            statusClass={styles.activeStatus}
+          >
             <CurrentPlan />
           </CardWrapper>
         </section>

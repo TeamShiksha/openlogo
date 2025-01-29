@@ -35,6 +35,14 @@
 }
 
 
+.activeStatus {
+    color: var(--primary);
+}
+
+.inactiveStatus {
+    color: var(--black);
+}
+
 @media screen and (max-width: 768px) {
   .dashboardContainer {
     flex-direction: column;

@@ -27,9 +27,8 @@
 }
 
 .cardStatus {
-    color: var(--smooth-purple);
     font-weight: 600;
-    font-size: var(--medium-text);
+    font-size: medium;
 }
 
 .cardContent {
