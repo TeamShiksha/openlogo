@@ -21,7 +21,7 @@ function Dashboard() {
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
           <ChangePassword />
-          <SettingCard/>
+          <SettingCard />
         </section>
       </div>
     </div>
