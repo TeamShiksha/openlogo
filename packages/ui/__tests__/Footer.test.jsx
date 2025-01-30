@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
 import { FOOTER_ITEMS } from "../src/utils/Constants";
+import { expect, describe, it } from "vitest";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {
