@@ -1,19 +1,30 @@
 import styles from "./CardWrapper.module.css";
+import PropTypes from "prop-types";
 
 function CardWrapper({ title, children, status, statusClass }) {
   return (
-    <div className={styles.cardWrapper}>
-      <div className={styles.cardHeader}>
-        <h3 className={styles.cardTitle}>{title}</h3>
+    <div className={styles.wrapper}>
+      <div className={styles.header}>
+        <p className={styles.header}>{title}</p>
         {status && (
-          <span className={`${styles.cardStatus} ${statusClass}`}>
-            {status}
-          </span>
+          <span className={`${styles.status} ${statusClass}`}>{status}</span>
         )}
       </div>
-      <div className={styles.cardContent}>{children}</div>
+      <div className={styles.content}>{children}</div>
     </div>
   );
 }
+
+CardWrapper.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  status: PropTypes.string,
+  statusClass: PropTypes.string,
+};
+
+CardWrapper.defaultProps = {
+  status: "",
+  statusClass: "",
+};
 
 export default CardWrapper;

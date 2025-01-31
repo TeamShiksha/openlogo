@@ -1,4 +1,4 @@
-.cardWrapper {
+.wrapper {
     border-radius: 8px;
     border: var(--border);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -11,27 +11,26 @@
     flex: 1;
 }
 
-.cardHeader {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.cardTitle {
+.header {
     color: var(--black);
-    font-size: var(--large-text);
     font-weight: 500;
     line-height: 20px;
     margin: 0;
 }
 
-.cardStatus {
+.status {
     font-weight: 600;
     font-size: medium;
 }
 
-.cardContent {
+.content {
     display: flex;
     flex-direction: column;
 }

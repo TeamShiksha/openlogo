@@ -6,12 +6,16 @@ function Usage() {
     <>
       <div className={styles.usageBodyContainer}>
         <div className={styles.circularChart}>
-          <PieGraph percentage={21} colour="#4F46E5" fill="#E6E6FA" />
+          <PieGraph
+            percentage={21}
+            colour="var(--primary)"
+            fill="var(--border)"
+          />
         </div>
         <div className={styles.usageStatistics}>
           <div className={styles.dataHeading}>Calls</div>
           <div className={styles.data}>105</div>
-          <div className={styles.dataheading}>Limit</div>
+          <div className={styles.dataHeading}>Limit</div>
           <div className={styles.data}>500</div>
         </div>
       </div>
