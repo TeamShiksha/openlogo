@@ -1,77 +1,39 @@
-.dashboard-content-item {
-  border-radius: 8px;
-  border: var(--border);
-  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
-  background-color: var(--white);
-  padding: 24px 32px;
-  text-align: left;
+.usageBodyContainer {
   display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.dashboard-content-item .current-plan {
-  color: rgb(17 24 39);
-  font-size: var(--large-text);
-  line-height: 28px;
-  font-weight: 600;
-  margin: 12px 0px;
-  padding-top: 16px;
-}
-
-.dashboard-content-item > button {
-  max-width: 100%;
-  color: var(--black);
-  background-color: var(--white);
-  border-radius: var(--bradius);
-  box-shadow: var(--shadow);
-  border: var(--border);
-}
-
-.content-item-heading {
-  color: var(--black);
-  font-size: var(--large-text);
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
-}
-
-.usage-body-container {
-  display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 16px;
+  padding-top: 10px;
 }
 
-.usage-body-container .data-heading {
-  font-size: var(--medium-text);
+.usageBodyContainer .dataHeading {
+  font-size: medium;
   font-weight: 600;
   line-height: 28px;
-  color: var(--smooth-gray);
+  color: var(--label-color);
 }
 
-.usage-body-container .data {
+.usageBodyContainer .data {
   font-size: 24px;
   font-weight: 800;
   line-height: 20px;
-  color: var(--smooth-purple);
+  color: var(--primary);
   margin-bottom: 12px;
 }
 
-.circular-chart {
+.circularChart {
   width: 160px;
   max-height: 250px;
 }
 
-.usage-statistics {
-  width: 150px;
+.usageStatistics {
+  width: 110px;
   max-height: 250px;
 }
 
-.dashboard-reset-date {
-  font-size: var(--medium-text);
+.dashboardResetDate {
+  font-size: medium;
   font-weight: 400;
   line-height: 20px;
   color: var(--description);

@@ -22,6 +22,7 @@
   --shadow-bottom: 0px 16px 24px rgba(140, 152, 164, 0.125);
   --dark-shadow-menu: 0px 30px 18px 2px rgba(0, 0, 0, 0.3);
   --table-heading-bg: rgb(226, 224, 224);
+  --table-background: #f9fafb;
 }
 
 *,

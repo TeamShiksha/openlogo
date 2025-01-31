@@ -1,28 +1,28 @@
-.dashboard-container {
+.dashboardContainer {
   display: flex;
   flex-direction: column;
   max-width: 1280px;
   margin: 0 auto;
 }
 
-.dashboard-content-container {
+.dashboardContentContainer {
   padding: 2rem;
   display: flex;
   flex-grow: 1;
   gap: 55px;
 }
 
-.dashboard-content-container .divider {
+.dashboardContentContainer .divider {
   border-bottom: var(--border);
 }
 
-.dashboard-content-section {
+.dashboardContentSection {
   display: flex;
   gap: 32px;
   width: 100%;
 }
 
-.generate-api {
+.generateApi {
   border-radius: 8px;
   border: var(--border);
   box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
@@ -34,28 +34,29 @@
   flex: 1;
 }
 
-.content-item-heading {
-  color: var(--black);
-  font-size: var(--large-text);
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
+
+.activeStatus {
+    color: var(--primary);
+}
+
+.inactiveStatus {
+    color: var(--black);
 }
 
 @media screen and (max-width: 768px) {
-  .dashboard-container {
+  .dashboardContainer {
     flex-direction: column;
   }
 
-  .dashboard-container > aside {
+  .dashboardContainer > aside {
     width: 100%;
   }
 
-  .dashboard-content-container {
+  .dashboardContentContainer {
     padding: 32px 16px;
   }
 
-  .dashboard-content-section {
+  .dashboardContentSection {
     flex-direction: column;
   }
 }

@@ -5,11 +5,10 @@ import { SETTING } from "../../../utils/Constants";
 
 function SettingCard() {
   return (
-    <div className={styles["dashboard-content-item"]}>
-      <h6 className={styles["content-item-heading"]}>Setting</h6>
+    <>
       {SETTING.map((setting, index) => (
-        <div key={index} className={styles["action-button-wrapper"]}>
-          <p className={styles["action-text"]}>{setting.subtitle}</p>
+        <div key={index} className={styles.actionButtonWrapper}>
+          <p className={styles.actionText}>{setting.subtitle}</p>
           <Button
             type="submit"
             variant={
@@ -17,13 +16,13 @@ function SettingCard() {
                 ? "danger"
                 : "primary"
             }
-            className={styles["action-button"]}
+            className={styles.actionButton}
           >
             {setting.buttontitle}
           </Button>
         </div>
       ))}
-    </div>
+    </>
   );
 }
 export default SettingCard;

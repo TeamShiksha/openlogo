@@ -72,7 +72,9 @@ const CodeBlock = ({ id, codeExamples }) => {
           {Object.keys(codeExamples).map((lang) => (
             <button
               key={`${id}-${lang}`}
-              onClick={() => { setSelectedLanguage(lang); }}
+              onClick={() => {
+                setSelectedLanguage(lang);
+              }}
               className={`${styles.languageButton} ${
                 selectedLanguage === lang ? styles.languageButtonActive : ""
               }`}
