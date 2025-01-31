@@ -5,7 +5,7 @@ function CardWrapper({ title, children, status, statusClass }) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <p className={styles.header}>{title}</p>
+        <p className={styles.title}>{title}</p>
         {status && (
           <span className={`${styles.status} ${statusClass}`}>{status}</span>
         )}

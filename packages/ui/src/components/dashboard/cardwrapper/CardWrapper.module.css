@@ -18,7 +18,7 @@
     flex-wrap: wrap;
 }
 
-.header {
+.title {
     color: var(--black);
     font-weight: 500;
     line-height: 20px;
