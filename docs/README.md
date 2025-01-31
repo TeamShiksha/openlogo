@@ -1,10 +1,7 @@
 Open Logo
 
-
-
 # INTRODUCTION
 Open Logo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos. Generate API keys and access logos in various sizes and formats, all while staying in control of your budget. Elevate your brand with Open Logo!
-
 
 # How to run this project
 1. Clone the repository:
@@ -25,29 +22,22 @@ Open Logo is your partner in logo exploration. Our platform boasts a collection 
    ```
 
 
-
 How to set environment variables
 
-JWT_SECRET=Your_JWT_SECRET    #GENERATE YOUR JWT TOKEN
+JWT_SECRET=Your_JWT_SECRET    #Generate jwt token
 CLIENT_URL=http://127.0.0.1:3000
 CLIENT_PROXY_URL=http://127.0.0.1:5000
-PORT=5000   #CHANGE ACCORDING TO YOUR PORT 
+PORT=5000                  #Change according to your port
 ACCESS_KEY=D75FHPL3LHUKV2SF3QR7Y4   
 SECRET_ACCESS_KEY=n9qyBGN7R5k2pnBMYand4Ym8mLibrZkYgrYhPMM3
-BUCKET_NAME=AWS_bucket_name    #NAME OF THE BUCKET WHICH YOU CREATED
-BUCKET_REGION=AWS_region       #NAME OF THE REGION
+BUCKET_NAME=AWS_bucket_name               #Name of the bucket which you created
+BUCKET_REGION=AWS_region                  #Name of Your Region
 DISTRIBUTION_DOMAIN=https://hmzsbpcw4ex33jxeiage.cloudfront.net
 CLOUD_FRONT_KEYPAIR_ID=Q8A4T7ZMUYRW3Z
 CLOUD_FRONT_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----RSA KEY FOR CLOUDFRONT=-----END RSA PRIVATE KEY-----    #STEPS TO GENERATE THIS IS AWS SETUP 
 KEY=s3_bucket_folder_name_can_customise_as_per_your_likings  
 MONGO_URL=mongodb://admin:password123@mongodb:27017/logoexecutive?authSource=admin
 NODE_ENV=dev
-
-
-
-
-
-
 
 
 
@@ -69,35 +59,15 @@ NODE_ENV=dev
 
 5. Navigate to the [AWS CloudFormation service](https://ap-southeast-2.console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/getting-started).
 
-![Close Icon](../packages/ui/public/aws1.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Close Icon](./../packages/ui/public/aws1.png)
 
 6. Click on the "Create Stack" button.
 
-![Close Icon](../packages/ui/public/aws2.png)
-
-
-
-
+![Close Icon](./../packages/ui/public/aws2.png)
 
 
 7. On the Create Stack page, select "Upload a template file" and choose the `cft_dev_test_logoexecutive.yml` file downloaded earlier. Then, click "Next."
-![Close Icon](../packages/ui/public/aws3.png)
-
-
+![Close Icon](./../packages/ui/public/aws3.png)
 
 8. Specify the following stack details:
    - Provide a `Stack Name`.
