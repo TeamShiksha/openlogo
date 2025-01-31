@@ -27,29 +27,26 @@ function ChangePassword() {
   };
 
   return (
-    <div className={styles.dashboardContentItem}>
-      <h6 className={styles.contentItemHeading}>Change Password</h6>
-      <form onSubmit={handleSubmit}>
-        {PASSWORD_FIELDS.map((field) => (
-          <CustomInput
-            key={field.name}
-            type={field.type}
-            name={field.name}
-            label={field.label}
-            value={formValues[field.name]}
-            onChange={handleChange}
-            required
-          />
-        ))}
-        <Button
-          type="submit"
-          variant="primary"
-          className={styles.changePasswordButton}
-        >
-          Change password
-        </Button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      {PASSWORD_FIELDS.map((field) => (
+        <CustomInput
+          key={field.name}
+          type={field.type}
+          name={field.name}
+          label={field.label}
+          value={formValues[field.name]}
+          onChange={handleChange}
+          required
+        />
+      ))}
+      <Button
+        type="submit"
+        variant="primary"
+        className={styles.changePasswordButton}
+      >
+        Change password
+      </Button>
+    </form>
   );
 }
 

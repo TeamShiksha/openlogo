@@ -20,7 +20,7 @@ function SignUpForm({ toggleForm, onClose }) {
       password: "",
       confirmPassword: "",
     }),
-    [],
+    []
   );
 
   const [formValues, setFormValues] = useState(initialValues);

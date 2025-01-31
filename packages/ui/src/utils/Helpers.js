@@ -20,13 +20,13 @@ export const isValidPassword = (password) => {
       {
         condition: password.length < PASSWORD_RULES.minLength,
         message: PASSWORD_VALIDATION_MESSAGES.minLength(
-          PASSWORD_RULES.minLength,
+          PASSWORD_RULES.minLength
         ),
       },
       {
         condition: password.length > PASSWORD_RULES.maxLength,
         message: PASSWORD_VALIDATION_MESSAGES.maxLength(
-          PASSWORD_RULES.maxLength,
+          PASSWORD_RULES.maxLength
         ),
       },
       {

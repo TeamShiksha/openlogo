@@ -14,12 +14,15 @@
   --primary-hover: #4338ca;
   --black: rgb(17, 24, 39);
   --description: rgb(75, 85, 99);
-  --border: 2px solid rgb(177, 179, 183);
+  --border: 1px solid rgb(177, 179, 183);
   --label-color: rgb(134, 137, 139);
   --input-color: var(--description);
   --bradius: 6px;
   --shadow: rgba(140, 152, 164, 0.125) 0px 6px 24px 0px;
+  --shadow-bottom: 0px 16px 24px rgba(140, 152, 164, 0.125);
+  --dark-shadow-menu: 0px 30px 18px 2px rgba(0, 0, 0, 0.3);
   --table-heading-bg: rgb(226, 224, 224);
+  --table-background: #f9fafb;
 }
 
 *,
@@ -40,6 +43,10 @@ body {
   margin: 0 auto;
 }
 
+.container {
+  padding: 0 8%;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -52,4 +59,22 @@ body {
 
 footer {
   margin-top: auto;
+}
+
+@media only screen and (max-width: 1220px) {
+  .container {
+    padding: 0 5%;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+@media only screen and (max-width: 564px) {
+  .container {
+    padding: 0 1rem;
+  }
 }

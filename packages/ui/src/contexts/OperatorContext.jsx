@@ -28,14 +28,14 @@ export function OperatorProvider({ children }) {
         setLoading(false);
       }
     },
-    [setLoading, setQueries, setError],
+    [setLoading, setQueries, setError]
   );
 
   return (
     <OperatorContext.Provider
       value={useMemo(
         () => ({ queries, loading, error, fetchQueries }),
-        [queries, loading, error, fetchQueries],
+        [queries, loading, error, fetchQueries]
       )}
     >
       {children}

@@ -1,0 +1,25 @@
+.dashboard-content-item {
+  border-radius: 8px;
+  border: var(--border);
+  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
+  background-color: var(--white);
+  padding: 24px 32px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.content-item-heading {
+  color: var(--black);
+  font-size: var(--large-text);
+  font-weight: 500;
+  line-height: 20px;
+  margin-bottom: 12px;
+}
+
+.user-info-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

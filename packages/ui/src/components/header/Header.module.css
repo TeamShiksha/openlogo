@@ -1,84 +1,97 @@
-body.activemodal {
-  overflow: hidden;
-}
-
-.header-container {
+.block {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding: 1.2rem 0;
+  justify-content: center;
+  background-color: var(--white);
   border-bottom: var(--border);
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: white;
-  z-index: 1;
+  z-index: 100;
 }
 
-.header-logo {
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+}
+
+.brand {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
   align-items: center;
-  font-size: 2rem;
   cursor: pointer;
+  border: none;
+  background-color: var(--white);
 }
 
-.header-items {
-  font-size: 1rem;
+.brand-img {
+  width: 36px;
+  height: 36px;
+}
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--black);
+}
+
+.nav-bar {
   display: flex;
-  color: var(--description);
-  font-weight: 600;
-  flex-direction: row;
   gap: 1.5rem;
   align-items: center;
 }
 
-.header-item {
-  text-decoration: none;
-  color: unset;
+.ml {
+  margin-left: 1rem;
 }
 
-.header-item:hover {
+.nav {
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--description);
+}
+
+.nav:hover {
   color: var(--primary);
   transition: all 0.3s ease-in-out;
   text-decoration: underline;
   text-decoration-color: var(--primary);
-  transition: all 0.3s ease-in-out;
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
 }
 
-.header-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.header-hamburger {
+.hamburger {
   display: none;
 }
 
-@media only screen and (max-width: 768px) {
-  .header-container {
-    justify-content: space-between;
-    padding: 20px 24px;
+@media only screen and (max-width: 1024px) {
+  .brand-img {
+    width: 32px;
+    height: 32px;
   }
-  .header-logo {
-    font-size: 1.125rem;
+
+  .brand-name {
+    font-size: 1.8rem;
   }
-  .header-items {
-    display: none;
+
+  .nav-bar {
+    gap: 1rem;
   }
-  .header-button {
+
+  .ml {
+    margin-left: 12px;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .nav-bar {
     display: none;
   }
 
-  .signup-modal {
-    display: none;
-  }
-
-  .header-hamburger {
+  .hamburger {
     display: flex;
     align-items: center;
     background: none;
@@ -86,5 +99,27 @@ body.activemodal {
     padding: 0;
     cursor: pointer;
     justify-content: flex-end;
+  }
+
+  .hamburger-img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media only screen and (max-width: 564px) {
+  .brand-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-name {
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
+
+  .hamburger-img {
+    width: 20px;
+    height: 20px;
   }
 }
