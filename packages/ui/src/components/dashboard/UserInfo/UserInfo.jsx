@@ -64,32 +64,29 @@ function UserInfo() {
   };
 
   return (
-    <div className={styles["dashboard-content-item"]}>
-      <h6 className={styles["content-item-heading"]}>User Info</h6>
-      <form className={styles["user-info-input-group"]}>
-        {USER_INFO_FIELDS.map((field) => (
-          <CustomInput
-            key={field.name}
-            type={field.type}
-            name={field.name}
-            label={field.label}
-            value={formData[field.name]}
-            onChange={handleUserInfoChange}
-            {...(field.name === "email" ? { disabled: true } : {})}
-            {...(field.name === "name" && formErrors.type === "error"
-              ? { error: formErrors.message }
-              : {})}
-          />
-        ))}
-        <Button
-          onClick={handleUserInfoUpdate}
-          disabled={formData.isBtnDisabled}
-          variant={"primary"}
-        >
-          Save
-        </Button>
-      </form>
-    </div>
+    <form className={styles["user-info-input-group"]}>
+      {USER_INFO_FIELDS.map((field) => (
+        <CustomInput
+          key={field.name}
+          type={field.type}
+          name={field.name}
+          label={field.label}
+          value={formData[field.name]}
+          onChange={handleUserInfoChange}
+          {...(field.name === "email" ? { disabled: true } : {})}
+          {...(field.name === "name" && formErrors.type === "error"
+            ? { error: formErrors.message }
+            : {})}
+        />
+      ))}
+      <Button
+        onClick={handleUserInfoUpdate}
+        disabled={formData.isBtnDisabled}
+        variant={"primary"}
+      >
+        Save
+      </Button>
+    </form>
   );
 }
 

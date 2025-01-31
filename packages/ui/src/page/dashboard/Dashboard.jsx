@@ -6,7 +6,6 @@ import UserInfo from "../../components/dashboard/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
 import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
-import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   return (
@@ -31,7 +30,9 @@ function Dashboard() {
 
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
-          <UserInfo/>
+          <CardWrapper title="User Info">
+            <UserInfo />
+          </CardWrapper>
           <CardWrapper title="Change Password">
             <ChangePassword />
           </CardWrapper>
