@@ -1,7 +1,7 @@
 import styles from "./CardWrapper.module.css";
 import PropTypes from "prop-types";
 
-function CardWrapper({ title, children, status, statusClass }) {
+function CardWrapper({ title, children, status = "", statusClass = "" }) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -20,11 +20,6 @@ CardWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   status: PropTypes.string,
   statusClass: PropTypes.string,
-};
-
-CardWrapper.defaultProps = {
-  status: "",
-  statusClass: "",
 };
 
 export default CardWrapper;
