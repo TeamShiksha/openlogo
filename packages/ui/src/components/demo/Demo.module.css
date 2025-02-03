@@ -103,7 +103,7 @@
 .resultItem {
   display: flex;
   align-items: center;
-  padding: 6px 8px;
+  padding: 0.75rem 1.375rem;
   border-radius: 6px;
   margin: 4px 0;
   transition: all 0.2s ease-in-out;
@@ -147,7 +147,7 @@
 .curvedArrow {
   position: absolute;
   bottom: -60px;
-  left: 40%;
+  left: 30%;
 }
 
 .searchBoxInput {
@@ -160,6 +160,12 @@
   height: 3.5rem;
   color: var(--black);
   width: 100%;
+  font-size: 1rem;
+}
+
+.searchBoxInput:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px var(--white) inset;
+  -webkit-text-fill-color: var(--input-color);
 }
 
 .searchBoxInput:focus {
@@ -191,6 +197,10 @@
   .apiContainer {
     padding: 4rem 4rem;
     margin: 0 2.875rem;
+  }
+
+  .curvedArrow {
+    left: 25%;
   }
 
   .searchBox {
@@ -227,10 +237,10 @@
 
   .curvedArrow {
     top: 155px;
-    left: -39px;
+    left: -24px;
     transform: rotate(60deg);
-    width: 180px;
-    height: 180px;
+    width: 120px;
+    height: 120px;
   }
 }
 
@@ -241,7 +251,7 @@
   }
 
   .searchBox {
-    margin: 8rem 0 0 0;
+    margin: 4.5rem 0 0 0;
     width: 100%;
     padding: 1rem;
   }
