@@ -30,9 +30,9 @@
 }
 
 .searchBox {
-  background: var(--white);
+  background: var(--table-background);
   border-radius: 12px;
-  padding: 0.5rem 1rem;
+  padding: 2rem 2.5rem;
   width: 380px;
   transition: all 0.3s ease-in-out;
   display: flex;
@@ -46,6 +46,9 @@
 
 .searchContent {
   width: 100%;
+  border: 1px solid #eaecf0;
+  border-radius: 0.75rem;
+  background-color: var(--white);
 }
 
 .searchInputContainer {
@@ -60,7 +63,7 @@
   background: none;
   border: none;
   position: absolute;
-  right: -1rem;
+  left: 1.156rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -147,6 +150,27 @@
   left: 40%;
 }
 
+.searchBoxInput {
+  border: 0;
+  padding-left: 2.75rem;
+  border-radius: 1rem;
+  box-shadow: none;
+  background-color: var(--white);
+  outline: none;
+  height: 3.5rem;
+  color: var(--black);
+  width: 100%;
+}
+
+.searchBoxInput:focus {
+  border: none;
+}
+
+.searchButton > img {
+  height: 15px;
+  width: 15px;
+}
+
 @media (min-width: 1024px) and (max-width: 1280px) {
   .apiContainer {
     padding: 4rem 6rem;
@@ -219,6 +243,7 @@
   .searchBox {
     margin: 8rem 0 0 0;
     width: 100%;
+    padding: 1rem;
   }
 
   .apiContent h1 {
