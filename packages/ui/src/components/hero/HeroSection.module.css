@@ -84,5 +84,8 @@
     flex-direction: column-reverse;
     align-items: center;
     width: 100%;
+    button {
+      width: 100%;
+    }
   }
 }
