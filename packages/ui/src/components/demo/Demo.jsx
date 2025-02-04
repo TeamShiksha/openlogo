@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SVGS, COMPANIES } from "../../utils/Constants";
-import CustomInput from "../common/input/CustomInput";
 import styles from "./Demo.module.css";
 
 const Demo = () => {
@@ -50,10 +49,10 @@ const Demo = () => {
               placeholder="Search"
             />
             <button type="submit" className={styles.searchButton}>
-              <img src={SVGS.searchIcon} height={24} width={24} alt="Search" />
+              <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
-          {filteredCompanies.length && showResults && (
+          {!!filteredCompanies.length && showResults && (
             <div
               className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ""}`}
             >

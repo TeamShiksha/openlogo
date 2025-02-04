@@ -8,7 +8,7 @@ import GetInTouch from "../../components/contact/GetInTouch";
 
 const Home = () => {
   return (
-    <>
+    <div className="container">
       <HeroSection />
       <Demo />
       <Features />
@@ -16,7 +16,7 @@ const Home = () => {
       <FAQs />
       <About />
       <GetInTouch />
-    </>
+    </div>
   );
 };
 
