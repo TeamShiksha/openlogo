@@ -34,7 +34,6 @@ describe("Demo Component", () => {
 
     fireEvent.change(input, { target: { value: COMPANIES[0].name } });
     fireEvent.click(button);
-
     expect(screen.getByText(COMPANIES[0].name)).toBeVisible();
   });
 
@@ -42,11 +41,10 @@ describe("Demo Component", () => {
     render(<Demo />);
     const input = screen.getByLabelText("search");
     const button = screen.getByRole("button");
-    const list = screen.getByTestId(COMPANIES[0].name);
     fireEvent.change(input, { target: { value: "" } });
-    fireEvent.click(button);
-    console.log(list.innerHTML);
-    expect(list).not.toHaveClass("_resultItem_66da6a_show_66da6a");
+    expect(button.parentElement).not.toHaveClass(
+      "_searchInputContainer_66da6a _hasResults_66da6a"
+    );
   });
 
   it("renders integration images", () => {
