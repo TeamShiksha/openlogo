@@ -1,37 +1,11 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const app = require("../../index");
 const UserService = require("../../services/User");
 const User = require("../../models/Users");
-const { UserType } = require("../../utils/constants");
+const mockUser = require("../../utils/mocks/Users");
 
 const ENDPOINT = "/api/auth/signin";
-
-const mockUser = [
-  {
-    _id: new mongoose.Types.ObjectId(),
-    name: "John Doe",
-    email: "johndoe@example.com",
-    password: bcrypt.hashSync("password123", 10),
-    role: UserType.CUSTOMER,
-    is_verified: false,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-  {
-    _id: new mongoose.Types.ObjectId(),
-    name: "John Doe",
-    email: "johndoe@example.com",
-    password: bcrypt.hashSync("password123", 10),
-    role: UserType.CUSTOMER,
-    is_verified: true,
-    subscription_id: new mongoose.Types.ObjectId(),
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-];
 
 describe("Signin Controller", () => {
   beforeAll(() => {
@@ -82,7 +56,7 @@ describe("Signin Controller", () => {
   it("422 - Password must be string", async () => {
     const response = await request(app)
       .post(ENDPOINT)
-      .send({ email: "johndoe@example.com", password: 5 });
+      .send({ email: "email@example.com", password: 5 });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -95,7 +69,7 @@ describe("Signin Controller", () => {
   it("422 - Password is required", async () => {
     const response = await request(app)
       .post(ENDPOINT)
-      .send({ email: "johndoe@example.com" });
+      .send({ email: "email@example.com" });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -110,7 +84,7 @@ describe("Signin Controller", () => {
 
     const response = await request(app)
       .post(ENDPOINT)
-      .send({ email: "johndoe@example.com", password: "password123" });
+      .send({ email: "email@example.com", password: "password" });
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -144,7 +118,7 @@ describe("Signin Controller", () => {
 
     const response = await request(app)
       .post(ENDPOINT)
-      .send({ email: "johndoe@example.com", password: "password122" });
+      .send({ email: "johndoe1@example.com", password: "password122" });
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
@@ -161,7 +135,7 @@ describe("Signin Controller", () => {
 
     const response = await request(app)
       .post(ENDPOINT)
-      .send({ email: "johndoe@example.com", password: "password123" });
+      .send({ email: "johndoe1@example.com", password: "password123" });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
