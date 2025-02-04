@@ -27,7 +27,7 @@ body:
     attributes:
       label: Confirmation Checklist
       options:
-        - label: I have searched for similar issues [issues](https://github.com/TeamShiksha/logoexecutive/issues) and made sure no duplicate issue exists..
+        - label: I have searched for similar issues [issues](https://github.com/TeamShiksha/openlogo/issues) and made sure no duplicate issue exists..
         - label: I have provided all the necessary information to understand and reproduce the bug.
     validations:
       required: true
