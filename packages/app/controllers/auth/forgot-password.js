@@ -2,6 +2,7 @@ const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 const UserTokenService = require("../../services/UserToken");
 const { forgotPasswordSchema } = require("../../schemas/auth");
+const sendEmail = require("../../utils/sendEmail");
 
 /**
  * This controller processes a token provided in the request query.
@@ -36,7 +37,15 @@ async function forgotPasswordController(req, res, next) {
         message: "Unable to process request",
         statusCode: 503,
       });
-    console.log(userToken.tokenURL()); // send email function to be called
+
+    await sendEmail({
+      id: 1,
+      subject: "Reset Your Password",
+      recipient: email,
+      body: {
+        url: userToken.tokenURL(),
+      },
+    });
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {

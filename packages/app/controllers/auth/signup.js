@@ -3,6 +3,7 @@ const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
 const UserTokenService = require("../../services/UserToken");
 const { signupPayloadSchema } = require("../../schemas/auth");
+const sendEmail = require("../../utils/sendEmail");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -51,7 +52,7 @@ async function signupController(req, res, next) {
     }
 
     const verificationToken = await userTokenService.createUserToken(
-      newUser._id,
+      newUser._id
     );
     if (!verificationToken) {
       return res.status(206).json({
@@ -60,8 +61,15 @@ async function signupController(req, res, next) {
         statusCode: 201,
       });
     }
-    // send email function to be added
-    console.log(verificationToken.tokenURL());
+
+    await sendEmail({
+      id: 2,
+      subject: "Verify Your Email Address",
+      recipient: email,
+      body: {
+        url: verificationToken.tokenURL(),
+      },
+    });
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {

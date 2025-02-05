@@ -20,7 +20,7 @@ async function sendEmail({ id, subject, recipient, body, cc = [], bcc = [] }) {
   try {
     if (process.env.NODE_ENV === "production") {
       const response = await axios.post(
-        `${process.env.EMAIL_SERVICE_URL}/email`,
+        `${process.env.EMAIL_SERVICE_URL}`,
         payload,
         {
           headers: {
@@ -29,17 +29,13 @@ async function sendEmail({ id, subject, recipient, body, cc = [], bcc = [] }) {
           },
         }
       );
-      logger.info("✅ Email sent successfully:", response.data);
+      logger.info("Email sent successfully:", response.data);
     } else {
-      logger.info(
-        `🟡 Development Mode: Email payload - ${JSON.stringify(payload)}`
-      );
+      logger.info("Development Mode");
+      logger.info(payload);
     }
   } catch (error) {
-    logger.error("❌ Email sending failed:", error.message);
-    throw new Error(
-      "An error occurred while sending the email: " + error.message
-    );
+    logger.error("Email sending failed:", error.message);
   }
 }
 
