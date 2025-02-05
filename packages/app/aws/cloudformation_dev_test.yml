@@ -132,7 +132,7 @@ Resources:
       - CloudFrontCDN
       - IAMUser
     Properties:
-      ManagedPolicyName: logoexecutiveCDNS3Policy
+      ManagedPolicyName: OpenlogoCDNS3Policy
       PolicyDocument:
         Version: "2012-10-17"
         Statement:

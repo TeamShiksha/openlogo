@@ -1,62 +1,24 @@
-.dashboardContentItem {
-  border-radius: 8px;
-  border: var(--border);
-  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
-  background-color: var(--white);
-  padding: 24px 32px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.dashboardContentItem .currentPlan {
-  color: rgb(17 24 39);
-  font-size: var(--large-text);
-  line-height: 28px;
-  font-weight: 600;
-  margin: 12px 0px;
-  padding-top: 16px;
-}
-
-.dashboardContentItem > button {
-  max-width: 100%;
-  color: var(--black);
-  background-color: var(--white);
-  border-radius: var(--bradius);
-  box-shadow: var(--shadow);
-  border: var(--border);
-}
-
-.contentItemHeading {
-  color: var(--black);
-  font-size: var(--large-text);
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
-}
-
 .usageBodyContainer {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 16px;
+  padding-top: 10px;
 }
 
 .usageBodyContainer .dataHeading {
-  font-size: var(--medium-text);
+  font-size: medium;
   font-weight: 600;
   line-height: 28px;
-  color: var(--smooth-gray);
+  color: var(--label-color);
 }
 
 .usageBodyContainer .data {
   font-size: 24px;
   font-weight: 800;
   line-height: 20px;
-  color: var(--smooth-purple);
+  color: var(--primary);
   margin-bottom: 12px;
 }
 
@@ -66,12 +28,12 @@
 }
 
 .usageStatistics {
-  width: 150px;
+  width: 110px;
   max-height: 250px;
 }
 
 .dashboardResetDate {
-  font-size: var(--medium-text);
+  font-size: medium;
   font-weight: 400;
   line-height: 20px;
   color: var(--description);

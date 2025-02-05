@@ -614,6 +614,11 @@ export const SETTING = [
   },
 ];
 
+export const USER_INFO_FIELDS = [
+  { type: "text", name: "name", label: "Username" },
+  { type: "email", name: "email", label: "Email" },
+];
+
 export const HAMBURGER = {
   src: "hamburger.svg",
   alt: "Hamburger Icon",

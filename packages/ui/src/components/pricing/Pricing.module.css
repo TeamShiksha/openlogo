@@ -2,13 +2,12 @@
   background: var(--primary);
   border-radius: 1rem;
   padding: 5rem 2rem;
-  margin: 2rem auto;
+  margin: 2rem 0;
   max-width: 1440px;
-  width: 85vw;
 }
 
 .heading {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 3rem;
   text-align: center;
   color: var(--white);
@@ -33,9 +32,8 @@
 
 @media (max-width: 768px) {
   .mainDiv {
-    margin: 16px auto;
+    margin: 1rem 1rem;
     padding: 3rem 1rem;
-    width: 80vw;
     flex-direction: column;
     align-items: center;
     justify-content: center;
