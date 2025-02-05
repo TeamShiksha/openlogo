@@ -25,7 +25,7 @@ async function sendEmail({ id, subject, recipient, body, cc = [], bcc = [] }) {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: process.env.EMAIL_SERVICE_TOKEN,
+            Authorization: process.env.EMAIL_SERVICE_AUTH_TOKEN,
           },
         }
       );
