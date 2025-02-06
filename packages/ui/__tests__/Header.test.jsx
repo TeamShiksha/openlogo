@@ -91,6 +91,27 @@ describe("Header", () => {
     );
   });
 
+  it("closes the signup modal", () => {
+    render(
+      <BrowserRouter>
+        <Header />
+      </BrowserRouter>
+    );
+    const getStartedButton = screen.getByText(buttonText.getStarted);
+    fireEvent.click(getStartedButton);
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
+      "data-open",
+      "true"
+    );
+
+    const closeModalButton = screen.getByText("Close Modal");
+    fireEvent.click(closeModalButton);
+    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
+      "data-open",
+      "false"
+    );
+  });
+
   it("navigates to home when clicking the brand", () => {
     const navigateMock = vi.fn();
     vi.mocked(useNavigate).mockReturnValue(navigateMock);
