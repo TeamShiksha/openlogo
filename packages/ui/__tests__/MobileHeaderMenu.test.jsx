@@ -1,81 +1,62 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu";
+import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu.jsx";
+import { vi } from "vitest";
 
-vi.mock("../../utils/Constants", () => ({
-  HEADER_ITEMS: [
-    { name: "home", title: "Home", url: "/" },
-    { name: "docs", title: "Docs", url: "/docs" },
-    { name: "features", title: "Features", url: "/features" },
-    { name: "pricing", title: "Pricing", url: "/pricing" },
-    { name: "about", title: "About", url: "/about" },
-  ],
-}));
+const mockCloseMenu = vi.fn();
+const HEADER_ITEMS = [
+  { name: "home", title: "Home", url: "/" },
+  { name: "docs", title: "Docs", url: "/docs" },
+  { name: "features", title: "Features", url: "/features" },
+  { name: "pricing", title: "Pricing", url: "/pricing" },
+  { name: "about", title: "About", url: "/about" },
+];
 
-vi.mock("react-router-dom", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    Link: ({ to, children }) => <a href={to}>{children}</a>,
-  };
-});
+vi.mock("../../utils/Constants", () => ({ HEADER_ITEMS }));
 
-describe("MobileHeaderMenu", () => {
-  it("should render nothing when not open", () => {
-    const closeMenu = vi.fn();
+describe("MobileHeaderMenu Component", () => {
+  it("should not render when isOpen is false", () => {
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={closeMenu} isOpen={false} />
+        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
       </BrowserRouter>
     );
-    expect(screen.queryByText("Home")).not.toBeInTheDocument();
+    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 
-  it("should render menu items when open", () => {
-    const closeMenu = vi.fn();
+  it("should render correctly when isOpen is true", () => {
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={closeMenu} isOpen={true} />
+        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
       </BrowserRouter>
     );
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("About")).toBeInTheDocument();
+    HEADER_ITEMS.forEach((item) => {
+      expect(screen.getByText(item.title)).toBeInTheDocument();
+    });
   });
 
-  it("should close menu on window resize above 780px", () => {
-    const closeMenu = vi.fn();
+  it("should have correct href attributes for links", () => {
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={closeMenu} isOpen={true} />
+        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
       </BrowserRouter>
     );
-
-    global.innerWidth = 800;
-    global.dispatchEvent(new Event("resize"));
-
-    expect(closeMenu).toHaveBeenCalledWith(false);
+    HEADER_ITEMS.forEach((item) => {
+      expect(screen.getByText(item.title).closest("a")).toHaveAttribute(
+        "href",
+        item.url
+      );
+    });
   });
 
-  it("should navigate to correct route when clicking menu items", async () => {
-    const closeMenu = vi.fn();
-    const user = userEvent.setup();
-
+  it("should close the menu when window is resized above 780px", () => {
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={closeMenu} isOpen={true} />
+        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
       </BrowserRouter>
     );
 
-    await user.click(screen.getByText("Home"));
-    expect(
-      screen.getByRole("link", { name: /Home/i }).getAttribute("href")
-    ).toBe("/");
-
-    await user.click(screen.getByText("About"));
-    expect(
-      screen.getByRole("link", { name: /About/i }).getAttribute("href")
-    ).toBe("/about");
+    fireEvent.resize(window, { target: { innerWidth: 800 } });
+    expect(mockCloseMenu).toHaveBeenCalledWith(false);
   });
 });
