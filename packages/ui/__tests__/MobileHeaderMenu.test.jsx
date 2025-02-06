@@ -7,6 +7,9 @@ import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu";
 vi.mock("../../utils/Constants", () => ({
   HEADER_ITEMS: [
     { name: "home", title: "Home", url: "/" },
+    { name: "docs", title: "Docs", url: "/docs" },
+    { name: "features", title: "Features", url: "/features" },
+    { name: "pricing", title: "Pricing", url: "/pricing" },
     { name: "about", title: "About", url: "/about" },
   ],
 }));
