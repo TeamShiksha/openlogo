@@ -26,14 +26,12 @@ const Table = ({ headers, rows, emptyMessage, onDelete }) => {
               ))}
               {onDelete && (
                 <td className={classes["table-cell"]}>
-                  <img
+                  <div
                     onClick={() => onDelete(cells[index])}
                     className={classes["delete-btn"]}
-                    src="delete.svg"
-                    alt="delete"
-                    height={20}
-                    width={20}
-                  />
+                  >
+                    Delete
+                  </div>
                 </td>
               )}
             </tr>

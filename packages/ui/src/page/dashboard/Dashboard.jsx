@@ -32,7 +32,10 @@ function Dashboard() {
       <div className={styles["table-wrapper"]}>
         <Table
           headers={["Description", "Created"]}
-          rows={[["key1 for test api", "17th february 2024"]]}
+          rows={[
+            ["test1", "test2"],
+            ["test2", "test3"],
+          ]}
           emptyMessage="Your api keys will be visible here, click on generate key to add new api key"
           onDelete={() => {}}
         />
