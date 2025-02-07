@@ -22,6 +22,10 @@
   width: 100%;
 }
 
+.table-wrapper {
+  padding: 2rem;
+}
+
 .generateApi {
   border-radius: 8px;
   border: var(--border);
@@ -36,11 +40,11 @@
 
 
 .activeStatus {
-    color: var(--primary);
+  color: var(--primary);
 }
 
 .inactiveStatus {
-    color: var(--black);
+  color: var(--black);
 }
 
 @media screen and (max-width: 768px) {
@@ -48,7 +52,7 @@
     flex-direction: column;
   }
 
-  .dashboardContainer > aside {
+  .dashboardContainer>aside {
     width: 100%;
   }
 
@@ -58,5 +62,9 @@
 
   .dashboardContentSection {
     flex-direction: column;
+  }
+
+  .table-wrapper {
+    padding: 1rem;
   }
 }

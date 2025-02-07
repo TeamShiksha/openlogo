@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import classes from "./Table.module.css";
 
-const Table = ({ headers, rows, emptyMessage }) => {
+const Table = ({ headers, rows, emptyMessage, onDelete }) => {
   const hasData = rows && rows?.length > 0;
 
   return (
@@ -24,6 +24,18 @@ const Table = ({ headers, rows, emptyMessage }) => {
                   {cell}
                 </td>
               ))}
+              {onDelete && (
+                <td className={classes["table-cell"]}>
+                  <img
+                    onClick={() => onDelete(cells[index])}
+                    className={classes["delete-btn"]}
+                    src="delete.svg"
+                    alt="delete"
+                    height={20}
+                    width={20}
+                  />
+                </td>
+              )}
             </tr>
           ))
         ) : (
@@ -42,6 +54,7 @@ Table.propTypes = {
   headers: PropTypes.array,
   rows: PropTypes.array,
   emptyMessage: PropTypes.string,
+  onDelete: PropTypes.func,
 };
 
 export default Table;

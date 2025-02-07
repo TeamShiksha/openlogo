@@ -1,7 +1,5 @@
 .custom-table {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
     background-color: var(--table-background);
     border: var(--border);
     border-radius: 0.5rem;
@@ -32,6 +30,11 @@
     background-color: var(--table-background);
     border: 1px solid var(--border-color);
 }
+
+.delete-btn > img > svg {
+    color: rgba(255, 0, 0, .7)
+}
+
 
 @media only screen and (max-width: 1024px) {
     .custom-table {

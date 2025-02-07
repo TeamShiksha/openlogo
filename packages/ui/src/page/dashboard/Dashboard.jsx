@@ -6,6 +6,7 @@ import UserInfo from "../../components/dashboard/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
 import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import Table from "../../components/common/table/Table.jsx";
 
 function Dashboard() {
   return (
@@ -26,6 +27,15 @@ function Dashboard() {
             <CurrentPlan />
           </CardWrapper>
         </section>
+      </div>
+
+      <div className={styles["table-wrapper"]}>
+        <Table
+          headers={["Description", "Created"]}
+          rows={[["key1 for test api", "17th february 2024"]]}
+          emptyMessage="Your api keys will be visible here, click on generate key to add new api key"
+          onDelete={() => {}}
+        />
       </div>
 
       <div className={styles.dashboardContentContainer}>
