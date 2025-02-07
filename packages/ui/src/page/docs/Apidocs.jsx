@@ -6,6 +6,7 @@ import jsLogo from "../../assets/js.png";
 import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
 import tick from "../../assets/tick.png";
+import Table from "../../components/common/table/Table.jsx";
 
 const codeExamples = {
   javascript: `// Initialize API request to fetch company logo
@@ -111,6 +112,23 @@ const CodeBlock = ({ id, codeExamples }) => {
 };
 
 const ApiDocs = () => {
+  const tableData = {
+    headers: ["Parameter", "Type", "Description", "Required"],
+    logoRows: [
+      ["domain", "string", "The domain name of the company.", "Yes"],
+      ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+    ],
+    searchRows: [
+      [
+        "domainKey",
+        "string",
+        "The starting prefix of the domain name to filter logo URLs.",
+        "Yes",
+      ],
+      ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+    ],
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -144,34 +162,11 @@ const ApiDocs = () => {
           </p>
 
           <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th className={styles.tableHeader}>Parameter</th>
-                  <th className={styles.tableHeader}>Type</th>
-                  <th className={styles.tableHeader}>Description</th>
-                  <th className={styles.tableHeader}>Required</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className={styles.tableCell}>domain</td>
-                  <td className={styles.tableCell}>string</td>
-                  <td className={styles.tableCell}>
-                    The domain name of the company.
-                  </td>
-                  <td className={styles.tableCell}>Yes</td>
-                </tr>
-                <tr>
-                  <td className={styles.tableCell}>API_KEY</td>
-                  <td className={styles.tableCell}>string</td>
-                  <td className={styles.tableCell}>
-                    The API Key generated from the dashboard.
-                  </td>
-                  <td className={styles.tableCell}>Yes</td>
-                </tr>
-              </tbody>
-            </table>
+            <Table
+              headers={tableData.headers}
+              rows={tableData.logoRows}
+              emptyMessage="No data available"
+            />
           </div>
 
           {/* <h3 className={styles.heading3}>Example Call:</h3> */}
@@ -200,34 +195,11 @@ const ApiDocs = () => {
           </p>
 
           <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th className={styles.tableHeader}>Parameter</th>
-                  <th className={styles.tableHeader}>Type</th>
-                  <th className={styles.tableHeader}>Description</th>
-                  <th className={styles.tableHeader}>Required</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className={styles.tableCell}>domainKey</td>
-                  <td className={styles.tableCell}>string</td>
-                  <td className={styles.tableCell}>
-                    The starting prefix of the domain name to filter logo URLs.
-                  </td>
-                  <td className={styles.tableCell}>Yes</td>
-                </tr>
-                <tr>
-                  <td className={styles.tableCell}>API_KEY</td>
-                  <td className={styles.tableCell}>string</td>
-                  <td className={styles.tableCell}>
-                    The API Key generated from the dashboard.
-                  </td>
-                  <td className={styles.tableCell}>Yes</td>
-                </tr>
-              </tbody>
-            </table>
+            <Table
+              headers={tableData.headers}
+              rows={tableData.searchRows}
+              emptyMessage="No data available"
+            />
           </div>
 
           {/* <h3 className={styles.heading3}>Example Call:</h3> */}
