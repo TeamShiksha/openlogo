@@ -26,12 +26,12 @@ const Table = ({ headers, rows, emptyMessage, onDelete }) => {
               ))}
               {onDelete && (
                 <td className={classes["table-cell"]}>
-                  <div
+                  <button
                     onClick={() => onDelete(cells[index])}
                     className={classes["delete-btn"]}
                   >
                     Delete
-                  </div>
+                  </button>
                 </td>
               )}
             </tr>

@@ -41,6 +41,7 @@
     width: min-content;
     font-size: small;
     cursor: pointer;
+    border: none;
 }
 
 
