@@ -8,6 +8,8 @@ import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx"
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 
+const TABLE_HEADER_DATA = ["Description", "Created", "Action"];
+
 function Dashboard() {
   return (
     <div className={styles.dashboardContainer} data-testid="testid-dashboard">
@@ -31,11 +33,8 @@ function Dashboard() {
 
       <div className={styles["table-wrapper"]}>
         <Table
-          headers={["Description", "Created", "Action"]}
-          rows={[
-            ["test1", "test2"],
-            ["test2", "test3"],
-          ]}
+          headers={TABLE_HEADER_DATA}
+          rows={[]}
           emptyMessage="Your api keys will be visible here, click on generate key to add new api key"
           onDelete={() => {}}
         />
