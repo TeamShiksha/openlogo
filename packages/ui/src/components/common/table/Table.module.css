@@ -2,12 +2,11 @@
     width: 100%;
     background-color: var(--table-background);
     border: var(--border);
-    border-collapse: collapse;
     border-radius: 0.5rem;
 }
 
 .custom-table th {
-    border-bottom: 1px solid var(--label-color);
+    border-bottom: 1px solid var(--light-grey);
 }
 
 .table-header {
@@ -40,6 +39,8 @@
     background-color: #fff;
     padding: 0.5rem;
     width: min-content;
+    font-size: small;
+    cursor: pointer;
 }
 
 

@@ -31,7 +31,7 @@ function Dashboard() {
 
       <div className={styles["table-wrapper"]}>
         <Table
-          headers={["Description", "Created"]}
+          headers={["Description", "Created", "Action"]}
           rows={[
             ["test1", "test2"],
             ["test2", "test3"],
