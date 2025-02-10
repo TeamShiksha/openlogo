@@ -150,9 +150,10 @@ const Documentation = () => {
           logo retrieval, high-resolution logos, and easy integration. Whether
           you need a logo for branding or marketing, we’re here to help. Contact
           us anytime!
-          <br />
-          <strong>Base URL: </strong>
-          https://api-logoexecutive.vercel.app/api/business
+          <p>
+            <strong>Base URL:</strong>
+            <span>https://api-logoexecutive.vercel.app/api/business</span>
+          </p>
         </p>
 
         <h3>Logo Retrieval</h3>
