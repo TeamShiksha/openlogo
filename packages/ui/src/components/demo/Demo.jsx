@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SVGS, COMPANIES } from "../../utils/Constants";
-import CustomInput from "../common/input/CustomInput";
 import styles from "./Demo.module.css";
 
 const Demo = () => {
@@ -41,31 +40,34 @@ const Demo = () => {
             onSubmit={handleSearch}
             className={`${styles.searchInputContainer} ${showResults ? styles.hasResults : ""}`}
           >
-            <CustomInput
+            <input
               name="search"
-              label="search"
               type="text"
               value={searchTerm}
               onChange={handleInputChange}
+              className={styles.searchBoxInput}
+              placeholder="Search"
             />
             <button type="submit" className={styles.searchButton}>
-              <img src={SVGS.searchIcon} height={24} width={24} alt="Search" />
+              <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
-          <div
-            className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ""}`}
-          >
-            {filteredCompanies.map((company, index) => (
-              <div
-                key={company.id}
-                className={`${styles.resultItem} ${showResults && searchTerm ? styles.show : ""}`}
-                style={{ transitionDelay: `${index * 0.1}s` }}
-              >
-                <img src={company.logo} alt={`${company.name} Logo`} />
-                <span>{company.name}</span>
-              </div>
-            ))}
-          </div>
+          {!!filteredCompanies.length && showResults && (
+            <div
+              className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ""}`}
+            >
+              {filteredCompanies.map((company, index) => (
+                <div
+                  key={company.id}
+                  className={`${styles.resultItem} ${showResults && searchTerm ? styles.show : ""}`}
+                  style={{ transitionDelay: `${index * 0.1}s` }}
+                >
+                  <img src={company.logo} alt={`${company.name} Logo`} />
+                  <span>{company.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <img

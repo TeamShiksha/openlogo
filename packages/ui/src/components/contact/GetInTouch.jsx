@@ -30,17 +30,7 @@ function GetInTouch() {
         </Button>
       </div>
 
-      {isModalOpen && (
-        <dialog
-          className={styles.modalOverlay}
-          open={isModalOpen}
-          onClose={closeModal}
-        >
-          <div className={styles.modalContent}>
-            <ContactForm closeModal={closeModal} />
-          </div>
-        </dialog>
-      )}
+      {isModalOpen && <ContactForm closeModal={closeModal} />}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 const { STATUS_CODES } = require("http");
 const ContactUsService = require("../../services/ContactUs");
 const { revertToCustomerPayloadSchema } = require("../../schemas/operator");
+const sendEmail = require("../../utils/sendEmail");
 
 /**
  * Controller responsible for responding back to customer.
@@ -37,6 +38,16 @@ async function revertToCustomerController(req, res, next) {
         message: "Already sent the response for this query!",
       });
     }
+
+    await sendEmail({
+      id: 3,
+      subject: "Response to Your Query",
+      recipient: formExists.email,
+      body: {
+        query: formExists.message,
+        response: reply,
+      },
+    });
 
     return res.status(200).json({
       message: "Updated successfully",
