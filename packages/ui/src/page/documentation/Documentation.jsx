@@ -7,6 +7,7 @@ import javaLogo from "../../assets/java.png";
 import copycodeicon from "../../assets/copy-code-icon.png";
 import tick from "../../assets/tick.png";
 import Table from "../../components/common/table/Table.jsx";
+import PropTypes from "prop-types";
 
 const codeExamples = {
   javascript: `// Initialize API request to fetch company logo
@@ -93,30 +94,32 @@ const CodeBlock = ({ id, codeExamples }) => {
       <pre className={styles.codeBlock}>
         <div className={styles.copyinside}>
           <code>{codeExamples[selectedLanguage]}</code>
-          {copyMessage ? (
-            <img
-              src={tick}
-              alt="tick"
-              style={{ width: "24px", height: "24px" }}
-            />
-          ) : (
-            <img
-              onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  copyToClipboard(codeExamples[selectedLanguage]);
-                }
-              }}
-              tabIndex={0}
-              src={copycodeicon}
-              alt="Copy code"
-              style={{ width: "24px", height: "24px", cursor: "pointer" }}
-            />
-          )}
+          <button
+            onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
+          >
+            {copyMessage ? (
+              <img
+                src={tick}
+                alt="tick"
+                style={{ width: "24px", height: "24px" }}
+              />
+            ) : (
+              <img
+                src={copycodeicon}
+                alt="Copy code"
+                style={{ width: "24px", height: "24px", cursor: "pointer" }}
+              />
+            )}
+          </button>
         </div>
       </pre>
     </div>
   );
+};
+
+CodeBlock.propTypes = {
+  id: PropTypes.string.isRequired,
+  codeExamples: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 const Documentation = () => {
