@@ -66,7 +66,6 @@ describe("Signup Controller", () => {
       _id: "id@123",
       email: "testname@gmail.com",
       name: "TESTONE",
-      lastname: "TESTLASTNAME",
       password: "hashedPassword",
       subscription_id: "sub@123",
     });
