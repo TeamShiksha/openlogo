@@ -91,10 +91,7 @@ const CodeBlock = ({ id, codeExamples }) => {
         </div>
       </div>
       <pre className={styles.codeBlock}>
-        <div
-          className={styles.copyinside}
-          onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
-        >
+        <div className={styles.copyinside}>
           <code>{codeExamples[selectedLanguage]}</code>
           {copyMessage ? (
             <img
@@ -104,6 +101,13 @@ const CodeBlock = ({ id, codeExamples }) => {
             />
           ) : (
             <img
+              onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  copyToClipboard(codeExamples[selectedLanguage]);
+                }
+              }}
+              tabIndex={0}
               src={copycodeicon}
               alt="Copy code"
               style={{ width: "24px", height: "24px", cursor: "pointer" }}
