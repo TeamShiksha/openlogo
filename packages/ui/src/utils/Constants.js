@@ -20,6 +20,11 @@ import discord from "../assets/discord.png";
 import bitbucket from "../assets/bitbucket.png";
 import confluence from "../assets/confluence.png";
 import dropbox from "../assets/dropbox.png";
+import jsLogo from "../assets/js.png";
+import pythonLogo from "../assets/python.png";
+import javaLogo from "../assets/java.png";
+import tick from "../assets/tick.png";
+import copycodeicon from "../assets/copy-code-icon.png";
 
 export const SVGS = {
   searchIcon,
@@ -636,6 +641,14 @@ export const buttonText = {
 export const branding = {
   imageSrc: "openlogo.svg",
   brandName: "Openlogo",
+};
+
+export const codeBlock = {
+  jsLogo,
+  pythonLogo,
+  javaLogo,
+  tick,
+  copycodeicon,
 };
 
 export const codeExamples = {

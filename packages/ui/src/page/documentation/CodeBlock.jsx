@@ -1,11 +1,7 @@
 import { useState } from "react";
-import jsLogo from "../../assets/js.png";
-import pythonLogo from "../../assets/python.png";
-import javaLogo from "../../assets/java.png";
 import styles from "./Documentation.module.css";
-import tick from "../../assets/tick.png";
-import copycodeicon from "../../assets/copy-code-icon.png";
 import PropTypes from "prop-types";
+import { codeBlock } from "../../utils/Constants.js";
 
 const CodeBlock = ({ id, codeExamples }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
@@ -25,9 +21,9 @@ const CodeBlock = ({ id, codeExamples }) => {
   };
 
   const logos = {
-    javascript: jsLogo,
-    python: pythonLogo,
-    java: javaLogo,
+    javascript: codeBlock.jsLogo,
+    python: codeBlock.pythonLogo,
+    java: codeBlock.javaLogo,
   };
 
   return (
@@ -54,10 +50,10 @@ const CodeBlock = ({ id, codeExamples }) => {
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
           >
             {copyMessage ? (
-              <img src={tick} alt="tick" />
+              <img src={codeBlock.tick} alt="tick" />
             ) : (
               <img
-                src={copycodeicon}
+                src={codeBlock.copycodeicon}
                 alt="Copy code"
                 style={{ cursor: "pointer" }}
               />
