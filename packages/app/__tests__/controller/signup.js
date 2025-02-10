@@ -1,30 +1,18 @@
 const request = require("supertest");
-const express = require("express");
+const app = require("../../index");
 const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
 const UserTokenService = require("../../services/UserToken");
-const signupController = require("../../controllers/auth/signup");
-
+const InitialRequest = require("../../utils/testConstants/constants");
 const ENDPOINT = "/api/auth/signup";
 
 jest.mock("../../services/User");
 jest.mock("../../services/Subscription");
 jest.mock("../../services/UserToken");
 
-const InitialRequest = {
-  name: "TESTNAME",
-  email: "testname@gmail.com",
-  password: "testname@1234",
-  confirmPassword: "testname@1234",
-};
-
 describe("Signup Controller", () => {
-  let app;
   beforeEach(() => {
     jest.clearAllMocks();
-    app = express();
-    app.use(express.json());
-    app.post(ENDPOINT, signupController);
   });
 
   test("should be a valid email", async () => {
@@ -78,6 +66,7 @@ describe("Signup Controller", () => {
       _id: "id@123",
       email: "testname@gmail.com",
       name: "TESTONE",
+      lastname: "TESTLASTNAME",
       password: "hashedPassword",
       subscription_id: "sub@123",
     });
