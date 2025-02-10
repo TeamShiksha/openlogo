@@ -1,10 +1,10 @@
-.dashboardContentSection {
+.dashboard-content-section {
   display: flex;
   gap: 4px;
   flex-direction: column;
 }
 
-.apiKeyContainer {
+.api-key-container {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@
   width: 100%;
 }
 
-.dashboardResetDate {
+.dashboard-reset-date {
   font-size: var(--medium-text);
   font-weight: 400;
   line-height: 20px;

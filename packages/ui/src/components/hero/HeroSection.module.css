@@ -4,7 +4,7 @@
   align-items: center;
   gap: 94px;
   background-image: url("hero-background.png");
-  padding: 90px 110px;
+  padding: 90px 0;
   background-position: center;
 }
 
@@ -84,5 +84,8 @@
     flex-direction: column-reverse;
     align-items: center;
     width: 100%;
+    button {
+      width: 100%;
+    }
   }
 }

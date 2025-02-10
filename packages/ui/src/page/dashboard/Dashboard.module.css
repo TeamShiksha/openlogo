@@ -34,12 +34,13 @@
   flex: 1;
 }
 
-.contentItemHeading {
-  color: var(--black);
-  font-size: var(--large-text);
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
+
+.activeStatus {
+    color: var(--primary);
+}
+
+.inactiveStatus {
+    color: var(--black);
 }
 
 @media screen and (max-width: 768px) {

@@ -1,12 +1,11 @@
 import React from "react";
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
-import { SETTING } from "../../../utils/constants";
+import { SETTING } from "../../../utils/Constants";
 
 function SettingCard() {
   return (
-    <div className={styles.dashboardContentItem}>
-      <h6 className={styles.contentItemHeading}>Setting</h6>
+    <>
       {SETTING.map((setting, index) => (
         <div key={index} className={styles.actionButtonWrapper}>
           <p className={styles.actionText}>{setting.subtitle}</p>
@@ -23,7 +22,7 @@ function SettingCard() {
           </Button>
         </div>
       ))}
-    </div>
+    </>
   );
 }
 export default SettingCard;
