@@ -1,10 +1,10 @@
 import { useState } from "react";
-import jsLogo from "../assets/js.png";
-import pythonLogo from "../assets/python.png";
-import javaLogo from "../assets/java.png";
-import styles from "../page/documentation/Documentation.module.css";
-import tick from "../assets/tick.png";
-import copycodeicon from "../assets/copy-code-icon.png";
+import jsLogo from "../../assets/js.png";
+import pythonLogo from "../../assets/python.png";
+import javaLogo from "../../assets/java.png";
+import styles from "./Documentation.module.css";
+import tick from "../../assets/tick.png";
+import copycodeicon from "../../assets/copy-code-icon.png";
 import PropTypes from "prop-types";
 
 const CodeBlock = ({ id, codeExamples }) => {
@@ -42,11 +42,7 @@ const CodeBlock = ({ id, codeExamples }) => {
                 selectedLanguage === lang ? styles.languageButtonActive : ""
               }`}
             >
-              <img
-                src={logos[lang]}
-                alt={`${lang} logo`}
-                style={{ width: "32px", height: "32px" }}
-              />
+              <img src={logos[lang]} alt={`${lang} logo`} />
             </button>
           ))}
         </div>
@@ -58,16 +54,12 @@ const CodeBlock = ({ id, codeExamples }) => {
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
           >
             {copyMessage ? (
-              <img
-                src={tick}
-                alt="tick"
-                style={{ width: "24px", height: "24px" }}
-              />
+              <img src={tick} alt="tick" />
             ) : (
               <img
                 src={copycodeicon}
                 alt="Copy code"
-                style={{ width: "24px", height: "24px", cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
               />
             )}
           </button>

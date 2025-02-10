@@ -56,6 +56,11 @@ p {
   gap: 0.5rem;
 }
 
+.languageSelector img{
+  width: 32px;
+  height: 32px;
+}
+
 .languageButton {
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
@@ -130,6 +135,10 @@ p {
   margin-right: 1rem;
 }
 
+.copyinside > button > img{
+  width: 24px;
+  height: 24px;
+}
 
 @media (max-width: 564px) {
   .languageSelector {

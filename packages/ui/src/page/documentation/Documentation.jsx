@@ -2,7 +2,7 @@ import styles from "./Documentation.module.css";
 import { Link } from "react-router-dom";
 import Table from "../../components/common/table/Table.jsx";
 import { codeExamples, tableData } from "../../utils/Constants.js";
-import CodeBlock from "../../components/CodeBlock.jsx";
+import CodeBlock from "./CodeBlock.jsx";
 
 const Documentation = () => {
   return (
