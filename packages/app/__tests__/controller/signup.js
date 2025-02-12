@@ -1,164 +1,186 @@
 const request = require("supertest");
+const { STATUS_CODES } = require("http");
 const app = require("../../index");
+
 const UserService = require("../../services/User");
 const SubscriptionService = require("../../services/Subscription");
 const UserTokenService = require("../../services/UserToken");
-const InitialRequest = require("../../utils/testConstants/constants");
-const ENDPOINT = "/api/auth/signup";
+const { signupRequest, Endpoints } = require("../../utils/testConstants");
+const { Users, UserToken, Subscriptions } = require("../../models");
+const mockUser = require("../../utils/mocks/Users");
+const mockUserTokens = require("../../utils/mocks/UserToken");
+const mockSubscriptions = require("../../utils/mocks/Subscription");
 
-jest.mock("../../services/User");
-jest.mock("../../services/Subscription");
-jest.mock("../../services/UserToken");
+const mockUserModel = new Users(mockUser[1]);
+const mockUserTokenVerify = new UserToken(mockUserTokens[0]);
+const mockSubscriptionModel = new Subscriptions(mockSubscriptions[0]);
 
 describe("Signup Controller", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test("should be a valid email", async () => {
-    const mockRequest = { ...InitialRequest, email: "hdgftsjcne" };
+  test("422 - should be a valid email", async () => {
+    const mockRequest = { ...signupRequest, email: "hdgftsjcne" };
 
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
-
-    expect(response.status).toBe(422);
-    expect(response.body.message).toBe("Invalid email");
-    expect(response.body.statusCode).toBe(422);
-  });
-
-  test("Should not be an empty email", async () => {
-    const mockRequest = { ...InitialRequest, email: "" };
-
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toBe('"email" is not allowed to be empty');
-    expect(response.statusCode).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Invalid email",
+      statusCode: 422,
+    });
   });
 
-  test("Name should not be empty", async () => {
-    const mockRequest = { ...InitialRequest, name: "" };
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+  test("422 - Should not be an empty email", async () => {
+    const mockRequest = { ...signupRequest, email: "" };
+
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toBe('"name" is not allowed to be empty');
-    expect(response.body.statusCode).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: '"email" is not allowed to be empty',
+      statusCode: 422,
+    });
   });
 
-  test("ConfirmPassword and Password should be same", async () => {
+  test("422 - Name should not be empty", async () => {
+    const mockRequest = { ...signupRequest, name: "" };
+
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: '"name" is not allowed to be empty',
+      statusCode: 422,
+    });
+  });
+
+  test("422 - ConfirmPassword and Password should be same", async () => {
     const mockRequest = {
-      ...InitialRequest,
+      ...signupRequest,
       password: "testname@1234",
       confirmPassword: "testname@5678",
     };
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toBe(
-      "Password and confirm password do not match",
-    );
-    expect(response.body.statusCode).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Password and confirm password do not match",
+      statusCode: 422,
+    });
   });
 
-  test("Email should not be already registered", async () => {
-    const mockRequest = { ...InitialRequest, email: "testname@gmail.com" };
+  test("400 - Email should not be already registered", async () => {
+    const mockRequest = { ...signupRequest, email: "testname@gmail.com" };
+    jest
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(mockUser[0]);
 
-    UserService.prototype.getUserByEmail.mockResolvedValue({
-      _id: "id@123",
-      email: "testname@gmail.com",
-      name: "TESTONE",
-      password: "hashedPassword",
-      subscription_id: "sub@123",
-    });
-
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe("Email already exists");
-    expect(response.body.statusCode).toBe(400);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[400],
+      message: "Email already exists",
+      statusCode: 400,
+    });
   });
 
-  test("Should create a new Subscription", async () => {
-    const mockRequest = { ...InitialRequest };
-    UserService.prototype.getUserByEmail.mockResolvedValue(null);
-    SubscriptionService.prototype.createSubscription.mockResolvedValue(null);
+  test("500 - Should create a new Subscription", async () => {
+    const mockRequest = { ...signupRequest };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(null);
 
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(500);
-    expect(response.body.message).toBe(
-      "Something went wrong. Please Try again later!",
-    );
-    expect(response.body.statusCode).toBe(500);
+    expect(response.body).toEqual({
+      message: "Something went wrong. Please Try again later!",
+      statusCode: 500,
+    });
   });
 
-  test("should be able to create a new User", async () => {
-    const mockRequest = { ...InitialRequest };
+  test("500 - should be able to create a new User", async () => {
+    const mockRequest = { ...signupRequest };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(mockSubscriptionModel);
+    jest.spyOn(UserService.prototype, "createUser").mockResolvedValue(null);
 
-    UserService.prototype.getUserByEmail.mockResolvedValue(null);
-    SubscriptionService.prototype.createSubscription.mockResolvedValue({
-      _id: "sub@123",
-    });
-
-    UserService.prototype.createUser.mockResolvedValue(null);
-
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(500);
-    expect(response.body.message).toBe(
-      "Something went wrong. Try again later!",
-    );
-    expect(response.body.statusCode).toBe(500);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[500],
+      message: "Something went wrong. Try again later!",
+      statusCode: 500,
+    });
   });
 
-  test("Should be able to create a new verification token", async () => {
-    const mockReuest = { ...InitialRequest };
-    UserService.prototype.getUserByEmail.mockResolvedValue(null);
-    SubscriptionService.prototype.createSubscription.mockResolvedValue({
-      _id: "sub123",
-    });
+  test("201 - Should be able to create a new verification Token", async () => {
+    const mockRequest = { ...signupRequest };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(mockSubscriptionModel);
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(mockUserModel);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockResolvedValue(null);
 
-    UserService.prototype.createUser.mockResolvedValue({
-      email: "testname@gmail.com",
-      name: "TESTNAME",
-      password: "testname@1234",
-      confirmPassword: "testname@1234",
-      subscription_id: "sub@123",
-    });
-
-    UserTokenService.prototype.createUserToken.mockResolvedValue(null);
-
-    const response = await request(app).post(ENDPOINT).send(mockReuest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(201);
-    expect(response.body.message).toBe(
-      "Registration Successful. Email failed to send. Contact us for assistance.",
-    );
-    expect(response.body.statusCode).toBe(201);
+    expect(response.body).toEqual({
+      message:
+        "Registration Successful. Email failed to send. Contact us for assistance.",
+      statusCode: 201,
+    });
   });
 
-  test("Should be able to create a user end to end", async () => {
-    const mockRequest = { ...InitialRequest };
+  test("200 - User created successfully", async () => {
+    const mockRequest = { ...signupRequest };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(true);
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(mockUserModel);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockResolvedValue(mockUserTokenVerify);
 
-    UserService.prototype.getUserByEmail.mockResolvedValue(null);
-    SubscriptionService.prototype.createSubscription.mockResolvedValue({
-      _id: "sub@123",
-    });
-
-    UserService.prototype.createUser.mockResolvedValue({
-      email: "testname@gmail.com",
-      name: "TESTNAME",
-      password: "testname@1234",
-      confirmPassword: "testname@1234",
-      subscription_id: "sub@123",
-    });
-
-    UserTokenService.prototype.createUserToken.mockResolvedValue({
-      token: "token@123",
-      user_id: "userID@1234",
-      _id: "id@1234",
-    });
-
-    const response = await request(app).post(ENDPOINT).send(mockRequest);
+    const response = await request(app)
+      .post(Endpoints.SIGNUP)
+      .send(mockRequest);
 
     expect(response.status).toBe(200);
     expect(response.body.statusCode).toBe(200);

@@ -4,8 +4,7 @@ const app = require("../../index");
 const UserService = require("../../services/User");
 const User = require("../../models/Users");
 const mockUser = require("../../utils/mocks/Users");
-
-const ENDPOINT = "/api/auth/signin";
+const { Endpoints } = require("../../utils/testConstants");
 
 describe("Signin Controller", () => {
   beforeAll(() => {
@@ -17,7 +16,9 @@ describe("Signin Controller", () => {
   });
 
   it("422 - Email must be a string", async () => {
-    const response = await request(app).post(ENDPOINT).send({ email: 5 });
+    const response = await request(app)
+      .post(Endpoints.SIGNIN)
+      .send({ email: 5 });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -29,7 +30,7 @@ describe("Signin Controller", () => {
 
   it("422 - Email is required", async () => {
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ user: "hello world" });
 
     expect(response.status).toBe(422);
@@ -42,7 +43,7 @@ describe("Signin Controller", () => {
 
   it("422 - Invalid email", async () => {
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "not-an-email" });
 
     expect(response.status).toBe(422);
@@ -55,7 +56,7 @@ describe("Signin Controller", () => {
 
   it("422 - Password must be string", async () => {
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "email@example.com", password: 5 });
 
     expect(response.status).toBe(422);
@@ -68,7 +69,7 @@ describe("Signin Controller", () => {
 
   it("422 - Password is required", async () => {
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "email@example.com" });
 
     expect(response.status).toBe(422);
@@ -83,7 +84,7 @@ describe("Signin Controller", () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
 
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "email@example.com", password: "password" });
 
     expect(response.status).toBe(404);
@@ -100,7 +101,7 @@ describe("Signin Controller", () => {
       .mockResolvedValue(new User(mockUser[0]));
 
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "johndoe@example.com", password: "password123" });
 
     expect(response.status).toBe(403);
@@ -117,7 +118,7 @@ describe("Signin Controller", () => {
       .mockResolvedValue(new User(mockUser[1]));
 
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "johndoe1@example.com", password: "password122" });
 
     expect(response.status).toBe(401);
@@ -134,7 +135,7 @@ describe("Signin Controller", () => {
       .mockResolvedValue(new User(mockUser[1]));
 
     const response = await request(app)
-      .post(ENDPOINT)
+      .post(Endpoints.SIGNIN)
       .send({ email: "johndoe1@example.com", password: "password123" });
 
     expect(response.status).toBe(200);
