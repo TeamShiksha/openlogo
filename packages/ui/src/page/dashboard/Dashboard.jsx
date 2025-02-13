@@ -9,6 +9,12 @@ import SettingCard from "../../components/dashboard/settingpage/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 
 const TABLE_HEADER_DATA = ["Description", "Created", "Action"];
+const EMPTY_MESSAGE =
+  "Your api keys will be visible here, click on generate key to add new api key";
+const TABLE_TEST_DATA = [
+  ["User table api key", "12th Feb 2024"],
+  ["Agent requirements data", "12th Feb 2028"],
+];
 
 function Dashboard() {
   return (
@@ -30,12 +36,11 @@ function Dashboard() {
           </CardWrapper>
         </section>
       </div>
-
       <div className={styles["table-wrapper"]}>
         <Table
           headers={TABLE_HEADER_DATA}
-          rows={[]}
-          emptyMessage="Your api keys will be visible here, click on generate key to add new api key"
+          rows={TABLE_TEST_DATA}
+          emptyMessage={EMPTY_MESSAGE}
           onDelete={() => {}}
         />
       </div>
