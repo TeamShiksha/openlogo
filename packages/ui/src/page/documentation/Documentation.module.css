@@ -1,84 +1,49 @@
-.container {
-  min-height: 100vh;
-  padding: 2rem 0;
-}
+
 code {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--description);
   background-color: white;
   width: 100%;
+  padding: 0.5rem 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
-.content {
-  max-width: 85%;
-  margin: 0 auto;
-}
 
 .card {
   background-color: white;
   border-radius: 8px;
+  padding: 1rem 0;
 }
-
-.cardWrapper {
-  padding: 1rem;
-}
-
-/* .heading2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #101828;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  } */
 
 h3 {
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 600;
   color: #101828;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
-/*   
-  .heading4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #101828;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-  } */
-
-/* .paragraph {
-    color: #475467;
-    line-height: 1.625;
-    margin-bottom: 1rem;
-  } */
 
 p {
   font-size: 1.2rem;
   line-height: 1.8rem;
   color: var(--description);
+  margin-top: 0.3rem;
 }
+
 .codeBlockWrapper {
   margin: 1rem 0;
   overflow: hidden;
   border-radius: 8px;
   background-color: rgb(249 250 251);
-  /* color: white;
-      border: #4f46e5; */
 }
-
-/* .bgGrey {
-    margin: 12px 0;
-    border-radius: 4px;
-  } */
 
 .codeBlockHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  padding-bottom: 0;
-  /* border-bottom: 1px solid #374151; */
+  padding: 12px 12px 0;
 }
 
 .codeLanguage {
@@ -89,6 +54,11 @@ p {
 .languageSelector {
   display: flex;
   gap: 0.5rem;
+}
+
+.languageSelector img{
+  width: 32px;
+  height: 32px;
 }
 
 .languageButton {
@@ -116,15 +86,6 @@ p {
   background-color: rgb(249 250 251);
 }
 
-.copyButton:hover {
-}
-
-.codeBlockHeader {
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: flex-start;
-}
-
 .codeBlock {
   padding: 16px;
   margin: 12px;
@@ -134,7 +95,6 @@ p {
   font-size: 1rem;
   line-height: 1.5;
   color: #111827;
-  /* border: 2px solid #e5e7eb; */
   border-radius: 12px;
   font-weight: 500;
 }
@@ -151,47 +111,8 @@ p {
   margin: 1.5rem 0;
   overflow-x: auto;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
 }
 
-.table {
-  width: 100%;
-  min-width: 100%;
-  border-collapse: collapse;
-  background-color: #f9fafb;
-}
-
-.tableHeader {
-  padding: 0.75rem 1.5rem;
-  text-align: left;
-  font-size: 1.2rem;
-  color: var(--black);
-}
-
-.tableCell {
-  padding: 1rem 1.5rem;
-  font-size: 1.2rem;
-  color: #344054;
-  /* border-top: 1px solid #e5e7eb; */
-}
-
-/* .underline {
-    position: relative;
-    display: block;
-    margin-bottom: 2rem;
-  } */
-/*   
-  .underline::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1.5px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
-  }
-   */
 .codeBox {
   padding: 12px;
   border: var(--border);
@@ -201,18 +122,25 @@ p {
 .copyinside {
   display: flex;
   justify-content: space-between;
-  align-items: top;
   background-color: white;
 }
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-  }
 
-  .cardWrapper {
-    padding: 1rem;
-  }
+.copyinside > button{
+  width: fit-content;
+  height: fit-content;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+}
 
+.copyinside > button > img{
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 564px) {
   .languageSelector {
     flex-wrap: wrap;
   }
