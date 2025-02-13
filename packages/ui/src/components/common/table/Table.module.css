@@ -1,5 +1,5 @@
 .custom-table {
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     background-color: var(--table-background);
@@ -17,8 +17,8 @@
 }
 
 .table-cell {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
     color: var(--description);
     border: 1px solid var(--border-color);
 }
@@ -55,13 +55,11 @@
 
 @media only screen and (max-width: 564px) {
     .custom-table {
-        font-size: 0.8rem;
         margin: 0.8rem;
     }
 
     .table-header,
     .table-cell {
         padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
     }
 }
