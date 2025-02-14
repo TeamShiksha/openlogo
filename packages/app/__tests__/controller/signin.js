@@ -4,7 +4,7 @@ const app = require("../../index");
 const UserService = require("../../services/User");
 const User = require("../../models/Users");
 const mockUser = require("../../utils/mocks/Users");
-const { Endpoints } = require("../../utils/testConstants");
+const { Endpoints } = require("../../utils/testconstants");
 
 describe("Signin Controller", () => {
   beforeAll(() => {
