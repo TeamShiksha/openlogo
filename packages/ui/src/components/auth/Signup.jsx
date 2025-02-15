@@ -74,6 +74,7 @@ function SignUpForm({ toggleForm, onClose }) {
     e.preventDefault();
     const errors = validate(formValues);
     console.log(errors);
+    resetForm();
   };
 
   useEffect(() => {

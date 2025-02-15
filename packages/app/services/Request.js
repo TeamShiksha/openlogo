@@ -6,7 +6,7 @@ class RequestService {
   }
 
   async createRaiseRequest(formData) {
-    const newRaiseRequest = this.requestRepository.create({
+    const newRaiseRequest = await this.requestRepository.create({
       user_id: formData.user_id,
       companyUrl: formData.companyUrl,
       comment: null,

@@ -12,13 +12,13 @@ router.post(
   "/image",
   authMiddleware({ adminOnly: true }),
   upload.single("logo"),
-  adminUploadController,
+  adminUploadController
 );
 router.put(
   "/image",
   authMiddleware({ adminOnly: true }),
   upload.single("logo"),
-  adminReUploadController,
+  adminReUploadController
 );
 
 module.exports = router;

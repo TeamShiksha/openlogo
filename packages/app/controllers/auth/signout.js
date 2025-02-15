@@ -4,7 +4,7 @@ const { STATUS_CODES } = require("http");
  * This controller clears the JWT cookie from the user's browser, effectively logging out the user.
  * It checks if a JWT cookie is present; if not, it returns a 400 error.
  */
-async function signoutController(req, res, next) {
+function signoutController(req, res, next) {
   try {
     const { jwt } = req.cookies;
     if (!jwt) {

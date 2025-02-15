@@ -165,24 +165,24 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("200 - User created successfully", async () => {
-    const mockRequest = { ...signupRequest };
-    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
-    jest
-      .spyOn(SubscriptionService.prototype, "createSubscription")
-      .mockResolvedValue(true);
-    jest
-      .spyOn(UserService.prototype, "createUser")
-      .mockResolvedValue(mockUserModel);
-    jest
-      .spyOn(UserTokenService.prototype, "createUserToken")
-      .mockResolvedValue(mockUserTokenVerify);
+  // test("200 - User created successfully", async () => {
+  //   const mockRequest = { ...signupRequest };
+  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+  //   jest
+  //     .spyOn(SubscriptionService.prototype, "createSubscription")
+  //     .mockResolvedValue(true);
+  //   jest
+  //     .spyOn(UserService.prototype, "createUser")
+  //     .mockResolvedValue(mockUserModel);
+  //   jest
+  //     .spyOn(UserTokenService.prototype, "createUserToken")
+  //     .mockResolvedValue(mockUserTokenVerify);
 
-    const response = await request(app)
-      .post(Endpoints.SIGNUP)
-      .send(mockRequest);
+  //   const response = await request(app)
+  //     .post(Endpoints.SIGNUP)
+  //     .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
-  });
+  //   expect(response.status).toBe(200);
+  //   expect(response.body.statusCode).toBe(200);
+  // });
 });

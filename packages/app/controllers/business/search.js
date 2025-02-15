@@ -34,7 +34,7 @@ async function searchLogoController(req, res, next) {
     }
 
     const subscription = await subscriptionService.getSubscription(
-      key.subscription_id,
+      key.subscription_id
     );
     if (subscription.usage_count >= subscription.usage_limit) {
       return res.status(403).json({

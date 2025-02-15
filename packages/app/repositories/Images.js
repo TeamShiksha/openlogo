@@ -47,7 +47,7 @@ class ImagesRepository extends BaseRepository {
    * @returns {Promise<string>} - Signed CloudFront URL.
    */
   async fetchCloudFrontURL(imageUrl) {
-    const cloudFrontUrl = cloudFrontSignedURL(`/${imageUrl}`).data;
+    const cloudFrontUrl = await cloudFrontSignedURL(`/${imageUrl}`).data;
     return cloudFrontUrl;
   }
 

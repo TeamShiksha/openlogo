@@ -13,11 +13,11 @@ class ContactUsRepository extends BaseRepository {
   }
 
   async findByEmailAndStatus(email, isActive) {
-    return this.model.findOne({ email, activityStatus: isActive });
+    return await this.model.findOne({ email, activityStatus: isActive });
   }
 
   async updateFormStatus(id, updateData) {
-    return this.model.updateOne({ _id: id }, updateData);
+    return await this.model.updateOne({ _id: id }, updateData);
   }
 }
 

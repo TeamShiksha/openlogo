@@ -2,6 +2,7 @@ const UserRepository = require("../repositories/Users");
 const KeyService = require("../services/Keys");
 const bcrypt = require("bcrypt");
 const { UserType } = require("../utils/constants");
+
 class UserService {
   constructor() {
     this.userRepository = new UserRepository();
@@ -93,7 +94,7 @@ class UserService {
    * @returns {Promise<Object>} - The user document if found, otherwise null.
    */
   async getUserByEmail(email) {
-    return this.userRepository.findUserByEmail(email);
+    return await this.userRepository.findUserByEmail(email);
   }
 
   /**
@@ -123,7 +124,7 @@ class UserService {
     };
     const userVerifed = await this.userRepository.update(
       userId,
-      verifyUserData,
+      verifyUserData
     );
     if (userVerifed == null) {
       return false;

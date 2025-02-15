@@ -13,14 +13,14 @@ async function get(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
     const { token } = req.params;
-    if (error)
+    if (!token)
       return res.status(422).json({
         error: STATUS_CODES[422],
-        message: error.message,
+        message: "Invalid or expired token",
         statusCode: 422,
       });
 
-    const userToken = await userTokenService.fetchUserToken(value.token);
+    const userToken = await userTokenService.fetchUserToken(token);
     if (!userToken)
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -40,8 +40,8 @@ async function get(req, res, next) {
       "resetPasswordSession",
       jwt.sign(
         { userId: userToken.user_id.toString(), token: userToken.token },
-        process.env.JWT_SECRET,
-      ),
+        process.env.JWT_SECRET
+      )
     );
 
     return res.status(200).json({ statusCode: 200 });
@@ -69,7 +69,7 @@ const patch = async (req, res, next) => {
 
     const decodedData = jwt.verify(
       resetPasswordSession,
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET
     );
     const { userId } = decodedData;
     const { error, value } = patchSchema.validate(req.body);

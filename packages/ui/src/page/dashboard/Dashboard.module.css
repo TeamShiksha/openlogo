@@ -37,7 +37,6 @@
   flex: 1;
 }
 
-
 .activeStatus {
   color: var(--primary);
 }
@@ -51,7 +50,7 @@
     flex-direction: column;
   }
 
-  .dashboardContainer>aside {
+  .dashboardContainer > aside {
     width: 100%;
   }
 

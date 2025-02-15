@@ -1,65 +1,65 @@
 .table-container {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 .custom-table {
-    width: 100%;
-    background-color: var(--table-background);
-    border: var(--border);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-bottom);
-    border-spacing: 0;
+  width: 100%;
+  background-color: var(--table-background);
+  border: var(--border);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-bottom);
+  border-spacing: 0;
 }
 
 .custom-table th {
-    border-bottom: var(--border);
+  border-bottom: var(--border);
 }
 
 .table-header {
-    padding: 0.75rem 3.5rem;
-    text-align: left;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--black);
-    background-color: var(--header-background);
+  padding: 0.75rem 3.5rem;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--black);
+  background-color: var(--header-background);
 }
 
 .table-cell {
-    padding: 0.5rem 4rem;
-    font-size: 1rem;
-    color: var(--description);
+  padding: 0.5rem 4rem;
+  font-size: 1rem;
+  color: var(--description);
 }
 
 .no-data {
-    text-align: center;
-    padding: 1rem;
-    font-size: 1rem;
-    color: var(--description);
-    font-style: italic;
-    background-color: var(--table-background);
-    border: 1px solid var(--border-color);
+  text-align: center;
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--description);
+  font-style: italic;
+  background-color: var(--table-background);
+  border: 1px solid var(--border-color);
 }
 
 .delete-btn {
-    color: var(--error);
-    background-color: #fff;
-    padding: 0.5rem;
-    width: min-content;
-    font-size: small;
-    cursor: pointer;
-    border: none;
+  color: var(--error);
+  background-color: #fff;
+  padding: 0.5rem;
+  width: min-content;
+  font-size: small;
+  cursor: pointer;
+  border: none;
 }
 
 @media only screen and (max-width: 780px) {
-    .table-header {
-        padding: 0.5rem 1rem;
-    }
+  .table-header {
+    padding: 0.5rem 1rem;
+  }
 
-    .table-cell {
-        padding: 0.5rem 1rem;
-    }
+  .table-cell {
+    padding: 0.5rem 1rem;
+  }
 
-    .custom-table {
-        min-width: 600px;
-    }
+  .custom-table {
+    min-width: 600px;
+  }
 }

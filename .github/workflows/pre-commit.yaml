@@ -38,4 +38,4 @@ jobs:
         run: pnpm --filter ui coverage
       
       - name: backend coverage report
-        run: pnpm --filter ui app
+        run: pnpm --filter app coverage
