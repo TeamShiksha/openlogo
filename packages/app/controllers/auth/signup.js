@@ -55,7 +55,7 @@ async function signupController(req, res, next) {
       newUser._id
     );
     if (!verificationToken) {
-      return res.status(206).json({
+      return res.status(201).json({
         message:
           "Registration Successful. Email failed to send. Contact us for assistance.",
         statusCode: 201,
