@@ -12,7 +12,8 @@
     "lint:fix": "eslint --fix .",
     "test": "vitest run --bail=3",
     "coverage": "vitest run --coverage",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check": "prettier --check ."
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.6.3",

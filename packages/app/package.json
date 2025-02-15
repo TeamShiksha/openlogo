@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix .",
     "test": "jest --watchAll=false",
     "coverage": "jest --coverage --watchAll=false",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check": "prettier --check ."
   },
   "dependencies": {
     "@aws-sdk/client-cloudfront": "^3.693.0",

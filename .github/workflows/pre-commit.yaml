@@ -5,11 +5,10 @@ on:
   push: 
     branches: 
       - dev
-      - prod
 
 jobs:
   test:
-    name: run tests
+    name: linting, formating and test checks
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -29,14 +28,14 @@ jobs:
       - name: Install run dependencies
         run: pnpm install
 
-      - name: Test ui and app
-        run: pnpm  test
+      - name: linting
+        run: pnpm  lint
 
-      - name: Get coverage report
-        run: pnpm coverage
+      - name: prettier check
+        run: pnpm check
 
-      - name: Run eslint check
-        run: pnpm lint
-
-      - name: Run prettier check
-        run: pnpm format --check
+      - name: frontend coverage report
+        run: pnpm --filter ui coverage
+      
+      - name: backend coverage report
+        run: pnpm --filter ui app
