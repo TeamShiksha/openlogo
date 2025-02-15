@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import {BrowserRouter, MemoryRouter, useNavigate} from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
   HEADER_ITEMS,
@@ -9,6 +9,7 @@ import {
   buttonText,
   branding,
 } from "../src/utils/Constants";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -140,5 +141,18 @@ describe("Header", () => {
 
     fireEvent.click(menuButton);
     expect(screen.getByAltText(CROSS.alt)).toBeInTheDocument();
+  });
+
+  it("header links should be clickable and navigate correctly", async () => {
+    render(<Header />, { wrapper: MemoryRouter });
+
+    for (const item of HEADER_ITEMS) {
+        const navLink = screen.getByText(item.title);
+        expect(navLink).toBeInTheDocument();
+
+        await userEvent.click(navLink);
+
+        expect(window.location.pathname).toBe(item.url);
+    }
   });
 });
