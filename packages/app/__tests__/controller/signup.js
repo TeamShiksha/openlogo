@@ -45,7 +45,7 @@ describe("Signup Controller", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "\"email\" is not allowed to be empty",
+      message: '"email" is not allowed to be empty',
       statusCode: 422,
     });
   });
@@ -60,7 +60,7 @@ describe("Signup Controller", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "\"name\" is not allowed to be empty",
+      message: '"name" is not allowed to be empty',
       statusCode: 422,
     });
   });
