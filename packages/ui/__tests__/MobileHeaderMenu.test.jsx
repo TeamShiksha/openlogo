@@ -1,14 +1,7 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  describe,
-  it,
-  expect,
-} from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu.jsx";
-import { vi } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 
 const mockCloseMenu = vi.fn();
 const HEADER_ITEMS = [
