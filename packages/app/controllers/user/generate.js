@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
-const SubscriptionService = require("../../services/Subscription");
+const { UserService, SubscriptionService } = require("../../services");
 const { generateKeyPayloadSchema } = require("../../schemas/user");
 
 /**

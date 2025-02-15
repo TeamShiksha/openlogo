@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
+const { UserService } = require("../../services");
 const { addAdminSchema } = require("../../schemas/admin");
 
 /**

@@ -1,5 +1,5 @@
-const ImageServices = require("../../services/Images");
 const { STATUS_CODES } = require("http");
+const { ImageServices } = require("../../services");
 const imageReuploadSchema = require("../../schemas/admin");
 
 /**

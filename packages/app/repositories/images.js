@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const Image = require("../models/Images");
+const Image = require("../models/images");
 
 const { cloudFrontSignedURL } = require("../utils/cloudFront");
 

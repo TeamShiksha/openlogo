@@ -1,7 +1,9 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
-const SubscriptionService = require("../../services/Subscription");
-const UserTokenService = require("../../services/UserToken");
+const {
+  UserService,
+  SubscriptionService,
+  UserTokenService,
+} = require("../../services");
 const { signupPayloadSchema } = require("../../schemas/auth");
 const sendEmail = require("../../utils/sendEmail");
 
@@ -57,14 +59,14 @@ async function signupController(req, res, next) {
     if (!verificationToken) {
       return res.status(201).json({
         message:
-          "Registration Successful. Email failed to send. Contact us for assistance.",
+          "Something went wrong. Try again later!",
         statusCode: 201,
       });
     }
 
     await sendEmail({
       id: 2,
-      subject: "Verify Your Email Address",
+      subject: "Openlogo: Email Verification",
       recipient: email,
       body: {
         url: verificationToken.tokenURL(),

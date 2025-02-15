@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const UserToken = require("../models/UserToken");
+const UserToken = require("../models/usertoken");
 
 /**
  * The UserTokenRepository extends BaseRepository to manage UerToken model operations,

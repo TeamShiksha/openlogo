@@ -8,14 +8,6 @@ const EnvSchema = Joi.object()
       Joi.string().regex(/^\d+$/),
       Joi.number()
     ).required(),
-    EMAIL_HOST: Joi.string().hostname().required(),
-    EMAIL_SERVICE: Joi.string().required(),
-    EMAIL_PORT: Joi.alternatives(
-      Joi.string().regex(/^\d+$/),
-      Joi.number()
-    ).required(),
-    EMAIL_USER: Joi.string().email().required(),
-    EMAIL_PASS: Joi.string().required(),
     CLOUD_FRONT_KEYPAIR_ID: Joi.string()
       .regex(/^[A-Z0-9]+$/)
       .required(),
@@ -32,8 +24,8 @@ const EnvSchema = Joi.object()
     NODE_ENV: Joi.string().valid("dev", "test", "prod"),
     NEW_RELIC_APP_NAME: Joi.string().required(),
     NEW_RELIC_LICENSE_KEY: Joi.string().required(),
-    EMAIL_SERVICE_URL: Joi.string().required(),
-    EMAIL_SERVICE_AUTH_TOKEN: Joi.string().required(),
+    EMAIL_SERVICE_URL: Joi.string().optional(),
+    EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
   })
   .unknown(true);
 

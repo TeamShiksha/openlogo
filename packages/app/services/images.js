@@ -1,9 +1,9 @@
-const ImageRepository = require("../repositories/Images");
+const { ImagesRepository } = require("../repositories");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 class ImageServices {
   constructor() {
-    this.imageRepository = new ImageRepository();
+    this.imageRepository = new ImagesRepository();
     this.s3 = new S3Client({
       region: process.env.BUCKET_REGION,
       credentials: {

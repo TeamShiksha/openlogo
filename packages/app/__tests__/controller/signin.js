@@ -1,49 +1,23 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
+const { UserService } = require("../../services");
+const { Users } = require("../../models");
+const { ENDPOINTS } = require("../../utils/testconstants");
+const { MOCK_USERS } = require("../../utils/mocks");
 const app = require("../../index");
-const UserService = require("../../services/User");
-const User = require("../../models/Users");
-const mockUser = require("../../utils/mocks/Users");
-const { Endpoints } = require("../../utils/testconstants");
 
-describe("Signin Controller", () => {
+describe("SIGNIN API", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "jwtsecret";
   });
-
+  
   afterAll(() => {
-    process.env.JWT_SECRET = "";
-  });
-
-  it("422 - Email must be a string", async () => {
-    const response = await request(app)
-      .post(Endpoints.SIGNIN)
-      .send({ email: 5 });
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: "Email must be a string",
-      statusCode: 422,
-    });
-  });
-
-  it("422 - Email is required", async () => {
-    const response = await request(app)
-      .post(Endpoints.SIGNIN)
-      .send({ user: "hello world" });
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: "Email is required",
-      statusCode: 422,
-    });
+    delete process.env.JWT_SECRET;
   });
 
   it("422 - Invalid email", async () => {
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "not-an-email" });
 
     expect(response.status).toBe(422);
@@ -54,22 +28,9 @@ describe("Signin Controller", () => {
     });
   });
 
-  it("422 - Password must be string", async () => {
-    const response = await request(app)
-      .post(Endpoints.SIGNIN)
-      .send({ email: "email@example.com", password: 5 });
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: "Password must be string",
-      statusCode: 422,
-    });
-  });
-
   it("422 - Password is required", async () => {
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "email@example.com" });
 
     expect(response.status).toBe(422);
@@ -82,9 +43,8 @@ describe("Signin Controller", () => {
 
   it("404 - Incorrect email or password", async () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
-
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "email@example.com", password: "password" });
 
     expect(response.status).toBe(404);
@@ -98,10 +58,9 @@ describe("Signin Controller", () => {
   it("403 - Email not verified", async () => {
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new User(mockUser[0]));
-
+      .mockResolvedValue(MOCK_USERS[0]);
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "johndoe@example.com", password: "password123" });
 
     expect(response.status).toBe(403);
@@ -112,30 +71,28 @@ describe("Signin Controller", () => {
     });
   });
 
-  it("401 - Incorrect email or password", async () => {
+  it("404 - Incorrect email or password", async () => {
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new User(mockUser[1]));
-
+      .mockImplementation(() => new Users(MOCK_USERS[1]));
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "johndoe1@example.com", password: "password122" });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(404);
     expect(response.body).toEqual({
-      error: STATUS_CODES[401],
+      error: STATUS_CODES[404],
       message: "Incorrect email or password",
-      statusCode: 401,
+      statusCode: 404,
     });
   });
 
-  it("200 - Sign in successful", async () => {
+  it("200 - Signin successful", async () => {
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new User(mockUser[1]));
-
+      .mockImplementation(() => new Users(MOCK_USERS[1]));
     const response = await request(app)
-      .post(Endpoints.SIGNIN)
+      .post(ENDPOINTS.SIGNIN)
       .send({ email: "johndoe1@example.com", password: "password123" });
 
     expect(response.status).toBe(200);

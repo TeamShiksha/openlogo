@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const User = require("../models/Users");
+const User = require("../models/users");
 
 /**
  * The UsersRepository extends BaseRepository to manage User model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..

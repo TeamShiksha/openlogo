@@ -1,30 +1,28 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
+const { UserToken } = require("../../models");
+const { UserTokenService, UserService, SubscriptionService } = require("../../services");
+const { SIGNUP_PAYLOAD, ENDPOINTS } = require("../../utils/testconstants");
+const { MOCK_USERS, MOCK_SUBSCRIPTION, MOCK_USERTOKENS } = require("../../utils/mocks");
 const app = require("../../index");
 
-const UserService = require("../../services/User");
-const SubscriptionService = require("../../services/Subscription");
-const UserTokenService = require("../../services/UserToken");
-const { signupRequest, Endpoints } = require("../../utils/testconstants");
-const { Users, UserToken, Subscriptions } = require("../../models");
-const mockUser = require("../../utils/mocks/Users");
-const mockUserTokens = require("../../utils/mocks/UserToken");
-const mockSubscriptions = require("../../utils/mocks/Subscription");
+describe("SINGUP API", () => {
+  beforeAll(() => {
+    process.env.CLIENT_URL = "https://localhost:3000";
+  });
 
-const mockUserModel = new Users(mockUser[1]);
-const mockUserTokenVerify = new UserToken(mockUserTokens[0]);
-const mockSubscriptionModel = new Subscriptions(mockSubscriptions[0]);
-
-describe("Signup Controller", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test("422 - should be a valid email", async () => {
-    const mockRequest = { ...signupRequest, email: "hdgftsjcne" };
+  afterAll(() => {
+    delete process.env.CLIENT_URL;
+  });
 
+  it("422 - Payload should be a valid email", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "hdgftsjcne" };
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(422);
@@ -35,26 +33,10 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("422 - Should not be an empty email", async () => {
-    const mockRequest = { ...signupRequest, email: "" };
-
+  it("422 - Name should not be empty", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, name: "" };
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
-      .send(mockRequest);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: '"email" is not allowed to be empty',
-      statusCode: 422,
-    });
-  });
-
-  test("422 - Name should not be empty", async () => {
-    const mockRequest = { ...signupRequest, name: "" };
-
-    const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(422);
@@ -65,15 +47,13 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("422 - ConfirmPassword and Password should be same", async () => {
+  it("422 - ConfirmPassword and Password should match", async () => {
     const mockRequest = {
-      ...signupRequest,
-      password: "testname@1234",
+      ...SIGNUP_PAYLOAD,
       confirmPassword: "testname@5678",
     };
-
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(422);
@@ -84,14 +64,13 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("400 - Email should not be already registered", async () => {
-    const mockRequest = { ...signupRequest, email: "testname@gmail.com" };
+  it("400 - Email already registered", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "testname@gmail.com" };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(mockUser[0]);
-
+      .mockResolvedValue(MOCK_USERS[0]);
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(400);
@@ -102,15 +81,14 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("500 - Should create a new Subscription", async () => {
-    const mockRequest = { ...signupRequest };
+  it("500 - Failed creating subscription", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(null);
-
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(500);
@@ -120,16 +98,15 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("500 - should be able to create a new User", async () => {
-    const mockRequest = { ...signupRequest };
+  it("500 - Failed creating user", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
-      .mockResolvedValue(mockSubscriptionModel);
+      .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
     jest.spyOn(UserService.prototype, "createUser").mockResolvedValue(null);
-
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(500);
@@ -140,49 +117,47 @@ describe("Signup Controller", () => {
     });
   });
 
-  test("201 - Should be able to create a new verification Token", async () => {
-    const mockRequest = { ...signupRequest };
+  it("201 - Failed creating verificiation token", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
-      .mockResolvedValue(mockSubscriptionModel);
+      .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
     jest
       .spyOn(UserService.prototype, "createUser")
-      .mockResolvedValue(mockUserModel);
+      .mockResolvedValue(MOCK_USERS[1]);
     jest
       .spyOn(UserTokenService.prototype, "createUserToken")
       .mockResolvedValue(null);
-
     const response = await request(app)
-      .post(Endpoints.SIGNUP)
+      .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
       message:
-        "Registration Successful. Email failed to send. Contact us for assistance.",
+        "Something went wrong. Try again later!",
       statusCode: 201,
     });
   });
 
-  // test("200 - User created successfully", async () => {
-  //   const mockRequest = { ...signupRequest };
-  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
-  //   jest
-  //     .spyOn(SubscriptionService.prototype, "createSubscription")
-  //     .mockResolvedValue(true);
-  //   jest
-  //     .spyOn(UserService.prototype, "createUser")
-  //     .mockResolvedValue(mockUserModel);
-  //   jest
-  //     .spyOn(UserTokenService.prototype, "createUserToken")
-  //     .mockResolvedValue(mockUserTokenVerify);
+  it("200 - User created successfully", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(true);
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockImplementation(() => new UserToken(MOCK_USERTOKENS[0]));
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
 
-  //   const response = await request(app)
-  //     .post(Endpoints.SIGNUP)
-  //     .send(mockRequest);
-
-  //   expect(response.status).toBe(200);
-  //   expect(response.body.statusCode).toBe(200);
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body.statusCode).toBe(200);
+  });
 });

@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const RequestService = require("../../services/Request");
+const { RequestService } = require("../../services");
 const { postRaiseRequestPayloadSchema } = require("../../schemas/user");
 
 /**

@@ -1,5 +1,5 @@
 const BaseRepository = require("../repositories/base");
-const Keys = require("../models/Keys");
+const Keys = require("../models/keys");
 
 /**
  * The Keys Repository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..

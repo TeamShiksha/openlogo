@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
+const { UserService } = require("../../services");
 const { updatePasswordPayloadSchema } = require("../../schemas/user");
 
 /**

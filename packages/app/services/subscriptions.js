@@ -1,9 +1,9 @@
-const SubscriptionRepository = require("../repositories/Subscriptions");
+const { SubscriptionsRepository } = require("../repositories");
 const { DefaultSubscriptionPlan } = require("../utils/constants");
 
 class SubscriptionService {
   constructor() {
-    this.subscriptionRepository = new SubscriptionRepository();
+    this.subscriptionRepository = new SubscriptionsRepository();
   }
 
   /**

@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserTokenService = require("../../services/UserToken");
-const UserService = require("../../services/User");
+const { UserService, UserTokenService } = require("../../services");
 
 /**
  * This controller processes a token provided in the request query.

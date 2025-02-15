@@ -1,7 +1,9 @@
 const { STATUS_CODES } = require("http");
-const ImageService = require("../../services/Images");
-const KeyService = require("../../services/Keys");
-const SubscriptionService = require("../../services/Subscription");
+const {
+  ImageService,
+  KeyService,
+  SubscriptionService,
+} = require("../../services");
 const { getLogoQuerySchema } = require("../../schemas/business");
 
 /**

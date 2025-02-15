@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
-const UserTokenService = require("../../services/UserToken");
+const { UserTokenService, UserService } = require("../../services");
 const { forgotPasswordSchema } = require("../../schemas/auth");
 const sendEmail = require("../../utils/sendEmail");
 

@@ -1,4 +1,5 @@
-const ContactUsRepository = require("../repositories/ContactUs");
+const { ContactUsRepository } = require("../repositories");
+
 class ContactUsService {
   constructor() {
     this.contactUsRepository = new ContactUsRepository();

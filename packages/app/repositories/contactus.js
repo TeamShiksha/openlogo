@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const ContactUs = require("../models/ContactUs");
+const ContactUs = require("../models/contactus");
 
 /**
  * The ContactUsRepository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..

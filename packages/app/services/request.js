@@ -1,4 +1,4 @@
-const RequestRepository = require("../repositories/Request");
+const { RequestRepository } = require("../repositories");
 
 class RequestService {
   constructor() {

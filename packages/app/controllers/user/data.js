@@ -1,7 +1,9 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
-const KeyService = require("../../services/Keys");
-const SubscriptionService = require("../../services/Subscription");
+const {
+  UserService,
+  KeyService,
+  SubscriptionService,
+} = require("../../services");
 
 /**
  * This controller fetches the authenticated user's data from the database

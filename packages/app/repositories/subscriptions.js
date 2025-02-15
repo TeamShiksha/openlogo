@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const Subscriptions = require("../models/Subscriptions");
+const Subscriptions = require("../models/subscriptions");
 
 /**
  * The SubscriptionsRepository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..

@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const ContactUsRepository = require("../../repositories/ContactUs");
+const { ContactUsRepository } = require("../../repositories");
 const { querySchema } = require("../../schemas/operator");
 
 /**

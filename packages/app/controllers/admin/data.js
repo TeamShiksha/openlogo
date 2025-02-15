@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
-const ImageService = require("../../services/Images");
+const { UserService, ImageService } = require("../../services");
 
 /**
  * Retrieves the list of images uploaded by a specific user.

@@ -1,11 +1,11 @@
-const UserRepository = require("../repositories/Users");
-const KeyService = require("../services/Keys");
 const bcrypt = require("bcrypt");
+const KeyService = require("../services/keys");
+const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
 
 class UserService {
   constructor() {
-    this.userRepository = new UserRepository();
+    this.userRepository = new UsersRepository();
     this.keyService = new KeyService();
   }
 

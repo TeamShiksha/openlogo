@@ -1,9 +1,9 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const cookieParser = require("cookie-parser");
-const { validateEnv } = require("./utils/scripts/envSchema");
-const logger = require("./utils/logger");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const { validateEnv } = require("./utils/envSchema");
+const logger = require("./utils/logger");
 const routes = require("./routes/index");
 
 /**

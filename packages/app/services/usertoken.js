@@ -1,6 +1,6 @@
-const UserTokenRepository = require("../repositories/UserToken");
-const { UserTokenTypes } = require("../utils/constants");
 const { v4 } = require("uuid");
+const { UserTokenRepository } = require("../repositories");
+const { UserTokenTypes } = require("../utils/constants");
 
 class UserTokenService {
   constructor() {

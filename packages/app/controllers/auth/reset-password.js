@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { STATUS_CODES } = require("http");
-const UserTokenService = require("./../../services/UserToken");
-const UserService = require("./../../services/User");
+const { UserTokenService, UserService } = require("./../../services");
 const { patchSchema } = require("../../schemas/auth");
 
 /**

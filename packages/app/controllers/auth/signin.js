@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const UserService = require("../../services/User");
+const { UserService } = require("../../services");
 const { signinPayloadSchema } = require("../../schemas/auth");
 
 /**
@@ -37,10 +37,10 @@ async function signinController(req, res, next) {
 
     const matchPassword = await user.matchPassword(password);
     if (!matchPassword) {
-      return res.status(401).json({
-        error: STATUS_CODES[401],
+      return res.status(404).json({
+        error: STATUS_CODES[404],
         message: "Incorrect email or password",
-        statusCode: 401,
+        statusCode: 404,
       });
     }
 

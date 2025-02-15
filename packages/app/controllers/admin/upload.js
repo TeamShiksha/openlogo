@@ -1,4 +1,4 @@
-const ImageServices = require("../../services/Images");
+const { ImageService } = require("../../services");
 const { STATUS_CODES } = require("http");
 
 /**
@@ -7,7 +7,7 @@ const { STATUS_CODES } = require("http");
  */
 async function adminUploadController(req, res, next) {
   try {
-    const imageServices = new ImageServices();
+    const imageServices = new ImageService();
     let { userId } = req.userData;
     const file = req.file;
     const imageSize = file.size;

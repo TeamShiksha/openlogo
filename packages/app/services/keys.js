@@ -1,8 +1,8 @@
-const KeyRepository = require("../repositories/Keys");
+const { KeysRepository } = require("../repositories");
 
 class KeyService {
   constructor() {
-    this.keyRepository = new KeyRepository();
+    this.keyRepository = new KeysRepository();
   }
 
   /**

@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const ContactUsService = require("../../services/ContactUs");
+const { ContactUsService } = require("../../services");
 const { revertToCustomerPayloadSchema } = require("../../schemas/operator");
 const sendEmail = require("../../utils/sendEmail");
 

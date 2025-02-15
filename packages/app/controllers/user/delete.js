@@ -1,4 +1,4 @@
-const UserService = require("../../services/User");
+const { UserService } = require("../../services");
 
 /**
  * This controller retrieves the user's ID from `req.userData`, invokes the
