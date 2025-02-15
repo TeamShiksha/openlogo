@@ -25,7 +25,7 @@ class UserTokenService {
     };
     return await this.userTokenRepository.update(
       userToken._id,
-      deleteUserTokenData,
+      deleteUserTokenData
     );
   }
 

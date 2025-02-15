@@ -11,7 +11,7 @@ describe("Signin Controller", () => {
     process.env.JWT_SECRET = "jwtsecret";
   });
 
-  afterAll(async () => {
+  afterAll(() => {
     process.env.JWT_SECRET = "";
   });
 

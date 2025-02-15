@@ -27,7 +27,7 @@ async function getUserDataController(req, res, next) {
 
     const data = {};
     const subscriptionData = await subscriptionService.getSubscription(
-      user.subscription_id,
+      user.subscription_id
     );
     const keysData = await keyService.getAllUserKeys(user.keys);
     if (!keysData || !subscriptionData) {

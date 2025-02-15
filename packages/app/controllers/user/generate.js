@@ -26,7 +26,7 @@ async function generateKeyController(req, res, next) {
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
     const subscription = await subscriptionService.getSubscription(
-      user.subscription_id,
+      user.subscription_id
     );
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({

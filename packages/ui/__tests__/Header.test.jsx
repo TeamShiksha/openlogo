@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import {BrowserRouter, MemoryRouter, useNavigate} from "react-router-dom";
+import { BrowserRouter, MemoryRouter, useNavigate } from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
   HEADER_ITEMS,
@@ -147,12 +147,12 @@ describe("Header", () => {
     render(<Header />, { wrapper: MemoryRouter });
 
     for (const item of HEADER_ITEMS) {
-        const navLink = screen.getByText(item.title);
-        expect(navLink).toBeInTheDocument();
+      const navLink = screen.getByText(item.title);
+      expect(navLink).toBeInTheDocument();
 
-        await userEvent.click(navLink);
+      await userEvent.click(navLink);
 
-        expect(window.location.pathname).toBe(item.url);
+      expect(window.location.pathname).toBe(item.url);
     }
   });
 });

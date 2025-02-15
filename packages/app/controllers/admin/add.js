@@ -1,4 +1,3 @@
-const Joi = require("joi");
 const { STATUS_CODES } = require("http");
 const UserService = require("../../services/User");
 const { addAdminSchema } = require("../../schemas/admin");

@@ -34,7 +34,7 @@ async function getLogoController(req, res, next) {
     }
 
     const userSubscription = await subscriptionService.getSubscription(
-      keyRef.subscription_id,
+      keyRef.subscription_id
     );
     if (userSubscription.usage_count >= userSubscription.usage_limit) {
       return res.status(403).json({

@@ -39,7 +39,7 @@ const subscriptionSchema = new mongoose.Schema({
   },
 });
 
-subscriptionSchema.statics.NewSubscription = function (userId) {
+subscriptionSchema.statics.NewSubscription = function () {
   return {
     subscriptionType: SubscriptionTypes.HOBBY,
     key_limit: 2,
@@ -49,6 +49,7 @@ subscriptionSchema.statics.NewSubscription = function (userId) {
     updated_at: new Date(),
   };
 };
+
 subscriptionSchema.methods.data = function () {
   return {
     _id: this._id,

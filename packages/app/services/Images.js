@@ -22,7 +22,7 @@ class ImageServices {
   async fetchImageByCompanyFree(
     company,
     default_extension = "png",
-    checkDb = true,
+    checkDb = true
   ) {
     let domainName = company;
     if (checkDb) {
@@ -59,7 +59,7 @@ class ImageServices {
       const signedUrl = await this.fetchImageByCompanyFree(
         company.company_name,
         undefined,
-        false,
+        false
       );
       if (!signedUrl) continue;
       dataList.push({

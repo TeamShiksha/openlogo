@@ -35,7 +35,7 @@ async function updatePasswordController(req, res, next) {
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
     const userUpdateSuccessful = await userService.updateUserPassword(
       user,
-      hashNewPassword,
+      hashNewPassword
     );
     if (!userUpdateSuccessful) {
       return res.status(500).json({

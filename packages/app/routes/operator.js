@@ -6,12 +6,12 @@ const authMiddleware = require("../middlewares/auth");
 router.put(
   "/revert",
   authMiddleware({ operatorOnly: true }),
-  revertToCustomerController,
+  revertToCustomerController
 );
 router.get(
   "/",
   authMiddleware({ operatorOnly: true }),
-  getOperatorDataController,
+  getOperatorDataController
 );
 
 module.exports = router;
