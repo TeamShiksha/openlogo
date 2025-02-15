@@ -39,7 +39,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
     **NOTE**: These values will be comma seperated.
 
-## More
+### More
 
 - [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
 
