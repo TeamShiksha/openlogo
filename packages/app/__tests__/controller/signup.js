@@ -1,9 +1,17 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { UserToken } = require("../../models");
-const { UserTokenService, UserService, SubscriptionService } = require("../../services");
+const {
+  UserTokenService,
+  UserService,
+  SubscriptionService,
+} = require("../../services");
 const { SIGNUP_PAYLOAD, ENDPOINTS } = require("../../utils/testconstants");
-const { MOCK_USERS, MOCK_SUBSCRIPTION, MOCK_USERTOKENS } = require("../../utils/mocks");
+const {
+  MOCK_USERS,
+  MOCK_SUBSCRIPTION,
+  MOCK_USERTOKENS,
+} = require("../../utils/mocks");
 const app = require("../../index");
 
 describe("SINGUP API", () => {
@@ -135,8 +143,7 @@ describe("SINGUP API", () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
-      message:
-        "Something went wrong. Try again later!",
+      message: "Something went wrong. Try again later!",
       statusCode: 201,
     });
   });

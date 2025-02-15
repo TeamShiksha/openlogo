@@ -58,8 +58,7 @@ async function signupController(req, res, next) {
     );
     if (!verificationToken) {
       return res.status(201).json({
-        message:
-          "Something went wrong. Try again later!",
+        message: "Something went wrong. Try again later!",
         statusCode: 201,
       });
     }

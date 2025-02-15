@@ -10,7 +10,7 @@ describe("SIGNIN API", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "jwtsecret";
   });
-  
+
   afterAll(() => {
     delete process.env.JWT_SECRET;
   });
