@@ -1,4 +1,4 @@
-name: test
+name: Check linting/formatin and test cases
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: linting, formating and test checks
+    name: Check linting/formatin and test cases
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
