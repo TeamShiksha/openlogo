@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
 import { FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
-import { MemoryRouter } from "react-router-dom";
+// import { MemoryRouter } from "react-router-dom";
 // import userEvent from "@testing-library/user-event";
 
 describe("Footer Component", () => {
