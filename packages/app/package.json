@@ -31,6 +31,8 @@
     "multer": "^1.4.5-lts.1",
     "newrelic": "^12.6.1",
     "newrelic-winston-transport": "^2.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.1",
     "winston": "^3.16.0"
   },
