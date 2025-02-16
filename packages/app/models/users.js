@@ -68,11 +68,10 @@ userSchema.statics.NewUser = async function (userData) {
   if (!email || !name || !password) {
     return null;
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
   const user = new this({
     email,
     name,
-    password: hashedPassword,
+    password: await bcrypt.hash(password, 10),
     role: UserType.CUSTOMER,
     is_verified: false,
     updated_at: new Date(),

@@ -53,11 +53,11 @@ class UserService {
   /**
    * Updates the user's password and saves the changes to the database.
    * @param {Object} user - The user object whose password is to be updated.
-   * @param {string} hashNewPassword - The new hashed password to replace the existing one.
+   * @param {string} newPassword - The new hashed password to replace the existing one.
    * @returns {boolean} - Returns `true` if the password was successfully updated, otherwise `false`.
    */
-  async updateUserPassword(user, hashNewPassword) {
-    user.password = hashNewPassword;
+  async updateUserPassword(user, newPassword) {
+    user.password = bcrypt.hash(newPassword, 10);;
     user.updated_at = Date.now();
     const updatedUser = await user.save();
     return updatedUser ? true : false;

@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const { STATUS_CODES } = require("http");
 const {
   UserService,
@@ -354,9 +353,8 @@ async function resetPasswordController(req, res, next) {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(value.newPassword, 10);
     const user = await userService.getUser(userId);
-    const result = await userService.updateUserPassword(user, hashedPassword);
+    const result = await userService.updateUserPassword(user, value.newPassword);
     if (!result) {
       return res.status(400).json({
         error: STATUS_CODES[400],
