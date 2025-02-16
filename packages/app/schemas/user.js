@@ -31,7 +31,7 @@ const generateKeyPayloadSchema = Joi.object().keys({
     }),
 });
 
-const postRaiseRequestPayloadSchema = Joi.object({
+const logoRequestPyaloadSchema = Joi.object({
   user_id: Joi.string().trim().required().hex().length(24).messages({
     "any.required": "User ID is required",
     "string.length": "User ID must be exactly 24 characters long",
@@ -79,7 +79,7 @@ const changeNameEmailSchema = Joi.object().keys({
 
 module.exports = {
   updatePasswordPayloadSchema,
-  postRaiseRequestPayloadSchema,
+  logoRequestPyaloadSchema,
   destroyKeyPayloadSchema,
   generateKeyPayloadSchema,
   changeNameEmailSchema,

@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const cors = require("cors");
 const operatorRouter = require("./operator");
-const userRouter = require("./user");
+const userRouter = require("./users");
 const authRouter = require("./auth");
-const businessRouter = require("./business");
-const adminRouter = require("./admin");
+const businessRouter = require("./logo");
+const adminRouter = require("./catalog");
 const logger = require("../utils/logger");
 
 const privateRouteCORS = {
@@ -24,10 +24,10 @@ const privateRouteCORS = {
   credentials: true,
 };
 
-router.use("/operator", cors(privateRouteCORS), operatorRouter);
-router.use("/user", cors(privateRouteCORS), userRouter);
+router.use("/messages", cors(privateRouteCORS), operatorRouter);
+router.use("/users/me", cors(privateRouteCORS), userRouter);
 router.use("/auth", cors(privateRouteCORS), authRouter);
-router.use("/business", cors(), businessRouter);
-router.use("/admin", cors(privateRouteCORS), adminRouter);
+router.use("/logo", cors(), businessRouter);
+router.use("/catalog", cors(privateRouteCORS), adminRouter);
 
 module.exports = router;
