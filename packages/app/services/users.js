@@ -57,7 +57,7 @@ class UserService {
    * @returns {boolean} - Returns `true` if the password was successfully updated, otherwise `false`.
    */
   async updateUserPassword(user, newPassword) {
-    user.password = bcrypt.hash(newPassword, 10);;
+    user.password = bcrypt.hash(newPassword, 10);
     user.updated_at = Date.now();
     const updatedUser = await user.save();
     return updatedUser ? true : false;
