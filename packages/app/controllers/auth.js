@@ -354,7 +354,10 @@ async function resetPasswordController(req, res, next) {
     }
 
     const user = await userService.getUser(userId);
-    const result = await userService.updateUserPassword(user, value.newPassword);
+    const result = await userService.updateUserPassword(
+      user,
+      value.newPassword
+    );
     if (!result) {
       return res.status(400).json({
         error: STATUS_CODES[400],
