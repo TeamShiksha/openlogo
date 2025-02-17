@@ -1,22 +1,24 @@
-name: Check linting, format and test cases
+name: Check linting, format, test and linked issue
 
 on:
   workflow_dispatch:
-  pull_request: 
-    branches: 
+  pull_request:
+    types: [opened, reopened]
+    branches:
       - dev
+      - prod
     paths:
       - 'packages/**'
 
 jobs:
-  test:
+  standards:
     name: Check linting/formatin and test cases
     runs-on: ubuntu-20.04
     timeout-minutes: 5
+    permissions:
+      issues: read
+      pull-requests: write
     steps:
-      - name: echo
-        run: echo "${{ toJson(github.event.pull_request.changed_files) }}"
-
       - name: Checkout repository content
         uses: actions/checkout@v4
 
@@ -40,9 +42,12 @@ jobs:
         run: pnpm check
 
       - name: frontend coverage report
-        if: contains(github.event.pull_request.changed_files, 'packages/ui/')
         run: pnpm --filter ui coverage
       
       - name: backend coverage report
-        if: contains(github.event.pull_request.changed_files, 'packages/app/')
         run: pnpm --filter app coverage
+
+      - name: Check linked issues
+        uses: nearform-actions/github-action-check-linked-issues@v1
+        with:
+          exclude-branches: "release/**, dependabot/**"
