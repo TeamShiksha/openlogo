@@ -1,5 +1,6 @@
 import { FOOTER_ITEMS } from "../../utils/Constants";
 import styles from "./Footer.module.css";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -11,13 +12,13 @@ function Footer() {
         </div>
         <div className={styles["footer-items"]}>
           {FOOTER_ITEMS.map((item) => (
-            <a
+            <Link
               key={item.name}
               className={styles["footer-item"]}
-              href={item.url}
+              to={item.url}
             >
               {item.title}
-            </a>
+            </Link>
           ))}
         </div>
         <div className={styles["footer-copyright"]}>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
@@ -39,9 +39,9 @@ const Header = () => {
         </button>
         <div className={styles["nav-bar"]}>
           {HEADER_ITEMS.map((item) => (
-            <a key={item.name} className={styles.nav} href={item.url}>
+            <Link key={item.name} className={styles.nav} to={item.url}>
               {item.title}
-            </a>
+            </Link>
           ))}
           <Button
             variant="primary"
