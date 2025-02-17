@@ -5,7 +5,7 @@ on:
   pull_request:
     types: [opened, reopened]
     branches:
-      - dev
+      - stage
       - prod
     paths:
       - 'packages/**'
