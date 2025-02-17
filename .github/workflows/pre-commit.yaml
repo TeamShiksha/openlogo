@@ -33,7 +33,9 @@ jobs:
             version: 10
 
       - name: Install run dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          pnpm add -g bcrypt
 
       - name: linting
         run: pnpm lint
