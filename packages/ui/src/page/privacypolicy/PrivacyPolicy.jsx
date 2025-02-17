@@ -2,8 +2,8 @@ import styles from "./PrivacyPolicy.module.css";
 
 const PrivacyPolicy = () => {
   return (
-    <div className={styles.container}>
-      <h2 className={styles.heading}>Openlogo Terms of Services</h2>
+    <div className={`container ${styles["privacy-page-container"]}`}>
+      <h2 className={styles.heading}>Openlogo Terms of Service</h2>
       <p className={styles.text}>
         Thank you for choosing OpenLogo! Before using our services, please
         review our Terms of Service carefully. This agreement is a crucial
@@ -52,7 +52,7 @@ const PrivacyPolicy = () => {
         is 100% secure. While we strive to use commercially acceptable means to
         protect your personal information, we cannot guarantee its absolute
         security. We retain your personal data only as long as necessary to
-        fulfill its purposes or as required by law.
+        fulfill its purpose or as required by law.
       </p>
       <p className={styles.text}>
         Openlogo&apos;s services are not intended for children under 13, and we
