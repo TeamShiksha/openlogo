@@ -9,7 +9,7 @@ import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
 import ContactForm from "./components/contact/ContactForm";
-// import ApiDocs from "./page/docs/Apidocs";
+import Documentation from "./page/documentation/Documentation.jsx";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        {/* <Route path="/docs" element={<ApiDocs />} /> */}
+        <Route path="/docs" element={<Documentation />} />
         <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
