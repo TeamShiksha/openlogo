@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   max-width: 1280px;
-  margin: 0 auto;
 }
 
 .dashboardContentContainer {
@@ -22,6 +21,10 @@
   width: 100%;
 }
 
+.table-wrapper {
+  padding: 2rem;
+}
+
 .generateApi {
   border-radius: 8px;
   border: var(--border);
@@ -34,13 +37,12 @@
   flex: 1;
 }
 
-
 .activeStatus {
-    color: var(--primary);
+  color: var(--primary);
 }
 
 .inactiveStatus {
-    color: var(--black);
+  color: var(--black);
 }
 
 @media screen and (max-width: 768px) {
@@ -58,5 +60,15 @@
 
   .dashboardContentSection {
     flex-direction: column;
+  }
+
+  .table-wrapper {
+    padding: 1rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .dashboardContainer {
+    margin: 0 auto;
   }
 }

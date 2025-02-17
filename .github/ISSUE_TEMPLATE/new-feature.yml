@@ -1,0 +1,28 @@
+name: New feature
+description: Suggest or request a new feature
+labels: ["enhancement"]
+type: "feature"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the sections below to properly describe the new feature you are suggesting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      placeholder: A button in the screen X that allows to do Y
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: It should be implemented because ? Additional context
+      placeholder: It will allow to do Y that is needed for Z
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched for similar issues before creating this one.
+        - label: I have provided all the necessary information to understand this documentation issue.

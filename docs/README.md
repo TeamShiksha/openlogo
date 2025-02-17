@@ -39,6 +39,9 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
     **NOTE**: These values will be comma seperated.
 
------------------------------------------------------------------------------------------------------------------
+### More
 
+- [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
+
+-----------------------------------------------------------------------------------------------------------------
 <p align="center" style="text"><strong>If you liked something about this repository, do give it a 🌟.</strong></p>

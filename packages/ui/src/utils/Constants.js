@@ -121,7 +121,7 @@ export const FOOTER_ITEMS = [
   {
     name: "docs",
     title: "Docs",
-    url: "/",
+    url: "/docs",
   },
   {
     name: "demo",

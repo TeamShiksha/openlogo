@@ -41,11 +41,13 @@
 }
 
 .danger {
-  background-color: rgba(255, 69, 58, 1); 
+  background-color: rgba(255, 69, 58, 1);
   color: var(--white);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .danger:hover {
-  background-color: rgba(220, 53, 53, 1); 
+  background-color: rgba(220, 53, 53, 1);
 }
