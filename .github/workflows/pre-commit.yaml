@@ -1,10 +1,12 @@
-name: Check linting/formatin and test cases
+name: Check linting, format and test cases
 
 on:
   workflow_dispatch:
   pull_request: 
     branches: 
       - dev
+    paths:
+      - 'packages/**'
 
 jobs:
   test:
@@ -12,6 +14,9 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     steps:
+      - name: echo
+        run: echo {{ github.event.pull_request.changed_files }}
+
       - name: Checkout repository content
         uses: actions/checkout@v4
 
@@ -29,13 +34,15 @@ jobs:
         run: pnpm install
 
       - name: linting
-        run: pnpm  lint
+        run: pnpm lint
 
       - name: prettier check
         run: pnpm check
 
       - name: frontend coverage report
+        if: contains(github.event.pull_request.changed_files, 'packages/ui/')
         run: pnpm --filter ui coverage
       
       - name: backend coverage report
+        if: contains(github.event.pull_request.changed_files, 'packages/app/')
         run: pnpm --filter app coverage

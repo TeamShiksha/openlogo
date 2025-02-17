@@ -1,5 +1,5 @@
 const BaseRepository = require("../repositories/base");
-const Request = require("../models/Request");
+const Request = require("../models/request");
 
 /**
  * The Request Repository extends BaseRepository to manage Request model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
