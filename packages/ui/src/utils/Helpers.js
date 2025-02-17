@@ -82,3 +82,5 @@ export const formatDate = (dateString) => {
     year: "numeric",
   });
 };
+
+export const NAME = "APP";
