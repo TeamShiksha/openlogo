@@ -58,8 +58,8 @@ importers:
         specifier: ^3.451.0
         version: 3.734.0
       bcrypt:
-        specifier: ^5.0.1
-        version: 5.0.1(encoding@0.1.13)
+        specifier: ^5.1.1
+        version: 5.1.1(encoding@0.1.13)
       cookie-parser:
         specifier: ^1.4.6
         version: 1.4.7
@@ -1716,8 +1716,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  bcrypt@5.0.1:
-    resolution: {integrity: sha512-9BTgmrhZM2t1bNuDtrtIMVSmmxZBrJ71n8Wg+YgdjHuIWYF7SjjmCPZFB+/5i/o/PIeRpwVJR3P+NrpIItUjqw==}
+  bcrypt@5.1.1:
+    resolution: {integrity: sha512-AGBHOG5hPYZ5Xl9KXzU5iKq9516yEmvCKDg3ecP5kX2aB6UqTeXZxk2ELnDgDm6BQSMlLt9rDB4LoSMx0rYwww==}
     engines: {node: '>= 10.0.0'}
 
   bignumber.js@9.1.2:
@@ -3575,8 +3575,8 @@ packages:
     resolution: {integrity: sha512-c5XK0MjkGBrQPGYG24GBADZud0NCbznxNx0ZkS+ebUTrmV1qTDxPxSL8zEAPURXSbLRWVexxmP4986BziahL5w==}
     engines: {node: '>=10'}
 
-  node-addon-api@3.2.1:
-    resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
+  node-addon-api@5.1.0:
+    resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -6915,10 +6915,10 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  bcrypt@5.0.1(encoding@0.1.13):
+  bcrypt@5.1.1(encoding@0.1.13):
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11(encoding@0.1.13)
-      node-addon-api: 3.2.1
+      node-addon-api: 5.1.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -9217,7 +9217,7 @@ snapshots:
       semver: 7.7.1
     optional: true
 
-  node-addon-api@3.2.1: {}
+  node-addon-api@5.1.0: {}
 
   node-fetch@2.7.0(encoding@0.1.13):
     dependencies:
