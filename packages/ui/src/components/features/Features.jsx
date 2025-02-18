@@ -3,7 +3,7 @@ import styles from "./Features.module.css";
 
 function Features() {
   return (
-    <section className={styles["features-container"]}>
+    <section id="features" className={styles["features-container"]}>
       <div className={styles["features-container-head"]}>
         <h2>Features</h2>
         <p>

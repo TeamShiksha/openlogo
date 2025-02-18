@@ -6,7 +6,7 @@ function Pricing() {
   const filteredPlans = plans.filter((plan) => plan.pricing !== null);
 
   return (
-    <div className={styles.mainDiv}>
+    <div id="pricing" className={styles.mainDiv}>
       <div className={styles.submainDiv}>
         <h1 className={styles.heading}>Compare our plans and find yours</h1>
         <p className={styles.tagline}>

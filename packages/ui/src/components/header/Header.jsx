@@ -11,6 +11,7 @@ import {
   branding,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
+import { handleSectionClick } from "../../utils/Helpers.js";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -38,11 +39,22 @@ const Header = () => {
           <span className={styles["brand-name"]}>{branding.brandName}</span>
         </button>
         <div className={styles["nav-bar"]}>
-          {HEADER_ITEMS.map((item) => (
-            <Link key={item.name} className={styles.nav} to={item.url}>
-              {item.title}
-            </Link>
-          ))}
+          {HEADER_ITEMS.map((item) =>
+            item.url.startsWith("#") ? (
+              <Link
+                key={item.name}
+                className={styles.nav}
+                to="/"
+                onClick={(e) => handleSectionClick(e, item.url, navigate)}
+              >
+                {item.title}
+              </Link>
+            ) : (
+              <Link key={item.name} className={styles.nav} to={item.url}>
+                {item.title}
+              </Link>
+            )
+          )}
           <Button
             variant="primary"
             className={styles.ml}

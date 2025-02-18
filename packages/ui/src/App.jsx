@@ -10,10 +10,12 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
 import ContactForm from "./components/contact/ContactForm";
 import Documentation from "./page/documentation/Documentation.jsx";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 function App() {
   return (
     <div className="app-container">
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
