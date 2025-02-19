@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   return (
-    <div className={`container ${styles.block}`}>
+    <div role="header" className={`container ${styles.block}`}>
       <header className={styles.header}>
         <button
           type="button"

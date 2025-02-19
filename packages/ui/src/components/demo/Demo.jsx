@@ -24,7 +24,7 @@ const Demo = () => {
   );
 
   return (
-    <div id="demo" className={styles.apiContainer}>
+    <div data-testid="demo" id="demo" className={styles.apiContainer}>
       <div className={styles.apiContent}>
         <h1>See API In Action</h1>
         <p>

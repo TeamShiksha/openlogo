@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
@@ -10,6 +10,7 @@ import {
   branding,
 } from "../src/utils/Constants";
 import userEvent from "@testing-library/user-event";
+import Home from "../src/page/home/Home.jsx";
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -147,17 +148,21 @@ describe("Header", () => {
     render(
       <BrowserRouter>
         <Header />
+        <Home />
       </BrowserRouter>
     );
 
+    const headerElement = screen.getByRole("header");
+
     for (const item of HEADER_ITEMS) {
-      const navLink = screen.getByText(item.title);
+      const navLink = within(headerElement).getByText(item.title);
       expect(navLink).toBeInTheDocument();
 
       await userEvent.click(navLink);
 
       if (item.url.startsWith("#")) {
-        //TODO: Not sure how to do that, or if it should be checked
+        const sectionElement = screen.getByTestId(item.url.substring(1));
+        expect(sectionElement).toBeInTheDocument();
       } else {
         expect(window.location.pathname).toBe(item.url);
       }

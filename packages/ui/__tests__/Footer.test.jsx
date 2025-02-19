@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
 import { FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+import Home from "../src/page/home/Home.jsx";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {
@@ -62,18 +63,22 @@ describe("Footer Component", () => {
   it("footer links should be clickable and navigate correctly", async () => {
     render(
       <BrowserRouter>
+        <Home />
         <Footer />
       </BrowserRouter>
     );
 
-    for (const item of FOOTER_ITEMS) {
-      const footerLink = screen.getByText(item.title);
-      expect(footerLink).toBeInTheDocument();
+    const footerElement = screen.getByRole("footer");
 
-      await userEvent.click(footerLink);
+    for (const item of FOOTER_ITEMS) {
+      const navLink = within(footerElement).getByText(item.title);
+      expect(navLink).toBeInTheDocument();
+
+      await userEvent.click(navLink);
 
       if (item.url.startsWith("#")) {
-        //TODO: Not sure how to do that, or if it should be checked
+        const sectionElement = screen.getByTestId(item.url.substring(1));
+        expect(sectionElement).toBeInTheDocument();
       } else {
         // If it's a route, check if the pathname has changed
         expect(window.location.pathname).toBe(item.url);
