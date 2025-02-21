@@ -53,7 +53,9 @@ jobs:
 
       - name: frontend coverage report
         if: steps.filter.outputs.ui == 'true'
-        run: pnpm --filter ui coverage
+        run: |
+          pnpm --filter ui coverage
+          pnpm build
       
       - name: backend coverage report
         if: steps.filter.outputs.app == 'true'
