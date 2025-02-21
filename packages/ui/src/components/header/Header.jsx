@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
@@ -11,6 +11,7 @@ import {
   branding,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
+import { handleSectionClick } from "../../utils/Helpers.js";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Header = () => {
   };
 
   return (
-    <div className={`container ${styles.block}`}>
+    <div data-testid="header" className={`container ${styles.block}`}>
       <header className={styles.header}>
         <button
           type="button"
@@ -38,11 +39,22 @@ const Header = () => {
           <span className={styles["brand-name"]}>{branding.brandName}</span>
         </button>
         <div className={styles["nav-bar"]}>
-          {HEADER_ITEMS.map((item) => (
-            <a key={item.name} className={styles.nav} href={item.url}>
-              {item.title}
-            </a>
-          ))}
+          {HEADER_ITEMS.map((item) =>
+            item.url.startsWith("#") ? (
+              <Link
+                key={item.name}
+                className={styles.nav}
+                to="/"
+                onClick={(e) => handleSectionClick(e, item.url, navigate)}
+              >
+                {item.title}
+              </Link>
+            ) : (
+              <Link key={item.name} className={styles.nav} to={item.url}>
+                {item.title}
+              </Link>
+            )
+          )}
           <Button
             variant="primary"
             className={styles.ml}
