@@ -72,8 +72,8 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const pr_number = context.issue.number;
-            const linkedIssuesJson = '${{ steps.linked-issues.outputs.linked_issues }}';
-            console.log('${{ steps.linked-issues.outputs.linked_issues }}');
+            const linkedIssuesJson = '${{ steps.linked-issues.outputs.issues }}';
+            console.log('${{ steps.linked-issues.outputs.issues }}');
             const linkedIssues = JSON.parse(linkedIssuesJson);
             const allLabels = new Set();
             for (const issueNumber of linkedIssues) {
