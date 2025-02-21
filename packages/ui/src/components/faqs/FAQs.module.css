@@ -1,6 +1,5 @@
 .container {
-  margin: 0 2rem;
-  padding: 0 5rem;
+  padding: 2rem 0;
 }
 
 .heading {
@@ -62,7 +61,7 @@
   }
 
   .heading {
-    font-size: 32px;
+    font-size: 2.25rem;
   }
 
   .description {
@@ -85,12 +84,15 @@
 
 @media (max-width: 480px) {
   .heading {
-    font-size: 28px;
+    font-size: 2.25rem;
+    line-height: 2.7rem;
+    text-align: center;
   }
 
   .description {
     font-size: 16px;
     margin-bottom: 16px;
+    text-align: center;
   }
 
   .icon img {

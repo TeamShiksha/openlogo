@@ -22,7 +22,7 @@ const signupPayloadSchema = Joi.object().keys({
     .required()
     .min(1)
     .max(20)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
+    .regex(/^[^!@#$%^&*(){}[\]\\;'",.<>/?`~|0-9]*$/)
     .messages({
       "string.base": "Name must be string",
       "string.min": "Name cannot be empty",

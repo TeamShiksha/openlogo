@@ -6,9 +6,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  width: 85%;
   border-radius: 12px;
-  margin: 0 auto;
   overflow: hidden;
 }
 
@@ -31,9 +29,9 @@
 }
 
 .searchBox {
-  background: var(--white);
+  background: var(--table-background);
   border-radius: 12px;
-  padding: 0.5rem 1rem;
+  padding: 2rem 2.5rem;
   width: 380px;
   transition: all 0.3s ease-in-out;
   display: flex;
@@ -47,6 +45,9 @@
 
 .searchContent {
   width: 100%;
+  border: var(--border);
+  border-radius: 0.75rem;
+  background-color: var(--white);
 }
 
 .searchInputContainer {
@@ -61,10 +62,11 @@
   background: none;
   border: none;
   position: absolute;
-  right: -1rem;
+  left: 1.156rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+  width: auto;
 }
 
 .resultsContainer {
@@ -100,7 +102,7 @@
 .resultItem {
   display: flex;
   align-items: center;
-  padding: 6px 8px;
+  padding: 0.75rem 1.375rem;
   border-radius: 6px;
   margin: 4px 0;
   transition: all 0.2s ease-in-out;
@@ -144,13 +146,41 @@
 .curvedArrow {
   position: absolute;
   bottom: -60px;
-  left: 40%;
+  left: 30%;
+}
+
+.searchBoxInput {
+  border: 0;
+  padding-left: 2.8rem;
+  border-radius: 1rem;
+  box-shadow: none;
+  background-color: var(--white);
+  outline: none;
+  height: 3.5rem;
+  color: var(--description);
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.searchBoxInput:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px var(--white) inset;
+  -webkit-text-fill-color: var(--input-color);
+}
+
+.searchBoxInput:focus {
+  border: none;
+}
+
+.searchButton > img {
+  height: 18px;
+  width: 18px;
+  margin-left: -2px;
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
   .apiContainer {
     padding: 4rem 6rem;
-    width: 70vw;
+    margin: 0 2.875rem;
   }
 
   .searchBox {
@@ -166,7 +196,11 @@
 @media (max-width: 1024px) {
   .apiContainer {
     padding: 4rem 4rem;
-    width: 80vw;
+    margin: 0 2.875rem;
+  }
+
+  .curvedArrow {
+    left: 25%;
   }
 
   .searchBox {
@@ -177,10 +211,10 @@
 @media (max-width: 768px) {
   .apiContainer {
     padding: 3rem 2rem;
-    width: 80vw;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 0 1.875rem;
   }
 
   .apiContent {
@@ -198,20 +232,28 @@
   }
 
   .searchBox {
-    margin: 2rem 0 0 0;
-    width: 80%;
-    max-width: 375px;
+    margin: 6rem 0 0 0;
   }
 
   .curvedArrow {
-    display: none;
+    top: 155px;
+    left: -24px;
+    transform: rotate(60deg);
+    width: 120px;
+    height: 120px;
   }
 }
 
 @media (max-width: 480px) {
   .apiContainer {
     padding: 2rem 1rem;
-    width: 80vw;
+    margin: 0 1rem;
+  }
+
+  .searchBox {
+    margin: 4.5rem 0 0 0;
+    width: 100%;
+    padding: 1rem;
   }
 
   .apiContent h1 {
@@ -220,9 +262,5 @@
 
   .apiContent p {
     font-size: 1rem;
-  }
-
-  .searchBox {
-    max-width: 80%;
   }
 }

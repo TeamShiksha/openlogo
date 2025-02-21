@@ -1,8 +1,8 @@
-const ContactUs = require("./ContactUs");
-const Images = require("./Images");
-const Keys = require("./Keys");
-const Subscriptions = require("./Subscriptions");
-const UserToken = require("./UserToken");
-const Users = require("./Users");
+const ContactUs = require("./contactus");
+const Images = require("./images");
+const Keys = require("./keys");
+const Subscriptions = require("./subscriptions");
+const UserToken = require("./usertoken");
+const Users = require("./users");
 
 module.exports = { ContactUs, Images, Keys, Subscriptions, UserToken, Users };
