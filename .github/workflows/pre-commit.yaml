@@ -7,8 +7,6 @@ on:
     branches:
       - stage
       - prod
-    paths:
-      - 'packages/**'
 
 jobs:
   standards:
@@ -34,24 +32,70 @@ jobs:
 
       - name: Install run dependencies
         run: pnpm install
+      
+      - name: Check for folder changes
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            ui:
+              - 'packages/ui/**'
+            app:
+              - 'packages/app/**'
 
       - name: linting
+        if: steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true'
         run: pnpm lint
 
       - name: prettier check
+        if: steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true'
         run: pnpm check
 
       - name: frontend coverage report
+        if: steps.filter.outputs.ui == 'true'
         run: pnpm --filter ui coverage
       
       - name: backend coverage report
+        if: steps.filter.outputs.app == 'true'
         run: pnpm --filter app coverage
 
       - name: Check linked issues
+        id: linked-issues
         uses: nearform-actions/github-action-check-linked-issues@v1
         with:
           exclude-branches: "release/**, dependabot/**"
       
+      - name: Transfer Labels from Linked Issues
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const pr_number = context.issue.number;
+            const linkedIssuesJson = '${{ steps.linked-issues.outputs.linked_issues }}';
+            const linkedIssues = JSON.parse(linkedIssuesJson);
+            const allLabels = new Set();
+            for (const issueNumber of linkedIssues) {
+              const linkedIssue = await github.rest.issues.get({
+                owner,
+                repo,
+                issue_number: issueNumber
+              });
+              linkedIssue.data.labels.forEach(label => {
+                allLabels.add(label.name);
+              });
+            }
+            if (allLabels.size === 0) {
+              return;
+            }
+            const labelsArray = Array.from(allLabels);
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: pr_number,
+              labels: labelsArray
+            });
+
       - name: Assign PR to Author
         uses: actions/github-script@v6
         with:
