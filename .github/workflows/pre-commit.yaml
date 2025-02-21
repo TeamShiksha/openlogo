@@ -111,7 +111,7 @@ jobs:
             console.log(assignee);
             await github.rest.orgs.checkMembershipForUser({
                 org: owner,
-                username: assignee
+                username: 'aps08'
               });
             await github.rest.issues.addAssignees({
               owner,
