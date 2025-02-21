@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import SignUpForm from "../src/components/auth/Signup";
 
 describe("SignUpForm UI and Functionality Tests", () => {
