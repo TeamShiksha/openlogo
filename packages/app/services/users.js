@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");

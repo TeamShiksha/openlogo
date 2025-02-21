@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { SubscriptionTypes, UserType, UserTokenTypes } = require("./constants");
 
 const MOCK_SUBSCRIPTION = [
