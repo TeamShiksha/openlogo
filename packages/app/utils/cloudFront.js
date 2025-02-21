@@ -50,25 +50,20 @@ const client = new CloudFrontClient(config);
 
 async function cloudFrontInvalidate(paths) {
   const distributionId = process.env.DISTRIBUTION_ID;
-  try {
-    const input = {
-      DistributionId: distributionId,
-      InvalidationBatch: {
-        Paths: {
-          Quantity: paths.length,
-          Items: paths,
-        },
-        CallerReference: Date.now().toString(),
+  const input = {
+    DistributionId: distributionId,
+    InvalidationBatch: {
+      Paths: {
+        Quantity: paths.length,
+        Items: paths,
       },
-    };
+      CallerReference: Date.now().toString(),
+    },
+  };
 
-    const command = new CreateInvalidationCommand(input);
-    const response = await client.send(command);
-
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  const command = new CreateInvalidationCommand(input);
+  const response = await client.send(command);
+  return response;
 }
 
 module.exports = { cloudFrontSignedURL, cloudFrontInvalidate };

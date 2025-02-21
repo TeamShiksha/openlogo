@@ -1,6 +1,5 @@
 .features-container {
-  margin: 1rem 2rem;
-  padding: 2rem 5rem;
+  padding: 2rem 0;
 }
 
 .features-container-head {
@@ -57,10 +56,14 @@
 @media only screen and (max-width: 768px) {
   .features-container {
     padding-left: 0;
+    margin: 1rem 1rem;
   }
   .features-container-head > p {
     font-size: 16px;
     line-height: 21.6px;
+  }
+  .features-container-body {
+    margin: 0 0 0 1rem;
   }
   features-container-body-item img {
     border-width: 6px;

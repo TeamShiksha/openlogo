@@ -56,7 +56,7 @@ const Header = () => {
         <AuthModal
           isOpen={signupModal}
           onClose={() => {
-            setSignupModal(true);
+            setSignupModal(false);
           }}
         />
         <button className={styles.hamburger} onClick={toggleMenu}>
