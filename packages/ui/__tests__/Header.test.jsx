@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
@@ -9,6 +9,8 @@ import {
   buttonText,
   branding,
 } from "../src/utils/Constants";
+import userEvent from "@testing-library/user-event";
+import Home from "../src/page/home/Home.jsx";
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -142,16 +144,28 @@ describe("Header", () => {
     expect(screen.getByAltText(CROSS.alt)).toBeInTheDocument();
   });
 
-  // it("header links should be clickable and navigate correctly", async () => {
-  //   render(<Header />, { wrapper: MemoryRouter });
+  it("header links should be clickable and navigate correctly", async () => {
+    render(
+      <BrowserRouter>
+        <Header />
+        <Home />
+      </BrowserRouter>
+    );
 
-  //   for (const item of HEADER_ITEMS) {
-  //     const navLink = screen.getByText(item.title);
-  //     expect(navLink).toBeInTheDocument();
+    const headerElement = screen.getByTestId("header");
 
-  //     await userEvent.click(navLink);
+    for (const item of HEADER_ITEMS) {
+      const navLink = within(headerElement).getByText(item.title);
+      expect(navLink).toBeInTheDocument();
 
-  //     expect(window.location.pathname).toBe(item.url);
-  //   }
-  // });
+      await userEvent.click(navLink);
+
+      if (item.url.startsWith("#")) {
+        const sectionElement = screen.getByTestId(item.url.substring(1));
+        expect(sectionElement).toBeInTheDocument();
+      } else {
+        expect(window.location.pathname).toBe(item.url);
+      }
+    }
+  });
 });
