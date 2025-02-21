@@ -68,7 +68,7 @@ describe("Footer Component", () => {
       </BrowserRouter>
     );
 
-    const footerElement = screen.getByRole("navigation");
+    const footerElement = screen.getByTestId("footer");
 
     for (const item of FOOTER_ITEMS) {
       const navLink = within(footerElement).getByText(item.title);

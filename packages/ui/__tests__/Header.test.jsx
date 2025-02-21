@@ -152,7 +152,7 @@ describe("Header", () => {
       </BrowserRouter>
     );
 
-    const headerElement = screen.getByRole("navigation");
+    const headerElement = screen.getByTestId("header");
 
     for (const item of HEADER_ITEMS) {
       const navLink = within(headerElement).getByText(item.title);
