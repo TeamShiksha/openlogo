@@ -108,10 +108,9 @@ jobs:
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const assignee = context.payload.pull_request.user.login;
-            console.log(assignee);
             await github.rest.orgs.checkMembershipForUser({
                 org: owner,
-                username: 'aps08'
+                username: assignee
               });
             await github.rest.issues.addAssignees({
               owner,
