@@ -74,8 +74,13 @@ jobs:
             const pr_number = context.issue.number;
             const linkedIssuesJson = '${{ steps.linked-issues.outputs.issues }}';
             console.log('${{ steps.linked-issues.outputs.issues }}');
-            const linkedIssues = JSON.parse(linkedIssuesJson);
+            const linkedIssuesRaw = JSON.parse(linkedIssuesJson);
+            const linkedIssues = linkedIssuesRaw.map(issueRef => {
+                const parts = issueRef.split('#');
+                return parseInt(parts[parts.length - 1]);
+              }).filter(num => !isNaN(num));
             const allLabels = new Set();
+            console.log(linkedIssues);
             for (const issueNumber of linkedIssues) {
               const linkedIssue = await github.rest.issues.get({
                 owner,
