@@ -72,8 +72,12 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const pr_number = context.issue.number;
-            const linkedIssuesJson = '${{ steps.linked-issues.outputs.linked_issues }}';
-            const linkedIssues = JSON.parse(linkedIssuesJson);
+            const linkedIssuesJson = '${{ steps.linked-issues.outputs.issues }}';
+            const linkedIssuesRaw = JSON.parse(linkedIssuesJson);
+            const linkedIssues = linkedIssuesRaw.map(issueRef => {
+                const parts = issueRef.split('#');
+                return parseInt(parts[parts.length - 1]);
+              }).filter(num => !isNaN(num));
             const allLabels = new Set();
             for (const issueNumber of linkedIssues) {
               const linkedIssue = await github.rest.issues.get({
@@ -106,7 +110,7 @@ jobs:
             const assignee = context.payload.pull_request.user.login;
             await github.rest.orgs.checkMembershipForUser({
                 org: owner,
-                username: author
+                username: assignee
               });
             await github.rest.issues.addAssignees({
               owner,
