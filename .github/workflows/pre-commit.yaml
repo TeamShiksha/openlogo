@@ -51,3 +51,22 @@ jobs:
         uses: nearform-actions/github-action-check-linked-issues@v1
         with:
           exclude-branches: "release/**, dependabot/**"
+      
+      - name: Assign PR to Author
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const assignee = context.payload.pull_request.user.login;
+            await github.rest.orgs.checkMembershipForUser({
+                org: owner,
+                username: author
+              });
+            await github.rest.issues.addAssignees({
+              owner,
+              repo,
+              issue_number,
+              assignees: [assignee]
+            });
