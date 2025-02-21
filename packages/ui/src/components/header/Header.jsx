@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   return (
-    <div role="header" className={`container ${styles.block}`}>
+    <div role="navigation" className={`container ${styles.block}`}>
       <header className={styles.header}>
         <button
           type="button"

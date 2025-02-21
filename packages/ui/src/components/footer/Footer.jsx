@@ -7,7 +7,7 @@ function Footer() {
   const navigate = useNavigate();
 
   return (
-    <div role="footer" className={`container ${styles.block}`}>
+    <div role="navigation" className={`container ${styles.block}`}>
       <footer className={styles["footer-container"]}>
         <div className={styles["footer-logo"]}>
           <img alt="Logo Icon" src="openlogo.svg" width={30} height={30} />
