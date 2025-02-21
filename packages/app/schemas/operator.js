@@ -31,7 +31,7 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
     .required()
     .min(20)
     .max(500)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
+    .regex(/^[^!@#$%^&*(){}[\]\\;'",.<>/?`~|0-9]*$/)
     .messages({
       "string.base": "Reply must be a string",
       "string.min": "Reply should be at least 20 characters",

@@ -8,15 +8,15 @@ import GetInTouch from "../../components/contact/GetInTouch";
 
 const Home = () => {
   return (
-    <>
+    <div className="container">
       <HeroSection />
       <Demo />
       <Features />
       <Pricing />
-      <About />
       <FAQs />
+      <About />
       <GetInTouch />
-    </>
+    </div>
   );
 };
 

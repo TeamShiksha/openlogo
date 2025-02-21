@@ -1,9 +1,11 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const cookieParser = require("cookie-parser");
-const { validateEnv } = require("./utils/scripts/envSchema");
-const logger = require("./utils/logger");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./utils/swagger");
+const { validateEnv } = require("./utils/envSchema");
+const logger = require("./utils/logger");
 const routes = require("./routes/index");
 
 /**
@@ -31,6 +33,7 @@ const app = express();
 app.use(cookieParser());
 app.disable("x-powered-by");
 app.use(express.json());
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", routes);
 
 if (process.env.NODE_ENV !== "test") {

@@ -31,7 +31,7 @@ const generateKeyPayloadSchema = Joi.object().keys({
     }),
 });
 
-const postRaiseRequestPayloadSchema = Joi.object({
+const logoRequestPyaloadSchema = Joi.object({
   user_id: Joi.string().trim().required().hex().length(24).messages({
     "any.required": "User ID is required",
     "string.length": "User ID must be exactly 24 characters long",
@@ -41,7 +41,7 @@ const postRaiseRequestPayloadSchema = Joi.object({
     .trim()
     .required()
     .regex(
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/,
+      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/
     )
     .messages({
       "any.required": "URL is required",
@@ -67,7 +67,7 @@ const changeNameEmailSchema = Joi.object().keys({
     .required()
     .min(1)
     .max(20)
-    .regex(/^[^!@#$%^&*(){}\[\]\\\.;'",.<>/?`~|0-9]*$/)
+    .regex(/^[^!@#$%^&*(){}[\]\\.;'",.<>/?`~|0-9]*$/)
     .messages({
       "string.base": "First name must be string",
       "string.min": "First name cannot be empty",
@@ -79,7 +79,7 @@ const changeNameEmailSchema = Joi.object().keys({
 
 module.exports = {
   updatePasswordPayloadSchema,
-  postRaiseRequestPayloadSchema,
+  logoRequestPyaloadSchema,
   destroyKeyPayloadSchema,
   generateKeyPayloadSchema,
   changeNameEmailSchema,

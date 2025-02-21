@@ -10,7 +10,7 @@ class BaseRepository {
   }
 
   async getById(id) {
-    return this.model.findById(id);
+    return await this.model.findById(id);
   }
 
   async getAll(page = 1, limit = 10) {
@@ -27,19 +27,19 @@ class BaseRepository {
 
   async create(data) {
     const document = new this.model(data);
-    return document.save();
+    return await document.save();
   }
 
   async update(id, data) {
-    return this.model.findByIdAndUpdate(id, data);
+    return await this.model.findByIdAndUpdate(id, data);
   }
 
   async delete(id) {
-    return this.model.findByIdAndDelete(id);
+    return await this.model.findByIdAndDelete(id);
   }
 
   async mark_deleted(id) {
-    return this.model.findByIdAndUpdate(id, { isDeleted: true });
+    return await this.model.findByIdAndUpdate(id, { isDeleted: true });
   }
 }
 
