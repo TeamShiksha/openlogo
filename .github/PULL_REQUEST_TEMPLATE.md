@@ -1,15 +1,21 @@
-### Summary and Approach
+## Description
+<!-- Link your ticket using #{ISSUE_NUMBER}. And add a clear and concise description of what this PR does. -->
 
-<!-- Provide a general summary of your changes in the Title above -->
-<!-- Make sure to link your PR with issue -->
-<!-- If you are integrating anything add proper documentation to get all environment variables used -->
+## What type of PR is this? (Check all applicable)
 
-### Screenshots or Recordings
+- [ ] 🍕 Feature
+- [ ] 🐛 Bug Fix
+- [ ] 📄 Documentation Update
+- [ ] 👨‍💻 Code Refactor
+- [ ] 🔥 Performance Improvements
+- [ ] ✅ Test
+- [ ] 🛠️ CI/CD
 
-<!-- If applicable, add screenshots or recordings to help explain your changes. -->
+## Screenshots (if applicable)
+<!-- Add screenshots to help explain your changes. -->
 
 ## Checklist
-
-<!-- To tick a checkbox, change '[ ]' to '[x]' -->
-- [ ] I have added/updated tests that cover the changes.
-- [ ] I have updated the documentation to reflect the changes.
+- [ ] I have performed a self-review of my code  
+- [ ] I have commented my code, particularly in hard-to-understand areas  
+- [ ] I have added tests that prove my fix is effective or that my feature works  
+- [ ] New and existing unit tests pass locally with my changes

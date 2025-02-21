@@ -20,6 +20,11 @@ import discord from "../assets/discord.png";
 import bitbucket from "../assets/bitbucket.png";
 import confluence from "../assets/confluence.png";
 import dropbox from "../assets/dropbox.png";
+import jsLogo from "../assets/js.png";
+import pythonLogo from "../assets/python.png";
+import javaLogo from "../assets/java.png";
+import tick from "../assets/tick.png";
+import copycodeicon from "../assets/copy-code-icon.png";
 
 export const SVGS = {
   searchIcon,
@@ -114,14 +119,9 @@ export const HEADER_ITEMS = [
 ];
 export const FOOTER_ITEMS = [
   {
-    name: "home",
-    title: "Home",
-    url: "/",
-  },
-  {
     name: "docs",
     title: "Docs",
-    url: "/",
+    url: "/docs",
   },
   {
     name: "demo",
@@ -636,4 +636,67 @@ export const buttonText = {
 export const branding = {
   imageSrc: "openlogo.svg",
   brandName: "Openlogo",
+};
+
+export const codeBlock = {
+  jsLogo,
+  pythonLogo,
+  javaLogo,
+  tick,
+  copycodeicon,
+};
+
+export const codeExamples = {
+  javascript: `// Initialize API request to fetch company logo
+  fetch('/api/business/logo?domain={domain}&API_KEY={api_key}', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',  // Set content type for JSON response
+    },
+  })`,
+
+  python: `# Import requests library for making HTTP requests
+  import requests
+  
+# Send GET request to fetch company logo
+  response = requests.get('api/business/logo',
+    params={
+        'domain': 'domain',    # Company domain name
+        'API_KEY': 'api_key'   # Your API authentication key
+    },
+    headers={
+        'Content-Type': 'application/json'  # Set content type for JSON response
+    }
+  )`,
+
+  java: `// Create HTTP client instance
+  HttpClient client = HttpClient.newHttpClient();
+  
+  // Build HTTP request with required parameters
+  HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
+    .header("Content-Type", "application/json")  // Set content type for JSON response
+    .GET()
+    .build();  
+  
+  // Send request and get response as String
+  HttpResponse<String> response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());`,
+};
+
+export const tableData = {
+  headers: ["Parameter", "Type", "Description", "Required"],
+  logoRows: [
+    ["domain", "string", "The domain name of the company.", "Yes"],
+    ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+  ],
+  searchRows: [
+    [
+      "domainKey",
+      "string",
+      "The starting prefix of the domain name to filter logo URLs.",
+      "Yes",
+    ],
+    ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+  ],
 };

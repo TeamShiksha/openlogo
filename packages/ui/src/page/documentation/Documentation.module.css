@@ -1,0 +1,145 @@
+code {
+  font-size: 1.2rem;
+  color: var(--description);
+  background-color: white;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem 0;
+}
+
+h3 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #101828;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  color: var(--description);
+  margin-top: 0.3rem;
+}
+
+.codeBlockWrapper {
+  margin: 1rem 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: rgb(249 250 251);
+}
+
+.codeBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 12px 0;
+}
+
+.codeLanguage {
+  font-size: 0.875rem;
+  color: white;
+}
+
+.languageSelector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.languageSelector img {
+  width: 32px;
+  height: 32px;
+}
+
+.languageButton {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: #9ca3af;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.languageButton:hover {
+  color: white;
+  background: rgba(229 231 235);
+}
+
+.languageButtonActive {
+  background: rgba(229 231 235);
+  color: white;
+}
+
+.copyButton {
+  background-color: rgb(249 250 251);
+}
+
+.codeBlock {
+  padding: 16px;
+  margin: 12px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #111827;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.inlineCode {
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.tableWrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+}
+
+.codeBox {
+  padding: 12px;
+  border: var(--border);
+  color: black;
+}
+
+.copyinside {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+}
+
+.copyinside > button {
+  width: fit-content;
+  height: fit-content;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+}
+
+.copyinside > button > img {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 564px) {
+  .languageSelector {
+    flex-wrap: wrap;
+  }
+}
