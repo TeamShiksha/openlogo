@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 // import SignInForm from "./SignInForm";
-import { vi } from "vitest";
+import { expect, test, vi } from "vitest";
 import SignInForm from "../src/components/auth/Signin";
 
 describe("SignInForm UI and Functionality Tests", () => {

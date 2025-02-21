@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import AuthModal from "../src/components/auth/Auth";
 import { expect, describe, vi } from "vitest";
+import { test } from "vitest";
 
 describe("Auth Component", () => {
   test("renders nothing when isOpen is false", () => {
