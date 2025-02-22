@@ -1,4 +1,5 @@
 name: Deploy nodejs backend app
+
 on:
   workflow_dispatch:
   push:
@@ -6,7 +7,8 @@ on:
       - stage
       - prod
    paths:
-      - 'packages/app/**' 
+      - 'packages/app/**'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,24 +17,29 @@ jobs:
     env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'  
+          
       - name: Setup pnpm
         uses: pnpm/action-setup@v3 
         with:
-            version: 10  
-      - name: Install dependencies
-        run: pnpm install    
+            version: 10     
+
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
+
       - name: Pull vercel environment information
         run: vercel pull --yes --environment=${{ env.VERCEL_ENV }} --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
