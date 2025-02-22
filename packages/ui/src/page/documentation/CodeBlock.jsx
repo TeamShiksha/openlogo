@@ -1,7 +1,7 @@
 import { useState } from "react";
-import styles from "./Documentation.module.css";
 import PropTypes from "prop-types";
 import { codeBlock } from "../../utils/Constants.js";
+import styles from "./Documentation.module.css";
 
 const CodeBlock = ({ id, codeExamples }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
@@ -27,15 +27,17 @@ const CodeBlock = ({ id, codeExamples }) => {
   };
 
   return (
-    <div className={styles.codeBlockWrapper}>
-      <div className={styles.codeBlockHeader}>
-        <div className={styles.languageSelector}>
+    <div className={styles["code-block-wrapper"]}>
+      <div className={styles["code-block-header"]}>
+        <div className={styles["language-selector"]}>
           {Object.keys(codeExamples).map((lang) => (
             <button
               key={`${id}-${lang}`}
               onClick={() => setSelectedLanguage(lang)}
-              className={`${styles.languageButton} ${
-                selectedLanguage === lang ? styles.languageButtonActive : ""
+              className={`${styles["language-button"]} ${
+                selectedLanguage === lang
+                  ? styles["language-button-active"]
+                  : ""
               }`}
             >
               <img src={logos[lang]} alt={`${lang} logo`} />
@@ -43,8 +45,8 @@ const CodeBlock = ({ id, codeExamples }) => {
           ))}
         </div>
       </div>
-      <pre className={styles.codeBlock}>
-        <div className={styles.copyinside}>
+      <pre className={styles["code-block"]}>
+        <div className={styles["copy-inside"]}>
           <code>{codeExamples[selectedLanguage]}</code>
           <button
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
