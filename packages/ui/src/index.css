@@ -15,7 +15,7 @@
   --black: rgb(17, 24, 39);
   --description: rgb(75, 85, 99);
   --border: 1px solid rgb(177, 179, 183);
-  --border-color: rgb(177, 179, 183, .3);
+  --border-color: rgb(177, 179, 183, 0.3);
   --label-color: rgb(134, 137, 139);
   --input-color: var(--description);
   --bradius: 6px;

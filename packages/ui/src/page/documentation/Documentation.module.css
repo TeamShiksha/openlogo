@@ -10,12 +10,12 @@ code {
   font-family: monospace;
 }
 
-.link{
+.link {
   text-decoration: none;
   color: var(--primary-hover);
 }
 
-.link:hover{
+.link:hover {
   text-decoration: underline;
   text-underline-offset: 6px;
 }
@@ -45,7 +45,7 @@ code {
   font-family: monospace;
 }
 
-.base-info span{
+.base-info span {
   font-family: monospace;
 }
 
