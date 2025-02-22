@@ -2,14 +2,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5rem;
+  margin: 5rem 0;
 }
 
 .card {
   width: 100%;
   max-width: 1000px;
   height: 350px;
-  padding: 2rem 0 0;
+  padding: 2rem 1rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,9 +79,11 @@
   .card {
     width: 90%;
   }
+
   .title {
     font-size: 1.2rem;
   }
+
   .description {
     font-size: 1rem;
   }
@@ -91,6 +93,7 @@
   .title {
     font-size: 1rem;
   }
+
   .description {
     font-size: 0.9rem;
   }
