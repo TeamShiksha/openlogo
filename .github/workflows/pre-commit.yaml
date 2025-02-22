@@ -12,7 +12,7 @@ jobs:
   standards:
     name: Check linting/formatin and test cases
     runs-on: ubuntu-20.04
-    timeout-minutes: 5
+    timeout-minutes: 3
     permissions:
       issues: read
       pull-requests: write
