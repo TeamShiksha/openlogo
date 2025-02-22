@@ -28,7 +28,7 @@ jobs:
           node-version: '20'
   
       - name: Install Vercel CLI
-        run: pnpm install -g vercel@latest
+        run: npm install -g vercel@latest
 
       - name: Pull vercel environment information
         run: vercel pull --yes --environment=${{ env.VERCEL_ENV }} --token=${{ secrets.VERCEL_TOKEN }}
