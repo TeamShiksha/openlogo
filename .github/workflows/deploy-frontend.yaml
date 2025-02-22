@@ -2,21 +2,21 @@ name: Deploy react frontend app
 
 on:
   workflow_dispatch:
-  # push:
-  #  branches:
-  #     - stage
-  #     - prod
-  #  paths:
-  #     - 'packages/ui/**' 
+  push:
+   branches:
+      - stage
+      - prod
+   paths:
+      - 'packages/ui/**' 
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 2
     environment: ${{ github.ref_name == 'stage' && 'STAGE' || 'PROD' }}
     env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.FRONTEND_VERCEL_PROJECT_ID }}
 
     steps:
       - name: checkout repository
