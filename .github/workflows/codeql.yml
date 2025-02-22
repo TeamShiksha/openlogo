@@ -6,10 +6,13 @@ on:
     branches:
     - stage
     - prod
+    paths:
+    - 'packages/**'
 
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
+    timeout-minutes: 3
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -20,9 +23,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - language: javascript-typescript
-          build-mode: none
+        language: [ "javascript-typescript", "actions" ]
+        build-mode: [ "none" ]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -36,4 +38,4 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:${{ matrix.language }}"
