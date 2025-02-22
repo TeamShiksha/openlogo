@@ -1,4 +1,4 @@
-.apiContainer {
+.demo-container {
   background: var(--primary);
   padding: 3rem 4rem;
   color: var(--white);
@@ -8,27 +8,28 @@
   align-items: flex-start;
   border-radius: 12px;
   overflow: hidden;
+  margin: 2rem 0;
 }
 
-.apiContent {
+.content {
   max-width: 450px;
   text-align: left;
   margin-top: 2rem;
 }
 
-.apiContent h1 {
+.content h1 {
   font-size: 3rem;
   margin-bottom: 1.5rem;
 }
 
-.apiContent p {
+.content p {
   font-size: 1.2rem;
   line-height: 1.8rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
 }
 
-.searchBox {
+.search-box {
   background: var(--table-background);
   border-radius: 12px;
   padding: 2rem 2.5rem;
@@ -43,14 +44,14 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-.searchContent {
+.search-content {
   width: 100%;
   border: var(--border);
   border-radius: 0.75rem;
   background-color: var(--white);
 }
 
-.searchInputContainer {
+.search-container {
   position: relative;
   margin-bottom: 0;
   display: flex;
@@ -58,7 +59,7 @@
   transition: margin 0.3s ease-in-out;
 }
 
-.searchButton {
+.search-button {
   background: none;
   border: none;
   position: absolute;
@@ -69,7 +70,7 @@
   width: auto;
 }
 
-.resultsContainer {
+.result-container {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -79,27 +80,27 @@
   margin-top: 0.5rem;
 }
 
-.resultsContainer.show {
+.result-container.show {
   opacity: 1;
   max-height: 140px;
   overflow-y: auto;
 }
 
-.resultsContainer::-webkit-scrollbar {
+.result-container::-webkit-scrollbar {
   width: 4px;
 }
 
-.resultsContainer::-webkit-scrollbar-track {
+.result-container::-webkit-scrollbar-track {
   background: var(--white);
   border-radius: 4px;
 }
 
-.resultsContainer::-webkit-scrollbar-thumb {
+.result-container::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 4px;
 }
 
-.resultItem {
+.result-item {
   display: flex;
   align-items: center;
   padding: 0.75rem 1.375rem;
@@ -111,45 +112,45 @@
   opacity: 0;
 }
 
-.resultItem.show {
+.result-item.show {
   transform: translateY(0);
   opacity: 1;
 }
 
-.resultItem:hover {
+.result-item:hover {
   background-color: var(--white);
 }
 
-.resultItem img {
+.result-item img {
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 15px;
   object-fit: contain;
 }
 
-.resultItem span {
+.result-item span {
   color: var(--description);
   font-size: 1rem;
   font-weight: 500;
 }
 
-.resultItem:nth-child(1) {
+.result-item:nth-child(1) {
   transition-delay: 0.1s;
 }
-.resultItem:nth-child(2) {
+.result-item:nth-child(2) {
   transition-delay: 0.15s;
 }
-.resultItem:nth-child(3) {
+.result-item:nth-child(3) {
   transition-delay: 0.2s;
 }
 
-.curvedArrow {
+.curved-arrow {
   position: absolute;
   bottom: -60px;
   left: 30%;
 }
 
-.searchBoxInput {
+.search-box-input {
   border: 0;
   padding-left: 2.8rem;
   border-radius: 1rem;
@@ -162,54 +163,54 @@
   font-size: 1.2rem;
 }
 
-.searchBoxInput:-webkit-autofill {
+.search-box-input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px var(--white) inset;
   -webkit-text-fill-color: var(--input-color);
 }
 
-.searchBoxInput:focus {
+.search-box-input:focus {
   border: none;
 }
 
-.searchButton > img {
+.search-button > img {
   height: 18px;
   width: 18px;
   margin-left: -2px;
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
-  .apiContainer {
+  .demo-container {
     padding: 4rem 6rem;
     margin: 0 2.875rem;
   }
 
-  .searchBox {
+  .search-box {
     margin-right: -50px;
     margin-top: 50px;
   }
 
-  .apiContent {
+  .content {
     max-width: 400px;
   }
 }
 
 @media (max-width: 1024px) {
-  .apiContainer {
+  .demo-container {
     padding: 4rem 4rem;
     margin: 0 2.875rem;
   }
 
-  .curvedArrow {
+  .curved-arrow {
     left: 25%;
   }
 
-  .searchBox {
+  .search-box {
     margin-right: 0;
   }
 }
 
 @media (max-width: 768px) {
-  .apiContainer {
+  .demo-container {
     padding: 3rem 2rem;
     flex-direction: column;
     align-items: center;
@@ -217,25 +218,25 @@
     margin: 0 1.875rem;
   }
 
-  .apiContent {
+  .content {
     max-width: 100%;
     text-align: center;
     margin-top: 0;
   }
 
-  .apiContent h1 {
+  .content h1 {
     font-size: 2.5rem;
   }
 
-  .apiContent p {
+  .content p {
     font-size: 1.1rem;
   }
 
-  .searchBox {
+  .search-box {
     margin: 6rem 0 0 0;
   }
 
-  .curvedArrow {
+  .curved-arrow {
     top: 155px;
     left: -24px;
     transform: rotate(60deg);
@@ -245,22 +246,22 @@
 }
 
 @media (max-width: 480px) {
-  .apiContainer {
+  .demo-container {
     padding: 2rem 1rem;
     margin: 0 1rem;
   }
 
-  .searchBox {
+  .search-box {
     margin: 4.5rem 0 0 0;
     width: 100%;
     padding: 1rem;
   }
 
-  .apiContent h1 {
+  .content h1 {
     font-size: 2rem;
   }
 
-  .apiContent p {
+  .content p {
     font-size: 1rem;
   }
 }

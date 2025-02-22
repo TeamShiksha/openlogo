@@ -50,6 +50,11 @@ body {
   padding: 0 8%;
 }
 
+.p-tb{
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
