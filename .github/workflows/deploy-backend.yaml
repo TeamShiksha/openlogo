@@ -2,12 +2,12 @@ name: Deploy nodejs backend app
 
 on:
   workflow_dispatch:
-  push:
-   branches:
-      - stage
-      - prod
-   paths:
-      - 'packages/app/**'
+  # push:
+  #  branches:
+  #     - stage
+  #     - prod
+  #  paths:
+  #     - 'packages/app/**'
 
 jobs:
   build:
