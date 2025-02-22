@@ -4,9 +4,9 @@
   "repository": "https://github.com/TeamShiksha/openlogo.git",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon server.js",
     "build": "echo 'Build not required for nodejs app'",
-    "serve": "node index.js",
+    "serve": "node server.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest --watchAll=false",
