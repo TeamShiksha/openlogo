@@ -10,11 +10,9 @@ const routes = require("./routes/index");
 
 /**
  * Load environmental variables only if `NODE_ENV` is not "test"
- * Also load newrelic and connect to database
  */
 if (process.env.NODE_ENV !== "test") {
   dotenv.config();
-  require("newrelic");
   const { error } = validateEnv(process.env);
   if (error) {
     logger.error(`Config validation error: ${error.message}`);
