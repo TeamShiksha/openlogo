@@ -2,12 +2,12 @@ name: Deploy react frontend app
 
 on:
   workflow_dispatch:
-  push:
-   branches:
-      - stage
-      - prod
-   paths:
-      - 'packages/ui/**' 
+  # push:
+  #  branches:
+  #     - stage
+  #     - prod
+  #  paths:
+  #     - 'packages/ui/**' 
 
 jobs:
   build:
