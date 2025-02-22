@@ -94,7 +94,7 @@ export const HEADER_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "/",
+    url: "#home",
   },
   {
     name: "docs",
@@ -104,17 +104,17 @@ export const HEADER_ITEMS = [
   {
     name: "features",
     title: "Features",
-    url: "/features",
+    url: "#features",
   },
   {
     name: "pricing",
     title: "Pricing",
-    url: "/pricing",
+    url: "#pricing",
   },
   {
     name: "about",
     title: "About",
-    url: "/about",
+    url: "#about",
   },
 ];
 export const FOOTER_ITEMS = [
@@ -126,22 +126,22 @@ export const FOOTER_ITEMS = [
   {
     name: "demo",
     title: "Demo",
-    url: "/demo",
+    url: "#demo",
   },
   {
     name: "features",
     title: "Features",
-    url: "/features",
+    url: "#features",
   },
   {
     name: "pricing",
     title: "Pricing",
-    url: "/pricing",
+    url: "#pricing",
   },
   {
     name: "about",
     title: "About",
-    url: "/about",
+    url: "#about",
   },
   {
     name: "privacy",
