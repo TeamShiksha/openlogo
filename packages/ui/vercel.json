@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://api-logoexecutive.vercel.app/api/$1"
+      },
+      { 
+        "source": "/(.*)",
+        "destination": "/"
+      }
+    ]
+}
