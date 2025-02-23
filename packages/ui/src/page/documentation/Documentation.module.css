@@ -33,6 +33,7 @@ code {
   line-height: 1.8rem;
   color: var(--description);
   margin-top: 0.3rem;
+  font-weight: 500;
 }
 
 .base-info {

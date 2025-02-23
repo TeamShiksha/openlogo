@@ -78,6 +78,10 @@
   .tag-line{
     margin-bottom: 1rem;
   }
+
+  .card{
+    margin-top: 2rem;
+  }
 }
 
 @media (max-width: 480px){
