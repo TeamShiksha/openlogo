@@ -1,5 +1,4 @@
 const axios = require("axios");
-const logger = require("./logger");
 
 /**
  * Sends an email using the configured email service.
@@ -32,12 +31,12 @@ async function sendEmail({ id, subject, recipient, body, cc = [], bcc = [] }) {
           },
         }
       );
-      logger.info("Email sent successfully:", response.data);
+      console.info("Email sent successfully:", response.data);
     } else {
-      logger.warn(`Development Mode\n${JSON.stringify(payload, null, 2)}`);
+      console.warn(`Development Mode\n${JSON.stringify(payload, null, 2)}`);
     }
   } catch (error) {
-    logger.error("Email sending failed:", error.message);
+    console.error("Email sending failed:", error.message);
   }
 }
 

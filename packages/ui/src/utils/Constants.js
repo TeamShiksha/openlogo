@@ -646,57 +646,90 @@ export const codeBlock = {
   copycodeicon,
 };
 
+export const codeExamplesSearch = {
+  javascript: `// use fetch to send GET request
+fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})`,
+
+  python: `# import package
+import requests
+
+# send GET request
+response = requests.get("api/logo/search",
+  params={
+    "key": "{prefix}",
+    "API_KEY": '{YOUR_API_KEY}'
+  },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+  java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
+};
+
 export const codeExamples = {
-  javascript: `// Initialize API request to fetch company logo
-  fetch('/api/business/logo?domain={domain}&API_KEY={api_key}', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',  // Set content type for JSON response
-    },
-  })`,
+  javascript: `// use fetch to send GET request
+fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})`,
 
-  python: `# Import requests library for making HTTP requests
-  import requests
-  
-# Send GET request to fetch company logo
-  response = requests.get('api/business/logo',
-    params={
-        'domain': 'domain',    # Company domain name
-        'API_KEY': 'api_key'   # Your API authentication key
-    },
-    headers={
-        'Content-Type': 'application/json'  # Set content type for JSON response
-    }
-  )`,
+  python: `# import package
+import requests
 
-  java: `// Create HTTP client instance
-  HttpClient client = HttpClient.newHttpClient();
-  
-  // Build HTTP request with required parameters
-  HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("/api/business/logo?domain=domain&API_KEY=api_key"))
-    .header("Content-Type", "application/json")  // Set content type for JSON response
-    .GET()
-    .build();  
-  
-  // Send request and get response as String
-  HttpResponse<String> response = client.send(request, 
-    HttpResponse.BodyHandlers.ofString());`,
+# send GET request
+response = requests.get("api/logo",
+  params={
+    "domain": "{domain}",
+    "API_KEY": "{YOUR_API_KEY}"
+  },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+  java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
 };
 
 export const tableData = {
   headers: ["Parameter", "Type", "Description", "Required"],
   logoRows: [
-    ["domain", "string", "The domain name of the company.", "Yes"],
-    ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+    ["key", "string", "The domain name of the company.", "Yes"],
+    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
   ],
   searchRows: [
-    [
-      "domainKey",
-      "string",
-      "The starting prefix of the domain name to filter logo URLs.",
-      "Yes",
-    ],
-    ["API_KEY", "string", "The API Key generated from the dashboard.", "Yes"],
+    ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
+    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
   ],
 };
