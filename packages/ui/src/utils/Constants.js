@@ -69,26 +69,31 @@ export const COMPANIES = [
   },
 ];
 
-export const featureItems = [
-  {
-    icon: databaseLogo,
-    title: "Comprehensive Database",
-    content:
-      "Tap into a vast logo library with thousands of brands, continuously refreshed and expanding.",
-  },
-  {
-    icon: searchLogo,
-    title: "Customizable Search Insights",
-    content:
-      "Gain insights on search patterns to spot missing logos and keep collections comprehensive.",
-  },
-  {
-    icon: rapidLogo,
-    title: "Fast & Reliable API Access",
-    content:
-      "Access logos instantly with fast, dependable APIs built to minimize downtime and maximize efficiency.",
-  },
-];
+export const features = {
+  heading: "Features",
+  summary:
+    "With Openlogo, integrate fresh, up-to-date company logos effortlessly and leverage smart search insights for professional branding.",
+  items: [
+    {
+      icon: databaseLogo,
+      title: "Comprehensive Database",
+      content:
+        "Tap into a vast logo library with thousands of brands, continuously refreshed and expanding.",
+    },
+    {
+      icon: searchLogo,
+      title: "Customizable Search Insights",
+      content:
+        "Gain insights on search patterns to spot missing logos and keep collections comprehensive.",
+    },
+    {
+      icon: rapidLogo,
+      title: "Fast & Reliable API Access",
+      content:
+        "Access logos instantly with fast, dependable APIs built to minimize downtime and maximize efficiency.",
+    },
+  ],
+};
 
 export const HEADER_ITEMS = [
   {
@@ -514,91 +519,84 @@ export const PASSWORD_VALIDATION_MESSAGES = {
   generalError: "Password does not meet security requirements.",
 };
 
-export const INTEGRATIONS = [
-  { id: 1, src: notion, alt: "Notion" },
-  { id: 2, src: slack, alt: "Slack" },
-  { id: 3, src: google_drive, alt: "Google Drive" },
-  { id: 4, src: intercom, alt: "Intercom" },
-  { id: 5, src: stripe, alt: "Stripe" },
-  { id: 6, src: dropbox, alt: "Dropbox" },
-  { id: 7, src: jira, alt: "Jira" },
-  { id: 8, src: zapier, alt: "Zapier" },
-  { id: 9, src: figma, alt: "Figma" },
-  { id: 10, src: confluence, alt: "Confluence" },
-  { id: 11, src: mailchimp, alt: "Mailchimp" },
-  { id: 12, src: zendesk, alt: "Zendesk" },
-  { id: 13, src: g_calendar, alt: "Google Calendar" },
-  { id: 14, src: whatsapp, alt: "WhatsApp" },
-  { id: 15, src: discord, alt: "Discord" },
-  { id: 16, src: bitbucket, alt: "Bitbucket" },
-];
-
-export const ABOUT_TEXT = {
+export const ABOUT = {
+  TITLE: "What is Openlogo",
   DESCRIPTION:
     "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding. Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
+  INTEGRATIONS: [
+    { id: 1, src: notion, alt: "Notion" },
+    { id: 2, src: slack, alt: "Slack" },
+    { id: 3, src: google_drive, alt: "Google Drive" },
+    { id: 4, src: intercom, alt: "Intercom" },
+    { id: 5, src: stripe, alt: "Stripe" },
+    { id: 6, src: dropbox, alt: "Dropbox" },
+    { id: 7, src: jira, alt: "Jira" },
+    { id: 8, src: zapier, alt: "Zapier" },
+    { id: 9, src: figma, alt: "Figma" },
+    { id: 10, src: confluence, alt: "Confluence" },
+    { id: 11, src: mailchimp, alt: "Mailchimp" },
+    { id: 12, src: zendesk, alt: "Zendesk" },
+    { id: 13, src: g_calendar, alt: "Google Calendar" },
+    { id: 14, src: whatsapp, alt: "WhatsApp" },
+    { id: 15, src: discord, alt: "Discord" },
+    { id: 16, src: bitbucket, alt: "Bitbucket" },
+  ],
 };
 
-export const FAQ = [
-  {
-    question: "Why should I use Openlogo?",
-    answer:
-      "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Customize logo sizes and formats to fit your needs effortlessly.",
-  },
-  {
-    question: "How do I get started with Openlogo?",
-    answer:
-      "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos in different formats (e.g., PNG, SVG) and sizes tailored to your needs. Use our comprehensive documentation to guide your integration and testing process.",
-  },
-  {
-    question: "What payment methods do you support?",
-    answer:
-      "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
-  },
-];
+export const FAQ = {
+  TITLE: "Frequently asked questions",
+  QAS: [
+    {
+      question: "Why should I use Openlogo?",
+      answer:
+        "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Logo not found, no worries raise a request to add your logo.",
+    },
+    {
+      question: "How do I get started with Openlogo?",
+      answer:
+        "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos or search logos using prefixs, all the provided images will be in PNG. Use our comprehensive documentation to guide your integration and testing process.",
+    },
+    {
+      question: "What payment methods do you support?",
+      answer:
+        "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+    },
+  ],
+};
 
-const PLANS = [
-  {
-    index: 0,
-    name: "HOBBY",
-    pricing: 0,
-    tagline: "Try for free for individuals",
-    keypoints: [
-      "Fortune 500 company logo",
-      "500 API calls per month",
-      "2 API keys",
-      "Basic analytics",
-      "48-72 hour of response time",
-    ],
-  },
-  {
-    index: 1,
-    name: "PRO",
-    pricing: 1500,
-    tagline: "Grow with pro plan.",
-    keypoints: [
-      "Hobby plan plus",
-      "10000 API calls per month",
-      "5 API keys",
-      "Advance analytics",
-      "12-36 hours of response time",
-    ],
-  },
-  {
-    index: 2,
-    name: "CUSTOM PRICING",
-    pricing: null,
-    tagline: "Large teams with unlimited users.",
-    keypoints: [
-      "Fortune 500 company logo + unlimited private logos",
-      "Unlimited API calls per month",
-      "50 API keys",
-      "Advance analytics",
-      "Priority support",
-    ],
-  },
-];
-
-export default PLANS;
+export const PRICING = {
+  heading: "Compare our plans and find yours",
+  summary:
+    "Simple, transparent pricing that grows with you. Try any plan free for 30 days.",
+  plans: [
+    {
+      index: 0,
+      name: "HOBBY",
+      pricing: 0,
+      tagline: "Try for free for individuals",
+      keypoints: [
+        "Fortune 500 company logo",
+        "500 API calls per month",
+        "2 API keys",
+        "Basic analytics",
+        "48-72 hour of response time",
+      ],
+    },
+    {
+      index: 1,
+      name: "PRO",
+      pricing: 1500,
+      tagline: "Grow with pro plan.",
+      keypoints: [
+        "Hobby plan plus",
+        "10000 API calls per month",
+        "5 API keys",
+        "Advance analytics",
+        "12-36 hours of response time",
+      ],
+    },
+  ],
+};
 
 export const SETTING = [
   {

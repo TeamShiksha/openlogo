@@ -9,23 +9,19 @@ function GetInTouch() {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles["git-container"]}>
       <div className={styles.card}>
-        <div className={styles.circleContainer}>
-          <div className={`${styles.circle} ${styles.leftCircle}`} />
-          <div className={`${styles.circle} ${styles.centerCircle}`} />
-          <div className={`${styles.circle} ${styles.rightCircle}`} />
+        <div className={styles.circles}>
+          <div className={`${styles.circle} ${styles["circle-l"]}`} />
+          <div className={`${styles.circle} ${styles["circle-c"]}`} />
+          <div className={`${styles.circle} ${styles["circle-r"]}`} />
         </div>
         <h2 className={styles.title}>Still have questions?</h2>
         <p className={styles.description}>
           Can&apos;t find the answer you&apos;re looking for? Please chat to our
           friendly team.
         </p>
-        <Button
-          onClick={openModal}
-          variant="primary"
-          className={styles.getInTouchBtn}
-        >
+        <Button onClick={openModal} variant="primary">
           Get in touch
         </Button>
       </div>

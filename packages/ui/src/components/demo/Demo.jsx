@@ -26,7 +26,7 @@ const Demo = () => {
   return (
     <div data-testid="demo" id="demo" className={styles["demo-container"]}>
       <div className={styles.content}>
-        <h1>See API In Action</h1>
+        <h1>See In Action</h1>
         <p>
           Powerful, self-serve product and growth analytics to help you convert,
           engage, and retain more.
@@ -34,10 +34,7 @@ const Demo = () => {
       </div>
       <div className={`${styles["search-box"]}`}>
         <div className={styles["search-content"]}>
-          <form
-            onSubmit={handleSearch}
-            className={`${styles["search-container"]}`}
-          >
+          <form onSubmit={handleSearch}>
             <input
               name="search"
               type="text"
@@ -70,8 +67,6 @@ const Demo = () => {
         src={SVGS.curvedArrow}
         alt="curved-arrow"
         className={styles["curved-arrow"]}
-        width="250"
-        height="250"
       />
     </div>
   );
