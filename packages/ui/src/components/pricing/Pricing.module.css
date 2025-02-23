@@ -27,18 +27,18 @@
   gap: 2rem;
 }
 
-@media only screen and (max-width: 1024px){
-  .plan{
+@media only screen and (max-width: 1024px) {
+  .plan {
     display: block;
   }
 
-  .heading{
+  .heading {
     line-height: 3.2rem;
   }
 }
 
 @media only screen and (max-width: 768px) {
-  .tag-line{
+  .tag-line {
     padding: 0 2rem;
   }
 
@@ -56,7 +56,7 @@
 }
 
 @media only screen and (max-width: 768px) {
-  .tag-line{
+  .tag-line {
     padding: 0;
   }
 

@@ -68,7 +68,7 @@
 .horizontalLine {
   border: none;
   border-top: 2px solid var(--description);
-  opacity: .5;
+  opacity: 0.5;
   margin-bottom: 16px;
   width: 100%;
 }

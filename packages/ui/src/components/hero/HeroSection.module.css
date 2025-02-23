@@ -22,13 +22,13 @@
   gap: 1.5rem;
 }
 
-.text-section h1{
+.text-section h1 {
   font-size: 4rem;
   line-height: 4.5rem;
   color: var(--black);
 }
 
-.text-section p{
+.text-section p {
   font-size: 1.2rem;
   color: var(--description);
   font-weight: 500;
@@ -50,7 +50,7 @@
   gap: 0.8rem;
 }
 
-@media only screen and (max-width: 1024px){
+@media only screen and (max-width: 1024px) {
   .hero-section {
     gap: 0;
   }
@@ -67,7 +67,7 @@
     text-align: center;
   }
 
-  .text-section h1{
+  .text-section h1 {
     font-size: 3rem;
     line-height: 3.2rem;
   }
@@ -86,8 +86,8 @@
   }
 }
 
-@media only screen and (max-width: 564px){
-  .logo-images{
+@media only screen and (max-width: 564px) {
+  .logo-images {
     height: 200px;
     width: 200px;
   }

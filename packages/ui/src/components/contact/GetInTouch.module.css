@@ -75,7 +75,7 @@
 }
 
 @media (max-width: 480px) {
-  .circles{
+  .circles {
     top: 2rem;
   }
 
@@ -84,7 +84,7 @@
     margin-bottom: 0;
   }
 
-  .description{
+  .description {
     padding: 1rem;
     max-width: unset;
     margin-bottom: 0;

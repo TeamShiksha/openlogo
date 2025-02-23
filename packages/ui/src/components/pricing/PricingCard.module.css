@@ -52,12 +52,12 @@
   margin-bottom: 1rem;
 }
 
-@media only screen and (max-width: 1024px){
-  .card{
+@media only screen and (max-width: 1024px) {
+  .card {
     width: 100%;
   }
 
-  .width{
+  .width {
     margin-top: 1rem;
     width: 60%;
     min-width: 350px;
@@ -70,22 +70,22 @@
     gap: 5px;
   }
 
-  .width{
+  .width {
     width: 40%;
     min-width: 300px;
   }
 
-  .tag-line{
+  .tag-line {
     margin-bottom: 1rem;
   }
 
-  .card{
+  .card {
     margin-top: 2rem;
   }
 }
 
-@media (max-width: 480px){
-  .width{
+@media (max-width: 480px) {
+  .width {
     width: 100%;
     min-width: unset;
   }

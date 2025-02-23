@@ -11,7 +11,7 @@
   border-radius: 12px;
 }
 
-.content{
+.content {
   margin: 2rem 0;
 }
 
@@ -86,7 +86,7 @@
   opacity: 0.7;
 }
 
-.search-button:hover{
+.search-button:hover {
   opacity: 1;
 }
 
@@ -179,7 +179,7 @@
     gap: 2rem;
   }
 
-  .search-box{
+  .search-box {
     padding: 1rem;
   }
 
@@ -190,7 +190,7 @@
     bottom: -30px;
   }
 
-  .search-box-input{
+  .search-box-input {
     height: 3rem;
   }
 }
@@ -216,7 +216,7 @@
     height: 100px;
   }
 
-  .search-box{
+  .search-box {
     margin: 0 10%;
     margin-top: 2rem;
   }
