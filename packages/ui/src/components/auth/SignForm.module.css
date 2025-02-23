@@ -10,6 +10,7 @@
   text-align: center;
   font-size: 1.8rem;
   color: var(--black);
+  margin-bottom: 1rem;
 }
 
 .signintitle {
@@ -34,7 +35,6 @@
 }
 
 .inputActiontext .signIn {
-  /* color: #007bff; */
   cursor: pointer;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .cusomeinputcss {
-  width: 247px;
+  width: 245px;
 }
 
 .logoWrapperBack {
@@ -67,15 +67,16 @@
 
 .horizontalLine {
   border: none;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid var(--description);
+  opacity: .5;
   margin-bottom: 16px;
   width: 100%;
 }
 
 .closeButton {
   position: absolute;
-  top: 2px;
-  right: 16px;
+  top: 2%;
+  right: 6%;
   background: none;
   border: none;
   color: #666;
@@ -84,7 +85,7 @@
   z-index: 2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .form {
     width: 90%;
     padding: 1rem;
@@ -100,12 +101,6 @@
     text-align: center;
   }
 
-  .closeButton {
-    font-size: 1.5rem;
-    top: 8px;
-    right: 8px;
-  }
-
   .horizontalLine {
     width: 90%;
   }
@@ -117,19 +112,9 @@
     padding: 15px;
   }
 
-  .title {
-    font-size: 1.7rem;
-  }
-
   .submitButton {
     font-size: 16px;
     padding: 10px;
-  }
-
-  .closeButton {
-    font-size: 1.4rem;
-    top: 5px;
-    right: 5px;
   }
 
   .horizontalLine {

@@ -84,9 +84,9 @@ function SignUpForm({ toggleForm, onClose }) {
   }, [formErrors, isSubmit]);
 
   return (
-    <div className={styles.pageDiv}>
-      <form noValidate className={styles.form} onSubmit={handleSubmit}>
-        <h2 className={styles.title}>Sign up for free</h2>
+    <form noValidate className={styles.form} onSubmit={handleSubmit}>
+      <h2 className={styles.title}>Sign up for free</h2>
+      <div className={styles.cusomeinputcss}>
         {SIGN_UP_FIELDS.map((field) => (
           <CustomInput
             key={field.name}
@@ -95,37 +95,35 @@ function SignUpForm({ toggleForm, onClose }) {
             label={field.label}
             value={formValues[field.name]}
             onChange={handleChange}
-            className={styles.input}
-            required
           />
         ))}
-        <div className={styles.inputGroup}>
-          <Button type="submit" variant="primary" className={styles.signbutton}>
-            Sign up
-          </Button>
-        </div>
-        <hr className={styles.horizontalLine} />
-        <span
-          onClick={toggleForm}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              toggleForm();
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          className={styles.inputActiontext}
-          aria-label="Switch to Sign In"
-          style={{ cursor: "pointer" }}
-        >
-          Already have an account?
-        </span>
+      </div>
+      <div className={styles.inputGroup}>
+        <Button type="submit" variant="primary" className={styles.signbutton}>
+          Sign up
+        </Button>
+      </div>
+      <hr className={styles.horizontalLine} />
+      <span
+        onClick={toggleForm}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            toggleForm();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        className={styles.inputActiontext}
+        aria-label="Switch to Sign In"
+        style={{ cursor: "pointer" }}
+      >
+        Already have an account?
+      </span>
 
-        <button onClick={onClose} className={styles.closeButton}>
-          ×
-        </button>
-      </form>
-    </div>
+      <button onClick={onClose} className={styles.closeButton}>
+        ×
+      </button>
+    </form>
   );
 }
 

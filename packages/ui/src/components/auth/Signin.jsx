@@ -67,12 +67,8 @@ const SignInForm = ({ toggleForm, onClose }) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.logoWrapperBack}>
-        <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
-      </div>
-      <div className={styles.signintitle}>
-        <h2 className={styles.title}>Go to dashboard</h2>
-      </div>
+      <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
+      <h2 className={styles.title}>Go to dashboard</h2>
       <div className={styles.cusomeinputcss}>
         {SIGN_IN_FIELDS.map((field) => (
           <CustomInput
@@ -82,16 +78,13 @@ const SignInForm = ({ toggleForm, onClose }) => {
             label={field.label}
             value={formData[field.name]}
             onChange={handleChange}
-            className={styles.input}
           />
         ))}
       </div>
       <p className={styles.forgotPassword}>Forgot Password?</p>
-      <div className={styles.inputGroup}>
-        <Button type="submit" variant="primary" className={styles.signbutton}>
-          Sign In
-        </Button>
-      </div>
+      <Button type="submit" variant="primary" className={styles.signbutton}>
+        Sign In
+      </Button>
       <hr className={styles.horizontalLine} />
 
       <span
