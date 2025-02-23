@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, reopened]
     branches:
-    - stage
-    - prod
+      - stage
+      - prod
     paths:
-    - 'packages/**'
+      - 'packages/**'
 
 jobs:
   analyze:

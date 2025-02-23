@@ -20,18 +20,10 @@ jobs:
       - name: Checkout repository content
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v3 
         with:
             version: 10
-
-      - name: Install run dependencies
-        run: pnpm install
       
       - name: Check for folder changes
         id: filter
@@ -42,6 +34,10 @@ jobs:
               - 'packages/ui/**'
             app:
               - 'packages/app/**'
+      
+      - name: Install run dependencies if packages have changes
+        if: steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true'
+        run: pnpm install
 
       - name: linting
         if: steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true'
