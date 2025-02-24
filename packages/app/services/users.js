@@ -98,16 +98,31 @@ class UserService {
   }
 
   /**
+   * Assign a role to the user.
+   * @param {string} email - The email of the user.
+   * @return {string} - The role of the user.
+   */
+  getRole(email) {
+    const role = process.env.ADMINSEMAILS.split(",").includes(email)
+      ? UserType.ADMIN
+      : UserType.CUSTOMER;
+    return role;
+  }
+
+  /**
    * Create a New User.
    * @param {Object} userDetails - User Information.
    * @returns {Promise<Object>} - The user document if found, otherwise null.
    */
   async createUser(userDetails) {
+    const userRole = this.getRole(userDetails.email);
+
     return await this.userRepository.create({
       name: userDetails.name,
       password: await bcrypt.hash(userDetails.password, 10),
       email: userDetails.email,
       is_verified: false,
+      role: userRole,
       subscription_id: userDetails.subscription_id,
       is_deleted: false,
     });

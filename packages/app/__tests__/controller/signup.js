@@ -12,11 +12,13 @@ const {
   MOCK_SUBSCRIPTION,
   MOCK_USERTOKENS,
 } = require("../../utils/mocks");
-const app = require("../../index");
+const app = require("../../server");
 
 describe("SINGUP API", () => {
   beforeAll(() => {
     process.env.CLIENT_URL = "https://localhost:3000";
+    process.env.ADMINSEMAILS =
+      "testAdminEmail1@gmail.com,testAdminEmail2@gmail.com,testAdminEmail3@gmail.com";
   });
 
   beforeEach(() => {
@@ -25,6 +27,7 @@ describe("SINGUP API", () => {
 
   afterAll(() => {
     delete process.env.CLIENT_URL;
+    delete process.env.ADMINSEMAILS;
   });
 
   it("422 - Payload should be a valid email", async () => {
@@ -157,6 +160,30 @@ describe("SINGUP API", () => {
     jest
       .spyOn(UserService.prototype, "createUser")
       .mockResolvedValue(MOCK_USERS[1]);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockImplementation(() => new UserToken(MOCK_USERTOKENS[0]));
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(200);
+    expect(response.body.statusCode).toBe(200);
+  });
+
+  it("200 - Admin created successfully", async () => {
+    const mockRequest = {
+      ...SIGNUP_PAYLOAD,
+      email: process.env.ADMINSEMAILS.split(",")[0],
+    };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getRole").mockReturnValue("ADMIN");
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(MOCK_USERS[2]);
     jest
       .spyOn(UserTokenService.prototype, "createUserToken")
       .mockImplementation(() => new UserToken(MOCK_USERTOKENS[0]));
