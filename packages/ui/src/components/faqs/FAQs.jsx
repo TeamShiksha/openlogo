@@ -7,13 +7,10 @@ import styles from "./FAQs.module.css";
 
 const FAQs = () => {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.heading}>Frequently asked questions</h1>
-      <p className={styles.description}>
-        Everything you need to know about the product and billing.
-      </p>
-      <div className={styles.faqList}>
-        {FAQ.map((faq) => (
+    <div className={styles["faq-container"]}>
+      <h1 className={styles.heading}>{FAQ.TITLE}</h1>
+      <div className={styles["faq-list"]}>
+        {FAQ["QAS"].map((faq) => (
           <CollapsibleFAQ
             key={faq.question}
             question={faq.question}
@@ -31,8 +28,8 @@ const CollapsibleFAQ = ({ question, answer }) => {
   const toggleFAQ = () => setIsOpen((prev) => !prev);
 
   return (
-    <div className={styles.faqItem}>
-      <button className={styles.questionContainer} onClick={toggleFAQ}>
+    <div className={styles["faq-list"]}>
+      <button className={styles["qa-container"]} onClick={toggleFAQ}>
         <h3 className={styles.question}>{question}</h3>
         <img
           src={isOpen ? minusCircle : plusCircle}
@@ -42,7 +39,7 @@ const CollapsibleFAQ = ({ question, answer }) => {
       </button>
       <div
         id={`faq-answer-${question}`}
-        className={`${styles.answerContainer} ${isOpen ? styles.open : ""}`}
+        className={`${styles["answer-container"]} ${isOpen ? styles.open : ""}`}
         ref={answerRef}
         style={{
           maxHeight: isOpen ? `${answerRef.current?.scrollHeight}px` : "0px",

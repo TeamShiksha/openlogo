@@ -24,42 +24,35 @@ const Demo = () => {
   );
 
   return (
-    <div className={styles.apiContainer}>
-      <div className={styles.apiContent}>
-        <h1>See API In Action</h1>
+    <div data-testid="demo" id="demo" className={styles["demo-container"]}>
+      <div className={styles.content}>
+        <h1>See In Action</h1>
         <p>
           Powerful, self-serve product and growth analytics to help you convert,
           engage, and retain more.
         </p>
       </div>
-      <div
-        className={`${styles.searchBox} ${showResults ? styles.expanded : ""}`}
-      >
-        <div className={styles.searchContent}>
-          <form
-            onSubmit={handleSearch}
-            className={`${styles.searchInputContainer} ${showResults ? styles.hasResults : ""}`}
-          >
+      <div className={`${styles["search-box"]}`}>
+        <div className={styles["search-content"]}>
+          <form onSubmit={handleSearch}>
             <input
               name="search"
               type="text"
               value={searchTerm}
               onChange={handleInputChange}
-              className={styles.searchBoxInput}
+              className={styles["search-box-input"]}
               placeholder="Search"
             />
-            <button type="submit" className={styles.searchButton}>
+            <button type="submit" className={styles["search-button"]}>
               <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
           {!!filteredCompanies.length && showResults && (
-            <div
-              className={`${styles.resultsContainer} ${showResults && searchTerm ? styles.show : ""}`}
-            >
+            <div className={`${styles["result-container"]}`}>
               {filteredCompanies.map((company, index) => (
                 <div
                   key={company.id}
-                  className={`${styles.resultItem} ${showResults && searchTerm ? styles.show : ""}`}
+                  className={`${styles["result-item"]}`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
                   <img src={company.logo} alt={`${company.name} Logo`} />
@@ -73,9 +66,7 @@ const Demo = () => {
       <img
         src={SVGS.curvedArrow}
         alt="curved-arrow"
-        className={styles.curvedArrow}
-        width="250"
-        height="250"
+        className={styles["curved-arrow"]}
       />
     </div>
   );

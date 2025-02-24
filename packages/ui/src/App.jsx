@@ -8,20 +8,20 @@ import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
-import ContactForm from "./components/contact/ContactForm";
-// import ApiDocs from "./page/docs/Apidocs";
+import Documentation from "./page/documentation/Documentation.jsx";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 function App() {
   return (
     <div className="app-container">
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        {/* <Route path="/docs" element={<ApiDocs />} /> */}
-        <Route path="/contact" element={<ContactForm />} />
+        <Route path="/docs" element={<Documentation />} />
         {/* <Route path="/analytics" element={<Analytics />} /> */}
         <Route
           path="/admin"

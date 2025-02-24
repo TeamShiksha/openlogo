@@ -5,26 +5,23 @@ const cookieParser = require("cookie-parser");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger");
 const { validateEnv } = require("./utils/envSchema");
-const logger = require("./utils/logger");
 const routes = require("./routes/index");
 
 /**
  * Load environmental variables only if `NODE_ENV` is not "test"
- * Also load newrelic and connect to database
  */
 if (process.env.NODE_ENV !== "test") {
   dotenv.config();
-  require("newrelic");
   const { error } = validateEnv(process.env);
   if (error) {
-    logger.error(`Config validation error: ${error.message}`);
+    console.log(`Config validation error: ${error.message}`);
     process.exit(1);
   }
   mongoose
     .connect(process.env.MONGO_URL)
-    .then(() => logger.info("Connected to mongodb.."))
+    .then(() => console.info("Connected to mongodb.."))
     .catch((err) => {
-      logger.error("Mongodb connection error:", err.message);
+      console.error("Mongodb connection error:", err.message);
       process.exit(1);
     });
 }
@@ -39,7 +36,7 @@ app.use("/api/", routes);
 if (process.env.NODE_ENV !== "test") {
   const PORT = process.env.PORT;
   app.listen(PORT, () => {
-    logger.info(`Server is running on http://localhost:${PORT}..`);
+    console.error(`Server is running on http://localhost:${PORT}..`);
   });
 }
 

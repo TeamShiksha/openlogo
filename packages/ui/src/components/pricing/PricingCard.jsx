@@ -8,20 +8,18 @@ function PricingCard({ name, tagline, index, keypoints }) {
   const isDisabled = index === 1 ? true : false;
 
   return (
-    <div className={styles.cardMainDiv}>
-      <div className={styles.cardSubDiv}>
-        <h1 className={styles.planname}>{name}</h1>
-        <div className={styles.planInfoContainer}>
-          <p className={styles.planTagline}>{tagline}</p>
-        </div>
-        <div className={styles.planKeypoints}>
+    <div className={styles.card}>
+      <div className={styles.intro}>
+        <h1 className={styles["plan-name"]}>{name}</h1>
+        <p className={styles["tag-line"]}>{tagline}</p>
+        <ul className={styles.point}>
           {keypoints.map((keypoint, idx) => (
-            <div key={keypoint + idx}>
-              <img alt="Tick Icon" src={tickIcon} className={styles.tickIcon} />
+            <li key={keypoint + idx}>
+              <img alt="Tick Icon" src={tickIcon} className={styles.point} />
               <p>{keypoint}</p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
         <Button
           variant={"primary"}
           className={styles.width}

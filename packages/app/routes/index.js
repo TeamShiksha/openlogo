@@ -5,17 +5,16 @@ const userRouter = require("./users");
 const authRouter = require("./auth");
 const businessRouter = require("./logo");
 const adminRouter = require("./catalog");
-const logger = require("../utils/logger");
 
 const privateRouteCORS = {
   origin: (origin, callback) => {
     if (origin === process.env.CLIENT_PROXY_URL || !origin) {
       callback(null, true);
     } else {
-      logger.error(
+      console.error(
         `origin=${origin} and CLIENT_PROXY_URL=${process.env.CLIENT_PROXY_URL} do not match..`
       );
-      logger.error(
+      console.error(
         "What is cors ? Learn here: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
       );
       callback(new Error("Not allowed by CORS"));

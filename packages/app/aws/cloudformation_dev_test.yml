@@ -123,7 +123,15 @@ Resources:
   IAMUser:
     Type: AWS::IAM::User
     Properties:
-      UserName: OpenlogoUser
+      UserName: OpenlogoUserStage
+
+  IAMAccessKey:
+    Type: AWS::IAM::AccessKey
+    DependsOn:
+      - IAMUser
+      - IAMManagedPolicy
+    Properties:
+      UserName: !Ref IAMUser
 
   IAMManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -202,7 +210,7 @@ Resources:
             Action:
               - "iam:GetUser"
             Resource:
-              - !Sub "arn:aws:iam::${AWS::AccountId}:user/OpenlogoUser"
+              - !Sub "arn:aws:iam::${AWS::AccountId}:user/OpenlogoUserStage"
           - Effect: Allow
             Action:
               - "iam:ListGroups"
@@ -231,5 +239,5 @@ Resources:
         - !Ref IAMReadOnlyGroup
 Outputs:
   EnvFileItems:
-    Value: !Sub BUCKET_NAME=${S3bucket},DISTRIBUTION_ID=${CloudFrontCDN},BUCKET_REGION=${AWS::Region},KEY=${CDNPathInS3},DISTRIBUTION_DOMAIN=https://${CloudFrontCDN.DomainName},CLOUD_FRONT_KEYPAIR_ID=${CloudFrontPublicKey}
+    Value: !Sub BUCKET_NAME=${S3bucket},DISTRIBUTION_ID=${CloudFrontCDN},BUCKET_REGION=${AWS::Region},KEY=${CDNPathInS3},DISTRIBUTION_DOMAIN=https://${CloudFrontCDN.DomainName},CLOUD_FRONT_KEYPAIR_ID=${CloudFrontPublicKey},ACCESS_KEY=${IAMAccessKey},SECRET_ACCESS_KEY=${IAMAccessKey.SecretAccessKey}
     Description: Items to be used for the backend environmental variables

@@ -22,8 +22,6 @@ const EnvSchema = Joi.object()
     SECRET_ACCESS_KEY: Joi.string().required(),
     MONGO_URL: Joi.string().required(),
     NODE_ENV: Joi.string().valid("dev", "test", "prod"),
-    NEW_RELIC_APP_NAME: Joi.string().required(),
-    NEW_RELIC_LICENSE_KEY: Joi.string().required(),
     EMAIL_SERVICE_URL: Joi.string().optional(),
     EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
   })

@@ -1,19 +1,18 @@
-.mainDiv {
+.pricing-container {
   background: var(--primary);
   border-radius: 1rem;
-  padding: 5rem 2rem;
-  margin: 2rem 0;
-  max-width: 1440px;
+  padding: 4rem 2rem;
+  margin: 3rem 0;
 }
 
 .heading {
-  font-family: "Inter", sans-serif;
   font-size: 3rem;
   text-align: center;
   color: var(--white);
+  margin-bottom: 1rem;
 }
 
-.tagline {
+.tag-line {
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.8rem;
@@ -21,34 +20,47 @@
   color: var(--white);
 }
 
-.cardsDiv {
+.plan {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
-  margin: 0 auto;
-  max-width: 1156px;
 }
 
-@media (max-width: 768px) {
-  .mainDiv {
-    margin: 1rem 1rem;
+@media only screen and (max-width: 1024px) {
+  .plan {
+    display: block;
+  }
+
+  .heading {
+    line-height: 3.2rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .tag-line {
+    padding: 0 2rem;
+  }
+
+  .pricing-container {
     padding: 3rem 1rem;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  .heading {
-    font-size: 36px;
-    line-height: 43.2px;
-    font-weight: 600;
-  }
-  .tagline {
-    font-size: 16px;
-    line-height: 21.6px;
-    margin-bottom: 4px;
-  }
-  .cardsDiv {
+
+  .plan {
     gap: 16px;
+    padding: 0 2rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .tag-line {
+    padding: 0;
+  }
+
+  .plan {
+    padding: 0;
   }
 }

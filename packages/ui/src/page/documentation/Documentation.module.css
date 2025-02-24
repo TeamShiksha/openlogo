@@ -1,129 +1,138 @@
 code {
   font-size: 1.2rem;
   color: var(--description);
-  background-color: white;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  line-height: 1.8rem;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;
+  font-family: monospace;
 }
 
-.card {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem 0;
+.link {
+  text-decoration: none;
+  color: var(--primary-hover);
 }
 
-h3 {
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.card-heading {
+  margin-top: 2rem;
   font-size: 2.2rem;
   font-weight: 600;
-  color: #101828;
-  margin-top: 1.5rem;
+  color: var(--black);
   margin-bottom: 0.75rem;
 }
 
-p {
+.text {
   font-size: 1.2rem;
   line-height: 1.8rem;
   color: var(--description);
   margin-top: 0.3rem;
+  font-weight: 500;
 }
 
-.codeBlockWrapper {
-  margin: 1rem 0;
-  overflow: hidden;
+.base-info {
   border-radius: 8px;
-  background-color: rgb(249 250 251);
+  padding: 0.5rem 1rem 0.5rem;
+  background-color: var(--table-background);
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: var(--description);
+  font-family: monospace;
 }
 
-.codeBlockHeader {
+.base-info span {
+  font-family: monospace;
+}
+
+.code-block-wrapper {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: var(--table-background);
+}
+
+.code-block-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 12px 0;
+  padding: 1rem;
 }
 
-.codeLanguage {
+.code-language {
   font-size: 0.875rem;
-  color: white;
+  color: var(--white);
 }
 
-.languageSelector {
+.language-selector {
   display: flex;
-  gap: 0.5rem;
+  gap: 12px;
 }
 
-.languageSelector img {
+.language-selector img {
   width: 32px;
   height: 32px;
 }
 
-.languageButton {
-  padding: 0.25rem 0.75rem;
+.language-button {
+  padding: 7px 12px;
   border-radius: 0.25rem;
   background: transparent;
-  color: #9ca3af;
+  color: var(--description);
   border: none;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
 }
 
-.languageButton:hover {
-  color: white;
+.language-button:hover {
+  color: var(--white);
   background: rgba(229 231 235);
 }
 
-.languageButtonActive {
+.language-button-active {
   background: rgba(229 231 235);
-  color: white;
+  color: var(--white);
 }
 
-.copyButton {
+.copy-button {
   background-color: rgb(249 250 251);
 }
 
-.codeBlock {
-  padding: 16px;
-  margin: 12px;
+.code-block {
+  margin: 16px;
+  margin-top: 0;
   overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #111827;
+  font-family: monospace;
+  font-size: 1.2rem;
   border-radius: 12px;
-  font-weight: 500;
+  border: var(--border);
 }
 
-.inlineCode {
-  background-color: #f3f4f6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  color: #111827;
-}
-
-.tableWrapper {
+.table-wrapper {
   margin: 1.5rem 0;
   overflow-x: auto;
   border-radius: 0.5rem;
 }
 
-.codeBox {
+.code-box {
   padding: 12px;
   border: var(--border);
-  color: black;
+  color: var(--black);
 }
 
-.copyinside {
+.copy-inside {
   display: flex;
   justify-content: space-between;
-  background-color: white;
 }
 
-.copyinside > button {
+.copy-inside > button {
+  height: 100%;
+  background-color: var(--table-background);
   width: fit-content;
   height: fit-content;
   background: none;
@@ -133,13 +142,13 @@ p {
   margin-right: 1rem;
 }
 
-.copyinside > button > img {
+.copy-inside > button > img {
   width: 24px;
   height: 24px;
 }
 
 @media (max-width: 564px) {
-  .languageSelector {
+  .language-selector {
     flex-wrap: wrap;
   }
 }

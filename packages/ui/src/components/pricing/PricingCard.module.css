@@ -1,4 +1,4 @@
-.cardMainDiv {
+.card {
   width: 380px;
   margin-top: 50px;
   background: var(--white);
@@ -9,7 +9,7 @@
   position: relative;
 }
 
-.cardSubDiv {
+.intro {
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -17,41 +17,31 @@
   gap: 1rem;
 }
 
-.cardSubDiv h1 {
+.intro h1 {
   color: var(--black);
 }
 
-.cardSubDiv h3 {
-  color: var(--description);
-}
-
-.planName {
+.plan-name {
   font-weight: 600;
   color: var(--description);
 }
 
-.planTagline {
+.tag-line {
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--description);
   text-align: center;
 }
 
-.planInfoContainer {
-  gap: 4px;
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-}
-
-.planKeypoints {
+.point {
   color: var(--description);
   text-align: left;
   font-size: 1.2rem;
   line-height: 2.4rem;
+  font-weight: 500;
 }
 
-.planKeypoints > div {
+.point > li {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -62,9 +52,41 @@
   margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-  .cardSubDiv {
+@media only screen and (max-width: 1024px) {
+  .card {
+    width: 100%;
+  }
+
+  .width {
+    margin-top: 1rem;
+    width: 60%;
+    min-width: 350px;
+  }
+}
+
+@media (max-width: 780px) {
+  .intro {
     padding: 12px;
     gap: 5px;
+  }
+
+  .width {
+    width: 40%;
+    min-width: 300px;
+  }
+
+  .tag-line {
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .width {
+    width: 100%;
+    min-width: unset;
   }
 }

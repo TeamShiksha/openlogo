@@ -1,22 +1,18 @@
 import PricingCard from "./PricingCard";
-import plans from "../../utils/Constants";
+import { PRICING } from "../../utils/Constants";
 import styles from "./Pricing.module.css";
 
 function Pricing() {
-  const filteredPlans = plans.filter((plan) => plan.pricing !== null);
-
   return (
-    <div className={styles.mainDiv}>
-      <div className={styles.submainDiv}>
-        <h1 className={styles.heading}>Compare our plans and find yours</h1>
-        <p className={styles.tagline}>
-          Simple, transparent pricing that grows with you. Try any plan free for
-          30 days.
-        </p>
-      </div>
-
-      <div className={styles.cardsDiv}>
-        {filteredPlans.map((plan) => (
+    <div
+      data-testid="pricing"
+      id="pricing"
+      className={styles["pricing-container"]}
+    >
+      <h1 className={styles.heading}>{PRICING.heading}</h1>
+      <p className={styles["tag-line"]}>{PRICING.summary}</p>
+      <div className={styles.plan}>
+        {PRICING["plans"].map((plan) => (
           <PricingCard
             key={plan.name}
             name={plan.name}

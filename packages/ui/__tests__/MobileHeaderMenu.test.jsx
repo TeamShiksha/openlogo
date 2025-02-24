@@ -2,15 +2,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu.jsx";
 import { vi, describe, it, expect } from "vitest";
+import { HEADER_ITEMS } from "../src/utils/Constants.js";
 
 const mockCloseMenu = vi.fn();
-const HEADER_ITEMS = [
-  { name: "home", title: "Home", url: "/" },
-  { name: "docs", title: "Docs", url: "/docs" },
-  { name: "features", title: "Features", url: "/features" },
-  { name: "pricing", title: "Pricing", url: "/pricing" },
-  { name: "about", title: "About", url: "/about" },
-];
 
 vi.mock("../../utils/Constants", () => ({ HEADER_ITEMS }));
 
@@ -41,11 +35,15 @@ describe("MobileHeaderMenu Component", () => {
         <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
       </BrowserRouter>
     );
+
     HEADER_ITEMS.forEach((item) => {
-      expect(screen.getByText(item.title).closest("a")).toHaveAttribute(
-        "href",
-        item.url
-      );
+      const linkElement = screen.getByText(item.title).closest("a");
+
+      if (item.url.startsWith("#")) {
+        expect(linkElement).toHaveAttribute("href", `/${item.url}`);
+      } else {
+        expect(linkElement).toHaveAttribute("href", item.url);
+      }
     });
   });
 
