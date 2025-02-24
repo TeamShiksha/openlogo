@@ -4,7 +4,7 @@ const { UserService } = require("../../services");
 const { Users } = require("../../models");
 const { ENDPOINTS } = require("../../utils/testconstants");
 const { MOCK_USERS } = require("../../utils/mocks");
-const app = require("../../index");
+const app = require("../../server");
 
 describe("SIGNIN API", () => {
   beforeAll(() => {

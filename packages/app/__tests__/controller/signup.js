@@ -12,7 +12,7 @@ const {
   MOCK_SUBSCRIPTION,
   MOCK_USERTOKENS,
 } = require("../../utils/mocks");
-const app = require("../../index");
+const app = require("../../server");
 
 describe("SINGUP API", () => {
   beforeAll(() => {
