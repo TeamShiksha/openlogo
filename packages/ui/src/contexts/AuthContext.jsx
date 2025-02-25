@@ -6,6 +6,7 @@ import { AuthContext } from "./Contexts";
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthCheckComplete, setIsAuthCheckComplete] = useState(false);
+  const [signupModal, setSignupModal] = useState(false); // Add this line
 
   useEffect(() => {
     const checkCookieExists = () => {
@@ -31,8 +32,14 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={useMemo(
-        () => ({ isAuthenticated, setIsAuthenticated, logout }),
-        [isAuthenticated, setIsAuthenticated, logout]
+        () => ({
+          isAuthenticated,
+          setIsAuthenticated,
+          logout,
+          signupModal,
+          setSignupModal,
+        }),
+        [isAuthenticated, setIsAuthenticated, logout, signupModal]
       )}
     >
       {isAuthCheckComplete ? children : null}

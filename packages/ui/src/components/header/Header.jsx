@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../contexts/Contexts";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
-import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
 import {
   HEADER_ITEMS,
@@ -16,7 +16,7 @@ import { handleSectionClick } from "../../utils/Helpers.js";
 const Header = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const [signupModal, setSignupModal] = useState(false);
+  const { setSignupModal } = useContext(AuthContext);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
 
   const toggleMenu = () => {
@@ -58,19 +58,11 @@ const Header = () => {
           <Button
             variant="primary"
             className={styles.ml}
-            onClick={() => {
-              setSignupModal(true);
-            }}
+            onClick={() => setSignupModal(true)}
           >
             {buttonText.getStarted}
           </Button>
         </div>
-        <AuthModal
-          isOpen={signupModal}
-          onClose={() => {
-            setSignupModal(false);
-          }}
-        />
         <button className={styles.hamburger} onClick={toggleMenu}>
           <img
             className={styles["hamburger-img"]}

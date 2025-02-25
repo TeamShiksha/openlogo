@@ -10,8 +10,13 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
 import Documentation from "./page/documentation/Documentation.jsx";
 import ScrollToTop from "./components/common/ScrollToTop.jsx";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/Contexts";
+import AuthModal from "./components/auth/Auth";
 
 function App() {
+  const { signupModal, setSignupModal } = useContext(AuthContext);
+
   return (
     <div className="app-container">
       <ScrollToTop />
@@ -32,6 +37,7 @@ function App() {
           }
         />
       </Routes>
+      <AuthModal isOpen={signupModal} onClose={() => setSignupModal(false)} />
       <Footer />
     </div>
   );
