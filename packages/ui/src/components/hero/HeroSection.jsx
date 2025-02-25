@@ -22,7 +22,7 @@ const HeroSection = () => {
         <div className={styles["button-section"]}>
           <Button type="button" variant="secondary">
             <div className={styles["button-text"]}>
-              <img alt="Play Icon" src="play-icon.svg" height={20} width={20} />
+              {/* <img alt="Play Icon" src="play-icon.svg" height={20} width={20} /> */}
               <span>Documentation</span>
             </div>
           </Button>
