@@ -2,16 +2,16 @@ import { render, screen, within } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
 import { FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
-import { BrowserRouter } from "react-router-dom";
+import { TestWrapper } from "./utils/TestWrapper";
 import userEvent from "@testing-library/user-event";
 import Home from "../src/page/home/Home.jsx";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Footer />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const logoImage = screen.getByAltText("Logo Icon");
     expect(logoImage).toBeInTheDocument();
@@ -25,9 +25,9 @@ describe("Footer Component", () => {
 
   it("renders all footer items with correct links and titles", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Footer />
-      </BrowserRouter>
+      </TestWrapper>
     );
 
     FOOTER_ITEMS.forEach((item) => {
@@ -38,9 +38,9 @@ describe("Footer Component", () => {
 
   it("renders the copyright text", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Footer />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const copyrightText = screen.getByText(/© Openlogo 2025/i);
     expect(copyrightText).toBeInTheDocument();
@@ -48,9 +48,9 @@ describe("Footer Component", () => {
 
   it("renders the 'Powered by TeamShiksha' link", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Footer />
-      </BrowserRouter>
+      </TestWrapper>
     );
 
     const poweredByLink = screen.getByText("Powered by TeamShiksha");
@@ -62,10 +62,10 @@ describe("Footer Component", () => {
 
   it("footer links should be clickable and navigate correctly", async () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Home />
         <Footer />
-      </BrowserRouter>
+      </TestWrapper>
     );
 
     const footerElement = screen.getByTestId("footer");

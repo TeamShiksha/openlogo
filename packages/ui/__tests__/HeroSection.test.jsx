@@ -1,10 +1,15 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import HeroSection from "../src/components/hero/HeroSection";
 import { expect, describe, it } from "vitest";
+import { TestWrapper } from "./utils/TestWrapper";
 
 describe("HeroSection Component", () => {
   it("renders the HeroSection with heading and description", () => {
-    render(<HeroSection />);
+    render(
+      <TestWrapper>
+        <HeroSection />
+      </TestWrapper>
+    );
     expect(
       screen.getByText("Access hundreds of logos with just one line of code")
     ).toBeInTheDocument();
@@ -16,7 +21,11 @@ describe("HeroSection Component", () => {
   });
 
   it("renders the buttons correctly", () => {
-    render(<HeroSection />);
+    render(
+      <TestWrapper>
+        <HeroSection />
+      </TestWrapper>
+    );
     expect(screen.getByText("Documentation")).toBeInTheDocument();
     expect(screen.getByText("Get started")).toBeInTheDocument();
   });

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
   HEADER_ITEMS,
@@ -11,6 +11,7 @@ import {
 } from "../src/utils/Constants";
 import userEvent from "@testing-library/user-event";
 import Home from "../src/page/home/Home.jsx";
+import { TestWrapper } from "./utils/TestWrapper";
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
@@ -29,19 +30,20 @@ vi.mock("../src/components/header/MobileHeaderMenu", () => ({
 }));
 
 vi.mock("../src/components/auth/Auth", () => ({
-  default: ({ isOpen, onClose }) => (
-    <div data-testid="auth-modal" data-open={isOpen}>
-      <button onClick={onClose}>Close Modal</button>
-    </div>
-  ),
+  default: ({ isOpen, onClose }) =>
+    isOpen ? (
+      <div role="dialog" data-testid="auth-modal" data-open={isOpen}>
+        <button onClick={onClose}>Close Modal</button>
+      </div>
+    ) : null,
 }));
 
 describe("Header", () => {
   it("renders branding correctly", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     expect(screen.getByAltText(branding.imageSrc)).toBeInTheDocument();
     expect(screen.getByText(branding.brandName)).toBeInTheDocument();
@@ -49,9 +51,9 @@ describe("Header", () => {
 
   it("renders navigation items", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     HEADER_ITEMS.forEach((item) => {
       expect(screen.getByText(item.title)).toBeInTheDocument();
@@ -60,9 +62,9 @@ describe("Header", () => {
 
   it("toggles the mobile menu", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const menuButton = screen.getByAltText(HAMBURGER.alt);
     fireEvent.click(menuButton);
@@ -79,39 +81,31 @@ describe("Header", () => {
     );
   });
 
+  // Update the modal test to check for role="dialog"
   it("opens the signup modal", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const getStartedButton = screen.getByText(buttonText.getStarted);
     fireEvent.click(getStartedButton);
-    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
-      "data-open",
-      "true"
-    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
   it("closes the signup modal", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const getStartedButton = screen.getByText(buttonText.getStarted);
     fireEvent.click(getStartedButton);
-    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
-      "data-open",
-      "true"
-    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     const closeModalButton = screen.getByText("Close Modal");
     fireEvent.click(closeModalButton);
-    expect(screen.getByTestId("auth-modal")).toHaveAttribute(
-      "data-open",
-      "false"
-    );
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("navigates to home when clicking the brand", () => {
@@ -119,9 +113,9 @@ describe("Header", () => {
     vi.mocked(useNavigate).mockReturnValue(navigateMock);
 
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
 
     const brandButton = screen.getByRole("button", {
@@ -133,9 +127,9 @@ describe("Header", () => {
 
   it("switches between hamburger and cross icons", () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
-      </BrowserRouter>
+      </TestWrapper>
     );
     const menuButton = screen.getByRole("button", { name: HAMBURGER.alt });
     expect(screen.getByAltText(HAMBURGER.alt)).toBeInTheDocument();
@@ -146,10 +140,10 @@ describe("Header", () => {
 
   it("header links should be clickable and navigate correctly", async () => {
     render(
-      <BrowserRouter>
+      <TestWrapper>
         <Header />
         <Home />
-      </BrowserRouter>
+      </TestWrapper>
     );
 
     const headerElement = screen.getByTestId("header");
