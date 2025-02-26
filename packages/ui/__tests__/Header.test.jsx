@@ -32,9 +32,9 @@ vi.mock("../src/components/header/MobileHeaderMenu", () => ({
 vi.mock("../src/components/auth/Auth", () => ({
   default: ({ isOpen, onClose }) =>
     isOpen ? (
-      <div role="dialog" data-testid="auth-modal" data-open={isOpen}>
+      <dialog data-testid="auth-modal" data-open={isOpen}>
         <button onClick={onClose}>Close Modal</button>
-      </div>
+      </dialog>
     ) : null,
 }));
 
