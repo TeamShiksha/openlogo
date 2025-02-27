@@ -66,6 +66,7 @@ jobs:
           exclude-branches: "release/**, dependabot/**"
       
       - name: Transfer Labels from Linked Issues
+        if: always() && steps.linked-issues.outcome == 'success'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -109,13 +110,24 @@ jobs:
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const assignee = context.payload.pull_request.user.login;
-            await github.rest.orgs.checkMembershipForUser({
-                org: owner,
-                username: assignee
-              });
-            await github.rest.issues.addAssignees({
+            const { data: pullRequest } = await github.rest.pulls.get({
               owner,
               repo,
-              issue_number,
-              assignees: [assignee]
+              pull_number: issue_number
             });
+            if (pullRequest.assignees.length === 0) {
+              try {
+                await github.rest.orgs.checkMembershipForUser({
+                  org: owner,
+                  username: assignee
+                });
+                await github.rest.issues.addAssignees({
+                  owner,
+                  repo,
+                  issue_number,
+                  assignees: [assignee]
+                });
+              } catch (error) {
+                console.log(`User ${assignee} is not a member of the organization.`);
+              }
+            }
