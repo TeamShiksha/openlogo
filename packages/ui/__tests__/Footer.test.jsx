@@ -5,6 +5,7 @@ import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import Home from "../src/page/home/Home.jsx";
+import PrivacyPolicy from "../src/page/privacypolicy/PrivacyPolicy.jsx";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {
@@ -65,6 +66,7 @@ describe("Footer Component", () => {
       <BrowserRouter>
         <Home />
         <Footer />
+        <PrivacyPolicy />
       </BrowserRouter>
     );
 
@@ -76,12 +78,13 @@ describe("Footer Component", () => {
 
       await userEvent.click(navLink);
 
-      if (item.url.startsWith("#")) {
-        const sectionElement = screen.getByTestId(item.url.substring(1));
+      const [path, sectionId] = item.url.split("#");
+
+      expect(window.location.pathname).toBe(path);
+
+      if (sectionId) {
+        const sectionElement = screen.getByTestId(sectionId);
         expect(sectionElement).toBeInTheDocument();
-      } else {
-        // If it's a route, check if the pathname has changed
-        expect(window.location.pathname).toBe(item.url);
       }
     }
   });

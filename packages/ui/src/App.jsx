@@ -9,12 +9,12 @@ import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
 import Documentation from "./page/documentation/Documentation.jsx";
-import ScrollToTop from "./components/common/ScrollToTop.jsx";
+import ScrollManager from "./components/common/ScrollManager.jsx";
 
 function App() {
   return (
     <div className="app-container">
-      <ScrollToTop />
+      <ScrollManager />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

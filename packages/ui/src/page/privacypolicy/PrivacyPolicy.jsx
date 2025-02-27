@@ -69,7 +69,9 @@ const PrivacyPolicy = () => {
         stay informed about how we are protecting your personal information.
       </p>
       <br />
-      <h2 className={styles.heading}>Terms and Conditions</h2>
+      <h2 data-testid="t&c" id="t&c" className={styles.heading}>
+        Terms and Conditions
+      </h2>
       <p className={styles.text}>
         By using Openlogo&apos;s website and services, you agree to comply with
         the following terms and conditions. You must abide by all applicable

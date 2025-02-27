@@ -1,10 +1,13 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
+import { handleNavigation } from "../../utils/Helpers.js";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 780) {
@@ -24,7 +27,12 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     <div className={styles["mobile-header"]}>
       <div className={styles.navbar}>
         {HEADER_ITEMS.map((item) => (
-          <Link key={item.name} className={styles.nav} to={item.url}>
+          <Link
+            key={item.name}
+            className={styles.nav}
+            to={item.url}
+            onClick={(e) => handleNavigation(e, item.url, navigate)}
+          >
             {item.title}
           </Link>
         ))}
