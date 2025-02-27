@@ -3,14 +3,15 @@ name: Check linting, format, test and linked issue
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, ready_for_review]
     branches:
       - stage
       - prod
 
 jobs:
   standards:
-    name: Check linting/formatin and test cases
+    name: Check coding standards
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     timeout-minutes: 3
     permissions:
@@ -44,20 +45,21 @@ jobs:
         run: pnpm lint
 
       - name: prettier check
-        if: steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true'
+        if: always() && ( steps.filter.outputs.ui == 'true' || steps.filter.outputs.app == 'true' )
         run: pnpm check
 
       - name: frontend coverage report and build check
-        if: steps.filter.outputs.ui == 'true'
+        if: always() && steps.filter.outputs.ui == 'true'
         run: |
           pnpm --filter ui coverage
           pnpm build
       
       - name: backend coverage report
-        if: steps.filter.outputs.app == 'true'
+        if: always() && steps.filter.outputs.app == 'true'
         run: pnpm --filter app coverage
 
       - name: Check linked issues
+        if: always()
         id: linked-issues
         uses: nearform-actions/github-action-check-linked-issues@v1
         with:
@@ -99,6 +101,7 @@ jobs:
             });
 
       - name: Assign PR to Author
+        if: always()
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
