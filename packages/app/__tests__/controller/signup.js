@@ -14,7 +14,7 @@ const {
 } = require("../../utils/mocks");
 const app = require("../../server");
 
-describe("SINGUP API", () => {
+describe("SIGNUP API", () => {
   beforeAll(() => {
     process.env.CLIENT_URL = "https://localhost:3000";
     process.env.ADMINSEMAILS =
