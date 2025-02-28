@@ -1,20 +1,20 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserToken } = require("../../models");
+const { UserToken } = require("../../../models");
 const {
   UserTokenService,
   UserService,
   SubscriptionService,
-} = require("../../services");
-const { SIGNUP_PAYLOAD, ENDPOINTS } = require("../../utils/testconstants");
+} = require("../../../services");
+const { SIGNUP_PAYLOAD, ENDPOINTS } = require("../../../utils/testconstants");
 const {
   MOCK_USERS,
   MOCK_SUBSCRIPTION,
   MOCK_USERTOKENS,
-} = require("../../utils/mocks");
-const app = require("../../server");
+} = require("../../../utils/mocks");
+const app = require("../../../server");
 
-describe("SINGUP API", () => {
+describe("SIGNUP API", () => {
   beforeAll(() => {
     process.env.CLIENT_URL = "https://localhost:3000";
     process.env.ADMINSEMAILS =

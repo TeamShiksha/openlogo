@@ -156,7 +156,7 @@ function signoutController(req, res, next) {
     }
 
     res.clearCookie("jwt");
-    return res.status(205).json({ statusCode: 205 });
+    return res.status(205).send();
   } catch (err) {
     next(err);
   }

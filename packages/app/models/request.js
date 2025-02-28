@@ -4,7 +4,7 @@ const { StatusTypes } = require("../utils/constants");
 const raiseRequestSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "users",
     required: true,
   },
   companyUrl: {
@@ -23,7 +23,7 @@ const raiseRequestSchema = new mongoose.Schema({
   },
   operator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "users",
   },
   comment: {
     type: String,
