@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
   },
   keys: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Key",
+    ref: "keys",
   },
   is_deleted: {
     type: Boolean,
