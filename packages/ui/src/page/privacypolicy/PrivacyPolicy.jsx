@@ -1,5 +1,5 @@
 import styles from "./PrivacyPolicy.module.css";
-import { branding } from "../../utils/Constants.js";
+import { branding } from "../../utils/Constants";
 
 const PrivacyPolicy = () => {
   return (
