@@ -83,28 +83,27 @@ export const formatDate = (dateString) => {
   });
 };
 
-export const handleSectionClick = (e, sectionId, navigate) => {
-  e.preventDefault();
+export const handleNavigation = (event, url, navigate) => {
+  event.preventDefault();
 
-  const scrollToSection = () => {
-    const section = document.querySelector(sectionId);
-    if (section) {
-      const offset = 95; // Adjust this value (positive = more space above, negative = scroll further)
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+  const [path, sectionId] = url.split("#");
 
+  if (window.location.pathname !== path) {
+    if (sectionId) {
+      sessionStorage.setItem("scrollTo", sectionId);
+    }
+    navigate(path);
+  } else if (sectionId) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 95;
+      const elementTop = element.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({
-        top: sectionTop - offset,
+        top: elementTop - offset,
         behavior: "smooth",
       });
-    } else {
-      requestAnimationFrame(scrollToSection);
     }
-  };
-
-  if (location.pathname !== "/") {
-    navigate("/", { replace: false });
-    requestAnimationFrame(scrollToSection);
   } else {
-    scrollToSection();
+    window.scrollTo(0, 0);
   }
 };

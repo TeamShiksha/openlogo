@@ -38,12 +38,7 @@ describe("MobileHeaderMenu Component", () => {
 
     HEADER_ITEMS.forEach((item) => {
       const linkElement = screen.getByText(item.title).closest("a");
-
-      if (item.url.startsWith("#")) {
-        expect(linkElement).toHaveAttribute("href", `/${item.url}`);
-      } else {
-        expect(linkElement).toHaveAttribute("href", item.url);
-      }
+      expect(linkElement).toHaveAttribute("href", item.url);
     });
   });
 

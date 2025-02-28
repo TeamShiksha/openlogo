@@ -10,7 +10,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div data-testid="home" id="home" className={styles["hero-section"]}>
+    <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
         <div className={styles["text-section"]}>
           <h1>Access hundreds of logos with just one line of code</h1>

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Header from "../src/components/header/Header";
 import {
   HEADER_ITEMS,
@@ -10,15 +10,7 @@ import {
   branding,
 } from "../src/utils/Constants";
 import userEvent from "@testing-library/user-event";
-import Home from "../src/page/home/Home.jsx";
-
-vi.mock("react-router-dom", async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useNavigate: vi.fn(),
-  };
-});
+import Home from "../src/page/home/Home";
 
 vi.mock("../src/components/header/MobileHeaderMenu", () => ({
   default: ({ isOpen, closeMenu }) => (
@@ -115,9 +107,6 @@ describe("Header", () => {
   });
 
   it("navigates to home when clicking the brand", () => {
-    const navigateMock = vi.fn();
-    vi.mocked(useNavigate).mockReturnValue(navigateMock);
-
     render(
       <BrowserRouter>
         <Header />
@@ -128,7 +117,7 @@ describe("Header", () => {
       name: /openlogo\.svg Openlogo/i,
     });
     fireEvent.click(brandButton);
-    expect(navigateMock).toHaveBeenCalledWith("/");
+    expect(window.location.pathname).toBe("/");
   });
 
   it("switches between hamburger and cross icons", () => {
@@ -160,11 +149,13 @@ describe("Header", () => {
 
       await userEvent.click(navLink);
 
-      if (item.url.startsWith("#")) {
-        const sectionElement = screen.getByTestId(item.url.substring(1));
+      const [path, sectionId] = item.url.split("#");
+
+      expect(window.location.pathname).toBe(path);
+
+      if (sectionId) {
+        const sectionElement = screen.getByTestId(sectionId);
         expect(sectionElement).toBeInTheDocument();
-      } else {
-        expect(window.location.pathname).toBe(item.url);
       }
     }
   });

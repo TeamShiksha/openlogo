@@ -1,10 +1,11 @@
 import { render, screen, within } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
-import { FOOTER_ITEMS } from "../src/utils/Constants";
+import { branding, FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import Home from "../src/page/home/Home.jsx";
+import Home from "../src/page/home/Home";
+import PrivacyPolicy from "../src/page/privacypolicy/PrivacyPolicy";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {
@@ -13,13 +14,13 @@ describe("Footer Component", () => {
         <Footer />
       </BrowserRouter>
     );
-    const logoImage = screen.getByAltText("Logo Icon");
+    const logoImage = screen.getByAltText(branding.imageSrc);
     expect(logoImage).toBeInTheDocument();
-    expect(logoImage).toHaveAttribute("src", "openlogo.svg");
+    expect(logoImage).toHaveAttribute("src", branding.imageSrc);
     expect(logoImage).toHaveAttribute("width", "30");
     expect(logoImage).toHaveAttribute("height", "30");
 
-    const logoText = screen.getByText("Openlogo");
+    const logoText = screen.getByText(branding.brandName);
     expect(logoText).toBeInTheDocument();
   });
 
@@ -65,6 +66,7 @@ describe("Footer Component", () => {
       <BrowserRouter>
         <Home />
         <Footer />
+        <PrivacyPolicy />
       </BrowserRouter>
     );
 
@@ -76,12 +78,13 @@ describe("Footer Component", () => {
 
       await userEvent.click(navLink);
 
-      if (item.url.startsWith("#")) {
-        const sectionElement = screen.getByTestId(item.url.substring(1));
+      const [path, sectionId] = item.url.split("#");
+
+      expect(window.location.pathname).toBe(path);
+
+      if (sectionId) {
+        const sectionElement = screen.getByTestId(sectionId);
         expect(sectionElement).toBeInTheDocument();
-      } else {
-        // If it's a route, check if the pathname has changed
-        expect(window.location.pathname).toBe(item.url);
       }
     }
   });
