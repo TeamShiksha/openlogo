@@ -1,9 +1,9 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const { UserService, UserTokenService } = require("../../services");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const { UserService, UserTokenService } = require("../../../services");
 
-const app = require("../../server");
+const app = require("../../../server");
 
 describe("FORGOT PASSWORD API", () => {
   beforeEach(() => {

@@ -1,13 +1,21 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const { UserTokenService } = require("../../services");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const { UserTokenService } = require("../../../services");
 
-const app = require("../../server");
+const app = require("../../../server");
 
 describe("RESET PASSWORD SESSION API", () => {
+  beforeAll(() => {
+    process.env.JWT_SECRET = "secret";
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    delete process.env.JWT_SECRET;
   });
 
   it("422 - Invalid or expired token", async () => {
@@ -61,7 +69,6 @@ describe("RESET PASSWORD SESSION API", () => {
   });
 
   it("200 - Successful", async () => {
-    process.env.JWT_SECRET = "secret";
     const mockUserToken = {
       isExpired: jest.fn().mockReturnValue(false),
       user_id: 123,

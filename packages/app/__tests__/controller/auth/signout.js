@@ -1,7 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const app = require("../../server");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const app = require("../../../server");
 
 describe("SIGNOUT API", () => {
   it("400 - Invalid email", async () => {

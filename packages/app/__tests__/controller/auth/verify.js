@@ -1,8 +1,8 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const { UserService, UserTokenService } = require("../../services");
-const app = require("../../server");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const { UserService, UserTokenService } = require("../../../services");
+const app = require("../../../server");
 
 describe("VERIFY EMAIL API", () => {
   beforeEach(() => {

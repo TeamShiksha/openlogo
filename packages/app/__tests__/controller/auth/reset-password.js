@@ -1,11 +1,11 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const { UserService, UserTokenService } = require("../../services");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const { UserService, UserTokenService } = require("../../../services");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const app = require("../../server");
+const app = require("../../../server");
 jest.mock("jsonwebtoken");
 jwt.verify = jest.fn(() => ({ userId: new mongoose.Types.ObjectId() }));
 
