@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
-import { handleNavigation } from "../../utils/Helpers.js";
+import { handleNavigation } from "../../utils/Helpers";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();

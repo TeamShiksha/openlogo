@@ -1,7 +1,7 @@
 import { branding, FOOTER_ITEMS } from "../../utils/Constants";
 import styles from "./Footer.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { handleNavigation } from "../../utils/Helpers.js";
+import { handleNavigation } from "../../utils/Helpers";
 
 function Footer() {
   const navigate = useNavigate();

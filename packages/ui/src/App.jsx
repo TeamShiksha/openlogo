@@ -8,8 +8,8 @@ import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 // import Analytics from "./components/analytics/Analytics";
-import Documentation from "./page/documentation/Documentation.jsx";
-import ScrollManager from "./components/common/ScrollManager.jsx";
+import Documentation from "./page/documentation/Documentation";
+import ScrollManager from "./components/common/ScrollManager";
 
 function App() {
   return (

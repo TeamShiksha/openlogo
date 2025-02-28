@@ -10,7 +10,7 @@ import {
   branding,
 } from "../src/utils/Constants";
 import userEvent from "@testing-library/user-event";
-import Home from "../src/page/home/Home.jsx";
+import Home from "../src/page/home/Home";
 
 vi.mock("../src/components/header/MobileHeaderMenu", () => ({
   default: ({ isOpen, closeMenu }) => (

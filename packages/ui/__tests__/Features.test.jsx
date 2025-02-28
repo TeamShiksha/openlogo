@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Features from "../src/components/features/Features";
 import { expect, describe, it } from "vitest";
-import { features } from "../src/utils/Constants.js";
+import { features } from "../src/utils/Constants";
 
 describe("Features component", () => {
   it('should render the title "Features"', () => {

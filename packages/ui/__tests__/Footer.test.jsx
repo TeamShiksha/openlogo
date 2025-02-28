@@ -4,8 +4,8 @@ import { branding, FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import Home from "../src/page/home/Home.jsx";
-import PrivacyPolicy from "../src/page/privacypolicy/PrivacyPolicy.jsx";
+import Home from "../src/page/home/Home";
+import PrivacyPolicy from "../src/page/privacypolicy/PrivacyPolicy";
 
 describe("Footer Component", () => {
   it("renders the footer logo with text and image", () => {

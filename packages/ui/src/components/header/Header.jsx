@@ -11,7 +11,7 @@ import {
   branding,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
-import { handleNavigation } from "../../utils/Helpers.js";
+import { handleNavigation } from "../../utils/Helpers";
 
 const Header = () => {
   const navigate = useNavigate();
