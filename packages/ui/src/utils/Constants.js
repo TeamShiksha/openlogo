@@ -561,6 +561,16 @@ export const FAQ = {
       answer:
         "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
     },
+    {
+      question: "What formats and sizes are available for the logos?",
+      answer:
+        "All logos are provided in PNG format with transparent backgrounds for easy integration into any project. While we currently offer standard resolutions, we're working on implementing multiple size options to better suit your specific needs. If you need a particular size or format, please contact our support team.",
+    },
+    {
+      question: "How can I request a logo that's not in your library?",
+      answer:
+        "If you need a logo that isn't currently in our database, you can submit a logo request through your account dashboard. Simply provide the company name and any relevant details. Our team reviews all requests and aims to add new logos within 48-72 hours, depending on complexity and availability. You'll receive a notification once your requested logo is available.",
+    },
   ],
 };
 
