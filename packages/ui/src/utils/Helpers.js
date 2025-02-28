@@ -83,8 +83,8 @@ export const formatDate = (dateString) => {
   });
 };
 
-export const handleNavigation = (e, url, navigate) => {
-  e.preventDefault();
+export const handleNavigation = (event, url, navigate) => {
+  event.preventDefault();
 
   const [path, sectionId] = url.split("#");
 
@@ -94,10 +94,9 @@ export const handleNavigation = (e, url, navigate) => {
     }
     navigate(path);
   } else if (sectionId) {
-    // Already on the correct page, just scroll to the section
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 95; // Adjust this value (positive = more space above, negative = scroll further)
+      const offset = 95;
       const elementTop = element.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({
         top: elementTop - offset,
@@ -105,7 +104,6 @@ export const handleNavigation = (e, url, navigate) => {
       });
     }
   } else {
-    // No sectionId, just scroll to top
     window.scrollTo(0, 0);
   }
 };

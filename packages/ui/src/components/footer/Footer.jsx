@@ -1,4 +1,4 @@
-import { FOOTER_ITEMS } from "../../utils/Constants";
+import { branding, FOOTER_ITEMS } from "../../utils/Constants";
 import styles from "./Footer.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { handleNavigation } from "../../utils/Helpers.js";
@@ -10,8 +10,13 @@ function Footer() {
     <div data-testid="footer" className={`container ${styles.block}`}>
       <footer className={styles["footer-container"]}>
         <div className={styles["footer-logo"]}>
-          <img alt="Logo Icon" src="openlogo.svg" width={30} height={30} />
-          <h4>Openlogo</h4>
+          <img
+            alt={branding.imageSrc}
+            src={branding.imageSrc}
+            width={30}
+            height={30}
+          />
+          <h4>{branding.brandName}</h4>
         </div>
         <div className={styles["footer-items"]}>
           {FOOTER_ITEMS.map((item) => (
@@ -19,7 +24,7 @@ function Footer() {
               key={item.name}
               className={styles["footer-item"]}
               to={item.url}
-              onClick={(e) => handleNavigation(e, item.url, navigate)}
+              onClick={(event) => handleNavigation(event, item.url, navigate)}
             >
               {item.title}
             </Link>

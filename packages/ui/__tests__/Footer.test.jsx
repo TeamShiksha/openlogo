@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import Footer from "../src/components/footer/Footer";
-import { FOOTER_ITEMS } from "../src/utils/Constants";
+import { branding, FOOTER_ITEMS } from "../src/utils/Constants";
 import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -14,13 +14,13 @@ describe("Footer Component", () => {
         <Footer />
       </BrowserRouter>
     );
-    const logoImage = screen.getByAltText("Logo Icon");
+    const logoImage = screen.getByAltText(branding.imageSrc);
     expect(logoImage).toBeInTheDocument();
-    expect(logoImage).toHaveAttribute("src", "openlogo.svg");
+    expect(logoImage).toHaveAttribute("src", branding.imageSrc);
     expect(logoImage).toHaveAttribute("width", "30");
     expect(logoImage).toHaveAttribute("height", "30");
 
-    const logoText = screen.getByText("Openlogo");
+    const logoText = screen.getByText(branding.brandName);
     expect(logoText).toBeInTheDocument();
   });
 

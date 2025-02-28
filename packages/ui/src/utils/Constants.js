@@ -136,7 +136,7 @@ export const FOOTER_ITEMS = [
   {
     name: "terms&conditions",
     title: "Terms & Conditions",
-    url: "/privacy#t&c",
+    url: "/privacy#t-and-c",
   },
 ];
 export const companies = [

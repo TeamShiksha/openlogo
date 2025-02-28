@@ -31,7 +31,10 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
             key={item.name}
             className={styles.nav}
             to={item.url}
-            onClick={(e) => handleNavigation(e, item.url, navigate)}
+            onClick={(event) => {
+              handleNavigation(event, item.url, navigate);
+              closeMenu(false);
+            }}
           >
             {item.title}
           </Link>

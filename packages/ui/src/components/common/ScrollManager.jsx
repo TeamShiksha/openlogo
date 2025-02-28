@@ -10,7 +10,6 @@ const ScrollManager = () => {
     if (scrollToHash) {
       sessionStorage.removeItem("scrollTo");
 
-      // Try to scroll to the section with a small delay to ensure DOM is ready
       let attempts = 0;
       const tryScroll = () => {
         const element = document.getElementById(scrollToHash);
@@ -29,7 +28,6 @@ const ScrollManager = () => {
       };
       setTimeout(tryScroll, 100);
     } else {
-      // If no specific section to scroll to, scroll to top
       window.scrollTo(0, 0);
     }
   }, [pathname]);
