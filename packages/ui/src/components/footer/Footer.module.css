@@ -50,7 +50,7 @@
 .footer-copyright,
 .footer-powered {
   color: var(--description);
-  font-size: 1rem;
+  font-size: 1.2rem;
   text-decoration: none;
   font-weight: bold;
   text-align: center;
@@ -63,34 +63,6 @@
   transition: all 0.3s ease-in-out;
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
-}
-
-@media only screen and (max-width: 1024px) {
-  .footer-copyright,
-  .footer-powered {
-    font-size: 1rem;
-    max-width: 30%;
-  }
-
-  .footer-items {
-    gap: 0.65rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    text-align: start;
-  }
-
-  .footer-item {
-    gap: 0.8rem;
-  }
-
-  .footer-logo img {
-    width: 32px;
-    height: 32px;
-  }
-
-  .footer-logo {
-    font-size: 1.5rem;
-  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -115,7 +87,6 @@
     min-width: 100%;
     margin-top: 10px;
     text-align: center;
-    font-size: 1rem;
   }
 
   .footer-items {
