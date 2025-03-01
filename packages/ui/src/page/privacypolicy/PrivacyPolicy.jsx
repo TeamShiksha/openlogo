@@ -1,10 +1,10 @@
 import styles from "./PrivacyPolicy.module.css";
-import { branding } from "../../utils/Constants";
+import { BRANDING } from "../../utils/Constants";
 
 const PrivacyPolicy = () => {
   return (
     <div className={`container ${styles["privacy-page-container"]}`}>
-      <h2 className={styles.heading}>{branding.brandName} Terms of Service</h2>
+      <h2 className={styles.heading}>{BRANDING.brandName} Terms of Service</h2>
       <p className={styles.text}>
         Thank you for choosing OpenLogo! Before using our services, please
         review our Terms of Service carefully. This agreement is a crucial
@@ -14,14 +14,14 @@ const PrivacyPolicy = () => {
       <br />
       <h2 className={styles.heading}>Privacy Policy</h2>
       <p className={styles.text}>
-        This Privacy Policy explains how {branding.brandName} collects, uses,
+        This Privacy Policy explains how {BRANDING.brandName} collects, uses,
         and protects your personal information when you use our website and
-        services. By using {branding.brandName}&apos;s services, you agree to
+        services. By using {BRANDING.brandName}&apos;s services, you agree to
         the terms of this Privacy Policy. Your privacy is important to us, and
         we are committed to safeguarding your personal information.
       </p>
       <p className={styles.text}>
-        {branding.brandName} collects personal information such as your name,
+        {BRANDING.brandName} collects personal information such as your name,
         email address, and other details when you register for an account or use
         specific features on our platform. We also gather usage data about how
         you interact with our website and services, including pages viewed,
@@ -34,11 +34,11 @@ const PrivacyPolicy = () => {
         manage your account, communicate with you about updates, offers, and
         newsletters, and perform business analysis to optimize site performance
         and security. We may also use your information to personalize your
-        experience on {branding.brandName} and improve our services based on
+        experience on {BRANDING.brandName} and improve our services based on
         your preferences.
       </p>
       <p className={styles.text}>
-        {branding.brandName} employs cookies and similar technologies to monitor
+        {BRANDING.brandName} employs cookies and similar technologies to monitor
         usage patterns, improve functionality, and analyze website traffic.
         Cookies help us provide a more personalized user experience. You can
         manage your cookie settings through your browser, but please note that
@@ -56,7 +56,7 @@ const PrivacyPolicy = () => {
         fulfill its purpose or as required by law.
       </p>
       <p className={styles.text}>
-        {branding.brandName}&apos;s services are not intended for children under
+        {BRANDING.brandName}&apos;s services are not intended for children under
         13, and we do not knowingly collect personal information from children
         under this age. If you believe that we have inadvertently collected
         personal information from a child under 13, please contact us
@@ -74,7 +74,7 @@ const PrivacyPolicy = () => {
         Terms and Conditions
       </h2>
       <p className={styles.text}>
-        By using {branding.brandName}&apos;s website and services, you agree to
+        By using {BRANDING.brandName}&apos;s website and services, you agree to
         comply with the following terms and conditions. You must abide by all
         applicable laws and regulations while using our services. You are
         responsible for maintaining the confidentiality of your account
@@ -82,28 +82,28 @@ const PrivacyPolicy = () => {
         under your account.
       </p>
       <p className={styles.text}>
-        {branding.brandName} reserves the right to modify or discontinue
+        {BRANDING.brandName} reserves the right to modify or discontinue
         services, in whole or in part, at any time without prior notice. We are
         not liable for any direct or indirect damages resulting from the use of
         our services, including but not limited to loss of data, loss of
         revenue, or business interruption.
       </p>
       <p className={styles.text}>
-        {branding.brandName} may, from time to time, offer promotional codes,
+        {BRANDING.brandName} may, from time to time, offer promotional codes,
         discounts, or special offers that are subject to additional terms and
         conditions. We reserve the right to cancel or modify any offers at our
         discretion. These offers may be available for limited periods and are
         subject to availability.
       </p>
       <p className={styles.text}>
-        You agree not to misuse {branding.brandName}&apos;s services, including
+        You agree not to misuse {BRANDING.brandName}&apos;s services, including
         but not limited to engaging in illegal activities, spamming, or
         violating the intellectual property rights of others. Failure to comply
         with these terms may result in the suspension or termination of your
         account.
       </p>
       <p className={styles.text}>
-        {branding.brandName} is not responsible for any third-party services or
+        {BRANDING.brandName} is not responsible for any third-party services or
         websites linked to our platform. Please read their respective privacy
         policies and terms before engaging with them.
       </p>

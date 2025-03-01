@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, beforeEach, afterEach, it, expect } from "vitest";
-import ScrollManager from "../src/components/common/ScrollManager";
-import { handleNavigation } from "../src/utils/Helpers";
+import ScrollManager from "../../../src/components/common/ScrollManager";
+import { handleNavigation } from "../../../src/utils/Helpers";
 
 describe("ScrollManager Component", () => {
   beforeEach(() => {

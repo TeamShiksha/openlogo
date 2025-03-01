@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import SignInForm from "../src/components/auth/Signin";
+import SignInForm from "../../../src/components/auth/Signin";
 
 describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {

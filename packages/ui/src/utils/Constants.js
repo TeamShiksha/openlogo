@@ -69,7 +69,7 @@ export const COMPANIES = [
   },
 ];
 
-export const features = {
+export const FEATURES = {
   heading: "Features",
   summary:
     "With Openlogo, integrate fresh, up-to-date company logos effortlessly and leverage smart search insights for professional branding.",
@@ -199,288 +199,6 @@ export const companies = [
     companyImage: "BerkshireHathaway.png",
     createdAt: "01 Mar 2024",
     updatedAt: "10 Mar 2024",
-  },
-  {
-    id: "Y1Z2A3B4C5",
-    companyImage: "Disney.png",
-    createdAt: "10 Jan 2024",
-    updatedAt: "12 Jan 2024",
-  },
-  {
-    id: "D6E7F8G9H0",
-    companyImage: "Intel.png",
-    createdAt: "30 Aug 2023",
-    updatedAt: "03 Sep 2023",
-  },
-  {
-    id: "I1J2K3L4M5",
-    companyImage: "Nike.png",
-    createdAt: "14 Jun 2024",
-    updatedAt: "20 Jun 2024",
-  },
-  {
-    id: "N6O7P8Q9R0",
-    companyImage: "PepsiCo.png",
-    createdAt: "23 Feb 2024",
-    updatedAt: "25 Feb 2024",
-  },
-  {
-    id: "S1T2U3V4W5",
-    companyImage: "CocaCola.png",
-    createdAt: "29 Oct 2023",
-    updatedAt: "01 Nov 2023",
-  },
-  {
-    id: "X6Y7Z8A9B0",
-    companyImage: "ProcterAndGamble.png",
-    createdAt: "05 May 2024",
-    updatedAt: "06 May 2024",
-  },
-  {
-    id: "C1D2E3F4G5",
-    companyImage: "Pfizer.png",
-    createdAt: "09 Dec 2023",
-    updatedAt: "11 Dec 2023",
-  },
-  {
-    id: "H6I7J8K9L0",
-    companyImage: "GeneralElectric.png",
-    createdAt: "18 Mar 2024",
-    updatedAt: "20 Mar 2024",
-  },
-  {
-    id: "M1N2O3P4Q5",
-    companyImage: "IBM.png",
-    createdAt: "07 Apr 2024",
-    updatedAt: "09 Apr 2024",
-  },
-  {
-    id: "R6S7T8U9V0",
-    companyImage: "Verizon.png",
-    createdAt: "16 Sep 2023",
-    updatedAt: "20 Sep 2023",
-  },
-  {
-    id: "W1X2Y3Z4A5",
-    companyImage: "AT&T.png",
-    createdAt: "10 Aug 2024",
-    updatedAt: "13 Aug 2024",
-  },
-  {
-    id: "B6C7D8E9F0",
-    companyImage: "Oracle.png",
-    createdAt: "24 Oct 2024",
-    updatedAt: "28 Oct 2024",
-  },
-  {
-    id: "G1H2I3J4K5",
-    companyImage: "Cisco.png",
-    createdAt: "15 Jul 2024",
-    updatedAt: "18 Jul 2024",
-  },
-  {
-    id: "L6M7N8O9P0",
-    companyImage: "Netflix.png",
-    createdAt: "25 Feb 2024",
-    updatedAt: "01 Mar 2024",
-  },
-  {
-    id: "Q1R2S3T4U5",
-    companyImage: "ExxonMobil.png",
-    createdAt: "19 Nov 2023",
-    updatedAt: "21 Nov 2023",
-  },
-  {
-    id: "V6W7X8Y9Z0",
-    companyImage: "Chevron.png",
-    createdAt: "22 Dec 2023",
-    updatedAt: "27 Dec 2023",
-  },
-  {
-    id: "A1B2C3D4E6",
-    companyImage: "GoldmanSachs.png",
-    createdAt: "14 Jan 2024",
-    updatedAt: "18 Jan 2024",
-  },
-  {
-    id: "F6G7H8I9J1",
-    companyImage: "WellsFargo.png",
-    createdAt: "05 Mar 2024",
-    updatedAt: "09 Mar 2024",
-  },
-  {
-    id: "K1L2M3N4O6",
-    companyImage: "BankOfAmerica.png",
-    createdAt: "06 Oct 2024",
-    updatedAt: "12 Oct 2024",
-  },
-  {
-    id: "P6Q7R8S9T1",
-    companyImage: "Target.png",
-    createdAt: "18 Jun 2024",
-    updatedAt: "21 Jun 2024",
-  },
-  {
-    id: "U1V2W3X4Y6",
-    companyImage: "Costco.png",
-    createdAt: "12 Apr 2024",
-    updatedAt: "15 Apr 2024",
-  },
-  {
-    id: "Z6A7B8C9D1",
-    companyImage: "HomeDepot.png",
-    createdAt: "03 Jul 2024",
-    updatedAt: "09 Jul 2024",
-  },
-  {
-    id: "E1F2G3H4I6",
-    companyImage: "UPS.png",
-    createdAt: "21 Aug 2023",
-    updatedAt: "25 Aug 2023",
-  },
-  {
-    id: "J6K7L8M9N1",
-    companyImage: "FedEx.png",
-    createdAt: "28 Nov 2024",
-    updatedAt: "02 Dec 2024",
-  },
-  {
-    id: "O1P2Q3R4S6",
-    companyImage: "McDonalds.png",
-    createdAt: "01 Jun 2024",
-    updatedAt: "03 Jun 2024",
-  },
-  {
-    id: "T6U7V8W9X1",
-    companyImage: "Starbucks.png",
-    createdAt: "07 Feb 2024",
-    updatedAt: "12 Feb 2024",
-  },
-  {
-    id: "Y1Z2A3B4C6",
-    companyImage: "Visa.png",
-    createdAt: "20 May 2024",
-    updatedAt: "24 May 2024",
-  },
-  {
-    id: "D6E7F8G9H1",
-    companyImage: "Mastercard.png",
-    createdAt: "17 Apr 2024",
-    updatedAt: "22 Apr 2024",
-  },
-  {
-    id: "I1J2K3L4M6",
-    companyImage: "AmericanExpress.png",
-    createdAt: "04 Mar 2024",
-    updatedAt: "10 Mar 2024",
-  },
-  {
-    id: "N6O7P8Q9R1",
-    companyImage: "GeneralMotors.png",
-    createdAt: "11 Oct 2024",
-    updatedAt: "18 Oct 2024",
-  },
-  {
-    id: "S1T2U3V4W6",
-    companyImage: "Ford.png",
-    createdAt: "30 Apr 2024",
-    updatedAt: "07 May 2024",
-  },
-  {
-    id: "X6Y7Z8A9B1",
-    companyImage: "Boeing.png",
-    createdAt: "13 Aug 2024",
-    updatedAt: "20 Aug 2024",
-  },
-  {
-    id: "C1D2E3F4G6",
-    companyImage: "LockheedMartin.png",
-    createdAt: "29 Sep 2023",
-    updatedAt: "06 Oct 2023",
-  },
-  {
-    id: "H6I7J8K9L1",
-    companyImage: "NorthropGrumman.png",
-    createdAt: "05 Dec 2023",
-    updatedAt: "10 Dec 2023",
-  },
-  {
-    id: "M1N2O3P4Q6",
-    companyImage: "Raytheon.png",
-    createdAt: "12 Nov 2024",
-    updatedAt: "15 Nov 2024",
-  },
-  {
-    id: "R6S7T8U9V1",
-    companyImage: "Samsung.png",
-    createdAt: "18 May 2024",
-    updatedAt: "25 May 2024",
-  },
-  {
-    id: "W1X2Y3Z4A6",
-    companyImage: "Sony.png",
-    createdAt: "21 Jan 2024",
-    updatedAt: "28 Jan 2024",
-  },
-  {
-    id: "B6C7D8E9F1",
-    companyImage: "Panasonic.png",
-    createdAt: "03 Oct 2023",
-    updatedAt: "11 Oct 2023",
-  },
-  {
-    id: "G1H2I3J4K6",
-    companyImage: "LG.png",
-    createdAt: "10 Feb 2024",
-    updatedAt: "18 Feb 2024",
-  },
-  {
-    id: "L6M7N8O9P1",
-    companyImage: "Huawei.png",
-    createdAt: "12 Jun 2024",
-    updatedAt: "20 Jun 2024",
-  },
-  {
-    id: "Q1R2S3T4U6",
-    companyImage: "Dell.png",
-    createdAt: "17 Aug 2023",
-    updatedAt: "23 Aug 2023",
-  },
-  {
-    id: "V6W7X8Y9Z1",
-    companyImage: "HP.png",
-    createdAt: "14 Apr 2024",
-    updatedAt: "20 Apr 2024",
-  },
-  {
-    id: "A1B2C3D4E7",
-    companyImage: "Lenovo.png",
-    createdAt: "09 Mar 2024",
-    updatedAt: "15 Mar 2024",
-  },
-  {
-    id: "F6G7H8I9J2",
-    companyImage: "Xiaomi.png",
-    createdAt: "18 Nov 2023",
-    updatedAt: "25 Nov 2023",
-  },
-  {
-    id: "K1L2M3N4O7",
-    companyImage: "Philips.png",
-    createdAt: "21 Dec 2023",
-    updatedAt: "28 Dec 2023",
-  },
-  {
-    id: "P6Q7R8S9T2",
-    companyImage: "Siemens.png",
-    createdAt: "05 Jan 2024",
-    updatedAt: "12 Jan 2024",
-  },
-  {
-    id: "U1V2W3X4Y7",
-    companyImage: "Honeywell.png",
-    createdAt: "27 Apr 2024",
-    updatedAt: "05 May 2024",
   },
 ];
 
@@ -612,16 +330,20 @@ export const CROSS = {
   alt: "Close Icon",
 };
 
-export const buttonText = {
+export const BUTTON_TEXT = {
   getStarted: "Get started",
+  commingSoon: "Coming Soon",
+  documentation: "Documentation",
 };
 
-export const branding = {
+export const BRANDING = {
   imageSrc: "openlogo.svg",
   brandName: "Openlogo",
+  poweredByText: "Powered by TeamShiksha",
+  poweredByLink: "https://team.shiksha",
 };
 
-export const codeBlock = {
+export const CODEBLOCK = {
   jsLogo,
   pythonLogo,
   javaLogo,
@@ -629,7 +351,7 @@ export const codeBlock = {
   copycodeicon,
 };
 
-export const codeExamplesSearch = {
+export const CODE_EXAMPLE_SEARCH = {
   javascript: `// use fetch to send GET request
 fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
   method: "GET",
@@ -667,7 +389,7 @@ HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
-export const codeExamples = {
+export const CODE_EXAMPLE = {
   javascript: `// use fetch to send GET request
 fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
   method: "GET",
@@ -705,7 +427,7 @@ HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
-export const tableData = {
+export const TABLE_DATA = {
   headers: ["Parameter", "Type", "Description", "Required"],
   logoRows: [
     ["key", "string", "The domain name of the company.", "Yes"],
@@ -715,4 +437,12 @@ export const tableData = {
     ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
     ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
   ],
+};
+
+export const HERO_SECTION = {
+  tagLine: "Access hundreds of logos with just one line of code",
+  summary:
+    "A collection of APIs designed to simplify the process of obtaining company logos. Generate API keys in seconds.",
+  illustractionSrc: "logo-images.png",
+  illustractionSrcAlt: "illustraction",
 };

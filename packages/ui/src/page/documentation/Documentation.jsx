@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import Table from "../../components/common/table/Table.jsx";
 import {
-  codeExamples,
-  codeExamplesSearch,
-  tableData,
-} from "../../utils/Constants.js";
+  CODE_EXAMPLE,
+  CODE_EXAMPLE_SEARCH,
+  TABLE_DATA,
+} from "../../utils/Constants";
 import styles from "./Documentation.module.css";
 import CodeBlock from "./CodeBlock.jsx";
 
@@ -42,12 +42,12 @@ const Documentation = () => {
       </div>
       <div className={styles["table-wrapper"]}>
         <Table
-          headers={tableData.headers}
-          rows={tableData.logoRows}
+          headers={TABLE_DATA.headers}
+          rows={TABLE_DATA.logoRows}
           emptyMessage="No data available"
         />
       </div>
-      <CodeBlock id="logo-example" codeExamples={codeExamples} />
+      <CodeBlock id="logo-example" codeExamples={CODE_EXAMPLE} />
       <div className={styles.card}>
         <h3 className={styles["card-heading"]}>Search (Now Available)</h3>
         <p className={styles.text}>
@@ -63,12 +63,12 @@ const Documentation = () => {
       </div>
       <div className={styles["table-wrapper"]}>
         <Table
-          headers={tableData.headers}
-          rows={tableData.searchRows}
+          headers={TABLE_DATA.headers}
+          rows={TABLE_DATA.searchRows}
           emptyMessage="No data available"
         />
       </div>
-      <CodeBlock id="search-example" codeExamples={codeExamplesSearch} />
+      <CodeBlock id="search-example" codeExamples={CODE_EXAMPLE_SEARCH} />
       <div className={styles.card} style={{ marginTop: "2rem" }}>
         <p className={styles.text}>
           If you&apos;re unable to find the logo you need, please don&apos;t

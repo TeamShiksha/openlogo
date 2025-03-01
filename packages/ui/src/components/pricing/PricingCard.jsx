@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import tickIcon from "../../assets/Icon.svg";
 import Button from "../common/button/Button";
+import { BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./PricingCard.module.css";
 
 function PricingCard({ name, tagline, index, keypoints }) {
-  const buttonText = index === 1 ? "Coming Soon" : "Get Started";
+  const buttonText =
+    index === 1 ? BUTTON_TEXT.commingSoon : BUTTON_TEXT.getStarted;
   const isDisabled = index === 1 ? true : false;
 
   return (

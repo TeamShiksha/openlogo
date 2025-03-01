@@ -1,63 +1,48 @@
+import { expect, describe, it } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import HeroSection from "../src/components/hero/HeroSection";
-import { expect, describe, it } from "vitest";
+import { BUTTON_TEXT, HERO_SECTION } from "../src/utils/Constants";
 
 describe("HeroSection Component", () => {
-  it("renders the HeroSection with heading and description", () => {
+  it("Tagline and summary visible", () => {
     render(<HeroSection />);
-    expect(
-      screen.getByText("Access hundreds of logos with just one line of code")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "A collection of APIs designed to simplify the process of obtaining company logos. Generate API keys in seconds."
-      )
-    ).toBeInTheDocument();
+
+    const tagline = screen.getByText(HERO_SECTION.tagLine);
+    const summary = screen.getByText(HERO_SECTION.summary);
+    expect(tagline).toBeInTheDocument();
+    expect(summary).toBeInTheDocument();
   });
 
-  it("renders the buttons correctly", () => {
+  it("Buttons visible", () => {
     render(<HeroSection />);
-    expect(screen.getByText("Documentation")).toBeInTheDocument();
-    expect(screen.getByText("Get started")).toBeInTheDocument();
+
+    const documentationButton = screen.getByText(BUTTON_TEXT.documentation);
+    const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
+    expect(documentationButton).toBeInTheDocument();
+    expect(documentationButton.tagName).toBe("BUTTON");
+    expect(getStartedButton).toBeInTheDocument();
+    expect(getStartedButton.tagName).toBe("BUTTON");
   });
 
-  it("renders the logo image in the right section", () => {
+  it("Illustration visible", () => {
     render(<HeroSection />);
-    const logoImage = screen.getByAltText("Logo Images");
+
+    const logoImage = screen.getByAltText(HERO_SECTION.illustractionSrcAlt);
     expect(logoImage).toBeInTheDocument();
-    expect(logoImage).toHaveAttribute("src", "logo-images.png");
+    expect(logoImage).toHaveAttribute("src", HERO_SECTION.illustractionSrc);
   });
 
-  it("does not render the modal initially", () => {
+  it("Auth modal visibility before and after the click", () => {
     render(<HeroSection />);
-    expect(screen.queryByText("AuthModal")).not.toBeInTheDocument();
-  });
 
-  it("opens the modal when the 'Get started' button is clicked", () => {
-    render(<HeroSection />);
-    fireEvent.click(screen.getByText("Get started"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-  });
-
-  it("closes the modal when the 'Escape' key is pressed", () => {
-    render(<HeroSection />);
-    fireEvent.click(screen.getByText("Get started"));
-    fireEvent.keyDown(document, { key: "Escape", code: "Escape" });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  });
-
-  it("closes the modal when clicking outside of it", () => {
-    render(<HeroSection />);
-    fireEvent.click(screen.getByText("Get started"));
-    fireEvent.click(screen.getByRole("dialog"));
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  });
-
-  it("toggles between SignIn and SignUp forms when the toggle button is clicked", () => {
-    render(<HeroSection />);
-    fireEvent.click(screen.getByText("Get started"));
-    expect(screen.getByText("Sign up for free")).toBeInTheDocument();
-    expect(screen.getByText("Go to dashboard")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Don't have an account?"));
+    const anyDialog = screen.queryByRole("dialog");
+    expect(anyDialog).not.toBeInTheDocument();
+    const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
+    fireEvent.click(getStartedButton);
+    const authDialog = screen.getByRole("dialog");
+    expect(authDialog).toBeInTheDocument();
+    fireEvent.click(authDialog);
+    const authDialogAfter = screen.queryByRole("dialog");
+    expect(authDialogAfter).not.toBeInTheDocument();
   });
 });

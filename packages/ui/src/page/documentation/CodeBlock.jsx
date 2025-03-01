@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { codeBlock } from "../../utils/Constants.js";
+import { CODEBLOCK } from "../../utils/Constants";
 import styles from "./Documentation.module.css";
 
 const CodeBlock = ({ id, codeExamples }) => {
@@ -21,9 +21,9 @@ const CodeBlock = ({ id, codeExamples }) => {
   };
 
   const logos = {
-    javascript: codeBlock.jsLogo,
-    python: codeBlock.pythonLogo,
-    java: codeBlock.javaLogo,
+    javascript: CODEBLOCK.jsLogo,
+    python: CODEBLOCK.pythonLogo,
+    java: CODEBLOCK.javaLogo,
   };
 
   return (
@@ -52,10 +52,10 @@ const CodeBlock = ({ id, codeExamples }) => {
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
           >
             {copyMessage ? (
-              <img src={codeBlock.tick} alt="tick" />
+              <img src={CODEBLOCK.tick} alt="tick" />
             ) : (
               <img
-                src={codeBlock.copycodeicon}
+                src={CODEBLOCK.copycodeicon}
                 alt="Copy code"
                 style={{ cursor: "pointer" }}
               />

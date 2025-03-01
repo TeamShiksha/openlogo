@@ -63,10 +63,6 @@
   text-underline-offset: 6px;
 }
 
-.hamburger {
-  display: none;
-}
-
 @media only screen and (max-width: 1024px) {
   .brand-img {
     width: 32px;

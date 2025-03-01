@@ -10,7 +10,7 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 780) {
+      if (window.innerWidth > 1024) {
         closeMenu(false);
       }
     };
@@ -19,12 +19,12 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
       window.removeEventListener("resize", handleResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.innerWidth]);
+  }, []);
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles["mobile-header"]}>
+    <div data-testid="mobile-menu" className={styles["mobile-header"]}>
       <div className={styles.navbar}>
         {HEADER_ITEMS.map((item) => (
           <Link

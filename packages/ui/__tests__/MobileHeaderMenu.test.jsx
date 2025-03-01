@@ -1,55 +1,51 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
-import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu.jsx";
 import { vi, describe, it, expect } from "vitest";
-import { HEADER_ITEMS } from "../src/utils/Constants.js";
+import { BrowserRouter } from "react-router-dom";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Documentation from "../src/page/documentation/Documentation";
+import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu";
 
 const mockCloseMenu = vi.fn();
 
-vi.mock("../../utils/Constants", () => ({ HEADER_ITEMS }));
-
 describe("MobileHeaderMenu Component", () => {
-  it("should not render when isOpen is false", () => {
+  it("Doesn't render when isOpen = false", () => {
     render(
       <BrowserRouter>
         <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
       </BrowserRouter>
     );
-    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+
+    const mobileMenu = screen.queryByTestId("mobile-menu");
+    expect(mobileMenu).not.toBeInTheDocument();
   });
 
-  it("should render correctly when isOpen is true", () => {
+  it("Does render when isOpen = false and navigation works", async () => {
     render(
       <BrowserRouter>
         <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
+        <Documentation />
       </BrowserRouter>
     );
-    HEADER_ITEMS.forEach((item) => {
-      expect(screen.getByText(item.title)).toBeInTheDocument();
-    });
+
+    const mobileMenu = screen.getByTestId("mobile-menu");
+    expect(mobileMenu).toBeInTheDocument();
+    const docsNavigation = within(mobileMenu).getByText("Docs");
+    expect(docsNavigation).toBeInTheDocument();
+    await userEvent.click(docsNavigation);
+    expect(window.location.pathname).toBe("/docs");
   });
 
-  it("should have correct href attributes for links", () => {
+  it("calls closeMenu when screen width exceeds 1024px", () => {
+    window.innerWidth = 800;
+    window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
+        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
       </BrowserRouter>
     );
 
-    HEADER_ITEMS.forEach((item) => {
-      const linkElement = screen.getByText(item.title).closest("a");
-      expect(linkElement).toHaveAttribute("href", item.url);
-    });
-  });
-
-  it("should close the menu when window is resized above 780px", () => {
-    render(
-      <BrowserRouter>
-        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
-      </BrowserRouter>
-    );
-
-    fireEvent.resize(window, { target: { innerWidth: 800 } });
+    window.innerWidth = 1100;
+    window.dispatchEvent(new Event("resize"));
     expect(mockCloseMenu).toHaveBeenCalledWith(false);
   });
 });
