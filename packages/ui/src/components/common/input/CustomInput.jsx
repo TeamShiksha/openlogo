@@ -8,26 +8,26 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
   const handleBlur = () => setIsFocused(false);
 
   return (
-    <div className={styles.customInputGroup}>
+    <div className={styles.group}>
       <input
         type={type}
         id={label}
         name={name}
-        className={`${styles.customInput} ${className}`}
+        className={`${styles["group-input"]} ${className}`}
         value={value}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={onChange}
       />
       <label
-        className={`${styles.customInputLabel} ${
-          isFocused || value ? styles.customInputLabelActive : ""
+        className={`${styles["input-label"]} ${
+          isFocused || value ? styles["label-active"] : ""
         }`}
         htmlFor={label}
       >
         {label}
       </label>
-      {error && <p className={styles.customInputError}>{error}</p>}
+      {error && <p className={styles["input-error"]}>{error}</p>}
     </div>
   );
 }
