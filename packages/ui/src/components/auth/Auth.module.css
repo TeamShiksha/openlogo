@@ -12,7 +12,7 @@ dialog {
 .modal-container {
   width: 350px;
   min-height: 500px;
-  background-color: white;
+  background-color: var(--white);
   display: flex;
   flex-direction: row;
   position: relative;
@@ -46,7 +46,7 @@ dialog {
 }
 
 .back {
-  background-color: #ffffff;
+  background-color: var(--white);
   transform: rotateY(180deg);
   z-index: 1;
 }

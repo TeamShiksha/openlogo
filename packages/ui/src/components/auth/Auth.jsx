@@ -17,26 +17,12 @@ const AuthModal = ({ isOpen, onClose }) => {
     const dialog = dialogRef.current;
     if (isOpen && dialog) {
       dialog.showModal();
-
-      const handleKeyDown = (event) => {
-        if (event.key === "Escape") {
-          onClose();
-        }
-      };
-      document.addEventListener("keydown", handleKeyDown);
-
       const handleClickOutside = (e) => {
         if (e.target === dialog) {
           onClose();
         }
       };
-
       dialog.addEventListener("click", handleClickOutside);
-
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-        dialog.removeEventListener("click", handleClickOutside);
-      };
     } else if (!isOpen && dialog) {
       dialog.close();
     }
@@ -52,7 +38,6 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className={styles.front}>
           <SignUpForm toggleForm={toggleForm} onClose={onClose} />
         </div>
-
         <div className={styles.back}>
           <SignInForm toggleForm={toggleForm} onClose={onClose} />
         </div>
