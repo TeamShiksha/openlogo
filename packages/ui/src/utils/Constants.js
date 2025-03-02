@@ -338,6 +338,7 @@ export const BUTTON_TEXT = {
   signIn: "Sign In",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
+  sendMessage: "Send message",
 };
 
 export const BRANDING = {
@@ -513,4 +514,17 @@ export const SIGNIN = {
   ],
   footerText: "Don't have an account ?",
   initialValues: { email: "", password: "" },
+};
+
+export const CONTACT = {
+  title: "Contact Us",
+  fields: [
+    { type: "text", name: "name", label: "Name" },
+    { type: "email", name: "email", label: "Email" },
+  ],
+  intialValues: {
+    name: "",
+    email: "",
+    message: "",
+  },
 };

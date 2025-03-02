@@ -1,55 +1,20 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
+import Modal from "../common/modal/Modal";
 import Button from "../common/button/Button";
 import styles from "./ContactForm.module.css";
+import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function ContactForm({ closeModal }) {
-  const [formValues, setFormValues] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formValues, setFormValues] = useState(CONTACT.intialValues);
+  const [errors, setErrors] = useState({});
 
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [successMessage, setSuccessMessage] = useState("");
-  const modalRef = useRef(null);
-  const nameInputRef = useRef(null);
-
-  useEffect(() => {
-    nameInputRef.current?.focus();
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        closeModal();
-      }
-    };
-
-    const handleEscKeyPress = (event) => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscKeyPress);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscKeyPress);
-    };
-  }, [closeModal]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
-    setErrors({ ...errors, [name]: "" });
   };
 
   const validateForm = () => {
@@ -71,77 +36,45 @@ function ContactForm({ closeModal }) {
     return !newErrors.name && !newErrors.email && !newErrors.message;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (submitEvent) => {
+    submitEvent.preventDefault();
     if (validateForm()) {
-      setSuccessMessage("Message sent successfully!");
       setFormValues({ name: "", email: "", message: "" });
       setTimeout(() => {
-        setSuccessMessage("");
         closeModal();
       }, 5000);
     }
   };
 
   return (
-    <dialog className={styles.modalOverlay} open>
-      <div ref={modalRef} className={styles.modalContent}>
-        {successMessage && (
-          <div className={styles.successNotification}>
-            <p>{successMessage}</p>
-          </div>
-        )}
-        <button
-          onClick={closeModal}
-          className={styles.closeButton}
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <h3>Contact Us</h3>
-        <form className={styles.contactForm} onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
+    <Modal onClose={closeModal} isOpen={true}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h3 className={styles.title}>{CONTACT.title}</h3>
+        <div className={styles["form-width"]}>
+          {CONTACT["fields"].map((field) => (
             <CustomInput
-              type="text"
-              name="name"
-              value={formValues.name}
-              label="Name"
+              key={field.name}
+              type={field.type}
+              name={field.name}
+              label={field.label}
+              value={formValues[field.name]}
               onChange={handleInputChange}
-              className={`${styles.inputField} ${errors.name ? styles.invalid : ""}`}
             />
-          </div>
-          <div className={styles.formGroup}>
-            <CustomInput
-              type="email"
-              name="email"
-              value={formValues.email}
-              label="Email"
-              onChange={handleInputChange}
-              className={`${styles.inputField} ${errors.email ? styles.invalid : ""}`}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <textarea
-              name="message"
-              placeholder={errors.message || "Type your message here ...."}
-              value={formValues.message}
-              onChange={handleInputChange}
-              className={`${styles.textArea} ${errors.message ? styles.invalid : ""}`}
-              aria-invalid={!!errors.message}
-            ></textarea>
-          </div>
-          <div className={styles.buttonContainer}>
-            <Button
-              type="submit"
-              variant="primary"
-              className={styles.submitButton}
-            >
-              Send Message
-            </Button>
-          </div>
-        </form>
-      </div>
-    </dialog>
+          ))}
+          <textarea
+            name="message"
+            placeholder={errors.message || "Type your message here ...."}
+            value={formValues.message}
+            onChange={handleInputChange}
+            className={styles["text-area"]}
+            aria-invalid={!!errors.message}
+          ></textarea>
+        </div>
+        <Button type="submit" variant="primary" disabled={true}>
+          {BUTTON_TEXT.sendMessage}
+        </Button>
+      </form>
+    </Modal>
   );
 }
 

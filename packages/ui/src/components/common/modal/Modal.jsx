@@ -21,7 +21,7 @@ const Modal = ({
   };
 
   return (
-    <dialog className={styles["modal-overlay"]} onClick={handleOverlayClick}>
+    <div className={styles["modal-overlay"]} onClick={handleOverlayClick}>
       <div
         className={`${styles.modal} ${customClass || ""}`}
         style={{
@@ -36,7 +36,7 @@ const Modal = ({
         )}
         {children}
       </div>
-    </dialog>
+    </div>
   );
 };
 
