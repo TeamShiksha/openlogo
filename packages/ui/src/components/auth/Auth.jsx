@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import SignUpForm from "./Signup";
-import SignInForm from "./Signin";
+import SignUp from "./Signup";
+import SignIn from "./Signin";
 import styles from "./Auth.module.css";
 import ModalStyles from "../common/modal/Modal.module.css";
 
@@ -36,10 +36,10 @@ const AuthModal = ({ isOpen, onClose }) => {
         className={`${styles["modal-container"]} ${isFlipped ? styles.flipped : ""}`}
       >
         <div className={styles.front}>
-          <SignUpForm toggleForm={toggleForm} onClose={onClose} />
+          <SignUp toggleForm={toggleForm} onClose={onClose} />
         </div>
         <div className={styles.back}>
-          <SignInForm toggleForm={toggleForm} onClose={onClose} />
+          <SignIn toggleForm={toggleForm} onClose={onClose} />
         </div>
       </div>
     </dialog>

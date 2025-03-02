@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import SignInForm from "../../../src/components/auth/Signin";
+import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 
 describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
-    render(<SignInForm toggleForm={vi.fn()} onClose={vi.fn()} />);
+    render(<SignIn toggleForm={vi.fn()} onClose={vi.fn()} />);
 
     const title = screen.getByRole("heading", { name: SIGNIN.title });
     expect(title).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe("SignInForm UI and Functionality Tests", () => {
 
   it("closes modal when close button is clicked", () => {
     const onCloseMock = vi.fn();
-    render(<SignInForm toggleForm={vi.fn()} onClose={onCloseMock} />);
+    render(<SignIn toggleForm={vi.fn()} onClose={onCloseMock} />);
 
     const closeButton = screen.getByText(BUTTON_TEXT.cross);
     fireEvent.click(closeButton);
@@ -30,7 +30,7 @@ describe("SignInForm UI and Functionality Tests", () => {
 
   it("toggles to sign-up form when link is clicked", () => {
     const toggleFormMock = vi.fn();
-    render(<SignInForm toggleForm={toggleFormMock} onClose={vi.fn()} />);
+    render(<SignIn toggleForm={toggleFormMock} onClose={vi.fn()} />);
 
     const switchButton = screen.getByText(SIGNIN.footerText);
     fireEvent.click(switchButton);
