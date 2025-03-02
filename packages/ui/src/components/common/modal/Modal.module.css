@@ -12,7 +12,7 @@
 }
 
 .modal {
-  background-color: white;
+  background-color: var(--white);
   border-radius: 12px;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -20,51 +20,31 @@
   z-index: 1100;
   overflow: hidden;
   margin: 1rem;
-  width: 100%;
-  max-width: 800px;
+  width: 350px;
 }
 
-.modalSmall {
-  width: 100%;
-  max-width: 300px;
-}
-
-.modalMedium {
-  width: 100%;
-  max-width: 400px;
-}
-
-.modalLarge {
-  width: 100%;
-  max-width: 800px;
-}
-
-.closeButton {
+.close-button {
   position: absolute;
-  top: 0.2rem;
-  right: 0.5rem;
+  top: 0.5rem;
+  right: 1rem;
   background: none;
   border: none;
   font-size: 2rem;
   cursor: pointer;
   padding: 5px;
-  color: #666;
+  color: var(--description);
+  opacity: 0.4;
   z-index: 1;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.closeButton:hover {
-  color: #333;
+.close-button:hover {
+  opacity: 0.8;
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .modal {
-    width: 90%;
-    max-width: none;
-    padding: 2rem;
-  }
-
-  .closeButton {
+@media (max-width: 780px) {
+  .close-button {
     top: 0.5rem;
     right: 1rem;
     font-size: 2rem;
@@ -73,12 +53,7 @@
 }
 
 @media (max-width: 480px) {
-  .modal {
-    width: 95%;
-    padding: 1.5rem;
-  }
-
-  .closeButton {
+  .close-button {
     font-size: 1.5rem;
     padding: 8px;
   }

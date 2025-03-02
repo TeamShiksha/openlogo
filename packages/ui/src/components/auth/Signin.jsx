@@ -6,7 +6,7 @@ import { isValidEmail, isValidPassword } from "../../utils/Helpers";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 
-const SignIn = ({ toggleForm, onClose }) => {
+const SignIn = ({ toggleForm }) => {
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -64,19 +64,15 @@ const SignIn = ({ toggleForm, onClose }) => {
         </Button>
       </form>
       <hr className={styles.separator} />
-      <span onClick={toggleForm} className={styles.switch}>
+      <p onClick={toggleForm} className={styles.switch}>
         {SIGNIN.footerText}
-      </span>
-      <button onClick={onClose} className={styles.cross}>
-        {BUTTON_TEXT.cross}
-      </button>
+      </p>
     </>
   );
 };
 
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 export default SignIn;

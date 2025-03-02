@@ -17,7 +17,7 @@ describe("Auth Component", () => {
   it("Authmodal does render if isOpen = true", () => {
     render(<AuthModal isOpen={true} onClose={closeModal} />);
 
-    const authModalDialog = screen.getByRole("dialog");
+    const authModalDialog = screen.getByText(BUTTON_TEXT.cross);
     expect(authModalDialog).toBeInTheDocument();
   });
 
@@ -26,15 +26,16 @@ describe("Auth Component", () => {
 
     const toggleSpan = screen.getByText(SIGNIN.footerText);
     fireEvent.click(toggleSpan);
-    const SignInForm = screen.getByText(BUTTON_TEXT.signIn);
-    expect(SignInForm).toBeInTheDocument();
+    const SignUpForm = screen.getByText(BUTTON_TEXT.signUp);
+    expect(SignUpForm).toBeInTheDocument();
   });
 
-  it("AuthModal closes when clicking outside", () => {
-    const onClose = vi.fn();
-    render(<AuthModal isOpen={true} onClose={onClose} />);
+  it("AuthModal closes when cross is clicked", () => {
+    const Close = vi.fn();
+    render(<AuthModal isOpen={true} onClose={Close} />);
 
-    fireEvent.click(screen.getByRole("dialog"));
-    expect(onClose).toHaveBeenCalled();
+    const AuthModalcross = screen.getByText(BUTTON_TEXT.cross);
+    fireEvent.click(AuthModalcross);
+    expect(Close).toHaveBeenCalled();
   });
 });

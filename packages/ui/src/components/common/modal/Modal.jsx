@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
+import { BUTTON_TEXT } from "../../../utils/Constants";
 import styles from "./Modal.module.css";
 
 const Modal = ({
   isOpen,
   onClose,
   children,
-  size = "medium",
   customWidth,
   customHeight,
   customClass,
@@ -20,46 +20,23 @@ const Modal = ({
     }
   };
 
-  const handleKeyBoardEvent = (keyboardEvent) => {
-    if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
-      handleOverlayClick(keyboardEvent);
-    }
-  };
-
-  const getModalSize = () => {
-    switch (size) {
-      case "small":
-        return styles.modalSmall;
-      case "large":
-        return styles.modalLarge;
-      case "custom":
-        return "";
-      default:
-        return styles.modalMedium;
-    }
-  };
-
   return (
-    <div
-      className={styles["modal-overlay"]}
-      onClick={handleOverlayClick}
-      onKeyDown={(e) => handleKeyBoardEvent(e)}
-    >
+    <dialog className={styles["modal-overlay"]} onClick={handleOverlayClick}>
       <div
-        className={`${styles.modal} ${getModalSize()} ${customClass || ""}`}
+        className={`${styles.modal} ${customClass || ""}`}
         style={{
           ...(customWidth ? { width: customWidth } : {}),
           ...(customHeight ? { height: customHeight } : {}),
         }}
       >
         {showCloseButton && (
-          <button className={styles.closeButton} onClick={onClose}>
-            ×
+          <button className={styles["close-button"]} onClick={onClose}>
+            {BUTTON_TEXT.cross}
           </button>
         )}
         {children}
       </div>
-    </div>
+    </dialog>
   );
 };
 
@@ -67,7 +44,6 @@ Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   children: PropTypes.node,
-  size: PropTypes.oneOf(["small", "medium", "large", "custom"]),
   customWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customClass: PropTypes.string,

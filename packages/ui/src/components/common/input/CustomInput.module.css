@@ -50,8 +50,8 @@
   color: var(--label-color);
 }
 
-.input-error{
-   color: var(--error);
-   font-size: 0.8rem;
-   padding: 4px;
+.input-error {
+  color: var(--error);
+  font-size: 0.8rem;
+  padding: 4px;
 }

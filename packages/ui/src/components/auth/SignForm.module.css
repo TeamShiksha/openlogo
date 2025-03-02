@@ -20,23 +20,27 @@
   text-align: center;
   margin: 10px 0;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .switch:hover {
   color: var(--primary);
+  transition: all 0.3s ease;
 }
 
 .forgot-password {
   margin-left: auto;
   color: var(--primary);
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   cursor: pointer;
   opacity: 0.7;
+  transition: all 0.3s ease;
 }
 
 .forgot-password:hover {
   opacity: 1;
+  transition: all 0.3s ease;
 }
 
 .form-width {
@@ -51,7 +55,7 @@
 .separator {
   border-top: 2px solid var(--description);
   opacity: 0.3;
-  width: 80%;
+  width: 100%;
 }
 
 .cross {

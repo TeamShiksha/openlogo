@@ -10,6 +10,7 @@ import {
   CROSS,
   BUTTON_TEXT,
   BRANDING,
+  SIGNIN,
 } from "../../src/utils/Constants";
 
 describe("Header component", () => {
@@ -141,11 +142,11 @@ describe("Header component", () => {
 
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
-    const signupForm = screen.getByTestId("signup-form");
+    const signupForm = screen.getByText(SIGNIN.title);
     expect(signupForm).toBeInTheDocument();
     const closeModalButton = screen.getAllByText(BUTTON_TEXT.cross);
     fireEvent.click(closeModalButton[0]);
-    const signupFormAfter = screen.queryByTestId("signup-form");
+    const signupFormAfter = screen.queryByText(SIGNIN.title);
     expect(signupFormAfter).not.toBeInTheDocument();
   });
 });

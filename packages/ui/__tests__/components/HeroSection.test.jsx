@@ -35,14 +35,14 @@ describe("HeroSection Component", () => {
   it("Auth modal visibility before and after the click", () => {
     render(<HeroSection />);
 
-    const anyDialog = screen.queryByRole("dialog");
+    const anyDialog = screen.queryByText(BUTTON_TEXT.cross);
     expect(anyDialog).not.toBeInTheDocument();
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
-    const authDialog = screen.getByRole("dialog");
+    const authDialog = screen.queryByText(BUTTON_TEXT.cross);
     expect(authDialog).toBeInTheDocument();
     fireEvent.click(authDialog);
-    const authDialogAfter = screen.queryByRole("dialog");
+    const authDialogAfter = screen.queryByText(BUTTON_TEXT.cross);
     expect(authDialogAfter).not.toBeInTheDocument();
   });
 });

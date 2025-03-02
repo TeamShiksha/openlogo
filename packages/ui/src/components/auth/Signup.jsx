@@ -6,7 +6,7 @@ import { isValidEmail, isValidPassword } from "../../utils/Helpers";
 import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 
-function SignUp({ toggleForm, onClose }) {
+function SignUp({ toggleForm }) {
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -83,19 +83,15 @@ function SignUp({ toggleForm, onClose }) {
         </Button>
       </form>
       <hr className={styles.separator} />
-      <span onClick={toggleForm} className={styles.switch}>
+      <p onClick={toggleForm} className={styles.switch}>
         {SIGNUP.footerText}
-      </span>
-      <button onClick={onClose} className={styles.cross}>
-        {BUTTON_TEXT.cross}
-      </button>
+      </p>
     </>
   );
 }
 
 SignUp.propTypes = {
   toggleForm: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 export default SignUp;
