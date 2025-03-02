@@ -41,7 +41,7 @@ const Modal = ({
 
   return (
     <div
-      className={styles.modalOverlay}
+      className={styles["modal-overlay"]}
       onClick={handleOverlayClick}
       onKeyDown={(e) => handleKeyBoardEvent(e)}
     >

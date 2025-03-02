@@ -16,7 +16,7 @@ import { handleNavigation } from "../../utils/Helpers";
 const Header = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const [signupModal, setSignupModal] = useState(false);
+  const [authModal, setAuthModal] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
@@ -65,16 +65,16 @@ const Header = () => {
             variant="primary"
             className={styles.ml}
             onClick={() => {
-              setSignupModal(true);
+              setAuthModal(true);
             }}
           >
             {BUTTON_TEXT.getStarted}
           </Button>
         </div>
         <AuthModal
-          isOpen={signupModal}
+          isOpen={authModal}
           onClose={() => {
-            setSignupModal(false);
+            setAuthModal(false);
           }}
         />
         {isMobile && (

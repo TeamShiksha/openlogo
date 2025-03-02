@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import SignUpForm from "./Signup";
 import SignInForm from "./Signin";
 import styles from "./Auth.module.css";
+import ModalStyles from "../common/modal/Modal.module.css";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -44,15 +45,15 @@ const AuthModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <dialog className={styles.modalOverlay} ref={dialogRef}>
+    <dialog className={ModalStyles["modal-overlay"]} ref={dialogRef}>
       <div
-        className={`${styles.modalContainer} ${isFlipped ? styles.flipped : ""}`}
+        className={`${styles["modal-container"]} ${isFlipped ? styles.flipped : ""}`}
       >
-        <div className={styles.modalFront}>
+        <div className={styles.front}>
           <SignUpForm toggleForm={toggleForm} onClose={onClose} />
         </div>
 
-        <div className={styles.modalBack}>
+        <div className={styles.back}>
           <SignInForm toggleForm={toggleForm} onClose={onClose} />
         </div>
       </div>

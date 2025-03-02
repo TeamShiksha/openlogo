@@ -2,8 +2,8 @@ import { vi, describe, it, expect } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Documentation from "../src/page/documentation/Documentation";
-import MobileHeaderMenu from "../src/components/header/MobileHeaderMenu";
+import Documentation from "../../src/page/documentation/Documentation";
+import MobileHeaderMenu from "../../src/components/header/MobileHeaderMenu";
 
 const mockCloseMenu = vi.fn();
 

@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Features from "../src/components/features/Features";
-import { FEATURES } from "../src/utils/Constants";
+import Features from "../../src/components/features/Features";
+import { FEATURES } from "../../src/utils/Constants";
 
 describe("Features component", () => {
   it("Features title should be visible", () => {

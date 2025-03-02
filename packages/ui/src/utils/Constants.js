@@ -334,6 +334,10 @@ export const BUTTON_TEXT = {
   getStarted: "Get started",
   commingSoon: "Coming Soon",
   documentation: "Documentation",
+  signUp: "Sign Up",
+  signIn: "Sign In",
+  forgotPassword: "Forgot Password ?",
+  cross: `×`,
 };
 
 export const BRANDING = {
@@ -483,3 +487,30 @@ export const PRIVACY_POLICY_CONTENT = [
     ],
   },
 ];
+
+export const SIGNUP = {
+  title: "Sign up for free",
+  fields: [
+    { type: "text", name: "name", label: "Name" },
+    { type: "email", name: "email", label: "Email" },
+    { type: "password", name: "password", label: "Password" },
+    { type: "password", name: "confirmPassword", label: "Confirm Password" },
+  ],
+  footerText: "Already have an account ?",
+  initialValues: {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  },
+};
+
+export const SIGNIN = {
+  title: "Go to dashboard",
+  fields: [
+    { type: "email", name: "email", label: "Email" },
+    { type: "password", name: "password", label: "Password" },
+  ],
+  footerText: "Don't have an account ?",
+  initialValues: { email: "", password: "" },
+};

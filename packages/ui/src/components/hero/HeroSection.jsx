@@ -18,13 +18,18 @@ const HeroSection = () => {
           <p>{HERO_SECTION.summary}</p>
         </div>
         <div className={styles["button-section"]}>
-          <Button type="button" variant="secondary">
+          <Button
+            type="button"
+            variant="secondary"
+            className={styles["button-width"]}
+          >
             {BUTTON_TEXT.documentation}
           </Button>
           <Button
             type="button"
             variant="primary"
             onClick={() => setSignupModal(true)}
+            className={styles["button-width"]}
           >
             {BUTTON_TEXT.getStarted}
           </Button>

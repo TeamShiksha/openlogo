@@ -1,32 +1,16 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import Header from "../src/components/header/Header";
-import Home from "../src/page/home/Home";
+import Header from "../../src/components/header/Header";
+import Home from "../../src/page/home/Home";
 import {
   HEADER_ITEMS,
   HAMBURGER,
   CROSS,
   BUTTON_TEXT,
   BRANDING,
-} from "../src/utils/Constants";
-
-vi.mock("../src/components/header/MobileHeaderMenu", () => ({
-  default: ({ isOpen, closeMenu }) => (
-    <div data-testid="mobile-menu" data-open={isOpen}>
-      <button onClick={() => closeMenu(false)}>Close</button>
-    </div>
-  ),
-}));
-
-vi.mock("../src/components/auth/Auth", () => ({
-  default: ({ isOpen, onClose }) => (
-    <div data-testid="auth-modal" data-open={isOpen}>
-      <button onClick={onClose}>Close Modal</button>
-    </div>
-  ),
-}));
+} from "../../src/utils/Constants";
 
 describe("Header component", () => {
   it("Render header branding and naviagte to home on click", () => {
@@ -157,11 +141,11 @@ describe("Header component", () => {
 
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
-    const AuthModalBefore = screen.getByTestId("auth-modal");
-    expect(AuthModalBefore).toHaveAttribute("data-open", "true");
-    const closeModalButton = screen.getByText("Close Modal");
-    fireEvent.click(closeModalButton);
-    const AuthModalAfter = screen.getByTestId("auth-modal");
-    expect(AuthModalAfter).toHaveAttribute("data-open", "false");
+    const signupForm = screen.getByTestId("signup-form");
+    expect(signupForm).toBeInTheDocument();
+    const closeModalButton = screen.getAllByText(BUTTON_TEXT.cross);
+    fireEvent.click(closeModalButton[0]);
+    const signupFormAfter = screen.queryByTestId("signup-form");
+    expect(signupFormAfter).not.toBeInTheDocument();
   });
 });

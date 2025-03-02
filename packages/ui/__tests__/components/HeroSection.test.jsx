@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import HeroSection from "../src/components/hero/HeroSection";
-import { BUTTON_TEXT, HERO_SECTION } from "../src/utils/Constants";
+import HeroSection from "../../src/components/hero/HeroSection";
+import { BUTTON_TEXT, HERO_SECTION } from "../../src/utils/Constants";
 
 describe("HeroSection Component", () => {
   it("Tagline and summary visible", () => {

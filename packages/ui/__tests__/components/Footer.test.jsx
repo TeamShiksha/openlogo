@@ -2,10 +2,10 @@ import { expect, describe, it } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Footer from "../src/components/footer/Footer";
-import Home from "../src/page/home/Home";
-import PrivacyPolicy from "../src/page/privacypolicy/PrivacyPolicy";
-import { BRANDING, FOOTER_ITEMS } from "../src/utils/Constants";
+import Footer from "../../src/components/footer/Footer";
+import Home from "../../src/page/home/Home";
+import PrivacyPolicy from "../../src/page/privacypolicy/PrivacyPolicy";
+import { BRANDING, FOOTER_ITEMS } from "../../src/utils/Constants";
 
 describe("Footer Component", () => {
   it("Render footer branding", () => {

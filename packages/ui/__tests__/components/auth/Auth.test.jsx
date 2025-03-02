@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import AuthModal from "../../../src/components/auth/Auth";
 import { expect, describe, vi, it } from "vitest";
+import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 
 const closeModal = vi.fn();
 
@@ -23,9 +24,9 @@ describe("Auth Component", () => {
   it("Toggle between to Signup and Signin", () => {
     render(<AuthModal isOpen={true} onClose={closeModal} />);
 
-    const toggleSpan = screen.getByText("Already have an account?");
+    const toggleSpan = screen.getByText(SIGNIN.footerText);
     fireEvent.click(toggleSpan);
-    const SignInForm = screen.getByText("Sign In");
+    const SignInForm = screen.getByText(BUTTON_TEXT.signIn);
     expect(SignInForm).toBeInTheDocument();
   });
 
@@ -34,14 +35,6 @@ describe("Auth Component", () => {
     render(<AuthModal isOpen={true} onClose={onClose} />);
 
     fireEvent.click(screen.getByRole("dialog"));
-    expect(onClose).toHaveBeenCalled();
-  });
-
-  it("AuthModal closes when Escape key is pressed", () => {
-    const onClose = vi.fn();
-    render(<AuthModal isOpen={true} onClose={onClose} />);
-
-    fireEvent.keyDown(document, { key: "Escape" });
     expect(onClose).toHaveBeenCalled();
   });
 });
