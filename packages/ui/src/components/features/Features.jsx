@@ -17,7 +17,6 @@ function Features() {
           <div
             className={styles["features-list-item"]}
             key={index}
-            data-testid="feature-item"
           >
             <img src={FEATURE_ITEM.icon} alt="logo" />
             <h3>{FEATURE_ITEM.title}</h3>
