@@ -7,7 +7,7 @@ describe("Features component", () => {
   it("Features title should be visible", () => {
     render(<Features />);
 
-    const titleElement = screen.getByText("Features");
+    const titleElement = screen.getByText(FEATURES.heading);
     expect(titleElement).toBeVisible();
   });
 
@@ -20,6 +20,10 @@ describe("Features component", () => {
       expect(titleElement).toBeVisible();
       expect(contentElement).toBeVisible();
     });
+
+    const featureItems = screen.getAllByTestId("feature-item");
+    expect(featureItems.length).toBe(FEATURES.items.length);
+
     const images = screen.getAllByAltText("logo");
     expect(images.length).toBe(FEATURES.items.length);
   });

@@ -10,7 +10,7 @@ function PricingCard({ name, tagline, index, keypoints }) {
   const isDisabled = index === 1 ? true : false;
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-testid="pricing-card">
       <div className={styles.intro}>
         <h1 className={styles["plan-name"]}>{name}</h1>
         <p className={styles["tag-line"]}>{tagline}</p>
