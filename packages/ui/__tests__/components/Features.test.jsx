@@ -20,7 +20,6 @@ describe("Features component", () => {
       expect(titleElement).toBeVisible();
       expect(contentElement).toBeVisible();
     });
-
     const images = screen.getAllByAltText("logo");
     expect(images.length).toBe(FEATURES.items.length);
   });
