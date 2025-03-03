@@ -18,7 +18,7 @@
 
 .logo-grid {
   display: grid;
-  grid-template-columns: repeat(8, 70px);
+  grid-template-columns: repeat(6, 70px);
   gap: 32px;
   justify-content: center;
   align-items: center;

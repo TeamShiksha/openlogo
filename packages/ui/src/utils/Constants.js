@@ -4,27 +4,17 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
-import notion from "../assets/notion.png";
-import slack from "../assets/slack.png";
-import google_drive from "../assets/google_drive.png";
-import whatsapp from "../assets/whatsapp.png";
-import g_calendar from "../assets/g_calendar.png";
-import mailchimp from "../assets/mailchimp.png";
-import zapier from "../assets/zapier.png";
-import zendesk from "../assets/zendesk.png";
-import stripe from "../assets/stripe.png";
-import jira from "../assets/jira.png";
-import intercom from "../assets/intercom.png";
-import figma from "../assets/figma.png";
-import discord from "../assets/discord.png";
-import bitbucket from "../assets/bitbucket.png";
-import confluence from "../assets/confluence.png";
-import dropbox from "../assets/dropbox.png";
 import jsLogo from "../assets/js.png";
 import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
 import tick from "../assets/tick.png";
 import copycodeicon from "../assets/copy-code-icon.png";
+import netflixLogo from "../assets/netflix.svg";
+import googleLogo from "../assets/google.svg";
+import facebookLogo from "../assets/facebook.svg";
+import amazonLogo from "../assets/amazon.svg";
+import teslaLogo from "../assets/tesla.svg";
+import appleLogo from "../assets/apple.svg";
 
 export const SVGS = {
   searchIcon,
@@ -524,22 +514,36 @@ export const ABOUT = {
   DESCRIPTION:
     "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding. Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
   INTEGRATIONS: [
-    { id: 1, src: notion, alt: "Notion" },
-    { id: 2, src: slack, alt: "Slack" },
-    { id: 3, src: google_drive, alt: "Google Drive" },
-    { id: 4, src: intercom, alt: "Intercom" },
-    { id: 5, src: stripe, alt: "Stripe" },
-    { id: 6, src: dropbox, alt: "Dropbox" },
-    { id: 7, src: jira, alt: "Jira" },
-    { id: 8, src: zapier, alt: "Zapier" },
-    { id: 9, src: figma, alt: "Figma" },
-    { id: 10, src: confluence, alt: "Confluence" },
-    { id: 11, src: mailchimp, alt: "Mailchimp" },
-    { id: 12, src: zendesk, alt: "Zendesk" },
-    { id: 13, src: g_calendar, alt: "Google Calendar" },
-    { id: 14, src: whatsapp, alt: "WhatsApp" },
-    { id: 15, src: discord, alt: "Discord" },
-    { id: 16, src: bitbucket, alt: "Bitbucket" },
+    {
+      id: 1,
+      src: netflixLogo,
+      alt: "Netflix Logo",
+    },
+    {
+      id: 2,
+      src: googleLogo,
+      alt: "Google Logo",
+    },
+    {
+      id: 3,
+      src: facebookLogo,
+      alt: "Facebook Logo",
+    },
+    {
+      id: 4,
+      src: amazonLogo,
+      alt: "Amazon Logo",
+    },
+    {
+      id: 5,
+      src: teslaLogo,
+      alt: "Tesla Logo",
+    },
+    {
+      id: 6,
+      src: appleLogo,
+      alt: "Apple Logo",
+    },
   ],
 };
 
@@ -560,6 +564,16 @@ export const FAQ = {
       question: "What payment methods do you support?",
       answer:
         "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+    },
+    {
+      question: "Is there a rate limit for API calls?",
+      answer:
+        "During the free trial period, we have a rate limit of 1000 requests per day per API key. This ensures fair usage while providing sufficient capacity for your development and testing needs.",
+    },
+    {
+      question: "Can I request specific logos to be added?",
+      answer:
+        "Yes! We welcome logo requests from our users. If you need a specific logo that isn't in our library, you can submit a request through your dashboard. We typically process and add new logos within 24-48 hours.",
     },
   ],
 };
