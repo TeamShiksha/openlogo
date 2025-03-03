@@ -528,3 +528,22 @@ export const CONTACT = {
     message: "",
   },
 };
+
+export const DOCUMENTATION_CONTENT = {
+  introduction: {
+    heading: "Introduction",
+    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we’re here to help. Contact us anytime!",
+  },
+  logoRetrieval: {
+    heading: "Logo Retrieval",
+    text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
+  },
+  search: {
+    heading: "Search (Now Available)",
+    texts: [
+      "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
+      "If you're unable to find the logo you need, please don't hesitate to ",
+      ". Our team will be happy to assist you in locating the appropriate logo. Additionally, you can refer to the provided examples for guidance. If you still require further support, our dedicated support team is available to help with any additional questions or concerns.",
+    ],
+  },
+};
