@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Table from "../../components/common/table/Table.jsx";
 import {
+  BASE_API_URL_DEV,
+  BASE_API_URL_PROD,
+  BASE_API_URL_STAGE,
   CODE_EXAMPLE,
   CODE_EXAMPLE_SEARCH,
   DOCUMENTATION_CONTENT,
@@ -17,6 +20,17 @@ const Documentation = () => {
   const closeModal = () => setIsModalOpen(false);
   const currentDomain = window.location.origin;
 
+  function getBASE_API_URL(domain) {
+    if (domain.includes("localhost")) {
+      return BASE_API_URL_DEV;
+    } else if (domain.includes("stage")) {
+      return BASE_API_URL_STAGE;
+    } else {
+      return BASE_API_URL_PROD;
+    }
+  }
+  const baseAPI = getBASE_API_URL(currentDomain);
+
   return (
     <section
       className="container"
@@ -28,7 +42,7 @@ const Documentation = () => {
         </h3>
         <p className={styles.text}>{DOCUMENTATION_CONTENT.introduction.text}</p>
         <p className={styles["base-info"]}>
-          Base URL: <span>{`${currentDomain}/api`}</span>
+          Base URL: <span>{`${baseAPI}/api`}</span>
         </p>
       </div>
       <div className={styles.card}>

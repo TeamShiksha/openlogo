@@ -547,3 +547,7 @@ export const DOCUMENTATION_CONTENT = {
     ],
   },
 };
+
+export const BASE_API_URL_PROD = "https://api-openlogo.fyi";
+export const BASE_API_URL_STAGE = "https://api-stage-openlogo.fyi";
+export const BASE_API_URL_DEV = "http://localhost:3000";
