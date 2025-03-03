@@ -1,4 +1,5 @@
 ## Openlogo
+
 Openlogo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos.
 
 ## Made with
@@ -13,12 +14,13 @@ Openlogo is your partner in logo exploration. Our platform boasts a collection o
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
 ### Clone and run the project locally
-   ```
-   git clone https://github.com/TeamShiksha/openlogo.git
-   cd openlogo
-   pnpm install
-   pnpm start
-   ```
+
+```
+git clone https://github.com/TeamShiksha/openlogo.git
+cd openlogo
+pnpm install
+pnpm start
+```
 
 ### Environment variables
 
@@ -29,13 +31,14 @@ Most of the environment variables can be used by copying them from the `.env.exa
 - Create a stack using `cloudformation_dev_test.yml` file given inside `server/aws` directory.
 - You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html).
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
-   - `BUCKET_NAME`
-   - `BUCKET_REGION`
-   - `KEY`
-   - `DISTRIBUTION_DOMAIN`
-   - `CLOUD_FRONT_KEYPAIR_ID`
-   - `ACCESS_KEY`
-   - `SECRET_ACCESS_KEY`
+
+  - `BUCKET_NAME`
+  - `BUCKET_REGION`
+  - `KEY`
+  - `DISTRIBUTION_DOMAIN`
+  - `CLOUD_FRONT_KEYPAIR_ID`
+  - `ACCESS_KEY`
+  - `SECRET_ACCESS_KEY`
 
     **NOTE**: These values will be comma seperated.
 
@@ -43,5 +46,6 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
 - [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
 
------------------------------------------------------------------------------------------------------------------
+---
+
 <p align="center" style="text"><strong>If you liked something about this repository, do give it a 🌟.</strong></p>
