@@ -10,6 +10,12 @@ export default [
     languageOptions: {
       sourceType: "commonjs",
       globals: {
+        ...Object.fromEntries(
+          Object.entries(globals.browser).map(([key, value]) => [
+            key.trim(),
+            value,
+          ])
+        ),
         ...globals.node,
         ...globals.jest,
       },
@@ -22,7 +28,6 @@ export default [
       indent: ["error", 2],
     },
   },
-  { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   prettierConfig,
 ];
