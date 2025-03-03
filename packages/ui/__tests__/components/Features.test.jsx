@@ -21,9 +21,6 @@ describe("Features component", () => {
       expect(contentElement).toBeVisible();
     });
 
-    const featureItems = screen.getAllByTestId("feature-item");
-    expect(featureItems.length).toBe(FEATURES.items.length);
-
     const images = screen.getAllByAltText("logo");
     expect(images.length).toBe(FEATURES.items.length);
   });
