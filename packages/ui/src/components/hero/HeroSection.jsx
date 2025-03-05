@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Button from "../common/button/Button";
-import styles from "./HeroSection.module.css";
 import AuthModal from "../auth/Auth";
+import { HERO_SECTION, BUTTON_TEXT } from "../../utils/Constants";
+import styles from "./HeroSection.module.css";
 
 const HeroSection = () => {
   const [signupModal, setSignupModal] = useState(false);
@@ -10,38 +11,35 @@ const HeroSection = () => {
   };
 
   return (
-    <div data-testid="home" id="home" className={styles["hero-section"]}>
+    <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
         <div className={styles["text-section"]}>
-          <h1>Access hundreds of logos with just one line of code</h1>
-          <p>
-            A collection of APIs designed to simplify the process of obtaining
-            company logos. Generate API keys in seconds.
-          </p>
+          <h1>{HERO_SECTION.tagLine}</h1>
+          <p>{HERO_SECTION.summary}</p>
         </div>
         <div className={styles["button-section"]}>
-          <Button type="button" variant="secondary">
-            <div className={styles["button-text"]}>
-              <img alt="Play Icon" src="play-icon.svg" height={20} width={20} />
-              <span>Documentation</span>
-            </div>
+          <Button
+            type="button"
+            variant="secondary"
+            className={styles["button-width"]}
+          >
+            {BUTTON_TEXT.documentation}
           </Button>
           <Button
             type="button"
             variant="primary"
             onClick={() => setSignupModal(true)}
+            className={styles["button-width"]}
           >
-            Get started
+            {BUTTON_TEXT.getStarted}
           </Button>
           <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
         </div>
       </div>
-      <div className={styles["right-section"]}>
+      <div>
         <img
-          alt="Logo Images"
-          src="logo-images.png"
-          height={358}
-          width={326}
+          alt={HERO_SECTION.illustractionSrcAlt}
+          src={HERO_SECTION.illustractionSrc}
           className={styles["logo-images"]}
         />
       </div>

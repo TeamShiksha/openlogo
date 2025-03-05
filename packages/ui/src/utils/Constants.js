@@ -69,7 +69,7 @@ export const COMPANIES = [
   },
 ];
 
-export const features = {
+export const FEATURES = {
   heading: "Features",
   summary:
     "With Openlogo, integrate fresh, up-to-date company logos effortlessly and leverage smart search insights for professional branding.",
@@ -99,7 +99,7 @@ export const HEADER_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "#home",
+    url: "/",
   },
   {
     name: "docs",
@@ -109,49 +109,34 @@ export const HEADER_ITEMS = [
   {
     name: "features",
     title: "Features",
-    url: "#features",
+    url: "/#features",
   },
   {
     name: "pricing",
     title: "Pricing",
-    url: "#pricing",
+    url: "/#pricing",
   },
   {
     name: "about",
     title: "About",
-    url: "#about",
+    url: "/#about",
   },
 ];
 export const FOOTER_ITEMS = [
   {
-    name: "docs",
-    title: "Docs",
-    url: "/docs",
-  },
-  {
-    name: "demo",
-    title: "Demo",
-    url: "#demo",
-  },
-  {
-    name: "features",
-    title: "Features",
-    url: "#features",
-  },
-  {
-    name: "pricing",
-    title: "Pricing",
-    url: "#pricing",
-  },
-  {
     name: "about",
     title: "About",
-    url: "#about",
+    url: "/#about",
   },
   {
     name: "privacy",
     title: "Privacy",
-    url: "/privacy",
+    url: "/privacy#privacy",
+  },
+  {
+    name: "terms&conditions",
+    title: "Terms",
+    url: "/privacy#terms",
   },
 ];
 export const companies = [
@@ -214,288 +199,6 @@ export const companies = [
     companyImage: "BerkshireHathaway.png",
     createdAt: "01 Mar 2024",
     updatedAt: "10 Mar 2024",
-  },
-  {
-    id: "Y1Z2A3B4C5",
-    companyImage: "Disney.png",
-    createdAt: "10 Jan 2024",
-    updatedAt: "12 Jan 2024",
-  },
-  {
-    id: "D6E7F8G9H0",
-    companyImage: "Intel.png",
-    createdAt: "30 Aug 2023",
-    updatedAt: "03 Sep 2023",
-  },
-  {
-    id: "I1J2K3L4M5",
-    companyImage: "Nike.png",
-    createdAt: "14 Jun 2024",
-    updatedAt: "20 Jun 2024",
-  },
-  {
-    id: "N6O7P8Q9R0",
-    companyImage: "PepsiCo.png",
-    createdAt: "23 Feb 2024",
-    updatedAt: "25 Feb 2024",
-  },
-  {
-    id: "S1T2U3V4W5",
-    companyImage: "CocaCola.png",
-    createdAt: "29 Oct 2023",
-    updatedAt: "01 Nov 2023",
-  },
-  {
-    id: "X6Y7Z8A9B0",
-    companyImage: "ProcterAndGamble.png",
-    createdAt: "05 May 2024",
-    updatedAt: "06 May 2024",
-  },
-  {
-    id: "C1D2E3F4G5",
-    companyImage: "Pfizer.png",
-    createdAt: "09 Dec 2023",
-    updatedAt: "11 Dec 2023",
-  },
-  {
-    id: "H6I7J8K9L0",
-    companyImage: "GeneralElectric.png",
-    createdAt: "18 Mar 2024",
-    updatedAt: "20 Mar 2024",
-  },
-  {
-    id: "M1N2O3P4Q5",
-    companyImage: "IBM.png",
-    createdAt: "07 Apr 2024",
-    updatedAt: "09 Apr 2024",
-  },
-  {
-    id: "R6S7T8U9V0",
-    companyImage: "Verizon.png",
-    createdAt: "16 Sep 2023",
-    updatedAt: "20 Sep 2023",
-  },
-  {
-    id: "W1X2Y3Z4A5",
-    companyImage: "AT&T.png",
-    createdAt: "10 Aug 2024",
-    updatedAt: "13 Aug 2024",
-  },
-  {
-    id: "B6C7D8E9F0",
-    companyImage: "Oracle.png",
-    createdAt: "24 Oct 2024",
-    updatedAt: "28 Oct 2024",
-  },
-  {
-    id: "G1H2I3J4K5",
-    companyImage: "Cisco.png",
-    createdAt: "15 Jul 2024",
-    updatedAt: "18 Jul 2024",
-  },
-  {
-    id: "L6M7N8O9P0",
-    companyImage: "Netflix.png",
-    createdAt: "25 Feb 2024",
-    updatedAt: "01 Mar 2024",
-  },
-  {
-    id: "Q1R2S3T4U5",
-    companyImage: "ExxonMobil.png",
-    createdAt: "19 Nov 2023",
-    updatedAt: "21 Nov 2023",
-  },
-  {
-    id: "V6W7X8Y9Z0",
-    companyImage: "Chevron.png",
-    createdAt: "22 Dec 2023",
-    updatedAt: "27 Dec 2023",
-  },
-  {
-    id: "A1B2C3D4E6",
-    companyImage: "GoldmanSachs.png",
-    createdAt: "14 Jan 2024",
-    updatedAt: "18 Jan 2024",
-  },
-  {
-    id: "F6G7H8I9J1",
-    companyImage: "WellsFargo.png",
-    createdAt: "05 Mar 2024",
-    updatedAt: "09 Mar 2024",
-  },
-  {
-    id: "K1L2M3N4O6",
-    companyImage: "BankOfAmerica.png",
-    createdAt: "06 Oct 2024",
-    updatedAt: "12 Oct 2024",
-  },
-  {
-    id: "P6Q7R8S9T1",
-    companyImage: "Target.png",
-    createdAt: "18 Jun 2024",
-    updatedAt: "21 Jun 2024",
-  },
-  {
-    id: "U1V2W3X4Y6",
-    companyImage: "Costco.png",
-    createdAt: "12 Apr 2024",
-    updatedAt: "15 Apr 2024",
-  },
-  {
-    id: "Z6A7B8C9D1",
-    companyImage: "HomeDepot.png",
-    createdAt: "03 Jul 2024",
-    updatedAt: "09 Jul 2024",
-  },
-  {
-    id: "E1F2G3H4I6",
-    companyImage: "UPS.png",
-    createdAt: "21 Aug 2023",
-    updatedAt: "25 Aug 2023",
-  },
-  {
-    id: "J6K7L8M9N1",
-    companyImage: "FedEx.png",
-    createdAt: "28 Nov 2024",
-    updatedAt: "02 Dec 2024",
-  },
-  {
-    id: "O1P2Q3R4S6",
-    companyImage: "McDonalds.png",
-    createdAt: "01 Jun 2024",
-    updatedAt: "03 Jun 2024",
-  },
-  {
-    id: "T6U7V8W9X1",
-    companyImage: "Starbucks.png",
-    createdAt: "07 Feb 2024",
-    updatedAt: "12 Feb 2024",
-  },
-  {
-    id: "Y1Z2A3B4C6",
-    companyImage: "Visa.png",
-    createdAt: "20 May 2024",
-    updatedAt: "24 May 2024",
-  },
-  {
-    id: "D6E7F8G9H1",
-    companyImage: "Mastercard.png",
-    createdAt: "17 Apr 2024",
-    updatedAt: "22 Apr 2024",
-  },
-  {
-    id: "I1J2K3L4M6",
-    companyImage: "AmericanExpress.png",
-    createdAt: "04 Mar 2024",
-    updatedAt: "10 Mar 2024",
-  },
-  {
-    id: "N6O7P8Q9R1",
-    companyImage: "GeneralMotors.png",
-    createdAt: "11 Oct 2024",
-    updatedAt: "18 Oct 2024",
-  },
-  {
-    id: "S1T2U3V4W6",
-    companyImage: "Ford.png",
-    createdAt: "30 Apr 2024",
-    updatedAt: "07 May 2024",
-  },
-  {
-    id: "X6Y7Z8A9B1",
-    companyImage: "Boeing.png",
-    createdAt: "13 Aug 2024",
-    updatedAt: "20 Aug 2024",
-  },
-  {
-    id: "C1D2E3F4G6",
-    companyImage: "LockheedMartin.png",
-    createdAt: "29 Sep 2023",
-    updatedAt: "06 Oct 2023",
-  },
-  {
-    id: "H6I7J8K9L1",
-    companyImage: "NorthropGrumman.png",
-    createdAt: "05 Dec 2023",
-    updatedAt: "10 Dec 2023",
-  },
-  {
-    id: "M1N2O3P4Q6",
-    companyImage: "Raytheon.png",
-    createdAt: "12 Nov 2024",
-    updatedAt: "15 Nov 2024",
-  },
-  {
-    id: "R6S7T8U9V1",
-    companyImage: "Samsung.png",
-    createdAt: "18 May 2024",
-    updatedAt: "25 May 2024",
-  },
-  {
-    id: "W1X2Y3Z4A6",
-    companyImage: "Sony.png",
-    createdAt: "21 Jan 2024",
-    updatedAt: "28 Jan 2024",
-  },
-  {
-    id: "B6C7D8E9F1",
-    companyImage: "Panasonic.png",
-    createdAt: "03 Oct 2023",
-    updatedAt: "11 Oct 2023",
-  },
-  {
-    id: "G1H2I3J4K6",
-    companyImage: "LG.png",
-    createdAt: "10 Feb 2024",
-    updatedAt: "18 Feb 2024",
-  },
-  {
-    id: "L6M7N8O9P1",
-    companyImage: "Huawei.png",
-    createdAt: "12 Jun 2024",
-    updatedAt: "20 Jun 2024",
-  },
-  {
-    id: "Q1R2S3T4U6",
-    companyImage: "Dell.png",
-    createdAt: "17 Aug 2023",
-    updatedAt: "23 Aug 2023",
-  },
-  {
-    id: "V6W7X8Y9Z1",
-    companyImage: "HP.png",
-    createdAt: "14 Apr 2024",
-    updatedAt: "20 Apr 2024",
-  },
-  {
-    id: "A1B2C3D4E7",
-    companyImage: "Lenovo.png",
-    createdAt: "09 Mar 2024",
-    updatedAt: "15 Mar 2024",
-  },
-  {
-    id: "F6G7H8I9J2",
-    companyImage: "Xiaomi.png",
-    createdAt: "18 Nov 2023",
-    updatedAt: "25 Nov 2023",
-  },
-  {
-    id: "K1L2M3N4O7",
-    companyImage: "Philips.png",
-    createdAt: "21 Dec 2023",
-    updatedAt: "28 Dec 2023",
-  },
-  {
-    id: "P6Q7R8S9T2",
-    companyImage: "Siemens.png",
-    createdAt: "05 Jan 2024",
-    updatedAt: "12 Jan 2024",
-  },
-  {
-    id: "U1V2W3X4Y7",
-    companyImage: "Honeywell.png",
-    createdAt: "27 Apr 2024",
-    updatedAt: "05 May 2024",
   },
 ];
 
@@ -627,16 +330,25 @@ export const CROSS = {
   alt: "Close Icon",
 };
 
-export const buttonText = {
+export const BUTTON_TEXT = {
   getStarted: "Get started",
+  commingSoon: "Coming Soon",
+  documentation: "Documentation",
+  signUp: "Sign Up",
+  signIn: "Sign In",
+  forgotPassword: "Forgot Password ?",
+  cross: `×`,
+  sendMessage: "Send message",
 };
 
-export const branding = {
+export const BRANDING = {
   imageSrc: "openlogo.svg",
   brandName: "Openlogo",
+  poweredByText: "Powered by TeamShiksha",
+  poweredByLink: "https://team.shiksha",
 };
 
-export const codeBlock = {
+export const CODEBLOCK = {
   jsLogo,
   pythonLogo,
   javaLogo,
@@ -644,7 +356,7 @@ export const codeBlock = {
   copycodeicon,
 };
 
-export const codeExamplesSearch = {
+export const CODE_EXAMPLE_SEARCH = {
   javascript: `// use fetch to send GET request
 fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
   method: "GET",
@@ -682,7 +394,7 @@ HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
-export const codeExamples = {
+export const CODE_EXAMPLE = {
   javascript: `// use fetch to send GET request
 fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
   method: "GET",
@@ -720,7 +432,7 @@ HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
-export const tableData = {
+export const TABLE_DATA = {
   headers: ["Parameter", "Type", "Description", "Required"],
   logoRows: [
     ["key", "string", "The domain name of the company.", "Yes"],
@@ -730,4 +442,89 @@ export const tableData = {
     ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
     ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
   ],
+};
+
+export const HERO_SECTION = {
+  tagLine: "Access hundreds of logos with just one line of code",
+  summary:
+    "A collection of APIs designed to simplify the process of obtaining company logos. Generate API keys in seconds.",
+  illustractionSrc: "logo-images.png",
+  illustractionSrcAlt: "illustraction",
+};
+
+export const PRIVACY_POLICY_CONTENT = [
+  {
+    HEADLINE: "Privacy and Terms",
+    DATA_ID: "#",
+    TEXTS: [
+      "Thank you for choosing Openlogo! Before using our services, please review our Terms of Service carefully. This agreement is a crucial contract between us and our users. We've provided a concise summary followed by the complete legal terms.",
+    ],
+  },
+  {
+    HEADLINE: "Privacy Policy",
+    DATA_ID: "privacy",
+    TEXTS: [
+      "This Privacy Policy explains how Openlogo collects, uses, and protects your personal information when you use our website and services. By using Openlogo's services, you agree to the terms of this Privacy Policy. Your privacy is important to us, and we are committed to safeguarding your personal information.",
+      "Openlogo collects personal information such as your name, email address, and other details when you register for an account or use specific features on our platform. We also gather usage data about how you interact with our website and services, including pages viewed, features used, and your activity within our platform. If you contact us for support or inquiries, we may collect and store those communications.",
+      "The information collected is used to provide and enhance our services, manage your account, communicate with you about updates, offers, and newsletters, and perform business analysis to optimize site performance and security. We may also use your information to personalize your experience on Openlogo and improve our services based on your preferences.",
+      "Openlogo uses cookies and similar tracking technologies to enhance your browsing experience, improve website functionality, and analyze site traffic. These technologies help us understand how users interact with our platform, allowing us to optimize performance, provide seamless navigation, and offer a more personalized experience tailored to your preferences.",
+      "We utilize different types of cookies, including essential cookies that enable core website functions such as authentication and security, as well as performance and analytics cookies that help us measure traffic and analyze usage trends. Functional cookies store your preferences, such as language settings, to make your interactions with our platform smoother. Additionally, marketing and advertising cookies assist in delivering relevant promotions and personalized content based on your interests.",
+      "You can manage your cookie preferences through your browser settings. However, please note that disabling certain cookies may affect website functionality and limit access to some features.",
+      "We take reasonable precautions to protect your personal data from unauthorized access, disclosure, alteration, and destruction. However, no method of data transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security. We retain your personal data only as long as necessary to fulfill its purpose or as required by law.",
+      "Openlogo's services are not intended for children under 13. We do not knowingly collect personal information from anyone under this age. If you believe that we have inadvertently collected personal information from a child under 13, please contact us immediately, and we will take steps to delete such data.",
+      "We may update this Privacy Policy periodically to reflect changes in our practices, services, or legal requirements. When updates are made, they will be posted on the website, and the effective date will be updated accordingly. We encourage you to review this policy regularly to stay informed about how we are protecting your personal information.",
+    ],
+  },
+  {
+    HEADLINE: "Terms of Services",
+    DATA_ID: "terms",
+    TEXTS: [
+      "By using Openlogo's website and services, you agree to comply with the following terms and conditions. You must abide by all applicable laws and regulations while using our services. You are responsible for maintaining the confidentiality of your account credentials, including your password, and for all activities that occur under your account.",
+      "Openlogo reserves the right to modify or discontinue services, in whole or in part, at any time without prior notice. We are not liable for any direct or indirect damages resulting from the use of our services, including but not limited to loss of data, loss of revenue, or business interruption.",
+      "Openlogo may, from time to time, offer promotional codes, discounts, or special offers that are subject to additional terms and conditions. We reserve the right to cancel or modify any offers at our discretion. These offers may be available for limited periods and are subject to availability.",
+      "You agree not to misuse Openlogo's services, including but not limited to engaging in illegal activities, spamming, or violating the intellectual property rights of others. Failure to comply with these terms may result in the suspension or termination of your account.",
+      "Openlogo is not responsible for any third-party services or websites linked to our platform. Please read their respective privacy policies and terms before engaging with them.",
+      "If you have any questions about this Privacy Policy or our Terms and Conditions, please contact us through our contact page. We are here to help you understand and navigate our policies.",
+    ],
+  },
+];
+
+export const SIGNUP = {
+  title: "Sign up for free",
+  fields: [
+    { type: "text", name: "name", label: "Name" },
+    { type: "email", name: "email", label: "Email" },
+    { type: "password", name: "password", label: "Password" },
+    { type: "password", name: "confirmPassword", label: "Confirm Password" },
+  ],
+  footerText: "Already have an account ?",
+  initialValues: {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  },
+};
+
+export const SIGNIN = {
+  title: "Go to dashboard",
+  fields: [
+    { type: "email", name: "email", label: "Email" },
+    { type: "password", name: "password", label: "Password" },
+  ],
+  footerText: "Don't have an account ?",
+  initialValues: { email: "", password: "" },
+};
+
+export const CONTACT = {
+  title: "Contact Us",
+  fields: [
+    { type: "text", name: "name", label: "Name" },
+    { type: "email", name: "email", label: "Email" },
+  ],
+  intialValues: {
+    name: "",
+    email: "",
+    message: "",
+  },
 };

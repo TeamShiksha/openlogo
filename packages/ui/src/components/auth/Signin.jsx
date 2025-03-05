@@ -1,118 +1,78 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import styles from "./SignForm.module.css";
 import { isValidEmail, isValidPassword } from "../../utils/Helpers";
+import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
+import styles from "./SignForm.module.css";
 
-const SIGN_IN_FIELDS = [
-  { type: "email", name: "email", label: "Email" },
-  { type: "password", name: "password", label: "Password" },
-];
+const SignIn = ({ toggleForm }) => {
+  const [formData, setFormData] = useState(SIGNIN.initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
-const SignInForm = ({ toggleForm, onClose }) => {
-  const initialValues = { email: "", password: "" };
-  const [formData, setFormData] = useState(initialValues);
-  const [feedbackMessage, setFeedbackMessage] = useState({
-    type: "",
-    message: "",
-  });
-
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-  }, []);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validate(formData);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setFeedbackMessage({
-        type: "error",
-        message: Object.values(validationErrors)[0],
-      });
-      return;
-    }
-    console.log(feedbackMessage);
-    setFeedbackMessage({ type: "success", message: "Signed in successfully!" });
-
-    setTimeout(() => {
-      resetForm();
-      onClose();
-    }, 1500);
+  const handleSubmit = (submitEvent) => {
+    submitEvent.preventDefault();
+    const errors = validate(formData);
+    console.log(errors, formErrors);
+    setFormData(SIGNIN.initialValues);
+    setFormErrors({});
+    setIsSubmit(false);
   };
 
   const validate = (values) => {
     const errors = {};
-
     if (!values.email) {
       errors.email = "Email is required!";
     } else if (!isValidEmail(values.email)) {
       errors.email = "This is not a valid email format!";
     }
-
     const passwordErrors = isValidPassword(values.password);
     if (Object.keys(passwordErrors).length > 0) {
       errors.password = passwordErrors.password;
     }
-
     return errors;
   };
 
-  const resetForm = () => {
-    setFormData(initialValues);
-    setFeedbackMessage({ type: "", message: "" });
-  };
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
-      <h2 className={styles.title}>Go to dashboard</h2>
-      <div className={styles.cusomeinputcss}>
-        {SIGN_IN_FIELDS.map((field) => (
-          <CustomInput
-            key={field.name}
-            type={field.type}
-            name={field.name}
-            label={field.label}
-            value={formData[field.name]}
-            onChange={handleChange}
-          />
-        ))}
-      </div>
-      <p className={styles.forgotPassword}>Forgot Password?</p>
-      <Button type="submit" variant="primary" className={styles.signbutton}>
-        Sign In
-      </Button>
-      <hr className={styles.horizontalLine} />
-
-      <span
-        onClick={toggleForm}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            toggleForm();
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        className={styles.inputActiontext}
-        aria-label="Switch to Sign Up"
-        style={{ cursor: "pointer" }}
-      >
-        Don&apos;t have an account?
-      </span>
-
-      <button onClick={onClose} className={styles.closeButton}>
-        ×
-      </button>
-    </form>
+    <>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
+        <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <div className={styles["form-width"]}>
+          {SIGNIN["fields"].map((field) => (
+            <CustomInput
+              key={field.name}
+              type={field.type}
+              name={field.name}
+              label={field.label}
+              value={formData[field.name]}
+              onChange={handleChange}
+            />
+          ))}
+        </div>
+        <p className={styles["forgot-password"]}>
+          {BUTTON_TEXT.forgotPassword}
+        </p>
+        <Button type="submit" variant="primary" disabled={!isSubmit}>
+          {BUTTON_TEXT.signIn}
+        </Button>
+      </form>
+      <hr className={styles.separator} />
+      <p onClick={toggleForm} className={styles.switch}>
+        {SIGNIN.footerText}
+      </p>
+    </>
   );
 };
 
-SignInForm.propTypes = {
+SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
-export default SignInForm;
+export default SignIn;

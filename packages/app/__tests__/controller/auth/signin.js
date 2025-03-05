@@ -1,10 +1,10 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserService } = require("../../services");
-const { Users } = require("../../models");
-const { ENDPOINTS } = require("../../utils/testconstants");
-const { MOCK_USERS } = require("../../utils/mocks");
-const app = require("../../server");
+const { UserService } = require("../../../services");
+const { Users } = require("../../../models");
+const { ENDPOINTS } = require("../../../utils/testconstants");
+const { MOCK_USERS } = require("../../../utils/mocks");
+const app = require("../../../server");
 
 describe("SIGNIN API", () => {
   beforeAll(() => {

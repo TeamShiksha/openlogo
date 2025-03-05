@@ -1,13 +1,9 @@
 name: "CodeQL Advanced"
 
 on:
-  pull_request:
-    types: [opened, reopened]
-    branches:
-      - stage
-      - prod
-    paths:
-      - 'packages/**'
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 */14 * *"
 
 jobs:
   analyze:

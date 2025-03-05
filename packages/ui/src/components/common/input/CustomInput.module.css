@@ -1,10 +1,10 @@
-.customInputGroup {
+.group {
   position: relative;
   margin: 12px 0;
   width: 100%;
 }
 
-.customInput {
+.group-input {
   color: var(--input-color);
   background: var(--white);
   padding: 12px;
@@ -15,12 +15,12 @@
   transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.customInput:-webkit-autofill {
+.group-input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px var(--white) inset;
   -webkit-text-fill-color: var(--input-color);
 }
 
-.customInputLabel {
+.input-label {
   position: absolute;
   left: 12px;
   color: var(--label-color);
@@ -31,13 +31,13 @@
   cursor: text;
 }
 
-.customInput:focus {
+.group-input:focus {
   outline: none;
   border-color: var(--primary);
 }
 
-.customInputGroup:focus-within .customInputLabel,
-.customInputLabelActive {
+.group:focus-within .input-label,
+.label-active {
   color: var(--primary);
   transform: scale(0.8);
   font-size: 0.8rem;
@@ -46,6 +46,12 @@
   padding: 0 4px;
 }
 
-.customInputGroup:not(:focus-within) .customInputLabel {
+.group:not(:focus-within) .input-label {
   color: var(--label-color);
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.8rem;
+  padding: 4px;
 }
