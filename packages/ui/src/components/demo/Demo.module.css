@@ -30,7 +30,6 @@
   background: var(--table-background);
   border-radius: 12px;
   padding: 2rem;
-  transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   position: relative;
@@ -94,7 +93,7 @@
   position: absolute;
   bottom: -40px;
   left: 40%;
-  width: 200xp;
+  width: 200px;
   height: 200px;
 }
 
@@ -185,7 +184,7 @@
 
   .curved-arrow {
     left: 40%;
-    width: 150xp;
+    width: 150px;
     height: 150px;
     bottom: -30px;
   }
@@ -204,8 +203,8 @@
 
   .content {
     text-align: center;
-    margin-top: 0;
     margin: 0 3rem;
+    margin-top: 0;
   }
 
   .curved-arrow {

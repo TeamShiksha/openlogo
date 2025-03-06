@@ -18,7 +18,7 @@ export default function AnalyticsCard({ title, api }) {
   }
 
   useEffect(() => {
-    fetchAndUpdateValue(api);
+    fetchAndUpdateValue();
     fetchAndUpdatePercentageChange(api);
   }, [api]);
 
