@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { ContactUsStatus } = require("../utils/constants");
+const { StatusTypes } = require("../utils/constants");
 
 /**
  * ContactUs Model: Represents user inquiries and support requests.
@@ -26,8 +26,8 @@ const contactUsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: Object.values(ContactUsStatus),
-    default: ContactUsStatus.PENDING,
+    enum: Object.values(StatusTypes),
+    default: StatusTypes.PENDING,
   },
   operator: {
     type: mongoose.Schema.Types.ObjectId,

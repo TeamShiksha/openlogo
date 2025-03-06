@@ -7,7 +7,8 @@ const {
 const {
   getLogoQuerySchema,
   getSearchQuerySchema,
-} = require("../schemas/business");
+} = require("../schemas/catalog");
+const { Messages } = require("../utils/constants");
 
 /**
  * Handles requests for fetching a company's logo based on a domain and API key.
@@ -32,7 +33,7 @@ async function getLogoController(req, res, next) {
     const keyRef = await keyService.getApiKey(API_KEY);
     if (!keyRef) {
       return res.status(403).json({
-        message: "Invalid API_KEY.",
+        message: Messages.INVALID_KEY,
         statusCode: 403,
         error: STATUS_CODES[403],
       });
@@ -43,7 +44,7 @@ async function getLogoController(req, res, next) {
     );
     if (userSubscription.usage_count >= userSubscription.usage_limit) {
       return res.status(403).json({
-        message: "Limit reached. Consider upgrading your plan",
+        message: Messages.LIMIT_REACHED,
         statusCode: 403,
         error: STATUS_CODES[403],
       });
@@ -53,7 +54,7 @@ async function getLogoController(req, res, next) {
     await subscriptionService.incrementUsageCount(userSubscription);
     if (!imageUrl) {
       return res.status(404).json({
-        message: "Logo not found",
+        message: Messages.LOGO_NOT_FOUND,
         statusCode: 404,
         error: STATUS_CODES[404],
       });
@@ -91,7 +92,7 @@ async function searchLogoController(req, res, next) {
     const key = await keyService.getApiKey(API_KEY);
     if (!key) {
       return res.status(403).json({
-        message: "Invalid API KEY.",
+        message: Messages.INVALID_KEY,
         error: STATUS_CODES[403],
         statusCode: 403,
       });
@@ -102,7 +103,7 @@ async function searchLogoController(req, res, next) {
     );
     if (subscription.usage_count >= subscription.usage_limit) {
       return res.status(403).json({
-        message: "Subscription Limit reached. Consider upgrading your plan",
+        message: Messages.LIMIT_REACHED,
         error: STATUS_CODES[403],
         statusCode: 403,
       });
@@ -112,7 +113,7 @@ async function searchLogoController(req, res, next) {
     const companyList = await imageServices.fetchCompanyList(regexPattern);
     if (companyList.length === 0) {
       return res.status(404).json({
-        message: "No companies found matching the provided domain key.",
+        message: Messages.LOGO_NOT_FOUND,
         statusCode: 404,
         error: STATUS_CODES[404],
       });

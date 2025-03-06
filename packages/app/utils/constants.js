@@ -2,6 +2,7 @@
  * @readonly
  * @enum {string}
  **/
+
 const UserTokenTypes = {
   FORGOT: "FORGOT",
   VERIFY: "VERIFY",
@@ -19,11 +20,6 @@ const SubscriptionTypes = {
   TEAMS: "TEAMS",
 };
 
-const ContactUsStatus = {
-  PENDING: "PENDING",
-  RESOLVED: "RESOLVED",
-};
-
 const StatusTypes = {
   PENDING: "PENDING",
   REJECTED: "REJECTED",
@@ -38,11 +34,40 @@ const DefaultSubscriptionPlan = {
   is_active: true,
 };
 
+const Messages = {
+  EMAIL_EXISTS: "Email already exists.",
+  EMAIL_DOESNT_EXISTS: "Email doesn't exists.",
+  USER_NOT_FOUND: "User not found.",
+  DATA_NOT_FOUND: "User data not found.",
+  SOMETHING_WENT_WRONG:
+    "We're experiencing high demand. Please try again later.",
+  INCORRECT_EMAIL_PASS: "Incorrect email or password.",
+  EMAIL_NOT_VERIFIED: "Email not verified",
+  SESSION_FAIL: "User session validation failed.",
+  INVALID_TOKEN: "Invalid token.",
+  EXPIRED_TOKEN: "Token expired.",
+  VERIFICATION_FAIL: "Verification failed.",
+  PASS_FAILED: "Failed to update password.",
+  IMAGE_REQUIRED: "Image not found in request.",
+  NAME_AND_EXT_SAME: "Name and extension should be same.",
+  UPLOAD_FAILED: "Image upload failed.",
+  UPDATE_IMAGE_FAILED: "Failed to update image record.",
+  UPLOAD_SUCESS: "Image updated successfully.",
+  INVALID_KEY: "Invalid API key.",
+  LIMIT_REACHED: "Limit reached. Consider upgrading your plan.",
+  LOGO_NOT_FOUND: "Logo not found.",
+  FETCH_ALL_MESSAGE: "Fetched all contact us messages.",
+  MESSAGE_NOT_FOUND: "Message not found.",
+  ALREADY_SEND_RESPOND: "Already sent the response.",
+  UPDATE_SUCESS: "Responded successfully.",
+  INCORRECT_PASSWORD: "Current password is incorrect",
+};
+
 module.exports = {
   UserTokenTypes,
   UserType,
   SubscriptionTypes,
-  ContactUsStatus,
   StatusTypes,
   DefaultSubscriptionPlan,
+  Messages,
 };
