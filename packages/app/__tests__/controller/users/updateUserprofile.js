@@ -8,7 +8,7 @@ const app = require("../../../server");
 describe("Update User Profile", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
-    process.env.CLIENT_PROXY_URL = "http://validcorsorigin.com";
+    process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
