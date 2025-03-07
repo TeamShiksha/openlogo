@@ -1,6 +1,7 @@
 const { STATUS_CODES } = require("http");
 const { UserService, ImageService } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
+const { Messages } = require("../utils/constants");
 
 /**
  * Promotes a user to admin or operator role using their email.
@@ -23,7 +24,7 @@ async function addPermissionController(req, res, next) {
     if (!response) {
       return res.status(404).json({
         statusCode: 404,
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
         error: STATUS_CODES[404],
       });
     }
@@ -51,7 +52,7 @@ async function getCatalogController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User document not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -84,7 +85,7 @@ async function updateCatalogController(req, res, next) {
     if (!file) {
       return res.status(422).json({
         statusCode: 422,
-        message: "Image file is required",
+        message: Messages.IMAGE_REQUIRED,
         error: STATUS_CODES[422],
       });
     }
@@ -107,7 +108,7 @@ async function updateCatalogController(req, res, next) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         statusCode: 400,
-        message: "Image Name And Extension Must Be Same As Previous Image",
+        message: Messages.NAME_AND_EXT_SAME,
       });
     }
 
@@ -116,7 +117,7 @@ async function updateCatalogController(req, res, next) {
       res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
-        message: "Image Upload Failed, try again later",
+        message: Messages.UPLOAD_FAILED,
       });
     }
 
@@ -128,13 +129,13 @@ async function updateCatalogController(req, res, next) {
       res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
-        message: "Failed to update record",
+        message: Messages.UPDATE_IMAGE_FAILED,
       });
     }
 
     res.status(200).json({
       statusCode: 200,
-      message: "Reupload successfully",
+      message: Messages.UPLOAD_SUCESS,
       data: imageData,
     });
   } catch (err) {
@@ -161,7 +162,7 @@ async function addCatalogController(req, res, next) {
       res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
-        message: "Image Upload Failed, try again later",
+        message: Messages.UPLOAD_FAILED,
       });
     }
 
@@ -174,21 +175,19 @@ async function addCatalogController(req, res, next) {
       res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
-        message: "Failed to create record",
+        message: Messages.UPDATE_IMAGE_FAILED,
       });
     }
 
     res.status(200).json({
       statusCode: 200,
-      message: "Upload successfully",
+      message: Messages.UPLOAD_SUCESS,
       data: imageData,
     });
   } catch (err) {
     next(err);
   }
 }
-
-// controller for revoking access
 
 module.exports = {
   addPermissionController,

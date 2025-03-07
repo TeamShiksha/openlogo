@@ -7,6 +7,7 @@ const {
   SubscriptionService,
 } = require("../../../services");
 const { SIGNUP_PAYLOAD, ENDPOINTS } = require("../../../utils/testconstants");
+const { Messages } = require("../../../utils/constants");
 const {
   MOCK_USERS,
   MOCK_SUBSCRIPTION,
@@ -87,7 +88,7 @@ describe("SIGNUP API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: "Email already exists",
+      message: Messages.EMAIL_EXISTS,
       statusCode: 400,
     });
   });
@@ -104,7 +105,7 @@ describe("SIGNUP API", () => {
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
-      message: "Something went wrong. Please Try again later!",
+      message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 500,
     });
   });
@@ -123,7 +124,7 @@ describe("SIGNUP API", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       error: STATUS_CODES[500],
-      message: "Something went wrong. Try again later!",
+      message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 500,
     });
   });
@@ -146,7 +147,7 @@ describe("SIGNUP API", () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
-      message: "Something went wrong. Try again later!",
+      message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 201,
     });
   });

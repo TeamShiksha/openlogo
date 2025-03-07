@@ -6,6 +6,7 @@ const {
 } = require("../schemas/operator");
 const { ContactUsService } = require("../services");
 const sendEmail = require("../utils/sendEmail");
+const { Messages } = require("../utils/constants");
 
 /**
  * Controller responsible for handling data fetching with pagination.
@@ -25,24 +26,23 @@ async function getMessagesController(req, res, next) {
       });
     }
 
+    let fetchedData = null;
     const { page, limit } = req.query;
     const { data, total, currentPage, totalPages } =
       await contactUsRepository.getAll(parseInt(page), parseInt(limit));
     if (!data || data.length === 0) {
-      return res.status(404).json({
-        statusCode: 404,
-        error: STATUS_CODES[404],
-        message: "Data not found!",
-      });
+      fetchedData = [];
+    } else {
+      fetchedData = data;
     }
 
     return res.status(200).json({
-      message: "Successful",
+      message: Messages.FETCH_ALL_MESSAGE,
       statusCode: 200,
       total,
       currentPage,
       totalPages,
-      results: data,
+      results: fetchedData,
     });
   } catch (err) {
     console.error(err);
@@ -73,7 +73,7 @@ async function respondMessagesController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "Form not found",
+        message: Messages.MESSAGE_NOT_FOUND,
       });
     }
 
@@ -82,7 +82,7 @@ async function respondMessagesController(req, res, next) {
       return res.status(409).json({
         statusCode: 409,
         error: STATUS_CODES[409],
-        message: "Already sent the response for this query!",
+        message: Messages.ALREADY_SEND_RESPOND,
       });
     }
 
@@ -97,7 +97,7 @@ async function respondMessagesController(req, res, next) {
     });
 
     return res.status(200).json({
-      message: "Updated successfully",
+      message: Messages.UPDATE_SUCESS,
       data: revertForm,
     });
   } catch (error) {

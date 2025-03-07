@@ -4,6 +4,7 @@ const { UserService } = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("SIGNIN API", () => {
@@ -50,7 +51,7 @@ describe("SIGNIN API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
-      message: "Incorrect email or password",
+      message: Messages.INCORRECT_EMAIL_PASS,
       statusCode: 404,
     });
   });
@@ -82,7 +83,7 @@ describe("SIGNIN API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
-      message: "Incorrect email or password",
+      message: Messages.INCORRECT_EMAIL_PASS,
       statusCode: 404,
     });
   });

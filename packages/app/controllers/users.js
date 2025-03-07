@@ -12,6 +12,7 @@ const {
   updatePasswordPayloadSchema,
   logoRequestPyaloadSchema,
 } = require("../schemas/user");
+const { Messages } = require("../utils/constants");
 
 /**
  * This controller fetches the authenticated user's data from the database
@@ -31,7 +32,7 @@ async function getUserDataController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -44,7 +45,7 @@ async function getUserDataController(req, res, next) {
       return res.status(206).json({
         statusCode: 206,
         error: STATUS_CODES[206],
-        message: "User Data not found",
+        message: Messages.DATA_NOT_FOUND,
       });
     }
 
@@ -84,7 +85,7 @@ async function updateProfileController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -92,7 +93,7 @@ async function updateProfileController(req, res, next) {
     if (!profileUpdatedSuccessfully) {
       return res.status(500).json({
         statusCode: 500,
-        message: "Failed to update profile",
+        message: Messages.SOMETHING_WENT_WRONG,
         error: STATUS_CODES[500],
       });
     }
@@ -167,7 +168,7 @@ async function generateKeyController(req, res, next) {
 
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
-        message: "Limit reached. Consider upgrading your plan",
+        message: Messages.LIMIT_REACHED,
         statusCode: 403,
         error: STATUS_CODES[403],
       });
@@ -212,7 +213,7 @@ async function destroyKeyController(req, res, next) {
     const destroyedKey = await userService.destroyUserKey(value.keyId, user);
     if (!destroyedKey) {
       return res.status(404).json({
-        message: "Invalid Key",
+        message: Messages.INVALID_KEY,
         statusCode: STATUS_CODES[404],
       });
     }
@@ -256,7 +257,7 @@ async function updatePasswordController(req, res, next) {
     const matchPassword = await user.matchPassword(currPassword);
     if (!matchPassword) {
       return res.status(400).json({
-        message: "Current password is incorrect",
+        message: Messages.INCORRECT_PASSWORD,
         statusCode: 400,
         error: STATUS_CODES[400],
       });
@@ -268,7 +269,7 @@ async function updatePasswordController(req, res, next) {
     );
     if (!userUpdateSuccessful) {
       return res.status(500).json({
-        message: "Something went wrong. Try again later!",
+        message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
         error: STATUS_CODES[500],
       });
@@ -302,7 +303,7 @@ async function logoRequestController(req, res, next) {
     const raiseRequest = await requestService.createRaiseRequest(value);
     if (!raiseRequest) {
       return res.status(500).json({
-        message: "Something went wrong, try again later",
+        message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
         error: STATUS_CODES[500],
       });

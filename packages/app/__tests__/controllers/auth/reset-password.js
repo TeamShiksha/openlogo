@@ -3,6 +3,7 @@ const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { UserService, UserTokenService } = require("../../../services");
 const jwt = require("jsonwebtoken");
+const { Messages } = require("../../../utils/constants");
 const mongoose = require("mongoose");
 
 const app = require("../../../server");
@@ -24,7 +25,7 @@ describe("RESET PASSWORD API", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       error: STATUS_CODES[401],
-      message: "User is not signed in",
+      message: Messages.VERIFICATION_FAIL,
       statusCode: 401,
     });
   });
@@ -159,7 +160,7 @@ describe("RESET PASSWORD API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: "Failed to update password",
+      message: Messages.PASS_FAILED,
       statusCode: 400,
     });
   });
@@ -185,7 +186,7 @@ describe("RESET PASSWORD API", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       error: STATUS_CODES[403],
-      message: "Invalid credentials",
+      message: Messages.PASS_FAILED,
       statusCode: 403,
     });
   });

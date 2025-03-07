@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
+const { Messages } = require("../../../utils/constants");
 const { UserService, UserTokenService } = require("../../../services");
 
 const app = require("../../../server");
@@ -58,7 +59,7 @@ describe("FORGOT PASSWORD API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
-      message: "Email does not exist",
+      message: Messages.EMAIL_DOESNT_EXISTS,
       statusCode: 404,
     });
   });
@@ -73,11 +74,11 @@ describe("FORGOT PASSWORD API", () => {
       .post(ENDPOINTS.FORGOT_PASSWORD)
       .send({ email: "email@example.com" });
 
-    expect(response.status).toBe(503);
+    expect(response.status).toBe(500);
     expect(response.body).toEqual({
-      error: STATUS_CODES[503],
-      message: "Unable to process request",
-      statusCode: 503,
+      error: STATUS_CODES[500],
+      message: Messages.SOMETHING_WENT_WRONG,
+      statusCode: 500,
     });
   });
 
