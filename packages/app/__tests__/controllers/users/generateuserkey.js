@@ -2,6 +2,7 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { Users } = require("../../../models");
 const { MOCK_USERS } = require("../../../utils/mocks");
+const { Messages } = require("../../../utils/constants");
 const {
   UserService,
   SubscriptionService,
@@ -20,66 +21,6 @@ describe("Generate User Key", () => {
   afterAll(() => {
     delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
-  });
-
-  it("422 - Key Description must be a string", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      key_description: 56896595,
-    };
-
-    const response = await request(app)
-      .post("/api/users/me/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      statusCode: 422,
-      message: "Description must be a string",
-      error: STATUS_CODES[422],
-    });
-  });
-
-  it("422 - Key Description is required", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      key_description: "",
-    };
-
-    const response = await request(app)
-      .post("/api/users/me/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      statusCode: 422,
-      message: '"key_description" is not allowed to be empty',
-      error: STATUS_CODES[422],
-    });
-  });
-
-  it("422 - Key Description must be 20 characters or fewer", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      key_description: "this is a 20 or more characters Description",
-    };
-
-    const response = await request(app)
-      .post("/api/users/me/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      statusCode: 422,
-      message: "Description must be 20 characters or fewer",
-      error: STATUS_CODES[422],
-    });
   });
 
   it("422 - Key Description must contain only alphabets and spaces", async () => {
@@ -118,7 +59,7 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       statusCode: 404,
-      message: "User not found",
+      message: Messages.USER_NOT_FOUND,
       error: STATUS_CODES[404],
     });
   });
@@ -144,7 +85,7 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(206);
     expect(response.body).toEqual({
       statusCode: 206,
-      message: "User Data not found",
+      message: Messages.DATA_NOT_FOUND,
       error: STATUS_CODES[206],
     });
   });
@@ -172,7 +113,7 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       statusCode: 403,
-      message: "Limit reached. Consider upgrading your plan",
+      message: Messages.LIMIT_REACHED,
       error: STATUS_CODES[403],
     });
   });

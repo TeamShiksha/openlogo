@@ -11,6 +11,7 @@ const {
   MOCK_KEYS,
 } = require("../../../utils/mocks");
 const { Keys, Subscriptions, Users } = require("../../../models");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("GETUSERDATA", () => {
@@ -39,7 +40,7 @@ describe("GETUSERDATA", () => {
     expect(response.body).toEqual({
       statusCode: 404,
       error: STATUS_CODES[404],
-      message: "User not found",
+      message: Messages.USER_NOT_FOUND,
     });
   });
 
@@ -62,7 +63,7 @@ describe("GETUSERDATA", () => {
     expect(response.body).toEqual({
       statusCode: 206,
       error: STATUS_CODES[206],
-      message: "User Data not found",
+      message: Messages.DATA_NOT_FOUND,
     });
   });
 

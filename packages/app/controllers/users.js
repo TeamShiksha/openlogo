@@ -151,7 +151,7 @@ async function generateKeyController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -162,7 +162,7 @@ async function generateKeyController(req, res, next) {
       return res.status(206).json({
         statusCode: 206,
         error: STATUS_CODES[206],
-        message: "User Data not found",
+        message: Messages.DATA_NOT_FOUND,
       });
     }
 
@@ -206,7 +206,7 @@ async function destroyKeyController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -250,7 +250,7 @@ async function updatePasswordController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "User not found",
+        message: Messages.USER_NOT_FOUND,
       });
     }
 
@@ -263,7 +263,7 @@ async function updatePasswordController(req, res, next) {
       });
     }
 
-    const userUpdateSuccessful = await userService.updateUserPassword(
+    const userUpdateSuccessful = userService.updateUserPassword(
       user,
       newPassword
     );

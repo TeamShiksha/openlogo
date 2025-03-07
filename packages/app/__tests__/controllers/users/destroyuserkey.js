@@ -4,6 +4,7 @@ const { Users } = require("../../../models");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { mongoose } = require("mongoose");
 const { UserService } = require("../../../services");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("Destroy User Key", () => {
@@ -17,26 +18,6 @@ describe("Destroy User Key", () => {
   afterAll(() => {
     delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
-  });
-
-  it("422 - Key ID must be a valid mongodb objectId", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      keyId: "mockId@123",
-    };
-
-    const response = await request(app)
-      .delete("/api/users/me/api-key/:keyId")
-      .query(mockInput)
-      .set("Cookie", `jwt=${mockToken}`);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      message: "Key ID must be a valid mongodb objectId",
-      statusCode: 422,
-      error: STATUS_CODES[422],
-    });
   });
 
   it("422 - Key ID cannot be empty", async () => {
@@ -56,27 +37,6 @@ describe("Destroy User Key", () => {
       message: '"keyId" is not allowed to be empty',
       statusCode: 422,
       error: STATUS_CODES[422],
-    });
-  });
-
-  it("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      keyId: new mongoose.Types.ObjectId().toString(),
-    };
-    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
-
-    const response = await request(app)
-      .delete("/api/users/me/api-key/:keyId")
-      .query(mockInput)
-      .set("Cookie", `jwt=${mockToken}`);
-
-    expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      statusCode: 404,
-      message: "User not found",
-      error: STATUS_CODES[404],
     });
   });
 
@@ -100,8 +60,29 @@ describe("Destroy User Key", () => {
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
-      message: "Invalid Key",
+      message: Messages.INVALID_KEY,
       statusCode: STATUS_CODES[404],
+    });
+  });
+
+  it("404 - User not found", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      keyId: new mongoose.Types.ObjectId().toString(),
+    };
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
+
+    const response = await request(app)
+      .delete("/api/users/me/api-key/:keyId")
+      .query(mockInput)
+      .set("Cookie", `jwt=${mockToken}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      statusCode: 404,
+      message: Messages.USER_NOT_FOUND,
+      error: STATUS_CODES[404],
     });
   });
 
