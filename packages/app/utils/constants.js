@@ -34,6 +34,11 @@ const DefaultSubscriptionPlan = {
   is_active: true,
 };
 
+const ApiRateLimit = {
+  max_requests: 100,
+  timeWindow: 1000 * 60,
+};
+
 const Messages = {
   EMAIL_EXISTS: "Email already exists.",
   EMAIL_DOESNT_EXISTS: "Email doesn't exists.",
@@ -70,4 +75,5 @@ module.exports = {
   StatusTypes,
   DefaultSubscriptionPlan,
   Messages,
+  ApiRateLimit,
 };

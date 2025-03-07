@@ -6,6 +6,8 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./utils/swagger");
 const { validateEnv } = require("./utils/envSchema");
 const routes = require("./routes/index");
+const createApiLimiter = require("./middlewares/rateLimiter");
+const { ApiRateLimit } = require("./utils/constants");
 
 /**
  * Load environmental variables only if `NODE_ENV` is not "test"
@@ -29,6 +31,8 @@ if (process.env.NODE_ENV !== "test") {
 const app = express();
 app.use(cookieParser());
 app.disable("x-powered-by");
+app.set("trust proxy", true);
+app.use(createApiLimiter(ApiRateLimit.max_requests, ApiRateLimit.timeWindow));
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", routes);
