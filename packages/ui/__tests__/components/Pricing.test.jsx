@@ -18,14 +18,28 @@ describe("Pricing Component", () => {
   it("renders Pricing component with heading and summary", () => {
     render(<Pricing />);
 
-    expect(screen.getByTestId("pricing")).toBeInTheDocument();
-    expect(screen.getByText(PRICING.heading)).toBeInTheDocument();
-    expect(screen.getByText(PRICING.summary)).toBeInTheDocument();
+    const pricing = screen.getByTestId("pricing");
+    const pricing_heading = screen.getByText(PRICING.heading);
+    const pricing_summary = screen.getByText(PRICING.summary);
+
+    expect(pricing).toBeInTheDocument();
+    expect(pricing_heading).toBeInTheDocument();
+    expect(pricing_summary).toBeInTheDocument();
   });
 
   it("renders correct number of PricingCard components", () => {
     render(<Pricing />);
-    const pricingCards = screen.getAllByTestId("pricing-card");
-    expect(pricingCards.length).toBe(PRICING.plans.length);
+
+    PRICING.plans.forEach((plan) => {
+      const titleElement = screen.getByText(plan.name);
+      const taglineElement = screen.getByText(plan.tagline);
+
+      expect(taglineElement).toBeInTheDocument();
+      expect(titleElement).toBeInTheDocument();
+      plan.keypoints.forEach((keypoint) => {
+        const plan_keypoint = screen.getByText(keypoint);
+        expect(plan_keypoint).toBeInTheDocument();
+      });
+    });
   });
 });
