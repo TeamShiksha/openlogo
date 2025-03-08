@@ -2,6 +2,7 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { UserService, UserTokenService } = require("../../../services");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("VERIFY EMAIL API", () => {
@@ -15,7 +16,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "No token provided",
+      message: Messages.INVALID_TOKEN,
       statusCode: 422,
     });
   });
@@ -31,7 +32,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: "Invalid token",
+      message: Messages.INVALID_TOKEN,
       statusCode: 400,
     });
   });
@@ -51,7 +52,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       error: STATUS_CODES[403],
-      message: "Token expired",
+      message: Messages.EXPIRED_TOKEN,
       statusCode: 403,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
@@ -73,7 +74,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
-      message: "Invalid token",
+      message: Messages.INVALID_TOKEN,
       statusCode: 404,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
@@ -96,7 +97,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       error: STATUS_CODES[500],
-      message: "Verification failed",
+      message: Messages.VERIFICATION_FAIL,
       statusCode: 500,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
@@ -122,7 +123,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       error: STATUS_CODES[500],
-      message: "Something went wrong",
+      message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 500,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();

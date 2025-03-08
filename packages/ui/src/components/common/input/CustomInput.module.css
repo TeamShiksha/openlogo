@@ -39,7 +39,6 @@
 .group:focus-within .input-label,
 .label-active {
   color: var(--primary);
-  transform: scale(0.8);
   font-size: 0.8rem;
   transform: translateY(-50%) translateX(2px);
   background-color: var(--white);
