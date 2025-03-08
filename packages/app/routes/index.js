@@ -5,6 +5,7 @@ const userRouter = require("./users");
 const authRouter = require("./auth");
 const businessRouter = require("./logo");
 const adminRouter = require("./catalog");
+const limiter = require("../middlewares/rateLimit");
 
 const privateRouteCORS = {
   origin: (origin, callback) => {
@@ -25,8 +26,8 @@ const privateRouteCORS = {
 
 router.use("/messages", cors(privateRouteCORS), operatorRouter);
 router.use("/users/me", cors(privateRouteCORS), userRouter);
-router.use("/auth", cors(privateRouteCORS), authRouter);
-router.use("/logo", cors(), businessRouter);
+router.use("/auth", limiter, cors(privateRouteCORS), authRouter);
+router.use("/logo", limiter, cors(), businessRouter);
 router.use("/catalog", cors(privateRouteCORS), adminRouter);
 
 module.exports = router;
