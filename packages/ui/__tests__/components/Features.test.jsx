@@ -7,7 +7,7 @@ describe("Features component", () => {
   it("Features title should be visible", () => {
     render(<Features />);
 
-    const titleElement = screen.getByText("Features");
+    const titleElement = screen.getByText(FEATURES.heading);
     expect(titleElement).toBeVisible();
   });
 
