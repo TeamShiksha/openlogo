@@ -1,4 +1,4 @@
-import { PASSWORD_VALIDATION_MESSAGES } from "./Constants";
+import { DOCUMENTATION, PASSWORD_VALIDATION_MESSAGES } from "./Constants";
 
 const PASSWORD_RULES = {
   minLength: 6,
@@ -105,5 +105,15 @@ export const handleNavigation = (event, url, navigate) => {
     }
   } else {
     window.scrollTo(0, 0);
+  }
+};
+
+export const getBASE_API_URL = (domain) => {
+  if (domain.includes("localhost")) {
+    return DOCUMENTATION.localUrl;
+  } else if (domain.includes("stage")) {
+    return DOCUMENTATION.baseStageUrl;
+  } else {
+    return DOCUMENTATION.baseProdUrl;
   }
 };

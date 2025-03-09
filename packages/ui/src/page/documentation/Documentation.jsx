@@ -5,6 +5,7 @@ import { DOCUMENTATION } from "../../utils/Constants";
 import styles from "./Documentation.module.css";
 import CodeBlock from "./CodeBlock.jsx";
 import ContactForm from "../../components/contact/ContactForm.jsx";
+import { getBASE_API_URL } from "../../utils/Helpers.js";
 
 const Documentation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,15 +13,6 @@ const Documentation = () => {
   const closeModal = () => setIsModalOpen(false);
   const currentDomain = window.location.origin;
 
-  function getBASE_API_URL(domain) {
-    if (domain.includes("localhost")) {
-      return DOCUMENTATION.localUrl;
-    } else if (domain.includes("stage")) {
-      return DOCUMENTATION.baseStageUrl;
-    } else {
-      return DOCUMENTATION.baseProdUrl;
-    }
-  }
   const baseAPI = getBASE_API_URL(currentDomain);
 
   return (
