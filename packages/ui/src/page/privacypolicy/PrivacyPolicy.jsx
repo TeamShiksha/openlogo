@@ -1,10 +1,10 @@
 import styles from "./PrivacyPolicy.module.css";
-import { PRIVACY_POLICY_CONTENT } from "../../utils/Constants";
+import { PRIVACY_AND_TERMS } from "../../utils/Constants";
 
 const PrivacyPolicy = () => {
   return (
     <div className={`container ${styles["privacy-page-container"]}`}>
-      {PRIVACY_POLICY_CONTENT.map((POLICY_ITEMS, _i) => {
+      {PRIVACY_AND_TERMS.map((POLICY_ITEMS, _i) => {
         return (
           <div key={_i}>
             <h2

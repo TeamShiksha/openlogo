@@ -1,9 +1,10 @@
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Documentation from "../../src/page/documentation/Documentation";
 import { DOCUMENTATION } from "../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
-import { getBASE_API_URL } from "../../src/utils/Helpers";
+import { getBaseApiUrl } from "../../src/utils/Helpers";
 
 describe("Documentation Component", () => {
   it("renders the introduction heading, text, and base URL", () => {
@@ -23,13 +24,11 @@ describe("Documentation Component", () => {
   });
 
   it("returns correct BASE API URL for different environments", () => {
-    expect(getBASE_API_URL("http://localhost:3000")).toBe(
-      DOCUMENTATION.localUrl
-    );
-    expect(getBASE_API_URL("https://stage-openlogo.vercel.app")).toBe(
+    expect(getBaseApiUrl("http://localhost:3000")).toBe(DOCUMENTATION.localUrl);
+    expect(getBaseApiUrl("https://stage-openlogo.vercel.app")).toBe(
       DOCUMENTATION.baseStageUrl
     );
-    expect(getBASE_API_URL("https://openlogo.fyi")).toBe(
+    expect(getBaseApiUrl("https://openlogo.fyi")).toBe(
       DOCUMENTATION.baseProdUrl
     );
   });
@@ -41,7 +40,7 @@ describe("Documentation Component", () => {
       </BrowserRouter>
     );
 
-    DOCUMENTATION.apiFeatures.forEach((feature) => {
+    DOCUMENTATION.apiDocs.forEach((feature) => {
       const featureHeading = screen.getByText(feature.heading);
       const featureText = screen.getByText(feature.text);
       const endpointText = screen.getByText(feature.endPoint);
@@ -67,5 +66,24 @@ describe("Documentation Component", () => {
     expect(closeModalButton).toBeInTheDocument();
     fireEvent.click(closeModalButton);
     expect(closeModalButton).not.toBeInTheDocument();
+  });
+
+  it("check if copy to clipboard is working or not", async () => {
+    const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
+    render(
+      <BrowserRouter>
+        <Documentation />
+      </BrowserRouter>
+    );
+
+    const copyButtons = screen.getAllByAltText("tick-copy-code");
+    expect(copyButtons.length).toBeLessThanOrEqual(
+      DOCUMENTATION.apiDocs.length
+    );
+    const firstCopyButton = copyButtons[0];
+    await userEvent.click(firstCopyButton);
+
+    const javascripteCode = DOCUMENTATION.apiDocs[0].codeExample["javascript"];
+    expect(clipboardSpy).toHaveBeenCalledWith(javascripteCode);
   });
 });

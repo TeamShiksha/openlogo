@@ -4,10 +4,8 @@ code {
   width: 100%;
   padding: 1rem;
   line-height: 1.8rem;
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: break-word;
   font-family: monospace;
+  overflow-x: auto;
 }
 
 .link {
@@ -44,10 +42,7 @@ code {
   font-size: 1.2rem;
   color: var(--description);
   font-family: monospace;
-}
-
-.base-info span {
-  font-family: monospace;
+  word-break: break-all;
 }
 
 .code-block-wrapper {
