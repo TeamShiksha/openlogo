@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Table from "../../components/common/table/Table.jsx";
-import { DOCUMENTATION, TABLE_DATA } from "../../utils/Constants";
+import { DOCUMENTATION } from "../../utils/Constants";
 import styles from "./Documentation.module.css";
 import CodeBlock from "./CodeBlock.jsx";
 import ContactForm from "../../components/contact/ContactForm.jsx";
@@ -37,55 +37,37 @@ const Documentation = () => {
           Base URL: <span>{`${baseAPI}/api`}</span>
         </p>
       </div>
-      <div className={styles.card}>
-        <h3 className={styles["card-heading"]}>
-          {DOCUMENTATION.logoRetrieval.heading}
-        </h3>
-        <p className={styles.text}>{DOCUMENTATION.logoRetrieval.text}</p>
-        <p className={styles["base-info"]}>
-          Endpoint: <span>/logo?key=google&API_KEY={"YOUR_API_KEY"}</span>
-        </p>
-      </div>
-      <div className={styles["table-wrapper"]}>
-        <Table
-          headers={TABLE_DATA.headers}
-          rows={TABLE_DATA.logoRows}
-          emptyMessage="No data available"
-        />
-      </div>
-      <CodeBlock
-        id="logo-example"
-        codeExamples={DOCUMENTATION.logoRetrieval.codeExample}
-      />
-      <div className={styles.card}>
-        <h3 className={styles["card-heading"]}>
-          {DOCUMENTATION.search.heading}
-        </h3>
-        <p className={styles.text}>{DOCUMENTATION.search.texts[0]}</p>
-        <p className={styles["base-info"]}>
-          Endpoint: <span>/logo/search?key=go&API_KEY={"YOUR_API_KEY"}</span>
-        </p>
-      </div>
-      <div className={styles["table-wrapper"]}>
-        <Table
-          headers={TABLE_DATA.headers}
-          rows={TABLE_DATA.searchRows}
-          emptyMessage="No data available"
-        />
-      </div>
-      <CodeBlock
-        id="search-example"
-        codeExamples={DOCUMENTATION.search.codeExample}
-      />
+      {DOCUMENTATION.apiFeatures.map((feature) => {
+        return (
+          <div key={feature.heading}>
+            <div className={styles.card}>
+              <h3 className={styles["card-heading"]}>{feature.heading}</h3>
+              <p className={styles.text}>{feature.text}</p>
+              <p className={styles["base-info"]}>
+                Endpoint: <span>{feature.endPoint}</span>
+              </p>
+            </div>
+            <div className={styles["table-wrapper"]}>
+              <Table
+                headers={DOCUMENTATION.tableDataHeaders}
+                rows={feature.tableDataContent}
+                emptyMessage="No data available"
+              />
+            </div>
+            <CodeBlock id="logo-example" codeExamples={feature.codeExample} />
+          </div>
+        );
+      })}
       <div className={styles.card} style={{ marginTop: "2rem" }}>
         <p className={styles.text}>
-          {DOCUMENTATION.search.texts[1]}
+          {DOCUMENTATION.customerSupportText[0]}
           <Link className={styles.link} onClick={openModal}>
             contact us
           </Link>
-          {DOCUMENTATION.search.texts[2]}
+          {DOCUMENTATION.customerSupportText[1]}
         </p>
       </div>
+
       {isModalOpen && <ContactForm closeModal={closeModal} />}
     </section>
   );

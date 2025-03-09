@@ -458,92 +458,106 @@ export const DOCUMENTATION = {
     heading: "Introduction",
     text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we’re here to help. Contact us anytime!",
   },
-  logoRetrieval: {
-    heading: "Logo Retrieval",
-    text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
-    codeExample: {
-      javascript: `// use fetch to send GET request
-    fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })`,
+  tableDataHeaders: ["Parameter", "Type", "Description", "Required"],
 
-      python: `# import package
-    import requests
-    
-    # send GET request
-    response = requests.get("api/logo",
-      params={
-        "domain": "{domain}",
-        "API_KEY": "{YOUR_API_KEY}"
-      },
-      headers={
-        "Content-Type": "application/json"
-      }
-    )`,
-
-      java: `// create http client instance
-    HttpClient client = HttpClient.newHttpClient();
-    
-    // build http request
-    HttpRequest request = HttpRequest.newBuilder()
-      .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
-      .header("Content-Type", "application/json")
-      .GET()
-      .build();  
-    
-    // send GET request
-    HttpResponse<String> response = client.send(request, 
-      HttpResponse.BodyHandlers.ofString());`,
-    },
+  apiFeatures: [
+    {
+      heading: "Logo Retrieval",
+      text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
+      endPoint: "/logo?key=google&API_KEY=YOUR_API_KEY",
+      tableDataContent: [
+        ["key", "string", "The domain name of the company.", "Yes"],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+      ],
+      codeExample: {
+        javascript: `// use fetch to send GET request
+fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
   },
-  search: {
-    heading: "Search (Now Available)",
-    texts: [
-      "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
-      "If you're unable to find the logo you need, please don't hesitate to ",
-      ". Our team will be happy to assist you in locating the appropriate logo. Additionally, you can refer to the provided examples for guidance. If you still require further support, our dedicated support team is available to help with any additional questions or concerns.",
-    ],
-    codeExample: {
-      javascript: `// use fetch to send GET request
-    fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })`,
+})`,
 
-      python: `# import package
-    import requests
-    
-    # send GET request
-    response = requests.get("api/logo/search",
-      params={
-        "key": "{prefix}",
-        "API_KEY": '{YOUR_API_KEY}'
-      },
-      headers={
-        "Content-Type": "application/json"
-      }
-    )`,
+        python: `# import package
+import requests
 
-      java: `// create http client instance
-    HttpClient client = HttpClient.newHttpClient();
-    
-    // build http request
-    HttpRequest request = HttpRequest.newBuilder()
-      .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
-      .header("Content-Type", "application/json")
-      .GET()
-      .build();  
-    
-    // send GET request
-    HttpResponse<String> response = client.send(request, 
-      HttpResponse.BodyHandlers.ofString());`,
-    },
+# send GET request
+response = requests.get("api/logo",
+  params={
+    "domain": "{domain}",
+    "API_KEY": "{YOUR_API_KEY}"
   },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+        java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
+      },
+    },
+    {
+      heading: "Search (Now Available)",
+      text: "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
+      endPoint: "/logo/search?key=go&API_KEY=YOUR_API_KEY",
+      tableDataContent: [
+        ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+      ],
+      codeExample: {
+        javascript: `// use fetch to send GET request
+fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})`,
+
+        python: `# import package
+import requests
+
+# send GET request
+response = requests.get("api/logo/search",
+  params={
+    "key": "{prefix}",
+    "API_KEY": '{YOUR_API_KEY}'
+  },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+        java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
+      },
+    },
+  ],
+  customerSupportText: [
+    "If you're unable to find the logo you need, please don't hesitate to ",
+    ". Our team will be happy to assist you in locating the appropriate logo. Additionally, you can refer to the provided examples for guidance. If you still require further support, our dedicated support team is available to help with any additional questions or concerns.",
+  ],
   localUrl: "http://localhost:3000",
   baseStageUrl: "https://api-stage-openlogo.fyi",
   baseProdUrl: "https://api-openlogo.fyi",
