@@ -1,4 +1,4 @@
-import { PASSWORD_VALIDATION_MESSAGES } from "./Constants";
+import { DOCUMENTATION, PASSWORD_VALIDATION_MESSAGES } from "./Constants";
 
 const PASSWORD_RULES = {
   minLength: 6,
@@ -105,5 +105,24 @@ export const handleNavigation = (event, url, navigate) => {
     }
   } else {
     window.scrollTo(0, 0);
+  }
+};
+
+/**
+ * Returns the base API URL based on the provided domain.
+ *
+ * @param {string} domain - The domain to check against.
+ * @returns {string} - The base API URL corresponding to the domain.
+ * If the domain includes "localhost", it returns the local URL.
+ * If the domain includes "stage", it returns the staging URL.
+ * Otherwise, it returns the production URL.
+ */
+export const getBaseApiUrl = (domain) => {
+  if (domain.includes("localhost")) {
+    return DOCUMENTATION.localUrl;
+  } else if (domain.includes("stage")) {
+    return DOCUMENTATION.baseStageUrl;
+  } else {
+    return DOCUMENTATION.baseProdUrl;
   }
 };
