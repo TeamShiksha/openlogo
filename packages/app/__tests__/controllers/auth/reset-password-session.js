@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
+const { Messages } = require("../../../utils/constants");
 const { UserTokenService } = require("../../../services");
 
 const app = require("../../../server");
@@ -26,7 +27,7 @@ describe("RESET PASSWORD SESSION API", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Invalid or expired token",
+      message: Messages.INVALID_TOKEN,
       statusCode: 422,
     });
   });
@@ -43,7 +44,7 @@ describe("RESET PASSWORD SESSION API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
-      message: "User Token not found",
+      message: Messages.USER_NOT_FOUND,
       statusCode: 404,
     });
   });
@@ -63,7 +64,7 @@ describe("RESET PASSWORD SESSION API", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       error: STATUS_CODES[403],
-      message: "Token expired",
+      message: Messages.EXPIRED_TOKEN,
       statusCode: 403,
     });
   });

@@ -12,6 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
+const { Messages } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -35,7 +36,7 @@ async function signupController(req, res, next) {
     const emailExists = await userService.getUserByEmail(email);
     if (emailExists) {
       return res.status(400).json({
-        message: "Email already exists",
+        message: Messages.EMAIL_EXISTS,
         error: STATUS_CODES[400],
         statusCode: 400,
       });
@@ -44,7 +45,7 @@ async function signupController(req, res, next) {
     const newSubscription = await subscriptionService.createSubscription();
     if (!newSubscription) {
       return res.status(500).json({
-        message: "Something went wrong. Please Try again later!",
+        message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
       });
     }
@@ -53,7 +54,7 @@ async function signupController(req, res, next) {
     const newUser = await userService.createUser(value);
     if (!newUser) {
       return res.status(500).json({
-        message: "Something went wrong. Try again later!",
+        message: Messages.SOMETHING_WENT_WRONG,
         error: STATUS_CODES[500],
         statusCode: 500,
       });
@@ -64,7 +65,7 @@ async function signupController(req, res, next) {
     );
     if (!verificationToken) {
       return res.status(201).json({
-        message: "Something went wrong. Try again later!",
+        message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 201,
       });
     }
@@ -106,14 +107,14 @@ async function signinController(req, res, next) {
     if (!user)
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "Incorrect email or password",
+        message: Messages.INCORRECT_EMAIL_PASS,
         statusCode: 404,
       });
 
     if (!user.is_verified)
       return res.status(403).json({
         error: STATUS_CODES[403],
-        message: "Email not verified",
+        message: Messages.EMAIL_NOT_VERIFIED,
         statusCode: 403,
       });
 
@@ -121,7 +122,7 @@ async function signinController(req, res, next) {
     if (!matchPassword) {
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "Incorrect email or password",
+        message: Messages.INCORRECT_EMAIL_PASS,
         statusCode: 404,
       });
     }
@@ -150,7 +151,7 @@ function signoutController(req, res, next) {
     if (!jwt) {
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: "Failed to validate user session",
+        message: Messages.SESSION_FAIL,
         statusCode: 400,
       });
     }
@@ -175,7 +176,7 @@ async function verifyEmailController(req, res, next) {
     if (!token) {
       return res.status(422).json({
         error: STATUS_CODES[422],
-        message: "No token provided",
+        message: Messages.INVALID_TOKEN,
         statusCode: 422,
       });
     }
@@ -184,14 +185,14 @@ async function verifyEmailController(req, res, next) {
     if (!userToken)
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: "Invalid token",
+        message: Messages.INVALID_TOKEN,
         statusCode: 400,
       });
 
     if (userToken.isExpired())
       return res.status(403).json({
         error: STATUS_CODES[403],
-        message: "Token expired",
+        message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
       });
 
@@ -199,7 +200,7 @@ async function verifyEmailController(req, res, next) {
     if (!user)
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "Invalid token",
+        message: Messages.INVALID_TOKEN,
         statusCode: 404,
       });
 
@@ -207,7 +208,7 @@ async function verifyEmailController(req, res, next) {
     if (!verifyResult)
       return res.status(500).json({
         error: STATUS_CODES[500],
-        message: "Verification failed",
+        message: Messages.VERIFICATION_FAIL,
         statusCode: 500,
       });
 
@@ -215,7 +216,7 @@ async function verifyEmailController(req, res, next) {
     if (!result) {
       return res.status(500).json({
         error: STATUS_CODES[500],
-        message: "Something went wrong",
+        message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
       });
     }
@@ -248,16 +249,16 @@ async function forgotPasswordController(req, res, next) {
     if (!user)
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "Email does not exist",
+        message: Messages.EMAIL_DOESNT_EXISTS,
         statusCode: 404,
       });
 
     const userToken = await userTokenService.createForgotToken(user._id);
     if (!userToken)
-      return res.status(503).json({
-        error: STATUS_CODES[503],
-        message: "Unable to process request",
-        statusCode: 503,
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: Messages.SOMETHING_WENT_WRONG,
+        statusCode: 500,
       });
 
     await sendEmail({
@@ -287,7 +288,7 @@ async function resetPasswordSessionController(req, res, next) {
     if (!token)
       return res.status(422).json({
         error: STATUS_CODES[422],
-        message: "Invalid or expired token",
+        message: Messages.INVALID_TOKEN,
         statusCode: 422,
       });
 
@@ -295,14 +296,14 @@ async function resetPasswordSessionController(req, res, next) {
     if (!userToken)
       return res.status(404).json({
         error: STATUS_CODES[404],
-        message: "User Token not found",
+        message: Messages.USER_NOT_FOUND,
         statusCode: 404,
       });
 
     if (userToken.isExpired()) {
       return res.status(403).json({
         error: STATUS_CODES[403],
-        message: "Token expired",
+        message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
       });
     }
@@ -334,7 +335,7 @@ async function resetPasswordController(req, res, next) {
     if (!resetPasswordSession) {
       return res.status(401).json({
         error: STATUS_CODES[401],
-        message: "User is not signed in",
+        message: Messages.VERIFICATION_FAIL,
         statusCode: 401,
       });
     }
@@ -361,7 +362,7 @@ async function resetPasswordController(req, res, next) {
     if (!result) {
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: "Failed to update password",
+        message: Messages.PASS_FAILED,
         statusCode: 400,
       });
     }
@@ -370,7 +371,7 @@ async function resetPasswordController(req, res, next) {
     if (userToken === null || userToken.token !== value.token) {
       return res.status(403).json({
         error: STATUS_CODES[403],
-        message: "Invalid credentials",
+        message: Messages.PASS_FAILED,
         statusCode: 403,
       });
     }

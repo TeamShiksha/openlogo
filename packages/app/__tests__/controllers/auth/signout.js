@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("SIGNOUT API", () => {
@@ -10,7 +11,7 @@ describe("SIGNOUT API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: "Failed to validate user session",
+      message: Messages.SESSION_FAIL,
       statusCode: 400,
     });
   });
