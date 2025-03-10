@@ -15,10 +15,10 @@
     "check": "prettier --check ."
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "@aws-sdk/client-cloudfront": "^3.693.0",
     "@aws-sdk/client-s3": "^3.472.0",
     "@aws-sdk/cloudfront-signer": "^3.451.0",
-    "axios": "^1.7.9",
     "bcryptjs": "^3.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
