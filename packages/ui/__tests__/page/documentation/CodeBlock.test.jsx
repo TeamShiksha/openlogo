@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import CodeBlock from "../../src/page/documentation/CodeBlock";
+import CodeBlock from "../../../src/page/documentation/CodeBlock";
+import userEvent from "@testing-library/user-event";
 
 const mockCodeExamples = {
   javascript: "console.log('Hello, JavaScript!');",
@@ -9,37 +10,34 @@ const mockCodeExamples = {
 };
 
 describe("CodeBlock component", () => {
-  beforeEach(() => {
-    vi.spyOn(navigator.clipboard, "writeText").mockResolvedValue();
-  });
-
   it("Defaults to JavaScript on initial render", () => {
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
-    expect(screen.getByText(mockCodeExamples.javascript)).toBeInTheDocument();
+    const javascriptCode = screen.getByText(mockCodeExamples.javascript);
+    expect(javascriptCode).toBeInTheDocument();
   });
 
   it("Copies code to clipboard on button click", async () => {
+    const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
     const copyButton = screen.getByRole("button", { name: /tick-copy-code/i });
     fireEvent.click(copyButton);
-
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      mockCodeExamples.javascript
-    );
+    expect(clipboardSpy).toHaveBeenCalledWith(mockCodeExamples.javascript);
   });
 
-  it("Changes displayed code when clicking on language icon", () => {
+  it("Changes displayed code when clicking on language icon", async () => {
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
     const pythonButton = screen.getByRole("button", { name: /python logo/i });
     fireEvent.click(pythonButton);
-    expect(screen.getByText(mockCodeExamples.python)).toBeInTheDocument();
+    const pythonCode = screen.getByText(mockCodeExamples.python);
+    expect(pythonCode).toBeInTheDocument();
 
     const javaButton = screen.getByRole("button", { name: /java logo/i });
-    fireEvent.click(javaButton);
-    expect(screen.getByText(mockCodeExamples.java)).toBeInTheDocument();
+    await userEvent.click(javaButton);
+    const javaCode = screen.getByText(mockCodeExamples.java);
+    expect(javaCode).toBeInTheDocument();
   });
 
   it("Renders buttons for all available languages", () => {

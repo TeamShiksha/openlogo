@@ -1,10 +1,10 @@
 import { expect, describe, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Documentation from "../../src/page/documentation/Documentation";
-import { DOCUMENTATION } from "../../src/utils/Constants";
+import Documentation from "../../../src/page/documentation/Documentation";
+import { DOCUMENTATION } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
-import { getBaseApiUrl } from "../../src/utils/Helpers";
+import { getBaseApiUrl } from "../../../src/utils/Helpers";
 
 describe("Documentation Component", () => {
   it("renders the introduction heading, text, and base URL", () => {
