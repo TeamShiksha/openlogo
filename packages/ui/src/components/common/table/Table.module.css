@@ -44,21 +44,11 @@
 }
 
 .delete-btn {
-  color: var(--error);
-  background-color: #fff;
-  padding: 0.5rem;
-  width: min-content;
-  font-size: small;
-  cursor: pointer;
-  border: none;
+  padding: 0.5rem 1rem;
 }
 
-@media only screen and (max-width: 780px) {
-  .table-header {
-    padding: 0.5rem 1rem;
-  }
-
-  .table-cell {
+@media only screen and (max-width: 1024px) {
+  .table-header, .table-cell {
     padding: 0.5rem 1rem;
   }
 

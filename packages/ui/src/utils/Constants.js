@@ -339,6 +339,7 @@ export const BUTTON_TEXT = {
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
+  delete: "Delete",
 };
 
 export const BRANDING = {
