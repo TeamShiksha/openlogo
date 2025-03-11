@@ -12,6 +12,7 @@ const UserType = {
   ADMIN: "ADMIN",
   CUSTOMER: "CUSTOMER",
   OPERATOR: "OPERATOR",
+  GUEST: "GUEST",
 };
 
 const SubscriptionTypes = {

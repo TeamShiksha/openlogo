@@ -1,18 +1,27 @@
 const Joi = require("joi");
 
 const signinPayloadSchema = Joi.object().keys({
-  email: Joi.string()
-    .trim()
-    .required()
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be a string",
-      "any.required": "Email is required",
-      "string.pattern.base": "Invalid email",
+  isGuest: Joi.boolean().default(false),
+  email: Joi.when("isGuest", {
+    is: true,
+    then: Joi.forbidden(),
+    otherwise: Joi.string()
+      .trim()
+      .required()
+      .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
+      .messages({
+        "string.base": "Email must be a string",
+        "any.required": "Email is required",
+        "string.pattern.base": "Invalid email",
+      }),
+  }),
+  password: Joi.when("isGuest", {
+    is: true,
+    then: Joi.forbidden(),
+    otherwise: Joi.string().trim().required().messages({
+      "string.base": "Password must be string",
+      "any.required": "Password is required",
     }),
-  password: Joi.string().trim().required().messages({
-    "string.base": "Password must be string",
-    "any.required": "Password is required",
   }),
 });
 

@@ -39,6 +39,9 @@ const SignIn = ({ toggleForm }) => {
     return errors;
   };
 
+  const guestSignIn = () => {
+    console.log("Guest Sign in initiated");
+  };
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -64,6 +67,9 @@ const SignIn = ({ toggleForm }) => {
         </Button>
       </form>
       <hr className={styles.separator} />
+      <p onClick={guestSignIn} className={styles["guest-sign-in"]}>
+        {SIGNIN.guestAccount}
+      </p>
       <p onClick={toggleForm} className={styles.switch}>
         {SIGNIN.footerText}
       </p>

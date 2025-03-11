@@ -4,6 +4,7 @@ const {
   UserService,
   SubscriptionService,
   UserTokenService,
+  GuestUsersService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -93,6 +94,8 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
+    const guestUserService = new GuestUsersService();
+
     const { body: payload } = req;
     const { error, value } = signinPayloadSchema.validate(payload);
     if (error)
@@ -102,45 +105,63 @@ async function signinController(req, res, next) {
         error: STATUS_CODES[422],
       });
 
-    const { email, password } = value;
-    const user = await userService.getUserByEmail(email);
-    if (!user)
-      return res.status(404).json({
-        error: STATUS_CODES[404],
-        message: Messages.INCORRECT_EMAIL_PASS,
-        statusCode: 404,
-      });
+    const { email, password, isGuest } = value;
 
-    if (!user.is_verified)
-      return res.status(403).json({
-        error: STATUS_CODES[403],
-        message: Messages.EMAIL_NOT_VERIFIED,
-        statusCode: 403,
-      });
+    if (isGuest) {
+      const ip = req.connection.remoteAddress;
+      let { message, token } = await guestUserService.handleGuestLogin(
+        ip,
+        req.cookies["x-guest-token"]
+      );
 
-    const matchPassword = await user.matchPassword(password);
-    if (!matchPassword) {
-      return res.status(404).json({
-        error: STATUS_CODES[404],
-        message: Messages.INCORRECT_EMAIL_PASS,
-        statusCode: 404,
+      res.cookie("X-GUEST-TOKEN", token, {
+        expires: new Date(Date.now() + 15 * 60 * 1000),
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
       });
+      return res.status(200).json({ message });
+    } else {
+      const user = await userService.getUserByEmail(email);
+      if (!user)
+        return res.status(404).json({
+          error: STATUS_CODES[404],
+          message: Messages.INCORRECT_EMAIL_PASS,
+          statusCode: 404,
+        });
+      if (!user.is_verified)
+        return res.status(403).json({
+          error: STATUS_CODES[403],
+          message: Messages.EMAIL_NOT_VERIFIED,
+          statusCode: 403,
+        });
+      const matchPassword = await user.matchPassword(password);
+      if (!matchPassword) {
+        return res.status(404).json({
+          error: STATUS_CODES[404],
+          message: Messages.INCORRECT_EMAIL_PASS,
+          statusCode: 404,
+        });
+      }
+      const guestToken = req.cookies["x-guest-token"];
+      if (guestToken) {
+        const decodedToken = jwt.verify(guestToken, process.env.JWT_SECRET);
+        await guestUserService.deleteUserAccount(decodedToken.id);
+      }
+      res.clearCookie("x-guest-token");
+      const currentDate = new Date();
+      const tomorrow = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+      res.cookie("jwt", user.generateJWT(), {
+        expires: tomorrow,
+        sameSite: "none",
+        secure: true,
+      });
+      return res.status(200).json({ statusCode: 200 });
     }
-
-    const currentDate = new Date();
-    const tomorrow = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-    res.cookie("jwt", user.generateJWT(), {
-      expires: tomorrow,
-      sameSite: "none",
-      secure: true,
-    });
-
-    return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
   }
 }
-
 /**
  * This controller clears the JWT cookie from the user's browser.
  * It checks if a JWT cookie is present; if not, it returns a 400 error.

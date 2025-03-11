@@ -512,6 +512,7 @@ export const SIGNIN = {
     { type: "email", name: "email", label: "Email" },
     { type: "password", name: "password", label: "Password" },
   ],
+  guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
   initialValues: { email: "", password: "" },
 };
