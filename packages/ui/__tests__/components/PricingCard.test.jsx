@@ -2,7 +2,9 @@ import { render, screen } from "@testing-library/react";
 import PricingCard from "../../src/components/pricing/PricingCard";
 import { BUTTON_TEXT, PRICING } from "../../src/utils/Constants";
 import "@testing-library/jest-dom";
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, vi } from "vitest";
+
+const openCloseAuthModal = vi.fn();
 
 describe("PricingCard Component", () => {
   it("renders PricingCard with correct name, tagline, and keypoints", () => {
@@ -14,6 +16,7 @@ describe("PricingCard Component", () => {
         tagline={plan.tagline}
         index={plan.index}
         keypoints={plan.keypoints}
+        openAuthModal={openCloseAuthModal}
       />
     );
 
@@ -31,7 +34,7 @@ describe("PricingCard Component", () => {
 
   it("renders correct button text based on index", () => {
     PRICING.plans.forEach((plan) => {
-      render(<PricingCard {...plan} />);
+      render(<PricingCard {...plan} openAuthModal={openCloseAuthModal} />);
       const buttonText =
         plan.index === 1 ? BUTTON_TEXT.commingSoon : BUTTON_TEXT.getStarted;
       const buttonElement = screen.getByText(buttonText);

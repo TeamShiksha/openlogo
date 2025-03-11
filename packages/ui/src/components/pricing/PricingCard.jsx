@@ -4,7 +4,7 @@ import Button from "../common/button/Button";
 import { BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./PricingCard.module.css";
 
-function PricingCard({ name, tagline, index, keypoints }) {
+function PricingCard({ name, tagline, index, keypoints, openAuthModal }) {
   const buttonText =
     index === 1 ? BUTTON_TEXT.commingSoon : BUTTON_TEXT.getStarted;
   const isDisabled = index === 1 ? true : false;
@@ -26,6 +26,7 @@ function PricingCard({ name, tagline, index, keypoints }) {
           variant={"primary"}
           className={styles.width}
           disabled={isDisabled}
+          onClick={openAuthModal}
         >
           {buttonText}
         </Button>
@@ -40,6 +41,7 @@ PricingCard.propTypes = {
   index: PropTypes.number.isRequired,
   tagline: PropTypes.string.isRequired,
   keypoints: PropTypes.arrayOf(PropTypes.string).isRequired,
+  openAuthModal: PropTypes.func.isRequired,
 };
 
 export default PricingCard;

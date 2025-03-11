@@ -1,7 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -10,14 +9,15 @@ import {
   CROSS,
   BUTTON_TEXT,
   BRANDING,
-  SIGNIN,
 } from "../../src/utils/Constants";
+
+const openCloseAuthModal = vi.fn();
 
 describe("Header component", () => {
   it("Render header branding and naviagte to home on click", () => {
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
@@ -32,7 +32,7 @@ describe("Header component", () => {
   it("Render all header navigations", () => {
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
@@ -42,11 +42,11 @@ describe("Header component", () => {
     });
   });
 
-  it("Header links should be clickable and navigate", async () => {
+  it("Header links should be clickable and navigate", () => {
     render(
       <BrowserRouter>
-        <Header />
-        <Home />
+        <Header openAuthModal={openCloseAuthModal} />
+        <Home openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
@@ -54,7 +54,7 @@ describe("Header component", () => {
     for (const item of HEADER_ITEMS) {
       const navLink = within(headerElement).getByText(item.title);
       expect(navLink).toBeInTheDocument();
-      await userEvent.click(navLink);
+      fireEvent.click(navLink);
       const [path, sectionId] = item.url.split("#");
       expect(window.location.pathname).toBe(path);
       if (sectionId) {
@@ -69,7 +69,7 @@ describe("Header component", () => {
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
@@ -82,7 +82,7 @@ describe("Header component", () => {
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
@@ -92,39 +92,39 @@ describe("Header component", () => {
     expect(afterResizeMobileMenuButton).toBeInTheDocument();
   });
 
-  it("Mobile header toggle icon", async () => {
+  it("Mobile header toggle icon", () => {
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
     const mobileMenuButton = screen.getByRole("button", {
       name: HAMBURGER.alt,
     });
-    await userEvent.click(mobileMenuButton);
+    fireEvent.click(mobileMenuButton);
     const closeIcon = screen.getByRole("button", { name: CROSS.alt });
     expect(closeIcon).toBeInTheDocument();
-    await userEvent.click(closeIcon);
+    fireEvent.click(closeIcon);
     const afterClose = screen.queryByRole("button", { name: CROSS.alt });
     expect(afterClose).not.toBeInTheDocument();
   });
 
-  it("Mobile header auto close if width > 1024", async () => {
+  it("Mobile header auto close if width > 1024", () => {
     window.innerWidth = 700;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
     const mobileMenuButton = screen.getByRole("button", {
       name: HAMBURGER.alt,
     });
-    await userEvent.click(mobileMenuButton);
+    fireEvent.click(mobileMenuButton);
     window.innerWidth = 1200;
     window.dispatchEvent(new Event("resize"));
     const mobileMenuButtonAfter = screen.queryByRole("button", {
@@ -136,17 +136,12 @@ describe("Header component", () => {
   it("Open and close authModal", () => {
     render(
       <BrowserRouter>
-        <Header />
+        <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
     );
 
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
-    const signupForm = screen.getByText(SIGNIN.title);
-    expect(signupForm).toBeInTheDocument();
-    const closeModalButton = screen.getAllByText(BUTTON_TEXT.cross);
-    fireEvent.click(closeModalButton[0]);
-    const signupFormAfter = screen.queryByText(SIGNIN.title);
-    expect(signupFormAfter).not.toBeInTheDocument();
+    expect(openCloseAuthModal).toHaveBeenCalled();
   });
 });

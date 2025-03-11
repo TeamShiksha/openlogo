@@ -1,7 +1,6 @@
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { BrowserRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import Footer from "../../src/components/footer/Footer";
 import Home from "../../src/page/home/Home";
 import PrivacyPolicy from "../../src/page/privacypolicy/PrivacyPolicy";
@@ -50,10 +49,11 @@ describe("Footer Component", () => {
     expect(poweredByLink).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it("Footer navigations should navigate to correct components", async () => {
+  it("Footer navigations should navigate to correct components", () => {
+    const openCloseAuthModal = vi.fn();
     render(
       <BrowserRouter>
-        <Home />
+        <Home openAuthModal={openCloseAuthModal} />
         <Footer />
         <PrivacyPolicy />
       </BrowserRouter>
@@ -63,7 +63,7 @@ describe("Footer Component", () => {
     for (const item of FOOTER_ITEMS) {
       const navLink = within(footerElement).getByText(item.title);
       expect(navLink).toBeInTheDocument();
-      await userEvent.click(navLink);
+      fireEvent.click(navLink);
       const [path, sectionId] = item.url.split("#");
       expect(window.location.pathname).toBe(path);
       if (sectionId) {

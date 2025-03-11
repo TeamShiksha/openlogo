@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import CodeBlock from "../../../src/page/documentation/CodeBlock";
-import userEvent from "@testing-library/user-event";
 
 const mockCodeExamples = {
   javascript: "console.log('Hello, JavaScript!');",
@@ -17,7 +16,7 @@ describe("CodeBlock component", () => {
     expect(javascriptCode).toBeInTheDocument();
   });
 
-  it("Copies code to clipboard on button click", async () => {
+  it("Copies code to clipboard on button click", () => {
     const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
@@ -26,7 +25,7 @@ describe("CodeBlock component", () => {
     expect(clipboardSpy).toHaveBeenCalledWith(mockCodeExamples.javascript);
   });
 
-  it("Changes displayed code when clicking on language icon", async () => {
+  it("Changes displayed code when clicking on language icon", () => {
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
     const pythonButton = screen.getByRole("button", { name: /python logo/i });
@@ -35,7 +34,7 @@ describe("CodeBlock component", () => {
     expect(pythonCode).toBeInTheDocument();
 
     const javaButton = screen.getByRole("button", { name: /java logo/i });
-    await userEvent.click(javaButton);
+    fireEvent.click(javaButton);
     const javaCode = screen.getByText(mockCodeExamples.java);
     expect(javaCode).toBeInTheDocument();
   });

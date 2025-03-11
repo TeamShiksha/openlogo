@@ -1,15 +1,9 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
 import Button from "../common/button/Button";
-import AuthModal from "../auth/Auth";
 import { HERO_SECTION, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./HeroSection.module.css";
 
-const HeroSection = () => {
-  const [signupModal, setSignupModal] = useState(false);
-  const closeSignupModal = () => {
-    setSignupModal(false);
-  };
-
+const HeroSection = ({ openAuthModal }) => {
   return (
     <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
@@ -28,12 +22,11 @@ const HeroSection = () => {
           <Button
             type="button"
             variant="primary"
-            onClick={() => setSignupModal(true)}
+            onClick={openAuthModal}
             className={styles["button-width"]}
           >
             {BUTTON_TEXT.getStarted}
           </Button>
-          <AuthModal isOpen={signupModal} onClose={closeSignupModal} />
         </div>
       </div>
       <div>
@@ -45,6 +38,10 @@ const HeroSection = () => {
       </div>
     </div>
   );
+};
+
+HeroSection.propTypes = {
+  openAuthModal: PropTypes.func.isRequired,
 };
 
 export default HeroSection;
