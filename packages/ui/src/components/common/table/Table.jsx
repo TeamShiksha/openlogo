@@ -32,7 +32,13 @@ const Table = ({ headers, rows, emptyMessage, onDelete }) => {
                 ))}
                 {onDelete && (
                   <td className={styles["table-cell"]}>
-                    <Button variant="danger" className={styles["delete-btn"]} onClick={() => onDelete(cells[index])}>{BUTTON_TEXT.delete}</Button>
+                    <Button
+                      variant="danger"
+                      className={styles["delete-btn"]}
+                      onClick={() => onDelete(cells[index])}
+                    >
+                      {BUTTON_TEXT.delete}
+                    </Button>
                   </td>
                 )}
               </tr>

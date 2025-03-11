@@ -48,7 +48,8 @@
 }
 
 @media only screen and (max-width: 1024px) {
-  .table-header, .table-cell {
+  .table-header,
+  .table-cell {
     padding: 0.5rem 1rem;
   }
 
