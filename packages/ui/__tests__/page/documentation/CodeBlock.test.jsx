@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CodeBlock from "../../../src/page/documentation/CodeBlock";
+import { CODEBLOCK } from "../../../src/utils/Constants";
 
 const mockCodeExamples = {
   javascript: "console.log('Hello, JavaScript!');",
@@ -16,13 +17,18 @@ describe("CodeBlock component", () => {
     expect(javascriptCode).toBeInTheDocument();
   });
 
-  it("Copies code to clipboard on button click", () => {
+  it("Copies code to clipboard on button click, change icon", async () => {
     const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
     render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
 
-    const copyButton = screen.getByRole("button", { name: /tick-copy-code/i });
+    const copyButton = screen.getByRole("img", { name: /tick-copy-code/i });
+    expect(copyButton.src).toContain(CODEBLOCK.copycodeicon);
     fireEvent.click(copyButton);
     expect(clipboardSpy).toHaveBeenCalledWith(mockCodeExamples.javascript);
+    await waitFor(() => {
+      const tickIcon = screen.getByRole("img", { name: /tick-copy-code/i });
+      expect(tickIcon.src).toContain(CODEBLOCK.tick);
+    });
   });
 
   it("Changes displayed code when clicking on language icon", () => {
