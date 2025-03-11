@@ -339,6 +339,7 @@ export const BUTTON_TEXT = {
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
+  delete: "Delete",
 };
 
 export const BRANDING = {
@@ -354,82 +355,6 @@ export const CODEBLOCK = {
   javaLogo,
   tick,
   copycodeicon,
-};
-
-export const CODE_EXAMPLE_SEARCH = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
-
-  python: `# import package
-import requests
-
-# send GET request
-response = requests.get("api/logo/search",
-  params={
-    "key": "{prefix}",
-    "API_KEY": '{YOUR_API_KEY}'
-  },
-  headers={
-    "Content-Type": "application/json"
-  }
-)`,
-
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();  
-
-// send GET request
-HttpResponse<String> response = client.send(request, 
-  HttpResponse.BodyHandlers.ofString());`,
-};
-
-export const CODE_EXAMPLE = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
-
-  python: `# import package
-import requests
-
-# send GET request
-response = requests.get("api/logo",
-  params={
-    "domain": "{domain}",
-    "API_KEY": "{YOUR_API_KEY}"
-  },
-  headers={
-    "Content-Type": "application/json"
-  }
-)`,
-
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();  
-
-// send GET request
-HttpResponse<String> response = client.send(request, 
-  HttpResponse.BodyHandlers.ofString());`,
 };
 
 export const TABLE_DATA = {
@@ -452,7 +377,7 @@ export const HERO_SECTION = {
   illustractionSrcAlt: "illustraction",
 };
 
-export const PRIVACY_POLICY_CONTENT = [
+export const PRIVACY_AND_TERMS = [
   {
     HEADLINE: "Privacy and Terms",
     DATA_ID: "#",
@@ -528,4 +453,111 @@ export const CONTACT = {
     email: "",
     message: "",
   },
+};
+
+const CODE_EXAMPLE_SEARCH = {
+  javascript: `// use fetch to send GET request
+fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})`,
+
+  python: `# import package
+import requests
+# send GET request
+response = requests.get("api/logo/search",
+  params={
+    "key": "{prefix}",
+    "API_KEY": '{YOUR_API_KEY}'
+  },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+  java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
+};
+
+const CODE_EXAMPLE = {
+  javascript: `// use fetch to send GET request
+fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})`,
+
+  python: `# import package
+import requests
+# send GET request
+response = requests.get("api/logo",
+  params={
+    "domain": "{domain}",
+    "API_KEY": "{YOUR_API_KEY}"
+  },
+  headers={
+    "Content-Type": "application/json"
+  }
+)`,
+
+  java: `// create http client instance
+HttpClient client = HttpClient.newHttpClient();
+// build http request
+HttpRequest request = HttpRequest.newBuilder()
+  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
+  .header("Content-Type", "application/json")
+  .GET()
+  .build();  
+// send GET request
+HttpResponse<String> response = client.send(request, 
+  HttpResponse.BodyHandlers.ofString());`,
+};
+
+export const DOCUMENTATION = {
+  introduction: {
+    heading: "Introduction",
+    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we’re here to help. Contact us anytime!",
+  },
+  tableDataHeaders: ["Parameter", "Type", "Description", "Required"],
+  apiDocs: [
+    {
+      heading: "Logo Retrieval",
+      text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
+      endPoint: "Endpoint: /logo?key=google&API_KEY=YOUR_API_KEY",
+      tableDataContent: [
+        ["key", "string", "The domain name of the company.", "Yes"],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+      ],
+      codeExample: CODE_EXAMPLE,
+    },
+    {
+      heading: "Search (Now Available)",
+      text: "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
+      endPoint: "Endpoint: /logo/search?key=go&API_KEY=YOUR_API_KEY",
+      tableDataContent: [
+        ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+      ],
+      codeExample: CODE_EXAMPLE_SEARCH,
+    },
+  ],
+  customerSupportText: [
+    "If you're unable to find the logo you need, please don't hesitate to ",
+    ". Our team will be happy to assist you in locating the appropriate logo. Additionally, you can refer to the provided examples for guidance. If you still require further support, our dedicated support team is available to help with any additional questions or concerns.",
+  ],
+  localUrl: "Base URL: http://localhost:5000/api",
+  baseStageUrl: "Base URL: https://api-stage-openlogo.fyi/api",
+  baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
 };
