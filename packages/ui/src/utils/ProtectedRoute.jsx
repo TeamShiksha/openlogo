@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect } from "react";
 import { AuthContext, UserContext } from "../contexts/Contexts";
-import { Navigate, useLocation } from "react-router";
+import { Navigate, useLocation } from "react-router-dom";
 
-function ProtectedRoute({ adminOnly, children }) {
+function ProtectedRoute({ adminOnly, openAuthModal, children }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const location = useLocation();
@@ -14,6 +14,13 @@ function ProtectedRoute({ adminOnly, children }) {
     }
   }, [adminOnly, fetchUserData, isAuthenticated, loading, userData]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      openAuthModal();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+
   if (adminOnly && isAuthenticated && (loading || !userData)) {
     console.log("spinner. needs to be implemented..");
   }
@@ -22,19 +29,20 @@ function ProtectedRoute({ adminOnly, children }) {
     if (userData.userType === "ADMIN") {
       return children;
     } else {
-      return <Navigate to="/home" replace={true} />;
+      return <Navigate to="/" replace={true} />;
     }
   }
 
   return isAuthenticated ? (
     children
   ) : (
-    <Navigate to="/signin" replace state={{ path: location.pathname }} />
+    <Navigate to="/" replace state={{ path: location.pathname }} />
   );
 }
 
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
+  openAuthModal: PropTypes.func.isRequired,
   adminOnly: PropTypes.bool,
 };
 
