@@ -85,6 +85,27 @@ describe("Logo Request", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      user_id: "DF016301880BC69B04117206",
+      companyUrl: "https://www.google.co.in/",
+    };
+    jest
+      .spyOn(RequestService.prototype, "createRaiseRequest")
+      .mockImplementation(() => {
+        throw new Error();
+      });
+
+    const response = await request(app)
+      .post("/api/users/me/request")
+      .set("Cookie", `jwt=${mockToken}`)
+      .send(mockInput);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Request Raised", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
@@ -92,7 +113,6 @@ describe("Logo Request", () => {
       user_id: "DF016301880BC69B04117206",
       companyUrl: "https://www.google.co.in/",
     };
-
     jest
       .spyOn(RequestService.prototype, "createRaiseRequest")
       .mockResolvedValue(true);

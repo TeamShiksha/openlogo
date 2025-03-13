@@ -86,6 +86,29 @@ describe("Destroy User Key", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      keyId: new mongoose.Types.ObjectId().toString(),
+    };
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+    jest
+      .spyOn(UserService.prototype, "destroyUserKey")
+      .mockImplementation(() => {
+        throw new Error();
+      });
+
+    const response = await request(app)
+      .delete("/api/users/me/api-key/:keyId")
+      .query(mockInput)
+      .set("Cookie", `jwt=${mockToken}`);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Key Destroyed", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

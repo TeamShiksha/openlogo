@@ -17,6 +17,26 @@ describe("Delete User Account", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      userId: "mockUserId@123",
+    };
+    jest
+      .spyOn(UserService.prototype, "deleteUserAccount")
+      .mockImplementation(() => {
+        throw new Error();
+      });
+
+    const response = await request(app)
+      .delete("/api/users/me")
+      .set("Cookie", `jwt=${mockToken}`)
+      .send(mockInput);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200- User account deleted", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

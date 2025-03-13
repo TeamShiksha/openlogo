@@ -134,6 +134,30 @@ describe("Update User Password", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      currPassword: "password123",
+      newPassword: "mockNewpassword",
+    };
+    jest
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(new Users(MOCK_USERS[1]));
+    jest
+      .spyOn(UserService.prototype, "updateUserPassword")
+      .mockImplementation(() => {
+        throw new Error();
+      });
+
+    const response = await request(app)
+      .put("/api/users/me/password")
+      .set("Cookie", `jwt=${mockToken}`)
+      .send(mockInput);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - User password updated", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

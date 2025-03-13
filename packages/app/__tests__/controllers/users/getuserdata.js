@@ -67,6 +67,20 @@ describe("GETUSERDATA", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    jest.spyOn(UserService.prototype, "getUser").mockImplementation(() => {
+      throw new Error();
+    });
+
+    const response = await request(app)
+      .get("/api/users/me")
+      .set("Cookie", `jwt=${mockToken}`);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Success", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

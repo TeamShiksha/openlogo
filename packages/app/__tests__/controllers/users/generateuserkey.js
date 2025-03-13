@@ -118,6 +118,40 @@ describe("Generate User Key", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockuser = {
+      ...MOCK_USERS[1],
+      keys: [
+        { key_description: "description one" },
+        { key_description: "description two" },
+      ],
+    };
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockuser);
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue({ key_limit: 3 });
+    jest
+      .spyOn(KeyService.prototype, "getAllUserKeys")
+      .mockResolvedValue([
+        { key_description: "description one" },
+        { key_description: "description two" },
+      ]);
+    jest
+      .spyOn(UserService.prototype, "createNewUserKey")
+      .mockImplementation(() => {
+        throw new Error();
+      });
+
+    const response = await request(app)
+      .post("/api/users/me/api-key")
+      .set("Cookie", `jwt=${mockToken}`)
+      .send({ key_description: "description three" });
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Key generated ", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

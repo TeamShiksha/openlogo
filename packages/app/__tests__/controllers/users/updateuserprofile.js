@@ -84,6 +84,27 @@ describe("Update User Profile", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockToken = mockUserModel.generateJWT();
+    const mockInput = {
+      name: "Mockname",
+    };
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+    jest.spyOn(UserService.prototype, "updateUser").mockImplementation(() => {
+      throw new Error();
+    });
+
+    const response = await request(app)
+      .patch("/api/users/me")
+      .set("Cookie", `jwt=${mockToken}`)
+      .send(mockInput);
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - User profile updated", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
