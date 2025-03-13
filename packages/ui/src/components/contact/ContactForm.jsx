@@ -1,49 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
 import Modal from "../common/modal/Modal";
 import Button from "../common/button/Button";
 import styles from "./ContactForm.module.css";
 import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
-
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+import { validate } from "../../utils/Helpers";
 
 function ContactForm({ closeModal }) {
   const [formValues, setFormValues] = useState(CONTACT.intialValues);
-  const [errors, setErrors] = useState({});
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (!focusedField) {
+      setFormErrors({});
+      return;
+    }
+    const timeout = setTimeout(() => {
+      const validationErrors = validate({
+        [focusedField]: formValues[focusedField],
+      });
+      setFormErrors({
+        [focusedField]: validationErrors[focusedField] || "",
+      });
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [focusedField, formValues]);
+
+  useEffect(() => {
+    const errors = validate(formValues);
+    setIsFormValid(Object.keys(errors).length === 0);
+  }, [formValues]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const validateForm = () => {
-    const newErrors = {
-      name: "",
-      email: "",
-      message: "",
-    };
-
-    if (!formValues.name.trim()) newErrors.name = "Name is required.";
-    if (!formValues.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!emailRegex.test(formValues.email)) {
-      newErrors.email = "Enter a valid email address.";
-    }
-    if (!formValues.message.trim()) newErrors.message = "Message is required.";
-
-    setErrors(newErrors);
-    return !newErrors.name && !newErrors.email && !newErrors.message;
-  };
-
   const handleSubmit = (submitEvent) => {
     submitEvent.preventDefault();
-    if (validateForm()) {
-      setFormValues({ name: "", email: "", message: "" });
-      setTimeout(() => {
-        closeModal();
-      }, 5000);
-    }
+    setFormValues(CONTACT.intialValues);
+    setFormErrors({});
+    setIsSubmit(false);
+    setFocusedField(null);
+    setTimeout(() => {
+      closeModal();
+    }, 5000);
   };
 
   return (
@@ -53,24 +59,33 @@ function ContactForm({ closeModal }) {
         <div className={styles["form-width"]}>
           {CONTACT["fields"].map((field) => (
             <CustomInput
+              error={formErrors[field.name]}
               key={field.name}
               type={field.type}
               name={field.name}
               label={field.label}
               value={formValues[field.name]}
               onChange={handleInputChange}
+              onFocus={() => setFocusedField(field.name)}
+              onBlur={() => setFocusedField(null)}
             />
           ))}
           <textarea
             name="message"
-            placeholder={errors.message || "Type your message here ...."}
+            placeholder="Type your message here ...."
             value={formValues.message}
             onChange={handleInputChange}
             className={styles["text-area"]}
-            aria-invalid={!!errors.message}
+            onFocus={() => setFocusedField("message")}
+            onBlur={() => setFocusedField(null)}
           ></textarea>
+          <p className={styles["input-error"]}>{formErrors.message}</p>
         </div>
-        <Button type="submit" variant="primary" disabled={true}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!isFormValid || isSubmit}
+        >
           {BUTTON_TEXT.sendMessage}
         </Button>
       </form>

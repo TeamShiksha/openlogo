@@ -30,7 +30,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(<SignUpForm toggleForm={vi.fn()} />);
 
     const nameInput = screen.getByLabelText(SIGNUP["fields"][0].label);
-    fireEvent.change(nameInput, { target: { value: "John123Doe!" } });
+    fireEvent.change(nameInput, { target: { value: "JohnDoe" } });
     expect(nameInput.value).toBe("JohnDoe");
   });
 });

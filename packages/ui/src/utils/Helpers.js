@@ -74,6 +74,11 @@ export const isValidMessage = (message) => {
   return messageRegex.test(message);
 };
 
+export const isValidName = (name) => {
+  const nameRegex = /^[a-zA-Z\s]*$/;
+  return nameRegex.test(name);
+};
+
 export const formatDate = (dateString) => {
   const date = dateString ? new Date(dateString) : new Date();
   return date.toLocaleDateString("en-us", {
@@ -106,6 +111,41 @@ export const handleNavigation = (event, url, navigate) => {
   } else {
     window.scrollTo(0, 0);
   }
+};
+
+export const validate = (values) => {
+  const errors = {};
+
+  if (!values.name) {
+    errors.name = "Name is required!";
+  } else if (!isValidName(values.name)) {
+    errors.name = "Name can only contain letters and spaces!";
+  }
+
+  if (!values.email) {
+    errors.email = "Email is required!";
+  } else if (!isValidEmail(values.email)) {
+    errors.email = "This is not a valid email format!";
+  }
+
+  const passwordErrors = isValidPassword(values.password);
+  if (Object.keys(passwordErrors).length > 0) {
+    errors.password = passwordErrors.password;
+  }
+
+  if (!values.confirmPassword) {
+    errors.confirmPassword = "Confirm password is required!";
+  } else if (values.confirmPassword !== values.password) {
+    errors.confirmPassword = "Passwords do not match!";
+  }
+
+  if (!values.message) {
+    errors.message = "Message is required!";
+  } else if (!isValidMessage(values.message)) {
+    errors.message = "Message can only contain letters and spaces!";
+  }
+
+  return errors;
 };
 
 /**
