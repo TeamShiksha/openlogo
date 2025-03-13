@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
 import styles from "./CustomInput.module.css";
 
 function CustomInput({
@@ -13,7 +12,7 @@ function CustomInput({
   onFocus,
   onBlur,
 }) {
-  const [isFocused] = useState(false);
+  const isFocused = false;
 
   return (
     <div className={styles.group}>
