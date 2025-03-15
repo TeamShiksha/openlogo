@@ -6,11 +6,11 @@ function CustomInput({
   name,
   label,
   value,
-  onChange,
   error,
-  className,
-  onFocus,
-  onBlur,
+  onChange = () => {},
+  className = "",
+  onFocus = () => {},
+  onBlur = () => {},
 }) {
   const isFocused = false;
 
@@ -44,11 +44,11 @@ CustomInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   error: PropTypes.string,
   className: PropTypes.string,
-  onFocus: PropTypes.func.isRequired,
-  onBlur: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 
 export default CustomInput;

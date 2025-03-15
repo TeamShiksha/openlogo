@@ -49,4 +49,18 @@
   margin-top: -9px;
   margin-bottom: 9px;
   margin-left: 5px;
+  animation: fadeIn 0.5s ease-in;
+  transform-origin: top left;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

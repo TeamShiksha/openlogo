@@ -14,7 +14,7 @@ const SignIn = ({ toggleForm }) => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    if (!focusedField) {
+    if (focusedField !== "email") {
       setFormErrors({});
       return;
     }

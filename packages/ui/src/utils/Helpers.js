@@ -126,7 +126,7 @@ export const validate = (values) => {
   validateField(
     "name",
     values.name && !isValidName(values.name),
-    "Name can only contain letters and spaces!"
+    "Only letters and spaces allowed!"
   );
 
   validateField("email", !values.email, "Email is required!");
@@ -158,7 +158,7 @@ export const validate = (values) => {
   validateField(
     "message",
     values.message && !isValidMessage(values.message),
-    "Message can only contain letters and spaces!"
+    "Only letters and spaces allowed!"
   );
 
   return errors;
