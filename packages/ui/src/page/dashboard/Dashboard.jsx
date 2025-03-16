@@ -53,7 +53,7 @@ function Dashboard() {
           <CardWrapper title="Change Password">
             <ChangePassword />
           </CardWrapper>
-          <CardWrapper title="Setting">
+          <CardWrapper title="Settings">
             <SettingCard />
           </CardWrapper>
         </section>

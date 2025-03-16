@@ -4,7 +4,10 @@ import styles from "./CustomInput.module.css";
 
 function CustomInput({ type, name, label, value, onChange, error, className }) {
   const [isFocused, setIsFocused] = useState(false);
-  const handleFocus = () => setIsFocused(true);
+  const handleFocus = (e) => {
+    e.target.select();
+    setIsFocused(true);
+  };
   const handleBlur = () => setIsFocused(false);
 
   return (
