@@ -1,7 +1,6 @@
 import { vi, describe, it, expect } from "vitest";
 import { BrowserRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import Documentation from "../../src/page/documentation/Documentation";
 import MobileHeaderMenu from "../../src/components/header/MobileHeaderMenu";
 
@@ -19,7 +18,7 @@ describe("MobileHeaderMenu Component", () => {
     expect(mobileMenu).not.toBeInTheDocument();
   });
 
-  it("Does render when isOpen = false and navigation works", async () => {
+  it("Does render when isOpen = false and navigation works", () => {
     render(
       <BrowserRouter>
         <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
@@ -31,7 +30,7 @@ describe("MobileHeaderMenu Component", () => {
     expect(mobileMenu).toBeInTheDocument();
     const docsNavigation = within(mobileMenu).getByText("Docs");
     expect(docsNavigation).toBeInTheDocument();
-    await userEvent.click(docsNavigation);
+    fireEvent.click(docsNavigation);
     expect(window.location.pathname).toBe("/docs");
   });
 

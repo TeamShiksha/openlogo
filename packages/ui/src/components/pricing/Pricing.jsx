@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import PricingCard from "./PricingCard";
 import { PRICING } from "../../utils/Constants";
 import styles from "./Pricing.module.css";
 
-function Pricing() {
+function Pricing({ openAuthModal }) {
   return (
     <div
       data-testid="pricing"
@@ -19,11 +20,16 @@ function Pricing() {
             tagline={plan.tagline}
             index={plan.index}
             keypoints={plan.keypoints}
+            openAuthModal={openAuthModal}
           />
         ))}
       </div>
     </div>
   );
 }
+
+Pricing.propTypes = {
+  openAuthModal: PropTypes.func.isRequired,
+};
 
 export default Pricing;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
-import AuthModal from "../auth/Auth";
 import Button from "../common/button/Button";
 import {
   HEADER_ITEMS,
@@ -13,10 +13,9 @@ import {
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
 
-const Header = () => {
+const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const [authModal, setAuthModal] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
@@ -64,19 +63,11 @@ const Header = () => {
           <Button
             variant="primary"
             className={styles.ml}
-            onClick={() => {
-              setAuthModal(true);
-            }}
+            onClick={openAuthModal}
           >
             {BUTTON_TEXT.getStarted}
           </Button>
         </div>
-        <AuthModal
-          isOpen={authModal}
-          onClose={() => {
-            setAuthModal(false);
-          }}
-        />
         {isMobile && (
           <button className={styles.hamburger} onClick={toggleMenu}>
             <img
@@ -90,6 +81,10 @@ const Header = () => {
       </header>
     </div>
   );
+};
+
+Header.propTypes = {
+  openAuthModal: PropTypes.func.isRequired,
 };
 
 export default Header;

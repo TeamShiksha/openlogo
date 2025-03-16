@@ -8,16 +8,10 @@ const CodeBlock = ({ id, codeExamples }) => {
   const [copyMessage, setCopyMessage] = useState("");
 
   const copyToClipboard = (code) => {
-    navigator.clipboard
-      .writeText(code)
-      .then(() => {
-        setCopyMessage("Copied!");
-        setTimeout(() => setCopyMessage(""), 2000);
-      })
-      .catch(() => {
-        setCopyMessage("Copy failed!");
-        setTimeout(() => setCopyMessage(""), 2000);
-      });
+    navigator.clipboard.writeText(code).then(() => {
+      setCopyMessage("Copied!");
+      setTimeout(() => setCopyMessage(""), 2000);
+    });
   };
 
   const logos = {
@@ -51,15 +45,11 @@ const CodeBlock = ({ id, codeExamples }) => {
           <button
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
           >
-            {copyMessage ? (
-              <img src={CODEBLOCK.tick} alt="tick" />
-            ) : (
-              <img
-                src={CODEBLOCK.copycodeicon}
-                alt="Copy code"
-                style={{ cursor: "pointer" }}
-              />
-            )}
+            <img
+              src={copyMessage ? CODEBLOCK.tick : CODEBLOCK.copycodeicon}
+              alt="tick-copy-code"
+              style={copyMessage ? {} : { cursor: "pointer" }}
+            />
           </button>
         </div>
       </pre>

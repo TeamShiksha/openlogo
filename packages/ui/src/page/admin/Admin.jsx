@@ -1,5 +1,7 @@
+import Catalog from "../../components/admindashboard/Catalog";
+
 function AdminDashboard() {
-  return <div>AdminDashboard</div>;
+  return <Catalog />;
 }
 
 export default AdminDashboard;
