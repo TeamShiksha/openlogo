@@ -49,22 +49,28 @@
   color: var(--label-color);
 }
 
+.error-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.has-error {
+  max-height: 50px;
+}
+
 .input-error {
   color: var(--error);
   font-size: 0.8rem;
-  padding: 4px;
-  animation: fadeIn 0.5s ease-in;
-  transform-origin: top left;
+  opacity: 0;
+  padding: 0 4px;
+  transition:
+    opacity 0.2s ease-out,
+    padding 0.2s ease-out;
+  transition-delay: 0.1s;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.has-error .input-error {
+  opacity: 1;
+  padding: 4px;
 }

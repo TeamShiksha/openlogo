@@ -79,7 +79,11 @@ function ContactForm({ closeModal }) {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           ></textarea>
-          <p className={styles["input-error"]}>{formErrors.message}</p>
+          <p
+            className={`${styles["input-error"]} ${formErrors.message ? styles["has-error"] : ""}`}
+          >
+            {formErrors.message}
+          </p>
         </div>
         <Button
           type="submit"

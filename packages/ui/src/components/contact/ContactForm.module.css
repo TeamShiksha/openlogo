@@ -48,19 +48,17 @@
   font-size: 0.8rem;
   margin-top: -9px;
   margin-bottom: 9px;
-  margin-left: 5px;
-  animation: fadeIn 0.5s ease-in;
-  transform-origin: top left;
+  margin-left: 3px;
+  opacity: 0;
+  max-height: 1px;
+  transition:
+    opacity 0.2s ease-in-out 0.3s,
+    max-height 0.2s ease-in-out,
+    padding 0.2s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.has-error {
+  opacity: 1;
+  max-height: 50px;
+  padding: 1px;
 }
