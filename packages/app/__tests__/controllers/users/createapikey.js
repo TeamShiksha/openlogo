@@ -64,32 +64,6 @@ describe("Generate User Key", () => {
     });
   });
 
-  it("206 - User data not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      key_description: "mock keydescription",
-    };
-    jest
-      .spyOn(UserService.prototype, "getUser")
-      .mockResolvedValue(MOCK_USERS[1]);
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue(null);
-
-    const response = await request(app)
-      .post("/api/users/me/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
-
-    expect(response.status).toBe(206);
-    expect(response.body).toEqual({
-      statusCode: 206,
-      message: Messages.DATA_NOT_FOUND,
-      error: STATUS_CODES[206],
-    });
-  });
-
   it("403 - Limit reached", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

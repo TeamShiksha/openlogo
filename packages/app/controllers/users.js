@@ -158,13 +158,6 @@ async function generateKeyController(req, res, next) {
     const subscription = await subscriptionService.getSubscription(
       user.subscription_id
     );
-    if (!subscription) {
-      return res.status(206).json({
-        statusCode: 206,
-        error: STATUS_CODES[206],
-        message: Messages.DATA_NOT_FOUND,
-      });
-    }
 
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
