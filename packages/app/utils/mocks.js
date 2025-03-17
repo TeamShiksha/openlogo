@@ -113,4 +113,19 @@ const MOCK_USERTOKENS = [
   },
 ];
 
-module.exports = { MOCK_SUBSCRIPTION, MOCK_USERS, MOCK_USERTOKENS };
+const MOCK_KEYS = [
+  {
+    user: new mongoose.Types.ObjectId(),
+    key: "28482DNDO483ND3",
+    key_description: "API-KEY-1",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+];
+
+module.exports = {
+  MOCK_SUBSCRIPTION,
+  MOCK_USERS,
+  MOCK_USERTOKENS,
+  MOCK_KEYS,
+};
