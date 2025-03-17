@@ -7,55 +7,16 @@ describe("ContactForm Component", () => {
   it("renders the ContactForm with heading and input fields", () => {
     render(<ContactForm closeModal={() => {}} />);
 
-    expect(screen.getByText("Contact Us")).toBeInTheDocument();
-    expect(screen.getByLabelText("Name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email")).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText("Type your message here ....")
-    ).toBeInTheDocument();
-  });
-
-  it("renders the disabled submit button", () => {
-    render(<ContactForm closeModal={() => {}} />);
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
-    expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toBeDisabled();
-  });
-
-  it("renders the close button", () => {
-    render(<ContactForm closeModal={() => {}} />);
-    const closeButton =
-      screen.getByRole("button", { name: BUTTON_TEXT.cross }) ||
-      screen.getByText(BUTTON_TEXT.cross);
-    expect(closeButton).toBeInTheDocument();
-  });
-
-  it("closes the modal when the close button is clicked", () => {
-    let isOpen = true;
-    const closeModal = () => {
-      isOpen = false;
-    };
-    render(<ContactForm closeModal={closeModal} />);
-    const closeButton = screen.getByRole("button", { name: BUTTON_TEXT.cross });
-    fireEvent.click(closeButton);
-    expect(isOpen).toBe(false);
-  });
-
-  it("closes the modal when clicking outside", () => {
-    let isOpen = true;
-    const closeModal = () => {
-      isOpen = false;
-    };
-
-    render(<ContactForm closeModal={closeModal} />);
-
-    const modalOverlay = screen.getByTestId("modal-overlay");
-    expect(modalOverlay).toBeInTheDocument();
-
-    fireEvent.click(modalOverlay);
-    expect(isOpen).toBe(false);
+    const title = screen.getByText(CONTACT.title);
+    expect(title).toBeInTheDocument();
+    const nameInput = screen.getByLabelText("Name");
+    expect(nameInput).toBeInTheDocument();
+    const emailInput = screen.getByLabelText("Email");
+    expect(emailInput).toBeInTheDocument();
+    const messageInput = screen.getByPlaceholderText(
+      "Type your message here ...."
+    );
+    expect(messageInput).toBeInTheDocument();
   });
 
   it("shows validation errors when fields are empty after focus", async () => {

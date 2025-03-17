@@ -6,7 +6,8 @@ import { BUTTON_TEXT } from "../../../src/utils/Constants";
 describe("GetInTouch Component", () => {
   it("renders the GetInTouch card with title and description", () => {
     render(<GetInTouch />);
-    expect(screen.getByText("Still have questions?")).toBeInTheDocument();
+    const title = screen.getByText("Still have questions?");
+    expect(title).toBeInTheDocument();
     const description = screen.getByText(
       "Can't find the answer you're looking for? Please chat to our friendly team."
     );
@@ -15,20 +16,26 @@ describe("GetInTouch Component", () => {
 
   it("renders the 'Get in touch' button", () => {
     render(<GetInTouch />);
-    expect(screen.getByText("Get in touch")).toBeInTheDocument();
+    const button = screen.getByText("Get in touch");
+    expect(button).toBeInTheDocument();
   });
 
   it("opens the ContactForm modal when 'Get in touch' button is clicked", () => {
     render(<GetInTouch />);
-    fireEvent.click(screen.getByText("Get in touch"));
-    expect(screen.getByText("Contact Us")).toBeInTheDocument();
+    const button = screen.getByText("Get in touch");
+    fireEvent.click(button);
+    const modal = screen.getByText("Contact Us");
+    expect(modal).toBeInTheDocument();
   });
 
   it("closes the ContactForm modal when the close button is clicked", () => {
     render(<GetInTouch />);
-    fireEvent.click(screen.getByText("Get in touch"));
-    expect(screen.getByText("Contact Us")).toBeInTheDocument();
+    const button = screen.getByText("Get in touch");
+    fireEvent.click(button);
+    const modal = screen.getByText("Contact Us");
+    expect(modal).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.cross }));
-    expect(screen.queryByText("Contact Us")).not.toBeInTheDocument();
+    const modalClosed = screen.queryByText("Contact Us");
+    expect(modalClosed).not.toBeInTheDocument();
   });
 });
