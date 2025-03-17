@@ -40,9 +40,13 @@ describe("UserProvider", () => {
       </UserProvider>
     );
 
-    expect(screen.getByTestId("user-data").textContent).toBe("No User Data");
-    expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
-    expect(screen.getByTestId("error").textContent).toBe("No Error");
+    const userDataText = screen.getByTestId("user-data").textContent;
+    const loadingText = screen.getByTestId("loading").textContent;
+    const errorText = screen.getByTestId("error").textContent;
+
+    expect(userDataText).toBe("No User Data");
+    expect(loadingText).toBe("Not Loading");
+    expect(errorText).toBe("No Error");
   });
 
   it("should update userData when fetchUserData is successful", async () => {
@@ -61,11 +65,13 @@ describe("UserProvider", () => {
     screen.getByTestId("fetch-btn").click();
 
     await waitFor(() => {
-      expect(screen.getByTestId("user-data").textContent).toBe(
-        JSON.stringify(mockUserData)
-      );
-      expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
-      expect(screen.getByTestId("error").textContent).toBe("No Error");
+      const userDataText = screen.getByTestId("user-data").textContent;
+      const loadingText = screen.getByTestId("loading").textContent;
+      const errorText = screen.getByTestId("error").textContent;
+
+      expect(userDataText).toBe(JSON.stringify(mockUserData));
+      expect(loadingText).toBe("Not Loading");
+      expect(errorText).toBe("No Error");
     });
 
     expect(instance.get).toHaveBeenCalledWith("/api/user/data");
@@ -83,8 +89,11 @@ describe("UserProvider", () => {
     screen.getByTestId("fetch-btn").click();
 
     await waitFor(() => {
-      expect(screen.getByTestId("error").textContent).toBe("Error Occurred");
-      expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
+      const errorText = screen.getByTestId("error").textContent;
+      const loadingText = screen.getByTestId("loading").textContent;
+
+      expect(errorText).toBe("Error Occurred");
+      expect(loadingText).toBe("Not Loading");
     });
 
     expect(instance.get).toHaveBeenCalledWith("/api/user/data");

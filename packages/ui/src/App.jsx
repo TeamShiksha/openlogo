@@ -31,7 +31,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute adminOnly={true} openAuthModal={openCloseAuthModal}>
+            <ProtectedRoute adminOnly={true}>
               <AdminDashboard />
             </ProtectedRoute>
           }

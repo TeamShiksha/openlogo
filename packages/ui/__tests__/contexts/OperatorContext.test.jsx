@@ -40,9 +40,13 @@ describe("OperatorProvider", () => {
       </OperatorProvider>
     );
 
-    expect(screen.getByTestId("queries").textContent).toBe("No Queries");
-    expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
-    expect(screen.getByTestId("error").textContent).toBe("No Error");
+    const queriesText = screen.getByTestId("queries").textContent;
+    const loadingText = screen.getByTestId("loading").textContent;
+    const errorText = screen.getByTestId("error").textContent;
+
+    expect(queriesText).toBe("No Queries");
+    expect(loadingText).toBe("Not Loading");
+    expect(errorText).toBe("No Error");
   });
 
   it("should update queries when fetchQueries is successful", async () => {
@@ -62,11 +66,13 @@ describe("OperatorProvider", () => {
     screen.getByTestId("fetch-btn").click();
 
     await waitFor(() => {
-      expect(screen.getByTestId("queries").textContent).toBe(
-        JSON.stringify(mockQueries)
-      );
-      expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
-      expect(screen.getByTestId("error").textContent).toBe("No Error");
+      const queriesText = screen.getByTestId("queries").textContent;
+      const loadingText = screen.getByTestId("loading").textContent;
+      const errorText = screen.getByTestId("error").textContent;
+
+      expect(queriesText).toBe(JSON.stringify(mockQueries));
+      expect(loadingText).toBe("Not Loading");
+      expect(errorText).toBe("No Error");
     });
 
     expect(instance.get).toHaveBeenCalledWith("/api/common/pagination", {
@@ -91,8 +97,11 @@ describe("OperatorProvider", () => {
     screen.getByTestId("fetch-btn").click();
 
     await waitFor(() => {
-      expect(screen.getByTestId("error").textContent).toBe("Error Occurred");
-      expect(screen.getByTestId("loading").textContent).toBe("Not Loading");
+      const errorText = screen.getByTestId("error").textContent;
+      const loadingText = screen.getByTestId("loading").textContent;
+
+      expect(errorText).toBe("Error Occurred");
+      expect(loadingText).toBe("Not Loading");
     });
 
     expect(instance.get).toHaveBeenCalledWith("/api/common/pagination", {

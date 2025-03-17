@@ -50,9 +50,8 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("auth-status").textContent).toBe(
-        "Authenticated"
-      );
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Authenticated");
     });
   });
 
@@ -66,9 +65,8 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("auth-status").textContent).toBe(
-        "Not Authenticated"
-      );
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Not Authenticated");
     });
   });
 
@@ -81,18 +79,16 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("auth-status").textContent).toBe(
-        "Authenticated"
-      );
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Authenticated");
     });
 
     screen.getByTestId("logout-btn").click();
 
     await waitFor(() => {
+      const authStatusText = screen.getByTestId("auth-status").textContent;
       expect(instance.get).toHaveBeenCalledWith("api/auth/signout");
-      expect(screen.getByTestId("auth-status").textContent).toBe(
-        "Not Authenticated"
-      );
+      expect(authStatusText).toBe("Not Authenticated");
     });
   });
 });

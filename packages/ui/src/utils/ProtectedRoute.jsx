@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext, UserContext } from "../contexts/Contexts";
 import { Navigate, useLocation } from "react-router-dom";
 
-function ProtectedRoute({ adminOnly, openAuthModal, children }) {
+function ProtectedRoute({ adminOnly, children }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const location = useLocation();
@@ -13,13 +13,6 @@ function ProtectedRoute({ adminOnly, openAuthModal, children }) {
       fetchUserData();
     }
   }, [adminOnly, fetchUserData, isAuthenticated, loading, userData]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      openAuthModal();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
 
   if (adminOnly && isAuthenticated && (loading || !userData)) {
     console.log("spinner. needs to be implemented..");
@@ -42,7 +35,6 @@ function ProtectedRoute({ adminOnly, openAuthModal, children }) {
 
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
-  openAuthModal: PropTypes.func.isRequired,
   adminOnly: PropTypes.bool,
 };
 
