@@ -21,7 +21,11 @@ const Modal = ({
   };
 
   return (
-    <div className={styles["modal-overlay"]} onClick={handleOverlayClick}>
+    <div
+      className={styles["modal-overlay"]}
+      onClick={handleOverlayClick}
+      data-testid="modal-overlay"
+    >
       <div
         className={`${styles.modal} ${customClass || ""}`}
         style={{
