@@ -37,7 +37,6 @@ function Dashboard() {
             </CardWrapper>
           </section>
         </div>
-
         <div className={styles["table-wrapper"]}>
           <Table
             headers={TABLE_HEADER_DATA}
@@ -46,6 +45,7 @@ function Dashboard() {
             onDelete={() => {}}
           />
         </div>
+
         <div className={styles.dashboardContentContainer}>
           <section className={styles.dashboardContentSection}>
             <CardWrapper title="User Info">

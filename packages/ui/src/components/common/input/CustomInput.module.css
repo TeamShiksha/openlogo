@@ -50,20 +50,7 @@
 }
 
 .input-error {
-  color: red;
+  color: var(--error);
   font-size: 0.8rem;
-  margin-top: 4px;
-  animation: shrinkUp 0.3s ease-out;
-  transform-origin: top left;
-}
-
-@keyframes shrinkUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  padding: 4px;
 }
