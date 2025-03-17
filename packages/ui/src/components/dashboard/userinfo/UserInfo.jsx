@@ -80,7 +80,6 @@ function UserInfo() {
         />
       ))}
       <Button
-        type={"submit"}
         onClick={handleUserInfoUpdate}
         disabled={formData.isBtnDisabled}
         variant={"primary"}

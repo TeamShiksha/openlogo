@@ -18,45 +18,47 @@ const TABLE_TEST_DATA = [
 
 function Dashboard() {
   return (
-    <div className="container" data-testid="testid-dashboard">
-      <div className={styles.dashboardContentContainer}>
-        <section className={styles.dashboardContentSection}>
-          <CardWrapper title="Usage">
-            <Usage />
-          </CardWrapper>
-          <CardWrapper title="Generate New API Key">
-            <ApiKeyForm />
-          </CardWrapper>
-          <CardWrapper
-            title="Plan"
-            status="Active"
-            statusClass={styles.activeStatus}
-          >
-            <CurrentPlan />
-          </CardWrapper>
-        </section>
-      </div>
+    <div className="container">
+      <div className={styles.dashboardContainer} data-testid="testid-dashboard">
+        <div className={styles.dashboardContentContainer}>
+          <section className={styles.dashboardContentSection}>
+            <CardWrapper title="Usage">
+              <Usage />
+            </CardWrapper>
+            <CardWrapper title="Generate New API Key">
+              <ApiKeyForm />
+            </CardWrapper>
+            <CardWrapper
+              title="Plan"
+              status="Active"
+              statusClass={styles.activeStatus}
+            >
+              <CurrentPlan />
+            </CardWrapper>
+          </section>
+        </div>
 
-      <div className={styles["table-wrapper"]}>
-        <Table
-          headers={TABLE_HEADER_DATA}
-          rows={TABLE_TEST_DATA}
-          emptyMessage={EMPTY_MESSAGE}
-          onDelete={() => {}}
-        />
-      </div>
-      <div className={styles.dashboardContentContainer}>
-        <section className={styles.dashboardContentSection}>
-          <CardWrapper title="User Info">
-            <UserInfo />
-          </CardWrapper>
-          <CardWrapper title="Change Password">
-            <ChangePassword />
-          </CardWrapper>
-          <CardWrapper title="Settings">
-            <SettingCard />
-          </CardWrapper>
-        </section>
+        <div className={styles["table-wrapper"]}>
+          <Table
+            headers={TABLE_HEADER_DATA}
+            rows={TABLE_TEST_DATA}
+            emptyMessage={EMPTY_MESSAGE}
+            onDelete={() => {}}
+          />
+        </div>
+        <div className={styles.dashboardContentContainer}>
+          <section className={styles.dashboardContentSection}>
+            <CardWrapper title="User Info">
+              <UserInfo />
+            </CardWrapper>
+            <CardWrapper title="Change Password">
+              <ChangePassword />
+            </CardWrapper>
+            <CardWrapper title="Setting">
+              <SettingCard />
+            </CardWrapper>
+          </section>
+        </div>
       </div>
     </div>
   );

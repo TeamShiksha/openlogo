@@ -39,7 +39,11 @@ function ChangePassword() {
           required={true}
         />
       ))}
-      <Button type="submit" variant="primary">
+      <Button
+        type="submit"
+        variant="primary"
+        className={styles.changePasswordButton}
+      >
         Change Password
       </Button>
     </form>
