@@ -1,0 +1,35 @@
+.dashboard-container {
+  --dashboard-padding-xl: 2rem;
+  --dashboard-padding-lg: 1.5rem;
+  --dashboard-padding-md: 1.25rem;
+  --dashboard-padding-sm: 1rem;
+  --dashboard-margin-xl: 2rem;
+  --dashboard-margin-lg: 1.5rem;
+  --dashboard-margin-md: 1.25rem;
+  --dashboard-margin-sm: 1rem;
+
+  padding: var(--dashboard-padding-xl);
+  margin: var(--dashboard-margin-xl);
+}
+
+/* Breakpoints */
+@media screen and (max-width: 1400px) {
+  .dashboard-container {
+    padding: var(--dashboard-padding-lg);
+    margin: var(--dashboard-margin-lg);
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .dashboard-container {
+    padding: var(--dashboard-padding-md);
+    margin: var(--dashboard-margin-md);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    padding: var(--dashboard-padding-sm);
+    margin: var(--dashboard-margin-sm);
+  }
+}

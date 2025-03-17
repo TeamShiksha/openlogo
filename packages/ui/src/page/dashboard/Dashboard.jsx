@@ -18,7 +18,7 @@ const TABLE_TEST_DATA = [
 
 function Dashboard() {
   return (
-    <div className={styles.dashboardContainer} data-testid="testid-dashboard">
+    <div className="container" data-testid="testid-dashboard">
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
           <CardWrapper title="Usage">
@@ -36,6 +36,7 @@ function Dashboard() {
           </CardWrapper>
         </section>
       </div>
+
       <div className={styles["table-wrapper"]}>
         <Table
           headers={TABLE_HEADER_DATA}
@@ -44,7 +45,6 @@ function Dashboard() {
           onDelete={() => {}}
         />
       </div>
-
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
           <CardWrapper title="User Info">
