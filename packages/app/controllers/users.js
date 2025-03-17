@@ -147,9 +147,18 @@ async function generateKeyController(req, res, next) {
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
     const subscription = await subscriptionService.getSubscription(
       user.subscription_id
     );
+
     if (user.keys.length >= subscription.key_limit) {
       return res.status(403).json({
         message: Messages.LIMIT_REACHED,
@@ -186,6 +195,14 @@ async function destroyKeyController(req, res, next) {
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
     const destroyedKey = await userService.destroyUserKey(value.keyId, user);
     if (!destroyedKey) {
       return res.status(404).json({
@@ -222,6 +239,14 @@ async function updatePasswordController(req, res, next) {
     const { currPassword, newPassword } = value;
     const { email } = req.userData;
     const user = await userService.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
     const matchPassword = await user.matchPassword(currPassword);
     if (!matchPassword) {
       return res.status(400).json({
@@ -231,7 +256,7 @@ async function updatePasswordController(req, res, next) {
       });
     }
 
-    const userUpdateSuccessful = await userService.updateUserPassword(
+    const userUpdateSuccessful = userService.updateUserPassword(
       user,
       newPassword
     );
