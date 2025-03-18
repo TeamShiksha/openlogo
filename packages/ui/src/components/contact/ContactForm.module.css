@@ -8,6 +8,7 @@
 
 .text-area {
   width: 100%;
+  height: 100px;
   padding: 12px;
   font-size: 1rem;
   font-family: inherit;
@@ -30,10 +31,6 @@
   text-align: center;
 }
 
-.text-area {
-  height: 100px;
-}
-
 .text-area::placeholder {
   color: var(--label-color);
 }
@@ -44,4 +41,24 @@
 
 .text-area:focus {
   border-color: var(--primary);
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.8rem;
+  margin-top: -9px;
+  margin-bottom: 9px;
+  margin-left: 3px;
+  opacity: 0;
+  max-height: 1px;
+  transition:
+    opacity 0.2s ease-in-out 0.3s,
+    max-height 0.2s ease-in-out,
+    padding 0.2s ease-in-out;
+}
+
+.has-error {
+  opacity: 1;
+  max-height: 50px;
+  padding: 1px;
 }

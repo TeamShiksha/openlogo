@@ -1,11 +1,18 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
 import styles from "./CustomInput.module.css";
 
-function CustomInput({ type, name, label, value, onChange, error, className }) {
-  const [isFocused, setIsFocused] = useState(false);
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
+function CustomInput({
+  type,
+  name,
+  label,
+  value,
+  error,
+  onChange = () => {},
+  className = "",
+  onFocus = () => {},
+  onBlur = () => {},
+}) {
+  const isFocused = false;
 
   return (
     <div className={styles.group}>
@@ -15,8 +22,8 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
         name={name}
         className={`${styles["group-input"]} ${className}`}
         value={value}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={onFocus}
+        onBlur={onBlur}
         onChange={onChange}
       />
       <label
@@ -27,7 +34,11 @@ function CustomInput({ type, name, label, value, onChange, error, className }) {
       >
         {label}
       </label>
-      {error && <p className={styles["input-error"]}>{error}</p>}
+      <div
+        className={`${styles["error-container"]} ${error ? styles["has-error"] : ""}`}
+      >
+        <p className={styles["input-error"]}>{error}</p>
+      </div>
     </div>
   );
 }
@@ -37,9 +48,11 @@ CustomInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   error: PropTypes.string,
   className: PropTypes.string,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 
 export default CustomInput;
