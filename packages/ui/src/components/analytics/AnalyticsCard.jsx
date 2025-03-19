@@ -24,25 +24,12 @@ export default function AnalyticsCard({ title, api }) {
 
   return (
     <div className={styles.card}>
+      <div className={styles.cardTitle}>{title}</div>
       <div className={styles.cardContent}>
         <div className={styles.leftContent}>
-          <div className={styles.cardTitle}>{title}</div>
           <div className={styles.cardValue}>{value}</div>
         </div>
         <div className={styles.rightContent}>
-          {/* {change >= 0 ? (
-            <img
-              // src={increasingImage}
-              alt="Increasing"
-              className={styles.changeGraph}
-            />
-          ) : (
-            <img
-              // src={decreasingImage}
-              alt="Decreasing"
-              className={styles.changeGraph}
-            />
-          )} */}
           <div
             className={`${styles.changeValue} ${
               change >= 0
