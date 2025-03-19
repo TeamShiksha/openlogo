@@ -45,14 +45,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     fireEvent.focus(nameInput);
     await waitFor(() => {
-      const nameError = screen.getByText("Name is required!");
+      const nameError = screen.getByText("Name is required");
       expect(nameError).toBeInTheDocument();
     });
     fireEvent.blur(nameInput);
 
     fireEvent.focus(emailInput);
     await waitFor(() => {
-      const emailError = screen.getByText("Email is required!");
+      const emailError = screen.getByText("Email is required");
       expect(emailError).toBeInTheDocument();
     });
     fireEvent.blur(emailInput);
@@ -102,7 +102,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     const nameError = screen.queryByText("Name is required!");
     expect(nameError).not.toBeInTheDocument();
-    const emailError = screen.queryByText("Email is required!");
+    const emailError = screen.queryByText("Email is required");
     expect(emailError).not.toBeInTheDocument();
     const passwordError = screen.queryByText(
       PASSWORD_VALIDATION_MESSAGES.required

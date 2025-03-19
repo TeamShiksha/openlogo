@@ -34,13 +34,13 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     fireEvent.focus(emailInput);
     await waitFor(() => {
-      const emailError = screen.getByText("Email is required!");
+      const emailError = screen.getByText("Email is required");
       expect(emailError).toBeInTheDocument();
     });
     fireEvent.blur(emailInput);
 
     await waitFor(() => {
-      const emailError = screen.queryByText("Email is required!");
+      const emailError = screen.queryByText("Email is required");
       expect(emailError).not.toBeInTheDocument();
     });
   });
@@ -79,7 +79,7 @@ describe("SignInForm UI and Functionality Tests", () => {
       expect(emailInput).toHaveValue(SIGNIN.initialValues.email);
       expect(passwordInput).toHaveValue(SIGNIN.initialValues.password);
     });
-    const emailError = screen.queryByText("Email is required!");
+    const emailError = screen.queryByText("Email is required");
     expect(emailError).not.toBeInTheDocument();
 
     expect(signInButton).toBeDisabled();
