@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
-// import increasingImage from "../../src/assets/growth.svg";
-// import decreasingImage from "../../src/assets/decline.svg";
 import styles from "./AnalyticsCard.module.css";
 export default function AnalyticsCard({ title, api }) {
   const [value, setValue] = useState(1000);
