@@ -10,7 +10,7 @@ class BaseRepository {
   }
 
   async getById(id) {
-    return await this.model.findById(id);
+    return await this.model.findById(id).select("-__v");
   }
 
   async getAll(page = 1, limit = 10) {
