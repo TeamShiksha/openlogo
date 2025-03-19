@@ -24,10 +24,17 @@ function App() {
       <Header openAuthModal={openCloseAuthModal} />
       <Routes>
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/docs" element={<Documentation />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute adminOnly={false}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={
