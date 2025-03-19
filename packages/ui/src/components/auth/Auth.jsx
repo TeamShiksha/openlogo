@@ -6,17 +6,28 @@ import SignIn from "./Signin";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const toggleForm = () => {
-    setIsFlipped(!isFlipped);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setIsFlipped(!isFlipped);
+      setShowSignUp(!showSignUp);
+      setIsTransitioning(false);
+    }, 300);
   };
 
   if (!isOpen) return null;
 
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
-      {!isFlipped && <SignIn toggleForm={toggleForm} onClose={onClose} />}
-      {isFlipped && <SignUp toggleForm={toggleForm} onClose={onClose} />}
+      <div
+        style={{ opacity: isTransitioning ? 0 : 1, transition: "opacity 0.3s" }}
+      >
+        {!showSignUp && <SignIn toggleForm={toggleForm} onClose={onClose} />}
+        {showSignUp && <SignUp toggleForm={toggleForm} onClose={onClose} />}
+      </div>
     </Modal>
   );
 };
