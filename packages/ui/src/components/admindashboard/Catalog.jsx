@@ -105,8 +105,11 @@ function Catalog() {
             <img src={leftArrow} alt="left-arrow" />
           </button>
           <div>
-            Page <span className={styles["cur-page"]}>{pageNum + 1}</span> of{" "}
-            {totalPages + 1}
+            Page{" "}
+            <span data-testid="current-page" className={styles["cur-page"]}>
+              {pageNum + 1}
+            </span>{" "}
+            of {totalPages + 1}
           </div>
           <button
             onClick={handleNextBtnClick}
