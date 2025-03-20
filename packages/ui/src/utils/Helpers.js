@@ -74,6 +74,11 @@ export const isValidMessage = (message) => {
   return messageRegex.test(message);
 };
 
+export const isValidName = (name) => {
+  const nameRegex = /^[a-zA-Z\s]*$/;
+  return nameRegex.test(name);
+};
+
 export const formatDate = (dateString) => {
   const date = dateString ? new Date(dateString) : new Date();
   return date.toLocaleDateString("en-us", {
@@ -106,6 +111,57 @@ export const handleNavigation = (event, url, navigate) => {
   } else {
     window.scrollTo(0, 0);
   }
+};
+
+export const validate = (values) => {
+  const errors = {};
+
+  const validateField = (field, condition, errorMessage) => {
+    if (field in values && condition) {
+      errors[field] = errorMessage;
+    }
+  };
+
+  validateField("name", !values.name, "Name is required");
+  validateField(
+    "name",
+    values.name && !isValidName(values.name),
+    "Only letters and spaces allowed"
+  );
+
+  validateField("email", !values.email, "Email is required");
+  validateField(
+    "email",
+    values.email && !isValidEmail(values.email),
+    "This is not a valid email format"
+  );
+
+  if ("password" in values) {
+    const passwordErrors = isValidPassword(values.password);
+    if (Object.keys(passwordErrors).length > 0) {
+      errors.password = passwordErrors.password;
+    }
+  }
+
+  validateField(
+    "confirmPassword",
+    !values.confirmPassword,
+    "Confirm password is required"
+  );
+  validateField(
+    "confirmPassword",
+    values.confirmPassword && values.confirmPassword !== values.password,
+    "Passwords do not match"
+  );
+
+  validateField("message", !values.message, "Message is required");
+  validateField(
+    "message",
+    values.message && !isValidMessage(values.message),
+    "Only letters and spaces allowed"
+  );
+
+  return errors;
 };
 
 /**
