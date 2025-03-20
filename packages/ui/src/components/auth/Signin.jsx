@@ -1,15 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { isValidEmail, isValidPassword } from "../../utils/Helpers";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
+import { validate } from "../../utils/Helpers";
 
 const SignIn = ({ toggleForm }) => {
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (focusedField !== "email") {
+      setFormErrors({});
+      return;
+    }
+    const timer = setTimeout(() => {
+      const validationErrors = validate({
+        [focusedField]: formData[focusedField],
+      });
+      setFormErrors({
+        [focusedField]: validationErrors[focusedField] || "",
+      });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [focusedField, formData]);
+
+  useEffect(() => {
+    const errors = validate(formData);
+    setIsFormValid(Object.keys(errors).length === 0);
+  }, [formData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -18,25 +42,10 @@ const SignIn = ({ toggleForm }) => {
 
   const handleSubmit = (submitEvent) => {
     submitEvent.preventDefault();
-    const errors = validate(formData);
-    console.log(errors, formErrors);
     setFormData(SIGNIN.initialValues);
     setFormErrors({});
     setIsSubmit(false);
-  };
-
-  const validate = (values) => {
-    const errors = {};
-    if (!values.email) {
-      errors.email = "Email is required!";
-    } else if (!isValidEmail(values.email)) {
-      errors.email = "This is not a valid email format!";
-    }
-    const passwordErrors = isValidPassword(values.password);
-    if (Object.keys(passwordErrors).length > 0) {
-      errors.password = passwordErrors.password;
-    }
-    return errors;
+    setFocusedField(null);
   };
 
   const guestSignIn = () => {
@@ -50,19 +59,26 @@ const SignIn = ({ toggleForm }) => {
         <div className={styles["form-width"]}>
           {SIGNIN["fields"].map((field) => (
             <CustomInput
+              error={formErrors[field.name]}
               key={field.name}
               type={field.type}
               name={field.name}
               label={field.label}
               value={formData[field.name]}
               onChange={handleChange}
+              onFocus={() => setFocusedField(field.name)}
+              onBlur={() => setFocusedField(null)}
             />
           ))}
         </div>
         <p className={styles["forgot-password"]}>
           {BUTTON_TEXT.forgotPassword}
         </p>
-        <Button type="submit" variant="primary" disabled={!isSubmit}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!isFormValid || isSubmit}
+        >
           {BUTTON_TEXT.signIn}
         </Button>
       </form>

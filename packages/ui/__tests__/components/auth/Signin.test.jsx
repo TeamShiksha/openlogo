@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
@@ -26,5 +26,63 @@ describe("SignInForm UI and Functionality Tests", () => {
     const closeButton = screen.getByText(SIGNIN.footerText);
     fireEvent.click(closeButton);
     expect(toggleForm).toHaveBeenCalled();
+  });
+
+  it("validates email only when focused and blurred", async () => {
+    render(<SignIn toggleForm={vi.fn()} />);
+    const emailInput = screen.getByLabelText("Email");
+
+    fireEvent.focus(emailInput);
+    await waitFor(() => {
+      const emailError = screen.getByText("Email is required");
+      expect(emailError).toBeInTheDocument();
+    });
+    fireEvent.blur(emailInput);
+
+    await waitFor(() => {
+      const emailError = screen.queryByText("Email is required");
+      expect(emailError).not.toBeInTheDocument();
+    });
+  });
+
+  it("does not show an error for password but still validates it", async () => {
+    render(<SignIn toggleForm={vi.fn()} />);
+    const passwordInput = screen.getByLabelText("Password");
+
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "short" } });
+    fireEvent.blur(passwordInput);
+
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("Resets form correctly after submission", async () => {
+    render(<SignIn toggleForm={vi.fn()} />);
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const signInButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.signIn,
+    });
+
+    expect(signInButton).toBeDisabled();
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "ValidPassword@123" } });
+
+    await waitFor(() => {
+      expect(signInButton).toBeEnabled();
+    });
+
+    fireEvent.click(signInButton);
+
+    await waitFor(() => {
+      expect(emailInput).toHaveValue(SIGNIN.initialValues.email);
+      expect(passwordInput).toHaveValue(SIGNIN.initialValues.password);
+    });
+    const emailError = screen.queryByText("Email is required");
+    expect(emailError).not.toBeInTheDocument();
+
+    expect(signInButton).toBeDisabled();
+    expect(document.activeElement).toBe(document.body);
   });
 });

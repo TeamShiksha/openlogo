@@ -5,6 +5,7 @@ const SubscriptionService = require("./subscriptions");
 const UserTokenService = require("./usertoken");
 const UserService = require("./users");
 const GuestUsersService = require("./guestuser");
+const RequestService = require("./request");
 
 module.exports = {
   ContactUsService,
@@ -14,4 +15,5 @@ module.exports = {
   UserTokenService,
   UserService,
   GuestUsersService,
+  RequestService,
 };
