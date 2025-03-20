@@ -115,7 +115,7 @@ async function signinController(req, res, next) {
       );
 
       res.cookie("X-GUEST-TOKEN", token, {
-        expires: new Date(Date.now() + 15 * 60 * 1000),
+        expires: new Date(Date.now() + 3 * 60 * 1000),
         httpOnly: true,
         sameSite: "none",
         secure: true,

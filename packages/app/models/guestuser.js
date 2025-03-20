@@ -20,7 +20,7 @@ const guestUserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: "15min",
+    expires: "3m",
   },
 });
 

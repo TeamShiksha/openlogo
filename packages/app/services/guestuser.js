@@ -15,7 +15,6 @@ class GuestUserService {
   async handleGuestLogin(rawDeviceID, token) {
     console.log(token);
     if (token) {
-      console.log(token);
       try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         console.log("Decoded Token: ", decodedToken);
@@ -26,8 +25,7 @@ class GuestUserService {
           return { message: "Guest User already logged in", token };
         }
       } catch (error) {
-        console.log("Invalid or expired JWT, creating a new guest session.");
-        return { message: error };
+        console.log(error);
       }
     }
     const hashedDeviceID = await bcrypt.hash(
@@ -42,7 +40,7 @@ class GuestUserService {
       { id: guest.deviceID, role: guest.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "15min",
+        expiresIn: "3min",
       }
     );
     return { message: "Guest Signed In", token };

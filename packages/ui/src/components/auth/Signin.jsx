@@ -66,7 +66,6 @@ const SignIn = ({ toggleForm }) => {
           {BUTTON_TEXT.signIn}
         </Button>
       </form>
-      <hr className={styles.separator} />
       <p onClick={guestSignIn} className={styles["guest-sign-in"]}>
         {SIGNIN.guestAccount}
       </p>
