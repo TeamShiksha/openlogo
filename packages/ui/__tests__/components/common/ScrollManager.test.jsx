@@ -14,7 +14,7 @@ describe("ScrollManager Component", () => {
     vi.restoreAllMocks();
   });
 
-  it("scrolls to the stored hash element", async () => {
+  it("scrolls to the stored hash element with correct offset", async () => {
     document.body.innerHTML =
       '<div id="test-element" style="margin-top: 2000px;">Test</div>';
     sessionStorage.setItem("scrollTo", "test-element");
@@ -26,7 +26,15 @@ describe("ScrollManager Component", () => {
     );
 
     await new Promise((resolve) => setTimeout(resolve, 200));
-    expect(window.scrollTo).toHaveBeenCalled();
+
+    const element = document.getElementById("test-element");
+    const expectedTop =
+      element.getBoundingClientRect().top + window.scrollY - 95;
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: expectedTop,
+      behavior: "smooth",
+    });
   });
 
   it("scrolls to the top when no stored hash", () => {
