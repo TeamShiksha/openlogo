@@ -10,11 +10,12 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Analytics from "./components/analytics/Analytics";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
-  const [authModal, setauthModal] = useState(false);
+  const [authModal, setAuthModal] = useState(false);
   const openCloseAuthModal = () => {
-    setauthModal(!authModal);
+    setAuthModal(!authModal);
   };
 
   return (
@@ -23,11 +24,25 @@ function App() {
       <Header openAuthModal={openCloseAuthModal} />
       <Routes>
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/docs" element={<Documentation />} />
         <Route path="/analytics" element={<Analytics />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute adminOnly={false}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Footer />
       <AuthModal isOpen={authModal} onClose={openCloseAuthModal} />

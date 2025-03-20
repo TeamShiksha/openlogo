@@ -1,0 +1,94 @@
+import { render, screen, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { AuthProvider } from "../../src/contexts/AuthContext";
+import { AuthContext } from "../../src/contexts/Contexts";
+import { instance } from "../../src/api/api_instance";
+import { useContext } from "react";
+
+vi.mock("../../src/api/api_instance", () => ({
+  instance: {
+    get: vi.fn(() => Promise.resolve({})),
+  },
+}));
+
+const TestComponent = () => {
+  const { isAuthenticated, setIsAuthenticated, logout } =
+    useContext(AuthContext);
+  return (
+    <div>
+      <p data-testid="auth-status">
+        {isAuthenticated ? "Authenticated" : "Not Authenticated"}
+      </p>
+      <button onClick={() => setIsAuthenticated(true)}>Login</button>
+      <button data-testid="logout-btn" onClick={logout}>
+        Logout
+      </button>
+    </div>
+  );
+};
+
+const clearCookies = () => {
+  document.cookie.split(";").forEach((cookie) => {
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  });
+};
+
+beforeEach(() => {
+  clearCookies();
+  vi.clearAllMocks();
+});
+
+describe("AuthProvider", () => {
+  it("should set isAuthenticated to true if jwt cookie exists", async () => {
+    document.cookie = "jwt=valid_token; path=/";
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Authenticated");
+    });
+  });
+
+  it("should set isAuthenticated to false if jwt cookie does not exist", async () => {
+    clearCookies();
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Not Authenticated");
+    });
+  });
+
+  it("should call API on logout and set isAuthenticated to false", async () => {
+    document.cookie = "jwt=valid_token; path=/";
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(authStatusText).toBe("Authenticated");
+    });
+
+    screen.getByTestId("logout-btn").click();
+
+    await waitFor(() => {
+      const authStatusText = screen.getByTestId("auth-status").textContent;
+      expect(instance.get).toHaveBeenCalledWith("api/auth/signout");
+      expect(authStatusText).toBe("Not Authenticated");
+    });
+  });
+});
