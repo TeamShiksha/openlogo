@@ -210,16 +210,14 @@ export const INFO = [
 ];
 
 export const PASSWORD_VALIDATION_MESSAGES = {
-  required: "Password is required!",
-  minLength: (minLength) =>
-    `Password must be at least ${minLength} characters long.`,
-  maxLength: (maxLength) =>
-    `Password must be no more than ${maxLength} characters long.`,
-  uppercase: "Password must contain at least one uppercase letter.",
-  lowercase: "Password must contain at least one lowercase letter.",
-  digit: "Password must contain at least one digit.",
-  specialChar: "Password must contain at least one special character.",
-  generalError: "Password does not meet security requirements.",
+  required: "Password is required",
+  minLength: (minLength) => `Password must be at least ${minLength} characters`,
+  maxLength: (maxLength) => `Password cannot exceed ${maxLength} characters`,
+  uppercase: "Password must have an uppercase letter",
+  lowercase: "Password must have a lowercase letter",
+  digit: "Password must have a digit.",
+  specialChar: "Password must have a special character",
+  generalError: "Password is not secure",
 };
 
 export const ABOUT = {

@@ -30,31 +30,31 @@ describe("ContactForm Component", () => {
 
     fireEvent.focus(nameInput);
     await waitFor(() => {
-      const nameError = screen.getByText("Name is required!");
+      const nameError = screen.getByText("Name is required");
       expect(nameError).toBeInTheDocument();
     });
     fireEvent.blur(nameInput);
 
     fireEvent.focus(emailInput);
     await waitFor(() => {
-      const emailError = screen.getByText("Email is required!");
+      const emailError = screen.getByText("Email is required");
       expect(emailError).toBeInTheDocument();
     });
     fireEvent.blur(emailInput);
 
     fireEvent.focus(messageInput);
     await waitFor(() => {
-      const messageError = screen.getByText("Message is required!");
+      const messageError = screen.getByText("Message is required");
       expect(messageError).toBeInTheDocument();
     });
     fireEvent.blur(messageInput);
 
     await waitFor(() => {
-      const nameError = screen.queryByText("Name is required!");
+      const nameError = screen.queryByText("Name is required");
       expect(nameError).not.toBeInTheDocument();
-      const emailError = screen.queryByText("Email is required!");
+      const emailError = screen.queryByText("Email is required");
       expect(emailError).not.toBeInTheDocument();
-      const messageError = screen.queryByText("Message is required!");
+      const messageError = screen.queryByText("Message is required");
       expect(messageError).not.toBeInTheDocument();
     });
   });
@@ -90,11 +90,11 @@ describe("ContactForm Component", () => {
       expect(emailInput).toHaveValue(CONTACT.intialValues.email);
       expect(messageInput).toHaveValue(CONTACT.intialValues.message);
     });
-    const nameError = screen.queryByText("Name is required!");
+    const nameError = screen.queryByText("Name is required");
     expect(nameError).not.toBeInTheDocument();
-    const emailError = screen.queryByText("Email is required!");
+    const emailError = screen.queryByText("Email is required");
     expect(emailError).not.toBeInTheDocument();
-    const messageError = screen.queryByText("Message is required!");
+    const messageError = screen.queryByText("Message is required");
     expect(messageError).not.toBeInTheDocument();
 
     expect(submitButton).toBeDisabled();
