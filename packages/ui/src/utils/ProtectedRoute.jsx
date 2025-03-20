@@ -10,11 +10,18 @@ function ProtectedRoute({ adminOnly = false, children }) {
   const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if (adminOnly && !loading && !userData && !hasFetched) {
+    if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
       setHasFetched(true);
       fetchUserData();
     }
-  }, [adminOnly, loading, userData, hasFetched, fetchUserData]);
+  }, [
+    adminOnly,
+    loading,
+    userData,
+    hasFetched,
+    fetchUserData,
+    isAuthenticated,
+  ]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
