@@ -6,6 +6,8 @@ import { companies } from "../../utils/Constants";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 
 function Catalog() {
   const [pageNum, setPageNum] = useState(0);
@@ -55,13 +57,18 @@ function Catalog() {
           alt="search-logo"
           className={styles["search-icon"]}
         />
-        <input
-          value={searchTerm}
+        <CustomInput
           type="search"
-          placeholder="Search"
+          label="search"
           onChange={(e) => handleSearchTermChange(e)}
         />
-        <button onClick={() => setIsModalOpen(true)}>Add image</button>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          variant="primary"
+          className={styles["catalog-add-image-btn"]}
+        >
+          Add image
+        </Button>
         <ImageUploadModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -71,12 +78,7 @@ function Catalog() {
       <div className={styles["catalog-table-wrapper"]}>
         {/* catalog table header */}
         <div className={styles["catalog-table-header"]}>
-          <div className={styles["catalog-table-column-first"]}>
-            Images
-            <span className={styles["companies-count"]}>
-              {companies.length}
-            </span>
-          </div>
+          <div className={styles["catalog-table-column-first"]}>Images</div>
           <div className={styles["catalog-table-header-inner"]}>
             <div>Created</div>
             <div>Updated</div>
@@ -103,8 +105,11 @@ function Catalog() {
             <img src={leftArrow} alt="left-arrow" />
           </button>
           <div>
-            Page <span className={styles["cur-page"]}>{pageNum + 1}</span> of{" "}
-            {totalPages + 1}
+            Page{" "}
+            <span data-testid="current-page" className={styles["cur-page"]}>
+              {pageNum + 1}
+            </span>{" "}
+            of {totalPages + 1}
           </div>
           <button
             onClick={handleNextBtnClick}
