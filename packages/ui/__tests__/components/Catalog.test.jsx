@@ -1,8 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Catalog from "../../src/components/admindashboard/Catalog";
-import { companies } from "../../src/utils/Constants";
-import { BUTTON_TEXT } from "../../src/utils/Constants";
+import { companies, BUTTON_TEXT } from "../../src/utils/Constants";
 
 describe("Catalog Component", () => {
   it("Search bar should be visible", () => {
