@@ -122,18 +122,18 @@ export const validate = (values) => {
     }
   };
 
-  validateField("name", !values.name, "Name is required!");
+  validateField("name", !values.name, "Name is required");
   validateField(
     "name",
     values.name && !isValidName(values.name),
-    "Only letters and spaces allowed!"
+    "Only letters and spaces allowed"
   );
 
-  validateField("email", !values.email, "Email is required!");
+  validateField("email", !values.email, "Email is required");
   validateField(
     "email",
     values.email && !isValidEmail(values.email),
-    "This is not a valid email format!"
+    "This is not a valid email format"
   );
 
   if ("password" in values) {
@@ -146,19 +146,19 @@ export const validate = (values) => {
   validateField(
     "confirmPassword",
     !values.confirmPassword,
-    "Confirm password is required!"
+    "Confirm password is required"
   );
   validateField(
     "confirmPassword",
     values.confirmPassword && values.confirmPassword !== values.password,
-    "Passwords do not match!"
+    "Passwords do not match"
   );
 
-  validateField("message", !values.message, "Message is required!");
+  validateField("message", !values.message, "Message is required");
   validateField(
     "message",
     values.message && !isValidMessage(values.message),
-    "Only letters and spaces allowed!"
+    "Only letters and spaces allowed"
   );
 
   return errors;

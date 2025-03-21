@@ -1,36 +1,50 @@
+import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useContext, useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext, UserContext } from "../contexts/Contexts";
-import { Navigate, useLocation } from "react-router";
 
-function ProtectedRoute({ adminOnly, children }) {
+function ProtectedRoute({ adminOnly = false, children }) {
+  const location = useLocation();
   const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
-  const location = useLocation();
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if (adminOnly && isAuthenticated && (loading || !userData)) {
+    if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
+      setHasFetched(true);
       fetchUserData();
     }
-  }, [adminOnly, fetchUserData, isAuthenticated, loading, userData]);
+  }, [
+    adminOnly,
+    loading,
+    userData,
+    hasFetched,
+    fetchUserData,
+    isAuthenticated,
+  ]);
 
-  if (adminOnly && isAuthenticated && (loading || !userData)) {
-    console.log("spinner. needs to be implemented..");
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace state={{ from: location.pathname }} />;
   }
 
-  if (adminOnly && isAuthenticated) {
-    if (userData.userType === "ADMIN") {
-      return children;
-    } else {
-      return <Navigate to="/home" replace={true} />;
-    }
+  if (!adminOnly) {
+    return children;
   }
 
-  return isAuthenticated ? (
-    children
-  ) : (
-    <Navigate to="/signin" replace state={{ path: location.pathname }} />
-  );
+  if (!loading && !userData) {
+    alert("Something went wrong!");
+    return <Navigate to="/" replace />;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (userData.userType !== "ADMIN") {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
 
 ProtectedRoute.propTypes = {

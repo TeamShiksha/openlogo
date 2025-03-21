@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AuthModal from "../../../src/components/auth/Auth";
 import { expect, describe, vi, it } from "vitest";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
@@ -21,13 +21,19 @@ describe("Auth Component", () => {
     expect(authModalDialog).toBeInTheDocument();
   });
 
-  it("Toggle between to Signup and Signin", () => {
+  it("Toggle between to Signup and Signin", async () => {
     render(<AuthModal isOpen={true} onClose={closeModal} />);
 
     const toggleSpan = screen.getByText(SIGNIN.footerText);
     fireEvent.click(toggleSpan);
-    const SignUpForm = screen.getByText(BUTTON_TEXT.signUp);
-    expect(SignUpForm).toBeInTheDocument();
+
+    await waitFor(
+      () => {
+        const SignUpForm = screen.getByText(BUTTON_TEXT.signUp);
+        expect(SignUpForm).toBeInTheDocument();
+      },
+      { timeout: 400 }
+    );
   });
 
   it("AuthModal closes when cross is clicked", () => {
