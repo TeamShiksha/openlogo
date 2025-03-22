@@ -136,10 +136,9 @@ async function signinController(req, res, next) {
         });
       } else {
         res.cookie("x-guest-token", createGuestUser.token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
           maxAge: 2 * 60 * 60 * 1000,
+          sameSite: "none",
+          secure: true,
         });
         return res.status(200).json({ statusCode: 200 });
       }
@@ -174,11 +173,7 @@ async function signinController(req, res, next) {
       });
       if (req.cookies["x-guest-token"]) {
         guestUserService.deleteGuestUser(req.cookies["x-guest-token"]);
-        res.clearCookie("x-guest-token", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "Strict",
-        });
+        res.clearCookie("x-guest-token");
       }
       return res.status(200).json({ statusCode: 200 });
     }

@@ -21,7 +21,7 @@ function ApiKeyForm() {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={guestToken ? true : false}
+          disabled={!!guestToken}
         >
           Generate Key
         </Button>

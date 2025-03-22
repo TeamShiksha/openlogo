@@ -34,7 +34,7 @@ function UserInfo() {
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        isBtnDisabled: guestToken ? true : false,
+        isBtnDisabled: !!guestToken,
         [name]: value,
       };
     });

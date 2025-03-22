@@ -9,10 +9,7 @@ function CurrentPlan() {
       <p className={styles.currentPlanTagline}>
         Empower your projects with essential tools, at no cost.
       </p>
-      <button
-        className={styles.upgradeButton}
-        disabled={guestToken ? true : false}
-      >
+      <button className={styles.upgradeButton} disabled={!!guestToken}>
         Upgrade
       </button>
     </>

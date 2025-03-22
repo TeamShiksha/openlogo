@@ -46,7 +46,7 @@ function ChangePassword() {
         type="submit"
         variant="primary"
         className={styles.changePasswordButton}
-        disabled={guestToken ? true : false}
+        disabled={!!guestToken}
       >
         Change password
       </Button>

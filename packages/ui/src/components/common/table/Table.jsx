@@ -37,7 +37,7 @@ const Table = ({ headers, rows, emptyMessage, onDelete }) => {
                       variant="danger"
                       className={styles["delete-btn"]}
                       onClick={() => onDelete(cells[index])}
-                      disabled={guestToken ? true : false}
+                      disabled={!!guestToken}
                     >
                       {BUTTON_TEXT.delete}
                     </Button>

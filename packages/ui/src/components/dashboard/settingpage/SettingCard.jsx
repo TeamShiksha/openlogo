@@ -18,7 +18,7 @@ function SettingCard() {
                 : "primary"
             }
             className={styles.actionButton}
-            disabled={guestToken ? true : false}
+            disabled={!!guestToken}
           >
             {setting.buttontitle}
           </Button>
