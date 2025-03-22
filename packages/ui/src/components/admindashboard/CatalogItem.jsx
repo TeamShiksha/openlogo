@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import styles from "./CatalogItem.module.css";
-
+import Button from "../common/button/Button";
 function CatalogItem({ company }) {
   return (
     <div className={styles["catalog-item"]}>
@@ -12,7 +12,9 @@ function CatalogItem({ company }) {
         <div className={styles["updated"]}>{company.updatedAt}</div>
       </div>
       <div className={styles["catalog-item-column-last"]}>
-        <button className={styles["reupload-btn"]}>Reupload</button>
+        <Button variant="primary" className={styles["reupload-btn"]}>
+          Reupload
+        </Button>
       </div>
     </div>
   );
