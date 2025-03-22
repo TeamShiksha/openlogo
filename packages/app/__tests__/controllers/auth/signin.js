@@ -112,7 +112,6 @@ describe("SIGNIN API", () => {
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
       .send({ isGuest: true });
-    console.log("Response Status: ", response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,
