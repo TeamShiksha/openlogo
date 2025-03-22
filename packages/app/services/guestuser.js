@@ -7,29 +7,36 @@ class GuestUserService {
     this.guestUserRepository = new GuestUserRepository();
   }
 
-  /**
-   * Delete a guest user
-   * @param {string} id - The device id to delete
-   * @returns {boolean} - true if user was successfully deleted.
-   */
-  async handleGuestLogin(rawDeviceID, token) {
-    console.log(token);
+  async handleGuestLogin(guestDetails) {
+    let { ip, token } = guestDetails;
+    console.log("Token: ", token);
     if (token) {
       try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded Token: ", decodedToken);
         const guest = await this.guestUserRepository.findUserByDeviceID(
           decodedToken.id
         );
+        console.log("Guest: ", guest);
         if (guest) {
-          return { message: "Guest User already logged in", token };
+          return {
+            status: 409,
+            message: "Guest User already logged in",
+            token,
+          };
         }
       } catch (error) {
         console.log(error);
+        if (error.name === "TokenExpiredError") {
+          return {
+            status: 403,
+            message: "Token has expired. Please sign in again.",
+          };
+        }
+        return { status: 400, message: "Invalid token" };
       }
     }
     const hashedDeviceID = await bcrypt.hash(
-      rawDeviceID,
+      ip,
       parseInt(process.env.SALT_ROUND)
     );
     let guest = await this.guestUserRepository.create({
@@ -40,7 +47,7 @@ class GuestUserService {
       { id: guest.deviceID, role: guest.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "3min",
+        expiresIn: "2h",
       }
     );
     return { message: "Guest Signed In", token };

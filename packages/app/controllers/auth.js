@@ -4,7 +4,7 @@ const {
   UserService,
   SubscriptionService,
   UserTokenService,
-  GuestUsersService,
+  GuestUserService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -94,7 +94,7 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
-    const guestUserService = new GuestUsersService();
+    const guestUserService = new GuestUserService();
 
     const { body: payload } = req;
     const { error, value } = signinPayloadSchema.validate(payload);
@@ -108,19 +108,41 @@ async function signinController(req, res, next) {
     const { email, password, isGuest } = value;
 
     if (isGuest) {
-      const ip = req.connection.remoteAddress;
-      let { message, token } = await guestUserService.handleGuestLogin(
-        ip,
-        req.cookies["x-guest-token"]
-      );
-
-      res.cookie("X-GUEST-TOKEN", token, {
-        expires: new Date(Date.now() + 3 * 60 * 1000),
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-      });
-      return res.status(200).json({ message });
+      const guestDetails = {
+        ip: req.ip,
+        token: req.cookies["x-guest-token"],
+      };
+      const createGuestUser =
+        await guestUserService.handleGuestLogin(guestDetails);
+      if (createGuestUser.status === 400 || createGuestUser.status === 409) {
+        return res.status(createGuestUser.status).json({
+          error: STATUS_CODES[createGuestUser.status],
+          message: createGuestUser.message,
+          statusCode: createGuestUser.status,
+        });
+      } else if (
+        createGuestUser.status === 403 ||
+        createGuestUser.status === 404
+      ) {
+        res.clearCookie("x-guest-token", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "Strict",
+        });
+        return res.status(createGuestUser.status).json({
+          error: STATUS_CODES[createGuestUser.status],
+          message: createGuestUser.message,
+          statusCode: createGuestUser.status,
+        });
+      } else {
+        res.cookie("x-guest-token", createGuestUser.token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 2 * 60 * 60 * 1000,
+        });
+        return res.status(200).json({ statusCode: 200 });
+      }
     } else {
       const user = await userService.getUserByEmail(email);
       if (!user)
@@ -143,12 +165,6 @@ async function signinController(req, res, next) {
           statusCode: 404,
         });
       }
-      const guestToken = req.cookies["x-guest-token"];
-      if (guestToken) {
-        const decodedToken = jwt.verify(guestToken, process.env.JWT_SECRET);
-        await guestUserService.deleteUserAccount(decodedToken.id);
-      }
-      res.clearCookie("x-guest-token");
       const currentDate = new Date();
       const tomorrow = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
       res.cookie("jwt", user.generateJWT(), {
@@ -156,6 +172,14 @@ async function signinController(req, res, next) {
         sameSite: "none",
         secure: true,
       });
+      if (req.cookies["x-guest-token"]) {
+        guestUserService.deleteGuestUser(req.cookies["x-guest-token"]);
+        res.clearCookie("x-guest-token", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "Strict",
+        });
+      }
       return res.status(200).json({ statusCode: 200 });
     }
   } catch (err) {

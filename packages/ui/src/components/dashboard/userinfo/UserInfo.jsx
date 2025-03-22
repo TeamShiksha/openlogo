@@ -3,6 +3,7 @@ import { USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
+import { guestTokenPresent } from "../../../utils/Helpers";
 
 function UserInfo() {
   const initialValues = {
@@ -25,13 +26,15 @@ function UserInfo() {
     return errors;
   };
 
+  const guestToken = guestTokenPresent();
+
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        isBtnDisabled: false,
+        isBtnDisabled: guestToken ? true : false,
         [name]: value,
       };
     });

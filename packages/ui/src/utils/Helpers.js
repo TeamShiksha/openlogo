@@ -182,3 +182,12 @@ export const getBaseApiUrl = (domain) => {
     return DOCUMENTATION.baseProdUrl;
   }
 };
+
+export const guestTokenPresent = () => {
+  const guestToken =
+    document.cookie
+      .split(";")
+      .find((cookie) => cookie.startsWith("x-guest-token="))
+      ?.split("=")[1] || null;
+  return guestToken;
+};

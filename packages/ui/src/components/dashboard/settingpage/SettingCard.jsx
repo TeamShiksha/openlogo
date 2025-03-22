@@ -1,8 +1,10 @@
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
+import { guestTokenPresent } from "../../../utils/Helpers";
 
 function SettingCard() {
+  const guestToken = guestTokenPresent();
   return (
     <>
       {SETTING.map((setting, index) => (
@@ -16,6 +18,7 @@ function SettingCard() {
                 : "primary"
             }
             className={styles.actionButton}
+            disabled={guestToken ? true : false}
           >
             {setting.buttontitle}
           </Button>

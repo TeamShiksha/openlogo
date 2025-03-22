@@ -1,5 +1,5 @@
 const BaseRepository = require("./base");
-const GuestUser = require("../models/guestuser");
+const { GuestUsers } = require("../models");
 /**
  * The GuestUserRepository extends BaseRepository to manage User model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
  * It passes the GuestUser model to the base repository for database interactions.
@@ -8,7 +8,7 @@ const GuestUser = require("../models/guestuser");
 
 class GuestUserRepository extends BaseRepository {
   constructor() {
-    super(GuestUser);
+    super(GuestUsers);
   }
 
   /**

@@ -76,6 +76,12 @@ const MOCK_USERS = [
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    role: UserType.GUEST,
+    deviceID: bcrypt.hashSync("192.168.1.1", 10),
+    createdAt: Date.now(),
+  },
 ];
 
 const MOCK_USERTOKENS = [

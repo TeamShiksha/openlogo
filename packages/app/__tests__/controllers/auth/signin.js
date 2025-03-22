@@ -1,7 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserService } = require("../../../services");
-const { Users } = require("../../../models");
+const { UserService, GuestUserService } = require("../../../services");
+const { Users, GuestUsers } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
@@ -10,10 +10,12 @@ const app = require("../../../server");
 describe("SIGNIN API", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "jwtsecret";
+    process.env.SALT_ROUNDS = 10;
   });
 
   afterAll(() => {
     delete process.env.JWT_SECRET;
+    delete process.env.SALT_ROUNDS;
   });
 
   it("422 - Invalid email", async () => {
@@ -96,6 +98,21 @@ describe("SIGNIN API", () => {
       .post(ENDPOINTS.SIGNIN)
       .send({ email: "johndoe1@example.com", password: "password123" });
 
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      statusCode: 200,
+    });
+    expect(response.headers["set-cookie"]).toBeDefined();
+  });
+
+  it("200- Signin as guest", async () => {
+    jest
+      .spyOn(GuestUserService.prototype, "handleGuestLogin")
+      .mockImplementation(() => new GuestUsers(MOCK_USERS[4]));
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNIN)
+      .send({ isGuest: true });
+    console.log("Response Status: ", response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,

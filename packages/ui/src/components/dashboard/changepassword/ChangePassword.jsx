@@ -2,6 +2,7 @@ import { useState } from "react";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 import styles from "./ChangePassword.module.css";
+import { guestTokenPresent } from "../../../utils/Helpers";
 
 const PASSWORD_FIELDS = [
   { type: "password", name: "currPassword", label: "Current Password" },
@@ -26,6 +27,8 @@ function ChangePassword() {
     e.preventDefault();
   };
 
+  const guestToken = guestTokenPresent();
+
   return (
     <form onSubmit={handleSubmit}>
       {PASSWORD_FIELDS.map((field) => (
@@ -43,6 +46,7 @@ function ChangePassword() {
         type="submit"
         variant="primary"
         className={styles.changePasswordButton}
+        disabled={guestToken ? true : false}
       >
         Change password
       </Button>

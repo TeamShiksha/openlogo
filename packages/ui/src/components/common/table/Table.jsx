@@ -2,10 +2,11 @@ import PropTypes from "prop-types";
 import Button from "../button/Button";
 import styles from "./Table.module.css";
 import { BUTTON_TEXT } from "../../../utils/Constants";
+import { guestTokenPresent } from "../../../utils/Helpers";
 
 const Table = ({ headers, rows, emptyMessage, onDelete }) => {
   const hasData = rows && rows?.length > 0;
-
+  const guestToken = guestTokenPresent();
   return (
     <div className={styles["table-container"]}>
       <table className={styles["custom-table"]}>
@@ -36,6 +37,7 @@ const Table = ({ headers, rows, emptyMessage, onDelete }) => {
                       variant="danger"
                       className={styles["delete-btn"]}
                       onClick={() => onDelete(cells[index])}
+                      disabled={guestToken ? true : false}
                     >
                       {BUTTON_TEXT.delete}
                     </Button>
