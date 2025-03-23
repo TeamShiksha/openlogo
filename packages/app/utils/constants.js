@@ -3,6 +3,10 @@
  * @enum {string}
  **/
 
+const EmailValidationRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
+const GuestToken = "x-guest-token";
+
 const UserTokenTypes = {
   FORGOT: "FORGOT",
   VERIFY: "VERIFY",
@@ -65,6 +69,8 @@ const Messages = {
 };
 
 module.exports = {
+  EmailValidationRegex,
+  GuestToken,
   UserTokenTypes,
   UserType,
   SubscriptionTypes,

@@ -13,7 +13,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, GuestToken } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -110,7 +110,7 @@ async function signinController(req, res, next) {
     if (isGuest) {
       const guestDetails = {
         ip: req.ip,
-        token: req.cookies["x-guest-token"],
+        token: req.cookies[GuestToken],
       };
       const createGuestUser =
         await guestUserService.handleGuestLogin(guestDetails);
@@ -124,7 +124,7 @@ async function signinController(req, res, next) {
         createGuestUser.status === 403 ||
         createGuestUser.status === 404
       ) {
-        res.clearCookie("x-guest-token", {
+        res.clearCookie(GuestToken, {
           httpOnly: true,
           secure: true,
           sameSite: "Strict",
@@ -135,7 +135,7 @@ async function signinController(req, res, next) {
           statusCode: createGuestUser.status,
         });
       } else {
-        res.cookie("x-guest-token", createGuestUser.token, {
+        res.cookie(GuestToken, createGuestUser.token, {
           maxAge: 2 * 60 * 60 * 1000,
           sameSite: "none",
           secure: true,
@@ -165,15 +165,17 @@ async function signinController(req, res, next) {
         });
       }
       const currentDate = new Date();
-      const tomorrow = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+      const oneDayValidityTimestamp = new Date(
+        currentDate.getTime() + 24 * 60 * 60 * 1000
+      );
       res.cookie("jwt", user.generateJWT(), {
-        expires: tomorrow,
+        expires: oneDayValidityTimestamp,
         sameSite: "none",
         secure: true,
       });
-      if (req.cookies["x-guest-token"]) {
-        guestUserService.deleteGuestUser(req.cookies["x-guest-token"]);
-        res.clearCookie("x-guest-token");
+      if (req.cookies[GuestToken]) {
+        guestUserService.deleteAccountById(req.cookies[GuestToken]);
+        res.clearCookie(GuestToken);
       }
       return res.status(200).json({ statusCode: 200 });
     }

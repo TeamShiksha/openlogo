@@ -15,14 +15,13 @@ class GuestUserRepository extends BaseRepository {
    * Find a user by Device ID
    * @param {string} id - The device ID to search for
    */
-
-  async findUserByDeviceID(hashedDeviceID) {
-    const guest = await this.model.findOne({ deviceID: hashedDeviceID });
+  async findUserByDeviceID(deviceId) {
+    const guest = await this.model.findOne({ deviceID: deviceId });
     return guest || null;
   }
-  async deleteUserByDeviceID(hashedDeviceID) {
+  async deleteUserByDeviceID(deviceId) {
     const deletedGuest = await this.model.deleteOne({
-      deviceID: hashedDeviceID,
+      deviceID: deviceId,
     });
     return deletedGuest || null;
   }

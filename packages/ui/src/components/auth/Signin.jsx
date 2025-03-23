@@ -48,9 +48,8 @@ const SignIn = ({ toggleForm }) => {
     setFocusedField(null);
   };
 
-  const guestSignIn = () => {
-    console.log("Guest Sign in initiated");
-  };
+  const guestSignIn = () => {};
+
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>

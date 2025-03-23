@@ -50,7 +50,7 @@ class GuestUserService {
     return { message: "Guest Signed In", token };
   }
 
-  async deleteUserAccount(id) {
+  async deleteAccountById(id) {
     const deletedUser = await this.guestUserRepository.deleteUserByDeviceID(id);
     return deletedUser;
   }
