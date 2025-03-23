@@ -1,17 +1,17 @@
 import { render, screen } from "@testing-library/react";
-import AnalyticsCard from "../../../src/components/analytics/AnalyticsCard";
-import { INFO } from "../../../src/utils/Constants";
-import "@testing-library/jest-dom";
 import { expect, describe, it } from "vitest";
+import AnalyticsCard from "../../../src/components/analytics/AnalyticsCard";
+import { ANALYTIC_CARDS } from "../../../src/utils/Constants";
 
-describe("PricingCard Component", () => {
-  it("renders PricingCard with correct name, tagline, and keypoints", () => {
-    const info = INFO[0]; // Use the first analytic card info
+describe("AnalyticsCard Component", () => {
+  it("renders AnalyticsCard with correct name, tagline, and keypoints", () => {
+    const first_card = ANALYTIC_CARDS[0]; // Use the first analytic card info
 
-    render(<AnalyticsCard title={info.title} api={info.api} />);
+    render(<AnalyticsCard title={first_card.title} api={first_card.api} />);
 
-    const apiText = info.api > 0 ? `+${info.api}%` : `-${info.api}%`;
-    const titleElement = screen.getByText(info.title);
+    const apiText =
+      first_card.api > 0 ? `+${first_card.api}%` : `-${first_card.api}%`;
+    const titleElement = screen.getByText(first_card.title);
     const apiElement = screen.getByText(apiText);
 
     expect(titleElement).toBeInTheDocument();

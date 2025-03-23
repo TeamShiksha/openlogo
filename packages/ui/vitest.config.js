@@ -8,7 +8,7 @@ export default defineConfig({
     coverage: {
       reporter: ["text", "html"],
       include: ["src/**/*.{jsx,js,ts,vue}"],
-      exclude: ["main.jsx"]
+      exclude: ["main.jsx"],
     },
     setupFiles: "./setupTest.js",
   },
