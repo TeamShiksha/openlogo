@@ -118,18 +118,6 @@
 }
 
 /* mobile layout styles for catalog header and footer */
-@media (max-width: 1220px) {
-  .catalog-wrapper {
-    padding: 8px 5%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .catalog-wrapper {
-    padding: 0 2rem;
-  }
-}
-
 @media (max-width: 780px) {
   .catalog-table-header {
     display: none;
