@@ -146,9 +146,3 @@
     content: "";
   }
 }
-
-@media (max-width: 564px) {
-  .catalog-wrapper {
-    padding: 0 1rem;
-  }
-}
