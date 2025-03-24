@@ -58,7 +58,11 @@ async function getMessagesController(req, res, next) {
 async function respondMessagesController(req, res, next) {
   try {
     const contactUsService = new ContactUsService();
-    const { error, value } = revertToCustomerPayloadSchema.validate(req.body);
+    const { error, value } = revertToCustomerPayloadSchema.validate({
+      id: req.params.messageId,
+      reply: req.body.reply,
+    });
+
     if (error) {
       return res.status(422).json({
         error: STATUS_CODES[422],

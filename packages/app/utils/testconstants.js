@@ -13,6 +13,7 @@ const ENDPOINTS = {
   FORGOT_PASSWORD: "/api/auth/password/forgot",
   RESET_PASSWORD_SESSION: "/api/auth/password/forgot",
   RESET_PASSWORD: "/api/auth/password/reset",
+  MESSAGES: "/api/messages",
 };
 
 module.exports = {
