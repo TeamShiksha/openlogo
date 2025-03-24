@@ -1,111 +1,108 @@
 .card {
   border-radius: 16px;
   background: #f8f8f9;
-  display: flex;
-  padding: 96px 0;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  flex: 1 0 0;
-  font-family: Inter;
+  padding: 2rem 1rem;
+  flex: 210px 1 1;
+  font-family: Inter, sans-serif;
   font-style: normal;
   line-height: normal;
 }
-.cardGroup,
-.leftContent,
-.rightContent {
+
+.card-group,
+.left-content,
+.right-content {
   display: flex;
   align-items: flex-start;
 }
-.cardContent {
+
+.card-content {
   display: flex;
   width: 100%;
-  padding: 0 100px;
+  gap: 2rem;
   justify-content: space-between;
   align-items: last baseline;
 }
-.cardTitle,
-.trackingText {
+
+.card-title,
+.tracking-text {
   color: #475467;
   font-weight: 400;
 }
-.cardTitle {
+
+.card-title {
   font-size: 24px;
   letter-spacing: 0.48px;
 }
-.cardValue {
+
+.card-value {
   color: var(--Primary-blue, #4f46e5);
-  font-size: 64px;
+  font-size: 2rem;
   font-weight: 600;
 }
-.changeValuePositive,
-.changeValueNegative {
+
+.change-value-positive,
+.change-value-negative {
   font-size: 20px;
   font-weight: 600;
 }
-.changeValuePositive {
+
+.change-value-positive {
   color: #00b69b;
 }
-.changeValueNegative {
+
+.change-value-negative {
   color: #f93c65;
 }
-.trackingText {
+
+.tracking-text {
   font-size: 16px;
 }
-.leftContent {
+
+.left-content {
   flex-direction: column;
   gap: 16px;
 }
-.rightContent {
+
+.right-content {
   flex-direction: column;
   gap: 8px;
 }
-.changeGraph {
+
+.change-graph {
   width: 50px;
   height: 30px;
 }
 
 /* Separate Mobile Styles */
 @media (max-width: 768px) {
-  .card {
-    padding: 32px 16px;
-    height: auto;
-  }
-
-  .cardContent {
-    align-items: flex-start;
-    gap: 8px;
-    padding: 0 24px;
-  }
-
-  .cardTitle {
+  .card-title {
     font-size: 20px;
     letter-spacing: 0.4px;
   }
 
-  .cardValue {
+  .card-value {
     font-size: 36px;
   }
 
-  .changeValuePositive,
-  .changeValueNegative {
+  .change-value-positive,
+  .change-value-negative {
     font-size: 16px;
   }
 
-  .trackingText {
+  .tracking-text {
     font-size: 14px;
   }
 
-  .leftContent {
+  .left-content {
     gap: 4px;
     width: auto;
   }
 
-  .rightContent {
+  .right-content {
     gap: 4px;
   }
 
-  .changeGraph {
+  .change-graph {
     width: 39.429px;
     height: 24px;
   }

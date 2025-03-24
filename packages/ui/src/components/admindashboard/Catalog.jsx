@@ -49,7 +49,7 @@ function Catalog() {
   };
 
   return (
-    <div className={styles["catalog-wrapper"]}>
+    <div className={styles["catalog-wrapper"]} data-testid="catalog">
       {/*catalog search bar*/}
       <div className={styles["catalog-search"]}>
         <img
@@ -60,7 +60,8 @@ function Catalog() {
         <CustomInput
           type="search"
           label="search"
-          onChange={(e) => handleSearchTermChange(e)}
+          value={searchTerm}
+          onChange={handleSearchTermChange}
         />
         <Button
           onClick={() => setIsModalOpen(true)}
