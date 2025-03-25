@@ -3,7 +3,6 @@
   margin-top: 1rem;
   margin-bottom: 4rem;
   background-color: var(--gray-drag-drop-background);
-  padding: 0 8%;
   border-radius: 16px;
 }
 
@@ -119,18 +118,6 @@
 }
 
 /* mobile layout styles for catalog header and footer */
-@media (max-width: 1220px) {
-  .catalog-wrapper {
-    padding: 8px 5%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .catalog-wrapper {
-    padding: 0 2rem;
-  }
-}
-
 @media (max-width: 780px) {
   .catalog-table-header {
     display: none;
@@ -157,11 +144,5 @@
 
   .catalog-nav-right-arrow:before {
     content: "";
-  }
-}
-
-@media (max-width: 564px) {
-  .catalog-wrapper {
-    padding: 0 1rem;
   }
 }
