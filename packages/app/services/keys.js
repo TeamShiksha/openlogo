@@ -18,6 +18,14 @@ class KeyService {
   }
 
   /**
+   * Gets All Keys.
+   * @returns {Promise<number>} - Total no of keys.
+   */
+  async getAllKeys() {
+    return await this.keyRepository.getAllKeys();
+  }
+
+  /**
    * Create a New Key.
    * @param {string} keyDescription - The Key Description of the user.
    * @returns {Object} - Newly created Key.

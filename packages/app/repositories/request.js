@@ -10,6 +10,23 @@ class RequestRepository extends BaseRepository {
   constructor() {
     super(Request);
   }
+
+  /**
+   * get all requests from db.
+   * @returns {Promise<number>} - total number of requests.
+   */
+  async getAllRequests() {
+    return await Request.countDocuments();
+  }
+
+  /**
+   * get all hits for all requests from db.
+   * @returns {Promise<number>} - total number of hits.
+   *
+   */
+  async getAllHits() {
+    return await Request.countDocuments({ status: "COMPLETED" });
+  }
 }
 
 module.exports = RequestRepository;

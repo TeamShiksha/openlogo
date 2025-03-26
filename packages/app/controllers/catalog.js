@@ -1,7 +1,50 @@
 const { STATUS_CODES } = require("http");
-const { UserService, ImageService } = require("../services");
+const {
+  UserService,
+  ImageService,
+  KeyService,
+  RequestService,
+} = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { Messages } = require("../utils/constants");
+
+async function getAnalyticsController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const totalUsers = await userService.getAllUsers();
+    const keyService = new KeyService();
+    const totalKeys = await keyService.getAllKeys();
+    const requestService = new RequestService();
+    const totalRequests = await requestService.getAllRequests();
+    const totalHits = await requestService.getAllHits();
+
+    console.log(totalUsers, totalKeys, totalRequests, totalHits);
+
+    if (
+      [totalUsers, totalKeys, totalRequests, totalHits].some(
+        (val) => val == null
+      )
+    ) {
+      return res.status(500).json({
+        statusCode: 500,
+        message: Messages.INTERNAL_SERVER_ERROR,
+        error: STATUS_CODES[500],
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: {
+        totalUsers: totalUsers, // Return count of users
+        totalKeys: totalKeys, // Return count of keys
+        totalRequests: totalRequests, // Return count of requests
+        totalHits: totalHits, // Return count of hits
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
 /**
  * Promotes a user to admin or operator role using their email.
@@ -194,4 +237,5 @@ module.exports = {
   getCatalogController,
   updateCatalogController,
   addCatalogController,
+  getAnalyticsController,
 };

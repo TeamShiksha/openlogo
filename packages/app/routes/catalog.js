@@ -6,6 +6,7 @@ const {
   getCatalogController,
   updateCatalogController,
   addCatalogController,
+  getAnalyticsController,
 } = require("../controllers/catalog");
 
 router.put(
@@ -13,6 +14,13 @@ router.put(
   authMiddleware({ adminOnly: true }),
   addPermissionController
 );
+
+router.get(
+  "/analytics",
+  authMiddleware({ adminOnly: true }),
+  getAnalyticsController
+);
+
 router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
 router.post(
   "/logo",

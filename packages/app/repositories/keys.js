@@ -24,6 +24,14 @@ class KeysRepository extends BaseRepository {
   }
 
   /**
+   * Get all keys from db.
+   * @returns {Promise<number>} - total number of keys.
+   */
+  async getAllKeys() {
+    return await Keys.countDocuments();
+  }
+
+  /**
    * Fetches a user and their subscription details using API key.
    * @param {string} apiKeys -  API key.
    * @returns {Promise<Object>} - User objects with subscription details.
