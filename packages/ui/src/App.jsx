@@ -7,7 +7,6 @@ import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
 import AuthModal from "./components/auth/Auth";
 import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
-import Analytics from "./components/analytics/Analytics";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -26,7 +25,6 @@ function App() {
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/docs" element={<Documentation />} />
-        <Route path="/analytics" element={<Analytics />} />
         <Route
           path="/dashboard"
           element={

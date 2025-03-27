@@ -202,7 +202,7 @@ export const companies = [
   },
 ];
 
-export const INFO = [
+export const ANALYTIC_CARDS = [
   { title: "Users", api: 5.2 },
   { title: "Keys", api: -6.8 },
   { title: "Hits", api: 9.2 },
