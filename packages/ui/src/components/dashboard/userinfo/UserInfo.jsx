@@ -6,9 +6,11 @@ import Button from "../../common/button/Button";
 import { guestTokenPresent } from "../../../utils/Helpers";
 
 function UserInfo() {
+  const guestToken = guestTokenPresent();
+
   const initialValues = {
-    name: "John Doe",
-    email: "johndoe@gmail.com",
+    name: guestToken ? "Guest User" : "John Doe",
+    email: guestToken ? "guest@xyz.com" : "johndoe@gmail.com",
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
@@ -25,8 +27,6 @@ function UserInfo() {
     }
     return errors;
   };
-
-  const guestToken = guestTokenPresent();
 
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
@@ -80,6 +80,7 @@ function UserInfo() {
           {...(field.name === "name" && formErrors.type === "error"
             ? { error: formErrors.message }
             : {})}
+          readOnly={!!guestToken}
         />
       ))}
       <Button

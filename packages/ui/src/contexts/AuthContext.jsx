@@ -32,19 +32,19 @@ export const AuthProvider = ({ children }) => {
     }
   }, [setIsAuthenticated]);
 
+  const authValue = useMemo(
+    () => ({
+      isAuthenticated,
+      setIsAuthenticated,
+      isGuest,
+      setIsGuest,
+      logout,
+    }),
+    [isAuthenticated, setIsAuthenticated, isGuest, setIsGuest, logout]
+  );
+
   return (
-    <AuthContext.Provider
-      value={useMemo(
-        () => ({
-          isAuthenticated,
-          setIsAuthenticated,
-          isGuest,
-          setIsGuest,
-          logout,
-        }),
-        [isAuthenticated, setIsAuthenticated, isGuest, setIsGuest, logout]
-      )}
-    >
+    <AuthContext.Provider value={authValue}>
       {isAuthCheckComplete ? children : null}
     </AuthContext.Provider>
   );

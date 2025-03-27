@@ -2,10 +2,15 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
+import { MemoryRouter } from "react-router-dom";
 
 describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
-    render(<SignIn toggleForm={vi.fn()} />);
+    render(
+      <MemoryRouter>
+        <SignIn toggleForm={vi.fn()} />
+      </MemoryRouter>
+    );
 
     const title = screen.getByRole("heading", { name: SIGNIN.title });
     expect(title).toBeInTheDocument();
@@ -21,7 +26,11 @@ describe("SignInForm UI and Functionality Tests", () => {
 
   it("Change form when clicked on text in footer", () => {
     const toggleForm = vi.fn();
-    render(<SignIn toggleForm={toggleForm} />);
+    render(
+      <MemoryRouter>
+        <SignIn toggleForm={toggleForm} />
+      </MemoryRouter>
+    );
 
     const closeButton = screen.getByText(SIGNIN.footerText);
     fireEvent.click(closeButton);
@@ -29,7 +38,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   it("validates email only when focused and blurred", async () => {
-    render(<SignIn toggleForm={vi.fn()} />);
+    render(
+      <MemoryRouter>
+        <SignIn toggleForm={vi.fn()} />
+      </MemoryRouter>
+    );
     const emailInput = screen.getByLabelText("Email");
 
     fireEvent.focus(emailInput);
@@ -46,7 +59,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   it("does not show an error for password but still validates it", async () => {
-    render(<SignIn toggleForm={vi.fn()} />);
+    render(
+      <MemoryRouter>
+        <SignIn toggleForm={vi.fn()} />
+      </MemoryRouter>
+    );
     const passwordInput = screen.getByLabelText("Password");
 
     fireEvent.focus(passwordInput);
@@ -57,7 +74,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   it("Resets form correctly after submission", async () => {
-    render(<SignIn toggleForm={vi.fn()} />);
+    render(
+      <MemoryRouter>
+        <SignIn toggleForm={vi.fn()} />
+      </MemoryRouter>
+    );
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const signInButton = screen.getByRole("button", {

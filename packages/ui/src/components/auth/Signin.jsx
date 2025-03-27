@@ -5,13 +5,15 @@ import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
+import { useNavigate } from "react-router-dom";
 
-const SignIn = ({ toggleForm }) => {
+const SignIn = ({ toggleForm, onClose }) => {
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -48,7 +50,14 @@ const SignIn = ({ toggleForm }) => {
     setFocusedField(null);
   };
 
-  const guestSignIn = () => {};
+  const guestSignIn = () => {
+    onClose();
+    if (window.location.pathname === "/dashboard") {
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate("/dashboard");
+    }
+  };
 
   return (
     <>
@@ -93,6 +102,7 @@ const SignIn = ({ toggleForm }) => {
 
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default SignIn;

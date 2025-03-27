@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AuthModal from "../../../src/components/auth/Auth";
 import { expect, describe, vi, it } from "vitest";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
+import { MemoryRouter } from "react-router-dom";
 
 const closeModal = vi.fn();
 
@@ -15,14 +16,22 @@ describe("Auth Component", () => {
   });
 
   it("Authmodal does render if isOpen = true", () => {
-    render(<AuthModal isOpen={true} onClose={closeModal} />);
+    render(
+      <MemoryRouter>
+        <AuthModal isOpen={true} onClose={closeModal} />
+      </MemoryRouter>
+    );
 
     const authModalDialog = screen.getByText(BUTTON_TEXT.cross);
     expect(authModalDialog).toBeInTheDocument();
   });
 
   it("Toggle between to Signup and Signin", async () => {
-    render(<AuthModal isOpen={true} onClose={closeModal} />);
+    render(
+      <MemoryRouter>
+        <AuthModal isOpen={true} onClose={closeModal} />
+      </MemoryRouter>
+    );
 
     const toggleSpan = screen.getByText(SIGNIN.footerText);
     fireEvent.click(toggleSpan);
@@ -38,7 +47,11 @@ describe("Auth Component", () => {
 
   it("AuthModal closes when cross is clicked", () => {
     const Close = vi.fn();
-    render(<AuthModal isOpen={true} onClose={Close} />);
+    render(
+      <MemoryRouter>
+        <AuthModal isOpen={true} onClose={Close} />
+      </MemoryRouter>
+    );
 
     const AuthModalcross = screen.getByText(BUTTON_TEXT.cross);
     fireEvent.click(AuthModalcross);

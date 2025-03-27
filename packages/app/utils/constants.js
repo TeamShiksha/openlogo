@@ -40,6 +40,7 @@ const DefaultSubscriptionPlan = {
 };
 
 const Messages = {
+  GUEST_USER_EXISTS: "Guest session already active",
   EMAIL_EXISTS: "Email already exists.",
   EMAIL_DOESNT_EXISTS: "Email doesn't exists.",
   USER_NOT_FOUND: "User not found.",

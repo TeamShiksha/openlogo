@@ -15,22 +15,10 @@ class GuestUserService {
         const guest = await this.guestUserRepository.findUserByDeviceID(
           decodedToken.id
         );
-        if (guest) {
-          return {
-            status: 409,
-            message: "Guest User already logged in",
-            token,
-          };
-        }
+        return guest;
       } catch (error) {
         console.log(error);
-        if (error.name === "TokenExpiredError") {
-          return {
-            status: 403,
-            message: "Token has expired. Please sign in again.",
-          };
-        }
-        return { status: 400, message: "Invalid token" };
+        return error;
       }
     }
     const hashedDeviceID = await bcrypt.hash(
@@ -47,7 +35,7 @@ class GuestUserService {
         expiresIn: "2h",
       }
     );
-    return { message: "Guest Signed In", token };
+    return token;
   }
 
   async deleteAccountById(id) {

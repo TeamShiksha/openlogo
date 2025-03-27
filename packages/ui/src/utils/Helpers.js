@@ -187,7 +187,7 @@ export const guestTokenPresent = () => {
   const guestToken =
     document.cookie
       .split(";")
-      .find((cookie) => cookie.startsWith("x-guest-token="))
+      .find((cookie) => cookie.trim().startsWith("x-guest-token="))
       ?.split("=")[1] || null;
   return guestToken;
 };

@@ -114,34 +114,39 @@ async function signinController(req, res, next) {
       };
       const createGuestUser =
         await guestUserService.handleGuestLogin(guestDetails);
-      if (createGuestUser.status === 400 || createGuestUser.status === 409) {
-        return res.status(createGuestUser.status).json({
-          error: STATUS_CODES[createGuestUser.status],
-          message: createGuestUser.message,
-          statusCode: createGuestUser.status,
-        });
-      } else if (
-        createGuestUser.status === 403 ||
-        createGuestUser.status === 404
-      ) {
-        res.clearCookie(GuestToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "Strict",
-        });
-        return res.status(createGuestUser.status).json({
-          error: STATUS_CODES[createGuestUser.status],
-          message: createGuestUser.message,
-          statusCode: createGuestUser.status,
-        });
-      } else {
-        res.cookie(GuestToken, createGuestUser.token, {
-          maxAge: 2 * 60 * 60 * 1000,
-          sameSite: "none",
-          secure: true,
-        });
-        return res.status(200).json({ statusCode: 200 });
+      if (createGuestUser instanceof Error) {
+        if (createGuestUser.name == "TokenExpiredError") {
+          res.clearCookie(GuestToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+          });
+          return res.status(403).json({
+            error: STATUS_CODES[403],
+            message: Messages.EXPIRED_TOKEN,
+            statusCode: 403,
+          });
+        } else {
+          return res.status(400).json({
+            error: STATUS_CODES[400],
+            message: Messages.INVALID_TOKEN,
+            statusCode: 400,
+          });
+        }
       }
+      if (createGuestUser?.deviceID) {
+        return res.status(409).json({
+          error: STATUS_CODES[409],
+          message: Messages.GUEST_USER_EXISTS,
+          statusCode: 409,
+        });
+      }
+      res.cookie(GuestToken, createGuestUser, {
+        maxAge: 2 * 60 * 60 * 1000,
+        sameSite: "none",
+        secure: true,
+      });
+      return res.status(200).json({ statusCode: 200 });
     } else {
       const user = await userService.getUserByEmail(email);
       if (!user)

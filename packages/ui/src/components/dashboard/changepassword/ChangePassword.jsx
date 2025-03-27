@@ -40,6 +40,7 @@ function ChangePassword() {
           value={formValues[field.name]}
           onChange={handleChange}
           required
+          readOnly={!!guestToken}
         />
       ))}
       <Button

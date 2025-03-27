@@ -7,6 +7,7 @@ function CustomInput({
   label,
   value,
   error,
+  readOnly,
   onChange = () => {},
   className = "",
   onFocus = () => {},
@@ -25,6 +26,7 @@ function CustomInput({
         onFocus={onFocus}
         onBlur={onBlur}
         onChange={onChange}
+        readOnly={readOnly}
       />
       <label
         className={`${styles["input-label"]} ${
@@ -53,6 +55,7 @@ CustomInput.propTypes = {
   className: PropTypes.string,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  readOnly: PropTypes.bool,
 };
 
 export default CustomInput;
