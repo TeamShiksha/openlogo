@@ -35,10 +35,10 @@ async function getAnalyticsController(req, res, next) {
     return res.status(200).json({
       statusCode: 200,
       data: {
-        totalUsers: totalUsers, // Return count of users
-        totalKeys: totalKeys, // Return count of keys
-        totalRequests: totalRequests, // Return count of requests
-        totalHits: totalHits, // Return count of hits
+        Users: totalUsers, // Return count of users
+        Keys: totalKeys, // Return count of keys
+        Requests: totalRequests, // Return count of requests
+        Hits: totalHits, // Return count of hits
       },
     });
   } catch (err) {

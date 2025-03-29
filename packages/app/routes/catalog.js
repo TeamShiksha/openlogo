@@ -16,7 +16,7 @@ router.put(
 );
 
 router.get(
-  "/analytics",
+  "/stats",
   authMiddleware({ adminOnly: true }),
   getAnalyticsController
 );
