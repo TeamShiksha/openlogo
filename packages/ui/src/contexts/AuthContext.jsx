@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      await instance.get(`api/auth/signout`);
+      await instance.post(`${import.meta.env.VITE_BASE_URL}/api/auth/signout`);
       setIsAuthenticated(false);
     } catch (err) {
       console.error(err);

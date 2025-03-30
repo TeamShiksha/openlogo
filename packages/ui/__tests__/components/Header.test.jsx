@@ -10,12 +10,28 @@ import {
   BUTTON_TEXT,
   BRANDING,
 } from "../../src/utils/Constants";
+import { AuthContext } from "../../src/contexts/Contexts";
 
 const openCloseAuthModal = vi.fn();
+const mockLogout = vi.fn();
+
+const renderWithAuthContext = (ui, { isAuthenticated = false } = {}) => {
+  return render(
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        setIsAuthenticated: vi.fn(),
+        logout: mockLogout,
+      }}
+    >
+      {ui}
+    </AuthContext.Provider>
+  );
+};
 
 describe("Header component", () => {
   it("Render header branding and naviagte to home on click", () => {
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -30,7 +46,7 @@ describe("Header component", () => {
   });
 
   it("Render all header navigations", () => {
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -43,7 +59,7 @@ describe("Header component", () => {
   });
 
   it("Header links should be clickable and navigate", () => {
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
         <Home openAuthModal={openCloseAuthModal} />
@@ -67,7 +83,7 @@ describe("Header component", () => {
   it("Hamburger visible before and after screen width change", () => {
     window.innerWidth = 1200;
     window.dispatchEvent(new Event("resize"));
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -80,7 +96,7 @@ describe("Header component", () => {
 
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -95,7 +111,7 @@ describe("Header component", () => {
   it("Mobile header toggle icon", () => {
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -115,7 +131,7 @@ describe("Header component", () => {
   it("Mobile header auto close if width > 1024", () => {
     window.innerWidth = 700;
     window.dispatchEvent(new Event("resize"));
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -134,7 +150,7 @@ describe("Header component", () => {
   });
 
   it("Open and close authModal", () => {
-    render(
+    renderWithAuthContext(
       <BrowserRouter>
         <Header openAuthModal={openCloseAuthModal} />
       </BrowserRouter>
@@ -143,5 +159,20 @@ describe("Header component", () => {
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
     expect(openCloseAuthModal).toHaveBeenCalled();
+  });
+
+  it("Shows logout button when authenticated", () => {
+    renderWithAuthContext(
+      <BrowserRouter>
+        <Header openAuthModal={openCloseAuthModal} />
+      </BrowserRouter>,
+      { isAuthenticated: true }
+    );
+
+    const logoutButton = screen.getByText("Logout");
+    expect(logoutButton).toBeInTheDocument();
+
+    fireEvent.click(logoutButton);
+    expect(mockLogout).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -12,9 +12,11 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
+import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -60,14 +62,22 @@ const Header = ({ openAuthModal }) => {
               {item.title}
             </Link>
           ))}
-          <Button
-            variant="primary"
-            className={styles.ml}
-            onClick={openAuthModal}
-          >
-            {BUTTON_TEXT.getStarted}
-          </Button>
+
+          {!isAuthenticated ? (
+            <Button
+              variant="primary"
+              className={styles.ml}
+              onClick={openAuthModal}
+            >
+              {BUTTON_TEXT.getStarted}
+            </Button>
+          ) : (
+            <Button variant="secondary" className={styles.ml} onClick={logout}>
+              Logout
+            </Button>
+          )}
         </div>
+
         {isMobile && (
           <button className={styles.hamburger} onClick={toggleMenu}>
             <img

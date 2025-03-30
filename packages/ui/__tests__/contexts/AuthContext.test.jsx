@@ -8,6 +8,7 @@ import { useContext } from "react";
 vi.mock("../../src/api/api_instance", () => ({
   instance: {
     get: vi.fn(() => Promise.resolve({})),
+    post: vi.fn(() => Promise.resolve({})),
   },
 }));
 
@@ -72,6 +73,8 @@ describe("AuthProvider", () => {
 
   it("should call API on logout and set isAuthenticated to false", async () => {
     document.cookie = "jwt=valid_token; path=/";
+    vi.spyOn(instance, "post").mockResolvedValue({});
+
     render(
       <AuthProvider>
         <TestComponent />
@@ -87,7 +90,9 @@ describe("AuthProvider", () => {
 
     await waitFor(() => {
       const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(instance.get).toHaveBeenCalledWith("api/auth/signout");
+      expect(instance.post).toHaveBeenCalledWith(
+        "http://localhost:5000/api/auth/signout"
+      );
       expect(authStatusText).toBe("Not Authenticated");
     });
   });
