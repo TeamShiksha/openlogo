@@ -21,8 +21,8 @@ class KeyService {
    * Gets All Keys.
    * @returns {Promise<number>} - Total no of keys.
    */
-  async getAllKeys() {
-    return await this.keyRepository.getAllKeys();
+  async getKeysCount() {
+    return await this.keyRepository.getKeysCount();
   }
 
   /**

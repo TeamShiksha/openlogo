@@ -4,6 +4,7 @@ const {
   ImageService,
   KeyService,
   RequestService,
+  SubscriptionService,
 } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { Messages } = require("../utils/constants");
@@ -11,14 +12,13 @@ const { Messages } = require("../utils/constants");
 async function getAnalyticsController(req, res, next) {
   try {
     const userService = new UserService();
-    const totalUsers = await userService.getAllUsers();
+    const totalUsers = await userService.getUsersCount();
     const keyService = new KeyService();
-    const totalKeys = await keyService.getAllKeys();
+    const totalKeys = await keyService.getKeysCount();
     const requestService = new RequestService();
-    const totalRequests = await requestService.getAllRequests();
-    const totalHits = await requestService.getAllHits();
-
-    console.log(totalUsers, totalKeys, totalRequests, totalHits);
+    const totalRequests = await requestService.getRequestsCount();
+    const subscriptionService = new SubscriptionService();
+    const totalHits = await subscriptionService.getSubscriptionUsageCount();
 
     if (
       [totalUsers, totalKeys, totalRequests, totalHits].some(
@@ -35,10 +35,10 @@ async function getAnalyticsController(req, res, next) {
     return res.status(200).json({
       statusCode: 200,
       data: {
-        Users: totalUsers, // Return count of users
-        Keys: totalKeys, // Return count of keys
-        Requests: totalRequests, // Return count of requests
-        Hits: totalHits, // Return count of hits
+        Users: totalUsers,
+        Keys: totalKeys,
+        Requests: totalRequests,
+        Hits: totalHits,
       },
     });
   } catch (err) {

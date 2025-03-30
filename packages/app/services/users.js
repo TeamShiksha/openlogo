@@ -22,8 +22,8 @@ class UserService {
    * Fetch all users from the database.
    * @returns {Promise<number>} - Returns a promise with total no of users.
    */
-  async getAllUsers() {
-    return await this.userRepository.getAllUsers();
+  async getUsersCount() {
+    return await this.userRepository.getUsersCount();
   }
 
   /**

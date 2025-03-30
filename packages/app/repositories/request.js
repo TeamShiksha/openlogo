@@ -15,7 +15,7 @@ class RequestRepository extends BaseRepository {
    * get all requests from db.
    * @returns {Promise<number>} - total number of requests.
    */
-  async getAllRequests() {
+  async getRequestsCount() {
     return await Request.countDocuments();
   }
 
@@ -24,7 +24,7 @@ class RequestRepository extends BaseRepository {
    * @returns {Promise<number>} - total number of hits.
    *
    */
-  async getAllHits() {
+  async getHitsCount() {
     return await Request.countDocuments({ status: "COMPLETED" });
   }
 }

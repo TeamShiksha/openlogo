@@ -34,6 +34,14 @@ class SubscriptionService {
     };
     return await this.subscriptionRepository.update(subscription._id, data);
   }
+
+  /**
+   * Gets all API usage count from the database.
+   * @returns {Promise<number>} - Returns a promise with total no of subscriptions.
+   */
+  async getSubscriptionUsageCount() {
+    return await this.subscriptionRepository.getSubscriptionUsageCount();
+  }
 }
 
 module.exports = SubscriptionService;

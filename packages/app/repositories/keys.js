@@ -27,7 +27,7 @@ class KeysRepository extends BaseRepository {
    * Get all keys from db.
    * @returns {Promise<number>} - total number of keys.
    */
-  async getAllKeys() {
+  async getKeysCount() {
     return await Keys.countDocuments();
   }
 

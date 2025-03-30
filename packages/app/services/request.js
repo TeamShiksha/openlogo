@@ -18,15 +18,15 @@ class RequestService {
   /**
    * @returns {Promise<number>} - Returns a promise with total no of requests.
    */
-  async getAllRequests() {
-    return await this.requestRepository.getAllRequests();
+  async getRequestsCount() {
+    return await this.requestRepository.getRequestsCount();
   }
 
   /**
    * @returns {Promise<number>} - Returns a promise with total no of hits.
    */
-  async getAllHits() {
-    return await this.requestRepository.getAllHits();
+  async getHitsCount() {
+    return await this.requestRepository.getHitsCount();
   }
 }
 
