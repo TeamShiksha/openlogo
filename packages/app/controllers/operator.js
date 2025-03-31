@@ -45,7 +45,6 @@ async function getMessagesController(req, res, next) {
       results: fetchedData,
     });
   } catch (err) {
-    console.error(err);
     next(err);
   }
 }
@@ -58,7 +57,11 @@ async function getMessagesController(req, res, next) {
 async function respondMessagesController(req, res, next) {
   try {
     const contactUsService = new ContactUsService();
-    const { error, value } = revertToCustomerPayloadSchema.validate(req.body);
+    const { error, value } = revertToCustomerPayloadSchema.validate({
+      id: req.params.messageId,
+      reply: req.body.reply,
+    });
+
     if (error) {
       return res.status(422).json({
         error: STATUS_CODES[422],
@@ -97,7 +100,7 @@ async function respondMessagesController(req, res, next) {
     });
 
     return res.status(200).json({
-      message: Messages.UPDATE_SUCESS,
+      message: Messages.UPDATE_SUCCESS,
       data: revertForm,
     });
   } catch (error) {
