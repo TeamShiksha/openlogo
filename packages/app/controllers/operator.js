@@ -45,7 +45,6 @@ async function getMessagesController(req, res, next) {
       results: fetchedData,
     });
   } catch (err) {
-    console.error(err);
     next(err);
   }
 }

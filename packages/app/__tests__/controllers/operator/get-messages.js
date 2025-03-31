@@ -99,6 +99,19 @@ describe("GET MESSAGES API", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    mockGetAll.mockImplementation(() => {
+      throw new Error("Unexpected Error");
+    });
+
+    const response = await request(app).get(ENDPOINTS.MESSAGES).query({
+      page: 1,
+      limit: 10,
+    });
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Get all messages", async () => {
     mockGetAll.mockResolvedValue({
       data: [{ key: "value" }],

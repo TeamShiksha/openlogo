@@ -154,6 +154,21 @@ describe("RESPOND MESSAGES API", () => {
     });
   });
 
+  it("500 - Unexpected Error", async () => {
+    const id = new mongoose.Types.ObjectId();
+    mockGetForm.mockImplementation(() => {
+      throw new Error();
+    });
+
+    const response = await request(app)
+      .put(`${ENDPOINTS.MESSAGES}/${id}`)
+      .send({
+        reply: "This is a valid reply with a minimum of twenty characters",
+      });
+
+    expect(response.status).toBe(500);
+  });
+
   it("200 - Successfully responded to message", async () => {
     const id = new mongoose.Types.ObjectId();
     mockGetForm.mockResolvedValue({});
