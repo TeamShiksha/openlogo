@@ -10,7 +10,7 @@ function UserInfo() {
 
   const initialValues = {
     name: guestToken ? "Guest User" : "John Doe",
-    email: guestToken ? "guest@xyz.com" : "johndoe@gmail.com",
+    email: guestToken ? "guestuser@gmail.com" : "johndoe@gmail.com",
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
@@ -80,7 +80,6 @@ function UserInfo() {
           {...(field.name === "name" && formErrors.type === "error"
             ? { error: formErrors.message }
             : {})}
-          readOnly={!!guestToken}
         />
       ))}
       <Button

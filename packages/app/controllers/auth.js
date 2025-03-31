@@ -4,7 +4,6 @@ const {
   UserService,
   SubscriptionService,
   UserTokenService,
-  GuestUserService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -94,7 +93,6 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
-    const guestUserService = new GuestUserService();
 
     const { body: payload } = req;
     const { error, value } = signinPayloadSchema.validate(payload);
@@ -108,40 +106,11 @@ async function signinController(req, res, next) {
     const { email, password, isGuest } = value;
 
     if (isGuest) {
-      const guestDetails = {
-        ip: req.ip,
-        token: req.cookies[GuestToken],
-      };
-      const createGuestUser =
-        await guestUserService.handleGuestLogin(guestDetails);
-      if (createGuestUser instanceof Error) {
-        if (createGuestUser.name == "TokenExpiredError") {
-          res.clearCookie(GuestToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "Strict",
-          });
-          return res.status(403).json({
-            error: STATUS_CODES[403],
-            message: Messages.EXPIRED_TOKEN,
-            statusCode: 403,
-          });
-        } else {
-          return res.status(400).json({
-            error: STATUS_CODES[400],
-            message: Messages.INVALID_TOKEN,
-            statusCode: 400,
-          });
-        }
-      }
-      if (createGuestUser?.deviceID) {
-        return res.status(409).json({
-          error: STATUS_CODES[409],
-          message: Messages.GUEST_USER_EXISTS,
-          statusCode: 409,
-        });
-      }
-      res.cookie(GuestToken, createGuestUser, {
+      const guestUser = await userService.getUserByEmail(
+        process.env.GUEST_EMAIL
+      );
+
+      res.cookie(GuestToken, guestUser.generateJWT(), {
         maxAge: 2 * 60 * 60 * 1000,
         sameSite: "none",
         secure: true,
@@ -179,7 +148,6 @@ async function signinController(req, res, next) {
         secure: true,
       });
       if (req.cookies[GuestToken]) {
-        guestUserService.deleteAccountById(req.cookies[GuestToken]);
         res.clearCookie(GuestToken);
       }
       return res.status(200).json({ statusCode: 200 });

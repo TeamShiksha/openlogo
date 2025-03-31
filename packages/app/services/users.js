@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
-
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();

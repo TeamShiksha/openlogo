@@ -78,9 +78,14 @@ const MOCK_USERS = [
   },
   {
     _id: new mongoose.Types.ObjectId(),
-    role: "GUEST",
-    deviceID: "$2a$10$dQla8Ef9yGwbvrVnh14lD.e2I39mAOWSWhGgQH.TVDqDwSN/nbPzW",
+    name: "Guest User",
+    email: "guestuser@example.com",
+    password: bcrypt.hashSync("password123", 10),
+    role: UserType.GUEST,
+    is_verified: true,
+    subscription_id: new mongoose.Types.ObjectId(),
     createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
 ];
 
@@ -119,15 +124,6 @@ const MOCK_USERTOKENS = [
   },
 ];
 
-const MOCK_GUESTTOKENS = {
-  validToken:
-    "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiR1VFU1QiLCJpZCI6IiQyYSQxMiRGTWtMOVc2ZDFBdm4yWlFQMXlUT1dPTWdTTWZjd2ttYmM5cVkzekZaVkovSGRXQklHdEJxdSJ9._nvS51IkgO3WA_UCjzGs-6l6nOk95T-JoO0PNb3ruxY",
-  expiredToken:
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJHVUVTVCIsImlhdCI6MTc0MzA0MjMwMiwiZXhwIjoxNzQzMDQyMzA1LCJhdWQiOiJ0ZXN0Iiwic3ViIjoiR1VFU1RfVVNFUiIsImlkIjoiRGV2aWNlSUQiLCJyb2xlIjoiR1VFU1QifQ.0snod5iw4_Hgk3nYYjHf4C4sSDmu5KO-jWc-_dC9si4",
-  invalidToken:
-    "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiR1ef354e1QiLCJpZCI6IiQyYSQxMiRGTWtMOVc2ZDFBdm4yWlFQMXlUT1dPTWdTTWZjd2ttYmM5cVkzekZaVkovSGRXQklHdEJxdSJ9._nvS51IkgO3WA_UCjzGs-6l6nOk95T-JoO0PNb3ruxY",
-};
-
 const MOCK_KEYS = [
   {
     user: new mongoose.Types.ObjectId(),
@@ -142,6 +138,5 @@ module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
   MOCK_USERTOKENS,
-  MOCK_GUESTTOKENS,
   MOCK_KEYS,
 };

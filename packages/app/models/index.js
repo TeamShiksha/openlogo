@@ -4,7 +4,6 @@ const Keys = require("./keys");
 const Subscriptions = require("./subscriptions");
 const UserToken = require("./usertoken");
 const Users = require("./users");
-const GuestUsers = require("./guestuser");
 module.exports = {
   ContactUs,
   Images,
@@ -12,5 +11,4 @@ module.exports = {
   Subscriptions,
   UserToken,
   Users,
-  GuestUsers,
 };

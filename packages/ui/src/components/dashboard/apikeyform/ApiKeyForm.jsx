@@ -11,12 +11,7 @@ function ApiKeyForm() {
         <p className={styles["dashboard-reset-date"]}>
           Generate a new API key to use in your projects.
         </p>
-        <CustomInput
-          type="text"
-          name="apikey"
-          label="Add the description"
-          value={guestToken ? "Description of API Key" : ""}
-        />
+        <CustomInput type="text" name="apikey" label="Add the description" />
         <Button
           className={styles.width}
           variant="primary"

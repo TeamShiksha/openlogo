@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await instance.get(`api/auth/signout`);
       setIsAuthenticated(false);
+      setIsGuest(false);
     } catch (err) {
       console.error(err);
     }

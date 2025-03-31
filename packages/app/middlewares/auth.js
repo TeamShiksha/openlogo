@@ -8,7 +8,23 @@ const { UserType } = require("../utils/constants");
 module.exports = (options = {}) => {
   return function (req, res, next) {
     try {
-      const { jwt } = req.cookies;
+      const { jwt, GuestToken } = req.cookies;
+      if (GuestToken) {
+        const decodedGuestToken = JWT.verify(
+          GuestToken,
+          process.env.JWT_SECRET
+        );
+        const { data } = decodedGuestToken;
+        if (!data) {
+          return res.status(403).json({
+            error: STATUS_CODES[403],
+            message: "Invalid credentials",
+            statusCode: 403,
+          });
+        }
+        Object.assign(req, { userData: decodedGuestToken.data });
+        next();
+      }
       if (!jwt) {
         return res.status(401).json({
           error: STATUS_CODES[401],
