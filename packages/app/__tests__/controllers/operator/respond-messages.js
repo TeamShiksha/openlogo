@@ -182,7 +182,7 @@ describe("RESPOND MESSAGES API", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      message: Messages.UPDATE_SUCESS,
+      message: Messages.UPDATE_SUCCESS,
       data: {},
     });
   });

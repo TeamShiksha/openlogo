@@ -100,7 +100,7 @@ async function respondMessagesController(req, res, next) {
     });
 
     return res.status(200).json({
-      message: Messages.UPDATE_SUCESS,
+      message: Messages.UPDATE_SUCCESS,
       data: revertForm,
     });
   } catch (error) {
