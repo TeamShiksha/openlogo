@@ -124,10 +124,10 @@ const MOCK_KEYS = [
 ];
 
 const MOCK_ANALYTICS_DATA = {
-  userCount: 10,
-  keyCount: 20,
-  requestCount: 30,
-  hitCount: 40,
+  Users: 10,
+  Keys: 20,
+  Requests: 30,
+  Hits: 40,
 };
 
 module.exports = {

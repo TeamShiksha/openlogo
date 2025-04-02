@@ -5,6 +5,7 @@ const {
   KeyService,
   RequestService,
   SubscriptionService,
+  ContactUsService,
 } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { Messages } = require("../utils/constants");
@@ -16,28 +17,18 @@ async function getAnalyticsController(req, res, next) {
     const keyService = new KeyService();
     const totalKeys = await keyService.getKeysCount();
     const requestService = new RequestService();
+    const contactUsService = new ContactUsService();
+    const totalContactUs = await contactUsService.getFormsCount();
     const totalRequests = await requestService.getRequestsCount();
     const subscriptionService = new SubscriptionService();
     const totalHits = await subscriptionService.getSubscriptionUsageCount();
-
-    if (
-      [totalUsers, totalKeys, totalRequests, totalHits].some(
-        (val) => val == null
-      )
-    ) {
-      return res.status(500).json({
-        statusCode: 500,
-        message: Messages.INTERNAL_SERVER_ERROR,
-        error: STATUS_CODES[500],
-      });
-    }
 
     return res.status(200).json({
       statusCode: 200,
       data: {
         Users: totalUsers,
         Keys: totalKeys,
-        Requests: totalRequests,
+        Requests: totalRequests + totalContactUs,
         Hits: totalHits,
       },
     });
