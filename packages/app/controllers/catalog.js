@@ -169,7 +169,7 @@ async function updateCatalogController(req, res, next) {
 
     res.status(200).json({
       statusCode: 200,
-      message: Messages.UPLOAD_SUCESS,
+      message: Messages.UPLOAD_SUCCESS,
       data: imageData,
     });
   } catch (err) {
@@ -215,7 +215,7 @@ async function addCatalogController(req, res, next) {
 
     res.status(200).json({
       statusCode: 200,
-      message: Messages.UPLOAD_SUCESS,
+      message: Messages.UPLOAD_SUCCESS,
       data: imageData,
     });
   } catch (err) {

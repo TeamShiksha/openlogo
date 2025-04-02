@@ -2,14 +2,13 @@ const Joi = require("joi");
 const { isValidObjectId } = require("mongoose");
 
 const querySchema = Joi.object({
-  type: Joi.string().trim().required().messages({
-    "string.empty": "Type is required",
-  }),
   page: Joi.number().required().messages({
-    "number.base": "Page number is required",
+    "any.required": "Page number is required",
+    "number.base": "Page number must be a number",
   }),
   limit: Joi.number().required().messages({
-    "number.base": "Limit number is required",
+    "any.required": "Limit is required",
+    "number.base": "Limit must be a number",
   }),
 });
 
