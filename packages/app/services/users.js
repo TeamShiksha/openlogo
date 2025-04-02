@@ -18,6 +18,14 @@ class UserService {
   }
 
   /**
+   * Fetch all users from the database.
+   * @returns {Promise<number>} - Returns a promise with total no of users.
+   */
+  async getUsersCount() {
+    return await this.userRepository.getUsersCount();
+  }
+
+  /**
    * Update User by userId.
    * @param {string, string} {firstName, lastName} - First and Last Name of the User.
    * @param {String} userId - The userId of the user.
