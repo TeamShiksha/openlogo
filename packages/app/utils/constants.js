@@ -61,6 +61,8 @@ const Messages = {
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
   INCORRECT_PASSWORD: "Current password is incorrect",
+  INTERNAL_SERVER_ERROR:
+    "An unexpected error occurred. Please try again later.",
 };
 
 module.exports = {
