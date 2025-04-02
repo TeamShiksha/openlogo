@@ -23,6 +23,14 @@ async function getAnalyticsController(req, res, next) {
     const subscriptionService = new SubscriptionService();
     const totalHits = await subscriptionService.getSubscriptionUsageCount();
 
+    console.log(
+      totalUsers,
+      totalKeys,
+      totalRequests,
+      totalHits,
+      totalContactUs
+    );
+
     return res.status(200).json({
       statusCode: 200,
       data: {
