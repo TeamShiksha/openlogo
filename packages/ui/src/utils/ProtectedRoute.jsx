@@ -31,7 +31,7 @@ function ProtectedRoute({ adminOnly = false, children }) {
     return children;
   }
 
-  if (!loading && !userData) {
+  if (!loading && !userData && hasFetched) {
     alert("Something went wrong!");
     return <Navigate to="/" replace />;
   }
@@ -40,7 +40,7 @@ function ProtectedRoute({ adminOnly = false, children }) {
     return <div>Loading...</div>;
   }
 
-  if (userData.userType !== "ADMIN") {
+  if (userData && userData.role !== "ADMIN") {
     return <Navigate to="/" replace />;
   }
 

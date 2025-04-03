@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
+import { instance } from "../../api/api_instance";
 
 function SignUp({ toggleForm }) {
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
@@ -44,6 +45,17 @@ function SignUp({ toggleForm }) {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setFormValues(SIGNUP.initialValues);
+    //  const endPoint = process.env.CLIENT_PROXY_URL ;
+    try {
+      const response = await instance.post(
+        "http://127.0.0.1:5000/api/auth/signup",
+        formValues
+      );
+      console.log("response", response.data);
+    } catch (err) {
+      console.log("error", err.message);
+    }
+
     setFormErrors({});
     setIsSubmit(false);
     setFocusedField(null);

@@ -10,6 +10,7 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -20,7 +21,9 @@ function App() {
   return (
     <div className="app-container">
       <ScrollManager />
-      <Header openAuthModal={openCloseAuthModal} />
+      <AuthProvider>
+        <Header openAuthModal={openCloseAuthModal} />
+      </AuthProvider>
       <Routes>
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
