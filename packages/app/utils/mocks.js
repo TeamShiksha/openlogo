@@ -134,9 +134,26 @@ const MOCK_KEYS = [
   },
 ];
 
+const MOCK_ANALYTICS_DATA_INPUT = {
+  Users: 10,
+  Keys: 20,
+  Requests: 30,
+  ContactUs: 10,
+  Hits: 40,
+};
+
+const MOCK_ANALYTICS_DATA_OUTPUT = {
+  Users: 10,
+  Keys: 20,
+  Requests: 40,
+  Hits: 40,
+};
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
   MOCK_USERTOKENS,
   MOCK_KEYS,
+  MOCK_ANALYTICS_DATA_INPUT,
+  MOCK_ANALYTICS_DATA_OUTPUT,
 };

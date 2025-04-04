@@ -1,7 +1,41 @@
 const { STATUS_CODES } = require("http");
-const { UserService, ImageService } = require("../services");
+const {
+  UserService,
+  ImageService,
+  KeyService,
+  RequestService,
+  SubscriptionService,
+  ContactUsService,
+} = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { Messages } = require("../utils/constants");
+
+async function getAnalyticsController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const totalUsers = await userService.getUsersCount();
+    const keyService = new KeyService();
+    const totalKeys = await keyService.getKeysCount();
+    const requestService = new RequestService();
+    const contactUsService = new ContactUsService();
+    const totalContactUs = await contactUsService.getFormsCount();
+    const totalRequests = await requestService.getRequestsCount();
+    const subscriptionService = new SubscriptionService();
+    const totalHits = await subscriptionService.getSubscriptionUsageCount();
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: {
+        Users: totalUsers,
+        Keys: totalKeys,
+        Requests: totalRequests + totalContactUs,
+        Hits: totalHits,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
 /**
  * Promotes a user to admin or operator role using their email.
@@ -135,7 +169,7 @@ async function updateCatalogController(req, res, next) {
 
     res.status(200).json({
       statusCode: 200,
-      message: Messages.UPLOAD_SUCESS,
+      message: Messages.UPLOAD_SUCCESS,
       data: imageData,
     });
   } catch (err) {
@@ -181,7 +215,7 @@ async function addCatalogController(req, res, next) {
 
     res.status(200).json({
       statusCode: 200,
-      message: Messages.UPLOAD_SUCESS,
+      message: Messages.UPLOAD_SUCCESS,
       data: imageData,
     });
   } catch (err) {
@@ -194,4 +228,5 @@ module.exports = {
   getCatalogController,
   updateCatalogController,
   addCatalogController,
+  getAnalyticsController,
 };

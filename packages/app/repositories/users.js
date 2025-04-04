@@ -21,6 +21,17 @@ class UsersRepository extends BaseRepository {
     return await this.model.findOne({ email: emailId, is_deleted: false });
   }
 
+  /**
+   *
+   * @returns {Promise<number>} - Total number of users.
+   */
+  async getUsersCount() {
+    return await User.countDocuments();
+  }
+  /**
+   *
+   * @returns {Promise<Object|null>} - Returns the user document with role:GUEST if found, otherwise null.
+   */
   async findGuestUser() {
     return await this.model.findOne({ role: "GUEST" });
   }

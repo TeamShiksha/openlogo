@@ -14,6 +14,20 @@ class RequestService {
     });
     return newRaiseRequest;
   }
+
+  /**
+   * @returns {Promise<number>} - Returns a promise with total no of requests.
+   */
+  async getRequestsCount() {
+    return await this.requestRepository.getRequestsCount();
+  }
+
+  /**
+   * @returns {Promise<number>} - Returns a promise with total no of hits.
+   */
+  async getHitsCount() {
+    return await this.requestRepository.getHitsCount();
+  }
 }
 
 module.exports = RequestService;
