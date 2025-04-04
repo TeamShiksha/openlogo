@@ -20,6 +20,10 @@ class UsersRepository extends BaseRepository {
   async findUserByEmail(emailId) {
     return await this.model.findOne({ email: emailId, is_deleted: false });
   }
+
+  async findGuestUser() {
+    return await this.model.findOne({ role: "GUEST" });
+  }
 }
 
 module.exports = UsersRepository;

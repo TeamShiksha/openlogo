@@ -107,7 +107,7 @@ describe("SIGNIN API", () => {
 
   it("200 - Guest Signin successful", async () => {
     jest
-      .spyOn(UserService.prototype, "getUserByEmail")
+      .spyOn(UserService.prototype, "getGuestUser")
       .mockImplementation(() => new Users(MOCK_USERS[4]));
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)

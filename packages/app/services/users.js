@@ -96,6 +96,10 @@ class UserService {
     return await this.userRepository.findUserByEmail(email);
   }
 
+  async getGuestUser() {
+    return await this.userRepository.findGuestUser();
+  }
+
   /**
    * Assign a role to the user.
    * @param {string} email - The email of the user.

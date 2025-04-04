@@ -106,10 +106,7 @@ async function signinController(req, res, next) {
     const { email, password, isGuest } = value;
 
     if (isGuest) {
-      const guestUser = await userService.getUserByEmail(
-        process.env.GUEST_EMAIL
-      );
-
+      const guestUser = await userService.getGuestUser();
       res.cookie(GuestToken, guestUser.generateJWT(), {
         maxAge: 2 * 60 * 60 * 1000,
         sameSite: "none",
