@@ -114,7 +114,7 @@ describe("POST /api/catalog/logo", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       statusCode: 200,
-      message: Messages.UPLOAD_SUCESS,
+      message: Messages.UPLOAD_SUCCESS,
       data: mockImageData,
     });
   });
