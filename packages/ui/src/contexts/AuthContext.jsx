@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         .some((item) => item.trim().startsWith("jwt="));
       setIsAuthenticated(jwtCookie);
       setIsAuthCheckComplete(true);
-      console.log("JWT Cookie exists:", jwtCookie);
     };
 
     checkCookieExists();

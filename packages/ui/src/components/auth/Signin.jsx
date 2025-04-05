@@ -5,20 +5,17 @@ import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
-import { Navigate, useLocation } from 'react-router-dom';
 import {useApi }from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 
-const SignIn = ({ toggleForm }) => {
+const SignIn = ({ toggleForm, onClose }) => {
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const {isAuthenticated,setIsAuthenticated} = useContext(AuthContext);
-  // const navigate = Navigate(); // Use navigate here, directly inside the component
-  const location = useLocation(); // Get the current location
-  const { makeRequest, data } = useApi({
+  const { makeRequest, data, errorMsg } = useApi({
     method: "post",
     url: `/api/auth/signin`,
     data: formData,
@@ -53,44 +50,16 @@ const SignIn = ({ toggleForm }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsSubmit(true);
-  
-      // const response = await instance.post(
-      //   `${import.meta.env.VITE_BASE_URL}/api/auth/signin`,
-      //   formData
-      // );
-      // console.log("Signin Successful", response.data);
-      
-      // // Check if statusCode is 200
-      // if (response.data.statusCode === 200) {
-      //   // Redirect to the /home page using navigate
-      //   navigate("/");
-      // } else {
-      //   // If the statusCode is not 200, redirect to /dashboard
-      //   // navigate("/dashboard");
-      //   alert("Signin failed. Please check your credentials.");
-      // }
       const success = await makeRequest();
       if (success) {
-
         setFormData(SIGNIN.initialValues);
         setIsAuthenticated(true);
-        console.log("Signin Successful", data);
         setIsSubmit(false);
         setFocusedField(null);
+        onClose();
       }
+
   };
-//   useEffect(() => {
-//     if (data) {
-      
-//       setIsAuthenticated(true);
-//       // navigate(location?.pathname || "/dashboard");
-
-//       // <Navigate to={location?.pathname || "/dashboard"} replace />;
-
-//       // window.location.href="/";
-//     }
-//   },[data, isSubmit]
-// );
 
   return (
     <>
@@ -111,6 +80,9 @@ const SignIn = ({ toggleForm }) => {
               onBlur={() => setFocusedField(null)}
             />
           ))}
+        <p className={styles["input-error"]}>
+          {errorMsg ? errorMsg: ""}
+        </p>
         </div>
         <p className={styles["forgot-password"]}>
           {BUTTON_TEXT.forgotPassword}
@@ -122,7 +94,6 @@ const SignIn = ({ toggleForm }) => {
         >
           {BUTTON_TEXT.signIn}
         </Button>
-        <p>{isAuthenticated ? "Authenticated" : "Not Authenticated" }</p>
       </form>
       <hr className={styles.separator} />
       <p onClick={toggleForm} className={styles.switch}>

@@ -79,7 +79,7 @@ describe("ProtectedRoute", () => {
 
   it("should allow admin access to admin routes", () => {
     const authContext = mockAuthContext(true);
-    const userContext = mockUserContext({ userType: "ADMIN" }, false);
+    const userContext = mockUserContext({ role: "ADMIN" }, false);
 
     render(
       <AuthContext.Provider value={authContext}>

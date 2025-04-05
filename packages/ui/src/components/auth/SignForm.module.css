@@ -74,3 +74,10 @@
 .cross:hover {
   opacity: 0.8;
 }
+
+.input-error {
+  font-size: 0.8rem;
+  padding: 0 4px;
+  margin: 0;
+	color: var(--error);
+}

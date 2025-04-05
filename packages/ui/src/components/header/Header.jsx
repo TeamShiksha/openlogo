@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext, useMemo } from "react";
+import { useState, useEffect,useContext} from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -13,21 +13,15 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { AuthContext } from "../../contexts/Contexts";
+import { AuthContext, UserContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
-  const { isAuthenticated } = useContext(AuthContext);
-  console.log("isAuthenticated", isAuthenticated);
-
-  const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-  const items = NAVBAR_ITEMS.map((item) => ({  
-    ...item,
-    url: item.url.replace(/^\//, ""), // Remove leading slash from URL
-  }));
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const { userData, fetchUserData } = useContext(UserContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,6 +33,24 @@ const Header = ({ openAuthModal }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserData();
+    }
+  }, [isAuthenticated, fetchUserData]);
+
+  useEffect(() => { 
+    if(isAuthenticated &&  userData?.role === "ADMIN"){
+      navigate("/admin");
+    }
+  }, [isAuthenticated, userData]);
+  
+  const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
+  const items = NAVBAR_ITEMS.map((item) => ({  
+    ...item,
+    url: item.url.replace(/^\//, ""),
+  }));
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
