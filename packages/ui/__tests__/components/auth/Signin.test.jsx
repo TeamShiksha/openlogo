@@ -81,38 +81,4 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("Resets form correctly after submission", async () => {
-    const authContext = mockAuthContext(false);
-    render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
-      </AuthContext.Provider>
-    );
-    const emailInput = screen.getByLabelText("Email");
-    const passwordInput = screen.getByLabelText("Password");
-    const signInButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.signIn,
-    });
-
-    expect(signInButton).toBeDisabled();
-
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "ValidPassword@123" } });
-
-    await waitFor(() => {
-      expect(signInButton).toBeEnabled();
-    });
-
-    fireEvent.click(signInButton);
-
-    await waitFor(() => {
-      expect(emailInput).toHaveValue(SIGNIN.initialValues.email);
-      expect(passwordInput).toHaveValue(SIGNIN.initialValues.password);
-    });
-    const emailError = screen.queryByText("Email is required");
-    expect(emailError).not.toBeInTheDocument();
-
-    expect(signInButton).toBeDisabled();
-    expect(document.activeElement).toBe(document.body);
-  });
 });

@@ -14,7 +14,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const {isAuthenticated,setIsAuthenticated} = useContext(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
   const { makeRequest, data, errorMsg } = useApi({
     method: "post",
     url: `/api/auth/signin`,
@@ -80,8 +80,12 @@ const SignIn = ({ toggleForm, onClose }) => {
               onBlur={() => setFocusedField(null)}
             />
           ))}
+        </div>
+        <div
+        className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
+        >
         <p className={styles["input-error"]}>
-          {errorMsg ? errorMsg: ""}
+          {errorMsg}
         </p>
         </div>
         <p className={styles["forgot-password"]}>

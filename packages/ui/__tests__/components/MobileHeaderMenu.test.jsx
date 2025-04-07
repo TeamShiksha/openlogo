@@ -35,14 +35,14 @@ describe("MobileHeaderMenu Component", () => {
     expect(mobileMenu).not.toBeInTheDocument();
   });
 
-  it("Does render when isOpen = false and navigation works", () => {
+  it("Does render when isOpen = true and navigation works", () => {
     const authContext = mockAuthContext(true);
     const userContext = mockUserContext({ role: "ADMIN" }, true);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
           <UserContext.Provider value={userContext}>
-            <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
+            <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
           </UserContext.Provider>
         </AuthContext.Provider>
         <Documentation />
