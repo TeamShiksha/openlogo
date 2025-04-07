@@ -20,6 +20,14 @@ class UsersRepository extends BaseRepository {
   async findUserByEmail(emailId) {
     return await this.model.findOne({ email: emailId, is_deleted: false });
   }
+
+  /**
+   *
+   * @returns {Promise<number>} - Total number of users.
+   */
+  async getUsersCount() {
+    return await User.countDocuments();
+  }
 }
 
 module.exports = UsersRepository;

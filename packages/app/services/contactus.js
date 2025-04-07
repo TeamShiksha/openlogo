@@ -82,6 +82,14 @@ class ContactUsService {
   async getForm(formId) {
     return await this.contactUsRepository.getById(formId);
   }
+
+  /**
+   * Retrieves number of contact forms.
+   * @returns {Promise<number>} - The total count of contact forms.
+   */
+  async getFormsCount() {
+    return await this.contactUsRepository.getFormsCount();
+  }
 }
 
 module.exports = ContactUsService;
