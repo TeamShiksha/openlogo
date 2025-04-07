@@ -116,7 +116,7 @@ describe("PUT /api/catalog/logo", () => {
     });
   });
 
-  it("500 - Update image failed", async () => {
+  it("500 - Image upload failed.", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
     const mockBuffer = Buffer.from("test image");

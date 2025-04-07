@@ -7,7 +7,7 @@ const { UserService } = require("../../../services");
 
 const app = require("../../../server");
 
-describe("ADD PERMISSION CATALOG API", () => {
+describe("PUT  /permission/:userId/roles/:role ", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
