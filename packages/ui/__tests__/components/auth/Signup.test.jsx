@@ -5,6 +5,8 @@ import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
+import { renderHook } from "@testing-library/react";
+import { useApi } from "../../../src/hooks/useApi";
 
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
@@ -115,5 +117,114 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     expect(signInButton).toBeDisabled();
     expect(document.activeElement).toBe(document.body);
+  });
+  it("connectivity test passed", async () => {
+    const toggleFormMock = vi.fn();
+    render(<SignUpForm toggleForm={toggleFormMock} />);
+
+    const mockFormvalues = {
+      name: "test",
+      email: "test@gmail.com",
+      password: "Test@1234",
+      confirmPassword: "Test@1234",
+    };
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const signInButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    expect(signInButton).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
+
+    expect(signInButton).not.toBeDisabled();
+    fireEvent.click(signInButton);
+
+    const { result } = renderHook(() =>
+      useApi({
+        url: `auth/signup`,
+        method: "post",
+        data: mockFormvalues,
+      })
+    );
+
+    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
+      return true;
+    });
+
+    const response = await result.current.makeRequest();
+
+    await waitFor(() => {
+      expect(nameInput.value).toBe(SIGNUP.initialValues.name);
+      expect(emailInput.value).toBe(SIGNUP.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNUP.initialValues.password);
+      expect(confirmPasswordInput.value).toBe(
+        SIGNUP.initialValues.confirmPassword
+      );
+    });
+
+    expect(response).toBe(true);
+    expect(toggleFormMock).toHaveBeenCalled();
+    expect(signInButton).toBeDisabled();
+  });
+  it("connectivity test failed", async () => {
+    render(<SignUpForm toggleForm={vi.fn()} />);
+    const mockFormvalues = {
+      name: "test",
+      email: "test@gmail.com",
+      password: "Test@1234",
+      confirmPassword: "Test@1234",
+    };
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const signInButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    expect(signInButton).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
+
+    expect(signInButton).not.toBeDisabled();
+    fireEvent.click(signInButton);
+
+    const { result } = renderHook(() =>
+      useApi({
+        url: `auth/signup`,
+        method: "post",
+        data: mockFormvalues,
+      })
+    );
+
+    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
+      return false;
+    });
+
+    const response = await result.current.makeRequest();
+
+    await waitFor(() => {
+      expect(nameInput.value).toBe(SIGNUP.initialValues.name);
+      expect(emailInput.value).toBe(SIGNUP.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNUP.initialValues.password);
+      expect(confirmPasswordInput.value).toBe(
+        SIGNUP.initialValues.confirmPassword
+      );
+    });
+
+    expect(response).toBe(false);
+    expect(signInButton).toBeDisabled();
   });
 });
