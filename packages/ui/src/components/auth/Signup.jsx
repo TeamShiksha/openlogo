@@ -13,8 +13,8 @@ function SignUp({ toggleForm }) {
   const [isSubmit, setIsSubmit] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
-  const { makeRequest } = useApi({
-    url: `auth/signup`,
+  const { makeRequest, errorMsg } = useApi({
+    url: `/auth/signup`,
     method: "post",
     data: formValues,
   });
@@ -71,6 +71,11 @@ function SignUp({ toggleForm }) {
         onSubmit={handleSubmit}
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
+        <div
+          className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
+        >
+          <p className={styles["input-error"]}>{errorMsg}</p>
+        </div>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => (
             <CustomInput
