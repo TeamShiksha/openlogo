@@ -1,11 +1,16 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+} from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
 import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
-import { renderHook } from "@testing-library/react";
 import { useApi } from "../../../src/hooks/useApi";
 
 describe("SignUpForm UI and Functionality Tests", () => {
