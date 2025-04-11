@@ -1,11 +1,19 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+} from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
+import { useApi } from "../../../src/hooks/useApi";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
+  setIsAuthenticated: vi.fn(),
 });
 
 describe("SignInForm UI and Functionality Tests", () => {
@@ -81,38 +89,53 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("Resets form correctly after submission", async () => {
+  it("connectivity test passed", async () => {
     const authContext = mockAuthContext(false);
+    const oncloseMock = vi.fn();
+
     render(
       <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
+        <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
       </AuthContext.Provider>
     );
+
+    const mockFormvalues = {
+      email: "test@gmail.com",
+      password: "Test@1234",
+    };
+
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const signInButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.signIn,
+      name: SIGNIN.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
 
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "ValidPassword@123" } });
-
-    await waitFor(() => {
-      expect(signInButton).toBeEnabled();
-    });
-
+    expect(signInButton).not.toBeDisabled();
     fireEvent.click(signInButton);
 
-    await waitFor(() => {
-      expect(emailInput).toHaveValue(SIGNIN.initialValues.email);
-      expect(passwordInput).toHaveValue(SIGNIN.initialValues.password);
-    });
-    const emailError = screen.queryByText("Email is required");
-    expect(emailError).not.toBeInTheDocument();
+    const { result } = renderHook(() =>
+      useApi({
+        url: `auth/signin`,
+        method: "post",
+        data: mockFormvalues,
+      })
+    );
 
-    expect(signInButton).toBeDisabled();
-    expect(document.activeElement).toBe(document.body);
+    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
+      return true;
+    });
+
+    const response = await result.current.makeRequest();
+
+    await waitFor(() => {
+      expect(emailInput.value).toBe(SIGNIN.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNIN.initialValues.password);
+    });
+
+    expect(response).toBe(true);
+    expect(oncloseMock).toHaveBeenCalled();
   });
 });

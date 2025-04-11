@@ -1,7 +1,7 @@
 import { DOCUMENTATION, PASSWORD_VALIDATION_MESSAGES } from "./Constants";
 
 const PASSWORD_RULES = {
-  minLength: 6,
+  minLength: 8,
   maxLength: 20,
   requiresUppercase: true,
   requiresLowercase: true,

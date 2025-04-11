@@ -5,7 +5,7 @@ import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
-import {useApi }from "../../hooks/useApi";
+import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 
 const SignIn = ({ toggleForm, onClose }) => {
@@ -14,10 +14,10 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const {isAuthenticated,setIsAuthenticated} = useContext(AuthContext);
-  const { makeRequest, data, errorMsg } = useApi({
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const { makeRequest, errorMsg } = useApi({
     method: "post",
-    url: `/api/auth/signin`,
+    url: `/auth/signin`,
     data: formData,
   });
   useEffect(() => {
@@ -50,15 +50,14 @@ const SignIn = ({ toggleForm, onClose }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsSubmit(true);
-      const success = await makeRequest();
-      if (success) {
-        setFormData(SIGNIN.initialValues);
-        setIsAuthenticated(true);
-        setIsSubmit(false);
-        setFocusedField(null);
-        onClose();
-      }
-
+    const success = await makeRequest();
+    if (success) {
+      setFormData(SIGNIN.initialValues);
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      setFocusedField(null);
+      onClose();
+    }
   };
 
   return (
@@ -80,9 +79,11 @@ const SignIn = ({ toggleForm, onClose }) => {
               onBlur={() => setFocusedField(null)}
             />
           ))}
-        <p className={styles["input-error"]}>
-          {errorMsg ? errorMsg: ""}
-        </p>
+        </div>
+        <div
+          className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
+        >
+          <p className={styles["input-error"]}>{errorMsg}</p>
         </div>
         <p className={styles["forgot-password"]}>
           {BUTTON_TEXT.forgotPassword}
@@ -90,7 +91,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit}
+          disabled={!isFormValid && isSubmit}
         >
           {BUTTON_TEXT.signIn}
         </Button>
@@ -105,6 +106,7 @@ const SignIn = ({ toggleForm, onClose }) => {
 
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default SignIn;

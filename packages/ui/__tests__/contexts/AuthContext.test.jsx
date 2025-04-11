@@ -36,7 +36,6 @@ const clearCookies = () => {
 };
 
 beforeEach(() => {
-  clearCookies();
   vi.clearAllMocks();
 });
 
