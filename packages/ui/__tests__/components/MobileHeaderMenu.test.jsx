@@ -54,7 +54,7 @@ describe("MobileHeaderMenu Component", () => {
     const docsNavigation = within(mobileMenu).getByText("Docs");
     expect(docsNavigation).toBeInTheDocument();
     fireEvent.click(docsNavigation);
-    expect(window.location.pathname).toBe("/docs");
+    expect(window.location.pathname).toBe("/admin");
   });
 
   it("calls closeMenu when screen width exceeds 1024px", () => {

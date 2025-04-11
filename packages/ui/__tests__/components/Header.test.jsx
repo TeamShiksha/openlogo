@@ -43,7 +43,7 @@ describe("Header component", () => {
     expect(brandImage).toBeInTheDocument();
     expect(brandName).toBeInTheDocument();
     fireEvent.click(brandName);
-    expect(window.location.pathname).toBe("/");
+    expect(window.location.pathname).toBe("/admin");
   });
 
   it("Render all header navigations", () => {

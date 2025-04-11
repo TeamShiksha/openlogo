@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="app-container">
       <ScrollManager />
-        <Header openAuthModal={openCloseAuthModal} />
+      <Header openAuthModal={openCloseAuthModal} />
       <Routes>
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />

@@ -11,7 +11,7 @@ export function UserProvider({ children }) {
   const fetchUserData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await instance.get("/api/users/me");
+      const res = await instance.get("users/me");
       const data = res.data.data;
       setUserData(data);
     } catch (err) {

@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext} from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -40,14 +40,14 @@ const Header = ({ openAuthModal }) => {
     }
   }, [isAuthenticated, fetchUserData]);
 
-  useEffect(() => { 
-    if(isAuthenticated &&  userData?.role === "ADMIN"){
+  useEffect(() => {
+    if (isAuthenticated && userData?.role == "ADMIN") {
       navigate("/admin");
     }
-  }, [isAuthenticated, userData]);
-  
+  }, [isAuthenticated, userData, navigate]);
+
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-  const items = NAVBAR_ITEMS.map((item) => ({  
+  const items = NAVBAR_ITEMS.map((item) => ({
     ...item,
     url: item.url.replace(/^\//, ""),
   }));

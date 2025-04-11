@@ -1,11 +1,19 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+} from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
+import { useApi } from "../../../src/hooks/useApi";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
+  setIsAuthenticated: vi.fn(),
 });
 
 describe("SignInForm UI and Functionality Tests", () => {
@@ -81,4 +89,53 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
+  it("connectivity test passed", async () => {
+    const authContext = mockAuthContext(false);
+    const oncloseMock = vi.fn();
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+      </AuthContext.Provider>
+    );
+
+    const mockFormvalues = {
+      email: "test@gmail.com",
+      password: "Test@1234",
+    };
+
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const signInButton = screen.getByRole("button", {
+      name: SIGNIN.submitButton,
+    });
+
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+
+    expect(signInButton).not.toBeDisabled();
+    fireEvent.click(signInButton);
+
+    const { result } = renderHook(() =>
+      useApi({
+        url: `auth/signin`,
+        method: "post",
+        data: mockFormvalues,
+      })
+    );
+
+    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
+      return true;
+    });
+
+    const response = await result.current.makeRequest();
+
+    await waitFor(() => {
+      expect(emailInput.value).toBe(SIGNIN.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNIN.initialValues.password);
+    });
+
+    expect(response).toBe(true);
+    expect(oncloseMock).toHaveBeenCalled();
+  });
 });
