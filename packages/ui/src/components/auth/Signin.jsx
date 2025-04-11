@@ -65,6 +65,11 @@ const SignIn = ({ toggleForm, onClose }) => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <div
+          className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
+        >
+          <p className={styles["input-error"]}>{errorMsg}</p>
+        </div>
         <div className={styles["form-width"]}>
           {SIGNIN["fields"].map((field) => (
             <CustomInput
@@ -79,11 +84,6 @@ const SignIn = ({ toggleForm, onClose }) => {
               onBlur={() => setFocusedField(null)}
             />
           ))}
-        </div>
-        <div
-          className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
-        >
-          <p className={styles["input-error"]}>{errorMsg}</p>
         </div>
         <p className={styles["forgot-password"]}>
           {BUTTON_TEXT.forgotPassword}
