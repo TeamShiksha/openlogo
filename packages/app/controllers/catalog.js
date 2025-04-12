@@ -148,7 +148,7 @@ async function updateCatalogController(req, res, next) {
 
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
-      res.status(500).json({
+      return res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
         message: Messages.UPLOAD_FAILED,
