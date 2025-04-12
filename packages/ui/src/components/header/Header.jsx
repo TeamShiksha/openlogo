@@ -13,14 +13,13 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { AuthContext, UserContext } from "../../contexts/Contexts";
+import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const { userData, fetchUserData } = useContext(UserContext);
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
@@ -33,18 +32,6 @@ const Header = ({ openAuthModal }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchUserData();
-    }
-  }, [isAuthenticated, fetchUserData]);
-
-  useEffect(() => {
-    if (isAuthenticated && userData?.role == "ADMIN") {
-      navigate("/admin");
-    }
-  }, [isAuthenticated, userData, navigate]);
 
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
   const items = NAVBAR_ITEMS.map((item) => ({

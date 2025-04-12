@@ -10,6 +10,7 @@ import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { useApi } from "../../../src/hooks/useApi";
+import { mockFormvalues } from "../../../src/utils/testconstants";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
@@ -99,11 +100,6 @@ describe("SignInForm UI and Functionality Tests", () => {
       </AuthContext.Provider>
     );
 
-    const mockFormvalues = {
-      email: "test@gmail.com",
-      password: "Test@1234",
-    };
-
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const signInButton = screen.getByRole("button", {
@@ -118,7 +114,7 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     const { result } = renderHook(() =>
       useApi({
-        url: `auth/signin`,
+        url: `/auth/signin`,
         method: "post",
         data: mockFormvalues,
       })

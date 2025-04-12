@@ -4,11 +4,10 @@ import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { AuthContext, UserContext } from "../../contexts/Contexts";
+import { AuthContext } from "../../contexts/Contexts";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
-  const { userData, fetchUserData } = useContext(UserContext);
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,18 +22,6 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchUserData();
-    }
-  }, [isAuthenticated, fetchUserData]);
-
-  useEffect(() => {
-    if (isAuthenticated && userData?.role == "ADMIN") {
-      navigate("/admin");
-    }
-  }, [isAuthenticated, userData, navigate]);
 
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
   const items = NAVBAR_ITEMS.map((item) => ({
