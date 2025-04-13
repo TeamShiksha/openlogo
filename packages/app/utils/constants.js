@@ -63,6 +63,7 @@ const Messages = {
   INCORRECT_PASSWORD: "Current password is incorrect",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
+  FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
 };
 
 module.exports = {
