@@ -149,6 +149,4 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(response).toBe(true);
     expect(oncloseMock).toHaveBeenCalled();
   });
-
-  it("check navigation after sign in", async () => {});
 });
