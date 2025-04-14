@@ -51,10 +51,14 @@ describe("MobileHeaderMenu Component", () => {
 
     const mobileMenu = screen.getByTestId("mobile-menu");
     expect(mobileMenu).toBeInTheDocument();
-    const docsNavigation = within(mobileMenu).getByText("Docs");
-    expect(docsNavigation).toBeInTheDocument();
-    fireEvent.click(docsNavigation);
-    expect(window.location.pathname).toBe("/docs");
+    const adminNavigation = within(mobileMenu).getByText("Admin");
+    expect(adminNavigation).toBeInTheDocument();
+    fireEvent.click(adminNavigation);
+    expect(window.location.pathname).toBe("/admin");
+    const dashboardNavigation = within(mobileMenu).getByText("Dashboard");
+    expect(dashboardNavigation).toBeInTheDocument();
+    fireEvent.click(dashboardNavigation);
+    expect(window.location.pathname).toBe("/dashboard");
   });
 
   it("calls closeMenu when screen width exceeds 1024px", () => {

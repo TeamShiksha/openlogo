@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { AuthContext } from "../../contexts/Contexts";
+import { AuthContext, UserContext } from "../../contexts/Contexts";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
+  const { userData, fetchUserData } = useContext(UserContext);
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,18 +24,33 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserData();
+    }
+  }, [isAuthenticated, fetchUserData]);
+
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-  const items = NAVBAR_ITEMS.map((item) => ({
-    ...item,
-    url: item.url.replace(/^\//, ""),
-  }));
 
   if (!isOpen) return null;
 
   return (
     <div data-testid="mobile-menu" className={styles["mobile-header"]}>
       <div className={styles.navbar}>
-        {items.map((item) => (
+        {userData && userData.role === "ADMIN" && (
+          <Link
+            key={"Admin"}
+            className={styles.nav}
+            to={"/admin"}
+            onClick={(event) => {
+              handleNavigation(event, "/admin", navigate);
+              closeMenu(false);
+            }}
+          >
+            Admin
+          </Link>
+        )}
+        {NAVBAR_ITEMS.map((item) => (
           <Link
             key={item.name}
             className={styles.nav}

@@ -83,11 +83,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
     fireEvent.change(emailInput, { target: { value: "xyz@example.com" } });
@@ -96,7 +96,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       target: { value: "Password@123" },
     });
 
-    fireEvent.click(signInButton);
+    fireEvent.click(signUpButton);
 
     await waitFor(() => {
       expect(nameInput.value).toBe(SIGNUP.initialValues.name);
@@ -120,7 +120,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     );
     expect(confirmPasswordError).not.toBeInTheDocument();
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
     expect(document.activeElement).toBe(document.body);
   });
   it("connectivity test passed", async () => {
@@ -138,19 +138,19 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "Test" } });
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
 
-    expect(signInButton).not.toBeDisabled();
-    fireEvent.click(signInButton);
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
 
     const { result } = renderHook(() =>
       useApi({
@@ -177,7 +177,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     expect(response).toBe(true);
     expect(toggleFormMock).toHaveBeenCalled();
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
   });
   it("connectivity test failed", async () => {
     render(<SignUpForm toggleForm={vi.fn()} />);
@@ -192,19 +192,19 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "Test" } });
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
 
-    expect(signInButton).not.toBeDisabled();
-    fireEvent.click(signInButton);
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
 
     const { result } = renderHook(() =>
       useApi({
@@ -230,6 +230,6 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
 
     expect(response).toBe(false);
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
   });
 });

@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UserProvider } from "../../src/contexts/UserContext";
+import { AuthProvider } from "../../src/contexts/AuthContext";
 import { UserContext } from "../../src/contexts/Contexts";
 import { instance } from "../../src/api/api_instance";
 import { useContext } from "react";
@@ -35,9 +36,11 @@ beforeEach(() => {
 describe("UserProvider", () => {
   it("should have default values on initialization", () => {
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </AuthProvider>
     );
 
     const userDataText = screen.getByTestId("user-data").textContent;
@@ -45,7 +48,7 @@ describe("UserProvider", () => {
     const errorText = screen.getByTestId("error").textContent;
 
     expect(userDataText).toBe("No User Data");
-    expect(loadingText).toBe("Not Loading");
+    expect(loadingText).toBe("Loading...");
     expect(errorText).toBe("No Error");
   });
 
@@ -57,9 +60,11 @@ describe("UserProvider", () => {
     });
 
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </AuthProvider>
     );
 
     screen.getByTestId("fetch-btn").click();
@@ -81,9 +86,11 @@ describe("UserProvider", () => {
     instance.get.mockRejectedValueOnce(new Error("Failed to fetch"));
 
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </AuthProvider>
     );
 
     screen.getByTestId("fetch-btn").click();

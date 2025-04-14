@@ -13,13 +13,14 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { AuthContext } from "../../contexts/Contexts";
+import { AuthContext, UserContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const { userData, fetchUserData } = useContext(UserContext);
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
@@ -33,11 +34,13 @@ const Header = ({ openAuthModal }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserData();
+    }
+  }, [isAuthenticated, fetchUserData]);
+
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-  const items = NAVBAR_ITEMS.map((item) => ({
-    ...item,
-    url: item.url.replace(/^\//, ""),
-  }));
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
@@ -59,7 +62,17 @@ const Header = ({ openAuthModal }) => {
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>
         <div className={styles["nav-bar"]}>
-          {items.map((item) => (
+          {userData && userData.role === "ADMIN" && (
+            <Link
+              key={"admin"}
+              className={styles.nav}
+              to={"/admin"}
+              onClick={(event) => handleNavigation(event, "/admin", navigate)}
+            >
+              Admin
+            </Link>
+          )}
+          {NAVBAR_ITEMS.map((item) => (
             <Link
               key={item.name}
               className={styles.nav}

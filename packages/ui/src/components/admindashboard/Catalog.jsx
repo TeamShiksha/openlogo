@@ -60,6 +60,7 @@ function Catalog() {
         <CustomInput
           type="search"
           label="search"
+          name="search"
           value={searchTerm}
           onChange={handleSearchTermChange}
         />

@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
@@ -9,13 +10,14 @@ import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 
 const SignIn = ({ toggleForm, onClose }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
-  const { makeRequest, errorMsg } = useApi({
+  const { makeRequest, data, isSuccess, errorMsg } = useApi({
     method: "post",
     url: `/auth/signin`,
     data: formData,
@@ -56,9 +58,15 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsAuthenticated(true);
       setIsSubmit(false);
       setFocusedField(null);
-      onClose();
     }
   };
+
+  useEffect(() => {
+    if (data && isSuccess) {
+      navigate(data.userRole === "ADMIN" ? "/admin" : "/dashboard");
+      onClose();
+    }
+  }, [data, isSuccess, navigate, onClose]);
 
   return (
     <>
