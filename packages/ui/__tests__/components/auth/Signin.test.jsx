@@ -10,7 +10,6 @@ import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { useApi } from "../../../src/hooks/useApi";
-import { mockFormvalues } from "../../../src/utils/testconstants";
 import { BrowserRouter } from "react-router-dom";
 
 const mockAuthContext = (isAuthenticated) => ({
@@ -102,6 +101,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("connectivity test passed", async () => {
     const authContext = mockAuthContext(false);
     const oncloseMock = vi.fn();
+
+    const mockFormvalues = {
+      email: "test@gmail.com",
+      password: "Test@1234",
+    };
 
     render(
       <BrowserRouter>
