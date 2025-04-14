@@ -123,9 +123,39 @@ const MOCK_KEYS = [
   },
 ];
 
+const MOCK_ANALYTICS_DATA_INPUT = {
+  Users: 10,
+  Keys: 20,
+  Requests: 30,
+  ContactUs: 10,
+  Hits: 40,
+};
+
+const MOCK_ANALYTICS_DATA_OUTPUT = {
+  Users: 10,
+  Keys: 20,
+  Requests: 40,
+  Hits: 40,
+};
+
+const MOCK_IMAGES = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[2]._id,
+    company_uri: "https://example.com/google",
+    company_name: "GOOGLE.png",
+    image_size: 1024,
+    is_deleted: false,
+    updatedAt: new Date(),
+  },
+];
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
   MOCK_USERTOKENS,
   MOCK_KEYS,
+  MOCK_ANALYTICS_DATA_INPUT,
+  MOCK_ANALYTICS_DATA_OUTPUT,
+  MOCK_IMAGES,
 };

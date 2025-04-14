@@ -49,7 +49,7 @@ function Catalog() {
   };
 
   return (
-    <div className={styles["catalog-wrapper"]}>
+    <div className={styles["catalog-wrapper"]} data-testid="catalog">
       {/*catalog search bar*/}
       <div className={styles["catalog-search"]}>
         <img
@@ -60,7 +60,8 @@ function Catalog() {
         <CustomInput
           type="search"
           label="search"
-          onChange={(e) => handleSearchTermChange(e)}
+          value={searchTerm}
+          onChange={handleSearchTermChange}
         />
         <Button
           onClick={() => setIsModalOpen(true)}
@@ -86,16 +87,18 @@ function Catalog() {
           {/* empty table header for reupload button column */}
           <div className={styles["catalog-table-column-last"]}></div>
         </div>
-        {/* catalog table */}
-        {filteredCompanies.length > 0 &&
-          filteredCompanies.map((company) => {
-            return <CatalogItem key={company.id} company={company} />;
-          })}
-        {filteredCompanies.length === 0 && (
-          <p className={styles["catalog-table-no-content"]}>
-            No results found matching your query!
-          </p>
-        )}
+        {/* catalog table content */}
+        <div className={styles["catalog-table-content"]}>
+          {filteredCompanies.length > 0 ? (
+            filteredCompanies.map((company) => (
+              <CatalogItem key={company.id} company={company} />
+            ))
+          ) : (
+            <p className={styles["catalog-table-no-content"]}>
+              No results found matching your query!
+            </p>
+          )}
+        </div>
         {/* catalog table footer */}
         <div className={styles["catalog-table-footer"]}>
           <button

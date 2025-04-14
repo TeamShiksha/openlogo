@@ -19,6 +19,10 @@ class ContactUsRepository extends BaseRepository {
   async updateFormStatus(id, updateData) {
     return await this.model.updateOne({ _id: id }, updateData);
   }
+
+  async getFormsCount() {
+    return await this.model.countDocuments();
+  }
 }
 
 module.exports = ContactUsRepository;

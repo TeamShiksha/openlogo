@@ -52,15 +52,17 @@ const Messages = {
   NAME_AND_EXT_SAME: "Name and extension should be same.",
   UPLOAD_FAILED: "Image upload failed.",
   UPDATE_IMAGE_FAILED: "Failed to update image record.",
-  UPLOAD_SUCESS: "Image updated successfully.",
+  UPLOAD_SUCCESS: "Image updated successfully.",
   INVALID_KEY: "Invalid API key.",
   LIMIT_REACHED: "Limit reached. Consider upgrading your plan.",
   LOGO_NOT_FOUND: "Logo not found.",
   FETCH_ALL_MESSAGE: "Fetched all contact us messages.",
   MESSAGE_NOT_FOUND: "Message not found.",
   ALREADY_SEND_RESPOND: "Already sent the response.",
-  UPDATE_SUCESS: "Responded successfully.",
+  UPDATE_SUCCESS: "Responded successfully.",
   INCORRECT_PASSWORD: "Current password is incorrect",
+  INTERNAL_SERVER_ERROR:
+    "An unexpected error occurred. Please try again later.",
 };
 
 module.exports = {

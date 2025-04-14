@@ -24,10 +24,9 @@ module.exports = (options = {}) => {
           message: "Invalid credentials",
           statusCode: 403,
         });
-
       if (
-        (options.adminOnly && data.userType !== UserType.ADMIN) ||
-        (options.operatorOnly && data.userType !== UserType.OPERATOR)
+        (options.adminOnly && data.role !== UserType.ADMIN) ||
+        (options.operatorOnly && data.role !== UserType.OPERATOR)
       )
         return res.status(401).json({
           error: STATUS_CODES[401],
