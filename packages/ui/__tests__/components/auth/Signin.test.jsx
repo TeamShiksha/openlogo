@@ -11,6 +11,7 @@ import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { useApi } from "../../../src/hooks/useApi";
 import { mockFormvalues } from "../../../src/utils/testconstants";
+import { BrowserRouter } from "react-router-dom";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
@@ -21,9 +22,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const title = screen.getByRole("heading", { name: SIGNIN.title });
@@ -42,9 +45,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
     const toggleForm = vi.fn();
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={toggleForm} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={toggleForm} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const closeButton = screen.getByText(SIGNIN.footerText);
@@ -55,9 +60,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("validates email only when focused and blurred", async () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const emailInput = screen.getByLabelText("Email");
 
@@ -77,9 +84,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("does not show an error for password but still validates it", async () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const passwordInput = screen.getByLabelText("Password");
 
@@ -95,9 +104,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     const oncloseMock = vi.fn();
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const emailInput = screen.getByLabelText("Email");
@@ -134,4 +145,6 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(response).toBe(true);
     expect(oncloseMock).toHaveBeenCalled();
   });
+
+  it("check navigation after sign in", async () => {});
 });

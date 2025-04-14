@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
+import { UserContext } from "../../../contexts/Contexts";
 
 function UserInfo() {
+  const { userData, loading } = useContext(UserContext);
+
   const initialValues = {
     name: "John Doe",
     email: "johndoe@gmail.com",
@@ -62,6 +65,22 @@ function UserInfo() {
 
     setFormErrors({ type: "success", message: "Signed in successfully!" });
   };
+
+  useEffect(() => {
+    if (!loading && userData) {
+      setFormData(() => {
+        return {
+          name: userData.name,
+          email: userData.email,
+          isBtnDisabled: true,
+        };
+      });
+    }
+  }, [loading, userData]);
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <form className={styles["user-info-input-group"]}>

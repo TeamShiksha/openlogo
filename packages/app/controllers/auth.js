@@ -135,7 +135,7 @@ async function signinController(req, res, next) {
       secure: true,
     });
 
-    return res.status(200).json({ statusCode: 200 });
+    return res.status(200).json({ statusCode: 200, userRole: user.role });
   } catch (err) {
     next(err);
   }

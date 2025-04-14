@@ -9,6 +9,7 @@ function CustomInput({
   error,
   onChange = () => {},
   className = "",
+  disabled = false,
   onFocus = () => {},
   onBlur = () => {},
 }) {
@@ -21,6 +22,7 @@ function CustomInput({
         id={label}
         name={name}
         className={`${styles["group-input"]} ${className}`}
+        disabled={disabled}
         value={value}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -51,6 +53,7 @@ CustomInput.propTypes = {
   onChange: PropTypes.func,
   error: PropTypes.string,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
 };

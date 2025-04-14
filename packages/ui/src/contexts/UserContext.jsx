@@ -1,16 +1,17 @@
 import PropTypes from "prop-types";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useContext, useEffect } from "react";
 import { instance } from "../api/api_instance";
-import { UserContext } from "./Contexts";
+import { AuthContext, UserContext } from "./Contexts";
 
 export function UserProvider({ children }) {
   const [userData, setUserData] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
+  const { isAuthenticated } = useContext(AuthContext);
 
   const fetchUserData = useCallback(async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await instance.get("users/me");
       const data = res.data.data;
       setUserData(data);
@@ -20,6 +21,12 @@ export function UserProvider({ children }) {
       setLoading(false);
     }
   }, [setError, setLoading]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setUserData(undefined);
+    }
+  }, [isAuthenticated, setUserData]);
 
   return (
     <UserContext.Provider
