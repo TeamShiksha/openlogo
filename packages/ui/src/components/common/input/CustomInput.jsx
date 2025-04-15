@@ -36,10 +36,8 @@ function CustomInput({
       >
         {label}
       </label>
-      <div
-        className={`${styles["error-container"]} ${error ? styles["has-error"] : ""}`}
-      >
-        <p className={styles["input-error"]}>{error}</p>
+      <div className={`"error-container" ${error ? "has-error" : ""}`}>
+        <p className="input-error">{error}</p>
       </div>
     </div>
   );

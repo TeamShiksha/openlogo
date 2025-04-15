@@ -87,3 +87,29 @@ footer {
     padding: 0 1rem;
   }
 }
+
+.error-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.has-error {
+  max-height: 50px;
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.8rem;
+  opacity: 0;
+  padding: 0 4px;
+  transition:
+    opacity 0.2s ease-out,
+    padding 0.2s ease-out;
+  transition-delay: 0.1s;
+}
+
+.has-error .input-error {
+  opacity: 1;
+  padding: 2px;
+}
