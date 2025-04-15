@@ -2,6 +2,7 @@
   display: flex;
   background-color: var(--white);
   border-bottom: var(--border);
+  border-top: var(--border);
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -14,7 +15,6 @@
   width: 100%;
   justify-content: space-between;
   padding: 1.2rem 0;
-  border-top: var(--border);
   align-items: center;
 }
 
