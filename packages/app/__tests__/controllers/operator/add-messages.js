@@ -23,7 +23,7 @@ describe("POST : /api/messages/contact-us", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Email is required",
+      message: Messages.EMAIL_REQUIRED,
       statusCode: 422,
     });
   });
@@ -40,7 +40,7 @@ describe("POST : /api/messages/contact-us", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Invalid email",
+      message: Messages.INVALID_EMAIL,
       statusCode: 422,
     });
   });
@@ -56,7 +56,7 @@ describe("POST : /api/messages/contact-us", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Name is required",
+      message: Messages.NAME_REQUIRED,
       statusCode: 422,
     });
   });
