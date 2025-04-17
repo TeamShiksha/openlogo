@@ -1,35 +1,16 @@
-import { useContext, useMemo } from "react";
+import PropTypes from "prop-types";
 import PieGraph from "../PieGraph";
 import styles from "./Usage.module.css";
-import { UserContext } from "../../../contexts/Contexts";
 
-function Usage() {
-  const { userData, loading } = useContext(UserContext);
-
-  const { usedInPercent, usageCount } = useMemo(() => {
-    let usedInPercent = 0;
-    let usageCount = 0;
-
-    if (!loading && userData) {
-      usedInPercent =
-        (userData.subscription.usage_count /
-          userData.subscription.usage_limit) *
-        100;
-      usageCount = userData.subscription?.usage_count;
-    }
-    return { usedInPercent, usageCount };
-  }, [userData, loading]);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
+function Usage({ usageCount, usageLimit }) {
+  const percentage = (usageCount / usageLimit) * 100;
 
   return (
     <>
       <div className={styles.usageBodyContainer}>
         <div className={styles.circularChart}>
           <PieGraph
-            percentage={usedInPercent}
+            percentage={percentage}
             colour="var(--primary)"
             fill="var(--border)"
           />
@@ -38,9 +19,7 @@ function Usage() {
           <div className={styles.dataHeading}>Calls</div>
           <div className={styles.data}>{usageCount}</div>
           <div className={styles.dataHeading}>Limit</div>
-          <div className={styles.data}>
-            {!loading ? userData?.subscription?.usage_limit : 0}
-          </div>
+          <div className={styles.data}>{usageLimit}</div>
         </div>
       </div>
       <div className={styles.dashboardResetDate}>
@@ -49,5 +28,10 @@ function Usage() {
     </>
   );
 }
+
+Usage.propTypes = {
+  usageCount: PropTypes.number,
+  usageLimit: PropTypes.number,
+};
 
 export default Usage;

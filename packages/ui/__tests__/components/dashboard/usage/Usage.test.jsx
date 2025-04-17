@@ -1,56 +1,38 @@
-import { expect, describe, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { UserContext } from "../../../../src/contexts/Contexts";
+import { describe, expect, it } from "vitest";
 import Usage from "../../../../src/components/dashboard/usage/Usage";
 
 const mockUserData = {
-  subscription: {
-    usage_count: 25,
-    usage_limit: 100,
-  },
+  usage_count: 25,
+  usage_limit: 100,
 };
 
 describe("Usage Component", () => {
-  it("Should show loading values when loading is true", () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: true }}>
-        <Usage />
-      </UserContext.Provider>
-    );
-
-    const loadingText = screen.getByText("loading...");
-    expect(loadingText).toBeInTheDocument();
-  });
-
   it("Should show correct usage count, usage limit", () => {
     render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <Usage />
-      </UserContext.Provider>
+      <Usage
+        usageCount={mockUserData.usage_count}
+        usageLimit={mockUserData.usage_limit}
+      />
     );
 
-    const usageCountText = screen.getByText(
-      mockUserData.subscription.usage_count
-    );
-    const usageLimitText = screen.getByText(
-      mockUserData.subscription.usage_limit
-    );
+    const usageCountText = screen.getByText(mockUserData.usage_count);
+    const usageLimitText = screen.getByText(mockUserData.usage_limit);
     expect(usageCountText).toBeInTheDocument();
     expect(usageLimitText).toBeInTheDocument();
   });
 
   it("Should render PieGraph with correct percentage", () => {
     const { container } = render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <Usage />
-      </UserContext.Provider>
+      <Usage
+        usageCount={mockUserData.usage_count}
+        usageLimit={mockUserData.usage_limit}
+      />
     );
 
     const pieGraph = container.querySelector("svg");
     const usedPercent =
-      (mockUserData.subscription.usage_count /
-        mockUserData.subscription.usage_limit) *
-      100;
+      (mockUserData.usage_count / mockUserData.usage_limit) * 100;
     const percentageText = screen.getByText(`${usedPercent}%`);
     expect(pieGraph).toBeInTheDocument();
     expect(percentageText).toBeInTheDocument();

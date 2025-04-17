@@ -99,7 +99,6 @@ describe("SIGNIN API", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,
-      userRole: MOCK_USERS[1].role,
     });
     expect(response.headers["set-cookie"]).toBeDefined();
   });

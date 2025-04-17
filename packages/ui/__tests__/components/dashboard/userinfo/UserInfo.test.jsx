@@ -1,7 +1,6 @@
-import { expect, describe, it } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
-import { UserContext } from "../../../../src/contexts/Contexts";
 
 const mockUserData = {
   name: "Jane Doe",
@@ -9,23 +8,8 @@ const mockUserData = {
 };
 
 describe("UserInfo Component", () => {
-  it("Should render loading state", () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: true }}>
-        <UserInfo />
-      </UserContext.Provider>
-    );
-
-    const loadingText = screen.getByText("loading...");
-    expect(loadingText).toBeInTheDocument();
-  });
-
   it("Should render name and email correctly", async () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <UserInfo />
-      </UserContext.Provider>
-    );
+    render(<UserInfo name={mockUserData.name} email={mockUserData.email} />);
 
     const nameInput = screen.getByDisplayValue(mockUserData.name);
     const emailInput = screen.getByDisplayValue(mockUserData.email);
@@ -34,11 +18,7 @@ describe("UserInfo Component", () => {
   });
 
   it("Should update name input value & email input value", () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <UserInfo />
-      </UserContext.Provider>
-    );
+    render(<UserInfo name={mockUserData.name} email={mockUserData.email} />);
 
     const nameInput = screen.getByLabelText(/name/i);
     fireEvent.change(nameInput, { target: { value: "New Name" } });
@@ -50,11 +30,7 @@ describe("UserInfo Component", () => {
   });
 
   it("Should show error if name or email is empty on submit", async () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <UserInfo />
-      </UserContext.Provider>
-    );
+    render(<UserInfo name={mockUserData.name} email={mockUserData.email} />);
 
     const nameInput = screen.getByLabelText(/name/i);
     fireEvent.change(nameInput, { target: { value: "" } });
@@ -69,11 +45,7 @@ describe("UserInfo Component", () => {
   });
 
   it("Should enable Save button when name is changed", () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData, loading: false }}>
-        <UserInfo />
-      </UserContext.Provider>
-    );
+    render(<UserInfo name={mockUserData.name} email={mockUserData.email} />);
 
     const nameInput = screen.getByLabelText(/name/i);
     const saveButton = screen.getByText("Save");

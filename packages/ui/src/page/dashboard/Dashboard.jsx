@@ -1,12 +1,14 @@
-import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
-import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
-import Usage from "../../components/dashboard/usage/Usage";
-import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
-import UserInfo from "../../components/dashboard/userinfo/UserInfo";
-import styles from "./Dashboard.module.css";
-import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
-import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import { useContext } from "react";
 import Table from "../../components/common/table/Table.jsx";
+import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
+import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
+import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
+import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
+import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import Usage from "../../components/dashboard/usage/Usage";
+import UserInfo from "../../components/dashboard/userinfo/UserInfo";
+import { UserContext } from "../../contexts/Contexts.jsx";
+import styles from "./Dashboard.module.css";
 
 const TABLE_HEADER_DATA = ["Description", "Created", "Action"];
 const EMPTY_MESSAGE =
@@ -17,12 +19,21 @@ const TABLE_TEST_DATA = [
 ];
 
 function Dashboard() {
+  const { userData, loading } = useContext(UserContext);
+
+  if (loading) {
+    return <div>loading..</div>;
+  }
+
   return (
     <div className={styles.dashboardContainer} data-testid="testid-dashboard">
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
           <CardWrapper title="Usage">
-            <Usage />
+            <Usage
+              usageCount={userData.subscription.usage_count}
+              usageLimit={userData.subscription.usage_limit}
+            />
           </CardWrapper>
           <CardWrapper title="Generate New API Key">
             <ApiKeyForm />
@@ -48,7 +59,7 @@ function Dashboard() {
       <div className={styles.dashboardContentContainer}>
         <section className={styles.dashboardContentSection}>
           <CardWrapper title="User Info">
-            <UserInfo />
+            <UserInfo name={userData.name} email={userData.email} />
           </CardWrapper>
           <CardWrapper title="Change Password">
             <ChangePassword />

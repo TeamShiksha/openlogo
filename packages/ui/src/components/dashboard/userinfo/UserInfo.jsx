@@ -1,16 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useState } from "react";
 import { USER_INFO_FIELDS } from "../../../utils/Constants";
-import styles from "./UserInfo.module.css";
-import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
-import { UserContext } from "../../../contexts/Contexts";
+import CustomInput from "../../common/input/CustomInput";
+import styles from "./UserInfo.module.css";
 
-function UserInfo() {
-  const { userData, loading } = useContext(UserContext);
-
+function UserInfo({ name, email }) {
   const initialValues = {
-    name: "John Doe",
-    email: "johndoe@gmail.com",
+    name,
+    email,
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
@@ -66,22 +64,6 @@ function UserInfo() {
     setFormErrors({ type: "success", message: "Signed in successfully!" });
   };
 
-  useEffect(() => {
-    if (!loading && userData) {
-      setFormData(() => {
-        return {
-          name: userData.name,
-          email: userData.email,
-          isBtnDisabled: true,
-        };
-      });
-    }
-  }, [loading, userData]);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-
   return (
     <form className={styles["user-info-input-group"]}>
       {USER_INFO_FIELDS.map((field) => (
@@ -108,5 +90,10 @@ function UserInfo() {
     </form>
   );
 }
+
+UserInfo.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+};
 
 export default UserInfo;
