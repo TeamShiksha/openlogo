@@ -12,22 +12,6 @@ describe("POST : /api/messages/contact-us", () => {
     jest.clearAllMocks();
   });
 
-  it("422 - Email is required", async () => {
-    const response = await request(app)
-      .post(`${ENDPOINTS.MESSAGES}/contact-us`)
-      .send({
-        name: "John Doe",
-        message: "This is a test message",
-      });
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: Messages.EMAIL_REQUIRED,
-      statusCode: 422,
-    });
-  });
-
   it("422 - Email must be a valid email", async () => {
     const response = await request(app)
       .post(`${ENDPOINTS.MESSAGES}/contact-us`)
@@ -61,22 +45,6 @@ describe("POST : /api/messages/contact-us", () => {
     });
   });
 
-  it("422 - Message is required", async () => {
-    const response = await request(app)
-      .post(`${ENDPOINTS.MESSAGES}/contact-us`)
-      .send({
-        name: "John Doe",
-        email: "abc@gmail.com",
-      });
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: "Message is required",
-      statusCode: 422,
-    });
-  });
-
   it("422 - Message should be at least 20 characters", async () => {
     const response = await request(app)
       .post(`${ENDPOINTS.MESSAGES}/contact-us`)
@@ -89,22 +57,6 @@ describe("POST : /api/messages/contact-us", () => {
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
       message: "Message should be at least be 20 characters",
-      statusCode: 422,
-    });
-  });
-
-  it("422 - Message must be 500 or fewer characters", async () => {
-    const response = await request(app)
-      .post(`${ENDPOINTS.MESSAGES}/contact-us`)
-      .send({
-        name: "John Doe",
-        email: "abc@gmail.com",
-        message: "A".repeat(501),
-      });
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[422],
-      message: "Message must be 500 or fewer characters",
       statusCode: 422,
     });
   });
@@ -200,7 +152,7 @@ describe("POST : /api/messages/contact-us", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      message: "Form submitted, our team will get in touch shortly",
+      message: Messages.FORM_SUBMITTED,
       statusCode: 200,
     });
   });

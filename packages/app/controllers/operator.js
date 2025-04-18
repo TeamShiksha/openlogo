@@ -147,7 +147,7 @@ async function addMessagesController(req, res, next) {
     }
 
     return res.status(200).json({
-      message: "Form submitted, our team will get in touch shortly",
+      message: Messages.FORM_SUBMITTED,
       statusCode: 200,
     });
   } catch (error) {

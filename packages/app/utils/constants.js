@@ -67,6 +67,7 @@ const Messages = {
   EMAIL_REQUIRED: "Email is required",
   NAME_REQUIRED: "Name is required",
   INVALID_EMAIL: "Invalid email",
+  FORM_SUBMITTED: "Form submitted, our team will get in touch shortly",
 };
 
 module.exports = {
