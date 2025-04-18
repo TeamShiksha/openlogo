@@ -58,7 +58,6 @@ function SignUp({ toggleForm }) {
     if (success) {
       setFormValues(SIGNUP.initialValues);
       setIsSubmit(true);
-      toggleForm();
     }
   };
 
@@ -71,10 +70,8 @@ function SignUp({ toggleForm }) {
         onSubmit={handleSubmit}
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
-        <div
-          className={`${styles["error-container"]} ${errorMsg ? styles["has-error"] : ""}`}
-        >
-          <p className={styles["input-error"]}>{errorMsg}</p>
+        <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
+          <p className="input-error">{errorMsg}</p>
         </div>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => (

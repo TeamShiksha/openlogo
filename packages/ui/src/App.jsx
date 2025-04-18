@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import AdminDashboard from "./page/admin/Admin";
@@ -20,7 +21,7 @@ function App() {
   return (
     <div className="app-container">
       <ScrollManager />
-        <Header openAuthModal={openCloseAuthModal} />
+      <Header openAuthModal={openCloseAuthModal} />
       <Routes>
         <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />

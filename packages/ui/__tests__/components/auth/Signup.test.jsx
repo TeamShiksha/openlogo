@@ -1,17 +1,11 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  renderHook,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
 import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
-import { useApi } from "../../../src/hooks/useApi";
+import * as apimodule from "../../../src/hooks/useApi";
 
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
@@ -83,11 +77,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
     fireEvent.change(emailInput, { target: { value: "xyz@example.com" } });
@@ -96,7 +90,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       target: { value: "Password@123" },
     });
 
-    fireEvent.click(signInButton);
+    fireEvent.click(signUpButton);
 
     await waitFor(() => {
       expect(nameInput.value).toBe(SIGNUP.initialValues.name);
@@ -120,51 +114,33 @@ describe("SignUpForm UI and Functionality Tests", () => {
     );
     expect(confirmPasswordError).not.toBeInTheDocument();
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
     expect(document.activeElement).toBe(document.body);
   });
   it("connectivity test passed", async () => {
-    const toggleFormMock = vi.fn();
-    render(<SignUpForm toggleForm={toggleFormMock} />);
-
-    const mockFormvalues = {
-      name: "test",
-      email: "test@gmail.com",
-      password: "Test@1234",
-      confirmPassword: "Test@1234",
-    };
+    const makeRequestMock = vi.fn().mockResolvedValue(true);
+    vi.spyOn(apimodule, "useApi").mockReturnValue({
+      makeRequest: makeRequestMock,
+    });
+    render(<SignUpForm toggleForm={vi.fn()} />);
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "Test" } });
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
 
-    expect(signInButton).not.toBeDisabled();
-    fireEvent.click(signInButton);
-
-    const { result } = renderHook(() =>
-      useApi({
-        url: `auth/signup`,
-        method: "post",
-        data: mockFormvalues,
-      })
-    );
-
-    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
-      return true;
-    });
-
-    const response = await result.current.makeRequest();
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
 
     await waitFor(() => {
       expect(nameInput.value).toBe(SIGNUP.initialValues.name);
@@ -175,50 +151,36 @@ describe("SignUpForm UI and Functionality Tests", () => {
       );
     });
 
-    expect(response).toBe(true);
-    expect(toggleFormMock).toHaveBeenCalled();
-    expect(signInButton).toBeDisabled();
+    await waitFor(() => {
+      expect(makeRequestMock).toHaveBeenCalled();
+    });
+    expect(signUpButton).toBeDisabled();
   });
   it("connectivity test failed", async () => {
+    const makeRequestMock = vi.fn().mockResolvedValue(false);
+    vi.spyOn(apimodule, "useApi").mockReturnValue({
+      makeRequest: makeRequestMock,
+    });
+
     render(<SignUpForm toggleForm={vi.fn()} />);
-    const mockFormvalues = {
-      name: "test",
-      email: "test@gmail.com",
-      password: "Test@1234",
-      confirmPassword: "Test@1234",
-    };
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "Test" } });
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
 
-    expect(signInButton).not.toBeDisabled();
-    fireEvent.click(signInButton);
-
-    const { result } = renderHook(() =>
-      useApi({
-        url: `auth/signup`,
-        method: "post",
-        data: mockFormvalues,
-      })
-    );
-
-    vi.spyOn(result.current, "makeRequest").mockImplementation(async () => {
-      return false;
-    });
-
-    const response = await result.current.makeRequest();
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
 
     await waitFor(() => {
       expect(nameInput.value).toBe(SIGNUP.initialValues.name);
@@ -229,7 +191,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
       );
     });
 
-    expect(response).toBe(false);
-    expect(signInButton).toBeDisabled();
+    await waitFor(() => {
+      expect(makeRequestMock).toHaveBeenCalled();
+    });
+    expect(signUpButton).toBeDisabled();
   });
 });
