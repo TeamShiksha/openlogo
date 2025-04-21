@@ -1,5 +1,5 @@
 const { ContactUsRepository } = require("../repositories");
-
+const { StatusTypes } = require("../utils/constants");
 class ContactUsService {
   constructor() {
     this.contactUsRepository = new ContactUsRepository();
@@ -13,7 +13,7 @@ class ContactUsService {
   async formExists(email) {
     const formQuery = await this.contactUsRepository.findByEmailAndStatus(
       email,
-      true
+      StatusTypes.PENDING
     );
     return !!formQuery;
   }
