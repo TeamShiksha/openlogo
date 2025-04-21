@@ -6,6 +6,13 @@ import {
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
 
+const mockedMakeRequest = vi.fn();
+vi.mock("../../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    makeRequest: mockedMakeRequest,
+  }),
+}));
+
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
     render(<SignUpForm toggleForm={vi.fn()} />);
@@ -76,11 +83,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signInButton = screen.getByRole("button", {
+    const signUpButton = screen.getByRole("button", {
       name: SIGNUP.submitButton,
     });
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
     fireEvent.change(emailInput, { target: { value: "xyz@example.com" } });
@@ -89,7 +96,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       target: { value: "Password@123" },
     });
 
-    fireEvent.click(signInButton);
+    fireEvent.click(signUpButton);
 
     await waitFor(() => {
       expect(nameInput.value).toBe(SIGNUP.initialValues.name);
@@ -113,7 +120,79 @@ describe("SignUpForm UI and Functionality Tests", () => {
     );
     expect(confirmPasswordError).not.toBeInTheDocument();
 
-    expect(signInButton).toBeDisabled();
+    expect(signUpButton).toBeDisabled();
     expect(document.activeElement).toBe(document.body);
+  });
+  it("connectivity test passed", async () => {
+    mockedMakeRequest.mockResolvedValue(true);
+    render(<SignUpForm toggleForm={vi.fn()} />);
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const signUpButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    expect(signUpButton).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
+
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
+
+    await waitFor(() => {
+      expect(nameInput.value).toBe(SIGNUP.initialValues.name);
+      expect(emailInput.value).toBe(SIGNUP.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNUP.initialValues.password);
+      expect(confirmPasswordInput.value).toBe(
+        SIGNUP.initialValues.confirmPassword
+      );
+    });
+
+    await waitFor(() => {
+      expect(mockedMakeRequest).toHaveBeenCalled();
+    });
+    expect(signUpButton).toBeDisabled();
+  });
+  it("connectivity test failed", async () => {
+    mockedMakeRequest.mockResolvedValue(false);
+    render(<SignUpForm toggleForm={vi.fn()} />);
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const signUpButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    expect(signUpButton).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
+
+    expect(signUpButton).not.toBeDisabled();
+    fireEvent.click(signUpButton);
+
+    await waitFor(() => {
+      expect(nameInput.value).toBe(SIGNUP.initialValues.name);
+      expect(emailInput.value).toBe(SIGNUP.initialValues.email);
+      expect(passwordInput.value).toBe(SIGNUP.initialValues.password);
+      expect(confirmPasswordInput.value).toBe(
+        SIGNUP.initialValues.confirmPassword
+      );
+    });
+
+    await waitFor(() => {
+      expect(mockedMakeRequest).toHaveBeenCalled();
+    });
+    expect(signUpButton).toBeDisabled();
   });
 });
