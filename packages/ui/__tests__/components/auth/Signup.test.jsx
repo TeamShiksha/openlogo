@@ -5,7 +5,13 @@ import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
-import * as apimodule from "../../../src/hooks/useApi";
+
+const mockedMakeRequest = vi.fn();
+vi.mock("../../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    makeRequest: mockedMakeRequest,
+  }),
+}));
 
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
@@ -118,10 +124,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     expect(document.activeElement).toBe(document.body);
   });
   it("connectivity test passed", async () => {
-    const makeRequestMock = vi.fn().mockResolvedValue(true);
-    vi.spyOn(apimodule, "useApi").mockReturnValue({
-      makeRequest: makeRequestMock,
-    });
+    mockedMakeRequest.mockResolvedValue(true);
     render(<SignUpForm toggleForm={vi.fn()} />);
 
     const nameInput = screen.getByLabelText("Name");
@@ -152,16 +155,12 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
 
     await waitFor(() => {
-      expect(makeRequestMock).toHaveBeenCalled();
+      expect(mockedMakeRequest).toHaveBeenCalled();
     });
     expect(signUpButton).toBeDisabled();
   });
   it("connectivity test failed", async () => {
-    const makeRequestMock = vi.fn().mockResolvedValue(false);
-    vi.spyOn(apimodule, "useApi").mockReturnValue({
-      makeRequest: makeRequestMock,
-    });
-
+    mockedMakeRequest.mockResolvedValue(false);
     render(<SignUpForm toggleForm={vi.fn()} />);
 
     const nameInput = screen.getByLabelText("Name");
@@ -192,7 +191,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
 
     await waitFor(() => {
-      expect(makeRequestMock).toHaveBeenCalled();
+      expect(mockedMakeRequest).toHaveBeenCalled();
     });
     expect(signUpButton).toBeDisabled();
   });
