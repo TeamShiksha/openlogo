@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -9,15 +9,19 @@ import {
   CROSS,
   BUTTON_TEXT,
   BRANDING,
+  LOGGEDIN_ITEMS,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
+import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const { isAuthenticated } = useContext(AuthContext);
+  const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,7 +54,7 @@ const Header = ({ openAuthModal }) => {
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>
         <div className={styles["nav-bar"]}>
-          {HEADER_ITEMS.map((item) => (
+          {NAVBAR_ITEMS.map((item) => (
             <Link
               key={item.name}
               className={styles.nav}

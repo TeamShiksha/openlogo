@@ -122,6 +122,40 @@ export const HEADER_ITEMS = [
     url: "/#about",
   },
 ];
+
+export const LOGGEDIN_ITEMS = [
+  {
+    name: "home",
+    title: "Home",
+    url: "/",
+  },
+  {
+    name: "dashboard",
+    title: "Dashboard",
+    url: "/dashboard",
+  },
+  {
+    name: "docs",
+    title: "Docs",
+    url: "/docs",
+  },
+  {
+    name: "features",
+    title: "Features",
+    url: "/#features",
+  },
+  {
+    name: "pricing",
+    title: "Pricing",
+    url: "/#pricing",
+  },
+  {
+    name: "about",
+    title: "About",
+    url: "/#about",
+  },
+];
+
 export const FOOTER_ITEMS = [
   {
     name: "about",

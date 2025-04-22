@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { AuthContext } from "../../src/contexts/Contexts";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -13,11 +14,18 @@ import {
 
 const openCloseAuthModal = vi.fn();
 
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+});
+
 describe("Header component", () => {
-  it("Render header branding and naviagte to home on click", () => {
+  it("Render header branding and navigate to home on click", () => {
+    const authContext = mockAuthContext(true);
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -30,9 +38,12 @@ describe("Header component", () => {
   });
 
   it("Render all header navigations", () => {
+    const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -43,10 +54,13 @@ describe("Header component", () => {
   });
 
   it("Header links should be clickable and navigate", () => {
+    const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
-        <Home openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+          <Home openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -65,11 +79,14 @@ describe("Header component", () => {
   });
 
   it("Hamburger visible before and after screen width change", () => {
+    const authContext = mockAuthContext(false);
     window.innerWidth = 1200;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -82,7 +99,9 @@ describe("Header component", () => {
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -93,11 +112,14 @@ describe("Header component", () => {
   });
 
   it("Mobile header toggle icon", () => {
+    const authContext = mockAuthContext(false);
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -113,11 +135,14 @@ describe("Header component", () => {
   });
 
   it("Mobile header auto close if width > 1024", () => {
+    const authContext = mockAuthContext(false);
     window.innerWidth = 700;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -134,9 +159,12 @@ describe("Header component", () => {
   });
 
   it("Open and close authModal", () => {
+    const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <Header openAuthModal={openCloseAuthModal} />
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 

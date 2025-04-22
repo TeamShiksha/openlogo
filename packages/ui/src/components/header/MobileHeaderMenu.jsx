@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { HEADER_ITEMS } from "../../utils/Constants";
+import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
 import { handleNavigation } from "../../utils/Helpers";
+import { AuthContext } from "../../contexts/Contexts";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
+  const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,7 +29,7 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   return (
     <div data-testid="mobile-menu" className={styles["mobile-header"]}>
       <div className={styles.navbar}>
-        {HEADER_ITEMS.map((item) => (
+        {NAVBAR_ITEMS.map((item) => (
           <Link
             key={item.name}
             className={styles.nav}
