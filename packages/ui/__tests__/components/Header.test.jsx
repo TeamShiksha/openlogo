@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContext } from "../../src/contexts/Contexts";
+import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -16,6 +16,12 @@ const openCloseAuthModal = vi.fn();
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
+});
+
+const mockUserContext = (userData, loading) => ({
+  userData,
+  loading,
+  fetchUserData: vi.fn(),
 });
 
 describe("Header component", () => {
@@ -171,5 +177,30 @@ describe("Header component", () => {
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
     expect(openCloseAuthModal).toHaveBeenCalled();
+  });
+
+  it("calls logout function when sign out button is clicked", () => {
+    const logoutMock = vi.fn();
+    const authContext = {
+      isAuthenticated: true,
+      logout: logoutMock,
+    };
+
+    const userContext = mockUserContext({ role: "USER" }, false);
+
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const signOutButton = screen.getByText(BUTTON_TEXT.signOut);
+    fireEvent.click(signOutButton);
+
+    expect(logoutMock).toHaveBeenCalled();
   });
 });

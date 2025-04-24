@@ -368,6 +368,7 @@ export const BUTTON_TEXT = {
   documentation: "Documentation",
   signUp: "Sign Up",
   signIn: "Sign In",
+  signOut: "Sign Out",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
