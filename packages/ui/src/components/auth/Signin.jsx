@@ -66,11 +66,8 @@ const SignIn = ({ toggleForm, onClose }) => {
 
       setIsSubmit(false);
       setFocusedField(null);
-
-      submitEvent.target.querySelector("input").focus();
     }
   };
-
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
