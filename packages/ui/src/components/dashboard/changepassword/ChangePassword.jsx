@@ -42,7 +42,7 @@ function ChangePassword() {
       <Button
         type="submit"
         variant="primary"
-        className={styles.changePasswordButton}
+        className={styles["change-password-button"]}
       >
         Change password
       </Button>

@@ -1,3 +1,5 @@
+import { useContext, useEffect } from "react";
+import { UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
 import Usage from "../../components/dashboard/usage/Usage";
@@ -17,12 +19,28 @@ const TABLE_TEST_DATA = [
 ];
 
 function Dashboard() {
+  const { userData, loading, fetchUserData } = useContext(UserContext);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  if (loading) {
+    return <div>loading..</div>;
+  }
+
   return (
-    <div className={styles.dashboardContainer} data-testid="testid-dashboard">
-      <div className={styles.dashboardContentContainer}>
-        <section className={styles.dashboardContentSection}>
+    <div
+      className={styles["dashboard-container"]}
+      data-testid="testid-dashboard"
+    >
+      <div className={styles["dashboard-content-container"]}>
+        <section className={styles["dashboard-content-section"]}>
           <CardWrapper title="Usage">
-            <Usage />
+            <Usage
+              usageCount={userData?.subscription.usage_count || 0}
+              usageLimit={userData?.subscription.usage_limit || 0}
+            />
           </CardWrapper>
           <CardWrapper title="Generate New API Key">
             <ApiKeyForm />
@@ -30,7 +48,7 @@ function Dashboard() {
           <CardWrapper
             title="Plan"
             status="Active"
-            statusClass={styles.activeStatus}
+            statusClass={styles["active-status"]}
           >
             <CurrentPlan />
           </CardWrapper>
@@ -45,10 +63,13 @@ function Dashboard() {
         />
       </div>
 
-      <div className={styles.dashboardContentContainer}>
-        <section className={styles.dashboardContentSection}>
+      <div className={styles["dashboard-content-container"]}>
+        <section className={styles["dashboard-content-section"]}>
           <CardWrapper title="User Info">
-            <UserInfo />
+            <UserInfo
+              name={userData?.name || ""}
+              email={userData?.email || ""}
+            />
           </CardWrapper>
           <CardWrapper title="Change Password">
             <ChangePassword />
