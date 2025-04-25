@@ -16,10 +16,12 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const { makeRequest, errorMsg } = useApi({
     method: "post",
-    url: `/auth/signin`,
+    url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
+
     data: formData,
   });
 
@@ -55,11 +57,19 @@ const SignIn = ({ toggleForm, onClose }) => {
     setIsSubmit(true);
     const success = await makeRequest();
     if (success) {
-      setFormData(SIGNIN.initialValues);
-      setIsAuthenticated(true);
+      if (isForgotPassword) {
+        alert("Password reset lint sent to email");
+        setIsForgotPassword(false);
+      } else {
+        setFormData(SIGNIN.initialValues);
+        setIsAuthenticated(true);
+        onClose();
+      }
+
       setIsSubmit(false);
       setFocusedField(null);
-      onClose();
+
+      submitEvent.target.querySelector("input").focus();
       navigate("/dashboard");
     }
   };
@@ -73,39 +83,65 @@ const SignIn = ({ toggleForm, onClose }) => {
           <p className="input-error">{errorMsg}</p>
         </div>
         <div className={styles["form-width"]}>
-          {SIGNIN["fields"].map((field) => (
-            <CustomInput
-              error={formErrors[field.name]}
-              key={field.name}
-              type={field.type}
-              name={field.name}
-              label={field.label}
-              value={formData[field.name]}
-              onChange={handleChange}
-              onFocus={() => setFocusedField(field.name)}
-              onBlur={() => setFocusedField(null)}
-            />
-          ))}
+          {SIGNIN["fields"]
+            .filter((field) => !isForgotPassword || field.name !== "password")
+            .map((field) => (
+              <CustomInput
+                error={formErrors[field.name]}
+                key={field.name}
+                type={field.type}
+                name={field.name}
+                label={field.label}
+                value={formData[field.name]}
+                onChange={handleChange}
+                onFocus={() => setFocusedField(field.name)}
+                onBlur={() => setFocusedField(null)}
+              />
+            ))}
         </div>
-        <p className={styles["forgot-password"]}>
-          {BUTTON_TEXT.forgotPassword}
-        </p>
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={!isFormValid && isSubmit}
-        >
-          {BUTTON_TEXT.signIn}
-        </Button>
+        {isForgotPassword ? (
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!isFormValid && isSubmit}
+          >
+            Submit
+          </Button>
+        ) : (
+          <>
+            <p
+              className={styles["forgot-password"]}
+              onClick={() => setIsForgotPassword(true)} // Switch to forgot password
+            >
+              {BUTTON_TEXT.forgotPassword}
+            </p>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={!isFormValid && isSubmit}
+            >
+              {BUTTON_TEXT.signIn}
+            </Button>
+          </>
+        )}
       </form>
       <hr className={styles.separator} />
-      <p onClick={toggleForm} className={styles.switch}>
-        {SIGNIN.footerText}
-      </p>
+      {isForgotPassword && (
+        <p
+          onClick={() => setIsForgotPassword(false)} // Switch back to sign-in
+          className={styles.switch}
+        >
+          Back to Sign In
+        </p>
+      )}
+      {!isForgotPassword && (
+        <p onClick={toggleForm} className={styles.switch}>
+          {SIGNIN.footerText}
+        </p>
+      )}
     </>
   );
 };
-
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func,
