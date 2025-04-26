@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { expect, it, describe, vi } from "vitest";
 import { UserContext } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
+import { BUTTON_TEXT } from "../../../src/utils/Constants";
 
 const mockUserData = {
   name: "John Doe",
@@ -32,24 +33,24 @@ describe("Dashboard", () => {
 
   it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(mockUserData, false);
-    const doc = render(
+    render(
       <UserContext.Provider value={userContext}>
         <Dashboard />
       </UserContext.Provider>
     );
 
     await waitFor(() => {
-      expect(doc.getByTestId("testid-dashboard")).toBeInTheDocument();
-      expect(doc.getByText("Usage")).toBeInTheDocument();
-      expect(doc.getByText("Generate New API Key")).toBeInTheDocument();
-      expect(doc.getByText("Plan")).toBeInTheDocument();
-      expect(doc.getByText("User Info")).toBeInTheDocument();
-      expect(doc.getByText("Change Password")).toBeInTheDocument();
-      expect(doc.getByText("Setting")).toBeInTheDocument();
+      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+      expect(screen.getByText("Usage")).toBeInTheDocument();
+      expect(screen.getByText("Generate New API Key")).toBeInTheDocument();
+      expect(screen.getByText("Plan")).toBeInTheDocument();
+      expect(screen.getByText("User Info")).toBeInTheDocument();
+      expect(screen.getByText("Change Password")).toBeInTheDocument();
+      expect(screen.getByText("Setting")).toBeInTheDocument();
       // Checking table headers
-      expect(doc.getByText("Description")).toBeInTheDocument();
-      expect(doc.getByText("Created")).toBeInTheDocument();
-      expect(doc.getByText("Action")).toBeInTheDocument();
+      expect(screen.getByText("Description")).toBeInTheDocument();
+      expect(screen.getByText("Created")).toBeInTheDocument();
+      expect(screen.getByText("Action")).toBeInTheDocument();
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();
@@ -57,24 +58,42 @@ describe("Dashboard", () => {
 
   it("should render dashboard with default values when user data is null and loading is false", async () => {
     const userContext = mockUserContext(null, false);
-    const doc = render(
+    render(
       <UserContext.Provider value={userContext}>
         <Dashboard />
       </UserContext.Provider>
     );
 
     await waitFor(() => {
-      expect(doc.getByTestId("testid-dashboard")).toBeInTheDocument();
-      expect(doc.getByText("Usage")).toBeInTheDocument();
-      expect(doc.getByText("Generate New API Key")).toBeInTheDocument();
-      expect(doc.getByText("Plan")).toBeInTheDocument();
-      expect(doc.getByText("User Info")).toBeInTheDocument();
-      expect(doc.getByText("Change Password")).toBeInTheDocument();
-      expect(doc.getByText("Setting")).toBeInTheDocument();
+      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+      expect(screen.getByText("Usage")).toBeInTheDocument();
+      expect(screen.getByText("Generate New API Key")).toBeInTheDocument();
+      expect(screen.getByText("Plan")).toBeInTheDocument();
+      expect(screen.getByText("User Info")).toBeInTheDocument();
+      expect(screen.getByText("Change Password")).toBeInTheDocument();
+      expect(screen.getByText("Setting")).toBeInTheDocument();
       // Checking table headers
-      expect(doc.getByText("Description")).toBeInTheDocument();
-      expect(doc.getByText("Created")).toBeInTheDocument();
-      expect(doc.getByText("Action")).toBeInTheDocument();
+      expect(screen.getByText("Description")).toBeInTheDocument();
+      expect(screen.getByText("Created")).toBeInTheDocument();
+      expect(screen.getByText("Action")).toBeInTheDocument();
+    });
+
+    expect(userContext.fetchUserData).toHaveBeenCalled();
+  });
+
+  it("renders api key table & is delete button clickable", async () => {
+    const userContext = mockUserContext(null, false);
+    render(
+      <UserContext.Provider value={userContext}>
+        <Dashboard />
+      </UserContext.Provider>
+    );
+
+    await waitFor(() => {
+      const deleteApiKeyBtns = screen.getAllByRole("button", {
+        name: BUTTON_TEXT.delete,
+      });
+      deleteApiKeyBtns[0].click();
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();
