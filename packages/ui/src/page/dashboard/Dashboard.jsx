@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
@@ -9,21 +9,28 @@ import styles from "./Dashboard.module.css";
 import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
+import { formatDate } from "../../utils/Helpers.js";
 
 const TABLE_HEADER_DATA = ["Description", "Created", "Action"];
 const EMPTY_MESSAGE =
   "Your api keys will be visible here, click on generate key to add new api key";
-const TABLE_TEST_DATA = [
-  ["User table api key", "12th Feb 2024"],
-  ["Agent requirements data", "12th Feb 2028"],
-];
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
+  const apiKeyTableData = useMemo(() => {
+    let data = [];
+    if (userData) {
+      data = userData.keys.map(({ key_description, updated_at }) => [
+        key_description,
+        formatDate(updated_at),
+      ]);
+    }
+    return data;
+  }, [userData]);
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   if (loading) {
     return <div>loading..</div>;
@@ -57,7 +64,7 @@ function Dashboard() {
       <div className={styles["table-wrapper"]}>
         <Table
           headers={TABLE_HEADER_DATA}
-          rows={TABLE_TEST_DATA}
+          rows={apiKeyTableData}
           emptyMessage={EMPTY_MESSAGE}
           onDelete={() => {}}
         />

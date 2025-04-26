@@ -1,8 +1,15 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { expect, it, describe, vi } from "vitest";
 import { UserContext } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
 import { BUTTON_TEXT } from "../../../src/utils/Constants";
+import { formatDate } from "../../../src/utils/Helpers";
 
 const mockUserData = {
   name: "John Doe",
@@ -11,6 +18,16 @@ const mockUserData = {
     usage_count: 42,
     usage_limit: 100,
   },
+  keys: [
+    {
+      key_description: "Testing Environment Key",
+      updated_at: "2023-10-30T11:20:00.000Z",
+    },
+    {
+      key_description: "Analytics Service Key",
+      updated_at: "2023-11-10T13:10:00.000Z",
+    },
+  ],
 };
 const mockUserContext = (userData, loading) => ({
   userData,
@@ -47,10 +64,22 @@ describe("Dashboard", () => {
       expect(screen.getByText("User Info")).toBeInTheDocument();
       expect(screen.getByText("Change Password")).toBeInTheDocument();
       expect(screen.getByText("Setting")).toBeInTheDocument();
-      // Checking table headers
+      // api key table headers
       expect(screen.getByText("Description")).toBeInTheDocument();
       expect(screen.getByText("Created")).toBeInTheDocument();
       expect(screen.getByText("Action")).toBeInTheDocument();
+      // api key table contents
+      mockUserData.keys.forEach(({ key_description, updated_at }) => {
+        const row = screen.getByText(key_description).closest("tr");
+        expect(within(row).getByText(key_description)).toBeInTheDocument();
+        expect(
+          within(row).getByText(formatDate(updated_at))
+        ).toBeInTheDocument();
+        const deleteBtn = within(row).getByRole("button", {
+          name: BUTTON_TEXT.delete,
+        });
+        fireEvent.click(deleteBtn);
+      });
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();
@@ -72,28 +101,15 @@ describe("Dashboard", () => {
       expect(screen.getByText("User Info")).toBeInTheDocument();
       expect(screen.getByText("Change Password")).toBeInTheDocument();
       expect(screen.getByText("Setting")).toBeInTheDocument();
-      // Checking table headers
+      // Checking table headers & empty body message
       expect(screen.getByText("Description")).toBeInTheDocument();
       expect(screen.getByText("Created")).toBeInTheDocument();
       expect(screen.getByText("Action")).toBeInTheDocument();
-    });
-
-    expect(userContext.fetchUserData).toHaveBeenCalled();
-  });
-
-  it("renders api key table & is delete button clickable", async () => {
-    const userContext = mockUserContext(null, false);
-    render(
-      <UserContext.Provider value={userContext}>
-        <Dashboard />
-      </UserContext.Provider>
-    );
-
-    await waitFor(() => {
-      const deleteApiKeyBtns = screen.getAllByRole("button", {
-        name: BUTTON_TEXT.delete,
-      });
-      deleteApiKeyBtns[0].click();
+      expect(
+        screen.getByText(
+          "Your api keys will be visible here, click on generate key to add new api key"
+        )
+      ).toBeInTheDocument();
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();
