@@ -592,3 +592,9 @@ export const DOCUMENTATION = {
   baseStageUrl: "Base URL: https://api-stage-openlogo.fyi/api",
   baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
 };
+
+export const API_KEY_TABLE = {
+  headers: ["Description", "Created", "Action"],
+  emptyMessage:
+    "Your api keys will be visible here, click on generate key to add new api key",
+};

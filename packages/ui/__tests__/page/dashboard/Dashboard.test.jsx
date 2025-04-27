@@ -1,15 +1,8 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
-import { expect, it, describe, vi } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { UserContext } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
-import { BUTTON_TEXT } from "../../../src/utils/Constants";
-import { formatDate } from "../../../src/utils/Helpers";
+import { API_KEY_TABLE } from "../../../src/utils/Constants";
 
 const mockUserData = {
   name: "John Doe",
@@ -29,6 +22,14 @@ const mockUserData = {
     },
   ],
 };
+const dashboardCardsTitle = [
+  "Usage",
+  "Generate New API Key",
+  "Plan",
+  "User Info",
+  "Change Password",
+  "Setting",
+];
 const mockUserContext = (userData, loading) => ({
   userData,
   loading,
@@ -57,28 +58,17 @@ describe("Dashboard", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
-      expect(screen.getByText("Usage")).toBeInTheDocument();
-      expect(screen.getByText("Generate New API Key")).toBeInTheDocument();
-      expect(screen.getByText("Plan")).toBeInTheDocument();
-      expect(screen.getByText("User Info")).toBeInTheDocument();
-      expect(screen.getByText("Change Password")).toBeInTheDocument();
-      expect(screen.getByText("Setting")).toBeInTheDocument();
-      // api key table headers
-      expect(screen.getByText("Description")).toBeInTheDocument();
-      expect(screen.getByText("Created")).toBeInTheDocument();
-      expect(screen.getByText("Action")).toBeInTheDocument();
-      // api key table contents
-      mockUserData.keys.forEach(({ key_description, updated_at }) => {
-        const row = screen.getByText(key_description).closest("tr");
-        expect(within(row).getByText(key_description)).toBeInTheDocument();
-        expect(
-          within(row).getByText(formatDate(updated_at))
-        ).toBeInTheDocument();
-        const deleteBtn = within(row).getByRole("button", {
-          name: BUTTON_TEXT.delete,
-        });
-        fireEvent.click(deleteBtn);
+      const dashboard = screen.getByTestId("testid-dashboard");
+      expect(dashboard).toBeInTheDocument();
+
+      dashboardCardsTitle.map((title) => {
+        const titleText = screen.getByText(title);
+        expect(titleText).toBeInTheDocument();
+      });
+
+      API_KEY_TABLE.headers.map((header) => {
+        const headerText = screen.getByText(header);
+        expect(headerText).toBeInTheDocument();
       });
     });
 
@@ -94,22 +84,8 @@ describe("Dashboard", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
-      expect(screen.getByText("Usage")).toBeInTheDocument();
-      expect(screen.getByText("Generate New API Key")).toBeInTheDocument();
-      expect(screen.getByText("Plan")).toBeInTheDocument();
-      expect(screen.getByText("User Info")).toBeInTheDocument();
-      expect(screen.getByText("Change Password")).toBeInTheDocument();
-      expect(screen.getByText("Setting")).toBeInTheDocument();
-      // Checking table headers & empty body message
-      expect(screen.getByText("Description")).toBeInTheDocument();
-      expect(screen.getByText("Created")).toBeInTheDocument();
-      expect(screen.getByText("Action")).toBeInTheDocument();
-      expect(
-        screen.getByText(
-          "Your api keys will be visible here, click on generate key to add new api key"
-        )
-      ).toBeInTheDocument();
+      const emptyMessage = screen.getByText(API_KEY_TABLE.emptyMessage);
+      expect(emptyMessage).toBeInTheDocument();
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();

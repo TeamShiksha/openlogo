@@ -10,10 +10,7 @@ import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx"
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
-
-const TABLE_HEADER_DATA = ["Description", "Created", "Action"];
-const EMPTY_MESSAGE =
-  "Your api keys will be visible here, click on generate key to add new api key";
+import { API_KEY_TABLE } from "../../utils/Constants.js";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -63,9 +60,9 @@ function Dashboard() {
       </div>
       <div className={styles["table-wrapper"]}>
         <Table
-          headers={TABLE_HEADER_DATA}
+          headers={API_KEY_TABLE.headers}
           rows={apiKeyTableData}
-          emptyMessage={EMPTY_MESSAGE}
+          emptyMessage={API_KEY_TABLE.emptyMessage}
           onDelete={() => {}}
         />
       </div>
