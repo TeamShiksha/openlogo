@@ -145,4 +145,89 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     expect(screen.getByText(errorMsg)).toBeInTheDocument();
   });
+
+  //tests for forgot password functionality
+
+  it("switches to forgot password mode when forgot password link is clicked", () => {
+    const authContext = mockAuthContext(false);
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <SignIn toggleForm={vi.fn()} />
+      </AuthContext.Provider>
+    );
+
+    const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
+    fireEvent.click(forgotPasswordLink);
+
+    expect(screen.queryByLabelText("Password")).not.toBeInTheDocument();
+
+    const submitButton = screen.getByRole("button", { name: "Submit" });
+    expect(submitButton).toBeInTheDocument();
+
+    const backToSignInLink = screen.getByText("Back to Sign In");
+    expect(backToSignInLink).toBeInTheDocument();
+  });
+
+  it("switches back to sign in mode when 'Back to Sign In' is clicked", async () => {
+    const authContext = mockAuthContext(false);
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <SignIn toggleForm={vi.fn()} />
+      </AuthContext.Provider>
+    );
+
+    const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
+    fireEvent.click(forgotPasswordLink);
+
+    const backToSignInLink = screen.getByText("Back to Sign In");
+    fireEvent.click(backToSignInLink);
+
+    const passwordField = screen.getByLabelText("Password");
+    expect(passwordField).toBeInTheDocument();
+
+    const signInButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.signIn,
+    });
+    expect(signInButton).toBeInTheDocument();
+  });
+
+  it("validates email in forgot password mode", async () => {
+    const authContext = mockAuthContext(false);
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <SignIn toggleForm={vi.fn()} />
+      </AuthContext.Provider>
+    );
+    const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
+    fireEvent.click(forgotPasswordLink);
+    const emailInput = screen.getByLabelText("Email");
+    fireEvent.focus(emailInput);
+    await waitFor(() => {
+      const emailError = screen.getByText("Email is required");
+      expect(emailError).toBeInTheDocument();
+    });
+    fireEvent.change(emailInput, { target: { value: "invalid-email" } });
+  });
+
+  it("validates forgot password form prevents submission with invalid email", async () => {
+    const authContext = mockAuthContext(false);
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <SignIn toggleForm={vi.fn()} />
+      </AuthContext.Provider>
+    );
+
+    const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
+    fireEvent.click(forgotPasswordLink);
+
+    const emailInput = screen.getByLabelText("Email");
+    fireEvent.change(emailInput, { target: { value: "" } });
+
+    const submitButton = screen.getByRole("button", { name: "Submit" });
+    fireEvent.click(submitButton);
+  });
 });
