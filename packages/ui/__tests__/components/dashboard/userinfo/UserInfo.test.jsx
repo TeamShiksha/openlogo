@@ -1,21 +1,19 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
-
-const mockUserInfoProps = {
-  name: "Jane Doe",
-  email: "janedoe@gmail.com",
-};
+import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
 
 describe("UserInfo Component", () => {
   it("renders all form elements correctly", async () => {
-    render(<UserInfo {...mockUserInfoProps} />);
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
 
     const nameInput = screen.getByLabelText(/name/i);
-    expect(nameInput.value).toBe(mockUserInfoProps.name);
+    expect(nameInput.value).toBe(MOCK_USER_DATA.name);
 
     const emailInput = screen.getByLabelText(/email/i);
-    expect(emailInput.value).toBe(mockUserInfoProps.email);
+    expect(emailInput.value).toBe(MOCK_USER_DATA.email);
     expect(emailInput).toBeDisabled();
 
     const saveButton = screen.getByText("Save");
@@ -23,7 +21,9 @@ describe("UserInfo Component", () => {
   });
 
   it("update name input value", () => {
-    render(<UserInfo {...mockUserInfoProps} />);
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
 
     const nameInput = screen.getByLabelText(/name/i);
     fireEvent.change(nameInput, { target: { value: "New Name" } });
@@ -31,7 +31,9 @@ describe("UserInfo Component", () => {
   });
 
   it("show error if name is empty & removes error if name is valid on submit", async () => {
-    render(<UserInfo {...mockUserInfoProps} />);
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
 
     const nameInput = screen.getByLabelText(/name/i);
     fireEvent.change(nameInput, { target: { value: "" } });
@@ -54,7 +56,9 @@ describe("UserInfo Component", () => {
   });
 
   it("enable Save button when name is changed", () => {
-    render(<UserInfo {...mockUserInfoProps} />);
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
 
     const nameInput = screen.getByLabelText(/name/i);
     const saveButton = screen.getByText("Save");

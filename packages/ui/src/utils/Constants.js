@@ -598,3 +598,30 @@ export const API_KEY_TABLE = {
   emptyMessage:
     "Your api keys will be visible here, click on generate key to add new api key",
 };
+
+export const DASHBOARD_CARDS_TITLE = [
+  "Usage",
+  "Generate New API Key",
+  "Plan",
+  "User Info",
+  "Change Password",
+  "Setting",
+];
+export const MOCK_USER_DATA = {
+  name: "John Doe",
+  email: "john@example.com",
+  subscription: {
+    usage_count: 42,
+    usage_limit: 100,
+  },
+  keys: [
+    {
+      key_description: "Testing Environment Key",
+      updated_at: "2023-10-30T11:20:00.000Z",
+    },
+    {
+      key_description: "Analytics Service Key",
+      updated_at: "2023-11-10T13:10:00.000Z",
+    },
+  ],
+};
