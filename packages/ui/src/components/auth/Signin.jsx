@@ -56,7 +56,6 @@ const SignIn = ({ toggleForm, onClose }) => {
     const success = await makeRequest();
     if (success) {
       if (isForgotPassword) {
-        alert("Password reset lint sent to email");
         setIsForgotPassword(false);
       } else {
         setFormData(SIGNIN.initialValues);
@@ -105,7 +104,7 @@ const SignIn = ({ toggleForm, onClose }) => {
           <>
             <p
               className={styles["forgot-password"]}
-              onClick={() => setIsForgotPassword(true)} // Switch to forgot password
+              onClick={() => setIsForgotPassword(true)}
             >
               {BUTTON_TEXT.forgotPassword}
             </p>
