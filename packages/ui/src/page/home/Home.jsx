@@ -11,7 +11,7 @@ const Home = ({ openAuthModal }) => {
   return (
     <div className="container">
       <HeroSection openAuthModal={openAuthModal} />
-      <Demo />
+      <Demo openAuthModal={openAuthModal} />
       <Features />
       <Pricing openAuthModal={openAuthModal} />
       <About />

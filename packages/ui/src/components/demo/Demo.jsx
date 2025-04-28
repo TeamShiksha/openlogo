@@ -1,14 +1,36 @@
 import { useState } from "react";
-import { SVGS, COMPANIES } from "../../utils/Constants";
+import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./Demo.module.css";
+import Button from "../common/button/Button.jsx";
+import PropTypes from "prop-types";
+import axios from "axios";
 
-const Demo = () => {
+const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiResults, setApiResults] = useState([]);
 
-  const handleSearch = (searchEvent) => {
+  const handleSearch = async (searchEvent) => {
     searchEvent.preventDefault();
-    setShowResults(searchTerm.length > 0);
+
+    if (searchTerm.length > 0) {
+      setLoading(true);
+      setShowResults(false);
+
+      try {
+        const result = await axios.get(
+          `https://67dad12b35c87309f52e299a.mockapi.io/company?search=${searchTerm}`
+        );
+        const data = result.data;
+        setApiResults(data.slice(0, 3));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+        setShowResults(true);
+      }
+    }
   };
 
   const handleInputChange = (inputChangeEvent) => {
@@ -16,12 +38,9 @@ const Demo = () => {
     setSearchTerm(value);
     if (!value) {
       setShowResults(false);
+      setApiResults([]);
     }
   };
-
-  const filteredCompanies = COMPANIES.filter((company) =>
-    company.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-  );
 
   return (
     <div data-testid="demo" id="demo" className={styles["demo-container"]}>
@@ -47,18 +66,43 @@ const Demo = () => {
               <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
-          {!!filteredCompanies.length && showResults && (
-            <div className={`${styles["result-container"]}`}>
-              {filteredCompanies.map((company, index) => (
+
+          {loading && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              <div
+                data-testid="loading-dots"
+                className={styles["loading-dots"]}
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
+
+          {apiResults.length > 0 && showResults && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              {apiResults.map((company, index) => (
                 <div
                   key={company.id}
-                  className={`${styles["result-item"]}`}
+                  className={`${styles["result-item"]} ${styles["show"]}`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
                   <img src={company.logo} alt={`${company.name} Logo`} />
                   <span>{company.name}</span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {!loading && showResults && apiResults.length === 0 && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              <div className={styles["no-result"]}>
+                <p>{`Your search “${searchTerm}” did not match any logo.`}</p>
+                <Button onClick={openAuthModal} variant={"primary"}>
+                  {BUTTON_TEXT.requestLogo}
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -70,6 +114,10 @@ const Demo = () => {
       />
     </div>
   );
+};
+
+Demo.propTypes = {
+  openAuthModal: PropTypes.func.isRequired,
 };
 
 export default Demo;
