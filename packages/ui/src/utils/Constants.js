@@ -364,6 +364,8 @@ export const CROSS = {
 
 export const BUTTON_TEXT = {
   getStarted: "Get started",
+  gotoDashboard: "Go to Dashboard",
+  active: "Active",
   commingSoon: "Coming Soon",
   documentation: "Documentation",
   signUp: "Sign Up",
@@ -613,6 +615,7 @@ export const MOCK_USER_DATA = {
   subscription: {
     usage_count: 42,
     usage_limit: 100,
+    type: "HOBBY",
   },
   keys: [
     {

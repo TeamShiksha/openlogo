@@ -64,13 +64,15 @@ const Header = ({ openAuthModal }) => {
               {item.title}
             </Link>
           ))}
-          <Button
-            variant="primary"
-            className={styles.ml}
-            onClick={openAuthModal}
-          >
-            {BUTTON_TEXT.getStarted}
-          </Button>
+          {!isAuthenticated && (
+            <Button
+              variant="primary"
+              className={styles.ml}
+              onClick={openAuthModal}
+            >
+              {BUTTON_TEXT.getStarted}
+            </Button>
+          )}
         </div>
         {isMobile && (
           <button className={styles.hamburger} onClick={toggleMenu}>

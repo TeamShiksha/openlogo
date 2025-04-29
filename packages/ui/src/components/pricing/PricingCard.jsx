@@ -4,10 +4,21 @@ import Button from "../common/button/Button";
 import { BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./PricingCard.module.css";
 
-function PricingCard({ name, tagline, index, keypoints, openAuthModal }) {
-  const buttonText =
-    index === 1 ? BUTTON_TEXT.commingSoon : BUTTON_TEXT.getStarted;
-  const isDisabled = index === 1 ? true : false;
+function PricingCard({
+  name,
+  tagline,
+  index,
+  keypoints,
+  activePlan,
+  openAuthModal,
+}) {
+  const isPlanActive = activePlan === name;
+  const buttonText = isPlanActive
+    ? BUTTON_TEXT.active
+    : index === 1
+      ? BUTTON_TEXT.commingSoon
+      : BUTTON_TEXT.getStarted;
+  const isDisabled = isPlanActive || index === 1 ? true : false;
 
   return (
     <div className={styles.card}>
@@ -41,6 +52,7 @@ PricingCard.propTypes = {
   index: PropTypes.number.isRequired,
   tagline: PropTypes.string.isRequired,
   keypoints: PropTypes.arrayOf(PropTypes.string).isRequired,
+  activePlan: PropTypes.string,
   openAuthModal: PropTypes.func.isRequired,
 };
 

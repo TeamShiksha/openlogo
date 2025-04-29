@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContext } from "../../src/contexts/Contexts";
+import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -58,8 +58,10 @@ describe("Header component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
-          <Home openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={{ userData: null }}>
+            <Header openAuthModal={openCloseAuthModal} />
+            <Home openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -171,5 +173,19 @@ describe("Header component", () => {
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
     expect(openCloseAuthModal).toHaveBeenCalled();
+  });
+
+  it("Removes Get started button if user is logged in", () => {
+    const authContext = mockAuthContext(true);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const getStartedButtonText = screen.queryByText(BUTTON_TEXT.getStarted);
+    expect(getStartedButtonText).not.toBeInTheDocument();
   });
 });

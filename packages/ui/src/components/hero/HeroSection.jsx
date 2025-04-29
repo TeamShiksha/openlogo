@@ -3,7 +3,7 @@ import Button from "../common/button/Button";
 import { HERO_SECTION, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./HeroSection.module.css";
 
-const HeroSection = ({ openAuthModal }) => {
+const HeroSection = ({ onPrimaryButtonClick, isAuthenticated }) => {
   return (
     <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
@@ -22,10 +22,12 @@ const HeroSection = ({ openAuthModal }) => {
           <Button
             type="button"
             variant="primary"
-            onClick={openAuthModal}
+            onClick={onPrimaryButtonClick}
             className={styles["button-width"]}
           >
-            {BUTTON_TEXT.getStarted}
+            {isAuthenticated
+              ? BUTTON_TEXT.gotoDashboard
+              : BUTTON_TEXT.getStarted}
           </Button>
         </div>
       </div>
@@ -41,7 +43,8 @@ const HeroSection = ({ openAuthModal }) => {
 };
 
 HeroSection.propTypes = {
-  openAuthModal: PropTypes.func.isRequired,
+  onPrimaryButtonClick: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
 
 export default HeroSection;
