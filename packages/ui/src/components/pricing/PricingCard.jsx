@@ -13,12 +13,13 @@ function PricingCard({
   openAuthModal,
 }) {
   const isPlanActive = activePlan === name;
-  const buttonText = isPlanActive
-    ? BUTTON_TEXT.active
-    : index === 1
-      ? BUTTON_TEXT.commingSoon
-      : BUTTON_TEXT.getStarted;
-  const isDisabled = isPlanActive || index === 1 ? true : false;
+  let buttonText = BUTTON_TEXT.getStarted;
+  if (isPlanActive) {
+    buttonText = BUTTON_TEXT.active;
+  } else if (index === 1) {
+    buttonText = BUTTON_TEXT.commingSoon;
+  }
+  const isDisabled = isPlanActive || index === 1;
 
   return (
     <div className={styles.card}>
@@ -48,7 +49,6 @@ function PricingCard({
 
 PricingCard.propTypes = {
   name: PropTypes.string.isRequired,
-  pricing: PropTypes.number,
   index: PropTypes.number.isRequired,
   tagline: PropTypes.string.isRequired,
   keypoints: PropTypes.arrayOf(PropTypes.string).isRequired,
