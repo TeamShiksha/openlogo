@@ -6,6 +6,10 @@
   padding-bottom: 1rem;
 }
 
+.form-width {
+  width: 100%;
+}
+
 .text-area {
   width: 100%;
   height: 100px;
@@ -51,10 +55,20 @@
   margin-left: 3px;
   opacity: 0;
   max-height: 1px;
+  width: 100%;
   transition:
     opacity 0.2s ease-in-out 0.3s,
     max-height 0.2s ease-in-out,
     padding 0.2s ease-in-out;
+}
+
+.success-message {
+  color: var(--success);
+  opacity: 1;
+  max-height: 50px;
+  padding: 1px;
+  margin-bottom: 10px;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .has-error {
