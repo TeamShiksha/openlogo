@@ -29,6 +29,10 @@
   color: var(--black);
 }
 
+.logout-wrapper {
+  padding: 32px;
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
@@ -48,6 +52,14 @@
 
   .table-wrapper {
     padding: 1rem;
+  }
+
+  .logout-wrapper {
+    padding: 32px 48px;
+  }
+
+  .logout-btn {
+    width: 100%;
   }
 }
 
