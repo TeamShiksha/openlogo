@@ -27,7 +27,10 @@ function ChangePassword() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      className={styles["change-password-input-group"]}
+    >
       {PASSWORD_FIELDS.map((field) => (
         <CustomInput
           key={field.name}
@@ -39,11 +42,7 @@ function ChangePassword() {
           required
         />
       ))}
-      <Button
-        type="submit"
-        variant="primary"
-        className={styles.changePasswordButton}
-      >
+      <Button type="submit" variant="primary">
         Change password
       </Button>
     </form>

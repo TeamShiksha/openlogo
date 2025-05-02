@@ -1,4 +1,4 @@
-.currentPlan {
+.current-plan {
   color: rgb(17 24 39);
   font-size: var(--large-text);
   line-height: 28px;
@@ -7,7 +7,7 @@
   padding-top: 16px;
 }
 
-.currentPlanTagline {
+.current-plan-tagline {
   color: var(--description);
   font-size: var(--medium-text);
   line-height: 20px;
@@ -15,18 +15,7 @@
   margin-bottom: 20px;
 }
 
-.apikeyInput {
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: var(--bradius);
-  box-shadow: var(--shadow);
-  border: var(--border);
-  width: calc(100% - 24px);
-  max-width: 450px;
-}
-
-.upgradeButton {
+.upgrade-button {
   max-width: 100%;
   color: var(--black);
   background-color: var(--white);
