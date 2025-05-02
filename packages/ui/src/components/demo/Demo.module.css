@@ -33,7 +33,6 @@
   display: flex;
   align-items: center;
   position: relative;
-  max-height: 300px;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -54,6 +53,7 @@ form {
   justify-content: center;
   align-items: center;
   margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
   height: 2rem;
   gap: 0.4rem;
 }
@@ -100,7 +100,7 @@ form {
 }
 
 .search-box-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px var(--white) inset;
+  box-shadow: 0 0 0 1000px var(--white) inset;
   -webkit-text-fill-color: var(--input-color);
 }
 
@@ -146,11 +146,12 @@ form {
     opacity 0.3s ease-in-out,
     max-height 0.3s;
   margin-top: 0.5rem;
+  border-top: 1px solid #eaecf0;
 }
 
 .result-container.show {
   opacity: 1;
-  max-height: 160px;
+  max-height: 15rem;
   overflow-y: auto;
 }
 
@@ -213,7 +214,7 @@ form {
 }
 
 .no-result {
-  padding: 1rem;
+  padding: 3rem 2rem;
   text-align: center;
   color: var(--description);
   background: var(--white);
@@ -222,7 +223,7 @@ form {
 }
 
 .no-result p {
-  margin: 0 0 0.75rem 0;
+  margin-bottom: 2rem;
   font-size: 1rem;
   font-weight: 400;
 }
@@ -260,7 +261,6 @@ form {
   .content {
     text-align: center;
     margin: 0 3rem;
-    margin-top: 0;
   }
 
   .curved-arrow {

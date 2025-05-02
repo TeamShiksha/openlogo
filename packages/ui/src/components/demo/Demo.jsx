@@ -14,7 +14,7 @@ const Demo = ({ openAuthModal }) => {
   const handleSearch = async (searchEvent) => {
     searchEvent.preventDefault();
 
-    if (searchTerm.length > 0) {
+    if (searchTerm.length > 1) {
       setLoading(true);
       setShowResults(false);
 

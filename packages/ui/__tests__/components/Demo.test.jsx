@@ -29,12 +29,12 @@ describe("Demo Component", () => {
   });
 
   it("shows loading animation while fetching", async () => {
-    axios.get.mockResolvedValueOnce(new Promise(() => {})); // never resolves to simulate loading
+    axios.get.mockResolvedValueOnce(new Promise(() => {}));
 
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
-      target: { value: "a" },
+      target: { value: "aa" },
     });
     fireEvent.submit(screen.getByRole("button"));
 
@@ -56,16 +56,14 @@ describe("Demo Component", () => {
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
-      target: { value: "a" },
+      target: { value: "aa" },
     });
     fireEvent.submit(screen.getByRole("button"));
 
     await waitFor(() => {
-      // Should display only the first 3 companies
       expect(screen.getByText("Apple")).toBeInTheDocument();
       expect(screen.getByText("Amazon")).toBeInTheDocument();
       expect(screen.getByText("Adobe")).toBeInTheDocument();
-      // 4th company should NOT be rendered
       expect(screen.queryByText("Airbnb")).not.toBeInTheDocument();
     });
   });
