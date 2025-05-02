@@ -11,6 +11,7 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import Operator from "./page/operator/Operator";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -40,6 +41,14 @@ function App() {
             <ProtectedRoute adminOnly={true}>
               <AdminDashboard />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/operator"
+          element={
+            // <ProtectedRoute adminOnly={true}>
+            <Operator />
+            // </ProtectedRoute>
           }
         />
       </Routes>
