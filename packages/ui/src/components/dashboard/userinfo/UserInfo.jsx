@@ -1,13 +1,14 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 
-function UserInfo() {
+function UserInfo({ name, email }) {
   const initialValues = {
-    name: "John Doe",
-    email: "johndoe@gmail.com",
+    name,
+    email,
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
@@ -60,7 +61,7 @@ function UserInfo() {
     }
     // to be implemented
 
-    setFormErrors({ type: "success", message: "Signed in successfully!" });
+    setFormErrors({ type: "", message: "" });
   };
 
   return (
@@ -89,5 +90,10 @@ function UserInfo() {
     </form>
   );
 }
+
+UserInfo.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+};
 
 export default UserInfo;

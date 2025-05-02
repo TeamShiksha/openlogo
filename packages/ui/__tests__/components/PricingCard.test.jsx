@@ -1,6 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import PricingCard from "../../src/components/pricing/PricingCard";
-import { BUTTON_TEXT, PRICING } from "../../src/utils/Constants";
+import {
+  BUTTON_TEXT,
+  MOCK_USER_DATA,
+  PRICING,
+} from "../../src/utils/Constants";
 import "@testing-library/jest-dom";
 import { expect, describe, it, vi } from "vitest";
 
@@ -32,11 +36,31 @@ describe("PricingCard Component", () => {
     });
   });
 
-  it("renders correct button text based on index", () => {
+  it("renders correct button text based on index when activePlan is undefined", () => {
     PRICING.plans.forEach((plan) => {
       render(<PricingCard {...plan} openAuthModal={openCloseAuthModal} />);
       const buttonText =
         plan.index === 1 ? BUTTON_TEXT.commingSoon : BUTTON_TEXT.getStarted;
+      const buttonElement = screen.getByText(buttonText);
+      expect(buttonElement).toBeInTheDocument();
+    });
+  });
+
+  it("renders correct button text based on index when activePlan is passed", () => {
+    PRICING.plans.forEach((plan) => {
+      render(
+        <PricingCard
+          {...plan}
+          openAuthModal={openCloseAuthModal}
+          activePlan={MOCK_USER_DATA.subscription.type}
+        />
+      );
+      let buttonText = BUTTON_TEXT.getStarted;
+      if (MOCK_USER_DATA.subscription.type === plan.name) {
+        buttonText = BUTTON_TEXT.active;
+      } else if (plan.index === 1) {
+        buttonText = BUTTON_TEXT.commingSoon;
+      }
       const buttonElement = screen.getByText(buttonText);
       expect(buttonElement).toBeInTheDocument();
     });

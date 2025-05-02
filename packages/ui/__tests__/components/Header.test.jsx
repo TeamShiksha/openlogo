@@ -18,12 +18,6 @@ const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
 });
 
-const mockUserContext = (userData, loading) => ({
-  userData,
-  loading,
-  fetchUserData: vi.fn(),
-});
-
 describe("Header component", () => {
   it("Render header branding and navigate to home on click", () => {
     const authContext = mockAuthContext(true);
@@ -64,8 +58,10 @@ describe("Header component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
-          <Home openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={{ userData: null }}>
+            <Header openAuthModal={openCloseAuthModal} />
+            <Home openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -179,28 +175,17 @@ describe("Header component", () => {
     expect(openCloseAuthModal).toHaveBeenCalled();
   });
 
-  it("calls logout function when sign out button is clicked", () => {
-    const logoutMock = vi.fn();
-    const authContext = {
-      isAuthenticated: true,
-      logout: logoutMock,
-    };
-
-    const userContext = mockUserContext({ role: "USER" }, false);
-
+  it("Removes Get started button if user is logged in", () => {
+    const authContext = mockAuthContext(true);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
+          <Header openAuthModal={openCloseAuthModal} />
         </AuthContext.Provider>
       </BrowserRouter>
     );
 
-    const signOutButton = screen.getByText(BUTTON_TEXT.signOut);
-    fireEvent.click(signOutButton);
-
-    expect(logoutMock).toHaveBeenCalled();
+    const getStartedButtonText = screen.queryByText(BUTTON_TEXT.getStarted);
+    expect(getStartedButtonText).not.toBeInTheDocument();
   });
 });

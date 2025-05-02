@@ -20,7 +20,7 @@ const Header = ({ openAuthModal }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
   useEffect(() => {
@@ -36,10 +36,6 @@ const Header = ({ openAuthModal }) => {
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
-  };
-
-  const handleLogout = () => {
-    logout();
   };
 
   return (
@@ -68,15 +64,7 @@ const Header = ({ openAuthModal }) => {
               {item.title}
             </Link>
           ))}
-          {isAuthenticated ? (
-            <Button
-              variant="secondary"
-              className={styles.ml}
-              onClick={handleLogout}
-            >
-              {BUTTON_TEXT.signOut}
-            </Button>
-          ) : (
+          {!isAuthenticated && (
             <Button
               variant="primary"
               className={styles.ml}
