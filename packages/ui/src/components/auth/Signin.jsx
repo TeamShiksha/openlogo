@@ -21,7 +21,6 @@ const SignIn = ({ toggleForm, onClose }) => {
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
-
     data: formData,
   });
 
@@ -69,17 +68,20 @@ const SignIn = ({ toggleForm, onClose }) => {
       setFocusedField(null);
     }
   };
+
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
-        <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <h2 className={styles.title}>Go to dashboard</h2>
+
         <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
           <p className="input-error">{errorMsg}</p>
         </div>
+
         <div className={styles["form-width"]}>
-          {SIGNIN["fields"]
-            .filter((field) => !isForgotPassword || field.name !== "password")
+          {SIGNIN.fields
+            .filter((field) => !(isForgotPassword && field.name === "password"))
             .map((field) => (
               <CustomInput
                 error={formErrors[field.name]}
@@ -94,49 +96,50 @@ const SignIn = ({ toggleForm, onClose }) => {
               />
             ))}
         </div>
-        {isForgotPassword ? (
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={!isFormValid && isSubmit}
+
+        {isForgotPassword && (
+          <p
+            onClick={() => setIsForgotPassword(false)}
+            className={styles["forgot-password"]}
           >
-            Submit
-          </Button>
+            Back to Sign In
+          </p>
+        )}
+
+        {!isForgotPassword && (
+          <p
+            className={styles["forgot-password"]}
+            onClick={() => setIsForgotPassword(true)}
+          >
+            {BUTTON_TEXT.forgotPassword}
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!isFormValid || isSubmit}
+        >
+          {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
+        </Button>
+        <div style={{ marginBottom: "15px" }}></div>
+
+        <hr className={styles.separator} />
+
+        {isForgotPassword ? (
+          <p onClick={toggleForm} className={styles.switch}>
+            Don't have an account?
+          </p>
         ) : (
-          <>
-            <p
-              className={styles["forgot-password"]}
-              onClick={() => setIsForgotPassword(true)}
-            >
-              {BUTTON_TEXT.forgotPassword}
-            </p>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={!isFormValid && isSubmit}
-            >
-              {BUTTON_TEXT.signIn}
-            </Button>
-          </>
+          <p onClick={toggleForm} className={styles.switch}>
+            {SIGNIN.footerText}
+          </p>
         )}
       </form>
-      <hr className={styles.separator} />
-      {isForgotPassword && (
-        <p
-          onClick={() => setIsForgotPassword(false)} // Switch back to sign-in
-          className={styles.switch}
-        >
-          Back to Sign In
-        </p>
-      )}
-      {!isForgotPassword && (
-        <p onClick={toggleForm} className={styles.switch}>
-          {SIGNIN.footerText}
-        </p>
-      )}
     </>
   );
 };
+
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func,
