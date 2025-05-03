@@ -71,7 +71,7 @@ const SignIn = ({ toggleForm, onClose }) => {
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
-        <h2 className={styles.title}>Go to dashboard</h2>
+        <h2 className={styles.title}>{SIGNIN.title}</h2>
 
         <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
           <p className="input-error">{errorMsg}</p>
@@ -126,7 +126,7 @@ const SignIn = ({ toggleForm, onClose }) => {
 
         {isForgotPassword ? (
           <p onClick={toggleForm} className={styles.switch}>
-            Don't have an account?
+            Don&apos;t have an account?
           </p>
         ) : (
           <p onClick={toggleForm} className={styles.switch}>
