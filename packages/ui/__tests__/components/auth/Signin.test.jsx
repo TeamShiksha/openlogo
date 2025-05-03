@@ -146,8 +146,6 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(screen.getByText(errorMsg)).toBeInTheDocument();
   });
 
-  //tests for forgot password functionality
-
   it("switches to forgot password mode when forgot password link is clicked", () => {
     const authContext = mockAuthContext(false);
 
