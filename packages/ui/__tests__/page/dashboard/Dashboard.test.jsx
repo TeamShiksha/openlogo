@@ -6,7 +6,7 @@ import {
   within,
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { UserContext } from "../../../src/contexts/Contexts";
+import { UserContext, AuthContext } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
 import {
   API_KEY_TABLE,
@@ -21,13 +21,20 @@ const mockUserContext = (userData, loading) => ({
   fetchUserData: vi.fn(),
 });
 
+const mockAuthContext = (isAuthenticated = true, logout = vi.fn()) => ({
+  isAuthenticated,
+  logout,
+});
+
 describe("Dashboard", () => {
   it("should render loading text when loading is true", () => {
     const userContext = mockUserContext(null, true);
     render(
-      <UserContext.Provider value={userContext}>
-        <Dashboard />
-      </UserContext.Provider>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     expect(screen.getByText(/loading../i)).toBeInTheDocument();
@@ -37,9 +44,11 @@ describe("Dashboard", () => {
   it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <UserContext.Provider value={userContext}>
-        <Dashboard />
-      </UserContext.Provider>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     await waitFor(async () => {
@@ -71,9 +80,11 @@ describe("Dashboard", () => {
   it("should render dashboard with default values when user data is null and loading is false", async () => {
     const userContext = mockUserContext(null, false);
     render(
-      <UserContext.Provider value={userContext}>
-        <Dashboard />
-      </UserContext.Provider>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     await waitFor(() => {
@@ -82,5 +93,52 @@ describe("Dashboard", () => {
     });
 
     expect(userContext.fetchUserData).toHaveBeenCalled();
+  });
+
+  it("should render logout button if user is authenticated and user data exists", () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    render(
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
+    expect(logoutButton).toBeInTheDocument();
+  });
+
+  it("should not render logout button if user is not authenticated or user data is null", () => {
+    const userContext = mockUserContext(null, false);
+    render(
+      <AuthContext.Provider value={mockAuthContext(false)}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const logoutButton = screen.queryByText(BUTTON_TEXT.signOut);
+    expect(logoutButton).not.toBeInTheDocument();
+  });
+
+  it("should call logout function when logout button is clicked", () => {
+    const logoutMock = vi.fn();
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    const authContext = mockAuthContext(true, logoutMock);
+
+    render(
+      <AuthContext.Provider value={authContext}>
+        <UserContext.Provider value={userContext}>
+          <Dashboard />
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
+    fireEvent.click(logoutButton);
+
+    expect(logoutMock).toHaveBeenCalled();
   });
 });

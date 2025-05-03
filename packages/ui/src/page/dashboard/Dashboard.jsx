@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from "react";
-import { UserContext } from "../../contexts/Contexts.jsx";
+import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
 import Usage from "../../components/dashboard/usage/Usage";
@@ -10,10 +10,12 @@ import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx"
 import SettingCard from "../../components/dashboard/settingpage/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
-import { API_KEY_TABLE } from "../../utils/Constants.js";
+import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
+import Button from "../../components/common/button/Button.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -32,6 +34,10 @@ function Dashboard() {
   if (loading) {
     return <div>loading..</div>;
   }
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <div
@@ -82,6 +88,20 @@ function Dashboard() {
             <SettingCard />
           </CardWrapper>
         </section>
+      </div>
+
+      <div className={styles["logout-wrapper"]}>
+        {isAuthenticated ? (
+          <Button
+            variant="danger"
+            className={styles["logout-btn"]}
+            onClick={handleLogout}
+          >
+            {BUTTON_TEXT.signOut}
+          </Button>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
