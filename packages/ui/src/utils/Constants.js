@@ -372,6 +372,7 @@ export const BUTTON_TEXT = {
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
+  submit: "Submit",
 };
 
 export const BRANDING = {
