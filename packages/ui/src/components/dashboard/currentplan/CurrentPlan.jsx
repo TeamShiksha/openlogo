@@ -3,11 +3,11 @@ import styles from "./CurrentPlan.module.css";
 function CurrentPlan() {
   return (
     <>
-      <p className={styles.currentPlan}>Hobby</p>
-      <p className={styles.currentPlanTagline}>
+      <p className={styles["current-plan"]}>Hobby</p>
+      <p className={styles["current-plan-tagline"]}>
         Empower your projects with essential tools, at no cost.
       </p>
-      <button className={styles.upgradeButton}>Upgrade</button>
+      <button className={styles["upgrade-button"]}>Upgrade</button>
     </>
   );
 }

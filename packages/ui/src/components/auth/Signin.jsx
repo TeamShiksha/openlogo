@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
@@ -9,6 +10,7 @@ import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 
 const SignIn = ({ toggleForm, onClose }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -58,6 +60,7 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsSubmit(false);
       setFocusedField(null);
       onClose();
+      navigate("/dashboard");
     }
   };
 
