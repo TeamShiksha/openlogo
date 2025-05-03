@@ -24,7 +24,7 @@ const Home = ({ openAuthModal }) => {
         onPrimaryButtonClick={onHeroSectionButtonClick}
         isAuthenticated={isAuthenticated}
       />
-      <Demo />
+      <Demo openAuthModal={openAuthModal} />
       <Features />
       <Pricing
         openAuthModal={openAuthModal}
