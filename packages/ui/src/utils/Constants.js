@@ -287,7 +287,7 @@ export const FAQ = {
         "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Logo not found, no worries raise a request to add your logo.",
     },
     {
-      question: "How do I get started with Openlogo?",
+      question: "How do I get started?",
       answer:
         "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos or search logos using prefixs, all the provided images will be in PNG. Use our comprehensive documentation to guide your integration and testing process.",
     },
@@ -295,6 +295,16 @@ export const FAQ = {
       question: "What payment methods do you support?",
       answer:
         "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+    },
+    {
+      question: "What types of logos can I access?",
+      answer:
+        "Openlogo provides access to a wide range of company logos, including Fortune 500 brands and emerging startups. Our database is continuously updated to ensure you find the latest logos you need.",
+    },
+    {
+      question: "Can I request a logo if it's not in the database?",
+      answer:
+        "Yes! If a logo you need is missing, you can submit a request through our platform. We strive to add new logos quickly to ensure comprehensive coverage for all users.",
     },
   ],
 };
@@ -375,6 +385,7 @@ export const BUTTON_TEXT = {
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
+  requestLogo: "Request Logo",
 };
 
 export const BRANDING = {
