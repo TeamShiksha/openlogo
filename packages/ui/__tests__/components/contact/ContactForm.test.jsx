@@ -73,7 +73,6 @@ describe("ContactForm Component", () => {
 
       const nameInput = screen.getByLabelText("Name");
       fireEvent.focus(nameInput);
-
       await waitFor(() => {
         const nameError = screen.getByText("Name is required");
         expect(nameError).toBeInTheDocument();
@@ -82,7 +81,6 @@ describe("ContactForm Component", () => {
       await act(async () => {
         fireEvent.change(nameInput, { target: { value: "John Doe" } });
       });
-
       await waitFor(() => {
         const nameError = screen.queryByText("Name is required");
         expect(nameError).not.toBeInTheDocument();
@@ -93,16 +91,13 @@ describe("ContactForm Component", () => {
       render(<ContactForm closeModal={() => {}} />);
 
       const emailInput = screen.getByLabelText("Email");
-
       await act(async () => {
         fireEvent.focus(emailInput);
       });
-
       await waitFor(() => {
         const emailError = screen.getByText("Email is required");
         expect(emailError).toBeInTheDocument();
       });
-
       await act(async () => {
         fireEvent.blur(emailInput);
       });
@@ -112,13 +107,11 @@ describe("ContactForm Component", () => {
       render(<ContactForm closeModal={() => {}} />);
 
       const emailInput = screen.getByLabelText("Email");
-
       await act(async () => {
         fireEvent.change(emailInput, { target: { value: "invalid-email" } });
         fireEvent.focus(emailInput);
         fireEvent.blur(emailInput);
       });
-
       await waitFor(() => {
         const emailError = screen.getByText("This is not a valid email format");
         expect(emailError).toBeInTheDocument();
@@ -131,7 +124,6 @@ describe("ContactForm Component", () => {
         fireEvent.focus(emailInput);
         fireEvent.blur(emailInput);
       });
-
       await waitFor(() => {
         const emailError = screen.queryByText(
           "This is not a valid email format"
@@ -146,16 +138,13 @@ describe("ContactForm Component", () => {
       const messageInput = screen.getByPlaceholderText(
         "Type your message here ...."
       );
-
       await act(async () => {
         fireEvent.focus(messageInput);
       });
-
       await waitFor(() => {
         const messageError = screen.getByText("Message is required");
         expect(messageError).toBeInTheDocument();
       });
-
       await act(async () => {
         fireEvent.blur(messageInput);
       });
@@ -168,13 +157,11 @@ describe("ContactForm Component", () => {
       const messageInput = screen.getByPlaceholderText(
         "Type your message here ...."
       );
-
       await act(async () => {
         fireEvent.change(messageInput, { target: { value: "Too short" } });
         fireEvent.focus(messageInput);
         fireEvent.blur(messageInput);
       });
-
       await waitFor(() => {
         const messageError = screen.getByText(errorMessage);
         expect(messageError).toBeInTheDocument();
@@ -200,7 +187,6 @@ describe("ContactForm Component", () => {
 
   it("enables submit button only when form is valid", async () => {
     render(<ContactForm closeModal={() => {}} />);
-
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
@@ -208,7 +194,6 @@ describe("ContactForm Component", () => {
     expect(submitButton).toBeDisabled();
 
     await fillFormWithValidData();
-
     await waitFor(() => {
       expect(submitButton).not.toBeDisabled();
     });
@@ -217,7 +202,6 @@ describe("ContactForm Component", () => {
     await act(async () => {
       fireEvent.change(emailInput, { target: { value: "invalid-email" } });
     });
-
     await waitFor(() => {
       expect(submitButton).toBeDisabled();
     });
@@ -227,11 +211,9 @@ describe("ContactForm Component", () => {
     render(<ContactForm closeModal={() => {}} />);
 
     await fillFormWithValidData();
-
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
-
     await waitFor(() => {
       expect(submitButton).not.toBeDisabled();
     });
@@ -239,11 +221,9 @@ describe("ContactForm Component", () => {
     await act(async () => {
       mockLoading.mockReturnValue(true);
     });
-
     await act(async () => {
       render(<ContactForm closeModal={() => {}} />);
     });
-
     await waitFor(() => {
       expect(screen.getByText("Sending")).toBeInTheDocument();
       expect(screen.getByText("Sending")).toBeDisabled();
@@ -253,15 +233,12 @@ describe("ContactForm Component", () => {
   it("shows success message when form is submitted successfully", async () => {
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-
     render(<ContactForm closeModal={() => {}} />);
 
     await fillFormWithValidData();
-
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
-
     await waitFor(() => {
       expect(submitButton).not.toBeDisabled();
     });
@@ -269,7 +246,6 @@ describe("ContactForm Component", () => {
     await act(async () => {
       fireEvent.click(submitButton);
     });
-
     await waitFor(() => {
       expect(
         screen.getByText("Form submitted, our team will get in touch shortly")
@@ -280,15 +256,12 @@ describe("ContactForm Component", () => {
   it("shows error message when form submission fails", async () => {
     mockMakeRequest.mockResolvedValue(false);
     mockIsSuccess.mockReturnValue(false);
-
     render(<ContactForm closeModal={() => {}} />);
 
     await fillFormWithValidData();
-
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
-
     await waitFor(() => {
       expect(submitButton).not.toBeDisabled();
     });
@@ -296,7 +269,6 @@ describe("ContactForm Component", () => {
     await act(async () => {
       fireEvent.click(submitButton);
     });
-
     await waitFor(() => {
       const errorElement = screen.getByText("An error occurred");
       expect(errorElement).toBeInTheDocument();
@@ -304,50 +276,40 @@ describe("ContactForm Component", () => {
   });
 
   it("calls closeModal after successful submission and timeout", async () => {
+    vi.useFakeTimers();
     const mockCloseModal = vi.fn(() => {});
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-
-    vi.useFakeTimers();
-
     render(<ContactForm closeModal={mockCloseModal} />);
-    await fillFormWithValidData();
 
+    await fillFormWithValidData();
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
-
     await act(async () => {
       fireEvent.click(submitButton);
     });
-
     await act(async () => {
       vi.advanceTimersByTime(3000);
     });
-
     expect(mockCloseModal).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
   });
 
   it("clears form after successful submission", async () => {
+    vi.useFakeTimers();
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-
-    vi.useFakeTimers();
-
     render(<ContactForm closeModal={() => {}} />);
 
     const { nameInput, emailInput, messageInput } =
       await fillFormWithValidData();
-
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
-
     await act(async () => {
       fireEvent.click(submitButton);
     });
-
     await act(async () => {
       vi.advanceTimersByTime(3000);
     });
@@ -355,7 +317,6 @@ describe("ContactForm Component", () => {
     expect(nameInput.value).toBe("");
     expect(emailInput.value).toBe("");
     expect(messageInput.value).toBe("");
-
     vi.useRealTimers();
   });
 });

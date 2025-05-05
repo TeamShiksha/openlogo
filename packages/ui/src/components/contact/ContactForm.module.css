@@ -62,15 +62,6 @@
     padding 0.2s ease-in-out;
 }
 
-.success-message {
-  color: var(--success);
-  opacity: 1;
-  max-height: 50px;
-  padding: 1px;
-  margin-bottom: 10px;
-  transition: opacity 0.5s ease-in-out;
-}
-
 .has-error {
   opacity: 1;
   max-height: 50px;

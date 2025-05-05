@@ -107,11 +107,7 @@ function ContactForm({ closeModal }) {
           </div>
         </div>
         {isSuccess ? (
-          <p
-            className={`${styles["input-error"]} ${styles["success-message"]}`}
-          >
-            {data?.message}
-          </p>
+          <p className="success-message">{data?.message}</p>
         ) : (
           <p className={`${styles["input-error"]} ${styles["has-error"]}`}>
             {errorMsg}
