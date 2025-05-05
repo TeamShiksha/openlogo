@@ -187,10 +187,11 @@ async function addCatalogController(req, res, next) {
     let { userId } = req.userData;
     const file = req.file;
     const imageSize = file.size;
+    const companyUri = req.body.companyUri;
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-    const companyName = Imagename + "." + Extension;
+    const companyName = Imagename;
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
       res.status(500).json({
@@ -203,7 +204,9 @@ async function addCatalogController(req, res, next) {
     const imageData = await imageServices.createImageData(
       userId,
       imageSize,
-      companyName
+      companyName,
+      companyUri,
+      Extension
     );
     if (!imageData) {
       res.status(500).json({
