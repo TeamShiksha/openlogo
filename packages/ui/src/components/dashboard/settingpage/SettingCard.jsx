@@ -6,8 +6,8 @@ function SettingCard() {
   return (
     <>
       {SETTING.map((setting, index) => (
-        <div key={index} className={styles.actionButtonWrapper}>
-          <p className={styles.actionText}>{setting.subtitle}</p>
+        <div key={index} className={styles["action-button-wrapper"]}>
+          <p className={styles["action-text"]}>{setting.subtitle}</p>
           <Button
             type="submit"
             variant={
@@ -15,7 +15,7 @@ function SettingCard() {
                 ? "danger"
                 : "primary"
             }
-            className={styles.actionButton}
+            className={styles["action-button"]}
           >
             {setting.buttontitle}
           </Button>

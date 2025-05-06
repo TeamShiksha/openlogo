@@ -161,6 +161,12 @@ export const validate = (values) => {
     "Only letters and spaces allowed"
   );
 
+  validateField(
+    "message",
+    values.message && values.message.length < 20,
+    "Message should be at least 20 characters"
+  );
+
   return errors;
 };
 

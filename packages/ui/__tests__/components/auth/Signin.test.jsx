@@ -3,11 +3,18 @@ import { describe, expect, it, vi } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
+import { BrowserRouter } from "react-router-dom";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
   setIsAuthenticated: vi.fn(),
 });
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
+  useNavigate: () => mockNavigate,
+}));
 
 const mockedMakeRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
@@ -21,9 +28,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const title = screen.getByRole("heading", { name: SIGNIN.title });
@@ -42,9 +51,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
     const toggleForm = vi.fn();
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={toggleForm} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={toggleForm} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const closeButton = screen.getByText(SIGNIN.footerText);
@@ -55,9 +66,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("validates email only when focused and blurred", async () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const emailInput = screen.getByLabelText("Email");
 
@@ -80,9 +93,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     mockedMakeRequest.mockResolvedValue(true);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     fireEvent.change(screen.getByLabelText("Email"), {
@@ -99,6 +114,7 @@ describe("SignInForm UI and Functionality Tests", () => {
     });
 
     expect(oncloseMock).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
   it("connectivity test failed", async () => {
@@ -107,9 +123,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     const errorMsg = "Incorrect email or password.";
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     fireEvent.change(screen.getByLabelText("Email"), {

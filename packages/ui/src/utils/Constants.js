@@ -287,7 +287,7 @@ export const FAQ = {
         "Openlogo makes it easy to retrieve logos quickly and reliably with seamless API integration, flexible pricing, and scalable access to a growing logo library. Logo not found, no worries raise a request to add your logo.",
     },
     {
-      question: "How do I get started with Openlogo?",
+      question: "How do I get started?",
       answer:
         "Getting started is easy! Sign up to create your account and generate a unique API key. With your key, explore our API features to retrieve logos or search logos using prefixs, all the provided images will be in PNG. Use our comprehensive documentation to guide your integration and testing process.",
     },
@@ -295,6 +295,16 @@ export const FAQ = {
       question: "What payment methods do you support?",
       answer:
         "Currently, our plans are in a free trial period, and you can use the API at no cost. We're continuously expanding our library by adding new logos every day. In the future, we plan to introduce a variety of payment methods to suit your convenience.",
+    },
+    {
+      question: "What types of logos can I access?",
+      answer:
+        "Openlogo provides access to a wide range of company logos, including Fortune 500 brands and emerging startups. Our database is continuously updated to ensure you find the latest logos you need.",
+    },
+    {
+      question: "Can I request a logo if it's not in the database?",
+      answer:
+        "Yes! If a logo you need is missing, you can submit a request through our platform. We strive to add new logos quickly to ensure comprehensive coverage for all users.",
     },
   ],
 };
@@ -364,15 +374,18 @@ export const CROSS = {
 
 export const BUTTON_TEXT = {
   getStarted: "Get started",
+  gotoDashboard: "Go to Dashboard",
+  active: "Active",
   commingSoon: "Coming Soon",
   documentation: "Documentation",
   signUp: "Sign Up",
   signIn: "Sign In",
+  signOut: "Sign Out",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
-  submit: "Submit",
+
 };
 
 export const BRANDING = {
@@ -480,7 +493,7 @@ export const CONTACT = {
     { type: "text", name: "name", label: "Name" },
     { type: "email", name: "email", label: "Email" },
   ],
-  intialValues: {
+  initialValues: {
     name: "",
     email: "",
     message: "",
@@ -592,4 +605,38 @@ export const DOCUMENTATION = {
   localUrl: "Base URL: http://localhost:5000/api",
   baseStageUrl: "Base URL: https://api-stage-openlogo.fyi/api",
   baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
+};
+
+export const API_KEY_TABLE = {
+  headers: ["Description", "Created", "Action"],
+  emptyMessage:
+    "Your api keys will be visible here, click on generate key to add new api key",
+};
+
+export const DASHBOARD_CARDS_TITLE = [
+  "Usage",
+  "Generate New API Key",
+  "Plan",
+  "User Info",
+  "Change Password",
+  "Setting",
+];
+export const MOCK_USER_DATA = {
+  name: "John Doe",
+  email: "john@example.com",
+  subscription: {
+    usage_count: 42,
+    usage_limit: 100,
+    type: "HOBBY",
+  },
+  keys: [
+    {
+      key_description: "Testing Environment Key",
+      updated_at: "2023-10-30T11:20:00.000Z",
+    },
+    {
+      key_description: "Analytics Service Key",
+      updated_at: "2023-11-10T13:10:00.000Z",
+    },
+  ],
 };
