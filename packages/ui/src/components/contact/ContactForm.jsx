@@ -6,26 +6,42 @@ import Button from "../common/button/Button";
 import styles from "./ContactForm.module.css";
 import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
 import { validate } from "../../utils/Helpers";
+import { useApi } from "../../hooks/useApi";
 
 function ContactForm({ closeModal }) {
-  const [formValues, setFormValues] = useState(CONTACT.intialValues);
+  const [formValues, setFormValues] = useState(CONTACT.initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const { errorMsg, makeRequest, data, loading, isSuccess } = useApi({
+    url: `/messages/contact-us`,
+    method: "POST",
+    data: formValues,
+  });
 
   useEffect(() => {
     if (!focusedField) {
-      setFormErrors({});
+      const filledFields = Object.keys(formValues).filter(
+        (field) => formValues[field] !== CONTACT.initialValues[field]
+      );
+      const errors = validate(
+        filledFields.reduce((acc, field) => {
+          acc[field] = formValues[field];
+          return acc;
+        }, {})
+      );
+      setFormErrors(errors);
       return;
     }
+
     const timeout = setTimeout(() => {
       const validationErrors = validate({
         [focusedField]: formValues[focusedField],
       });
-      setFormErrors({
-        [focusedField]: validationErrors[focusedField] || "",
-      });
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        [focusedField]: validationErrors[focusedField],
+      }));
     }, 500);
 
     return () => clearTimeout(timeout);
@@ -41,15 +57,18 @@ function ContactForm({ closeModal }) {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (submitEvent) => {
+  const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    setFormValues(CONTACT.intialValues);
-    setFormErrors({});
-    setIsSubmit(false);
-    setFocusedField(null);
+
+    const success = await makeRequest();
+    if (!success) return;
+
     setTimeout(() => {
+      setFormErrors({});
+      setFocusedField(null);
+      setFormValues(CONTACT.initialValues);
       closeModal();
-    }, 5000);
+    }, 3000);
   };
 
   return (
@@ -79,18 +98,27 @@ function ContactForm({ closeModal }) {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           ></textarea>
-          <p
-            className={`${styles["input-error"]} ${formErrors.message ? styles["has-error"] : ""}`}
-          >
-            {formErrors.message}
-          </p>
+          <div>
+            <p
+              className={`${styles["input-error"]} ${formErrors.message ? styles["has-error"] : ""}`}
+            >
+              {formErrors.message}
+            </p>
+          </div>
         </div>
+        {isSuccess ? (
+          <p className="success-message">{data?.message}</p>
+        ) : (
+          <p className={`${styles["input-error"]} ${styles["has-error"]}`}>
+            {errorMsg}
+          </p>
+        )}
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit}
+          disabled={!isFormValid || loading}
         >
-          {BUTTON_TEXT.sendMessage}
+          {loading ? "Sending" : BUTTON_TEXT.sendMessage}
         </Button>
       </form>
     </Modal>
