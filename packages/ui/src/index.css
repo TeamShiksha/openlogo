@@ -92,6 +92,16 @@ body {
   padding: 4px;
 }
 
+.success-message {
+  color: var(--success);
+  font-size: 0.8rem;
+  max-height: 50px;
+  padding: 1px;
+  margin: -9px 0px 10px 3px;
+  width: 100%;
+  transition: opacity 0.5s ease-in-out;
+}
+
 footer {
   margin-top: auto;
 }

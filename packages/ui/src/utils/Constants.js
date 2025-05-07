@@ -493,7 +493,7 @@ export const CONTACT = {
     { type: "text", name: "name", label: "Name" },
     { type: "email", name: "email", label: "Email" },
   ],
-  intialValues: {
+  initialValues: {
     name: "",
     email: "",
     message: "",
