@@ -385,6 +385,7 @@ export const BUTTON_TEXT = {
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
+  requestLogo: "Request Logo",
   submit: "Submit",
   requestLogo: "Request Logo",
 };

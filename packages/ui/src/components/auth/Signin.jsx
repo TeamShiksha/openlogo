@@ -62,6 +62,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         setFormData(SIGNIN.initialValues);
         setIsAuthenticated(true);
         onClose();
+        navigate("/dashboard");
       }
 
       setIsSubmit(false);
