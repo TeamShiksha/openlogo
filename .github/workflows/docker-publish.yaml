@@ -42,3 +42,5 @@ jobs:
           file: ./packages/ui/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-react:stage
+          build-args: |
+            VITE_BASE_URL=http://localhost:5000
