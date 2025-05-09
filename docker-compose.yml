@@ -32,12 +32,12 @@ services:
 
   react:
     build:
-      context: . # Root directory context
+      context: .
       dockerfile: packages/ui/Dockerfile
     container_name: openlogo-react
     restart: always
     ports:
-      - "8080:80" # Expose Nginx's port 80 as 8080 on the host
+      - "8080:80"
     env_file:
       - ./packages/ui/.env
     depends_on:
