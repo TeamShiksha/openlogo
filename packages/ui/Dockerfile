@@ -1,15 +1,27 @@
-FROM node:20-alpine
+# Stage 1: Build
+FROM node:20-alpine AS builder
 
-WORKDIR /ui
+WORKDIR /app
 
 RUN npm install -g pnpm
 
-COPY package.json ./
+COPY pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install
+COPY packages/ui/package.json packages/ui/
+COPY packages/ui/.env packages/ui/   
+
+RUN pnpm install --filter ui...
 
 COPY . .
 
-EXPOSE 3000
+RUN pnpm --filter ui build
 
-CMD ["pnpm", "start"]
+# Stage 2: Serve with nginx
+FROM nginx:alpine
+
+COPY --from=builder /app/packages/ui/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

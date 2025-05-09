@@ -23,6 +23,8 @@ services:
       - "5000:5000"
     env_file:
       - ./packages/app/.env
+    environment:
+      - CLIENT_PROXY_URL=http://localhost:8080
     depends_on:
       - mongodb
     networks:
@@ -30,12 +32,12 @@ services:
 
   react:
     build:
-      context: ./packages/ui
-      dockerfile: Dockerfile
+      context: . # Root directory context
+      dockerfile: packages/ui/Dockerfile
     container_name: openlogo-react
     restart: always
     ports:
-      - "3000:3000"
+      - "8080:80" # Expose Nginx's port 80 as 8080 on the host
     env_file:
       - ./packages/ui/.env
     depends_on:
