@@ -123,20 +123,19 @@ const SignIn = ({ toggleForm, onClose }) => {
         >
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>
-        <div style={{ marginBottom: "15px" }}></div>
-
-        <hr className={styles.separator} />
-
-        {isForgotPassword ? (
-          <p onClick={toggleForm} className={styles.switch}>
-            Don&apos;t have an account?
-          </p>
-        ) : (
-          <p onClick={toggleForm} className={styles.switch}>
-            {SIGNIN.footerText}
-          </p>
-        )}
       </form>
+
+      <hr className={styles.separator} />
+
+      {isForgotPassword ? (
+        <p onClick={toggleForm} className={styles.switch}>
+          Don&apos;t have an account?
+        </p>
+      ) : (
+        <p onClick={toggleForm} className={styles.switch}>
+          {SIGNIN.footerText}
+        </p>
+      )}
     </>
   );
 };
