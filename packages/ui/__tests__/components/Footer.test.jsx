@@ -5,6 +5,7 @@ import Footer from "../../src/components/footer/Footer";
 import Home from "../../src/page/home/Home";
 import PrivacyPolicy from "../../src/page/privacypolicy/PrivacyPolicy";
 import { BRANDING, FOOTER_ITEMS } from "../../src/utils/Constants";
+import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 
 describe("Footer Component", () => {
   it("Render footer branding", () => {
@@ -53,9 +54,18 @@ describe("Footer Component", () => {
     const openCloseAuthModal = vi.fn();
     render(
       <BrowserRouter>
-        <Home openAuthModal={openCloseAuthModal} />
-        <Footer />
-        <PrivacyPolicy />
+        <AuthContext.Provider value={{ isAuthenticated: false }}>
+          <UserContext.Provider
+            value={{
+              userData: null,
+              loading: false,
+            }}
+          >
+            <Home openAuthModal={openCloseAuthModal} />
+            <Footer />
+            <PrivacyPolicy />
+          </UserContext.Provider>
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 

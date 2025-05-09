@@ -161,6 +161,12 @@ export const validate = (values) => {
     "Only letters and spaces allowed"
   );
 
+  validateField(
+    "message",
+    values.message && values.message.length < 20,
+    "Message should be at least 20 characters"
+  );
+
   return errors;
 };
 
@@ -181,13 +187,4 @@ export const getBaseApiUrl = (domain) => {
   } else {
     return DOCUMENTATION.baseProdUrl;
   }
-};
-
-export const guestTokenPresent = () => {
-  const guestToken =
-    document.cookie
-      .split(";")
-      .find((cookie) => cookie.trim().startsWith("x-guest-token="))
-      ?.split("=")[1] || null;
-  return guestToken;
 };

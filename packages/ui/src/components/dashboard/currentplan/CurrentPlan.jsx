@@ -1,19 +1,26 @@
-import { guestTokenPresent } from "../../../utils/Helpers";
 import styles from "./CurrentPlan.module.css";
+import PropTypes from "prop-types";
 
-function CurrentPlan() {
-  const guestToken = guestTokenPresent();
+function CurrentPlan({ role }) {
   return (
     <>
-      <p className={styles.currentPlan}>{guestToken ? "Guest" : "Hobby"}</p>
-      <p className={styles.currentPlanTagline}>
+      <p className={styles["current-plan"]}>Hobby</p>
+      <p className={styles["current-plan-tagline"]}>
         Empower your projects with essential tools, at no cost.
       </p>
-      <button className={styles.upgradeButton} disabled={!!guestToken}>
+      <button
+        className={styles["upgrade-button"]}
+        disabled={role == "GUEST"}
+        style={{ cursor: role == "GUEST" ? "default" : "pointer" }}
+      >
         Upgrade
       </button>
     </>
   );
 }
+
+CurrentPlan.propTypes = {
+  role: PropTypes.string.isRequired,
+};
 
 export default CurrentPlan;

@@ -2,14 +2,14 @@ import { useState } from "react";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 import styles from "./ChangePassword.module.css";
-import { guestTokenPresent } from "../../../utils/Helpers";
+import PropTypes from "prop-types";
 
 const PASSWORD_FIELDS = [
   { type: "password", name: "currPassword", label: "Current Password" },
   { type: "password", name: "newPassword", label: "New Password" },
 ];
 
-function ChangePassword() {
+function ChangePassword({ role }) {
   const [formValues, setFormValues] = useState({
     currPassword: "",
     newPassword: "",
@@ -27,10 +27,11 @@ function ChangePassword() {
     e.preventDefault();
   };
 
-  const guestToken = guestTokenPresent();
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      className={styles["change-password-input-group"]}
+    >
       {PASSWORD_FIELDS.map((field) => (
         <CustomInput
           key={field.name}
@@ -42,16 +43,14 @@ function ChangePassword() {
           required
         />
       ))}
-      <Button
-        type="submit"
-        variant="primary"
-        className={styles.changePasswordButton}
-        disabled={!!guestToken}
-      >
+      <Button type="submit" variant="primary" disabled={role === "GUEST"}>
         Change password
       </Button>
     </form>
   );
 }
 
+ChangePassword.propTypes = {
+  role: PropTypes.string.isRequired,
+};
 export default ChangePassword;

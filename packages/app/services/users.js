@@ -105,7 +105,7 @@ class UserService {
   }
 
   async getGuestUser() {
-    return await this.userRepository.findGuestUser();
+    return await this.userRepository.getGuestUser();
   }
 
   /**

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import AdminDashboard from "./page/admin/Admin";
@@ -16,7 +17,6 @@ function App() {
   const openCloseAuthModal = () => {
     setAuthModal(!authModal);
   };
-
   return (
     <div className="app-container">
       <ScrollManager />

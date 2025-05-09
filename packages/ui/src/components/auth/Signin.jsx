@@ -1,19 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
-import { useNavigate } from "react-router-dom";
+import { useApi } from "../../hooks/useApi";
+import { AuthContext } from "../../contexts/Contexts";
 
 const SignIn = ({ toggleForm, onClose }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const navigate = useNavigate();
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const { makeRequest, errorMsg } = useApi({
+    method: "post",
+    url: `/auth/signin`,
+    data: formData,
+  });
+  const { makeRequest: makeGuestRequest } = useApi({
+    method: "post",
+    url: `/auth/signin?type=guest`,
+  });
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -33,7 +45,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   }, [focusedField, formData]);
 
   useEffect(() => {
-    const errors = validate(formData);
+    const errors = validate({ email: formData.email });
     setIsFormValid(Object.keys(errors).length === 0);
   }, [formData]);
 
@@ -42,19 +54,28 @@ const SignIn = ({ toggleForm, onClose }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (submitEvent) => {
+  const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    setFormData(SIGNIN.initialValues);
-    setFormErrors({});
-    setIsSubmit(false);
-    setFocusedField(null);
+    setIsSubmit(true);
+    const success = await makeRequest();
+    if (success) {
+      setFormData(SIGNIN.initialValues);
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      setFocusedField(null);
+      onClose();
+      navigate("/dashboard");
+    }
   };
 
-  const guestSignIn = () => {
-    onClose();
-    if (window.location.pathname === "/dashboard") {
-      navigate("/dashboard", { replace: true });
-    } else {
+  const handleGuestSignIn = async (submitEvent) => {
+    submitEvent.preventDefault();
+    setIsSubmit(true);
+    const success = await makeGuestRequest();
+    if (success) {
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      onClose();
       navigate("/dashboard");
     }
   };
@@ -64,6 +85,9 @@ const SignIn = ({ toggleForm, onClose }) => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
+          <p className="input-error">{errorMsg}</p>
+        </div>
         <div className={styles["form-width"]}>
           {SIGNIN["fields"].map((field) => (
             <CustomInput
@@ -85,12 +109,13 @@ const SignIn = ({ toggleForm, onClose }) => {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit}
+          disabled={!isFormValid && isSubmit}
         >
           {BUTTON_TEXT.signIn}
         </Button>
       </form>
-      <p onClick={guestSignIn} className={styles["guest-sign-in"]}>
+      <hr className={styles.separator} />
+      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
         {SIGNIN.guestAccount}
       </p>
       <p onClick={toggleForm} className={styles.switch}>

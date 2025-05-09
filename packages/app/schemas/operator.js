@@ -40,4 +40,47 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
     }),
 });
 
-module.exports = { querySchema, revertToCustomerPayloadSchema };
+const contactUsPayloadSchema = Joi.object().keys({
+  name: Joi.string()
+    .trim()
+    .required()
+    .min(1)
+    .max(20)
+    .regex(/^[^!@#$%^&*(){}[\]\\;'",.<>/?`~|0-9]*$/)
+    .messages({
+      "string.base": "Name must be string",
+      "string.min": "Name cannot be empty",
+      "string.max": "Name length must be 20 or fewer",
+      "any.required": "Name is required",
+      "string.pattern.base": "Name should only contain alphabets",
+    }),
+  email: Joi.string()
+    .trim()
+    .required()
+    .max(50)
+    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
+    .messages({
+      "string.base": "Email must be string",
+      "string.max": "Email length must be 50 or fewer",
+      "string.pattern.base": "Invalid email",
+      "any.required": "Email is required",
+    }),
+  message: Joi.string()
+    .trim()
+    .required()
+    .min(20)
+    .max(500)
+    .regex(/^[^!@#$%^&*(){}[\];'",<>/?`~|0-9]*$/)
+    .messages({
+      "string.base": "Message must be string",
+      "string.min": "Message should be at least be 20 characters",
+      "string.max": "Message must be 500 or fewer characters",
+      "any.required": "Message is required",
+      "string.pattern.base": "Message should only contain alphabets",
+    }),
+});
+module.exports = {
+  querySchema,
+  revertToCustomerPayloadSchema,
+  contactUsPayloadSchema,
+};

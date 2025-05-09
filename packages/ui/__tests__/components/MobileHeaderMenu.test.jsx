@@ -1,16 +1,23 @@
 import { vi, describe, it, expect } from "vitest";
 import { BrowserRouter } from "react-router-dom";
+import { AuthContext } from "../../src/contexts/Contexts";
 import { render, screen, within, fireEvent } from "@testing-library/react";
 import Documentation from "../../src/page/documentation/Documentation";
 import MobileHeaderMenu from "../../src/components/header/MobileHeaderMenu";
 
 const mockCloseMenu = vi.fn();
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+});
 
 describe("MobileHeaderMenu Component", () => {
   it("Doesn't render when isOpen = false", () => {
+    const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
+        <AuthContext.Provider value={authContext}>
+          <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 
@@ -18,10 +25,13 @@ describe("MobileHeaderMenu Component", () => {
     expect(mobileMenu).not.toBeInTheDocument();
   });
 
-  it("Does render when isOpen = false and navigation works", () => {
+  it("Does render when isOpen = true and navigation works", () => {
+    const authContext = mockAuthContext(true);
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
+        <AuthContext.Provider value={authContext}>
+          <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
+        </AuthContext.Provider>
         <Documentation />
       </BrowserRouter>
     );
@@ -35,11 +45,14 @@ describe("MobileHeaderMenu Component", () => {
   });
 
   it("calls closeMenu when screen width exceeds 1024px", () => {
+    const authContext = mockAuthContext(false);
     window.innerWidth = 800;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
+        <AuthContext.Provider value={authContext}>
+          <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={false} />
+        </AuthContext.Provider>
       </BrowserRouter>
     );
 

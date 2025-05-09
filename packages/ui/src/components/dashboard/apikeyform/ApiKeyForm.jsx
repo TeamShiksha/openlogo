@@ -1,10 +1,9 @@
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 import styles from "./ApiKeyForm.module.css";
-import { guestTokenPresent } from "../../../utils/Helpers";
+import PropTypes from "prop-types";
 
-function ApiKeyForm() {
-  const guestToken = guestTokenPresent();
+function ApiKeyForm({ role }) {
   return (
     <section className={styles["dashboard-content-section"]}>
       <form className={styles["api-key-container"]} noValidate>
@@ -16,7 +15,7 @@ function ApiKeyForm() {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={!!guestToken}
+          disabled={role == "GUEST"}
         >
           Generate Key
         </Button>
@@ -24,5 +23,8 @@ function ApiKeyForm() {
     </section>
   );
 }
+ApiKeyForm.propTypes = {
+  role: PropTypes.string.isRequired,
+};
 
 export default ApiKeyForm;

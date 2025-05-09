@@ -1,15 +1,14 @@
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
-import { guestTokenPresent } from "../../../utils/Helpers";
+import PropTypes from "prop-types";
 
-function SettingCard() {
-  const guestToken = guestTokenPresent();
+function SettingCard({ role }) {
   return (
     <>
       {SETTING.map((setting, index) => (
-        <div key={index} className={styles.actionButtonWrapper}>
-          <p className={styles.actionText}>{setting.subtitle}</p>
+        <div key={index} className={styles["action-button-wrapper"]}>
+          <p className={styles["action-text"]}>{setting.subtitle}</p>
           <Button
             type="submit"
             variant={
@@ -17,8 +16,8 @@ function SettingCard() {
                 ? "danger"
                 : "primary"
             }
-            className={styles.actionButton}
-            disabled={!!guestToken}
+            className={styles["action-button"]}
+            disabled={role == "GUEST"}
           >
             {setting.buttontitle}
           </Button>
@@ -27,4 +26,8 @@ function SettingCard() {
     </>
   );
 }
+
+SettingCard.propTypes = {
+  role: PropTypes.string.isRequired,
+};
 export default SettingCard;

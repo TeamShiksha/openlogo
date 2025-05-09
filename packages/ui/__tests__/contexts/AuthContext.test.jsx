@@ -2,13 +2,14 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AuthProvider } from "../../src/contexts/AuthContext";
 import { AuthContext } from "../../src/contexts/Contexts";
-import { instance } from "../../src/api/api_instance";
 import { useContext } from "react";
 
-vi.mock("../../src/api/api_instance", () => ({
-  instance: {
-    get: vi.fn(() => Promise.resolve({})),
-  },
+const makeRequestMock = vi.fn(() => Promise.resolve(true));
+
+vi.mock("../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    makeRequest: makeRequestMock,
+  }),
 }));
 
 const TestComponent = () => {
@@ -87,7 +88,7 @@ describe("AuthProvider", () => {
 
     await waitFor(() => {
       const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(instance.get).toHaveBeenCalledWith("api/auth/signout");
+      expect(makeRequestMock).toHaveBeenCalled();
       expect(authStatusText).toBe("Not Authenticated");
     });
   });

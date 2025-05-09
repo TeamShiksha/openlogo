@@ -1,15 +1,38 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+  setIsAuthenticated: vi.fn(),
+});
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
+  useNavigate: () => mockNavigate,
+}));
+
+const mockedMakeRequest = vi.fn();
+vi.mock("../../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    makeRequest: mockedMakeRequest,
+    errorMsg: "Incorrect email or password.",
+  }),
+}));
 
 describe("SignInForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
+    const authContext = mockAuthContext(false);
     render(
-      <MemoryRouter>
-        <SignIn toggleForm={vi.fn()} />
-      </MemoryRouter>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const title = screen.getByRole("heading", { name: SIGNIN.title });
@@ -25,11 +48,14 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   it("Change form when clicked on text in footer", () => {
+    const authContext = mockAuthContext(false);
     const toggleForm = vi.fn();
     render(
-      <MemoryRouter>
-        <SignIn toggleForm={toggleForm} />
-      </MemoryRouter>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={toggleForm} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const closeButton = screen.getByText(SIGNIN.footerText);
@@ -38,10 +64,13 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   it("validates email only when focused and blurred", async () => {
+    const authContext = mockAuthContext(false);
     render(
-      <MemoryRouter>
-        <SignIn toggleForm={vi.fn()} />
-      </MemoryRouter>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const emailInput = screen.getByLabelText("Email");
 
@@ -58,52 +87,62 @@ describe("SignInForm UI and Functionality Tests", () => {
     });
   });
 
-  it("does not show an error for password but still validates it", async () => {
+  it("connectivity test passed", async () => {
+    const authContext = mockAuthContext(false);
+    const oncloseMock = vi.fn();
+    mockedMakeRequest.mockResolvedValue(true);
+
     render(
-      <MemoryRouter>
-        <SignIn toggleForm={vi.fn()} />
-      </MemoryRouter>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
-    const passwordInput = screen.getByLabelText("Password");
 
-    fireEvent.focus(passwordInput);
-    fireEvent.change(passwordInput, { target: { value: "short" } });
-    fireEvent.blur(passwordInput);
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "johndoe1@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "password123" },
+    });
 
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: SIGNIN.submitButton }));
+
+    await waitFor(() => {
+      expect(mockedMakeRequest).toHaveBeenCalled();
+    });
+
+    expect(oncloseMock).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
-  it("Resets form correctly after submission", async () => {
+  it("connectivity test failed", async () => {
+    const authContext = mockAuthContext(false);
+    mockedMakeRequest.mockResolvedValue(false);
+    const errorMsg = "Incorrect email or password.";
+
     render(
-      <MemoryRouter>
-        <SignIn toggleForm={vi.fn()} />
-      </MemoryRouter>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
-    const emailInput = screen.getByLabelText("Email");
-    const passwordInput = screen.getByLabelText("Password");
-    const signInButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.signIn,
+
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "wrong@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "wrongpass" },
     });
 
-    expect(signInButton).toBeDisabled();
-
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "ValidPassword@123" } });
+    fireEvent.click(screen.getByRole("button", { name: SIGNIN.submitButton }));
 
     await waitFor(() => {
-      expect(signInButton).toBeEnabled();
+      expect(mockedMakeRequest).toHaveBeenCalled();
     });
 
-    fireEvent.click(signInButton);
-
-    await waitFor(() => {
-      expect(emailInput).toHaveValue(SIGNIN.initialValues.email);
-      expect(passwordInput).toHaveValue(SIGNIN.initialValues.password);
-    });
-    const emailError = screen.queryByText("Email is required");
-    expect(emailError).not.toBeInTheDocument();
-
-    expect(signInButton).toBeDisabled();
-    expect(document.activeElement).toBe(document.body);
+    expect(screen.getByText(errorMsg)).toBeInTheDocument();
   });
 });

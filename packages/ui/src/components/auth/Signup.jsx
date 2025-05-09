@@ -1,17 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
-import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
+import { SIGNUP, BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
+import { useApi } from "../../hooks/useApi";
+import { AuthContext } from "../../contexts/Contexts";
+import { useNavigate } from "react-router-dom";
 
-function SignUp({ toggleForm }) {
+function SignUp({ toggleForm, onClose }) {
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const { makeRequest, errorMsg } = useApi({
+    url: `/auth/signup`,
+    method: "post",
+    data: formValues,
+  });
+  const { makeRequest: makeGuestRequest } = useApi({
+    url: `/auth/signin?type=guest`,
+    method: "post",
+  });
 
   useEffect(() => {
     if (!focusedField) {
@@ -47,6 +61,24 @@ function SignUp({ toggleForm }) {
     setFormErrors({});
     setIsSubmit(false);
     setFocusedField(null);
+
+    const success = await makeRequest();
+    if (success) {
+      setFormValues(SIGNUP.initialValues);
+      setIsSubmit(true);
+    }
+  };
+
+  const handleGuestSignIn = async (submitEvent) => {
+    submitEvent.preventDefault();
+    setIsSubmit(true);
+    const success = await makeGuestRequest();
+    if (success) {
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      onClose();
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -58,6 +90,9 @@ function SignUp({ toggleForm }) {
         onSubmit={handleSubmit}
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
+        <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
+          <p className="input-error">{errorMsg}</p>
+        </div>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => (
             <CustomInput
@@ -82,6 +117,9 @@ function SignUp({ toggleForm }) {
         </Button>
       </form>
       <hr className={styles.separator} />
+      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+        {SIGNIN.guestAccount}
+      </p>
       <p onClick={toggleForm} className={styles.switch}>
         {SIGNUP.footerText}
       </p>
@@ -91,6 +129,7 @@ function SignUp({ toggleForm }) {
 
 SignUp.propTypes = {
   toggleForm: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default SignUp;

@@ -1,16 +1,14 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
-import { guestTokenPresent } from "../../../utils/Helpers";
 
-function UserInfo() {
-  const guestToken = guestTokenPresent();
-
+function UserInfo({ name, email, role }) {
   const initialValues = {
-    name: guestToken ? "Guest User" : "John Doe",
-    email: guestToken ? "guestuser@gmail.com" : "johndoe@gmail.com",
+    name,
+    email,
     isBtnDisabled: true,
   };
   const [formData, setFormData] = useState(initialValues);
@@ -34,7 +32,7 @@ function UserInfo() {
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        isBtnDisabled: !!guestToken,
+        isBtnDisabled: role === "GUEST",
         [name]: value,
       };
     });
@@ -63,7 +61,7 @@ function UserInfo() {
     }
     // to be implemented
 
-    setFormErrors({ type: "success", message: "Signed in successfully!" });
+    setFormErrors({ type: "", message: "" });
   };
 
   return (
@@ -92,5 +90,11 @@ function UserInfo() {
     </form>
   );
 }
+
+UserInfo.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  role: PropTypes.object.isRequired,
+};
 
 export default UserInfo;

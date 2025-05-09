@@ -110,8 +110,8 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getGuestUser")
       .mockImplementation(() => new Users(MOCK_USERS[4]));
     const response = await request(app)
-      .post(ENDPOINTS.SIGNIN)
-      .send({ isGuest: true });
+      .post(`${ENDPOINTS.SIGNIN}?type=guest`)
+      .send();
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
