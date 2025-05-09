@@ -5,21 +5,18 @@ WORKDIR /app
 
 RUN npm install -g pnpm
 
-# Accept VITE_BASE_URL as build argument
-ARG VITE_BASE_URL
-ENV VITE_BASE_URL=$VITE_BASE_URL
-
 COPY pnpm-workspace.yaml ./
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
 COPY packages/ui/package.json packages/ui/
+
+# Accept build arg
+ARG VITE_BASE_URL=http://localhost:5000
+ENV VITE_BASE_URL=$VITE_BASE_URL
 
 RUN pnpm install --filter ui...
 
 COPY . .
-
-
-RUN echo "VITE_BASE_URL=$VITE_BASE_URL" > packages/ui/.env
 
 RUN pnpm --filter ui build
 
