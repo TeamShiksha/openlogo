@@ -3,7 +3,7 @@ import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
 import PropTypes from "prop-types";
 
-function SettingCard({ role }) {
+function SettingCard({ isGuest }) {
   return (
     <>
       {SETTING.map((setting, index) => (
@@ -17,7 +17,7 @@ function SettingCard({ role }) {
                 : "primary"
             }
             className={styles["action-button"]}
-            disabled={role == "GUEST"}
+            disabled={isGuest}
           >
             {setting.buttontitle}
           </Button>
@@ -28,6 +28,6 @@ function SettingCard({ role }) {
 }
 
 SettingCard.propTypes = {
-  role: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 export default SettingCard;

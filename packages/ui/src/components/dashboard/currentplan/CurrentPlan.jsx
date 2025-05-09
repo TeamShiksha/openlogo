@@ -1,7 +1,7 @@
 import styles from "./CurrentPlan.module.css";
 import PropTypes from "prop-types";
 
-function CurrentPlan({ role }) {
+function CurrentPlan({ isGuest }) {
   return (
     <>
       <p className={styles["current-plan"]}>Hobby</p>
@@ -10,8 +10,8 @@ function CurrentPlan({ role }) {
       </p>
       <button
         className={styles["upgrade-button"]}
-        disabled={role == "GUEST"}
-        style={{ cursor: role == "GUEST" ? "default" : "pointer" }}
+        disabled={isGuest}
+        style={{ cursor: isGuest ? "default" : "pointer" }}
       >
         Upgrade
       </button>
@@ -20,7 +20,7 @@ function CurrentPlan({ role }) {
 }
 
 CurrentPlan.propTypes = {
-  role: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 
 export default CurrentPlan;

@@ -3,7 +3,7 @@ import Button from "../../common/button/Button";
 import styles from "./ApiKeyForm.module.css";
 import PropTypes from "prop-types";
 
-function ApiKeyForm({ role }) {
+function ApiKeyForm({ isGuest }) {
   return (
     <section className={styles["dashboard-content-section"]}>
       <form className={styles["api-key-container"]} noValidate>
@@ -15,7 +15,7 @@ function ApiKeyForm({ role }) {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={role == "GUEST"}
+          disabled={isGuest}
         >
           Generate Key
         </Button>
@@ -24,7 +24,7 @@ function ApiKeyForm({ role }) {
   );
 }
 ApiKeyForm.propTypes = {
-  role: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 
 export default ApiKeyForm;

@@ -9,7 +9,7 @@ const PASSWORD_FIELDS = [
   { type: "password", name: "newPassword", label: "New Password" },
 ];
 
-function ChangePassword({ role }) {
+function ChangePassword({ isGuest }) {
   const [formValues, setFormValues] = useState({
     currPassword: "",
     newPassword: "",
@@ -43,7 +43,7 @@ function ChangePassword({ role }) {
           required
         />
       ))}
-      <Button type="submit" variant="primary" disabled={role === "GUEST"}>
+      <Button type="submit" variant="primary" disabled={isGuest}>
         Change password
       </Button>
     </form>
@@ -51,6 +51,6 @@ function ChangePassword({ role }) {
 }
 
 ChangePassword.propTypes = {
-  role: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 export default ChangePassword;

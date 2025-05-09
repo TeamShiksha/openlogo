@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
@@ -16,6 +16,7 @@ import Button from "../../components/common/button/Button.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const [isGuest, setIsGuest] = useState(false);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -30,6 +31,12 @@ function Dashboard() {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+
+  useEffect(() => {
+    if (userData) {
+      setIsGuest(userData?.role == "GUEST");
+    }
+  }, [userData]);
 
   if (loading) {
     return <div>loading..</div>;
@@ -53,14 +60,14 @@ function Dashboard() {
             />
           </CardWrapper>
           <CardWrapper title="Generate New API Key">
-            <ApiKeyForm role={userData?.role} />
+            <ApiKeyForm isGuest={isGuest} />
           </CardWrapper>
           <CardWrapper
             title="Plan"
             status="Active"
             statusClass={styles["active-status"]}
           >
-            <CurrentPlan role={userData?.role} />
+            <CurrentPlan isGuest={isGuest} />
           </CardWrapper>
         </section>
       </div>
@@ -70,7 +77,7 @@ function Dashboard() {
           rows={apiKeyTableData}
           emptyMessage={API_KEY_TABLE.emptyMessage}
           onDelete={() => {}}
-          role={userData?.role}
+          isGuest={isGuest}
         />
       </div>
 
@@ -80,14 +87,14 @@ function Dashboard() {
             <UserInfo
               name={userData?.name || ""}
               email={userData?.email || ""}
-              role={userData?.role}
+              isGuest={isGuest}
             />
           </CardWrapper>
           <CardWrapper title="Change Password">
-            <ChangePassword role={userData?.role} />
+            <ChangePassword isGuest={isGuest} />
           </CardWrapper>
           <CardWrapper title="Setting">
-            <SettingCard role={userData?.role} />
+            <SettingCard isGuest={isGuest} />
           </CardWrapper>
         </section>
       </div>

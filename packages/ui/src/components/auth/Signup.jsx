@@ -1,30 +1,22 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
-import { SIGNUP, BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
+import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
-import { AuthContext } from "../../contexts/Contexts";
-import { useNavigate } from "react-router-dom";
 
-function SignUp({ toggleForm, onClose }) {
-  const navigate = useNavigate();
+function SignUp({ toggleForm }) {
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
-  const { setIsAuthenticated } = useContext(AuthContext);
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
     data: formValues,
-  });
-  const { makeRequest: makeGuestRequest } = useApi({
-    url: `/auth/signin?type=guest`,
-    method: "post",
   });
 
   useEffect(() => {
@@ -69,18 +61,6 @@ function SignUp({ toggleForm, onClose }) {
     }
   };
 
-  const handleGuestSignIn = async (submitEvent) => {
-    submitEvent.preventDefault();
-    setIsSubmit(true);
-    const success = await makeGuestRequest();
-    if (success) {
-      setIsAuthenticated(true);
-      setIsSubmit(false);
-      onClose();
-      navigate("/dashboard");
-    }
-  };
-
   return (
     <>
       <form
@@ -117,9 +97,6 @@ function SignUp({ toggleForm, onClose }) {
         </Button>
       </form>
       <hr className={styles.separator} />
-      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
-        {SIGNIN.guestAccount}
-      </p>
       <p onClick={toggleForm} className={styles.switch}>
         {SIGNUP.footerText}
       </p>
@@ -129,7 +106,6 @@ function SignUp({ toggleForm, onClose }) {
 
 SignUp.propTypes = {
   toggleForm: PropTypes.func.isRequired,
-  onClose: PropTypes.func,
 };
 
 export default SignUp;

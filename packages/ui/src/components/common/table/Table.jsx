@@ -3,7 +3,7 @@ import Button from "../button/Button";
 import styles from "./Table.module.css";
 import { BUTTON_TEXT } from "../../../utils/Constants";
 
-const Table = ({ headers, rows, emptyMessage, onDelete, role }) => {
+const Table = ({ headers, rows, emptyMessage, onDelete, isGuest }) => {
   const hasData = rows && rows?.length > 0;
   return (
     <div className={styles["table-container"]}>
@@ -35,7 +35,7 @@ const Table = ({ headers, rows, emptyMessage, onDelete, role }) => {
                       variant="danger"
                       className={styles["delete-btn"]}
                       onClick={() => onDelete(cells[index])}
-                      disabled={role == "GUEST"}
+                      disabled={isGuest}
                     >
                       {BUTTON_TEXT.delete}
                     </Button>
@@ -61,7 +61,7 @@ Table.propTypes = {
   rows: PropTypes.array.isRequired,
   emptyMessage: PropTypes.string,
   onDelete: PropTypes.func,
-  role: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 
 export default Table;
