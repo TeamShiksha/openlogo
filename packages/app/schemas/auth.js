@@ -1,15 +1,13 @@
 const Joi = require("joi");
+const { EmailValidationRegex } = require("../utils/constants");
 
 const signinPayloadSchema = Joi.object().keys({
-  email: Joi.string()
-    .trim()
-    .required()
-    .regex(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
-    .messages({
-      "string.base": "Email must be a string",
-      "any.required": "Email is required",
-      "string.pattern.base": "Invalid email",
-    }),
+  email: Joi.string().trim().required().regex(EmailValidationRegex).messages({
+    "string.base": "Email must be a string",
+    "any.required": "Email is required",
+    "string.pattern.base": "Invalid email",
+  }),
+
   password: Joi.string().trim().required().messages({
     "string.base": "Password must be string",
     "any.required": "Password is required",

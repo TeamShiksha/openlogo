@@ -5,6 +5,8 @@ import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
+import { BrowserRouter } from "react-router-dom";
+import { AuthContext } from "../../../src/contexts/Contexts";
 
 const mockedMakeRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
@@ -13,9 +15,21 @@ vi.mock("../../../src/hooks/useApi", () => ({
   }),
 }));
 
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+  setIsAuthenticated: vi.fn(),
+});
+
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const title = screen.getByRole("heading", { name: SIGNUP.title });
     expect(title).toBeInTheDocument();
@@ -29,7 +43,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
   it("switch to to sign-in form on click", () => {
     const toggleFormMock = vi.fn();
-    render(<SignUpForm toggleForm={toggleFormMock} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={toggleFormMock} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const switchButton = screen.getByText(SIGNUP.footerText);
     fireEvent.click(switchButton);
@@ -37,7 +58,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("removes non-letter characters from name input", () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText(SIGNUP["fields"][0].label);
     fireEvent.change(nameInput, { target: { value: "JohnDoe" } });
@@ -45,7 +73,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("validates only when focused and blurred", async () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
@@ -78,7 +113,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("resets form correctly after submission", async () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
@@ -125,7 +167,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
   it("connectivity test passed", async () => {
     mockedMakeRequest.mockResolvedValue(true);
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
@@ -161,7 +210,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
   it("connectivity test failed", async () => {
     mockedMakeRequest.mockResolvedValue(false);
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");

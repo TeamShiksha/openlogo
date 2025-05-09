@@ -22,6 +22,10 @@ const SignIn = ({ toggleForm, onClose }) => {
     url: `/auth/signin`,
     data: formData,
   });
+  const { makeRequest: makeGuestRequest } = useApi({
+    method: "post",
+    url: `/auth/signin?type=guest`,
+  });
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -64,6 +68,18 @@ const SignIn = ({ toggleForm, onClose }) => {
     }
   };
 
+  const handleGuestSignIn = async (submitEvent) => {
+    submitEvent.preventDefault();
+    setIsSubmit(true);
+    const success = await makeGuestRequest();
+    if (success) {
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      onClose();
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -99,6 +115,9 @@ const SignIn = ({ toggleForm, onClose }) => {
         </Button>
       </form>
       <hr className={styles.separator} />
+      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+        {SIGNIN.guestAccount}
+      </p>
       <p onClick={toggleForm} className={styles.switch}>
         {SIGNIN.footerText}
       </p>

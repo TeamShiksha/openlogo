@@ -28,6 +28,13 @@ class UsersRepository extends BaseRepository {
   async getUsersCount() {
     return await User.countDocuments();
   }
+  /**
+   *
+   * @returns {Promise<Object|null>} - Returns the user document with role:GUEST if found, otherwise null.
+   */
+  async getGuestUser() {
+    return await this.model.findOne({ role: "GUEST" });
+  }
 }
 
 module.exports = UsersRepository;

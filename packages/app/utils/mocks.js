@@ -76,6 +76,17 @@ const MOCK_USERS = [
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Guest User",
+    email: "guestuser@example.com",
+    password: bcrypt.hashSync("password123", 10),
+    role: UserType.GUEST,
+    is_verified: true,
+    subscription_id: new mongoose.Types.ObjectId(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
 ];
 
 const MOCK_USERTOKENS = [

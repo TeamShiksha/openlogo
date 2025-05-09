@@ -5,7 +5,7 @@ import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 
-function UserInfo({ name, email }) {
+function UserInfo({ name, email, isGuest }) {
   const initialValues = {
     name,
     email,
@@ -32,7 +32,7 @@ function UserInfo({ name, email }) {
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        isBtnDisabled: false,
+        isBtnDisabled: isGuest,
         [name]: value,
       };
     });
@@ -94,6 +94,7 @@ function UserInfo({ name, email }) {
 UserInfo.propTypes = {
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
+  isGuest: PropTypes.bool.isRequired,
 };
 
 export default UserInfo;

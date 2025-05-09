@@ -483,6 +483,7 @@ export const SIGNIN = {
     { type: "email", name: "email", label: "Email" },
     { type: "password", name: "password", label: "Password" },
   ],
+  guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
   initialValues: { email: "", password: "" },
 };
@@ -624,6 +625,7 @@ export const DASHBOARD_CARDS_TITLE = [
 export const MOCK_USER_DATA = {
   name: "John Doe",
   email: "john@example.com",
+  role: "USER",
   subscription: {
     usage_count: 42,
     usage_limit: 100,

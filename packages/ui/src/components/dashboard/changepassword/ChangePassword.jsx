@@ -2,13 +2,14 @@ import { useState } from "react";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 import styles from "./ChangePassword.module.css";
+import PropTypes from "prop-types";
 
 const PASSWORD_FIELDS = [
   { type: "password", name: "currPassword", label: "Current Password" },
   { type: "password", name: "newPassword", label: "New Password" },
 ];
 
-function ChangePassword() {
+function ChangePassword({ isGuest }) {
   const [formValues, setFormValues] = useState({
     currPassword: "",
     newPassword: "",
@@ -42,11 +43,14 @@ function ChangePassword() {
           required
         />
       ))}
-      <Button type="submit" variant="primary">
+      <Button type="submit" variant="primary" disabled={isGuest}>
         Change password
       </Button>
     </form>
   );
 }
 
+ChangePassword.propTypes = {
+  isGuest: PropTypes.bool.isRequired,
+};
 export default ChangePassword;

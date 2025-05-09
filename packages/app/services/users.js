@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
-
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
@@ -103,6 +102,10 @@ class UserService {
    */
   async getUserByEmail(email) {
     return await this.userRepository.findUserByEmail(email);
+  }
+
+  async getGuestUser() {
+    return await this.userRepository.getGuestUser();
   }
 
   /**
