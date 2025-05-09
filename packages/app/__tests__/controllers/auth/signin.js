@@ -10,12 +10,10 @@ const app = require("../../../server");
 describe("SIGNIN API", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "jwtsecret";
-    process.env.SALT_ROUNDS = 10;
   });
 
   afterAll(() => {
     delete process.env.JWT_SECRET;
-    delete process.env.SALT_ROUNDS;
   });
 
   it("422 - Invalid email", async () => {

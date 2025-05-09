@@ -5,18 +5,12 @@ import { AuthContext, UserContext } from "../contexts/Contexts";
 
 function ProtectedRoute({ adminOnly = false, children }) {
   const location = useLocation();
-  const { isAuthenticated, isGuest } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if (
-      adminOnly &&
-      (isAuthenticated || isGuest) &&
-      !loading &&
-      !userData &&
-      !hasFetched
-    ) {
+    if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
       setHasFetched(true);
       fetchUserData();
     }
@@ -27,10 +21,9 @@ function ProtectedRoute({ adminOnly = false, children }) {
     hasFetched,
     fetchUserData,
     isAuthenticated,
-    isGuest,
   ]);
 
-  if (!isAuthenticated && !isGuest) {
+  if (!isAuthenticated) {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
   }
 
