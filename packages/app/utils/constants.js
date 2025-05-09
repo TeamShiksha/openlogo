@@ -3,6 +3,8 @@
  * @enum {string}
  **/
 
+const EmailValidationRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
 const UserTokenTypes = {
   FORGOT: "FORGOT",
   VERIFY: "VERIFY",
@@ -12,6 +14,7 @@ const UserType = {
   ADMIN: "ADMIN",
   CUSTOMER: "CUSTOMER",
   OPERATOR: "OPERATOR",
+  GUEST: "GUEST",
 };
 
 const SubscriptionTypes = {
@@ -71,6 +74,7 @@ const Messages = {
 };
 
 module.exports = {
+  EmailValidationRegex,
   UserTokenTypes,
   UserType,
   SubscriptionTypes,

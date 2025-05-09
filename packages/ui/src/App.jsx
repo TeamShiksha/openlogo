@@ -17,7 +17,6 @@ function App() {
   const openCloseAuthModal = () => {
     setAuthModal(!authModal);
   };
-
   return (
     <div className="app-container">
       <ScrollManager />
