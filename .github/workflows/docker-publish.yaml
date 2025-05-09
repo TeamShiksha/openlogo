@@ -3,7 +3,7 @@ name: Publish Docker Images
 on:
   push:
     branches:
-      - 646-docker-optimization
+      - stage
     paths:
       - "packages/app/**"
       - "packages/ui/**"
