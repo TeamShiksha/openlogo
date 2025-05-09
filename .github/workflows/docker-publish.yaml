@@ -34,6 +34,8 @@ jobs:
           file: ./packages/app/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-express:stage
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push React image
         uses: docker/build-push-action@v5
@@ -42,3 +44,5 @@ jobs:
           file: ./packages/ui/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-react:stage
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
