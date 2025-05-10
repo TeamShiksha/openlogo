@@ -8,6 +8,7 @@ const {
   ContactUsService,
 } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
+const { companyUriSchema } = require("../schemas/catalog");
 const { Messages } = require("../utils/constants");
 
 async function getAnalyticsController(req, res, next) {
@@ -188,6 +189,15 @@ async function addCatalogController(req, res, next) {
     const file = req.file;
     const imageSize = file.size;
     const companyUri = req.body.companyUri;
+    const { error } = companyUriSchema.validate(companyUri);
+    if (error) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        statusCode: 500,
+        message: error.message,
+      });
+    }
+
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();

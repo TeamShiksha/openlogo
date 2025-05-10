@@ -46,4 +46,15 @@ const getSearchQuerySchema = Joi.object({
   return { ...value, companyNameBeginsWith };
 });
 
-module.exports = { getLogoQuerySchema, getSearchQuerySchema };
+const companyUriSchema = Joi.string()
+  .required()
+  .regex(/:\/\/[0-9a-z-.]+\.[a-z]+\//i)
+  .uri({
+    scheme: [/https?/],
+  })
+  .messages({
+    "any.required": "companyUri is required",
+    "string.pattern.base": "Invalid companyUri",
+  });
+
+module.exports = { getLogoQuerySchema, getSearchQuerySchema, companyUriSchema };

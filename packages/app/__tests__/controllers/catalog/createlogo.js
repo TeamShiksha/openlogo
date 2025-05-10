@@ -34,6 +34,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
@@ -60,6 +61,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
@@ -83,6 +85,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
@@ -109,6 +112,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(200);
