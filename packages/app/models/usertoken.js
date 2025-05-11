@@ -37,7 +37,7 @@ const userTokenSchema = new mongoose.Schema({
 
 userTokenSchema.methods.tokenURL = function () {
   let path, url;
-  if (this.type === UserTokenTypes.FORGOT) path = "/reset-password";
+  if (this.type === UserTokenTypes.FORGOT) path = "/password/forgot";
   if (this.type === UserTokenTypes.VERIFY) path = "/verify";
   url = new URL(path, process.env.CLIENT_URL);
   url.searchParams.append("token", this.token);
