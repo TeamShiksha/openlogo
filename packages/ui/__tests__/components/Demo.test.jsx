@@ -1,19 +1,23 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-vi.mock("../../utils/Constants", () => ({
-  SVGS: {
-    searchIcon: "search-icon.svg",
-    curvedArrow: "curved-arrow.svg",
-  },
-  BUTTON_TEXT: {
-    requestLogo: "Request Logo",
+// vi.mock("../../utils/Constants", () => ({
+//   SVGS: {
+//     searchIcon: "search-icon.svg",
+//     curvedArrow: "curved-arrow.svg",
+//   },
+//   BUTTON_TEXT: {
+//     requestLogo: "Request Logo",
+//   },
+// }));
+
+import Demo from "../../src/components/demo/Demo.jsx";
+import { instance } from "../../src/api/api_instance.js";
+vi.mock("../../src/api/api_instance.js", () => ({
+  instance: {
+    get: vi.fn(),
   },
 }));
-
-import axios from "axios";
-import Demo from "../../src/components/demo/Demo.jsx";
-vi.mock("axios");
 
 describe("Demo Component", () => {
   const mockOpenAuthModal = vi.fn();
@@ -29,7 +33,7 @@ describe("Demo Component", () => {
   });
 
   it("shows loading animation while fetching", async () => {
-    axios.get.mockResolvedValueOnce(new Promise(() => {}));
+    instance.get.mockResolvedValueOnce(new Promise(() => {}));
 
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 
@@ -45,13 +49,13 @@ describe("Demo Component", () => {
 
   it("displays up to 3 search results after fetching", async () => {
     const mockCompanies = [
-      { id: 1, name: "Apple", logo: "apple-logo.svg" },
-      { id: 2, name: "Amazon", logo: "amazon-logo.svg" },
-      { id: 3, name: "Adobe", logo: "adobe-logo.svg" },
-      { id: 4, name: "Airbnb", logo: "airbnb-logo.svg" },
+      { companyName: "Apple", image: "apple-logo.svg" },
+      { companyName: "Amazon", image: "amazon-logo.svg" },
+      { companyName: "Adobe", image: "adobe-logo.svg" },
+      { companyName: "Airbnb", image: "airbnb-logo.svg" },
     ];
 
-    axios.get.mockResolvedValueOnce({ data: mockCompanies });
+    instance.get.mockResolvedValueOnce({ data: { data: mockCompanies } });
 
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 
@@ -69,7 +73,7 @@ describe("Demo Component", () => {
   });
 
   it("shows 'No results' and request button if search returns nothing", async () => {
-    axios.get.mockResolvedValueOnce({ data: [] });
+    instance.get.mockResolvedValueOnce({ data: [] });
 
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 
@@ -85,7 +89,7 @@ describe("Demo Component", () => {
   });
 
   it("calls openAuthModal when request button is clicked", async () => {
-    axios.get.mockResolvedValueOnce({ data: [] });
+    instance.get.mockResolvedValueOnce({ data: [] });
 
     render(<Demo openAuthModal={mockOpenAuthModal} />);
 

@@ -46,4 +46,28 @@ const getSearchQuerySchema = Joi.object({
   return { ...value, companyNameBeginsWith };
 });
 
-module.exports = { getLogoQuerySchema, getSearchQuerySchema };
+const getDemoSearchQuerySchema = Joi.object({
+  domainKey: Joi.string()
+    .regex(/^[A-Za-z0-9&-/:.]+$/)
+    .required()
+    .messages({
+      "any.required": "domainKey is required",
+      "string.pattern.base": "Invalid domainKey",
+    }),
+}).custom((value, helpers) => {
+  const { domainKey } = value;
+  const companyNameBeginsWith = domainKey
+    .replace(/^(https?:\/\/)?(www\.)?/, "")
+    .match(/([A-Za-z0-9-]+)/)[1]
+    .toUpperCase();
+  if (companyNameBeginsWith === "") {
+    return helpers.error("domainKey cannot be empty");
+  }
+  return { ...value, companyNameBeginsWith };
+});
+
+module.exports = {
+  getLogoQuerySchema,
+  getSearchQuerySchema,
+  getDemoSearchQuerySchema,
+};

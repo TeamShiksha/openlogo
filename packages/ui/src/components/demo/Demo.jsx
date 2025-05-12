@@ -3,7 +3,7 @@ import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";
-import axios from "axios";
+import { instance } from "../../api/api_instance.js";
 
 const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,11 +19,11 @@ const Demo = ({ openAuthModal }) => {
       setShowResults(false);
 
       try {
-        const result = await axios.get(
-          `https://67dad12b35c87309f52e299a.mockapi.io/company?search=${searchTerm}`
+        const response = await instance.get(
+          `/logo/demo-search?domainKey=${searchTerm}`
         );
-        const data = result.data;
-        setApiResults(data.slice(0, 3));
+        const res = response.data;
+        setApiResults(res.data.slice(0, 3));
       } catch (error) {
         console.log(error);
       } finally {
@@ -84,12 +84,15 @@ const Demo = ({ openAuthModal }) => {
             <div className={`${styles["result-container"]} ${styles["show"]}`}>
               {apiResults.map((company, index) => (
                 <div
-                  key={company.id}
+                  key={company.companyName}
                   className={`${styles["result-item"]} ${styles["show"]}`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
-                  <img src={company.logo} alt={`${company.name} Logo`} />
-                  <span>{company.name}</span>
+                  <img
+                    src={company.image}
+                    alt={`${company.companyName} Logo`}
+                  />
+                  <span>{company.companyName}</span>
                 </div>
               ))}
             </div>
