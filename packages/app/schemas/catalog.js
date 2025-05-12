@@ -48,7 +48,7 @@ const getSearchQuerySchema = Joi.object({
 
 const getDemoSearchQuerySchema = Joi.object({
   domainKey: Joi.string()
-    .regex(/^[A-Za-z0-9&-/:.]+$/)
+    .regex(/^[A-Za-z0-9&/:.-]+$/)
     .required()
     .messages({
       "any.required": "domainKey is required",

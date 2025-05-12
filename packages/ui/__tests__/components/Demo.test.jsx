@@ -1,16 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-// vi.mock("../../utils/Constants", () => ({
-//   SVGS: {
-//     searchIcon: "search-icon.svg",
-//     curvedArrow: "curved-arrow.svg",
-//   },
-//   BUTTON_TEXT: {
-//     requestLogo: "Request Logo",
-//   },
-// }));
-
 import Demo from "../../src/components/demo/Demo.jsx";
 import { instance } from "../../src/api/api_instance.js";
 vi.mock("../../src/api/api_instance.js", () => ({
