@@ -3,7 +3,7 @@ import PricingCard from "./PricingCard";
 import { PRICING } from "../../utils/Constants";
 import styles from "./Pricing.module.css";
 
-function Pricing({ openAuthModal }) {
+function Pricing({ openAuthModal, activePlan }) {
   return (
     <div
       data-testid="pricing"
@@ -21,6 +21,7 @@ function Pricing({ openAuthModal }) {
             index={plan.index}
             keypoints={plan.keypoints}
             openAuthModal={openAuthModal}
+            activePlan={activePlan}
           />
         ))}
       </div>
@@ -30,6 +31,7 @@ function Pricing({ openAuthModal }) {
 
 Pricing.propTypes = {
   openAuthModal: PropTypes.func.isRequired,
+  activePlan: PropTypes.string,
 };
 
 export default Pricing;

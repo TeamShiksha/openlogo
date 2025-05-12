@@ -102,4 +102,19 @@ describe("SIGNIN API", () => {
     });
     expect(response.headers["set-cookie"]).toBeDefined();
   });
+
+  it("200 - Guest Signin successful", async () => {
+    jest
+      .spyOn(UserService.prototype, "getGuestUser")
+      .mockImplementation(() => new Users(MOCK_USERS[4]));
+    const response = await request(app)
+      .post(`${ENDPOINTS.SIGNIN}?type=guest`)
+      .send();
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      statusCode: 200,
+    });
+    expect(response.headers["set-cookie"]).toBeDefined();
+  });
 });

@@ -3,6 +3,7 @@ const authMiddleware = require("../middlewares/auth");
 const {
   getMessagesController,
   respondMessagesController,
+  addMessagesController,
 } = require("../controllers/operator");
 
 router.put(
@@ -11,5 +12,6 @@ router.put(
   respondMessagesController
 );
 router.get("/", authMiddleware({ operatorOnly: true }), getMessagesController);
+router.post("/contact-us", addMessagesController);
 
 module.exports = router;
