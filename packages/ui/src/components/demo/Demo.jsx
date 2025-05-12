@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";
 import { instance } from "../../api/api_instance.js";
+import { firstLetterCapitalString } from "../../utils/Helpers.js";
 
 const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,12 +12,16 @@ const Demo = ({ openAuthModal }) => {
   const [loading, setLoading] = useState(false);
   const [apiResults, setApiResults] = useState([]);
 
-  const handleSearch = async (searchEvent) => {
-    searchEvent.preventDefault();
-
-    if (searchTerm.length > 1) {
-      setLoading(true);
+  useEffect(() => {
+    if (searchTerm.length <= 1) {
+      setApiResults([]);
       setShowResults(false);
+      return;
+    }
+
+    const debounceTimer = setTimeout(async () => {
+      setLoading(true);
+      setShowResults(true);
 
       try {
         const response = await instance.get(
@@ -30,16 +35,14 @@ const Demo = ({ openAuthModal }) => {
         setLoading(false);
         setShowResults(true);
       }
-    }
-  };
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   const handleInputChange = (inputChangeEvent) => {
     const value = inputChangeEvent.target.value;
     setSearchTerm(value);
-    if (!value) {
-      setShowResults(false);
-      setApiResults([]);
-    }
   };
 
   return (
@@ -53,7 +56,7 @@ const Demo = ({ openAuthModal }) => {
       </div>
       <div className={`${styles["search-box"]}`}>
         <div className={styles["search-content"]}>
-          <form onSubmit={handleSearch}>
+          <form>
             <input
               name="search"
               type="text"
@@ -92,7 +95,7 @@ const Demo = ({ openAuthModal }) => {
                     src={company.image}
                     alt={`${company.companyName} Logo`}
                   />
-                  <span>{company.companyName}</span>
+                  <span>{firstLetterCapitalString(company.companyName)}</span>
                 </div>
               ))}
             </div>
