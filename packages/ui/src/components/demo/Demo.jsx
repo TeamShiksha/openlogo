@@ -56,7 +56,7 @@ const Demo = ({ openAuthModal }) => {
       </div>
       <div className={`${styles["search-box"]}`}>
         <div className={styles["search-content"]}>
-          <form>
+          <form onSubmit={(e) => e.preventDefault()}>
             <input
               name="search"
               type="text"
