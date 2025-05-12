@@ -188,3 +188,8 @@ export const getBaseApiUrl = (domain) => {
     return DOCUMENTATION.baseProdUrl;
   }
 };
+
+export const firstLetterCapitalString = (string) => {
+  string = string.toLowerCase();
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
