@@ -10,6 +10,8 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import VerifyEmail from "./components/verification/VerifyEmail";
+import "./styles/layout.css";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -21,27 +23,33 @@ function App() {
     <div className="app-container">
       <ScrollManager />
       <Header openAuthModal={openCloseAuthModal} />
-      <Routes>
-        <Route path="/" element={<Home openAuthModal={openCloseAuthModal} />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/docs" element={<Documentation />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute adminOnly={false}>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <div className="main-content">
+        <Routes>
+          <Route
+            path="/"
+            element={<Home openAuthModal={openCloseAuthModal} />}
+          />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/docs" element={<Documentation />} />
+          <Route path="/verify" element={<VerifyEmail />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute adminOnly={false}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
       <Footer />
       <AuthModal isOpen={authModal} onClose={openCloseAuthModal} />
     </div>
