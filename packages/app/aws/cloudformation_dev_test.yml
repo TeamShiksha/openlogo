@@ -9,15 +9,9 @@ Parameters:
   EncodedRSAPublicKey:
     Type: String
     Default: |
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4wfHrGMhxvipvkY0wZZz
-      YWSBzY3WW46UHDYxeaGq8nv0DAnEb6Sus8vnS4KxzimtSoNqZ9AFb/PT7JC7F67U
-      GawaamfrnSor0sN51aYypGAwjJWsQPyc0PuzVcZ7hD+3UYsykH1bkk6yLY9Rb7S7
-      lquMMiKfdBf2KhO/HJAxURfCU+KIcEd310aCFN5GPb3qgYiKUO9jHepK9PtRTP6J
-      ovI3owhZxVvprRd/rxj944X6JQwao5ctFy9xdB2IxZWMkMA2rq67i1tYorDEhhuX
-      CI8aKJ1Uz1gz9EaBw2W7scUo/YAPxP+PM6WBIVwf0AjpjwfnJZ4WXraXA+36Ip28
-      uwIDAQAB
-      -----END PUBLIC KEY-----
+      Insert the public key value in PEM format, encompassing both 
+      -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY-----.
+      Refer to https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html for guidance.
     Description: |
       The public key is employed to verify the signed URL generated with the private key.
 
