@@ -251,4 +251,43 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
     expect(signUpButton).toBeDisabled();
   });
+
+  it("disables input fields and submit button when loading", async () => {
+    mockedMakeRequest.mockImplementation(() => {
+      return new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+    });
+
+    render(<SignUpForm toggleForm={vi.fn()} />);
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    fireEvent.change(nameInput, {
+      target: { value: "Test" },
+    });
+    fireEvent.change(emailInput, {
+      target: { value: "test@gmail.com" },
+    });
+    fireEvent.change(passwordInput, {
+      target: { value: "Test@1234" },
+    });
+    fireEvent.change(confirmPasswordInput, {
+      target: { value: "Test@1234" },
+    });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(nameInput).toBeDisabled();
+      expect(emailInput).toBeDisabled();
+      expect(passwordInput).toBeDisabled();
+      expect(confirmPasswordInput).toBeDisabled();
+      expect(submitButton).toBeDisabled();
+    });
+  });
 });

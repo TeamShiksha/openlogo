@@ -17,6 +17,7 @@ function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isGuest, setIsGuest] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -43,7 +44,9 @@ function Dashboard() {
   }
 
   const handleLogout = () => {
+    setIsLoading(true);
     logout();
+    setIsLoading(false);
   };
 
   return (
@@ -105,6 +108,7 @@ function Dashboard() {
             variant="danger"
             className={styles["logout-btn"]}
             onClick={handleLogout}
+            isLoading={isLoading}
           >
             {BUTTON_TEXT.signOut}
           </Button>
