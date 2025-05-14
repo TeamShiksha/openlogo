@@ -32,6 +32,10 @@ const imageSchema = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  extension: {
+    type: String,
+    required: true,
+  },
 });
 
 imageSchema.methods.data = function () {
@@ -44,12 +48,14 @@ imageSchema.methods.data = function () {
     created_at: this._id.getTimestamp(),
     is_deleted: this.is_deleted,
     updated_at: this.updated_at,
+    extension: this.extension,
   };
 };
 
 imageSchema.statics.newImage = function (imageData) {
-  const { user_id, company_name, company_uri, image_size } = imageData;
-  if (!user_id || !company_name || !company_uri || !image_size) {
+  const { user_id, company_name, company_uri, image_size, extension } =
+    imageData;
+  if (!user_id || !company_name || !company_uri || !image_size || !extension) {
     return null;
   }
   const image = new Image({
@@ -58,6 +64,7 @@ imageSchema.statics.newImage = function (imageData) {
     company_uri,
     image_size,
     updated_at: new Date(),
+    extension,
   });
   return image;
 };
