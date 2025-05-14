@@ -148,9 +148,16 @@ describe("SignInForm UI and Functionality Tests", () => {
 
   it("disables input fields and submit button when loading", async () => {
     const authContext = mockAuthContext(false);
-    mockedMakeRequest.mockImplementation(() => {
-      return new Promise((resolve) => setTimeout(() => resolve(true), 1000));
-    });
+
+    const delayedResolve = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, 1000);
+      });
+    };
+
+    mockedMakeRequest.mockImplementation(delayedResolve);
 
     render(
       <BrowserRouter>
@@ -166,13 +173,8 @@ describe("SignInForm UI and Functionality Tests", () => {
       name: BUTTON_TEXT.signIn,
     });
 
-    fireEvent.change(emailInput, {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(passwordInput, {
-      target: { value: "password123" },
-    });
-
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {

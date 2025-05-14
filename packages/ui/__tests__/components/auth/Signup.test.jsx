@@ -253,9 +253,13 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("disables input fields and submit button when loading", async () => {
-    mockedMakeRequest.mockImplementation(() => {
-      return new Promise((resolve) => setTimeout(() => resolve(true), 1000));
-    });
+    const delayedResolve = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(true), 1000);
+      });
+    };
+
+    mockedMakeRequest.mockImplementation(delayedResolve);
 
     render(<SignUpForm toggleForm={vi.fn()} />);
 
@@ -267,18 +271,10 @@ describe("SignUpForm UI and Functionality Tests", () => {
       name: SIGNUP.submitButton,
     });
 
-    fireEvent.change(nameInput, {
-      target: { value: "Test" },
-    });
-    fireEvent.change(emailInput, {
-      target: { value: "test@gmail.com" },
-    });
-    fireEvent.change(passwordInput, {
-      target: { value: "Test@1234" },
-    });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "Test@1234" },
-    });
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
 
     fireEvent.click(submitButton);
 
