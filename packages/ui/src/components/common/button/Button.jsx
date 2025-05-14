@@ -10,9 +10,9 @@ const Button = ({
   disabled = false,
   className = "",
   isLoading = false,
-  spinnerSize = 20,
-  spinnerBorder = 4,
-  spinnerColor = "white",
+  spinnerSize,
+  spinnerBorder,
+  spinnerColor,
 }) => {
   const [buttonWidth, setButtonWidth] = useState(null);
   const buttonRef = useRef(null);
