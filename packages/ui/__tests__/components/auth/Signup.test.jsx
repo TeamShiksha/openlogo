@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
 import {
   SIGNUP,
@@ -252,15 +252,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
     expect(signUpButton).toBeDisabled();
   });
 
-  it("disables input fields and submit button when loading", async () => {
-    const delayedResolve = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(true), 1000);
-      });
-    };
+  const delayedResolve = () =>
+    new Promise((resolve) => setTimeout(() => resolve(true), 1000));
 
+  beforeEach(() => {
     mockedMakeRequest.mockImplementation(delayedResolve);
+  });
 
+  it("disables input fields and submit button when loading", async () => {
     render(<SignUpForm toggleForm={vi.fn()} />);
 
     const nameInput = screen.getByLabelText("Name");
