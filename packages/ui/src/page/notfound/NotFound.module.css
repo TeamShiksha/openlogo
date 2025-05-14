@@ -1,0 +1,28 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.not-found-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ff4d4f;
+  //color: var(--error);
+}
+
+.not-found-message {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  color: var(--black);
+}
+
+@media screen and (max-width: 640px) {
+  .not-found-title {
+    font-size: 2rem;
+  }
+}
