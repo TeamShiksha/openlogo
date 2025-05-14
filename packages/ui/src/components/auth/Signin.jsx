@@ -17,6 +17,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: `/auth/signin`,
@@ -57,6 +58,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsSubmit(true);
+    setIsLoading(true);
     const success = await makeRequest();
     if (success) {
       setFormData(SIGNIN.initialValues);
@@ -66,6 +68,7 @@ const SignIn = ({ toggleForm, onClose }) => {
       onClose();
       navigate("/dashboard");
     }
+    setIsLoading(false);
   };
 
   const handleGuestSignIn = async (submitEvent) => {
@@ -100,6 +103,7 @@ const SignIn = ({ toggleForm, onClose }) => {
               onChange={handleChange}
               onFocus={() => setFocusedField(field.name)}
               onBlur={() => setFocusedField(null)}
+              disabled={isLoading}
             />
           ))}
         </div>
@@ -110,6 +114,7 @@ const SignIn = ({ toggleForm, onClose }) => {
           type="submit"
           variant="primary"
           disabled={!isFormValid && isSubmit}
+          isLoading={isLoading}
         >
           {BUTTON_TEXT.signIn}
         </Button>
