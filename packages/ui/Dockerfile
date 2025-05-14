@@ -5,25 +5,23 @@ WORKDIR /app
 
 RUN npm install -g pnpm
 
-COPY pnpm-workspace.yaml ./
 COPY package.json ./
 
-COPY packages/ui/package.json packages/ui/
 
 # Accept build arg
 ARG VITE_BASE_URL=http://localhost:5000
 ENV VITE_BASE_URL=$VITE_BASE_URL
 
-RUN pnpm install --filter ui...
+RUN pnpm install
 
 COPY . .
 
-RUN pnpm --filter ui build
+RUN pnpm build # --filter ui
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
 
-COPY --from=builder /app/packages/ui/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 

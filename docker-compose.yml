@@ -32,8 +32,8 @@ services:
 
   react:
     build:
-      context: .
-      dockerfile: packages/ui/Dockerfile
+      context: ./packages/ui
+      dockerfile: Dockerfile
     container_name: openlogo-react
     restart: always
     ports:

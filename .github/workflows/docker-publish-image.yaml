@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - stage
-    paths:
-      - "packages/app/**"
-      - "packages/ui/**"
-      - "Dockerfile"
-      - "docker-compose.yml"
 
 jobs:
   publish:
@@ -38,7 +33,7 @@ jobs:
       - name: Build and push React image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./packages/ui
           file: ./packages/ui/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-react:stage
