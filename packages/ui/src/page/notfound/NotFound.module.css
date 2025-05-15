@@ -4,14 +4,13 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  min-height: 70vh;
   text-align: center;
 }
 
 .not-found-title {
   font-size: 3rem;
   font-weight: bold;
-  color: #ff4d4f;
 }
 
 .not-found-message {
