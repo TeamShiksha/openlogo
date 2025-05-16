@@ -3,6 +3,7 @@ const { ContactUsRepository } = require("../repositories");
 const {
   querySchema,
   revertToCustomerPayloadSchema,
+  contactUsPayloadSchema,
 } = require("../schemas/operator");
 const { ContactUsService } = require("../services");
 const sendEmail = require("../utils/sendEmail");
@@ -108,4 +109,54 @@ async function respondMessagesController(req, res, next) {
   }
 }
 
-module.exports = { getMessagesController, respondMessagesController };
+/**
+ * Controller responsible for handling Contact Us form submissions.
+ * Validates input, checks for existing active form by email,
+ * prevents duplicate submissions, and stores new entries.
+ */
+
+async function addMessagesController(req, res, next) {
+  try {
+    const { error, value } = contactUsPayloadSchema.validate(req.body);
+    if (error) {
+      return res.status(422).json({
+        error: STATUS_CODES[422],
+        message: error.message,
+        statusCode: 422,
+      });
+    }
+
+    const { email } = value;
+    const contactUsService = new ContactUsService();
+    const form = await contactUsService.formExists(email);
+    if (form) {
+      return res.status(400).json({
+        message: Messages.FORM_ALREADY_SUBMITTED,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const newForm = await contactUsService.createForm(value);
+    if (!newForm) {
+      return res.status(500).json({
+        message: Messages.INTERNAL_SERVER_ERROR,
+        statusCode: 500,
+        error: STATUS_CODES[500],
+      });
+    }
+
+    return res.status(200).json({
+      message: Messages.FORM_SUBMITTED,
+      statusCode: 200,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  getMessagesController,
+  respondMessagesController,
+  addMessagesController,
+};

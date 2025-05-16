@@ -1,27 +1,49 @@
-import { useState } from "react";
-import { SVGS, COMPANIES } from "../../utils/Constants";
+import { useEffect, useState } from "react";
+import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./Demo.module.css";
+import Button from "../common/button/Button.jsx";
+import PropTypes from "prop-types";
+import { instance } from "../../api/api_instance.js";
+import { firstLetterCapitalString } from "../../utils/Helpers.js";
 
-const Demo = () => {
+const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiResults, setApiResults] = useState([]);
 
-  const handleSearch = (searchEvent) => {
-    searchEvent.preventDefault();
-    setShowResults(searchTerm.length > 0);
-  };
+  useEffect(() => {
+    if (searchTerm.length <= 1) {
+      setApiResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const debounceTimer = setTimeout(async () => {
+      setLoading(true);
+      setShowResults(true);
+
+      try {
+        const response = await instance.get(
+          `/logo/demo-search?domainKey=${searchTerm}`
+        );
+        const res = response.data;
+        setApiResults(res.data.slice(0, 3));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+        setShowResults(true);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   const handleInputChange = (inputChangeEvent) => {
     const value = inputChangeEvent.target.value;
     setSearchTerm(value);
-    if (!value) {
-      setShowResults(false);
-    }
   };
-
-  const filteredCompanies = COMPANIES.filter((company) =>
-    company.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-  );
 
   return (
     <div data-testid="demo" id="demo" className={styles["demo-container"]}>
@@ -34,7 +56,7 @@ const Demo = () => {
       </div>
       <div className={`${styles["search-box"]}`}>
         <div className={styles["search-content"]}>
-          <form onSubmit={handleSearch}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <input
               name="search"
               type="text"
@@ -47,18 +69,46 @@ const Demo = () => {
               <img src={SVGS.searchIcon} alt="Search" />
             </button>
           </form>
-          {!!filteredCompanies.length && showResults && (
-            <div className={`${styles["result-container"]}`}>
-              {filteredCompanies.map((company, index) => (
+
+          {loading && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              <div
+                data-testid="loading-dots"
+                className={styles["loading-dots"]}
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
+
+          {apiResults.length > 0 && showResults && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              {apiResults.map((company, index) => (
                 <div
-                  key={company.id}
-                  className={`${styles["result-item"]}`}
+                  key={company.companyName}
+                  className={`${styles["result-item"]} ${styles["show"]}`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
-                  <img src={company.logo} alt={`${company.name} Logo`} />
-                  <span>{company.name}</span>
+                  <img
+                    src={company.image}
+                    alt={`${company.companyName} Logo`}
+                  />
+                  <span>{firstLetterCapitalString(company.companyName)}</span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {!loading && showResults && apiResults.length === 0 && (
+            <div className={`${styles["result-container"]} ${styles["show"]}`}>
+              <div className={styles["no-result"]}>
+                <p>{`Your search “${searchTerm}” did not match any logo.`}</p>
+                <Button onClick={openAuthModal} variant={"primary"}>
+                  {BUTTON_TEXT.requestLogo}
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -70,6 +120,10 @@ const Demo = () => {
       />
     </div>
   );
+};
+
+Demo.propTypes = {
+  openAuthModal: PropTypes.func.isRequired,
 };
 
 export default Demo;

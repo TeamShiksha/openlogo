@@ -1,13 +1,14 @@
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
+import PropTypes from "prop-types";
 
-function SettingCard() {
+function SettingCard({ isGuest }) {
   return (
     <>
       {SETTING.map((setting, index) => (
-        <div key={index} className={styles.actionButtonWrapper}>
-          <p className={styles.actionText}>{setting.subtitle}</p>
+        <div key={index} className={styles["action-button-wrapper"]}>
+          <p className={styles["action-text"]}>{setting.subtitle}</p>
           <Button
             type="submit"
             variant={
@@ -15,7 +16,8 @@ function SettingCard() {
                 ? "danger"
                 : "primary"
             }
-            className={styles.actionButton}
+            className={styles["action-button"]}
+            disabled={isGuest}
           >
             {setting.buttontitle}
           </Button>
@@ -24,4 +26,8 @@ function SettingCard() {
     </>
   );
 }
+
+SettingCard.propTypes = {
+  isGuest: PropTypes.bool.isRequired,
+};
 export default SettingCard;

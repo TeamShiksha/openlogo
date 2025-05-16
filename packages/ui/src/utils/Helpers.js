@@ -161,6 +161,12 @@ export const validate = (values) => {
     "Only letters and spaces allowed"
   );
 
+  validateField(
+    "message",
+    values.message && values.message.length < 20,
+    "Message should be at least 20 characters"
+  );
+
   return errors;
 };
 
@@ -181,4 +187,9 @@ export const getBaseApiUrl = (domain) => {
   } else {
     return DOCUMENTATION.baseProdUrl;
   }
+};
+
+export const firstLetterCapitalString = (string) => {
+  string = string.toLowerCase();
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };

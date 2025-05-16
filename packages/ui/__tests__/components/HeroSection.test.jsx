@@ -3,11 +3,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import HeroSection from "../../src/components/hero/HeroSection";
 import { BUTTON_TEXT, HERO_SECTION } from "../../src/utils/Constants";
 
-const openCloseAuthModal = vi.fn();
+const onPrimaryButtonClick = vi.fn();
 
 describe("HeroSection Component", () => {
   it("Tagline and summary visible", () => {
-    render(<HeroSection openAuthModal={openCloseAuthModal} />);
+    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
 
     const tagline = screen.getByText(HERO_SECTION.tagLine);
     const summary = screen.getByText(HERO_SECTION.summary);
@@ -16,7 +16,7 @@ describe("HeroSection Component", () => {
   });
 
   it("Buttons visible", () => {
-    render(<HeroSection openAuthModal={openCloseAuthModal} />);
+    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
 
     const documentationButton = screen.getByText(BUTTON_TEXT.documentation);
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
@@ -27,7 +27,7 @@ describe("HeroSection Component", () => {
   });
 
   it("Illustration visible", () => {
-    render(<HeroSection openAuthModal={openCloseAuthModal} />);
+    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
 
     const logoImage = screen.getByAltText(HERO_SECTION.illustractionSrcAlt);
     expect(logoImage).toBeInTheDocument();
@@ -35,12 +35,26 @@ describe("HeroSection Component", () => {
   });
 
   it("Auth modal visibility before and after the click", () => {
-    render(<HeroSection openAuthModal={openCloseAuthModal} />);
+    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
 
     const anyDialog = screen.queryByText(BUTTON_TEXT.cross);
     expect(anyDialog).not.toBeInTheDocument();
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
     fireEvent.click(getStartedButton);
-    expect(openCloseAuthModal).toHaveBeenCalled();
+    expect(onPrimaryButtonClick).toHaveBeenCalled();
+  });
+
+  it("shows Go To Dashboard button when authenticated", () => {
+    render(
+      <HeroSection
+        onPrimaryButtonClick={onPrimaryButtonClick}
+        isAuthenticated={true}
+      />
+    );
+
+    const gotoDashboardButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.gotoDashboard,
+    });
+    expect(gotoDashboardButton).toBeInTheDocument();
   });
 });

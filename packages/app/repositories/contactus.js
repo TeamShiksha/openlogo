@@ -12,8 +12,8 @@ class ContactUsRepository extends BaseRepository {
     super(ContactUs);
   }
 
-  async findByEmailAndStatus(email, isActive) {
-    return await this.model.findOne({ email, activityStatus: isActive });
+  async findByEmailAndStatus(email, isPending) {
+    return await this.model.findOne({ email, status: isPending });
   }
 
   async updateFormStatus(id, updateData) {

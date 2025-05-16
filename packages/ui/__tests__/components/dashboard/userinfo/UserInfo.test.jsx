@@ -1,0 +1,70 @@
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
+import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
+
+describe("UserInfo Component", () => {
+  it("renders all form elements correctly", async () => {
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
+
+    const nameInput = screen.getByLabelText(/name/i);
+    expect(nameInput.value).toBe(MOCK_USER_DATA.name);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    expect(emailInput.value).toBe(MOCK_USER_DATA.email);
+    expect(emailInput).toBeDisabled();
+
+    const saveButton = screen.getByText("Save");
+    expect(saveButton).toBeDisabled();
+  });
+
+  it("update name input value", () => {
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
+
+    const nameInput = screen.getByLabelText(/name/i);
+    fireEvent.change(nameInput, { target: { value: "New Name" } });
+    expect(nameInput.value).toBe("New Name");
+  });
+
+  it("show error if name is empty & removes error if name is valid on submit", async () => {
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
+
+    const nameInput = screen.getByLabelText(/name/i);
+    fireEvent.change(nameInput, { target: { value: "" } });
+
+    const saveButton = screen.getByText("Save");
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      const nameErrorText = screen.getByText("Name is required!");
+      expect(nameErrorText).toBeInTheDocument();
+    });
+
+    fireEvent.change(nameInput, { target: { value: "New Name" } });
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      const nameErrorText = screen.queryByText("Name is required!");
+      expect(nameErrorText).not.toBeInTheDocument();
+    });
+  });
+
+  it("enable Save button when name is changed", () => {
+    render(
+      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+    );
+
+    const nameInput = screen.getByLabelText(/name/i);
+    const saveButton = screen.getByText("Save");
+    expect(saveButton).toBeDisabled();
+
+    fireEvent.change(nameInput, { target: { value: "Another Name" } });
+    expect(saveButton).not.toBeDisabled();
+  });
+});

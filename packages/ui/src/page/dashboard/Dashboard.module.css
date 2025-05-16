@@ -1,21 +1,17 @@
-.dashboardContainer {
+.dashboard-container {
   display: flex;
   flex-direction: column;
   max-width: 1280px;
 }
 
-.dashboardContentContainer {
+.dashboard-content-container {
   padding: 2rem;
   display: flex;
   flex-grow: 1;
   gap: 55px;
 }
 
-.dashboardContentContainer .divider {
-  border-bottom: var(--border);
-}
-
-.dashboardContentSection {
+.dashboard-content-section {
   display: flex;
   gap: 32px;
   width: 100%;
@@ -25,50 +21,50 @@
   padding: 2rem;
 }
 
-.generateApi {
-  border-radius: 8px;
-  border: var(--border);
-  box-shadow: 0 4px 6px rgba(0, 0.1, 0.1, 0.1);
-  background-color: var(--white);
-  padding: 24px 32px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.activeStatus {
+.active-status {
   color: var(--primary);
 }
 
-.inactiveStatus {
+.inactive-status {
   color: var(--black);
 }
 
+.logout-wrapper {
+  padding: 32px;
+}
+
 @media screen and (max-width: 768px) {
-  .dashboardContainer {
+  .dashboard-container {
     flex-direction: column;
   }
 
-  .dashboardContainer > aside {
+  .dashboard-container > aside {
     width: 100%;
   }
 
-  .dashboardContentContainer {
+  .dashboard-content-container {
     padding: 32px 16px;
   }
 
-  .dashboardContentSection {
+  .dashboard-content-section {
     flex-direction: column;
   }
 
   .table-wrapper {
     padding: 1rem;
   }
+
+  .logout-wrapper {
+    padding: 32px 48px;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 768px) {
-  .dashboardContainer {
+  .dashboard-container {
     margin: 0 auto;
   }
 }
