@@ -11,7 +11,6 @@ import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import VerifyEmail from "./components/verification/VerifyEmail";
-import "./styles/layout.css";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -23,7 +22,7 @@ function App() {
     <div className="app-container">
       <ScrollManager />
       <Header openAuthModal={openCloseAuthModal} />
-      <div className="main-content">
+      <div className="content-wrapper">
         <Routes>
           <Route
             path="/"

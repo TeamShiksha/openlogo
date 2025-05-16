@@ -1,5 +1,9 @@
 .verification-page-container {
   padding: 0 8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 300px);
 }
 
 .verification-container {
@@ -119,28 +123,17 @@
     padding: 2rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 250px;
   }
 
-  .verification-container {
+  .verification-card {
     background-color: var(--white);
     border-radius: var(--bradius);
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 1140px;
     border: var(--border);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 250px;
-    padding: 0;
-  }
-
-  .verification-card {
-    background-color: transparent;
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-    max-width: 100%;
     padding: 30px;
   }
 }
