@@ -643,3 +643,8 @@ export const MOCK_USER_DATA = {
     },
   ],
 };
+
+export const NOT_FOUND_PAGE = {
+  TITLE: "404 - Page Not Found",
+  MESSAGE: "The page you are looking for does not exist.",
+};
