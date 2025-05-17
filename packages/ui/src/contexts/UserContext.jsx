@@ -13,6 +13,7 @@ export function UserProvider({ children }) {
     try {
       const res = await instance.get("users/me");
       const data = res.data.data;
+      console.log(data);
       setUserData(data);
     } catch (err) {
       setError(err);

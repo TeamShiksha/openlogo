@@ -12,12 +12,13 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
-
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // const [selectedKey, setSelectedKey] = useState(null);
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -38,6 +39,11 @@ function Dashboard() {
       setIsGuest(userData?.role == "GUEST");
     }
   }, [userData]);
+
+  const handleDeleteClick = () => {
+    //   setSelectedKey(userData.keys[index]);
+    //   setShowDeleteModal(true);
+  };
 
   if (loading) {
     return <div>loading..</div>;
@@ -79,7 +85,7 @@ function Dashboard() {
           headers={API_KEY_TABLE.headers}
           rows={apiKeyTableData}
           emptyMessage={API_KEY_TABLE.emptyMessage}
-          onDelete={() => {}}
+          onDelete={handleDeleteClick}
           isGuest={isGuest}
         />
       </div>
@@ -116,6 +122,7 @@ function Dashboard() {
           ""
         )}
       </div>
+      {/* {showDeleteModal && <DeleteKeyModal selectedKey={selectedKey} />} */}
     </div>
   );
 }

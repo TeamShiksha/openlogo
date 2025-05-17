@@ -27,3 +27,42 @@
   justify-content: center;
   margin: 0.5rem 0;
 }
+
+.api-key-modal {
+  padding: 20px;
+  text-align: center;
+}
+
+.api-key-modal h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.api-key-modal p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.key-display {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.key-display code {
+  font-family: monospace;
+  font-size: 14px;
+  color: #333;
+  word-break: break-all;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}

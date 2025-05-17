@@ -1,0 +1,22 @@
+.delete-modal {
+  padding: 20px;
+  text-align: center;
+}
+
+.delete-modal h2 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.delete-modal p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: var(--medium-text);
+}
+
+.error-message {
+  color: var(--error);
+  margin-bottom: 15px;
+  font-size: 0.8rem;
+}
