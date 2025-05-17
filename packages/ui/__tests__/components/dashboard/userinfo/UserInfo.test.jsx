@@ -1,9 +1,21 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
 import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
 
+const mockMakeRequest = vi.fn();
+vi.mock("../../../../src/hooks/useApi.js", () => ({
+  useApi: () => ({
+    makeRequest: mockMakeRequest,
+    errorMsg: "",
+  }),
+}));
+
 describe("UserInfo Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("renders all form elements correctly", async () => {
     render(
       <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
@@ -66,5 +78,30 @@ describe("UserInfo Component", () => {
 
     fireEvent.change(nameInput, { target: { value: "Another Name" } });
     expect(saveButton).not.toBeDisabled();
+  });
+
+  it("calls the update user API on form submission", async () => {
+    render(
+      <UserInfo
+        name={MOCK_USER_DATA.name}
+        email={MOCK_USER_DATA.email}
+        isGuest={false}
+      />
+    );
+
+    const nameInput = screen.getByLabelText("Username");
+    expect(nameInput.value).toBe(MOCK_USER_DATA.name);
+
+    fireEvent.change(nameInput, { target: { value: "Updated Name" } });
+    expect(nameInput.value).toBe("Updated Name");
+
+    const saveButton = screen.getByText("Save");
+    expect(saveButton).not.toBeDisabled();
+
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockMakeRequest).toBeCalled();
+    });
   });
 });

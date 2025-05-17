@@ -4,6 +4,7 @@ import { USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
+import { useApi } from "../../../hooks/useApi";
 
 function UserInfo({ name, email, isGuest }) {
   const initialValues = {
@@ -11,10 +12,18 @@ function UserInfo({ name, email, isGuest }) {
     email,
     isBtnDisabled: true,
   };
+  const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({
     type: "",
     message: "",
+  });
+  const { makeRequest, errorMsg } = useApi({
+    method: "PATCH",
+    url: "/users/me",
+    data: {
+      name: formData.name,
+    },
   });
 
   const validate = (values) => {
@@ -42,7 +51,7 @@ function UserInfo({ name, email, isGuest }) {
     });
   };
 
-  const handleUserInfoUpdate = (e) => {
+  const handleUserInfoUpdate = async (e) => {
     e.preventDefault();
 
     const validationErrors = validate(formData);
@@ -59,13 +68,23 @@ function UserInfo({ name, email, isGuest }) {
       });
       return;
     }
-    // to be implemented
 
-    setFormErrors({ type: "", message: "" });
+    try {
+      setIsUpdating(true);
+      const success = await makeRequest();
+      if (success.statusCode === 200) {
+        setFormErrors({ type: "", message: "" });
+      }
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
     <form className={styles["user-info-input-group"]}>
+      <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
+        <p className="input-error">{errorMsg}</p>
+      </div>
       {USER_INFO_FIELDS.map((field) => (
         <CustomInput
           key={field.name}
@@ -82,8 +101,9 @@ function UserInfo({ name, email, isGuest }) {
       ))}
       <Button
         onClick={handleUserInfoUpdate}
-        disabled={formData.isBtnDisabled}
+        disabled={formData.isBtnDisabled || isUpdating}
         variant={"primary"}
+        isLoading={isUpdating}
       >
         Save
       </Button>
