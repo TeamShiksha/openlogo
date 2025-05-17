@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
@@ -144,5 +144,41 @@ describe("SignInForm UI and Functionality Tests", () => {
     });
 
     expect(screen.getByText(errorMsg)).toBeInTheDocument();
+  });
+
+  const delayedResolve = () =>
+    new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+  let authContext;
+
+  beforeEach(() => {
+    authContext = mockAuthContext(false);
+    mockedMakeRequest.mockImplementation(delayedResolve);
+  });
+
+  it("disables input fields and submit button when loading", async () => {
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const submitButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.signIn,
+    });
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(emailInput).toBeDisabled();
+      expect(passwordInput).toBeDisabled();
+      expect(submitButton).toBeDisabled();
+    });
   });
 });
