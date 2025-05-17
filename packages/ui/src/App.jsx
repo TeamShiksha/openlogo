@@ -11,6 +11,7 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import NotFound from "./page/notfound/NotFound";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -41,6 +42,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} /> {/* Catch-all routes */}
       </Routes>
       <Footer />
       <AuthModal isOpen={authModal} onClose={openCloseAuthModal} />
