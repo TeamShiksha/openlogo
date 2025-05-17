@@ -387,6 +387,7 @@ export const BUTTON_TEXT = {
   delete: "Delete",
   requestLogo: "Request Logo",
   submit: "Submit",
+  backToSignIn: " Back to Sign In",
 };
 
 export const BRANDING = {

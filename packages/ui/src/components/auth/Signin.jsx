@@ -18,11 +18,15 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
+  const [localErrorMsg, setLocalErrorMsg] = useState("");
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
     data: formData,
   });
+  useEffect(() => {
+    setLocalErrorMsg(errorMsg);
+  }, [errorMsg]);
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -69,6 +73,10 @@ const SignIn = ({ toggleForm, onClose }) => {
       setFocusedField(null);
     }
   };
+  const handleToggleForgotPassword = () => {
+    setLocalErrorMsg("");
+    setIsForgotPassword(!isForgotPassword);
+  };
 
   return (
     <>
@@ -76,8 +84,10 @@ const SignIn = ({ toggleForm, onClose }) => {
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
 
-        <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
-          <p className="input-error">{errorMsg}</p>
+        <div
+          className={`"error-container" ${localErrorMsg ? "has-error" : ""}`}
+        >
+          <p className="input-error">{localErrorMsg}</p>
         </div>
 
         <div className={styles["form-width"]}>
@@ -100,17 +110,17 @@ const SignIn = ({ toggleForm, onClose }) => {
 
         {isForgotPassword && (
           <p
-            onClick={() => setIsForgotPassword(false)}
+            onClick={handleToggleForgotPassword}
             className={styles["forgot-password"]}
           >
-            Back to Sign In
+            {BUTTON_TEXT.backToSignIn}
           </p>
         )}
 
         {!isForgotPassword && (
           <p
             className={styles["forgot-password"]}
-            onClick={() => setIsForgotPassword(true)}
+            onClick={handleToggleForgotPassword}
           >
             {BUTTON_TEXT.forgotPassword}
           </p>
@@ -129,7 +139,7 @@ const SignIn = ({ toggleForm, onClose }) => {
 
       {isForgotPassword ? (
         <p onClick={toggleForm} className={styles.switch}>
-          Don&apos;t have an account?
+          {SIGNIN.footerText}
         </p>
       ) : (
         <p onClick={toggleForm} className={styles.switch}>
