@@ -72,7 +72,7 @@ function UserInfo({ name, email, isGuest }) {
     try {
       setIsUpdating(true);
       const success = await makeRequest();
-      if (success.statusCode === 200) {
+      if (success) {
         setFormErrors({ type: "", message: "" });
       }
     } finally {
