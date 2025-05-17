@@ -386,6 +386,7 @@ export const BUTTON_TEXT = {
   sendMessage: "Send message",
   delete: "Delete",
   requestLogo: "Request Logo",
+  goToHome: "Go to Home",
 };
 
 export const BRANDING = {
@@ -641,4 +642,9 @@ export const MOCK_USER_DATA = {
       updated_at: "2023-11-10T13:10:00.000Z",
     },
   ],
+};
+
+export const NOT_FOUND_PAGE = {
+  TITLE: "404 - Page Not Found",
+  MESSAGE: "The page you are looking for does not exist.",
 };
