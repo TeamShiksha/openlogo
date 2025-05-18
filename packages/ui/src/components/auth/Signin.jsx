@@ -97,10 +97,8 @@ const SignIn = ({ toggleForm, onClose }) => {
     setFocusedField(null);
     setIsSubmit(false);
 
-    // Reset form data to initial values when toggling modes
     setFormData(SIGNIN.initialValues);
 
-    // Toggle forgot password mode
     setIsForgotPassword(!isForgotPassword);
   };
 
