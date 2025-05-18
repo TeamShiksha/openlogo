@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
@@ -16,6 +16,8 @@ import Button from "../../components/common/button/Button.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const [isGuest, setIsGuest] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -31,12 +33,20 @@ function Dashboard() {
     fetchUserData();
   }, [fetchUserData]);
 
+  useEffect(() => {
+    if (userData) {
+      setIsGuest(userData?.role == "GUEST");
+    }
+  }, [userData]);
+
   if (loading) {
     return <div>loading..</div>;
   }
 
   const handleLogout = () => {
+    setIsLoading(true);
     logout();
+    setIsLoading(false);
   };
 
   return (
@@ -53,14 +63,14 @@ function Dashboard() {
             />
           </CardWrapper>
           <CardWrapper title="Generate New API Key">
-            <ApiKeyForm />
+            <ApiKeyForm isGuest={isGuest} />
           </CardWrapper>
           <CardWrapper
             title="Plan"
             status="Active"
             statusClass={styles["active-status"]}
           >
-            <CurrentPlan />
+            <CurrentPlan isGuest={isGuest} />
           </CardWrapper>
         </section>
       </div>
@@ -70,6 +80,7 @@ function Dashboard() {
           rows={apiKeyTableData}
           emptyMessage={API_KEY_TABLE.emptyMessage}
           onDelete={() => {}}
+          isGuest={isGuest}
         />
       </div>
 
@@ -79,13 +90,14 @@ function Dashboard() {
             <UserInfo
               name={userData?.name || ""}
               email={userData?.email || ""}
+              isGuest={isGuest}
             />
           </CardWrapper>
           <CardWrapper title="Change Password">
-            <ChangePassword />
+            <ChangePassword isGuest={isGuest} />
           </CardWrapper>
           <CardWrapper title="Setting">
-            <SettingCard />
+            <SettingCard isGuest={isGuest} />
           </CardWrapper>
         </section>
       </div>
@@ -96,6 +108,7 @@ function Dashboard() {
             variant="danger"
             className={styles["logout-btn"]}
             onClick={handleLogout}
+            isLoading={isLoading}
           >
             {BUTTON_TEXT.signOut}
           </Button>

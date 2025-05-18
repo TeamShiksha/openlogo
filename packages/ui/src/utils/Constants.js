@@ -386,6 +386,7 @@ export const BUTTON_TEXT = {
   sendMessage: "Send message",
   delete: "Delete",
   requestLogo: "Request Logo",
+  goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
 };
@@ -485,6 +486,7 @@ export const SIGNIN = {
     { type: "email", name: "email", label: "Email" },
     { type: "password", name: "password", label: "Password" },
   ],
+  guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
   initialValues: { email: "", password: "" },
 };
@@ -626,6 +628,7 @@ export const DASHBOARD_CARDS_TITLE = [
 export const MOCK_USER_DATA = {
   name: "John Doe",
   email: "john@example.com",
+  role: "USER",
   subscription: {
     usage_count: 42,
     usage_limit: 100,
@@ -641,4 +644,9 @@ export const MOCK_USER_DATA = {
       updated_at: "2023-11-10T13:10:00.000Z",
     },
   ],
+};
+
+export const NOT_FOUND_PAGE = {
+  TITLE: "404 - Page Not Found",
+  MESSAGE: "The page you are looking for does not exist.",
 };

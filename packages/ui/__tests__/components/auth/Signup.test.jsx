@@ -1,10 +1,12 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
 import {
   SIGNUP,
   PASSWORD_VALIDATION_MESSAGES,
 } from "../../../src/utils/Constants";
+import { BrowserRouter } from "react-router-dom";
+import { AuthContext } from "../../../src/contexts/Contexts";
 
 const mockedMakeRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
@@ -13,9 +15,21 @@ vi.mock("../../../src/hooks/useApi", () => ({
   }),
 }));
 
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+  setIsAuthenticated: vi.fn(),
+});
+
 describe("SignUpForm UI and Functionality Tests", () => {
   it("renders all form elements correctly", () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const title = screen.getByRole("heading", { name: SIGNUP.title });
     expect(title).toBeInTheDocument();
@@ -29,7 +43,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
   it("switch to to sign-in form on click", () => {
     const toggleFormMock = vi.fn();
-    render(<SignUpForm toggleForm={toggleFormMock} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={toggleFormMock} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const switchButton = screen.getByText(SIGNUP.footerText);
     fireEvent.click(switchButton);
@@ -37,7 +58,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("removes non-letter characters from name input", () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText(SIGNUP["fields"][0].label);
     fireEvent.change(nameInput, { target: { value: "JohnDoe" } });
@@ -45,7 +73,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("validates only when focused and blurred", async () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
@@ -78,7 +113,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
 
   it("resets form correctly after submission", async () => {
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
@@ -125,7 +167,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
   it("connectivity test passed", async () => {
     mockedMakeRequest.mockResolvedValue(true);
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
@@ -161,7 +210,14 @@ describe("SignUpForm UI and Functionality Tests", () => {
   });
   it("connectivity test failed", async () => {
     mockedMakeRequest.mockResolvedValue(false);
-    render(<SignUpForm toggleForm={vi.fn()} />);
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
 
     const nameInput = screen.getByLabelText("Name");
     const emailInput = screen.getByLabelText("Email");
@@ -194,5 +250,39 @@ describe("SignUpForm UI and Functionality Tests", () => {
       expect(mockedMakeRequest).toHaveBeenCalled();
     });
     expect(signUpButton).toBeDisabled();
+  });
+
+  const delayedResolve = () =>
+    new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+
+  beforeEach(() => {
+    mockedMakeRequest.mockImplementation(delayedResolve);
+  });
+
+  it("disables input fields and submit button when loading", async () => {
+    render(<SignUpForm toggleForm={vi.fn()} />);
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    fireEvent.change(nameInput, { target: { value: "Test" } });
+    fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Test@1234" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "Test@1234" } });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(nameInput).toBeDisabled();
+      expect(emailInput).toBeDisabled();
+      expect(passwordInput).toBeDisabled();
+      expect(confirmPasswordInput).toBeDisabled();
+      expect(submitButton).toBeDisabled();
+    });
   });
 });

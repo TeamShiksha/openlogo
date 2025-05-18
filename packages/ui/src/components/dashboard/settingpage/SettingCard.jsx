@@ -1,8 +1,9 @@
 import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
+import PropTypes from "prop-types";
 
-function SettingCard() {
+function SettingCard({ isGuest }) {
   return (
     <>
       {SETTING.map((setting, index) => (
@@ -16,6 +17,7 @@ function SettingCard() {
                 : "primary"
             }
             className={styles["action-button"]}
+            disabled={isGuest}
           >
             {setting.buttontitle}
           </Button>
@@ -24,4 +26,8 @@ function SettingCard() {
     </>
   );
 }
+
+SettingCard.propTypes = {
+  isGuest: PropTypes.bool.isRequired,
+};
 export default SettingCard;

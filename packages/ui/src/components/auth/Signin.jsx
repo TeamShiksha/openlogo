@@ -18,11 +18,16 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [localErrorMsg, setLocalErrorMsg] = useState("");
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
     data: formData,
+  });
+  const { makeRequest: makeGuestRequest } = useApi({
+    method: "post",
+    url: `/auth/signin?type=guest`,
   });
   useEffect(() => {
     setLocalErrorMsg(errorMsg);
@@ -58,6 +63,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsSubmit(true);
+    setIsLoading(true);
     const success = await makeRequest();
     if (success) {
       if (isForgotPassword) {
@@ -72,9 +78,29 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsSubmit(false);
       setFocusedField(null);
     }
+    setIsLoading(false);
+  };
+  const handleGuestSignIn = async (submitEvent) => {
+    submitEvent.preventDefault();
+    setIsSubmit(true);
+    const success = await makeGuestRequest();
+    if (success) {
+      setIsAuthenticated(true);
+      setIsSubmit(false);
+      onClose();
+      navigate("/dashboard");
+    }
   };
   const handleToggleForgotPassword = () => {
     setLocalErrorMsg("");
+    setFormErrors({});
+    setFocusedField(null);
+    setIsSubmit(false);
+
+    // Reset form data to initial values when toggling modes
+    setFormData(SIGNIN.initialValues);
+
+    // Toggle forgot password mode
     setIsForgotPassword(!isForgotPassword);
   };
 
@@ -91,7 +117,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         </div>
 
         <div className={styles["form-width"]}>
-          {SIGNIN.fields
+          {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))
             .map((field) => (
               <CustomInput
@@ -104,6 +130,7 @@ const SignIn = ({ toggleForm, onClose }) => {
                 onChange={handleChange}
                 onFocus={() => setFocusedField(field.name)}
                 onBlur={() => setFocusedField(null)}
+                disabled={isLoading}
               />
             ))}
         </div>
@@ -136,20 +163,15 @@ const SignIn = ({ toggleForm, onClose }) => {
       </form>
 
       <hr className={styles.separator} />
-
-      {isForgotPassword ? (
-        <p onClick={toggleForm} className={styles.switch}>
-          {SIGNIN.footerText}
-        </p>
-      ) : (
-        <p onClick={toggleForm} className={styles.switch}>
-          {SIGNIN.footerText}
-        </p>
-      )}
+      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+        {SIGNIN.guestAccount}
+      </p>
+      <p onClick={toggleForm} className={styles.switch}>
+        {SIGNIN.footerText}
+      </p>
     </>
   );
 };
-
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func,
