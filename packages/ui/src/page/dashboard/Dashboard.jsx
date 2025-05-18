@@ -12,13 +12,15 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
+import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
+
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [selectedKey, setSelectedKey] = useState(null);
-  // const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedKey, setSelectedKey] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const apiKeyTableData = useMemo(() => {
     let data = [];
     if (userData) {
@@ -40,9 +42,9 @@ function Dashboard() {
     }
   }, [userData]);
 
-  const handleDeleteClick = () => {
-    //   setSelectedKey(userData.keys[index]);
-    //   setShowDeleteModal(true);
+  const handleDeleteClick = (index) => {
+    setSelectedKey(userData.keys[index]);
+    setShowDeleteModal(true);
   };
 
   if (loading) {
@@ -122,7 +124,14 @@ function Dashboard() {
           ""
         )}
       </div>
-      {/* {showDeleteModal && <DeleteKeyModal selectedKey={selectedKey} />} */}
+
+      {showDeleteModal && (
+        <DeleteKeyModal
+          selectedKey={selectedKey}
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+        />
+      )}
     </div>
   );
 }

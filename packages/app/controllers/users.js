@@ -184,7 +184,7 @@ async function generateKeyController(req, res, next) {
 async function destroyKeyController(req, res, next) {
   try {
     const userService = new UserService();
-    const { error, value } = destroyKeyPayloadSchema.validate(req.query);
+    const { error, value } = destroyKeyPayloadSchema.validate(req.params);
     if (error) {
       return res.status(422).json({
         message: error.message,

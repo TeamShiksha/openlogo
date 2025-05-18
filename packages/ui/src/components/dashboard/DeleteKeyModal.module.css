@@ -20,3 +20,10 @@
   margin-bottom: 15px;
   font-size: 0.8rem;
 }
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
