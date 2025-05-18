@@ -28,8 +28,8 @@ describe("Footer Component", () => {
         <Footer />
       </BrowserRouter>
     );
-    const logoLink = screen.getByTestId("footer-logo-link");
-    fireEvent.click(logoLink);
+    const logoButton = screen.getByTestId("footer-logo-button");
+    fireEvent.click(logoButton);
     expect(window.location.pathname).toBe("/");
   });
 

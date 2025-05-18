@@ -10,10 +10,10 @@ function Footer() {
     <div data-testid="footer" className={`container ${styles.block}`}>
       <footer className={styles["footer-container"]}>
         <div>
-          <Link
-            to="/"
+          <button
             className={styles["footer-logo"]}
-            data-testid="footer-logo-link"
+            data-testid="footer-logo-button"
+            onClick={() => navigate("/")}
           >
             <img
               alt={BRANDING.imageSrc}
@@ -22,7 +22,7 @@ function Footer() {
               height={30}
             />
             <h4>{BRANDING.brandName}</h4>
-          </Link>
+          </button>
         </div>
         <div className={styles["footer-items"]}>
           {FOOTER_ITEMS.map((item) => (
