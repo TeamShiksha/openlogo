@@ -14,7 +14,7 @@ function ApiKeyForm({ isGuest }) {
   const [isCopied, setIsCopied] = useState(false);
   const { fetchUserData } = useContext(UserContext);
 
-  const { makeRequest, data, loading } = useApi({
+  const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
     url: "/users/me/api-key",
     data: {
@@ -76,17 +76,26 @@ function ApiKeyForm({ isGuest }) {
         customWidth="500px"
       >
         <div className={styles["api-key-modal"]}>
-          <h2>Your API Key</h2>
-          <p>
-            Please copy your API key now. You won&apos;t be able to see it
-            again!
-          </p>
-          <div className={styles["key-display"]}>
-            <code>{data?.data.api_key}</code>
-            <Button variant="secondary" onClick={handleCopyKey}>
-              {isCopied ? "Copied!" : "Copy"}
-            </Button>
-          </div>
+          {errorMsg ? (
+            <>
+              <h2>Error</h2>
+              <p className={styles["error-message"]}>{errorMsg}</p>
+            </>
+          ) : (
+            <>
+              <h2>Your API Key</h2>
+              <p>
+                Please copy your API key now. You won&apos;t be able to see it
+                again!
+              </p>
+              <div className={styles["key-display"]}>
+                <code>{data?.data.api_key}</code>
+                <Button variant="secondary" onClick={handleCopyKey}>
+                  {isCopied ? "Copied!" : "Copy"}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </Modal>
     </section>
