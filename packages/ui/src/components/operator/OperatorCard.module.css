@@ -1,0 +1,112 @@
+.card {
+  background-color: var(--white);
+  border-radius: var(--bradius);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.status {
+  display: block;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.userInfo {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.userName,
+.userEmail {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--description);
+  line-height: 1.4;
+}
+
+.userName span,
+.userEmail span {
+  font-weight: normal;
+  color: var(--text-secondary, #666);
+  margin-right: 0.25rem;
+}
+
+.message {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  overflow-wrap: break-word;
+  color: var(--description);
+}
+
+.date {
+  font-size: 0.85rem;
+  color: var(--description);
+  margin: 0;
+}
+
+.date span {
+  font-weight: 600;
+}
+
+.button-container {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+}
+
+.respondButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--bradius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.respondButton:hover {
+  background-color: var(--primary-dark, #0056b3);
+}
+
+.status-pending {
+  background-color: #ffefd5;
+  color: #ff8c00;
+}
+
+.status-in-progress {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.status-resolved {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+
+.status-rejected {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}

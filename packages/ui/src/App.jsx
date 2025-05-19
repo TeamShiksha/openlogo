@@ -12,6 +12,7 @@ import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import NotFound from "./page/notfound/NotFound";
+import Operator from "./page/operator/Operator";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -42,6 +43,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/operator" element={<Operator />} />
         <Route path="*" element={<NotFound />} /> {/* Catch-all routes */}
       </Routes>
       <Footer />
