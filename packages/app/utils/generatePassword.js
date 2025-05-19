@@ -1,12 +1,13 @@
+const crypto = require('crypto')
+
 /**
- * Generates a random password of specified length.
+ * Generates a cryptographically secure random password of specified length.
  *
- * This function creates a password using a combination of lowercase letters, digits,
- * and special characters. The generated password is random, and the length can
- * be customized by passing an argument. The default length is 12 if no argument is provided.
+ * This function uses a CSPRNG to generate passwords using a combination of lowercase letters,
+ * digits, and special characters. Default length is 12 characters.
  *
  * @param {number} [length=12] - The desired length of the generated password. Default is 12.
- * @returns {string} A randomly generated password string of the specified length.
+ * @returns {string} A secure randomly generated password.
  *
  * @example
  * const password = generatePassword(16);
@@ -14,9 +15,14 @@
  */
 function generatePassword(length = 12) {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*=";
-  let password = "";
+
+  let password = '';
+
+    // Generate secure random bytes
+  const randomBytes = crypto.randomBytes(length);
+
   for (let i = 0; i < length; i++) {
-    const index = Math.floor(Math.random() * chars.length);
+    const index = randomBytes[i] % chars.length;
     password += chars[index];
   }
   return password;
