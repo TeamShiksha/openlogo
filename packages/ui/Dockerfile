@@ -17,7 +17,20 @@ RUN pnpm build
 
 FROM nginx:alpine
 
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
+
+RUN mkdir -p /var/cache/nginx /var/lib/nginx /run/nginx \
+    && chown -R nonroot:nonroot /var/cache/nginx /var/lib/nginx /run/nginx \
+    && chmod -R 700 /var/cache/nginx /var/lib/nginx /run/nginx \
+    && chown -R nonroot:nonroot /etc/nginx/conf.d \
+    && chmod -R g+w /etc/nginx/conf.d \
+    && chown nonroot:nonroot /etc/nginx/nginx.conf \
+    && chmod g+w /etc/nginx/nginx.conf \
+    && touch /var/run/nginx.pid && chown nonroot:nonroot /var/run/nginx.pid || true
+
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+USER nonroot
 
 EXPOSE 80
 
