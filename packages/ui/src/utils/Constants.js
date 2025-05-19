@@ -642,3 +642,8 @@ export const MOCK_USER_DATA = {
     },
   ],
 };
+
+export const VERIFICATION = {
+  title: "Verifying",
+  message: "Please wait, while we verify your email.",
+};

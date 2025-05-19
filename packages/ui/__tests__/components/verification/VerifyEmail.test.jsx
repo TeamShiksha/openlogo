@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import VerifyEmail from "../../../src/components/verification/VerifyEmail";
+import { VERIFICATION } from "../../../src/utils/Constants";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -24,7 +25,7 @@ describe("VerifyEmail component", () => {
       </BrowserRouter>
     );
 
-    const title = screen.getByText("Verifying");
+    const title = screen.getByText(VERIFICATION.title);
     expect(title).toBeInTheDocument();
   });
 
@@ -47,13 +48,11 @@ describe("VerifyEmail component", () => {
       </BrowserRouter>
     );
 
-    const title = screen.getByText("Verifying");
+    const title = screen.getByText(VERIFICATION.title);
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe("H2");
 
-    const message = screen.getByText(
-      "Please wait, while we verify your email."
-    );
+    const message = screen.getByText(VERIFICATION.message);
     expect(message).toBeInTheDocument();
   });
 
@@ -82,7 +81,7 @@ describe("VerifyEmail component", () => {
       </BrowserRouter>
     );
 
-    const title = screen.getByText("Verifying");
+    const title = screen.getByText(VERIFICATION.title);
     expect(title.classList.contains("verify-title")).toBe(true);
 
     const loadingDotsContainer = document.querySelector(".loading-dots");

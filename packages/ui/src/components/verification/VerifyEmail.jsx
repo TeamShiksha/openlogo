@@ -1,4 +1,5 @@
 import "./VerifyEmail.css";
+import { VERIFICATION } from "../../utils/Constants";
 
 const VerifyEmail = () => {
   return (
@@ -9,8 +10,8 @@ const VerifyEmail = () => {
           <span></span>
           <span></span>
         </div>
-        <h2 className="verify-title">Verifying</h2>
-        <p>Please wait, while we verify your email.</p>
+        <h2 className="verify-title">{VERIFICATION.title}</h2>
+        <p>{VERIFICATION.message}</p>
       </div>
     </div>
   );
