@@ -1,18 +1,15 @@
-FROM node:20-apline AS deps
+FROM node:20-alpine AS deps
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json ./
 
-RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --prod
+RUN corepack enable && \
+    corepack prepare pnpm@latest --activate && \
+    pnpm install --prod && \
+    pnpm store prune && \
+    rm -rf ~/.pnpm-store /root/.cache /root/.local
 
-FROM node:20-alpine AS runtime
-
-WORKDIR /app
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 EXPOSE 5000
