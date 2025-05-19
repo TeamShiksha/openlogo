@@ -27,6 +27,7 @@ const StatusTypes = {
   PENDING: "PENDING",
   REJECTED: "REJECTED",
   COMPLETED: "COMPLETED",
+  RESOLVED: "RESOLVED",
 };
 
 const DefaultSubscriptionPlan = {
@@ -71,6 +72,10 @@ const Messages = {
   NAME_REQUIRED: "Name is required",
   INVALID_EMAIL: "Invalid email",
   FORM_SUBMITTED: "Form submitted, our team will get in touch shortly",
+  FETCH_ALL_REQUESTS: "Fetched all logo requests",
+  LOGO_REQUEST_NOT_FOUND: "Logo request not found",
+  LOGO_REQUEST_ALREADY_PROCESSED: "Request already processed",
+  LOGO_REQUEST_CREATED: "Logo request created successfully",
 };
 
 module.exports = {

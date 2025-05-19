@@ -11,21 +11,11 @@ class RequestRepository extends BaseRepository {
     super(Request);
   }
 
-  /**
-   * get all requests from db.
-   * @returns {Promise<number>} - total number of requests.
-   */
-  async getRequestsCount() {
-    return await Request.countDocuments();
+  async updateRequestStatus(id, updateData) {
+    return await this.model.updateOne({ _id: id }, updateData);
   }
-
-  /**
-   * get all hits for all requests from db.
-   * @returns {Promise<number>} - total number of hits.
-   *
-   */
-  async getHitsCount() {
-    return await Request.countDocuments({ status: "COMPLETED" });
+  async getRequestsCount() {
+    return await this.model.countDocuments();
   }
 }
 
