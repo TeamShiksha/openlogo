@@ -9,14 +9,20 @@ function Footer() {
   return (
     <div data-testid="footer" className={`container ${styles.block}`}>
       <footer className={styles["footer-container"]}>
-        <div className={styles["footer-logo"]}>
-          <img
-            alt={BRANDING.imageSrc}
-            src={BRANDING.imageSrc}
-            width={30}
-            height={30}
-          />
-          <h4>{BRANDING.brandName}</h4>
+        <div>
+          <button
+            className={styles["footer-logo"]}
+            data-testid="footer-logo-button"
+            onClick={() => navigate("/")}
+          >
+            <img
+              alt={BRANDING.imageSrc}
+              src={BRANDING.imageSrc}
+              width={30}
+              height={30}
+            />
+            <h4>{BRANDING.brandName}</h4>
+          </button>
         </div>
         <div className={styles["footer-items"]}>
           {FOOTER_ITEMS.map((item) => (
