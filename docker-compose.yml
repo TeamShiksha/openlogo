@@ -23,8 +23,6 @@ services:
       - "5000:5000"
     env_file:
       - ./packages/app/.env
-    environment:
-      - CLIENT_PROXY_URL=http://localhost:8080
     depends_on:
       - mongodb
     networks:
