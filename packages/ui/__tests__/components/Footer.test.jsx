@@ -22,6 +22,17 @@ describe("Footer Component", () => {
     expect(logoText).toBeInTheDocument();
   });
 
+  it("clicking OpenLogo navigates to the Home page", () => {
+    render(
+      <BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    );
+    const logoButton = screen.getByTestId("footer-logo-button");
+    fireEvent.click(logoButton);
+    expect(window.location.pathname).toBe("/");
+  });
+
   it("Render all footer navigations", () => {
     render(
       <BrowserRouter>
