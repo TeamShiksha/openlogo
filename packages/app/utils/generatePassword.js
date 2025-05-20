@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+const crypto = require("crypto");
 
 /**
  * Generates a cryptographically secure random password of specified length.
@@ -16,9 +16,9 @@ const crypto = require('crypto')
 function generatePassword(length = 12) {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*=";
 
-  let password = '';
+  let password = "";
 
-    // Generate secure random bytes
+  // Generate secure random bytes
   const randomBytes = crypto.randomBytes(length);
 
   for (let i = 0; i < length; i++) {

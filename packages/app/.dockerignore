@@ -3,4 +3,11 @@ node_modules
 .env.example
 .env_example
 aws
-eslintrc.json
+__tests__
+coverage
+Dockerfile
+eslint.config.mjs
+jest-mongodb-config.js
+jest.config.js
+.prettierrc.json
+vercel.json
