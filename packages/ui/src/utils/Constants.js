@@ -387,6 +387,8 @@ export const BUTTON_TEXT = {
   delete: "Delete",
   requestLogo: "Request Logo",
   goToHome: "Go to Home",
+  submit: "Submit",
+  backToSignIn: " Back to Sign In",
 };
 
 export const BRANDING = {
@@ -647,4 +649,9 @@ export const MOCK_USER_DATA = {
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
   MESSAGE: "The page you are looking for does not exist.",
+};
+
+export const VERIFICATION = {
+  title: "Verifying",
+  message: "Please wait, while we verify your email.",
 };
