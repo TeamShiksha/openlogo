@@ -2,8 +2,10 @@ import PropTypes from "prop-types";
 import Button from "../common/button/Button";
 import { HERO_SECTION, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./HeroSection.module.css";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = ({ onPrimaryButtonClick, isAuthenticated }) => {
+  const navigate = useNavigate();
   return (
     <div className={styles["hero-section"]}>
       <div className={styles["left-section"]}>
@@ -16,6 +18,7 @@ const HeroSection = ({ onPrimaryButtonClick, isAuthenticated }) => {
             type="button"
             variant="secondary"
             className={styles["button-width"]}
+            onClick={() => navigate("/docs")}
           >
             {BUTTON_TEXT.documentation}
           </Button>

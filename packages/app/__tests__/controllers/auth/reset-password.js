@@ -7,6 +7,8 @@ const { Messages } = require("../../../utils/constants");
 const mongoose = require("mongoose");
 
 const app = require("../../../server");
+const dummyPassword =
+  require("../../../utils/generatePassword").generatePassword();
 jest.mock("jsonwebtoken");
 jwt.verify = jest.fn(() => ({ userId: new mongoose.Types.ObjectId() }));
 
@@ -48,7 +50,7 @@ describe("RESET PASSWORD API", () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
-      .send({ newPassword: "a".repeat(31) });
+      .send({ newPassword: dummyPassword.repeat(3) });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -62,7 +64,7 @@ describe("RESET PASSWORD API", () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
-      .send({ newPassword: "invalid" });
+      .send({ newPassword: dummyPassword.slice(6) });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -77,8 +79,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password456",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword.slice(2),
         token: "validToken",
       });
 
@@ -95,7 +97,7 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
+        newPassword: dummyPassword,
         token: "validToken",
       });
 
@@ -112,8 +114,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password123",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword,
         token: 123,
       });
 
@@ -130,8 +132,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password123",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword,
       });
 
     expect(response.status).toBe(422);
@@ -152,8 +154,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password123",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword,
         token: "validToken",
       });
 
@@ -178,8 +180,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password123",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword,
         token: "validToken",
       });
 
@@ -207,8 +209,8 @@ describe("RESET PASSWORD API", () => {
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
       .send({
-        newPassword: "password123",
-        confirmPassword: "password123",
+        newPassword: dummyPassword,
+        confirmPassword: dummyPassword,
         token: "validToken",
       });
 
