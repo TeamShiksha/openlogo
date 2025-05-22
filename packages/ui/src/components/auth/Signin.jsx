@@ -8,8 +8,10 @@ import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
+import { useToast } from "../../hooks/useToast.js";
 
 const SignIn = ({ toggleForm, onClose }) => {
+  const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -77,6 +79,7 @@ const SignIn = ({ toggleForm, onClose }) => {
 
       setIsSubmit(false);
       setFocusedField(null);
+      toast.success("Sign in successfully");
     }
     setIsLoading(false);
   };

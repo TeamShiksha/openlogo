@@ -4,6 +4,7 @@ import { expect, describe, vi, it } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
+import { ToastProvider } from "../../../src/contexts/ToastContext.jsx";
 
 const closeModal = vi.fn();
 const mockAuthContext = (isAuthenticated) => ({
@@ -26,7 +27,9 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <AuthModal isOpen={true} onClose={closeModal} />
+          <ToastProvider>
+            <AuthModal isOpen={true} onClose={closeModal} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -40,7 +43,9 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <AuthModal isOpen={true} onClose={closeModal} />
+          <ToastProvider>
+            <AuthModal isOpen={true} onClose={closeModal} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -63,7 +68,9 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <AuthModal isOpen={true} onClose={Close} />
+          <ToastProvider>
+            <AuthModal isOpen={true} onClose={Close} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
