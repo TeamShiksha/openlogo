@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 import { MemoryRouter, useNavigate } from "react-router-dom";
@@ -97,9 +97,16 @@ describe("ProtectedRoute", () => {
     expect(adminContent).toBeInTheDocument();
   });
 
-  it("should redirect non-admin users from admin routes to the home page", () => {
+  it("should redirect non-admin users from admin routes to the home page", async () => {
     const authContext = mockAuthContext(true);
-    const userContext = mockUserContext({ userType: "USER" }, false);
+    const userContext = {
+      userData: null,
+      loading: false,
+      fetchUserData: vi.fn().mockImplementation(() => {
+        userContext.userData = { role: "USER" };
+        userContext.loading = false;
+      }),
+    };
 
     render(
       <AuthContext.Provider value={authContext}>
@@ -112,7 +119,11 @@ describe("ProtectedRoute", () => {
         </UserContext.Provider>
       </AuthContext.Provider>
     );
-
-    expect(mockNavigate).toHaveBeenCalledWith("/", { replace: true });
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/", {
+        replace: true,
+        state: undefined,
+      });
+    });
   });
 });

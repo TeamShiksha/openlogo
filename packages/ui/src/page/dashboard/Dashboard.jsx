@@ -14,7 +14,7 @@ import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
 
 function Dashboard() {
-  const { userData, loading, fetchUserData } = useContext(UserContext);
+  const { userData, loading } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,10 +28,6 @@ function Dashboard() {
     }
     return data;
   }, [userData]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
 
   useEffect(() => {
     if (userData) {

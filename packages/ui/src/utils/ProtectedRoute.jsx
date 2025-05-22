@@ -27,11 +27,7 @@ function ProtectedRoute({ adminOnly = false, children }) {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
   }
 
-  if (!adminOnly) {
-    return children;
-  }
-
-  if (!loading && !userData) {
+  if (hasFetched && !loading && !userData) {
     alert("Something went wrong!");
     return <Navigate to="/" replace />;
   }
@@ -40,7 +36,7 @@ function ProtectedRoute({ adminOnly = false, children }) {
     return <div>Loading...</div>;
   }
 
-  if (userData.userType !== "ADMIN") {
+  if (hasFetched && !loading && userData.role !== "ADMIN") {
     return <Navigate to="/" replace />;
   }
 
