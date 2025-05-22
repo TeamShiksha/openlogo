@@ -112,8 +112,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
   });
 
-  it("resets form correctly after submission", async () => {
-    const authContext = mockAuthContext(false);
+  it("resets form correctly after successful submission", async () => {
+    const authContext = mockAuthContext(true);
+    mockedMakeRequest.mockResolvedValue(true);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
@@ -165,6 +166,51 @@ describe("SignUpForm UI and Functionality Tests", () => {
     expect(signUpButton).toBeDisabled();
     expect(document.activeElement).toBe(document.body);
   });
+
+  it("does not reset form after failed submission", async () => {
+    mockedMakeRequest.mockResolvedValue(false);
+
+    const authContext = mockAuthContext(false);
+
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <SignUpForm toggleForm={vi.fn()} />
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const signUpButton = screen.getByRole("button", {
+      name: SIGNUP.submitButton,
+    });
+
+    fireEvent.change(nameInput, { target: { value: "Test User" } });
+    fireEvent.change(emailInput, { target: { value: "testuser@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "Password@123" } });
+    fireEvent.change(confirmPasswordInput, {
+      target: { value: "Password@123" },
+    });
+
+    expect(signUpButton).toBeEnabled();
+
+    fireEvent.click(signUpButton);
+
+    await waitFor(() => {
+      expect(mockedMakeRequest).toHaveBeenCalled();
+    });
+
+    expect(nameInput.value).toBe("Test User");
+    expect(emailInput.value).toBe("testuser@example.com");
+    expect(passwordInput.value).toBe("Password@123");
+    expect(confirmPasswordInput.value).toBe("Password@123");
+
+    expect(signUpButton).toBeEnabled();
+  });
+
   it("connectivity test passed", async () => {
     mockedMakeRequest.mockResolvedValue(true);
     const authContext = mockAuthContext(false);
@@ -208,6 +254,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
     expect(signUpButton).toBeDisabled();
   });
+
   it("connectivity test failed", async () => {
     mockedMakeRequest.mockResolvedValue(false);
     const authContext = mockAuthContext(false);
@@ -238,18 +285,16 @@ describe("SignUpForm UI and Functionality Tests", () => {
     fireEvent.click(signUpButton);
 
     await waitFor(() => {
-      expect(nameInput.value).toBe(SIGNUP.initialValues.name);
-      expect(emailInput.value).toBe(SIGNUP.initialValues.email);
-      expect(passwordInput.value).toBe(SIGNUP.initialValues.password);
-      expect(confirmPasswordInput.value).toBe(
-        SIGNUP.initialValues.confirmPassword
-      );
+      expect(nameInput.value).toBe("Test");
+      expect(emailInput.value).toBe("test@gmail.com");
+      expect(passwordInput.value).toBe("Test@1234");
+      expect(confirmPasswordInput.value).toBe("Test@1234");
     });
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
     });
-    expect(signUpButton).toBeDisabled();
+    expect(signUpButton).not.toBeDisabled();
   });
 
   const delayedResolve = () =>
