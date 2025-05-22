@@ -50,7 +50,6 @@ function SignUp({ toggleForm }) {
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    setFormValues(SIGNUP.initialValues);
     setFormErrors({});
     setIsSubmit(false);
     setFocusedField(null);
