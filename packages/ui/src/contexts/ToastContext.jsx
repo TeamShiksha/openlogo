@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import Toast from "../components/Toast/Toast";
 import styles from "../components/Toast/Toast.module.css";
 import PropTypes from "prop-types";
@@ -58,23 +58,22 @@ export const ToastProvider = ({ children, maxToasts = 5 }) => {
     setToasts([]);
   }, []);
 
-  const toastValue = {
-    success,
-    error,
-    warning,
-    info,
-    show: showToast,
-    clear: clearAll,
-    clearToast: removeToast,
-  };
+  const toastValue = useMemo(
+    () => ({
+      success,
+      error,
+      warning,
+      info,
+      show: showToast,
+      clear: clearAll,
+      clearToast: removeToast,
+    }),
+    [success, error, warning, info, showToast, clearAll, removeToast]
+  );
 
   return (
     <ToastContext.Provider value={toastValue}>
-      <div
-        className={styles.toastContainer}
-        role="region"
-        aria-label="Notifications"
-      >
+      <div className={styles.toastContainer} aria-label="Notifications">
         {toasts.map((toast) => (
           <Toast
             key={toast.id}
