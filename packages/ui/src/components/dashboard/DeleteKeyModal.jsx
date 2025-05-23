@@ -10,15 +10,10 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
 
   const { makeRequest: deleteKeyRequest } = useApi({
     method: "delete",
-    url: selectedKey ? `/users/me/api-key/${selectedKey._id}` : "",
+    url: `/users/me/api-key/${selectedKey._id}`,
   });
 
   const handleDeleteConfirm = async () => {
-    if (!selectedKey?._id) {
-      setDeleteError("Invalid API key selected");
-      return;
-    }
-
     try {
       await deleteKeyRequest();
       onClose();
@@ -40,8 +35,8 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
       <div className={styles["delete-modal"]}>
         <h2>Delete API Key</h2>
         <p>
-          Are you sure you want to delete the API key &quot
-          {selectedKey?.key_description}&quot;? This action cannot be undone.
+          Are you sure you want to delete the API key &quot;
+          {selectedKey?.key_description}&quot; ? This action cannot be undone.
         </p>
         {deleteError && (
           <p className={styles["error-message"]}>{deleteError}</p>
