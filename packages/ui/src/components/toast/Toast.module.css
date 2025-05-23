@@ -1,4 +1,4 @@
-.toastContainer {
+.toast-container {
   position: fixed;
   z-index: 1000;
   display: flex;
@@ -86,7 +86,7 @@
   color: var(--description);
 }
 
-.closeButton {
+.close-button {
   background: none;
   border: none;
   color: #64748b;
@@ -104,12 +104,12 @@
   flex-shrink: 0;
 }
 
-.closeButton:hover {
+.close-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
   color: #334155;
 }
 
-.progressBar {
+.progress-bar {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -119,19 +119,19 @@
   transition: width linear;
 }
 
-.success .progressBar {
+.success .progress-bar {
   background-color: #10b981;
 }
 
-.error .progressBar {
+.error .progress-bar {
   background-color: #ef4444;
 }
 
-.warning .progressBar {
+.warning .progress-bar {
   background-color: #f59e0b;
 }
 
-.info .progressBar {
+.info .progress-bar {
   background-color: #3b82f6;
 }
 
@@ -176,12 +176,7 @@
 }
 
 @media (max-width: 640px) {
-  .toastContainer {
-    width: calc(100% - 32px);
-  }
-
-  .toastContainer.topCenter,
-  .toastContainer.bottomCenter {
+  .toast-container {
     width: calc(100% - 32px);
   }
 }

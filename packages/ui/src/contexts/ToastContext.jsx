@@ -73,7 +73,7 @@ export const ToastProvider = ({ children, maxToasts = 5 }) => {
 
   return (
     <ToastContext.Provider value={toastValue}>
-      <div className={styles.toastContainer} aria-label="Notifications">
+      <div className={styles["toast-container"]} aria-label="Notifications">
         {toasts.map((toast) => (
           <Toast
             key={toast.id}

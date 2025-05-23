@@ -66,13 +66,16 @@ const Toast = ({ message, type = "info", duration = 5000, onClose, id }) => {
     >
       <p className={styles.message}>{message}</p>
       <button
-        className={styles.closeButton}
+        className={styles["close-button"]}
         onClick={handleClose}
         aria-label="Close notification"
       >
         {BUTTON_TEXT.cross}
       </button>
-      <div className={styles.progressBar} style={{ width: `${progress}%` }} />
+      <div
+        className={styles["progress-bar"]}
+        style={{ width: `${progress}%` }}
+      />
     </div>
   );
 };
