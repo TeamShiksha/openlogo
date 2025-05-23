@@ -372,6 +372,21 @@ export const CROSS = {
   alt: "Close Icon",
 };
 
+export const COPY = {
+  src: "copy-icon.svg",
+  alt: "Copy Icon",
+};
+
+export const VISIBLE = {
+  src: "visible-icon.svg",
+  alt: "Visible Icon",
+};
+
+export const VISIBLEOFF = {
+  src: "visible-off-icon.svg",
+  alt: "Visible Off Icon",
+};
+
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",
