@@ -61,9 +61,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           value={description}
         />
         {errorMsg ? (
-          <>
-            <p className={styles["error-message"]}>{errorMsg}</p>
-          </>
+          <p className={styles["error-message"]}>{errorMsg}</p>
         ) : (
           <Modal
             isOpen={showApiKeyModal}
@@ -82,19 +80,29 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
                     ? data?.data.api_key
                     : "********************************"}
                 </code>
-                <div className={styles["copy-wrapper"]}>
-                  <img
-                    src={isVisible ? VISIBLE.src : VISIBLEOFF.src}
-                    className={styles["copy-icon"]}
+                <div className={styles["icon-wrapper"]}>
+                  <button
+                    type="button"
+                    className={styles["icon-button"]}
                     onClick={() => setIsVisible(!isVisible)}
-                    alt={isVisible ? VISIBLE.alt : VISIBLEOFF.alt}
-                  />
-                  <img
-                    src={COPY.src}
-                    className={styles["copy-icon"]}
+                  >
+                    <img
+                      src={isVisible ? VISIBLE.src : VISIBLEOFF.src}
+                      className={styles["copy-icon"]}
+                      alt={isVisible ? VISIBLE.alt : VISIBLEOFF.alt}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles["icon-button"]}
                     onClick={handleCopyKey}
-                    alt="Copy API key"
-                  />
+                  >
+                    <img
+                      src={COPY.src}
+                      className={styles["copy-icon"]}
+                      alt="Copy API key"
+                    />
+                  </button>
                   {isCopied && <div className={styles["tooltip"]}>Copied!</div>}
                 </div>
               </div>
