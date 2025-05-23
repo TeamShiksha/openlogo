@@ -14,12 +14,10 @@ function SettingCard({ isGuest }) {
   };
 
   const handleActionItem = (action) => {
-    switch (action) {
-      case "delete":
-        handleDeleteConfirmation();
-        break;
-      default:
-        console.log("Action not recognized");
+    if (action === "delete") {
+      handleDeleteConfirmation();
+    } else {
+      console.log("Action not recognized");
     }
   };
 
