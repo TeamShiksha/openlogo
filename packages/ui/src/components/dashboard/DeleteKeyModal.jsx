@@ -1,24 +1,26 @@
 import Modal from "../common/modal/Modal";
 import styles from "./DeleteKeyModal.module.css";
 import Button from "../common/button/Button";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import PropTypes from "prop-types";
-import { UserContext } from "../../contexts/Contexts.jsx";
 
 const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
-  const { fetchUserData } = useContext(UserContext);
   const [deleteError, setDeleteError] = useState("");
 
   const { makeRequest: deleteKeyRequest } = useApi({
     method: "delete",
-    url: `/users/me/api-key/${selectedKey._id}`,
+    url: selectedKey ? `/users/me/api-key/${selectedKey._id}` : "",
   });
 
   const handleDeleteConfirm = async () => {
+    if (!selectedKey?._id) {
+      setDeleteError("Invalid API key selected");
+      return;
+    }
+
     try {
       await deleteKeyRequest();
-      fetchUserData();
       onClose();
     } catch (error) {
       setDeleteError("Failed to delete API key. Please try again.");
@@ -38,8 +40,8 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
       <div className={styles["delete-modal"]}>
         <h2>Delete API Key</h2>
         <p>
-          Are you sure you want to delete this API key? This action cannot be
-          undone.
+          Are you sure you want to delete the API key &quot
+          {selectedKey?.key_description}&quot;? This action cannot be undone.
         </p>
         {deleteError && (
           <p className={styles["error-message"]}>{deleteError}</p>

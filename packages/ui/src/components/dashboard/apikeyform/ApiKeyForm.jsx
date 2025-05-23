@@ -4,16 +4,14 @@ import Modal from "../../common/modal/Modal";
 import styles from "./ApiKeyForm.module.css";
 import PropTypes from "prop-types";
 import { useApi } from "../../../hooks/useApi";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import LoadingSpinner from "../../common/loadingspinner/LoadingSpinner.jsx";
-import { UserContext } from "../../../contexts/Contexts.jsx";
 import { COPY, VISIBLE, VISIBLEOFF } from "../../../utils/Constants.js";
 
-function ApiKeyForm({ isGuest }) {
+function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const { fetchUserData } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(false);
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
@@ -29,6 +27,7 @@ function ApiKeyForm({ isGuest }) {
       await makeRequest();
       setShowApiKeyModal(true);
       setDescription("");
+      onKeyGenerated();
     } catch (error) {
       console.error("Failed to generate API key:", error);
     }
@@ -42,7 +41,6 @@ function ApiKeyForm({ isGuest }) {
 
   const handleCloseModal = () => {
     setShowApiKeyModal(false);
-    fetchUserData();
   };
 
   return (
@@ -118,6 +116,7 @@ function ApiKeyForm({ isGuest }) {
 
 ApiKeyForm.propTypes = {
   isGuest: PropTypes.bool.isRequired,
+  onKeyGenerated: PropTypes.func.isRequired,
 };
 
 export default ApiKeyForm;
