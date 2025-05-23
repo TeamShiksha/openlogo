@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
-import Toast from "../components/Toast/Toast";
-import styles from "../components/Toast/Toast.module.css";
+import Toast from "../components/toast/Toast.jsx";
+import styles from "../components/toast/Toast.module.css";
 import PropTypes from "prop-types";
 import { ToastContext } from "./Contexts";
 
