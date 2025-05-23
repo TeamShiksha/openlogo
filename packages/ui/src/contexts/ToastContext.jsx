@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from "react";
-import Toast from "../components/Toast/Toast";
 import styles from "../components/Toast/Toast.module.css";
 import PropTypes from "prop-types";
 import { ToastContext } from "./Contexts";
+import Toast from "../components/toast/Toast.jsx";
 
 export const ToastProvider = ({ children, maxToasts = 5 }) => {
   const [toasts, setToasts] = useState([]);
