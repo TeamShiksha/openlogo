@@ -2,8 +2,27 @@ import styles from "./SettingCard.module.css";
 import Button from "../../common/button/Button";
 import { SETTING } from "../../../utils/Constants";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import DeleteAccountConfirmationModal from "./DeleteAccountConfirmationModal";
 
 function SettingCard({ isGuest }) {
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] =
+    useState(false);
+
+  const handleDeleteConfirmation = () => {
+    setShowDeleteConfirmationModal(true);
+  };
+
+  const handleActionItem = (action) => {
+    switch (action) {
+      case "delete":
+        handleDeleteConfirmation();
+        break;
+      default:
+        console.log("Action not recognized");
+    }
+  };
+
   return (
     <>
       {SETTING.map((setting, index) => (
@@ -18,11 +37,18 @@ function SettingCard({ isGuest }) {
             }
             className={styles["action-button"]}
             disabled={isGuest}
+            onClick={() => handleActionItem(setting.action)}
           >
             {setting.buttontitle}
           </Button>
         </div>
       ))}
+      {showDeleteConfirmationModal && (
+        <DeleteAccountConfirmationModal
+          isOpen={showDeleteConfirmationModal}
+          onClose={() => setShowDeleteConfirmationModal(false)}
+        />
+      )}
     </>
   );
 }
