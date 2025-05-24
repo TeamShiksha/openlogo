@@ -1,0 +1,23 @@
+.dropdown-div {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dropdown {
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+  border-radius: var(--bradius);
+  padding: 0.5rem;
+  width: 20vw;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .dropdown-div {
+    justify-content: center;
+  }
+  .dropdown {
+    width: 80vw;
+  }
+}

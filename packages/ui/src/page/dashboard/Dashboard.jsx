@@ -12,6 +12,7 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
+import DashboardDropdown from "../../components/dashboarddropdown/dashboardDropDown.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -51,6 +52,13 @@ function Dashboard() {
       className={styles["dashboard-container"]}
       data-testid="testid-dashboard"
     >
+      <div>
+        {userData?.role !== "CUSTOMER" || userData?.role !== "GUEST" ? (
+          <DashboardDropdown role={userData?.role} />
+        ) : (
+          <></>
+        )}
+      </div>
       <div className={styles["dashboard-content-container"]}>
         <section className={styles["dashboard-content-section"]}>
           <CardWrapper title="Usage">

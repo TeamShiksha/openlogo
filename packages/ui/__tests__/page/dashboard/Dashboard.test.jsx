@@ -14,6 +14,7 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
+import { BrowserRouter } from "react-router-dom";
 
 const mockUserContext = (userData, loading) => ({
   userData,
@@ -44,11 +45,13 @@ describe("Dashboard", () => {
   it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <Dashboard />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     await waitFor(async () => {
@@ -80,11 +83,13 @@ describe("Dashboard", () => {
   it("should render dashboard with default values when user data is null and loading is false", async () => {
     const userContext = mockUserContext(null, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <Dashboard />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     await waitFor(() => {
@@ -98,11 +103,13 @@ describe("Dashboard", () => {
   it("should render logout button if user is authenticated and user data exists", () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <Dashboard />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
@@ -112,11 +119,13 @@ describe("Dashboard", () => {
   it("should not render logout button if user is not authenticated or user data is null", () => {
     const userContext = mockUserContext(null, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(false)}>
-        <UserContext.Provider value={userContext}>
-          <Dashboard />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={mockAuthContext(false)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const logoutButton = screen.queryByText(BUTTON_TEXT.signOut);
@@ -129,11 +138,13 @@ describe("Dashboard", () => {
     const authContext = mockAuthContext(true, logoutMock);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <UserContext.Provider value={userContext}>
-          <Dashboard />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);

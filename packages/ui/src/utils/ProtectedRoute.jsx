@@ -8,10 +8,10 @@ function ProtectedRoute({ adminOnly = false, children }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [hasFetched, setHasFetched] = useState(false);
-
   useEffect(() => {
     if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
       setHasFetched(true);
+
       fetchUserData();
     }
   }, [

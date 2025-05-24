@@ -4,6 +4,12 @@
   max-width: 1280px;
 }
 
+.dashboard-navigation-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem 2rem 0rem 2rem;
+}
+
 .dashboard-content-container {
   padding: 2rem;
   display: flex;
