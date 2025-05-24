@@ -2,12 +2,17 @@ import { expect, describe, it, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import HeroSection from "../../src/components/hero/HeroSection";
 import { BUTTON_TEXT, HERO_SECTION } from "../../src/utils/Constants";
+import { BrowserRouter } from "react-router-dom";
 
 const onPrimaryButtonClick = vi.fn();
 
 describe("HeroSection Component", () => {
   it("Tagline and summary visible", () => {
-    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
+    render(
+      <BrowserRouter>
+        <HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />
+      </BrowserRouter>
+    );
 
     const tagline = screen.getByText(HERO_SECTION.tagLine);
     const summary = screen.getByText(HERO_SECTION.summary);
@@ -16,7 +21,11 @@ describe("HeroSection Component", () => {
   });
 
   it("Buttons visible", () => {
-    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
+    render(
+      <BrowserRouter>
+        <HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />
+      </BrowserRouter>
+    );
 
     const documentationButton = screen.getByText(BUTTON_TEXT.documentation);
     const getStartedButton = screen.getByText(BUTTON_TEXT.getStarted);
@@ -26,8 +35,25 @@ describe("HeroSection Component", () => {
     expect(getStartedButton.tagName).toBe("BUTTON");
   });
 
+  it("clicking the Documentation button navigates to the Document Page", () => {
+    render(
+      <BrowserRouter>
+        <HeroSection />
+      </BrowserRouter>
+    );
+    const DocumentationButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.documentation,
+    });
+    fireEvent.click(DocumentationButton);
+    expect(window.location.pathname).toBe("/docs");
+  });
+
   it("Illustration visible", () => {
-    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
+    render(
+      <BrowserRouter>
+        <HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />
+      </BrowserRouter>
+    );
 
     const logoImage = screen.getByAltText(HERO_SECTION.illustractionSrcAlt);
     expect(logoImage).toBeInTheDocument();
@@ -35,7 +61,11 @@ describe("HeroSection Component", () => {
   });
 
   it("Auth modal visibility before and after the click", () => {
-    render(<HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />);
+    render(
+      <BrowserRouter>
+        <HeroSection onPrimaryButtonClick={onPrimaryButtonClick} />
+      </BrowserRouter>
+    );
 
     const anyDialog = screen.queryByText(BUTTON_TEXT.cross);
     expect(anyDialog).not.toBeInTheDocument();
@@ -46,10 +76,12 @@ describe("HeroSection Component", () => {
 
   it("shows Go To Dashboard button when authenticated", () => {
     render(
-      <HeroSection
-        onPrimaryButtonClick={onPrimaryButtonClick}
-        isAuthenticated={true}
-      />
+      <BrowserRouter>
+        <HeroSection
+          onPrimaryButtonClick={onPrimaryButtonClick}
+          isAuthenticated={true}
+        />
+      </BrowserRouter>
     );
 
     const gotoDashboardButton = screen.getByRole("button", {
