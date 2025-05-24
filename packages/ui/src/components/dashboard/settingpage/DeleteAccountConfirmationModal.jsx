@@ -7,8 +7,11 @@ import { useContext, useState } from "react";
 import { useApi } from "../../../hooks/useApi";
 import { UserContext } from "../../../contexts/Contexts";
 import { DELETE_ACCOUNT_CONFIRMATION_MODAL } from "../../../utils/Constants";
+import { useToast } from "../../../hooks/useToast.js";
 
 function DeleteAccountConfirmationModal({ isOpen, onClose }) {
+  const toast = useToast();
+
   const [email, setEmail] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const { userData } = useContext(UserContext);
@@ -31,7 +34,11 @@ function DeleteAccountConfirmationModal({ isOpen, onClose }) {
       const success = await makeRequest();
       if (success) {
         setEmail("");
-        window.location.href = "/";
+        onClose();
+        toast.success("Account deleted successfully");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       }
     } finally {
       setIsDeleting(false);
@@ -39,7 +46,7 @@ function DeleteAccountConfirmationModal({ isOpen, onClose }) {
   };
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen}>
+    <Modal data-testid="delete-account-modal" onClose={onClose} isOpen={isOpen}>
       <div>
         <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
           <p data-testid="error-msg" className="input-error">

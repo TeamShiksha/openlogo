@@ -7,6 +7,7 @@ import {
 } from "../../../../src/utils/Constants";
 import { UserContext } from "../../../../src/contexts/Contexts";
 import DeleteAccountConfirmationModal from "../../../../src/components/dashboard/settingpage/DeleteAccountConfirmationModal";
+import { ToastProvider } from "../../../../src/contexts/ToastContext.jsx";
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => ({
@@ -33,7 +34,12 @@ describe("DeleteAccountConfirmationModal Component", () => {
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -47,25 +53,34 @@ describe("DeleteAccountConfirmationModal Component", () => {
   });
 
   it("does not render when isOpen is false", () => {
-    const { container } = render(
+    render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal
-            isOpen={false}
-            onClose={mockOnClose}
-          />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={false}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
 
-    expect(container).toBeEmptyDOMElement();
+    expect(
+      screen.queryByTestId("delete-account-modal")
+    ).not.toBeInTheDocument();
   });
 
   it("handles email input correctly", () => {
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -79,7 +94,12 @@ describe("DeleteAccountConfirmationModal Component", () => {
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -97,7 +117,12 @@ describe("DeleteAccountConfirmationModal Component", () => {
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -115,7 +140,12 @@ describe("DeleteAccountConfirmationModal Component", () => {
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -129,10 +159,21 @@ describe("DeleteAccountConfirmationModal Component", () => {
   });
 
   it("handles successful account deletion", async () => {
+    mockMakeRequest.mockResolvedValue(true);
+
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: vi.fn() };
+
     render(
       <BrowserRouter>
         <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
-          <DeleteAccountConfirmationModal isOpen={true} onClose={mockOnClose} />
+          <ToastProvider>
+            <DeleteAccountConfirmationModal
+              isOpen={true}
+              onClose={mockOnClose}
+            />
+          </ToastProvider>
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -147,8 +188,10 @@ describe("DeleteAccountConfirmationModal Component", () => {
 
     await waitFor(() => {
       expect(mockMakeRequest).toHaveBeenCalled();
-      expect(window.location.href).not.toContain(import.meta.env.VITE_APP_URL);
-      expect(screen.getByTestId("error-msg")).toBeInTheDocument();
+      expect(mockOnClose).toHaveBeenCalled();
+      expect(window.location.href).toBe("/");
     });
+
+    window.location = originalLocation;
   });
 });
