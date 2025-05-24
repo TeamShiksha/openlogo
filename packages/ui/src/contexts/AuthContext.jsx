@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     const success = await makeRequest();
     if (success) setIsAuthenticated(false);
-  }, [setIsAuthenticated]);
+  }, [setIsAuthenticated, makeRequest]);
 
   const authValue = useMemo(
     () => ({

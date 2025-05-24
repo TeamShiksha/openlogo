@@ -5,6 +5,9 @@ const { Users } = require("../../../models");
 const { UserService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
+const dummyPassword =
+  require("../../../utils/generatePassword").generatePassword();
+const bcrypt = require("bcryptjs");
 
 describe("Update User Password", () => {
   beforeAll(() => {
@@ -24,7 +27,7 @@ describe("Update User Password", () => {
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       currPassword: "",
-      newPassword: "mockNewpassword",
+      newPassword: dummyPassword,
     };
 
     const response = await request(app)
@@ -44,7 +47,7 @@ describe("Update User Password", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "mockCurrpassword",
+      currPassword: dummyPassword,
       newPassword: "",
     };
 
@@ -65,8 +68,8 @@ describe("Update User Password", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "password123",
-      newPassword: "mockNewpassword",
+      currPassword: dummyPassword,
+      newPassword: dummyPassword,
     };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
 
@@ -87,8 +90,8 @@ describe("Update User Password", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "mockCurrpassword",
-      newPassword: "mockNewpassword",
+      currPassword: dummyPassword.slice(2),
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
@@ -108,15 +111,18 @@ describe("Update User Password", () => {
   });
 
   it("500 - Something went wrong. Try again later", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockUserModel = new Users({
+      ...MOCK_USERS[1],
+      password: bcrypt.hashSync(dummyPassword, 10),
+    });
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "password123",
-      newPassword: "mockNewpassword",
+      currPassword: dummyPassword,
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new Users(MOCK_USERS[1]));
+      .mockResolvedValue(mockUserModel);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
       .mockReturnValue(false);
@@ -135,15 +141,18 @@ describe("Update User Password", () => {
   });
 
   it("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockUserModel = new Users({
+      ...MOCK_USERS[1],
+      password: bcrypt.hashSync(dummyPassword, 10),
+    });
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "password123",
-      newPassword: "mockNewpassword",
+      currPassword: dummyPassword,
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new Users(MOCK_USERS[1]));
+      .mockResolvedValue(mockUserModel);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
       .mockImplementation(() => {
@@ -159,15 +168,18 @@ describe("Update User Password", () => {
   });
 
   it("200 - User password updated", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockUserModel = new Users({
+      ...MOCK_USERS[1],
+      password: bcrypt.hashSync(dummyPassword, 10),
+    });
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      currPassword: "password123",
-      newPassword: "mockNewpassword",
+      currPassword: dummyPassword,
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(new Users(MOCK_USERS[1]));
+      .mockResolvedValue(mockUserModel);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
       .mockResolvedValue(true);
