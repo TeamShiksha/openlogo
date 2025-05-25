@@ -13,6 +13,7 @@ function SignUp({ toggleForm }) {
   const [isSubmit, setIsSubmit] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
@@ -53,12 +54,14 @@ function SignUp({ toggleForm }) {
     setFormErrors({});
     setIsSubmit(false);
     setFocusedField(null);
+    setIsLoading(true);
 
     const success = await makeRequest();
     if (success) {
       setFormValues(SIGNUP.initialValues);
       setIsSubmit(true);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -85,13 +88,15 @@ function SignUp({ toggleForm }) {
               onChange={handleChange}
               onFocus={() => setFocusedField(field.name)}
               onBlur={() => setFocusedField(null)}
+              disabled={isLoading}
             />
           ))}
         </div>
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit}
+          disabled={!isFormValid || isSubmit || isLoading}
+          isLoading={isLoading}
         >
           {BUTTON_TEXT.signUp}
         </Button>

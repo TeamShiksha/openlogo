@@ -1,12 +1,13 @@
-FROM node:20-alpine
+FROM node:20-alpine AS deps
 
 WORKDIR /app
 
-RUN npm install -g pnpm
-
 COPY package.json ./
 
-RUN pnpm install
+RUN corepack enable && \
+    corepack prepare pnpm@latest --activate && \
+    pnpm install --prod && \
+    rm -rf ~/.pnpm-store /root/.cache /root/.local
 
 COPY . .
 

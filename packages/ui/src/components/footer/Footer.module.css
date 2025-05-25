@@ -24,6 +24,10 @@
   gap: 0.5rem;
   align-items: center;
   font-size: 1.85rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--white);
+  user-select: none;
 }
 
 .footer-items {

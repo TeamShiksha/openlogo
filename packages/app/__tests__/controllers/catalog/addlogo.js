@@ -34,6 +34,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
@@ -60,6 +61,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
@@ -83,9 +85,29 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(500);
+  });
+
+  it("500 - Missing companyUri", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]); // Admin user
+    const token = mockAdmin.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "GOOGLE.png";
+
+    const res = await request(app)
+      .post("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .attach("logo", mockBuffer, mockFileName);
+
+    expect(res.status).toBe(500);
+    expect(res.body).toEqual({
+      statusCode: 500,
+      message: expect.stringContaining("companyUri is required"),
+      error: STATUS_CODES[500],
+    });
   });
 
   it("200 - Success", async () => {
@@ -109,6 +131,7 @@ describe("POST /api/catalog/logo", () => {
     const res = await request(app)
       .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
       .attach("logo", mockBuffer, mockFileName);
 
     expect(res.status).toBe(200);

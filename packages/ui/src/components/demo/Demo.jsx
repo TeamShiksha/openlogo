@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";
-import axios from "axios";
+import { instance } from "../../api/api_instance.js";
+import { firstLetterCapitalString } from "../../utils/Helpers.js";
 
 const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,35 +12,37 @@ const Demo = ({ openAuthModal }) => {
   const [loading, setLoading] = useState(false);
   const [apiResults, setApiResults] = useState([]);
 
-  const handleSearch = async (searchEvent) => {
-    searchEvent.preventDefault();
-
-    if (searchTerm.length > 1) {
-      setLoading(true);
+  useEffect(() => {
+    if (searchTerm.length <= 1) {
+      setApiResults([]);
       setShowResults(false);
+      return;
+    }
+
+    const debounceTimer = setTimeout(async () => {
+      setLoading(true);
+      setShowResults(true);
 
       try {
-        const result = await axios.get(
-          `https://67dad12b35c87309f52e299a.mockapi.io/company?search=${searchTerm}`
+        const response = await instance.get(
+          `/logo/demo-search?domainKey=${searchTerm}`
         );
-        const data = result.data;
-        setApiResults(data.slice(0, 3));
+        const res = response.data;
+        setApiResults(res.data.slice(0, 3));
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false);
         setShowResults(true);
       }
-    }
-  };
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   const handleInputChange = (inputChangeEvent) => {
     const value = inputChangeEvent.target.value;
     setSearchTerm(value);
-    if (!value) {
-      setShowResults(false);
-      setApiResults([]);
-    }
   };
 
   return (
@@ -53,7 +56,7 @@ const Demo = ({ openAuthModal }) => {
       </div>
       <div className={`${styles["search-box"]}`}>
         <div className={styles["search-content"]}>
-          <form onSubmit={handleSearch}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <input
               name="search"
               type="text"
@@ -84,12 +87,15 @@ const Demo = ({ openAuthModal }) => {
             <div className={`${styles["result-container"]} ${styles["show"]}`}>
               {apiResults.map((company, index) => (
                 <div
-                  key={company.id}
+                  key={company.companyName}
                   className={`${styles["result-item"]} ${styles["show"]}`}
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
-                  <img src={company.logo} alt={`${company.name} Logo`} />
-                  <span>{company.name}</span>
+                  <img
+                    src={company.image}
+                    alt={`${company.companyName} Logo`}
+                  />
+                  <span>{firstLetterCapitalString(company.companyName)}</span>
                 </div>
               ))}
             </div>

@@ -14,6 +14,8 @@ const {
   MOCK_USERTOKENS,
 } = require("../../../utils/mocks");
 const app = require("../../../server");
+const dummyPassword =
+  require("../../../utils/generatePassword").generatePassword();
 
 describe("SIGNUP API", () => {
   beforeAll(() => {
@@ -62,7 +64,7 @@ describe("SIGNUP API", () => {
   it("422 - ConfirmPassword and Password should match", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
-      confirmPassword: "testname@5678",
+      confirmPassword: dummyPassword,
     };
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
