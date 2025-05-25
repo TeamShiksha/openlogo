@@ -4,6 +4,7 @@ import { AuthContext } from "../../../src/contexts/Contexts";
 import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
+import { ToastProvider } from "../../../src/contexts/ToastContext.jsx";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
@@ -30,7 +31,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={vi.fn()} />
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -53,7 +56,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={toggleForm} />
+          <ToastProvider>
+            <SignIn toggleForm={toggleForm} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -68,7 +73,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={vi.fn()} />
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -95,7 +102,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -125,7 +134,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={vi.fn()} />
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -159,7 +170,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
+          </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -186,7 +199,9 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     render(
       <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
+        <ToastProvider>
+          <SignIn toggleForm={vi.fn()} />
+        </ToastProvider>
       </AuthContext.Provider>
     );
 
@@ -208,7 +223,9 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     render(
       <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
+        <ToastProvider>
+          <SignIn toggleForm={vi.fn()} />
+        </ToastProvider>
       </AuthContext.Provider>
     );
 
@@ -232,7 +249,9 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     render(
       <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
+        <ToastProvider>
+          <SignIn toggleForm={vi.fn()} />
+        </ToastProvider>
       </AuthContext.Provider>
     );
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
@@ -254,7 +273,9 @@ describe("SignInForm UI and Functionality Tests", () => {
 
     render(
       <AuthContext.Provider value={authContext}>
-        <SignIn toggleForm={vi.fn()} />
+        <ToastProvider>
+          <SignIn toggleForm={vi.fn()} />
+        </ToastProvider>
       </AuthContext.Provider>
     );
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
