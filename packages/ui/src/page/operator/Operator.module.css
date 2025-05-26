@@ -1,11 +1,14 @@
 .operator-container {
   min-height: calc(100vh - 11rem);
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 2rem;
 }
 
 .tabs-container {

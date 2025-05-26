@@ -48,7 +48,7 @@ const Operator = () => {
   const fetchRequests = async (page = 1) => {
     setLoading(true);
     try {
-      const response = await instance.get("/request", {
+      const response = await instance.get("/requests", {
         params: {
           page,
           limit: ITEMS_PER_PAGE,
@@ -74,8 +74,7 @@ const Operator = () => {
           reply: responseText,
         });
       } else {
-        await instance.put(`/request/${currentItem._id}`, {
-          status: "COMPLETED",
+        await instance.put(`/requests/${currentItem._id}`, {
           comment: responseText,
         });
       }
@@ -93,6 +92,7 @@ const Operator = () => {
       setFormErrors({});
     } catch (err) {
       console.error("Error sending response:", err);
+      setFormErrors({ message: "Error sending response" });
     } finally {
       setLoading(false);
     }

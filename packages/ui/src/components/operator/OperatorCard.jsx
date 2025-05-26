@@ -1,6 +1,6 @@
 import styles from "./OperatorCard.module.css";
 import PropTypes from "prop-types";
-
+import Button from "../common/button/Button";
 const OperatorCard = ({ item, onRespondClick, searchType }) => {
   const isArchived = item.status === "RESOLVED" || item.status === "REJECTED";
 
@@ -9,31 +9,79 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
       ? `Company URL: ${item.companyUrl}`
       : item.message;
 
+  const statusClassName = () => {
+    switch (item.status) {
+      case "RESOLVED":
+        return styles["status-resolved"];
+      case "REJECTED":
+        return styles["status-rejected"];
+      case "PENDING":
+        return styles["status-pending"];
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.content}>
+        <div className={styles["status-container"]}>
+          <div className={styles["status-container-left"]}>
+            <span className={styles["request-id"]}>{item._id}</span>
+            <span className={`${styles.status} ${statusClassName()}`}>
+              {item.status}
+            </span>
+          </div>
+          <div className={styles["date-container"]}>
+            <p>Opened at : {new Date(item.openedAt).toLocaleDateString()}</p>
+            {item.status !== "PENDING" && (
+              <p>Closed at : {new Date(item.closedAt).toLocaleDateString()}</p>
+            )}
+          </div>
+        </div>
         {searchType !== "requests" && (
-          <div className={styles.userInfo}>
-            <p className={styles.userName}>
-              <span>Name:</span> {item.name}
-            </p>
-            <p className={styles.userEmail}>
-              <span>Email:</span> {item.email}
-            </p>
+          <div className={styles.header}>
+            <div className={styles["user-info"]}>
+              <p className={styles["user-name"]}>{item.name}</p>
+              <p className={styles.divider}></p>
+              <p className={styles["user-email"]}>{item.email}</p>
+            </div>
           </div>
         )}
-        <p className={styles.message}>{displayMessage}</p>
-        <p className={styles.date}>
-          <span>Date:</span> {new Date(item.updated_at).toLocaleDateString()}
-        </p>
+        <div className={styles["message-container"]}>
+          <p className={styles["message-title"]}>Message</p>
+          <p className={styles.message}>{displayMessage}</p>
+        </div>
+        {isArchived && (
+          <>
+            <div className={styles["resolution-container"]}>
+              <p className={styles["resolution-title"]}>Resolution</p>
+              <p className={styles.resolution}>{item.status}</p>
+            </div>
+            <div className={styles["summary-container"]}>
+              <p className={styles["summary-title"]}>Summary</p>
+              <p className={styles.summary}>{item.comment}</p>
+            </div>
+          </>
+        )}
         <div className={styles["button-container"]}>
-          {!isArchived && (
-            <button
-              className={styles.respondButton}
-              onClick={() => onRespondClick(item)}
-            >
-              Respond
-            </button>
+          {searchType !== "requests" && !isArchived && (
+            <div className={styles["button-container"]}>
+              <Button
+                onClick={() => onRespondClick(item, "respond")}
+                variant="primary"
+                className={styles["respond-button"]}
+              >
+                Respond
+              </Button>
+              <Button
+                onClick={() => onRespondClick(item, "reject")}
+                variant="danger"
+                className={styles["reject-button"]}
+              >
+                Reject
+              </Button>
+            </div>
           )}
         </div>
       </div>

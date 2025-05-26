@@ -8,105 +8,117 @@
   position: relative;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-}
-
-.status {
-  display: block;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-top: 0.5rem;
 }
 
-.userInfo {
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  padding: 0.75rem;
-  margin-bottom: 0.25rem;
+.header {
+  display: flex;
+  justify-content: space-between;
 }
 
-.userName,
-.userEmail {
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .status-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.status-container-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.request-id {
+  color: var(--description);
+  font-weight: 600;
+  border: 1px solid var(--description);
+  border-radius: 100px;
+  padding: 0.25rem 0.5rem;
+}
+
+.status {
+  border: 1px solid var(--description);
+  border-radius: 100px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.status-pending {
+  color: var(--warning);
+}
+
+.status-resolved {
+  color: var(--success);
+}
+
+.status-rejected {
+  color: var(--error);
+}
+
+.date-container {
+  color: var(--description);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--description);
+}
+
+.user-name,
+.user-email {
   margin: 0;
-  font-size: 0.9rem;
   color: var(--description);
   line-height: 1.4;
 }
 
-.userName span,
-.userEmail span {
-  font-weight: normal;
-  color: var(--text-secondary, #666);
-  margin-right: 0.25rem;
+.message-title,
+.resolution-title,
+.summary-title {
+  color: var(--black);
+  font-weight: 500;
 }
 
-.message {
-  margin: 0;
-  line-height: 1.5;
-  font-size: 0.95rem;
-  overflow-wrap: break-word;
+.message,
+.resolution,
+.summary {
   color: var(--description);
-}
-
-.date {
-  font-size: 0.85rem;
-  color: var(--description);
-  margin: 0;
-}
-
-.date span {
-  font-weight: 600;
+  word-break: break-all;
 }
 
 .button-container {
   display: flex;
   width: 100%;
-  justify-content: end;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.respondButton {
-  padding: 0.5rem 1rem;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--bradius);
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
+.respond-button {
+  height: 2.5rem;
 }
 
-.respondButton:hover {
-  background-color: var(--primary-dark, #0056b3);
-}
-
-.status-pending {
-  background-color: #ffefd5;
-  color: #ff8c00;
-}
-
-.status-in-progress {
-  background-color: #e6f7ff;
-  color: #1890ff;
-}
-
-.status-resolved {
-  background-color: #f6ffed;
-  color: #52c41a;
-}
-
-.status-rejected {
-  background-color: #fff1f0;
-  color: #ff4d4f;
+.reject-button {
+  height: 2.5rem;
 }
