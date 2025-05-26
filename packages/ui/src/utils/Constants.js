@@ -348,12 +348,14 @@ export const SETTING = [
     title: "Download account data",
     subtitle: "Download your account data and move to other device with ease.",
     buttontitle: "Download",
+    action: "download",
   },
   {
     title: "Delete account",
     subtitle:
       "This will permanently delete your account and all associated data.",
     buttontitle: "Delete Account",
+    action: "delete",
   },
 ];
 
@@ -626,6 +628,7 @@ export const DASHBOARD_CARDS_TITLE = [
   "Setting",
 ];
 export const MOCK_USER_DATA = {
+  userId: "68239354add509808d8ee401",
   name: "John Doe",
   email: "john@example.com",
   role: "USER",
@@ -649,4 +652,17 @@ export const MOCK_USER_DATA = {
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
   MESSAGE: "The page you are looking for does not exist.",
+};
+
+export const VERIFICATION = {
+  title: "Verifying",
+  message: "Please wait, while we verify your email.",
+};
+
+export const DELETE_ACCOUNT_CONFIRMATION_MODAL = {
+  title: "Confirm Deletion",
+  subText:
+    "Are you sure you want to delete your account? This action cannot be undone.",
+  primaryButtonText: "Delete",
+  secondaryButtonText: "Cancel",
 };

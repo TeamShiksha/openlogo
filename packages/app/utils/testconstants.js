@@ -1,8 +1,10 @@
+const dummyPassword = require("./generatePassword").generatePassword();
+
 const SIGNUP_PAYLOAD = {
   name: "TESTNAME",
   email: "testname@gmail.com",
-  password: "testname@1234",
-  confirmPassword: "testname@1234",
+  password: dummyPassword,
+  confirmPassword: dummyPassword,
 };
 
 const ENDPOINTS = {
