@@ -6,8 +6,10 @@ import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast.js";
 
-function SignUp({ toggleForm }) {
+function SignUp({ toggleForm, onClose }) {
+  const toast = useToast();
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -59,6 +61,10 @@ function SignUp({ toggleForm }) {
     if (success) {
       setFormValues(SIGNUP.initialValues);
       setIsSubmit(true);
+      setFocusedField(null);
+      toggleForm();
+      onClose();
+      toast.success("Sign up successfully");
     }
     setIsLoading(false);
   };
@@ -110,6 +116,7 @@ function SignUp({ toggleForm }) {
 
 SignUp.propTypes = {
   toggleForm: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default SignUp;
