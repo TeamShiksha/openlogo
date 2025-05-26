@@ -29,6 +29,14 @@ const raiseRequestSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  openedAt: {
+    type: Date,
+    default: Date.now, // automatically set when created
+  },
+  closedAt: {
+    type: Date,
+    default: null, // will be set once status is RESOLVED
+  },
   updated_at: {
     type: Date,
     required: true,

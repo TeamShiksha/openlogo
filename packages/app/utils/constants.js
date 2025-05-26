@@ -76,6 +76,8 @@ const Messages = {
   LOGO_REQUEST_NOT_FOUND: "Logo request not found",
   LOGO_REQUEST_ALREADY_PROCESSED: "Request already processed",
   LOGO_REQUEST_CREATED: "Logo request created successfully",
+  USER_ALREADY_HAS_PENDING: "You already have a pending request.",
+  COMPANY_URL_ALREADY_PENDING: "This company url is already under review.",
 };
 
 module.exports = {

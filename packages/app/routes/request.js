@@ -5,17 +5,18 @@ const {
   getRequestsController,
   updateRequestController,
 } = require("../controllers/request");
+const { UserType } = require("../utils/constants");
 
 router.put(
   "/:requestId",
-  // authMiddleware({ operatorOnly: true }),
+  authMiddleware({ operatorOnly: true }),
   updateRequestController
 );
 router.get(
   "/",
-  // authMiddleware({ operatorOnly: true }),
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   getRequestsController
 );
-router.post("/", authMiddleware(), addRequestController);
+router.post("/", authMiddleware({ customerOnly: true }), addRequestController);
 
 module.exports = router;

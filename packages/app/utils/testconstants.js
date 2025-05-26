@@ -14,6 +14,7 @@ const ENDPOINTS = {
   RESET_PASSWORD_SESSION: "/api/auth/password/forgot",
   RESET_PASSWORD: "/api/auth/password/reset",
   MESSAGES: "/api/messages",
+  REQUESTS: "/api/requests",
 };
 
 module.exports = {

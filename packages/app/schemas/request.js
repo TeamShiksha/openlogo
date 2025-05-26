@@ -35,7 +35,7 @@ const updateRequestSchema = Joi.object({
     .required()
     .messages({
       "string.base": "Status must be a string",
-      "any.only": "Status must be one of PENDING, REJECTED, or COMPLETED",
+      "any.only": "Status must be one of PENDING, REJECTED, or RESOLVED",
       "any.required": "Status is required",
     }),
   comment: Joi.string().trim().allow(null).min(5).max(500).messages({
@@ -59,7 +59,7 @@ const requestQuerySchema = Joi.object({
     .optional()
     .messages({
       "string.base": "Status must be a string",
-      "any.only": "Status must be one of PENDING, REJECTED, or COMPLETED",
+      "any.only": "Status must be one of PENDING, REJECTED, or RESOLVED",
     }),
 });
 

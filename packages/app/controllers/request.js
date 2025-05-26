@@ -27,7 +27,10 @@ async function getRequestsController(req, res, next) {
 
     const { page, limit } = value;
     const { data, total, currentPage, totalPages } =
-      await requestService.getAllRequests(parseInt(page), parseInt(limit));
+      await requestService.getPaginatedRequests(
+        parseInt(page),
+        parseInt(limit)
+      );
 
     const fetchedData = !data || data.length === 0 ? [] : data;
 
@@ -65,7 +68,7 @@ async function updateRequestController(req, res, next) {
     }
 
     const { status, comment } = value;
-    const operatorId = req.user.id;
+    const operatorId = req.userData.userId;
 
     const request = await requestService.getRequestById(requestId);
     if (!request) {
@@ -116,6 +119,28 @@ async function addRequestController(req, res, next) {
         statusCode: 422,
         error: STATUS_CODES[422],
         message: error.message,
+      });
+    }
+    const requestedUserId = value.user_id;
+    const requestedCompanyUrl = value.companyUrl;
+
+    const userHasPending =
+      await requestService.requestExistsForUser(requestedUserId);
+    if (userHasPending) {
+      return res.status(400).json({
+        message: Messages.USER_ALREADY_HAS_PENDING,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const logoAlreadyRequested =
+      await requestService.requestExistsForCompanyUrl(requestedCompanyUrl);
+    if (logoAlreadyRequested) {
+      return res.status(400).json({
+        message: Messages.COMPANY_URL_ALREADY_PENDING,
+        statusCode: 400,
+        error: STATUS_CODES[400],
       });
     }
 
