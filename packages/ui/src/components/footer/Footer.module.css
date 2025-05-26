@@ -18,6 +18,28 @@
   align-items: center;
 }
 
+.footer-logo img {
+    width: 28px;
+    height: 28px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  background-color: var(--white);
+}
+
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--black);
+}
+
 .footer-logo {
   display: flex;
   flex-direction: row;
@@ -81,11 +103,6 @@
     font-size: 1.5rem;
   }
 
-  .footer-logo img {
-    width: 28px;
-    height: 28px;
-  }
-
   .footer-copyright,
   .footer-powered {
     min-width: 100%;
@@ -101,3 +118,4 @@
     margin: 15px 0;
   }
 }
+

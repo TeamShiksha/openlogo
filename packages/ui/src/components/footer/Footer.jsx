@@ -21,7 +21,7 @@ function Footer() {
               width={30}
               height={30}
             />
-            <h4>{BRANDING.brandName}</h4>
+            <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
           </button>
         </div>
         <div className={styles["footer-items"]}>
