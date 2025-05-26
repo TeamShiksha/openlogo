@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  cleanup,
+} from "@testing-library/react";
 import Toast from "../../src/components/toast/Toast.jsx";
 
 describe("Toast Component", () => {
@@ -11,8 +17,9 @@ describe("Toast Component", () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    vi.clearAllTimers();
     vi.useRealTimers();
+    cleanup();
   });
 
   it("renders the toast with message", () => {
@@ -31,13 +38,13 @@ describe("Toast Component", () => {
     render(
       <Toast
         message="Test auto close"
-        duration={3000}
+        duration={1000}
         onClose={onCloseMock}
         id="2"
       />
     );
     act(() => {
-      vi.advanceTimersByTime(3300);
+      vi.advanceTimersByTime(1300);
     });
     expect(onCloseMock).toHaveBeenCalledWith("2");
   });
@@ -46,7 +53,7 @@ describe("Toast Component", () => {
     render(
       <Toast
         message="Hover pause test"
-        duration={5000}
+        duration={1000}
         onClose={onCloseMock}
         id="3"
       />
@@ -56,14 +63,14 @@ describe("Toast Component", () => {
 
     act(() => {
       fireEvent.mouseEnter(toast);
-      vi.advanceTimersByTime(6000);
+      vi.advanceTimersByTime(1500);
     });
 
     expect(onCloseMock).not.toHaveBeenCalled();
 
     act(() => {
       fireEvent.mouseLeave(toast);
-      vi.advanceTimersByTime(5300);
+      vi.advanceTimersByTime(1300);
     });
 
     expect(onCloseMock).toHaveBeenCalledWith("3");
