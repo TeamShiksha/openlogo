@@ -12,8 +12,10 @@ import { useToast } from "../../../hooks/useToast";
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const toast = useToast();
-  const { makeRequest, data, loading, errorMsg } = useApi({
+
+  const { makeRequest, data, errorMsg } = useApi({
     method: "post",
     url: "/users/me/api-key",
     data: {
@@ -23,12 +25,19 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
 
   useEffect(() => {
     if (errorMsg) {
-      toast.error(errorMsg, "Failed to generate API key");
+      toast.error(errorMsg);
+      setIsGenerating(false);
     }
   }, [errorMsg, toast]);
 
   const handleGenerateKey = async (e) => {
     e.preventDefault();
+    if (!description.trim()) {
+      toast.error("Please enter a description for the API key");
+      return;
+    }
+
+    setIsGenerating(true);
     try {
       const success = await makeRequest();
       if (success) {
@@ -39,17 +48,23 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     } catch (err) {
       toast.error("Failed to generate API key");
       console.error("Failed to generate API key:", err);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   const handleCopyKey = () => {
-    navigator.clipboard.writeText(data?.data.api_key);
-    toast.info("API key copied to clipboard");
+    if (data?.data?.api_key) {
+      navigator.clipboard.writeText(data.data.api_key);
+      toast.info("API key copied to clipboard");
+    }
   };
 
   const handleCloseModal = () => {
     setShowApiKeyModal(false);
-    onKeyGenerated();
+    if (onKeyGenerated) {
+      onKeyGenerated();
+    }
   };
 
   return (
@@ -68,6 +83,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           label="Add the description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
+          disabled={isGenerating}
         />
         <Modal
           isOpen={showApiKeyModal}
@@ -81,12 +97,13 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
               again!
             </p>
             <div className={styles["key-display"]}>
-              <code>{data?.data.api_key}</code>
+              <code>{data?.data?.api_key}</code>
               <div className={styles["icon-wrapper"]}>
                 <button
                   type="button"
                   className={styles["icon-button"]}
                   onClick={handleCopyKey}
+                  aria-label="Copy API key"
                 >
                   <img
                     src={COPY.src}
@@ -102,9 +119,9 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={isGuest || loading}
+          disabled={isGuest || isGenerating || !description.trim()}
         >
-          {loading ? <LoadingSpinner /> : "Generate Key"}
+          {isGenerating ? <LoadingSpinner /> : "Generate Key"}
         </Button>
       </form>
     </section>
