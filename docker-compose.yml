@@ -35,7 +35,7 @@ services:
     container_name: openlogo-react
     restart: always
     ports:
-      - "3000:3000"
+      - "8080:80"
     env_file:
       - ./packages/ui/.env
     depends_on:
