@@ -23,6 +23,7 @@
   flex-direction: row;
   gap: 0.5rem;
   align-items: center;
+  color: var(--black);
   font-size: 1.85rem;
   cursor: pointer;
   border: none;
