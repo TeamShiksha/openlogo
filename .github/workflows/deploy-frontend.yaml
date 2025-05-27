@@ -3,11 +3,11 @@ name: Deploy react frontend app
 on:
   workflow_dispatch:
   push:
-   branches:
+    branches:
       - stage
       - prod
-   paths:
-      - 'packages/ui/**' 
+    paths:
+      - "packages/ui/**"
 
 jobs:
   build:
@@ -15,8 +15,8 @@ jobs:
     timeout-minutes: 2
     environment: ${{ github.ref_name == 'stage' && 'STAGE' || 'PROD' }}
     env:
-        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.FRONTEND_VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.FRONTEND_VERCEL_PROJECT_ID }}
 
     steps:
       - name: checkout repository
@@ -25,7 +25,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-            version: 10
+          version: 10
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
@@ -45,7 +45,7 @@ jobs:
           context: ./packages/ui
           file: ./packages/ui/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-react:stage
+          tags: ${{ secrets.DOCKER_USERNAME }}/openlogo-frontend
           build-args: |
             VITE_BASE_URL=http://localhost:5000
 
@@ -54,6 +54,6 @@ jobs:
 
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        
+
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
