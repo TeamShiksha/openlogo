@@ -204,7 +204,6 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
   });
 
-
   it("connectivity test failed", async () => {
     mockedMakeRequest.mockResolvedValue(false);
     const authContext = mockAuthContext(false);

@@ -4,9 +4,11 @@ import Button from "../common/button/Button";
 import { useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import PropTypes from "prop-types";
+import { useToast } from "../../hooks/useToast";
 
 const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
   const [deleteError, setDeleteError] = useState("");
+  const toast = useToast();
 
   const { makeRequest: deleteKeyRequest } = useApi({
     method: "delete",
@@ -16,9 +18,11 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
   const handleDeleteConfirm = async () => {
     try {
       await deleteKeyRequest();
+      toast.success("API key deleted successfully");
       onClose();
     } catch (error) {
       setDeleteError("Failed to delete API key. Please try again.");
+      toast.error("Failed to delete API key");
       console.error("Failed to delete API key:", error);
     }
   };

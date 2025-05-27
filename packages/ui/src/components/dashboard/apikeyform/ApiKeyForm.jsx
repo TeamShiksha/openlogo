@@ -4,15 +4,15 @@ import Modal from "../../common/modal/Modal";
 import styles from "./ApiKeyForm.module.css";
 import PropTypes from "prop-types";
 import { useApi } from "../../../hooks/useApi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LoadingSpinner from "../../common/loadingspinner/LoadingSpinner.jsx";
-import { COPY, VISIBLE, VISIBLEOFF } from "../../../utils/Constants.js";
+import { COPY } from "../../../utils/Constants.js";
+import { useToast } from "../../../hooks/useToast";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const toast = useToast();
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
     url: "/users/me/api-key",
@@ -21,26 +21,35 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     },
   });
 
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg, "Failed to generate API key");
+    }
+  }, [errorMsg, toast]);
+
   const handleGenerateKey = async (e) => {
     e.preventDefault();
     try {
-      await makeRequest();
-      setShowApiKeyModal(true);
-      setDescription("");
-      onKeyGenerated();
-    } catch (error) {
-      console.error("Failed to generate API key:", error);
+      const success = await makeRequest();
+      if (success) {
+        setShowApiKeyModal(true);
+        setDescription("");
+        toast.success("API key generated successfully");
+      }
+    } catch (err) {
+      toast.error("Failed to generate API key");
+      console.error("Failed to generate API key:", err);
     }
   };
 
   const handleCopyKey = () => {
     navigator.clipboard.writeText(data?.data.api_key);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+    toast.info("API key copied to clipboard");
   };
 
   const handleCloseModal = () => {
     setShowApiKeyModal(false);
+    onKeyGenerated();
   };
 
   return (
@@ -60,55 +69,35 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-        {errorMsg ? (
-          <p className={styles["error-message"]}>{errorMsg}</p>
-        ) : (
-          <Modal
-            isOpen={showApiKeyModal}
-            onClose={handleCloseModal}
-            customWidth="500px"
-          >
-            <div className={styles["api-key-modal"]}>
-              <h2>Your API Key</h2>
-              <p>
-                Please copy your API key now. You won&apos;t be able to see it
-                again!
-              </p>
-              <div className={styles["key-display"]}>
-                <code>
-                  {isVisible
-                    ? data?.data.api_key
-                    : "********************************"}
-                </code>
-                <div className={styles["icon-wrapper"]}>
-                  <button
-                    type="button"
-                    className={styles["icon-button"]}
-                    onClick={() => setIsVisible(!isVisible)}
-                  >
-                    <img
-                      src={isVisible ? VISIBLE.src : VISIBLEOFF.src}
-                      className={styles["copy-icon"]}
-                      alt={isVisible ? VISIBLE.alt : VISIBLEOFF.alt}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className={styles["icon-button"]}
-                    onClick={handleCopyKey}
-                  >
-                    <img
-                      src={COPY.src}
-                      className={styles["copy-icon"]}
-                      alt="Copy API key"
-                    />
-                  </button>
-                  {isCopied && <div className={styles["tooltip"]}>Copied!</div>}
-                </div>
+        <Modal
+          isOpen={showApiKeyModal}
+          onClose={handleCloseModal}
+          customWidth="500px"
+        >
+          <div className={styles["api-key-modal"]}>
+            <h2>Your API Key</h2>
+            <p>
+              Please copy your API key now. You won&apos;t be able to see it
+              again!
+            </p>
+            <div className={styles["key-display"]}>
+              <code>{data?.data.api_key}</code>
+              <div className={styles["icon-wrapper"]}>
+                <button
+                  type="button"
+                  className={styles["icon-button"]}
+                  onClick={handleCopyKey}
+                >
+                  <img
+                    src={COPY.src}
+                    className={styles["copy-icon"]}
+                    alt="Copy API key"
+                  />
+                </button>
               </div>
             </div>
-          </Modal>
-        )}
+          </div>
+        </Modal>
         <Button
           className={styles.width}
           variant="primary"
