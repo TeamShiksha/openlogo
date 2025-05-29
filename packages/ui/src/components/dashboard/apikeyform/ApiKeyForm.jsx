@@ -38,19 +38,13 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     }
 
     setIsGenerating(true);
-    try {
-      const success = await makeRequest();
-      if (success) {
-        setShowApiKeyModal(true);
-        setDescription("");
-        toast.success("API key generated successfully");
-      }
-    } catch (err) {
-      toast.error("Failed to generate API key");
-      console.error("Failed to generate API key:", err);
-    } finally {
-      setIsGenerating(false);
+    const success = await makeRequest();
+    if (success) {
+      setShowApiKeyModal(true);
+      setDescription("");
+      toast.success("API key generated successfully");
     }
+    setIsGenerating(false);
   };
 
   const handleCopyKey = () => {
@@ -131,6 +125,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
 ApiKeyForm.propTypes = {
   isGuest: PropTypes.bool.isRequired,
   onKeyGenerated: PropTypes.func.isRequired,
+  // onKeyGenerated prop is used to trigger a refresh of the API keys list in the parent component
 };
 
 export default ApiKeyForm;

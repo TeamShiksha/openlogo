@@ -96,7 +96,6 @@ async function signinController(req, res, next) {
     let user = {};
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
-      console.log(user);
     } else {
       const { body: payload } = req;
       const { error, value } = signinPayloadSchema.validate(payload);

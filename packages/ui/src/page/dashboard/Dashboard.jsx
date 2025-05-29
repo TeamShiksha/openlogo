@@ -14,6 +14,8 @@ import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
 import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
+import { useToast } from "../../hooks/useToast.js";
+
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -22,10 +24,12 @@ function Dashboard() {
   const [selectedKey, setSelectedKey] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
+  const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
     url: "/users/me",
   });
+
   const apiKeyTableData = useMemo(() => {
     return apiKeys.map(({ key_description, updated_at }) => [
       key_description,
@@ -66,16 +70,18 @@ function Dashboard() {
   };
 
   const handleKeyGenerated = async () => {
-    try {
-      await fetchUserKeys();
-    } catch (error) {
-      console.error("Failed to fetch updated API keys:", error);
+    const success = await fetchUserKeys(); // refreshes API keys list
+    if (!success) {
+      toast.error("Failed to fetch updated API keys");
     }
   };
 
   const handleDeleteModalClose = async () => {
     setShowDeleteModal(false);
-    await fetchUserKeys();
+    const success = await fetchUserKeys();
+    if (!success) {
+      toast.error("Failed to fetch updated API keys");
+    }
   };
 
   return (

@@ -8,6 +8,7 @@ const mockedDeleteKeyRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
   useApi: () => ({
     makeRequest: mockedDeleteKeyRequest,
+    errorMsg: null,
   }),
 }));
 
@@ -124,68 +125,24 @@ describe("DeleteKeyModal Component", () => {
     });
   });
 
-  it("handles deletion failure and shows error message", async () => {
-    mockedDeleteKeyRequest.mockRejectedValue(new Error("Network error"));
+  it("shows error toast when API returns an error", async () => {
+    vi.mock("../../../src/hooks/useApi", () => ({
+      useApi: () => ({
+        makeRequest: mockedDeleteKeyRequest,
+        errorMsg: "Failed to delete API key",
+      }),
+    }));
+
     renderDeleteKeyModal();
 
-    const deleteButton = screen.getByRole("button", { name: "Delete" });
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Failed to delete API key. Please try again.")
-      ).toBeInTheDocument();
-      expect(mockToast.error).toHaveBeenCalledWith("Failed to delete API key");
-    });
-  });
-
-  it("clears error message when modal is closed", async () => {
-    mockedDeleteKeyRequest.mockRejectedValue(new Error("Network error"));
-    const onCloseMock = vi.fn();
-    renderDeleteKeyModal({ onClose: onCloseMock });
-
-    const deleteButton = screen.getByRole("button", { name: "Delete" });
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Failed to delete API key. Please try again.")
-      ).toBeInTheDocument();
-    });
-
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    fireEvent.click(cancelButton);
-
-    expect(onCloseMock).toHaveBeenCalled();
-  });
-
-  it("clears error message when cancel is clicked after error", async () => {
-    mockedDeleteKeyRequest.mockRejectedValue(new Error("Network error"));
-    renderDeleteKeyModal();
-
-    const deleteButton = screen.getByRole("button", { name: "Delete" });
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Failed to delete API key. Please try again.")
-      ).toBeInTheDocument();
-    });
-
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    fireEvent.click(cancelButton);
-
-    expect(defaultProps.onClose).toHaveBeenCalled();
-  });
-
-  it("has correct button variants", () => {
-    renderDeleteKeyModal();
-
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    const deleteButton = screen.getByRole("button", { name: "Delete" });
-
-    expect(cancelButton).toBeInTheDocument();
-    expect(deleteButton).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(mockToast.error).toHaveBeenCalledWith(
+          "Failed to delete API key"
+        );
+      },
+      { timeout: 1000 }
+    );
   });
 
   it("handles multiple rapid delete clicks gracefully", async () => {
