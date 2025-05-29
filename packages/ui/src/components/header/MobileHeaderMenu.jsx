@@ -1,15 +1,20 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
 import { handleNavigation } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
+import { useLocation } from "react-router-dom";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
+
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState("");
+  const currentPath = location.pathname;
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,19 +34,27 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   return (
     <div data-testid="mobile-menu" className={styles["mobile-header"]}>
       <div className={styles.navbar}>
-        {NAVBAR_ITEMS.map((item) => (
-          <Link
-            key={item.name}
-            className={styles.nav}
-            to={item.url}
-            onClick={(event) => {
-              handleNavigation(event, item.url, navigate);
-              closeMenu(false);
-            }}
-          >
-            {item.title}
-          </Link>
-        ))}
+        {NAVBAR_ITEMS.map((item) => {
+          const [itemPath, itemSection] = item.url.split("#");
+
+          const isActive =
+            item.type === "route"
+              ? currentPath === item.url
+              : currentPath === itemPath && activeSection === itemSection;
+          return (
+            <Link
+              key={item.name}
+              className={`${styles.nav} ${isActive ? styles.active : ""}`}
+              to={item.url}
+              onClick={(event) => {
+                handleNavigation(event, item.url, navigate, setActiveSection);
+                closeMenu(false);
+              }}
+            >
+              {item.title}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

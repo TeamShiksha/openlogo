@@ -88,11 +88,14 @@ export const formatDate = (dateString) => {
   });
 };
 
-export const handleNavigation = (event, url, navigate) => {
+export const handleNavigation = (event, url, navigate, setActiveSection) => {
   event.preventDefault();
 
   const [path, sectionId] = url.split("#");
-
+  if (typeof setActiveSection === "function") {
+    setActiveSection(sectionId);
+  }
+  // setActiveSection(sectionId);
   if (window.location.pathname !== path) {
     if (sectionId) {
       sessionStorage.setItem("scrollTo", sectionId);

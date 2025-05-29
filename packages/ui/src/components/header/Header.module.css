@@ -41,6 +41,7 @@
   display: flex;
   gap: 1.5rem;
   align-items: center;
+ 
 }
 
 .ml {
@@ -52,11 +53,23 @@
   text-decoration: none;
   font-weight: 600;
   color: var(--description);
+   /* border: 2px solid blue; */
+   /* padding: 2px; */
+   
 }
 
 .nav:hover {
   color: var(--primary);
   transition: all 0.3s ease-in-out;
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.active {
+   color: var(--primary);
+  /* transition: all 0.3s ease-in-out; */
   text-decoration: underline;
   text-decoration-color: var(--primary);
   text-decoration-thickness: 2px;

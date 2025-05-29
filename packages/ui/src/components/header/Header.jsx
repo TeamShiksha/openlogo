@@ -13,10 +13,14 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
+import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState("");
+  const currentPath = location.pathname;
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -54,16 +58,27 @@ const Header = ({ openAuthModal }) => {
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>
         <div className={styles["nav-bar"]}>
-          {NAVBAR_ITEMS.map((item) => (
-            <Link
-              key={item.name}
-              className={styles.nav}
-              to={item.url}
-              onClick={(event) => handleNavigation(event, item.url, navigate)}
-            >
-              {item.title}
-            </Link>
-          ))}
+          {NAVBAR_ITEMS.map((item) => {
+            const [itemPath, itemSection] = item.url.split("#");
+            const isActive =
+              item.type === "route"
+                ? currentPath === item.url
+                : currentPath === itemPath && activeSection === itemSection;
+
+            return (
+              <Link
+                key={item.name}
+                className={`${styles.nav} ${isActive ? styles.active : ""}`}
+                to={item.url}
+                onClick={(event) =>
+                  handleNavigation(event, item.url, navigate, setActiveSection)
+                }
+              >
+                {item.title}
+              </Link>
+            );
+          })}
+
           {!isAuthenticated && (
             <Button
               variant="primary"
