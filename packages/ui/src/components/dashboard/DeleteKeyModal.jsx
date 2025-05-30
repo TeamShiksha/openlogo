@@ -6,6 +6,7 @@ import { useApi } from "../../hooks/useApi";
 import PropTypes from "prop-types";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
+import { API_KEY } from "../../utils/Constants";
 
 const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -24,7 +25,7 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
 
   const handleDeleteConfirm = async () => {
     if (!selectedKey?._id) {
-      toast.error("Invalid API key selected");
+      toast.error(API_KEY.delete.invalidKey);
       return;
     }
 
@@ -32,7 +33,7 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
 
     const success = await deleteKeyRequest();
     if (success) {
-      toast.success("API key deleted successfully");
+      toast.success(API_KEY.delete.success);
       onClose();
     }
     setIsDeleting(false);
@@ -45,10 +46,10 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose} customWidth="400px">
       <div className={styles["delete-modal"]}>
-        <h2>Delete API Key</h2>
+        <h2>{API_KEY.delete.modal.title}</h2>
         <p>
-          Are you sure you want to delete the API key &quot;
-          {selectedKey?.key_description}&quot; ? This action cannot be undone.
+          {API_KEY.delete.modal.description} &quot;
+          {selectedKey?.key_description}&quot; ? {API_KEY.delete.modal.warning}
         </p>
         <div className={styles["modal-actions"]}>
           <Button

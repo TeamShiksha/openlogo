@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useApi } from "../../../hooks/useApi";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "../../common/loadingspinner/LoadingSpinner.jsx";
-import { COPY } from "../../../utils/Constants.js";
+import { COPY, API_KEY } from "../../../utils/Constants.js";
 import { useToast } from "../../../hooks/useToast";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
@@ -33,7 +33,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const handleGenerateKey = async (e) => {
     e.preventDefault();
     if (!description.trim()) {
-      toast.error("Please enter a description for the API key");
+      toast.error(API_KEY.generation.descriptionRequired);
       return;
     }
 
@@ -42,7 +42,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     if (success) {
       setShowApiKeyModal(true);
       setDescription("");
-      toast.success("API key generated successfully");
+      toast.success(API_KEY.generation.success);
     }
     setIsGenerating(false);
   };
@@ -50,7 +50,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const handleCopyKey = () => {
     if (data?.data?.api_key) {
       navigator.clipboard.writeText(data.data.api_key);
-      toast.info("API key copied to clipboard");
+      toast.info(API_KEY.copy.success);
     }
   };
 
@@ -85,11 +85,8 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           customWidth="500px"
         >
           <div className={styles["api-key-modal"]}>
-            <h2>Your API Key</h2>
-            <p>
-              Please copy your API key now. You won&apos;t be able to see it
-              again!
-            </p>
+            <h2>{API_KEY.generation.modal.title}</h2>
+            <p>{API_KEY.generation.modal.warning}</p>
             <div className={styles["key-display"]}>
               <code>{data?.data?.api_key}</code>
               <div className={styles["icon-wrapper"]}>
