@@ -1,11 +1,10 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useLocation } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
 import { handleNavigation } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
-import { useLocation } from "react-router-dom";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();

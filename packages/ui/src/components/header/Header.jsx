@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import Button from "../common/button/Button";
 import {
@@ -13,7 +13,6 @@ import {
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
 import { handleNavigation } from "../../utils/Helpers";
-import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
