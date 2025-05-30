@@ -1,52 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import searchLogo from "../../assets/searchIcon.svg";
-import { companies } from "../../utils/Constants";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
+import { useApi } from "../../hooks/useApi";
 
 function Catalog() {
   const [pageNum, setPageNum] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   const limit = 10;
-  const totalPages = Math.floor(companies.length / 10);
+  const skip = pageNum * limit;
 
-  const skip = pageNum;
-  const skipCount = skip * limit;
+  const { data, loading, errorMsg, makeRequest } = useApi({
+    method: "GET",
+    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+  });
 
-  const companiesInfo = companies.slice(
-    skipCount,
-    Math.min(skipCount + limit, companies.length)
-  );
-  const filteredCompanies = companiesInfo.filter((company) =>
-    company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    makeRequest().then((responseData) => {
+      if (responseData?.totalCount) {
+        const pages = Math.ceil(responseData.totalCount / limit);
+        setTotalPages(pages - 1); // subtract 1 because pageNum is 0-indexed
+      }
+    });
+  }, [pageNum]);
 
   const handleSearchTermChange = (inputChangeEvent) => {
     setSearchTerm(inputChangeEvent.target.value);
   };
 
   const handlePreviousBtnClick = () => {
-    if (pageNum == 0) {
-      return;
+    if (pageNum > 0) {
+      setSearchTerm("");
+      setPageNum((prev) => prev - 1);
     }
-    setSearchTerm("");
-    setPageNum((prevPageNum) => prevPageNum - 1);
   };
 
   const handleNextBtnClick = () => {
-    if (pageNum == totalPages) {
-      return;
+    if (data && data?.length === limit) {
+      setSearchTerm("");
+      setPageNum((prev) => prev + 1);
     }
-    setSearchTerm("");
-    setPageNum((prevPageNum) => prevPageNum + 1);
   };
+
+  const filteredCompanies =
+    data && data.length > 0
+      ? data.filter((company) =>
+          company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : [];
 
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
