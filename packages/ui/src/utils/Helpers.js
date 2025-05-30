@@ -95,7 +95,6 @@ export const handleNavigation = (event, url, navigate, setActiveSection) => {
   if (typeof setActiveSection === "function") {
     setActiveSection(sectionId);
   }
-  // setActiveSection(sectionId);
   if (window.location.pathname !== path) {
     if (sectionId) {
       sessionStorage.setItem("scrollTo", sectionId);
