@@ -49,15 +49,13 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
           </div>
         )}
         <div className={styles["message-container"]}>
-          <p className={styles["message-title"]}>Message</p>
+          <p className={styles["message-title"]}>
+            {searchType === "messages" ? "Message" : ""}
+          </p>
           <p className={styles.message}>{displayMessage}</p>
         </div>
         {isArchived && (
           <>
-            <div className={styles["resolution-container"]}>
-              <p className={styles["resolution-title"]}>Resolution</p>
-              <p className={styles.resolution}>{item.status}</p>
-            </div>
             <div className={styles["summary-container"]}>
               <p className={styles["summary-title"]}>Summary</p>
               <p className={styles.summary}>{item.comment}</p>
@@ -65,7 +63,7 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
           </>
         )}
         <div className={styles["button-container"]}>
-          {searchType !== "requests" && !isArchived && (
+          {!isArchived && (
             <div className={styles["button-container"]}>
               <Button
                 onClick={() => onRespondClick(item, "respond")}
@@ -74,13 +72,15 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
               >
                 Respond
               </Button>
-              <Button
-                onClick={() => onRespondClick(item, "reject")}
-                variant="danger"
-                className={styles["reject-button"]}
-              >
-                Reject
-              </Button>
+              {searchType === "requests" && (
+                <Button
+                  onClick={() => onRespondClick(item, "reject")}
+                  variant="danger"
+                  className={styles["reject-button"]}
+                >
+                  Reject
+                </Button>
+              )}
             </div>
           )}
         </div>

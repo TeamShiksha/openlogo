@@ -173,28 +173,6 @@
   margin-top: 1rem;
 }
 
-.send-button {
-  padding: 16px 28px;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background-color 0.3s ease-in-out;
-  min-width: 150px;
-}
-
-.send-button:hover:not(:disabled) {
-  background-color: var(--primary-hover);
-}
-
-.send-button:disabled {
-  opacity: 0.8;
-  cursor: not-allowed;
-}
-
 @media (max-width: 768px) {
   .header {
     flex-direction: column;

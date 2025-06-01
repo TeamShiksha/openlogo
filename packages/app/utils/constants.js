@@ -30,6 +30,11 @@ const StatusTypes = {
   RESOLVED: "RESOLVED",
 };
 
+const TAB_OPTIONS = {
+  ACTIVE: "active",
+  ARCHIVED: "archived",
+};
+
 const DefaultSubscriptionPlan = {
   type: SubscriptionTypes.HOBBY,
   key_limit: 2,
@@ -88,4 +93,5 @@ module.exports = {
   StatusTypes,
   DefaultSubscriptionPlan,
   Messages,
+  TAB_OPTIONS,
 };

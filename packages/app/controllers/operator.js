@@ -28,9 +28,9 @@ async function getMessagesController(req, res, next) {
     }
 
     let fetchedData = null;
-    const { page, limit } = req.query;
+    const { page, limit, tab } = req.query;
     const { data, total, currentPage, totalPages } =
-      await contactUsRepository.getAll(parseInt(page), parseInt(limit));
+      await contactUsRepository.getAll(parseInt(page), parseInt(limit), tab);
     if (!data || data.length === 0) {
       fetchedData = [];
     } else {

@@ -7,6 +7,7 @@ import styles from "./ContactForm.module.css";
 import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 
 function ContactForm({ closeModal }) {
   const [formValues, setFormValues] = useState(CONTACT.initialValues);
@@ -18,13 +19,28 @@ function ContactForm({ closeModal }) {
     method: "POST",
     data: formValues,
   });
+  const toast = useToast();
+  const customValidate = (values) => {
+    const errors = validate(values);
+
+    if ("name" in values) {
+      if (values.name.length > 20) {
+        errors.name = "Name must be 20 characters or fewer";
+      }
+      if (!/^[a-zA-Z0-9\s]+$/.test(values.name)) {
+        errors.name = "Name is required";
+      }
+    }
+
+    return errors;
+  };
 
   useEffect(() => {
     if (!focusedField) {
       const filledFields = Object.keys(formValues).filter(
         (field) => formValues[field] !== CONTACT.initialValues[field]
       );
-      const errors = validate(
+      const errors = customValidate(
         filledFields.reduce((acc, field) => {
           acc[field] = formValues[field];
           return acc;
@@ -35,7 +51,7 @@ function ContactForm({ closeModal }) {
     }
 
     const timeout = setTimeout(() => {
-      const validationErrors = validate({
+      const validationErrors = customValidate({
         [focusedField]: formValues[focusedField],
       });
       setFormErrors((prevErrors) => ({
@@ -48,7 +64,7 @@ function ContactForm({ closeModal }) {
   }, [focusedField, formValues]);
 
   useEffect(() => {
-    const errors = validate(formValues);
+    const errors = customValidate(formValues);
     setIsFormValid(Object.keys(errors).length === 0);
   }, [formValues]);
 
@@ -61,14 +77,22 @@ function ContactForm({ closeModal }) {
     submitEvent.preventDefault();
 
     const success = await makeRequest();
-    if (!success) return;
+    if (!success) {
+      setFormErrors({});
+      setFocusedField(null);
+      setFormValues(CONTACT.initialValues);
+      closeModal();
+      toast.error("Form already submitted, try again later");
+      return;
+    }
 
     setTimeout(() => {
       setFormErrors({});
       setFocusedField(null);
       setFormValues(CONTACT.initialValues);
       closeModal();
-    }, 3000);
+    }, 500);
+    toast.success("Form submitted, our team will get in touch shortly");
   };
 
   return (

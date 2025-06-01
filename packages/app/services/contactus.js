@@ -56,6 +56,7 @@ class ContactUsService {
     const updateData = {
       comment: reply,
       status: "RESOLVED",
+      operator: operatorId,
       closedAt: new Date(),
       // assignedTo: operatorId
     };

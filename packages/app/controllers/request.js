@@ -25,11 +25,12 @@ async function getRequestsController(req, res, next) {
       });
     }
 
-    const { page, limit } = value;
+    const { page, limit, tab } = value;
     const { data, total, currentPage, totalPages } =
       await requestService.getPaginatedRequests(
         parseInt(page),
-        parseInt(limit)
+        parseInt(limit),
+        tab
       );
 
     const fetchedData = !data || data.length === 0 ? [] : data;

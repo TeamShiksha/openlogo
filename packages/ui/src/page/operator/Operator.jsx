@@ -5,6 +5,8 @@ import OperatorCard from "../../components/operator/OperatorCard";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner";
 import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";
+import Button from "../../components/common/button/Button";
+import { useToast } from "../../hooks/useToast";
 
 const Operator = () => {
   const [activeTab, setActiveTab] = useState("active");
@@ -16,6 +18,8 @@ const Operator = () => {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [responseAction, setResponseAction] = useState("respond");
+  const toast = useToast();
 
   // Data states
   const [messages, setMessages] = useState([]);
@@ -33,6 +37,7 @@ const Operator = () => {
         params: {
           page,
           limit: ITEMS_PER_PAGE,
+          tab: activeTab,
         },
       });
       setMessages(response.data.results);
@@ -52,6 +57,7 @@ const Operator = () => {
         params: {
           page,
           limit: ITEMS_PER_PAGE,
+          tab: activeTab,
         },
       });
       setRequests(response.data.results);
@@ -66,17 +72,19 @@ const Operator = () => {
   // Handle submitting a response
   const handleResponseSubmit = async () => {
     if (!currentItem) return;
+    const payload =
+      responseAction === "respond"
+        ? searchType === "messages"
+          ? { reply: responseText }
+          : { status: "RESOLVED", comment: responseText }
+        : { status: "REJECTED", comment: responseText };
 
     setLoading(true);
     try {
       if (searchType === "messages") {
-        await instance.put(`/messages/${currentItem._id}`, {
-          reply: responseText,
-        });
+        await instance.put(`/messages/${currentItem._id}`, payload);
       } else {
-        await instance.put(`/requests/${currentItem._id}`, {
-          comment: responseText,
-        });
+        await instance.put(`/requests/${currentItem._id}`, payload);
       }
 
       // Refresh data after successful response
@@ -90,9 +98,24 @@ const Operator = () => {
       setCurrentItem(null);
       setResponseText("");
       setFormErrors({});
+
+      if (searchType === "messages") {
+        if (responseAction === "respond") {
+          toast.success("Responded to message successfully.");
+        } else {
+          toast.success("Message rejected successfully.");
+        }
+      } else {
+        if (responseAction === "respond") {
+          toast.success("Request marked as resolved successfully.");
+        } else {
+          toast.success("Request rejected successfully.");
+        }
+      }
     } catch (err) {
       console.error("Error sending response:", err);
       setFormErrors({ message: "Error sending response" });
+      toast.error("Failed to send response. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -105,7 +128,8 @@ const Operator = () => {
     } else {
       fetchRequests(currentPage);
     }
-  }, [searchType, currentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchType, currentPage, activeTab]);
 
   // Validate response based on focus like in ContactForm
   useEffect(() => {
@@ -173,8 +197,9 @@ const Operator = () => {
   };
 
   // Handle clicking respond button
-  const handleRespondClick = (item) => {
+  const handleRespondClick = (item, actionType = "respond") => {
     setCurrentItem(item);
+    setResponseAction(actionType);
     setResponseText(item.comment || "");
     setFormErrors({}); // Clear form errors when opening a new modal
     setIsModalOpen(true);
@@ -267,9 +292,13 @@ const Operator = () => {
         customClass={styles["response-modal"]}
       >
         <h2>
-          {searchType === "messages"
-            ? "Respond to Message"
-            : "Respond to Request"}
+          {responseAction === "respond"
+            ? searchType === "messages"
+              ? "Respond to Message"
+              : "Respond to Request"
+            : searchType === "messages"
+              ? "Reject Message"
+              : "Reject Request"}
         </h2>
 
         <div className={styles["response-field"]}>
@@ -279,7 +308,11 @@ const Operator = () => {
             value={responseText}
             onChange={handleResponseChange}
             rows={6}
-            placeholder="Type your response here..."
+            placeholder={
+              responseAction === "respond"
+                ? "Type your response here..."
+                : "Please provide a reason for rejection..."
+            }
             disabled={loading}
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
@@ -292,13 +325,20 @@ const Operator = () => {
         </div>
 
         <div className={styles["modal-actions"]}>
-          <button
-            className={styles["send-button"]}
+          <Button
             onClick={handleResponseSubmit}
             disabled={!isFormValid || loading}
+            variant={responseAction === "respond" ? "primary" : "danger"}
+            className={styles["send-button"]}
           >
-            {loading ? "Sending..." : "Send Response"}
-          </button>
+            {loading
+              ? responseAction === "respond"
+                ? "Sending Response..."
+                : "Rejecting..."
+              : responseAction === "respond"
+                ? "Send Response"
+                : "Confirm Rejection"}
+          </Button>
         </div>
       </Modal>
     </div>

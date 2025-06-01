@@ -66,8 +66,8 @@ class RequestService {
    * @param {number} limit - number of requests per page
    * @returns {Promise<Object>} returns a list of requests or null if no requests exists
    */
-  async getPaginatedRequests(page, limit) {
-    return await this.requestRepository.getAll(page, limit);
+  async getPaginatedRequests(page, limit, tab) {
+    return await this.requestRepository.getAll(page, limit, tab);
   }
 
   /** Retrieves the total number of resolved requests

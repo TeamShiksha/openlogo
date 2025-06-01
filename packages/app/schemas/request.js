@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const { isValidObjectId } = require("mongoose");
-const { StatusTypes } = require("../utils/constants");
+const { StatusTypes, TAB_OPTIONS } = require("../utils/constants");
 
 const createRequestSchema = Joi.object({
   user_id: Joi.string()
@@ -54,6 +54,14 @@ const requestQuerySchema = Joi.object({
     "any.required": "Limit is required",
     "number.base": "Limit must be a number",
   }),
+  tab: Joi.string()
+    .valid(...Object.values(TAB_OPTIONS))
+    .required()
+    .messages({
+      "string.base": "Tab must be a string",
+      "any.required": "Tab is required",
+      "any.only": "Tab must be either 'active' or 'archived'",
+    }),
   status: Joi.string()
     .valid(...Object.values(StatusTypes))
     .optional()
