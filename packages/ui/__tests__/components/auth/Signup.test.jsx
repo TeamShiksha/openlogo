@@ -28,7 +28,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
           <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} onClose={vi.fn()} />
+            <SignUpForm toggleForm={vi.fn()} />
           </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
@@ -167,14 +167,13 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
   it("connectivity test passed", async () => {
     const authContext = mockAuthContext(true);
-    const onCloseMock = vi.fn();
     mockedMakeRequest.mockResolvedValue(true);
 
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
           <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} onClose={onCloseMock} />
+            <SignUpForm toggleForm={vi.fn()} />
           </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
@@ -200,7 +199,6 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
-      expect(onCloseMock).toHaveBeenCalled();
     });
   });
 
@@ -261,7 +259,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
           <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} onClose={vi.fn()} />
+            <SignUpForm toggleForm={vi.fn()} />
           </ToastProvider>
         </AuthContext.Provider>
       </BrowserRouter>
