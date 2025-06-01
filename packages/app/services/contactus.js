@@ -45,7 +45,7 @@ class ContactUsService {
    * @returns {Object} - An object containing the updated form details or a flag if already replied.
    * @throws {Error} - Throws an error if the form is not found or the database update operation fails.
    */
-  async updateForm(formId, reply, operatorId) {
+  async updateForm(formId, reply, status, operatorId) {
     const currentForm = await this.contactUsRepository.getById(formId);
     console.log("currentForm", currentForm);
     if (!currentForm) throw new Error("Form not found");
@@ -55,7 +55,7 @@ class ContactUsService {
 
     const updateData = {
       comment: reply,
-      status: "RESOLVED",
+      status,
       operator: operatorId,
       closedAt: new Date(),
       // assignedTo: operatorId

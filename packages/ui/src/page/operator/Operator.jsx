@@ -73,11 +73,15 @@ const Operator = () => {
   const handleResponseSubmit = async () => {
     if (!currentItem) return;
     const payload =
-      responseAction === "respond"
-        ? searchType === "messages"
-          ? { reply: responseText }
-          : { status: "RESOLVED", comment: responseText }
-        : { status: "REJECTED", comment: responseText };
+      searchType === "messages"
+        ? {
+            reply: responseText,
+            status: responseAction === "respond" ? "RESOLVED" : "REJECTED",
+          }
+        : {
+            comment: responseText,
+            status: responseAction === "respond" ? "RESOLVED" : "REJECTED",
+          };
 
     setLoading(true);
     try {

@@ -74,6 +74,34 @@ describe("GET : /api/requests", () => {
       message: "Limit must be a number",
     });
   });
+  it("422 - Tab is required", async () => {
+    const response = await request(app).get(ENDPOINTS.REQUESTS).query({
+      page: 1,
+      limit: 10,
+    });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Tab is required",
+    });
+  });
+
+  it("422 - Tab must be either 'active' or 'archived'", async () => {
+    const response = await request(app).get(ENDPOINTS.REQUESTS).query({
+      page: 1,
+      limit: 10,
+      tab: "unknown",
+    });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Tab must be either 'active' or 'archived'",
+    });
+  });
 
   it("500 - unexpected error", async () => {
     mockGetAll.mockImplementation(() => {
@@ -83,6 +111,7 @@ describe("GET : /api/requests", () => {
     const response = await request(app).get(ENDPOINTS.REQUESTS).query({
       page: 1,
       limit: 1,
+      tab: "active",
     });
 
     expect(response.status).toBe(500);
@@ -99,6 +128,7 @@ describe("GET : /api/requests", () => {
     const response = await request(app).get(ENDPOINTS.REQUESTS).query({
       page: 1,
       limit: 10,
+      tab: "active",
     });
 
     expect(response.status).toBe(200);
@@ -116,6 +146,7 @@ describe("GET : /api/requests", () => {
     const response = await request(app).get(ENDPOINTS.REQUESTS).query({
       page: 1,
       limit: 1,
+      tab: "active",
       status: "Inavlid-status",
     });
 
@@ -137,6 +168,7 @@ describe("GET : /api/requests", () => {
     const response = await request(app).get(ENDPOINTS.REQUESTS).query({
       page: 1,
       limit: 1,
+      tab: "active",
     });
 
     expect(response.status).toBe(200);

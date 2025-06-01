@@ -7,7 +7,10 @@ const { RequestService } = require("../../../services");
 const { default: mongoose } = require("mongoose");
 
 jest.mock("../../../middlewares/auth", () =>
-  jest.fn(() => (req, res, next) => next())
+  jest.fn(() => (req, res, next) => {
+    req.userData = { userId: "mock-operator-id" };
+    next();
+  })
 );
 
 describe("PUT : /api/requests/:requestId", () => {
@@ -105,6 +108,63 @@ describe("PUT : /api/requests/:requestId", () => {
       error: STATUS_CODES[404],
       message: Messages.LOGO_REQUEST_NOT_FOUND,
       statusCode: 404,
+    });
+  });
+  it("409 - Already responded to request", async () => {
+    const dummyRequestId = new mongoose.Types.ObjectId().toString();
+    jest
+      .spyOn(RequestService.prototype, "getRequestById")
+      .mockResolvedValue({ _id: dummyRequestId, status: StatusTypes.RESOLVED });
+    jest
+      .spyOn(RequestService.prototype, "respondToRequest")
+      .mockResolvedValue({ alreadyProcessed: true });
+    const response = await request(app)
+      .put(`${ENDPOINTS.REQUESTS}/${dummyRequestId}`)
+      .send({
+        status: StatusTypes.RESOLVED,
+        comment: "Already updated",
+      });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({
+      statusCode: 409,
+      error: STATUS_CODES[409],
+      message: Messages.LOGO_REQUEST_ALREADY_PROCESSED,
+    });
+  });
+  it("200 - Successfully updated request status", async () => {
+    const dummyRequest = {
+      _id: new mongoose.Types.ObjectId(),
+      status: StatusTypes.PENDING,
+    };
+
+    const updatedRequest = {
+      companyUrl: "https://example.com",
+      status: StatusTypes.RESOLVED,
+      comment: "Approved and resolved",
+      openedAt: new Date("2024-01-01").toString(),
+      closedAt: new Date().toString(),
+    };
+
+    jest
+      .spyOn(RequestService.prototype, "getRequestById")
+      .mockResolvedValue(dummyRequest);
+    jest
+      .spyOn(RequestService.prototype, "respondToRequest")
+      .mockResolvedValue(updatedRequest);
+
+    const response = await request(app)
+      .put(`${ENDPOINTS.REQUESTS}/${dummyRequest._id}`)
+      .send({
+        status: StatusTypes.RESOLVED,
+        comment: "Approved and resolved",
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      statusCode: 200,
+      message: Messages.UPDATE_SUCCESS,
+      data: updatedRequest,
     });
   });
 });

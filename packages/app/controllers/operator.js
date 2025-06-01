@@ -61,6 +61,7 @@ async function respondMessagesController(req, res, next) {
     const { error, value } = revertToCustomerPayloadSchema.validate({
       id: req.params.messageId,
       reply: req.body.reply,
+      status: req.body.status,
     });
 
     if (error) {
@@ -71,7 +72,8 @@ async function respondMessagesController(req, res, next) {
       });
     }
 
-    const { id, reply } = value;
+    const { id, reply, status } = value;
+    const operatorId = req.userData.userId;
     const formExists = await contactUsService.getForm(id);
     if (!formExists) {
       return res.status(404).json({
@@ -81,7 +83,12 @@ async function respondMessagesController(req, res, next) {
       });
     }
 
-    const revertForm = await contactUsService.updateForm(id, reply);
+    const revertForm = await contactUsService.updateForm(
+      id,
+      reply,
+      status,
+      operatorId
+    );
     if (revertForm?.alreadyReplied) {
       return res.status(409).json({
         statusCode: 409,

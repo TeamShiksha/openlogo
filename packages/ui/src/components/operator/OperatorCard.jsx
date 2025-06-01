@@ -72,15 +72,13 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
               >
                 Respond
               </Button>
-              {searchType === "requests" && (
-                <Button
-                  onClick={() => onRespondClick(item, "reject")}
-                  variant="danger"
-                  className={styles["reject-button"]}
-                >
-                  Reject
-                </Button>
-              )}
+              <Button
+                onClick={() => onRespondClick(item, "reject")}
+                variant="danger"
+                className={styles["reject-button"]}
+              >
+                Reject
+              </Button>
             </div>
           )}
         </div>

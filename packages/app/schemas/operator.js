@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const { isValidObjectId } = require("mongoose");
-const { TAB_OPTIONS } = require("../utils/constants");
+const { TAB_OPTIONS, StatusTypes } = require("../utils/constants");
 
 const querySchema = Joi.object({
   page: Joi.number().required().messages({
@@ -46,6 +46,14 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
       "string.max": "Reply must be 500 or fewer characters",
       "any.required": "Reply is required",
       "string.pattern.base": "Reply should only contain alphabets",
+    }),
+  status: Joi.string()
+    .valid(...Object.values(StatusTypes))
+    .required()
+    .messages({
+      "string.base": "Status must be a string",
+      "any.only": "Status must be one of PENDING, REJECTED, or RESOLVED",
+      "any.required": "Status is required",
     }),
 });
 
