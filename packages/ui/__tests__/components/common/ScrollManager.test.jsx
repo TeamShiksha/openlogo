@@ -65,23 +65,37 @@ describe("handleNavigation function", () => {
 
   it("navigates to a new page when path changes and stores sectionId", () => {
     const event = { preventDefault: vi.fn() };
-    handleNavigation(event, "/new-page#test-section", navigate);
+    const setActiveSection = vi.fn();
+
+    handleNavigation(
+      event,
+      "/new-page#test-section",
+      navigate,
+      setActiveSection
+    );
     expect(event.preventDefault).toHaveBeenCalled();
     expect(sessionStorage.getItem("scrollTo")).toBe("test-section");
+    expect(setActiveSection).toHaveBeenCalledWith("test-section");
     expect(navigate).toHaveBeenCalledWith("/new-page");
   });
 
   it("scrolls to the section on the same page", () => {
     const event = { preventDefault: vi.fn() };
-    handleNavigation(event, "/#test-section", navigate);
+    const setActiveSection = vi.fn();
+
+    handleNavigation(event, "/#test-section", navigate, setActiveSection);
     expect(event.preventDefault).toHaveBeenCalled();
+    expect(setActiveSection).toHaveBeenCalledWith("test-section");
     expect(window.scrollTo).toHaveBeenCalled();
   });
 
   it("scrolls to the top if no section id is provided", () => {
     const event = { preventDefault: vi.fn() };
-    handleNavigation(event, "/", navigate);
+    const setActiveSection = vi.fn();
+
+    handleNavigation(event, "/", navigate, setActiveSection);
     expect(event.preventDefault).toHaveBeenCalled();
+    expect(setActiveSection).toHaveBeenCalledWith(undefined);
     expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
   });
 });
