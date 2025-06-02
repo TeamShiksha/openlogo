@@ -25,13 +25,10 @@ const showSuccessToast = (toast, searchType, responseAction) => {
     } else {
       toast.success("Message rejected successfully.");
     }
+  } else if (responseAction === "respond") {
+    toast.success("Request marked as resolved successfully.");
   } else {
-    // For requests
-    if (responseAction === "respond") {
-      toast.success("Request marked as resolved successfully.");
-    } else {
-      toast.success("Request rejected successfully.");
-    }
+    toast.success("Request rejected successfully.");
   }
 };
 
@@ -223,12 +220,10 @@ const Operator = () => {
     } else {
       modalTitle = "Respond to Request";
     }
+  } else if (searchType === "messages") {
+    modalTitle = "Reject Message";
   } else {
-    if (searchType === "messages") {
-      modalTitle = "Reject Message";
-    } else {
-      modalTitle = "Reject Request";
-    }
+    modalTitle = "Reject Request";
   }
 
   let submitButtonText;
@@ -238,12 +233,10 @@ const Operator = () => {
     } else {
       submitButtonText = "Rejecting...";
     }
+  } else if (responseAction === "respond") {
+    submitButtonText = BUTTON_TEXT.sendResponse;
   } else {
-    if (responseAction === "respond") {
-      submitButtonText = BUTTON_TEXT.sendResponse;
-    } else {
-      submitButtonText = BUTTON_TEXT.confirmRejection;
-    }
+    submitButtonText = BUTTON_TEXT.confirmRejection;
   }
 
   let contentToRender;
