@@ -9,6 +9,32 @@ import Button from "../../components/common/button/Button";
 import { useToast } from "../../hooks/useToast";
 import { BUTTON_TEXT } from "../../utils/Constants";
 
+const createPayload = (searchType, responseText, responseAction) => {
+  const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
+  if (searchType === "messages") {
+    return { reply: responseText, status };
+  } else {
+    return { comment: responseText, status };
+  }
+};
+
+const showSuccessToast = (toast, searchType, responseAction) => {
+  if (searchType === "messages") {
+    if (responseAction === "respond") {
+      toast.success("Responded to message successfully.");
+    } else {
+      toast.success("Message rejected successfully.");
+    }
+  } else {
+    // For requests
+    if (responseAction === "respond") {
+      toast.success("Request marked as resolved successfully.");
+    } else {
+      toast.success("Request rejected successfully.");
+    }
+  }
+};
+
 const Operator = () => {
   const [activeTab, setActiveTab] = useState("active");
   const [searchType, setSearchType] = useState("messages");
@@ -73,50 +99,25 @@ const Operator = () => {
   // Handle submitting a response
   const handleResponseSubmit = async () => {
     if (!currentItem) return;
-    const payload =
-      searchType === "messages"
-        ? {
-            reply: responseText,
-            status: responseAction === "respond" ? "RESOLVED" : "REJECTED",
-          }
-        : {
-            comment: responseText,
-            status: responseAction === "respond" ? "RESOLVED" : "REJECTED",
-          };
+    const payload = createPayload(searchType, responseText, responseAction);
 
     setLoading(true);
     try {
-      if (searchType === "messages") {
-        await instance.put(`/messages/${currentItem._id}`, payload);
-      } else {
-        await instance.put(`/requests/${currentItem._id}`, payload);
-      }
+      const isMessages = searchType === "messages";
+      const endpoint = isMessages
+        ? `/messages/${currentItem._id}`
+        : `/requests/${currentItem._id}`;
+      const refreshData = isMessages ? fetchMessages : fetchRequests;
 
-      // Refresh data after successful response
-      if (searchType === "messages") {
-        fetchMessages(currentPage);
-      } else {
-        fetchRequests(currentPage);
-      }
+      await instance.put(endpoint, payload);
+      refreshData(currentPage);
 
       setIsModalOpen(false);
       setCurrentItem(null);
       setResponseText("");
       setFormErrors({});
 
-      if (searchType === "messages") {
-        if (responseAction === "respond") {
-          toast.success("Responded to message successfully.");
-        } else {
-          toast.success("Message rejected successfully.");
-        }
-      } else {
-        if (responseAction === "respond") {
-          toast.success("Request marked as resolved successfully.");
-        } else {
-          toast.success("Request rejected successfully.");
-        }
-      }
+      showSuccessToast(toast, searchType, responseAction);
     } catch (err) {
       console.error("Error sending response:", err);
       setFormErrors({ message: "Error sending response" });
@@ -215,6 +216,64 @@ const Operator = () => {
     setResponseText(e.target.value);
   };
 
+  let modalTitle;
+  if (responseAction === "respond") {
+    if (searchType === "messages") {
+      modalTitle = "Respond to Message";
+    } else {
+      modalTitle = "Respond to Request";
+    }
+  } else {
+    if (searchType === "messages") {
+      modalTitle = "Reject Message";
+    } else {
+      modalTitle = "Reject Request";
+    }
+  }
+
+  let submitButtonText;
+  if (loading) {
+    if (responseAction === "respond") {
+      submitButtonText = "Sending Response...";
+    } else {
+      submitButtonText = "Rejecting...";
+    }
+  } else {
+    if (responseAction === "respond") {
+      submitButtonText = BUTTON_TEXT.sendResponse;
+    } else {
+      submitButtonText = BUTTON_TEXT.confirmRejection;
+    }
+  }
+
+  let contentToRender;
+  if (loading) {
+    contentToRender = (
+      <div className={styles["loading-container"]}>
+        <LoadingSpinner size={40} color="black" />
+      </div>
+    );
+  } else if (filteredData.length === 0) {
+    contentToRender = (
+      <div className={styles["empty-state"]}>
+        No {searchType} found for this filter.
+      </div>
+    );
+  } else {
+    contentToRender = (
+      <div className={styles["cards-container"]}>
+        {filteredData.map((item) => (
+          <OperatorCard
+            key={item._id}
+            item={item}
+            searchType={searchType}
+            onRespondClick={handleRespondClick}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className={`container ${styles["operator-container"]}`}>
       <div className={styles.header}>
@@ -242,26 +301,7 @@ const Operator = () => {
         </select>
       </div>
 
-      {loading ? (
-        <div className={styles["loading-container"]}>
-          <LoadingSpinner size={40} color="black" />
-        </div>
-      ) : filteredData.length === 0 ? (
-        <div className={styles["empty-state"]}>
-          No {searchType} found for this filter.
-        </div>
-      ) : (
-        <div className={styles["cards-container"]}>
-          {filteredData.map((item) => (
-            <OperatorCard
-              key={item._id}
-              item={item}
-              searchType={searchType}
-              onRespondClick={handleRespondClick}
-            />
-          ))}
-        </div>
-      )}
+      {contentToRender}
 
       {totalPages > 1 && (
         <div className={styles.pagination}>
@@ -296,15 +336,7 @@ const Operator = () => {
         showCloseButton={!loading}
         customClass={styles["response-modal"]}
       >
-        <h2>
-          {responseAction === "respond"
-            ? searchType === "messages"
-              ? "Respond to Message"
-              : "Respond to Request"
-            : searchType === "messages"
-              ? "Reject Message"
-              : "Reject Request"}
-        </h2>
+        <h2>{modalTitle}</h2>
 
         <div className={styles["response-field"]}>
           <textarea
@@ -336,13 +368,7 @@ const Operator = () => {
             variant={responseAction === "respond" ? "primary" : "danger"}
             className={styles["send-button"]}
           >
-            {loading
-              ? responseAction === "respond"
-                ? "Sending Response..."
-                : "Rejecting..."
-              : responseAction === "respond"
-                ? BUTTON_TEXT.sendResponse
-                : BUTTON_TEXT.confirmRejection}
+            {submitButtonText}
           </Button>
         </div>
       </Modal>

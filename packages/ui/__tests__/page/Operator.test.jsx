@@ -59,7 +59,7 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Opened at.*1\/6\/2025/i)).toBeInTheDocument();
+      expect(screen.getByText(/Opened at.*6\/1\/2025/i)).toBeInTheDocument();
       expect(screen.getByText("Test message")).toBeInTheDocument();
     });
   });
@@ -179,8 +179,8 @@ describe("Operator Page", () => {
   });
 
   it("opens respond and reject modals and sends update requests with messages", async () => {
-    apiInstance.get.mockResolvedValueOnce(messages);
-    apiInstance.put.mockResolvedValueOnce({ data: {} });
+    apiInstance.get.mockResolvedValue(messages);
+    apiInstance.put.mockResolvedValue({ data: {} });
 
     render(
       <ToastProvider>
@@ -191,6 +191,9 @@ describe("Operator Page", () => {
     await waitFor(() => {
       expect(screen.getByText("Respond")).toBeInTheDocument();
     });
+
+    const validTestText =
+      "This is a valid test response that doest exceeds limit of characters";
 
     fireEvent.click(screen.getByText(BUTTON_TEXT.respond));
 
@@ -204,13 +207,15 @@ describe("Operator Page", () => {
     const textarea = screen.getByPlaceholderText("Type your response here...");
     fireEvent.change(textarea, {
       target: {
-        value:
-          "This is a valid test response that doest exceeds limit of characters",
+        value: validTestText,
       },
     });
     fireEvent.click(screen.getByText(BUTTON_TEXT.sendResponse));
     await waitFor(() => {
-      expect(apiInstance.put).toHaveBeenCalled();
+      expect(apiInstance.put).toHaveBeenNthCalledWith(1, "/messages/1", {
+        reply: validTestText,
+        status: "RESOLVED",
+      });
     });
 
     await waitFor(() => {
@@ -231,13 +236,15 @@ describe("Operator Page", () => {
     );
     fireEvent.change(textarea2, {
       target: {
-        value:
-          "This is a valid test response that doest exceeds limit of characters",
+        value: validTestText,
       },
     });
     fireEvent.click(screen.getByText(BUTTON_TEXT.confirmRejection));
     await waitFor(() => {
-      expect(apiInstance.put).toHaveBeenCalled();
+      expect(apiInstance.put).toHaveBeenNthCalledWith(2, "/messages/1", {
+        reply: validTestText,
+        status: "REJECTED",
+      });
     });
   });
 });

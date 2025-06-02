@@ -56,12 +56,10 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
           <p className={styles.message}>{displayMessage}</p>
         </div>
         {isArchived && (
-          <>
-            <div className={styles["summary-container"]}>
-              <p className={styles["summary-title"]}>Summary</p>
-              <p className={styles.summary}>{item.comment}</p>
-            </div>
-          </>
+          <div className={styles["summary-container"]}>
+            <p className={styles["summary-title"]}>Summary</p>
+            <p className={styles.summary}>{item.comment}</p>
+          </div>
         )}
         <div className={styles["button-container"]}>
           {!isArchived && (
