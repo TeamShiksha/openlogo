@@ -10,9 +10,13 @@
 }
 
 .delete-modal p {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: var(--text-secondary);
   font-size: var(--medium-text);
+}
+
+.key-description {
+  font-weight: 600;
 }
 
 .error-message {

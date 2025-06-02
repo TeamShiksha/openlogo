@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useApi } from "../../../hooks/useApi";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "../../common/loadingspinner/LoadingSpinner.jsx";
-import { COPY, API_KEY } from "../../../utils/Constants.js";
+import { COPY, API_KEY, BUTTON_TEXT } from "../../../utils/Constants.js";
 import { useToast } from "../../../hooks/useToast";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
@@ -112,7 +112,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           type="submit"
           disabled={isGuest || isGenerating || !description.trim()}
         >
-          {isGenerating ? <LoadingSpinner /> : "Generate Key"}
+          {isGenerating ? <LoadingSpinner /> : BUTTON_TEXT.generateKey}
         </Button>
       </form>
     </section>
@@ -122,7 +122,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
 ApiKeyForm.propTypes = {
   isGuest: PropTypes.bool.isRequired,
   onKeyGenerated: PropTypes.func.isRequired,
-  // onKeyGenerated prop is used to trigger a refresh of the API keys list in the parent component
 };
 
 export default ApiKeyForm;

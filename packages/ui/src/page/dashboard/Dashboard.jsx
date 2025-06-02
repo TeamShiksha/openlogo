@@ -70,7 +70,7 @@ function Dashboard() {
   };
 
   const handleKeyGenerated = async () => {
-    const success = await fetchUserKeys(); // refreshes API keys list
+    const success = await fetchUserKeys();
     if (!success) {
       toast.error("Failed to fetch updated API keys");
     }

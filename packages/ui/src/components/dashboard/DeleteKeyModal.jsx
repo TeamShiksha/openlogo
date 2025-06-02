@@ -6,7 +6,7 @@ import { useApi } from "../../hooks/useApi";
 import PropTypes from "prop-types";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
-import { API_KEY } from "../../utils/Constants";
+import { API_KEY, BUTTON_TEXT } from "../../utils/Constants";
 
 const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -47,24 +47,27 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={handleClose} customWidth="400px">
       <div className={styles["delete-modal"]}>
         <h2>{API_KEY.delete.modal.title}</h2>
-        <p>
-          {API_KEY.delete.modal.description} &quot;
-          {selectedKey?.key_description}&quot; ? {API_KEY.delete.modal.warning}
+        <p className={styles["modal-description"]}>
+          {API_KEY.delete.modal.description}
+          <span className={styles["key-description"]}>
+            {selectedKey?.key_description}
+          </span>
         </p>
+        <p>{API_KEY.delete.modal.warning}</p>
         <div className={styles["modal-actions"]}>
           <Button
             variant="secondary"
             onClick={handleClose}
             disabled={isDeleting}
           >
-            Cancel
+            {BUTTON_TEXT.cancel}
           </Button>
           <Button
             variant="danger"
             onClick={handleDeleteConfirm}
             disabled={isDeleting}
           >
-            {isDeleting ? <LoadingSpinner /> : "Delete"}
+            {isDeleting ? <LoadingSpinner /> : BUTTON_TEXT.delete}
           </Button>
         </div>
       </div>

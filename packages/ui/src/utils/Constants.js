@@ -402,10 +402,12 @@ export const BUTTON_TEXT = {
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
+  generateKey: "Generate Key",
   requestLogo: "Request Logo",
   goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
+  cancel: "Cancel",
 };
 
 export const BRANDING = {
@@ -702,8 +704,8 @@ export const API_KEY = {
     invalidKey: "Invalid API key selected",
     modal: {
       title: "Delete API Key",
-      description: "Are you sure you want to delete the API key",
-      warning: "This action cannot be undone.",
+      description: "Are you sure you want to delete the API key ? ",
+      warning: " This action cannot be undone.",
     },
   },
 };
