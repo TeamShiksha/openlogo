@@ -385,6 +385,21 @@ export const CROSS = {
   alt: "Close Icon",
 };
 
+export const COPY = {
+  src: "copy-icon.svg",
+  alt: "Copy Icon",
+};
+
+export const VISIBLE = {
+  src: "visible-icon.svg",
+  alt: "Visible Icon",
+};
+
+export const VISIBLEOFF = {
+  src: "visible-off-icon.svg",
+  alt: "Visible Off Icon",
+};
+
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",
@@ -398,10 +413,12 @@ export const BUTTON_TEXT = {
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
+  generateKey: "Generate Key",
   requestLogo: "Request Logo",
   goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
+  cancel: "Cancel",
 };
 
 export const BRANDING = {
@@ -590,7 +607,7 @@ HttpResponse<String> response = client.send(request,
 export const DOCUMENTATION = {
   introduction: {
     heading: "Introduction",
-    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we’re here to help. Contact us anytime!",
+    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we're here to help. Contact us anytime!",
   },
   tableDataHeaders: ["Parameter", "Type", "Description", "Required"],
   apiDocs: [
@@ -676,4 +693,30 @@ export const DELETE_ACCOUNT_CONFIRMATION_MODAL = {
     "Are you sure you want to delete your account? This action cannot be undone.",
   primaryButtonText: "Delete",
   secondaryButtonText: "Cancel",
+};
+
+export const API_KEY = {
+  generation: {
+    success: "API key generated successfully",
+    error: "Failed to generate API key",
+    descriptionRequired: "Please enter a description for the API key",
+    modal: {
+      title: "Your API Key",
+      warning:
+        "Please copy your API key now. You won't be able to see it again!",
+    },
+  },
+  copy: {
+    success: "API key copied to clipboard",
+  },
+  delete: {
+    success: "API key deleted successfully",
+    error: "Failed to delete API key",
+    invalidKey: "Invalid API key selected",
+    modal: {
+      title: "Delete API Key",
+      description: "Are you sure you want to delete the API key ? ",
+      warning: " This action cannot be undone.",
+    },
+  },
 };
