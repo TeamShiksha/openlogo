@@ -1,6 +1,7 @@
 import styles from "./OperatorCard.module.css";
 import PropTypes from "prop-types";
 import Button from "../common/button/Button";
+import { BUTTON_TEXT } from "../../utils/Constants";
 const OperatorCard = ({ item, onRespondClick, searchType }) => {
   const isArchived = item.status === "RESOLVED" || item.status === "REJECTED";
 
@@ -70,14 +71,14 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
                 variant="primary"
                 className={styles["respond-button"]}
               >
-                Respond
+                {BUTTON_TEXT.respond}
               </Button>
               <Button
                 onClick={() => onRespondClick(item, "reject")}
                 variant="danger"
                 className={styles["reject-button"]}
               >
-                Reject
+                {BUTTON_TEXT.reject}
               </Button>
             </div>
           )}

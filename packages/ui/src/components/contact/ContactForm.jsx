@@ -14,7 +14,7 @@ function ContactForm({ closeModal }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const { errorMsg, makeRequest, data, loading, isSuccess } = useApi({
+  const { makeRequest, loading } = useApi({
     url: `/messages/contact-us`,
     method: "POST",
     data: formValues,
@@ -130,13 +130,6 @@ function ContactForm({ closeModal }) {
             </p>
           </div>
         </div>
-        {isSuccess ? (
-          <p className="success-message">{data?.message}</p>
-        ) : (
-          <p className={`${styles["input-error"]} ${styles["has-error"]}`}>
-            {errorMsg}
-          </p>
-        )}
         <Button
           type="submit"
           variant="primary"

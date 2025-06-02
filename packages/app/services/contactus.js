@@ -31,7 +31,6 @@ class ContactUsService {
       name: formData.name,
       email: formData.email,
       message: formData.message,
-      assignedTo: null,
       activityStatus: false,
       reply: null,
     };
@@ -49,7 +48,10 @@ class ContactUsService {
     const currentForm = await this.contactUsRepository.getById(formId);
     console.log("currentForm", currentForm);
     if (!currentForm) throw new Error("Form not found");
-    if (currentForm.status === "RESOLVED") {
+    if (
+      currentForm.status === "RESOLVED" ||
+      currentForm.status === "REJECTED"
+    ) {
       return { alreadyReplied: true };
     }
 
@@ -91,6 +93,15 @@ class ContactUsService {
    */
   async getFormsCount() {
     return await this.contactUsRepository.getFormsCount();
+  }
+  /**
+   * fetches list of requests
+   * @param {number} page - number of pages
+   * @param {number} limit - number of requests per page
+   * @returns {Promise<Object>} returns a list of requests or null if no requests exists
+   */
+  async getPaginatedRequests(page, limit, tab) {
+    return await this.contactUsRepository.getAll(page, limit, tab);
   }
 }
 

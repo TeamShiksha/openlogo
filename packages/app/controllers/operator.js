@@ -1,5 +1,4 @@
 const { STATUS_CODES } = require("http");
-const { ContactUsRepository } = require("../repositories");
 const {
   querySchema,
   revertToCustomerPayloadSchema,
@@ -17,7 +16,7 @@ const { Messages } = require("../utils/constants");
  */
 async function getMessagesController(req, res, next) {
   try {
-    const contactUsRepository = new ContactUsRepository();
+    const contactUsService = new ContactUsService();
     const { error } = querySchema.validate(req.query);
     if (error) {
       return res.status(422).json({
@@ -30,7 +29,11 @@ async function getMessagesController(req, res, next) {
     let fetchedData = null;
     const { page, limit, tab } = req.query;
     const { data, total, currentPage, totalPages } =
-      await contactUsRepository.getAll(parseInt(page), parseInt(limit), tab);
+      await contactUsService.getPaginatedRequests(
+        parseInt(page),
+        parseInt(limit),
+        tab
+      );
     if (!data || data.length === 0) {
       fetchedData = [];
     } else {

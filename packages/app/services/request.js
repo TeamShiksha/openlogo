@@ -96,7 +96,10 @@ class RequestService {
    */
   async respondToRequest(requestId, operatorId, status, comment) {
     const currentRequest = await this.requestRepository.getById(requestId);
-    if (currentRequest.status === "RESOLVED") {
+    if (
+      currentRequest.status === "RESOLVED" ||
+      currentRequest.status === "REJECTED"
+    ) {
       return { alreadyProcessed: true };
     }
     const updatedData = {

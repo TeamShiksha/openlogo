@@ -7,6 +7,7 @@ import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";
 import Button from "../../components/common/button/Button";
 import { useToast } from "../../hooks/useToast";
+import { BUTTON_TEXT } from "../../utils/Constants";
 
 const Operator = () => {
   const [activeTab, setActiveTab] = useState("active");
@@ -340,8 +341,8 @@ const Operator = () => {
                 ? "Sending Response..."
                 : "Rejecting..."
               : responseAction === "respond"
-                ? "Send Response"
-                : "Confirm Rejection"}
+                ? BUTTON_TEXT.sendResponse
+                : BUTTON_TEXT.confirmRejection}
           </Button>
         </div>
       </Modal>

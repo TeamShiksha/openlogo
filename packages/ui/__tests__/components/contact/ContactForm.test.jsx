@@ -317,7 +317,9 @@ describe("ContactForm Component", () => {
       fireEvent.click(submitButton);
     });
     await waitFor(() => {
-      const errorElement = screen.getByText("An error occurred");
+      const errorElement = screen.getByText(
+        "Form already submitted, try again later"
+      );
       expect(errorElement).toBeInTheDocument();
     });
   });

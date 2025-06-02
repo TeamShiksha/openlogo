@@ -391,6 +391,10 @@ export const BUTTON_TEXT = {
   goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
+  respond: "Respond",
+  reject: "Reject",
+  sendResponse: "Send Response",
+  confirmRejection: "Confirm Rejection",
 };
 
 export const BRANDING = {
