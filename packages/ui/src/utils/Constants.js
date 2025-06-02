@@ -99,27 +99,32 @@ export const HEADER_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "/",
+    url: "/#",
+    type: "section",
   },
   {
     name: "docs",
     title: "Docs",
     url: "/docs",
+    type: "route",
   },
   {
     name: "features",
     title: "Features",
     url: "/#features",
+    type: "section",
   },
   {
     name: "pricing",
     title: "Pricing",
     url: "/#pricing",
+    type: "section",
   },
   {
     name: "about",
     title: "About",
     url: "/#about",
+    type: "section",
   },
 ];
 
@@ -127,32 +132,38 @@ export const LOGGEDIN_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "/",
+    url: "/#home",
+    type: "section",
   },
   {
     name: "dashboard",
     title: "Dashboard",
     url: "/dashboard",
+    type: "route",
   },
   {
     name: "docs",
     title: "Docs",
     url: "/docs",
+    type: "route",
   },
   {
     name: "features",
     title: "Features",
     url: "/#features",
+    type: "section",
   },
   {
     name: "pricing",
     title: "Pricing",
     url: "/#pricing",
+    type: "section",
   },
   {
     name: "about",
     title: "About",
     url: "/#about",
+    type: "section",
   },
 ];
 
