@@ -134,20 +134,49 @@ const MOCK_KEYS = [
   },
 ];
 
-const MOCK_ANALYTICS_DATA_INPUT = {
-  Users: 10,
-  Keys: 20,
-  Requests: 30,
-  ContactUs: 10,
-  Hits: 40,
-};
+const MOCK_ANALYTICS_DATA_INPUT = [
+  {
+    title: "Users",
+    value: 10,
+  },
+  {
+    title: "Keys",
+    value: 20,
+  },
 
-const MOCK_ANALYTICS_DATA_OUTPUT = {
-  Users: 10,
-  Keys: 20,
-  Requests: 40,
-  Hits: 40,
-};
+  {
+    title: "Requests",
+    value: 30,
+  },
+  {
+    title: "ContactUs",
+    value: 10,
+  },
+  {
+    title: "Hits",
+    value: 40,
+  },
+];
+
+const MOCK_ANALYTICS_DATA_OUTPUT = [
+  {
+    title: "Users",
+    value: 10,
+  },
+  {
+    title: "Keys",
+    value: 20,
+  },
+
+  {
+    title: "Requests",
+    value: 40,
+  },
+  {
+    title: "Hits",
+    value: 40,
+  },
+];
 
 const MOCK_IMAGES = [
   {

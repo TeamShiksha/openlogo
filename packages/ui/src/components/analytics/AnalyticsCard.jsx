@@ -8,7 +8,7 @@ function AnalyticsCard({ title, api }) {
 
   async function fetchAndUpdateValue() {
     // get value from API
-    setValue(1454); // Example value
+    setValue(api); // Example value
   }
 
   async function fetchAndUpdatePercentageChange(api) {
