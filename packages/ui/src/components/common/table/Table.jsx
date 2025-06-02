@@ -34,7 +34,7 @@ const Table = ({ headers, rows, emptyMessage, onDelete, isGuest }) => {
                     <Button
                       variant="danger"
                       className={styles["delete-btn"]}
-                      onClick={() => onDelete(cells[index])}
+                      onClick={() => onDelete(index)}
                       disabled={isGuest}
                     >
                       {BUTTON_TEXT.delete}
