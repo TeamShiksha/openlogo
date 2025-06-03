@@ -23,6 +23,7 @@ PUT catalog/permission/{user_id}/roles/{role} – revoke permissions (e.g., gran
 POST catalog/logo – Upload a new company logo.
 PUT catalog/logo – Update an existing logo.
 GET catalog/logos – Retrieve a list of all uploaded logos - (pagination)
+GET catalog/stats - Retrieve total stats for admin (e.g., users, keys, requests, hits)
 
 ### OPERATOR
 
