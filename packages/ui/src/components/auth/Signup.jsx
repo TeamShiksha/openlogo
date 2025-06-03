@@ -8,11 +8,10 @@ import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
 
-function SignUp({ toggleForm, onClose }) {
+function SignUp({ toggleForm }) {
   const toast = useToast();
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,17 +52,14 @@ function SignUp({ toggleForm, onClose }) {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setFormErrors({});
-    setIsSubmit(false);
     setFocusedField(null);
     setIsLoading(true);
 
     const success = await makeRequest();
     if (success) {
       setFormValues(SIGNUP.initialValues);
-      setIsSubmit(true);
       setFocusedField(null);
       toggleForm();
-      onClose();
       toast.success("Sign up successfully");
     }
     setIsLoading(false);
@@ -100,7 +96,7 @@ function SignUp({ toggleForm, onClose }) {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit || isLoading}
+          disabled={!isFormValid || isLoading}
           isLoading={isLoading}
         >
           {BUTTON_TEXT.signUp}
