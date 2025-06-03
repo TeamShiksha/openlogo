@@ -16,12 +16,8 @@ class RequestService {
       userId,
       StatusTypes.PENDING
     );
-    return !!request;
+    return request;
   }
-
-  // async urlAlreadyExists(companyUrl){
-
-  // }
 
   /**
    * checks if a Pending request exists for the given company Url.
@@ -33,7 +29,7 @@ class RequestService {
       companyUrl,
       StatusTypes.PENDING
     );
-    return !!request;
+    return request;
   }
 
   /**
@@ -113,14 +109,7 @@ class RequestService {
       updatedData
     );
     if (result.modifiedCount === 0) throw new Error("MongoDB operation failed");
-    const updatedRequest = await this.requestRepository.getById(requestId);
-    return {
-      companyUrl: updatedRequest.companyUrl,
-      status: updatedRequest.status,
-      comment: updatedRequest.comment,
-      openedAt: updatedRequest.openedAt,
-      closedAt: updatedRequest.closedAt,
-    };
+    return result;
   }
 }
 

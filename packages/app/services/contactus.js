@@ -33,6 +33,8 @@ class ContactUsService {
       message: formData.message,
       activityStatus: false,
       reply: null,
+      operator: null,
+      comment: null,
     };
     return await this.contactUsRepository.create(newForm);
   }
@@ -46,7 +48,6 @@ class ContactUsService {
    */
   async updateForm(formId, reply, status, operatorId) {
     const currentForm = await this.contactUsRepository.getById(formId);
-    console.log("currentForm", currentForm);
     if (!currentForm) throw new Error("Form not found");
     if (
       currentForm.status === "RESOLVED" ||
@@ -60,7 +61,6 @@ class ContactUsService {
       status,
       operator: operatorId,
       closedAt: new Date(),
-      // assignedTo: operatorId
     };
 
     const result = await this.contactUsRepository.updateFormStatus(
@@ -69,13 +69,7 @@ class ContactUsService {
     );
     if (result.modifiedCount === 0) throw new Error("MongoDB operation failed");
 
-    return {
-      reply,
-      activityStatus: true,
-      assignedTo: operatorId,
-      email: currentForm.email,
-      message: currentForm.message,
-    };
+    return result;
   }
   /**
    * Retrieves a form by its ID.

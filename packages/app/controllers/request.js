@@ -94,11 +94,17 @@ async function updateRequestController(req, res, next) {
         message: Messages.LOGO_REQUEST_ALREADY_PROCESSED,
       });
     }
+    const updatedData = {
+      companyUrl: request.companyUrl,
+      status: status,
+      comment: comment,
+      openedAt: request.openedAt,
+    };
 
     return res.status(200).json({
       statusCode: 200,
       message: Messages.UPDATE_SUCCESS,
-      data: updatedRequest,
+      data: updatedData,
     });
   } catch (err) {
     next(err);

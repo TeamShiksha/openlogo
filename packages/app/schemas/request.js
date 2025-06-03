@@ -19,7 +19,7 @@ const createRequestSchema = Joi.object({
     .trim()
     .required()
     .pattern(
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/
+      /^(https?:\/\/)?([a-zA-Z0-9-]+\.){0,5}[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(:\d+)?(\/.*)?$/
     )
     .messages({
       "string.base": "Company URL must be a string",

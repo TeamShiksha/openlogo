@@ -164,7 +164,10 @@ describe("PUT : /api/requests/:requestId", () => {
     expect(response.body).toEqual({
       statusCode: 200,
       message: Messages.UPDATE_SUCCESS,
-      data: updatedRequest,
+      data: {
+        status: "RESOLVED",
+        comment: "Approved and resolved",
+      },
     });
   });
 });

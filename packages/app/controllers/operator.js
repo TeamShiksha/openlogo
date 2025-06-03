@@ -110,9 +110,15 @@ async function respondMessagesController(req, res, next) {
       },
     });
 
+    const updatedDetails = {
+      reply,
+      operator: operatorId,
+      email: formExists.email,
+      message: formExists.message,
+    };
     return res.status(200).json({
       message: Messages.UPDATE_SUCCESS,
-      data: revertForm,
+      data: updatedDetails,
     });
   } catch (error) {
     next(error);

@@ -219,7 +219,10 @@ describe("RESPOND MESSAGES API", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       message: Messages.UPDATE_SUCCESS,
-      data: {},
+      data: {
+        operator: "mock-operator-id",
+        reply: "This is a valid reply with a minimum of twenty characters",
+      },
     });
   });
 });

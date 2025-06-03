@@ -59,7 +59,7 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Opened at.*6\/1\/2025/i)).toBeInTheDocument();
+      expect(screen.getByText("test@example.com")).toBeInTheDocument();
       expect(screen.getByText("Test message")).toBeInTheDocument();
     });
   });
