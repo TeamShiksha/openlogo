@@ -37,7 +37,7 @@ function Footer() {
           ))}
         </div>
         <div className={styles["footer-copyright"]}>
-          © 2025 |&nbsp;
+          © {new Date().getFullYear()} |&nbsp;
           <a
             href={BRANDING.poweredByLink}
             target="_blank"
