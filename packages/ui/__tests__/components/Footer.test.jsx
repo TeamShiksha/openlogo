@@ -53,8 +53,10 @@ describe("Footer Component", () => {
       </BrowserRouter>
     );
 
-    const copyrightText = screen.getByText(/© 2025/i);
-    expect(copyrightText).toBeInTheDocument();
+    const copyrightElement = screen.getByText(
+      new RegExp(`© ${new Date().getFullYear()}`, "i")
+    );
+    expect(copyrightElement).toBeInTheDocument();
     const poweredByLink = screen.getByText(BRANDING.poweredByText);
     expect(poweredByLink).toHaveAttribute("href", BRANDING.poweredByLink);
     expect(poweredByLink).toHaveAttribute("target", "_blank");

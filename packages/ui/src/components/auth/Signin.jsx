@@ -8,8 +8,10 @@ import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
+import { useToast } from "../../hooks/useToast.js";
 
 const SignIn = ({ toggleForm, onClose }) => {
+  const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -62,7 +64,6 @@ const SignIn = ({ toggleForm, onClose }) => {
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    setIsSubmit(true);
     setIsLoading(true);
     const success = await makeRequest();
     if (success) {
@@ -75,8 +76,8 @@ const SignIn = ({ toggleForm, onClose }) => {
         navigate("/dashboard");
       }
 
-      setIsSubmit(false);
       setFocusedField(null);
+      toast.success("Sign in successfully");
     }
     setIsLoading(false);
   };
@@ -154,7 +155,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || isSubmit}
+          disabled={!isFormValid || isSubmit || isLoading}
         >
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>

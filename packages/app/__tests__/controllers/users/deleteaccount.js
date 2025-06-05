@@ -53,5 +53,9 @@ describe("Delete User Account", () => {
       .send(mockInput);
 
     expect(response.status).toBe(200);
+
+    const setCookieHeader = response.headers["set-cookie"];
+    expect(setCookieHeader).toBeDefined();
+    expect(setCookieHeader[0]).toMatch(/jwt=;/);
   });
 });

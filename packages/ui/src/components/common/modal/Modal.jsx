@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { BUTTON_TEXT } from "../../../utils/Constants";
 import styles from "./Modal.module.css";
+import { useEffect } from "react";
 
 const Modal = ({
   isOpen,
@@ -12,6 +13,19 @@ const Modal = ({
   showCloseButton = true,
   closeOnOverlayClick = true,
 }) => {
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (clickEvent) => {

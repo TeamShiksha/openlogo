@@ -14,6 +14,7 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 
 const mockUserContext = (userData, loading) => ({
   userData,
@@ -32,7 +33,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -46,7 +49,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -82,7 +87,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -100,7 +107,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -114,7 +123,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(false)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -131,7 +142,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
