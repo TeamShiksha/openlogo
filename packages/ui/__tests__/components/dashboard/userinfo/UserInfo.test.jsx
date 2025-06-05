@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
 import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
+import { ToastProvider } from "../../../../src/contexts/ToastContext";
 
 const mockMakeRequest = vi.fn();
 vi.mock("../../../../src/hooks/useApi.js", () => ({
@@ -18,7 +19,9 @@ describe("UserInfo Component", () => {
 
   it("renders all form elements correctly", async () => {
     render(
-      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      <ToastProvider>
+        <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      </ToastProvider>
     );
 
     const nameInput = screen.getByLabelText(/name/i);
@@ -34,7 +37,9 @@ describe("UserInfo Component", () => {
 
   it("update name input value", () => {
     render(
-      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      <ToastProvider>
+        <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      </ToastProvider>
     );
 
     const nameInput = screen.getByLabelText(/name/i);
@@ -44,7 +49,9 @@ describe("UserInfo Component", () => {
 
   it("show error if name is empty & removes error if name is valid on submit", async () => {
     render(
-      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      <ToastProvider>
+        <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      </ToastProvider>
     );
 
     const nameInput = screen.getByLabelText(/name/i);
@@ -69,7 +76,9 @@ describe("UserInfo Component", () => {
 
   it("enable Save button when name is changed", () => {
     render(
-      <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      <ToastProvider>
+        <UserInfo name={MOCK_USER_DATA.name} email={MOCK_USER_DATA.email} />
+      </ToastProvider>
     );
 
     const nameInput = screen.getByLabelText(/name/i);
@@ -82,11 +91,13 @@ describe("UserInfo Component", () => {
 
   it("calls the update user API on form submission", async () => {
     render(
-      <UserInfo
-        name={MOCK_USER_DATA.name}
-        email={MOCK_USER_DATA.email}
-        isGuest={false}
-      />
+      <ToastProvider>
+        <UserInfo
+          name={MOCK_USER_DATA.name}
+          email={MOCK_USER_DATA.email}
+          isGuest={false}
+        />
+      </ToastProvider>
     );
 
     const nameInput = screen.getByLabelText("Username");

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AuthProvider } from "../../src/contexts/AuthContext";
-import { AuthContext } from "../../src/contexts/Contexts";
+import { AuthContext, ToastContext } from "../../src/contexts/Contexts";
 import { useContext } from "react";
 
 const makeRequestMock = vi.fn(() => Promise.resolve(true));
@@ -11,6 +11,16 @@ vi.mock("../../src/hooks/useApi", () => ({
     makeRequest: makeRequestMock,
   }),
 }));
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 const TestComponent = () => {
   const { isAuthenticated, setIsAuthenticated, logout } =
@@ -45,9 +55,11 @@ describe("AuthProvider", () => {
   it("should set isAuthenticated to true if jwt cookie exists", async () => {
     document.cookie = "jwt=valid_token; path=/";
     render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>
+      </ToastContext.Provider>
     );
 
     await waitFor(() => {
@@ -60,9 +72,11 @@ describe("AuthProvider", () => {
     clearCookies();
 
     render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>
+      </ToastContext.Provider>
     );
 
     await waitFor(() => {
@@ -74,9 +88,11 @@ describe("AuthProvider", () => {
   it("should call API on logout and set isAuthenticated to false", async () => {
     document.cookie = "jwt=valid_token; path=/";
     render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>
+      </ToastContext.Provider>
     );
 
     await waitFor(() => {

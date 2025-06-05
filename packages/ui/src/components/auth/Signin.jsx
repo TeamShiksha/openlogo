@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
+import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
@@ -27,13 +27,14 @@ const SignIn = ({ toggleForm, onClose }) => {
     url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
     data: formData,
   });
-  const { makeRequest: makeGuestRequest } = useApi({
+  const { makeRequest: makeGuestRequest, errorMsg: guestErrorMsg } = useApi({
     method: "post",
     url: `/auth/signin?type=guest`,
   });
   useEffect(() => {
     setLocalErrorMsg(errorMsg);
-  }, [errorMsg]);
+    if (errorMsg || guestErrorMsg) toast.error(errorMsg || guestErrorMsg);
+  }, [errorMsg, guestErrorMsg, toast]);
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -77,7 +78,7 @@ const SignIn = ({ toggleForm, onClose }) => {
       }
 
       setFocusedField(null);
-      toast.success("Sign in successfully");
+      toast.success(MESSAGES.SIGN_IN_SUCCESS);
     }
     setIsLoading(false);
   };
@@ -90,6 +91,7 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsSubmit(false);
       onClose();
       navigate("/dashboard");
+      toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
     }
   };
   const handleToggleForgotPassword = () => {

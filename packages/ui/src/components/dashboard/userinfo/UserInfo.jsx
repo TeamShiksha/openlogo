@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
-import { USER_INFO_FIELDS } from "../../../utils/Constants";
+import { useEffect, useState } from "react";
+import { MESSAGES, USER_INFO_FIELDS } from "../../../utils/Constants";
 import styles from "./UserInfo.module.css";
 import CustomInput from "../../common/input/CustomInput";
 import Button from "../../common/button/Button";
 import { useApi } from "../../../hooks/useApi";
+import { useToast } from "../../../hooks/useToast";
 
 function UserInfo({ name, email, isGuest }) {
+  const toast = useToast();
   const initialValues = {
     name,
     email,
@@ -25,6 +27,10 @@ function UserInfo({ name, email, isGuest }) {
       name: formData.name,
     },
   });
+
+  useEffect(() => {
+    if (errorMsg) toast.error(errorMsg);
+  }, [errorMsg, toast]);
 
   const validate = (values) => {
     const errors = {};
@@ -74,6 +80,7 @@ function UserInfo({ name, email, isGuest }) {
       const success = await makeRequest();
       if (success) {
         setFormErrors({ type: "", message: "" });
+        toast.success(MESSAGES.USERNAME_UPDATE_SUCCESS);
       }
     } finally {
       setIsUpdating(false);
