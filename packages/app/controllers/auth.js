@@ -222,14 +222,7 @@ async function verifyEmailController(req, res, next) {
     }
 
     if (user.is_verified) {
-      const result = await userTokenService.deleteUserToken(userToken);
-      if (!result) {
-        return res.status(500).json({
-          error: STATUS_CODES[500],
-          message: Messages.SOMETHING_WENT_WRONG,
-          statusCode: 500,
-        });
-      }
+      await userTokenService.deleteUserToken(userToken);
 
       return res.status(200).json({
         statusCode: 200,
