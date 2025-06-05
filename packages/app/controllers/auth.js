@@ -174,6 +174,7 @@ async function verifyEmailController(req, res, next) {
     const userTokenService = new UserTokenService();
     const userService = new UserService();
     const { token } = req.params;
+
     if (!token) {
       return res.status(422).json({
         error: STATUS_CODES[422],
@@ -183,35 +184,69 @@ async function verifyEmailController(req, res, next) {
     }
 
     const userToken = await userTokenService.fetchUserToken(token);
-    if (!userToken)
+
+    if (!userToken) {
+      const deletedToken = await userTokenService.fetchDeletedUserToken(token);
+
+      if (deletedToken) {
+        return res.status(200).json({
+          statusCode: 200,
+          message: Messages.EMAIL_ALREADY_VERIFIED,
+          success: true,
+          alreadyVerified: true,
+        });
+      }
+
       return res.status(400).json({
         error: STATUS_CODES[400],
         message: Messages.INVALID_TOKEN,
         statusCode: 400,
       });
+    }
 
-    if (userToken.isExpired())
+    if (userToken.isExpired()) {
       return res.status(403).json({
         error: STATUS_CODES[403],
         message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
       });
+    }
 
     const user = await userService.getUser(userToken.user_id);
-    if (!user)
+    if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
         message: Messages.INVALID_TOKEN,
         statusCode: 404,
       });
+    }
+
+    if (user.is_verified) {
+      const result = await userTokenService.deleteUserToken(userToken);
+      if (!result) {
+        return res.status(500).json({
+          error: STATUS_CODES[500],
+          message: Messages.SOMETHING_WENT_WRONG,
+          statusCode: 500,
+        });
+      }
+
+      return res.status(200).json({
+        statusCode: 200,
+        message: Messages.EMAIL_ALREADY_VERIFIED,
+        success: true,
+        alreadyVerified: true,
+      });
+    }
 
     const verifyResult = await userService.verifyUser(user._id);
-    if (!verifyResult)
+    if (!verifyResult) {
       return res.status(500).json({
         error: STATUS_CODES[500],
         message: Messages.VERIFICATION_FAIL,
         statusCode: 500,
       });
+    }
 
     const result = await userTokenService.deleteUserToken(userToken);
     if (!result) {
@@ -222,7 +257,11 @@ async function verifyEmailController(req, res, next) {
       });
     }
 
-    return res.status(200).json({ statusCode: 200 });
+    return res.status(200).json({
+      statusCode: 200,
+      message: "Email verified successfully",
+      success: true,
+    });
   } catch (err) {
     next(err);
   }

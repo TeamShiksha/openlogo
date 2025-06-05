@@ -8,15 +8,20 @@ class UserTokenService {
   }
 
   async createUserToken(userId) {
-    return await this.userTokenRepository.create({
+    const tokenData = {
       user_id: userId,
       token: v4().replaceAll("-", ""),
       type: UserTokenTypes.VERIFY,
-    });
+    };
+    return await this.userTokenRepository.create(tokenData);
   }
 
   async fetchUserToken(token) {
     return await this.userTokenRepository.fetchUserToken(token);
+  }
+
+  async fetchDeletedUserToken(token) {
+    return await this.userTokenRepository.fetchDeletedUserToken(token);
   }
 
   async deleteUserToken(userToken) {
