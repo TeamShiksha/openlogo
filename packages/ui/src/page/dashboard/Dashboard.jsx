@@ -12,22 +12,30 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
+import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
+import { useApi } from "../../hooks/useApi.js";
+import { useToast } from "../../hooks/useToast.js";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedKey, setSelectedKey] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiKeys, setApiKeys] = useState([]);
+  const toast = useToast();
+  const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
+    method: "get",
+    url: "/users/me",
+  });
+
   const apiKeyTableData = useMemo(() => {
-    let data = [];
-    if (userData) {
-      data = userData.keys.map(({ key_description, updated_at }) => [
-        key_description,
-        formatDate(updated_at),
-      ]);
-    }
-    return data;
-  }, [userData]);
+    return apiKeys.map(({ key_description, updated_at }) => [
+      key_description,
+      formatDate(updated_at),
+    ]);
+  }, [apiKeys]);
 
   useEffect(() => {
     fetchUserData();
@@ -36,8 +44,20 @@ function Dashboard() {
   useEffect(() => {
     if (userData) {
       setIsGuest(userData?.role == "GUEST");
+      setApiKeys(userData?.keys || []);
     }
   }, [userData]);
+
+  useEffect(() => {
+    if (userDataResponse?.data?.keys) {
+      setApiKeys(userDataResponse.data.keys);
+    }
+  }, [userDataResponse]);
+
+  const handleDeleteClick = (index) => {
+    setSelectedKey(apiKeys[index]);
+    setShowDeleteModal(true);
+  };
 
   if (loading) {
     return <div>loading..</div>;
@@ -47,6 +67,21 @@ function Dashboard() {
     setIsLoading(true);
     logout();
     setIsLoading(false);
+  };
+
+  const handleKeyGenerated = async () => {
+    const success = await fetchUserKeys();
+    if (!success) {
+      toast.error("Failed to fetch updated API keys");
+    }
+  };
+
+  const handleDeleteModalClose = async () => {
+    setShowDeleteModal(false);
+    const success = await fetchUserKeys();
+    if (!success) {
+      toast.error("Failed to fetch updated API keys");
+    }
   };
 
   return (
@@ -63,7 +98,7 @@ function Dashboard() {
             />
           </CardWrapper>
           <CardWrapper title="Generate New API Key">
-            <ApiKeyForm isGuest={isGuest} />
+            <ApiKeyForm isGuest={isGuest} onKeyGenerated={handleKeyGenerated} />
           </CardWrapper>
           <CardWrapper
             title="Plan"
@@ -79,7 +114,7 @@ function Dashboard() {
           headers={API_KEY_TABLE.headers}
           rows={apiKeyTableData}
           emptyMessage={API_KEY_TABLE.emptyMessage}
-          onDelete={() => {}}
+          onDelete={handleDeleteClick}
           isGuest={isGuest}
         />
       </div>
@@ -116,6 +151,14 @@ function Dashboard() {
           ""
         )}
       </div>
+
+      {showDeleteModal && (
+        <DeleteKeyModal
+          selectedKey={selectedKey}
+          isOpen={showDeleteModal}
+          onClose={handleDeleteModalClose}
+        />
+      )}
     </div>
   );
 }
