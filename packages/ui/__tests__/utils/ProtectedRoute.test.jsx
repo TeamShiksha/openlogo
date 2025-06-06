@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 import { MemoryRouter, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../../src/utils/ProtectedRoute";
+import { ToastProvider } from "../../src/contexts/ToastContext.jsx";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -42,11 +43,13 @@ describe("ProtectedRoute", () => {
     render(
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={userContext}>
-          <MemoryRouter>
-            <ProtectedRoute adminOnly={false}>
-              <p data-testid="protected-content">Protected Content</p>
-            </ProtectedRoute>
-          </MemoryRouter>
+          <ToastProvider>
+            <MemoryRouter>
+              <ProtectedRoute adminOnly={false}>
+                <p data-testid="protected-content">Protected Content</p>
+              </ProtectedRoute>
+            </MemoryRouter>
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -62,11 +65,13 @@ describe("ProtectedRoute", () => {
     render(
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={userContext}>
-          <MemoryRouter>
-            <ProtectedRoute adminOnly={false}>
-              <p data-testid="protected-content">Protected Content</p>
-            </ProtectedRoute>
-          </MemoryRouter>
+          <ToastProvider>
+            <MemoryRouter>
+              <ProtectedRoute adminOnly={false}>
+                <p data-testid="protected-content">Protected Content</p>
+              </ProtectedRoute>
+            </MemoryRouter>
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -79,16 +84,18 @@ describe("ProtectedRoute", () => {
 
   it("should allow admin access to admin routes", () => {
     const authContext = mockAuthContext(true);
-    const userContext = mockUserContext({ userType: "ADMIN" }, false);
+    const userContext = mockUserContext({ role: "ADMIN" }, false);
 
     render(
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={userContext}>
-          <MemoryRouter>
-            <ProtectedRoute adminOnly={true}>
-              <p data-testid="admin-content">Admin Content</p>
-            </ProtectedRoute>
-          </MemoryRouter>
+          <ToastProvider>
+            <MemoryRouter>
+              <ProtectedRoute adminOnly={true}>
+                <p data-testid="admin-content">Admin Content</p>
+              </ProtectedRoute>
+            </MemoryRouter>
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -104,11 +111,13 @@ describe("ProtectedRoute", () => {
     render(
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={userContext}>
-          <MemoryRouter>
-            <ProtectedRoute adminOnly={true}>
-              <p data-testid="admin-content">Admin Content</p>
-            </ProtectedRoute>
-          </MemoryRouter>
+          <ToastProvider>
+            <MemoryRouter>
+              <ProtectedRoute adminOnly={true}>
+                <p data-testid="admin-content">Admin Content</p>
+              </ProtectedRoute>
+            </MemoryRouter>
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
