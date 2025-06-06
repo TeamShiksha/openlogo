@@ -16,12 +16,8 @@ class RequestService {
       userId,
       StatusTypes.PENDING
     );
-    return !!request;
+    return request;
   }
-
-  // async urlAlreadyExists(companyUrl){
-
-  // }
 
   /**
    * checks if a Pending request exists for the given company Url.
@@ -33,7 +29,7 @@ class RequestService {
       companyUrl,
       StatusTypes.PENDING
     );
-    return !!request;
+    return request;
   }
 
   /**
@@ -68,8 +64,8 @@ class RequestService {
    * @param {number} limit - number of requests per page
    * @returns {Promise<Object>} returns a list of requests or null if no requests exists
    */
-  async getPaginatedRequests(page, limit) {
-    return await this.requestRepository.getAll(page, limit);
+  async getPaginatedRequests(page, limit, tab) {
+    return await this.requestRepository.getAll(page, limit, tab);
   }
 
   /**
@@ -99,7 +95,10 @@ class RequestService {
    */
   async respondToRequest(requestId, operatorId, status, comment) {
     const currentRequest = await this.requestRepository.getById(requestId);
-    if (currentRequest.status === "RESOLVED") {
+    if (
+      currentRequest.status === "RESOLVED" ||
+      currentRequest.status === "REJECTED"
+    ) {
       return { alreadyProcessed: true };
     }
     const updatedData = {
@@ -113,14 +112,7 @@ class RequestService {
       updatedData
     );
     if (result.modifiedCount === 0) throw new Error("MongoDB operation failed");
-    const updatedRequest = await this.requestRepository.getById(requestId);
-    return {
-      companyUrl: updatedRequest.companyUrl,
-      status: updatedRequest.status,
-      comment: updatedRequest.comment,
-      openedAt: updatedRequest.openedAt,
-      closedAt: updatedRequest.closedAt,
-    };
+    return result;
   }
 }
 

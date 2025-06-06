@@ -34,6 +34,8 @@ class ContactUsService {
       assignedTo: null,
       activityStatus: false,
       reply: null,
+      operator: null,
+      comment: null,
     };
     return await this.contactUsRepository.create(newForm);
   }
@@ -45,17 +47,20 @@ class ContactUsService {
    * @returns {Object} - An object containing the updated form details or a flag if already replied.
    * @throws {Error} - Throws an error if the form is not found or the database update operation fails.
    */
-  async updateForm(formId, reply, operatorId) {
+  async updateForm(formId, reply, status, operatorId) {
     const currentForm = await this.contactUsRepository.getById(formId);
-    console.log("currentForm", currentForm);
     if (!currentForm) throw new Error("Form not found");
-    if (currentForm.status === "RESOLVED") {
+    if (
+      currentForm.status === "RESOLVED" ||
+      currentForm.status === "REJECTED"
+    ) {
       return { alreadyReplied: true };
     }
 
     const updateData = {
       comment: reply,
-      status: "RESOLVED",
+      status,
+      operator: operatorId,
       closedAt: new Date(),
     };
 
@@ -65,13 +70,7 @@ class ContactUsService {
     );
     if (result.modifiedCount === 0) throw new Error("MongoDB operation failed");
 
-    return {
-      reply,
-      activityStatus: true,
-      assignedTo: operatorId,
-      email: currentForm.email,
-      message: currentForm.message,
-    };
+    return result;
   }
   /**
    * Retrieves a form by its ID.
@@ -89,6 +88,16 @@ class ContactUsService {
    */
   async getFormsCount() {
     return await this.contactUsRepository.getFormsCount();
+  }
+
+  /**
+   * fetches list of requests
+   * @param {number} page - number of pages
+   * @param {number} limit - number of requests per page
+   * @returns {Promise<Object>} returns a list of requests or null if no requests exists
+   */
+  async getPaginatedRequests(page, limit, tab) {
+    return await this.contactUsRepository.getAll(page, limit, tab);
   }
 }
 
