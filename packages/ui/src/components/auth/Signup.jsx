@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
-import { SIGNUP, BUTTON_TEXT } from "../../utils/Constants";
+import { SIGNUP, BUTTON_TEXT, MESSAGES } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
@@ -20,6 +20,10 @@ function SignUp({ toggleForm }) {
     method: "post",
     data: formValues,
   });
+
+  useEffect(() => {
+    if (errorMsg) toast.error(errorMsg);
+  }, [errorMsg, toast]);
 
   useEffect(() => {
     if (!focusedField) {
@@ -60,7 +64,7 @@ function SignUp({ toggleForm }) {
       setFormValues(SIGNUP.initialValues);
       setFocusedField(null);
       toggleForm();
-      toast.success("Sign up successfully");
+      toast.success(MESSAGES.SIGN_UP_SUCCESS);
     }
     setIsLoading(false);
   };
