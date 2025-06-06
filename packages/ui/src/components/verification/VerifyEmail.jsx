@@ -52,51 +52,47 @@ const VerifyEmail = () => {
     performVerification();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getTitle = () => {
-    switch (verificationState) {
-      case "loading":
-        return VERIFICATION.title;
-      case "success":
-        return "Verified";
-      case "already-verified":
-        return "Already Verified";
-      case "error":
-        return "Error";
-      default:
-        return "Processing...";
-    }
+  const stateConfig = {
+    loading: {
+      title: VERIFICATION.title,
+      message: VERIFICATION.message,
+      showLoader: true,
+    },
+    success: {
+      title: "Verified",
+      message:
+        "Your email has been verified successfully. Redirecting to homepage...",
+      showLoader: false,
+    },
+    "already-verified": {
+      title: "Already Verified",
+      message:
+        "This email has already been verified. You can sign in to your account.",
+      showLoader: false,
+    },
+    error: {
+      title: "Error",
+      message:
+        errorMsg ||
+        "Invalid verification link. Please try again or request a new verification email.",
+      showLoader: false,
+    },
   };
 
-  const getMessage = () => {
-    switch (verificationState) {
-      case "loading":
-        return VERIFICATION.message;
-      case "success":
-        return "Your email has been verified successfully. Redirecting to homepage...";
-      case "already-verified":
-        return "This email has already been verified. You can sign in to your account.";
-      case "error":
-        return (
-          errorMsg ||
-          "Invalid verification link. Please try again or request a new verification email."
-        );
-      default:
-        return "Processing your verification...";
-    }
-  };
+  const currentState = stateConfig[verificationState] || stateConfig.loading;
 
   return (
     <div className="verification-page-container">
       <div className="verification-card">
-        {verificationState === "loading" && (
+        {currentState.showLoader && (
           <div className="loading-dots">
             <span></span>
             <span></span>
             <span></span>
           </div>
         )}
-        <h2 className="verify-title">{getTitle()}</h2>
-        <p>{getMessage()}</p>
+        <h2 className="verify-title">{currentState.title}</h2>
+        <p>{currentState.message}</p>
       </div>
     </div>
   );
