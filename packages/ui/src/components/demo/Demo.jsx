@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SVGS, BUTTON_TEXT } from "../../utils/Constants";
+import { SVGS, BUTTON_TEXT } from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";

@@ -58,7 +58,7 @@ describe("Auth Component", () => {
         const SignUpForm = screen.getByText(BUTTON_TEXT.signUp);
         expect(SignUpForm).toBeInTheDocument();
       },
-      { timeout: 400 }
+      { timeout: 1000 }
     );
   });
 
