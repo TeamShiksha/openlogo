@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UserProvider } from "../../src/contexts/UserContext";
-import { UserContext } from "../../src/contexts/Contexts";
+import { ToastContext, UserContext } from "../../src/contexts/Contexts";
 import { instance } from "../../src/api/api_instance";
 import { useContext } from "react";
 
@@ -10,6 +10,16 @@ vi.mock("../../src/api/api_instance", () => ({
     get: vi.fn(),
   },
 }));
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 const TestComponent = () => {
   const { userData, loading, error, fetchUserData } = useContext(UserContext);
@@ -35,9 +45,11 @@ beforeEach(() => {
 describe("UserProvider", () => {
   it("should have default values on initialization", () => {
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </ToastContext.Provider>
     );
 
     const userDataText = screen.getByTestId("user-data").textContent;
@@ -57,9 +69,11 @@ describe("UserProvider", () => {
     });
 
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </ToastContext.Provider>
     );
 
     screen.getByTestId("fetch-btn").click();
@@ -81,9 +95,11 @@ describe("UserProvider", () => {
     instance.get.mockRejectedValueOnce(new Error("Failed to fetch"));
 
     render(
-      <UserProvider>
-        <TestComponent />
-      </UserProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <UserProvider>
+          <TestComponent />
+        </UserProvider>
+      </ToastContext.Provider>
     );
 
     screen.getByTestId("fetch-btn").click();

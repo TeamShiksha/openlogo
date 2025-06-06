@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Toast.module.css";
 import PropTypes from "prop-types";
 import { BUTTON_TEXT } from "../../utils/Constants.js";
@@ -9,7 +9,19 @@ const Toast = ({ message, type = "info", duration = 5000, onClose, id }) => {
   const progressIntervalRef = useRef(null);
   const timerRef = useRef(null);
 
-  const startTimer = () => {
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    clearInterval(progressIntervalRef.current);
+    clearTimeout(timerRef.current);
+
+    setTimeout(() => {
+      if (onClose) {
+        onClose(id);
+      }
+    }, 300);
+  }, [onClose, id]);
+
+  const startTimer = useCallback(() => {
     const intervalTime = 10;
     const steps = duration / intervalTime;
     const decrementPerStep = 100 / steps;
@@ -23,7 +35,7 @@ const Toast = ({ message, type = "info", duration = 5000, onClose, id }) => {
     timerRef.current = setTimeout(() => {
       handleClose();
     }, duration);
-  };
+  }, [duration, handleClose]);
 
   useEffect(() => {
     startTimer();
@@ -32,7 +44,7 @@ const Toast = ({ message, type = "info", duration = 5000, onClose, id }) => {
       clearInterval(progressIntervalRef.current);
       clearTimeout(timerRef.current);
     };
-  }, [duration]);
+  }, [duration, startTimer]);
 
   const handleMouseEnter = () => {
     clearInterval(progressIntervalRef.current);
@@ -41,18 +53,6 @@ const Toast = ({ message, type = "info", duration = 5000, onClose, id }) => {
 
   const handleMouseLeave = () => {
     startTimer();
-  };
-
-  const handleClose = () => {
-    setIsExiting(true);
-    clearInterval(progressIntervalRef.current);
-    clearTimeout(timerRef.current);
-
-    setTimeout(() => {
-      if (onClose) {
-        onClose(id);
-      }
-    }, 300);
   };
 
   const toastClassName = `${styles.toast} ${styles[type]} ${isExiting ? styles.exiting : ""}`;

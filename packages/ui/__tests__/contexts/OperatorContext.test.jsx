@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OperatorProvider } from "../../src/contexts/OperatorContext";
-import { OperatorContext } from "../../src/contexts/Contexts";
+import { OperatorContext, ToastContext } from "../../src/contexts/Contexts";
 import { instance } from "../../src/api/api_instance";
 import { useContext } from "react";
 
@@ -10,6 +10,16 @@ vi.mock("../../src/api/api_instance", () => ({
     get: vi.fn(),
   },
 }));
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 const TestComponent = () => {
   const { queries, loading, error, fetchQueries } = useContext(OperatorContext);
@@ -35,9 +45,11 @@ beforeEach(() => {
 describe("OperatorProvider", () => {
   it("should have default values on initialization", () => {
     render(
-      <OperatorProvider>
-        <TestComponent />
-      </OperatorProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <OperatorProvider>
+          <TestComponent />
+        </OperatorProvider>
+      </ToastContext.Provider>
     );
 
     const queriesText = screen.getByTestId("queries").textContent;
@@ -58,9 +70,11 @@ describe("OperatorProvider", () => {
     instance.get.mockResolvedValueOnce({ data: mockQueries });
 
     render(
-      <OperatorProvider>
-        <TestComponent />
-      </OperatorProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <OperatorProvider>
+          <TestComponent />
+        </OperatorProvider>
+      </ToastContext.Provider>
     );
 
     screen.getByTestId("fetch-btn").click();
@@ -89,9 +103,11 @@ describe("OperatorProvider", () => {
     instance.get.mockRejectedValueOnce(new Error("API Error"));
 
     render(
-      <OperatorProvider>
-        <TestComponent />
-      </OperatorProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <OperatorProvider>
+          <TestComponent />
+        </OperatorProvider>
+      </ToastContext.Provider>
     );
 
     screen.getByTestId("fetch-btn").click();
