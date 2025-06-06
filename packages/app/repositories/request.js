@@ -16,7 +16,11 @@ class RequestRepository extends BaseRepository {
    * @returns {Promise<number>} - total number of requests.
    */
   async getRequestsCount() {
-    return await Request.countDocuments();
+    return await this.model.countDocuments();
+  }
+
+  async updateRequestStatus(id, updateData) {
+    return await this.model.updateOne({ _id: id }, updateData);
   }
 
   /**
@@ -25,7 +29,7 @@ class RequestRepository extends BaseRepository {
    *
    */
   async getHitsCount() {
-    return await Request.countDocuments({ status: "COMPLETED" });
+    return await this.model.countDocuments({ status: "COMPLETED" });
   }
 }
 
