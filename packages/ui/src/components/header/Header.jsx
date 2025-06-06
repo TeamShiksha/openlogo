@@ -12,8 +12,12 @@ import {
   LOGGEDIN_ITEMS,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
-import { handleNavigation } from "../../utils/Helpers";
+import {
+  handleNavigation,
+  observeActiveSectionOnScroll,
+} from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
+import { extractSectionIds } from "../../utils/Helpers";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
@@ -26,11 +30,7 @@ const Header = ({ openAuthModal }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
-  const sectionIds = useMemo(() => {
-    return NAVBAR_ITEMS.filter((item) => item.type === "section").map(
-      (item) => item.url.split("#")[1] || ""
-    );
-  }, [NAVBAR_ITEMS]);
+  const sectionIds = useMemo(() => extractSectionIds(NAVBAR_ITEMS));
 
   useEffect(() => {
     const handleResize = () => {
@@ -44,33 +44,8 @@ const Header = ({ openAuthModal }) => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
-      let found = false;
-
-      for (let id of sectionIds) {
-        const section = document.getElementById(id);
-        if (section) {
-          const { offsetTop, offsetHeight } = section;
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(id);
-            found = true;
-            break;
-          }
-        }
-      }
-      if (!found && window.scrollY === 0) {
-        setActiveSection("");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
+    const cleanup = observeActiveSectionOnScroll(sectionIds, setActiveSection);
+    return cleanup;
   }, [sectionIds]);
 
   const toggleMenu = () => {

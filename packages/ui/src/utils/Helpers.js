@@ -88,6 +88,42 @@ export const formatDate = (dateString) => {
   });
 };
 
+export const extractSectionIds = (navItems) => {
+  return navItems
+    .filter((item) => item.type === "section")
+    .map((item) => item.url.split("#")[1] || "");
+};
+
+export const observeActiveSectionOnScroll = (sectionIds, setActiveSection) => {
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY + window.innerHeight / 3;
+    let found = false;
+
+    for (let id of sectionIds) {
+      const section = document.getElementById(id);
+      if (section) {
+        const { offsetTop, offsetHeight } = section;
+        if (
+          scrollPosition >= offsetTop &&
+          scrollPosition < offsetTop + offsetHeight
+        ) {
+          setActiveSection(id);
+          found = true;
+          break;
+        }
+      }
+    }
+
+    if (!found && window.scrollY === 0) {
+      setActiveSection("");
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
+
+  return () => window.removeEventListener("scroll", handleScroll);
+};
 export const handleNavigation = (event, url, navigate, setActiveSection) => {
   event.preventDefault();
 
