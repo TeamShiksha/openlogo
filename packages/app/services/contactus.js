@@ -56,7 +56,7 @@ class ContactUsService {
     const updateData = {
       comment: reply,
       status: "RESOLVED",
-      // assignedTo: operatorId
+      closedAt: new Date(),
     };
 
     const result = await this.contactUsRepository.updateFormStatus(

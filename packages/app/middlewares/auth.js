@@ -26,7 +26,9 @@ module.exports = (options = {}) => {
         });
       if (
         (options.adminOnly && data.role !== UserType.ADMIN) ||
-        (options.operatorOnly && data.role !== UserType.OPERATOR)
+        (options.operatorOnly && data.role !== UserType.OPERATOR) ||
+        (options.customerOnly && data.role !== UserType.CUSTOMER) ||
+        (options.roles && !options.roles.includes(data.role))
       )
         return res.status(401).json({
           error: STATUS_CODES[401],

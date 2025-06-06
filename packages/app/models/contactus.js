@@ -37,6 +37,14 @@ const contactUsSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  openedAt: {
+    type: Date,
+    default: Date.now, // automatically set when created
+  },
+  closedAt: {
+    type: Date,
+    default: null, // will be set once status is RESOLVED
+  },
   updated_at: {
     type: Date,
     required: true,

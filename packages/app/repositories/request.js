@@ -12,24 +12,47 @@ class RequestRepository extends BaseRepository {
   }
 
   /**
-   * get all requests from db.
-   * @returns {Promise<number>} - total number of requests.
+   * finds a request for the given userId and status
+   * @param {string} userId - ID of the user
+   * @param {string} status - status to filter
+   * @returns {Promise<Object>} - returns the matching request document or null if doesn't exist
+   */
+  async findByUserAndStatus(userId, status) {
+    return await this.model.findOne({ user_id: userId, status });
+  }
+
+  /**
+   * finds a request for the given url and status
+   * @param {string} companyUrl - url of the company
+   * @param {string} status - status to filter
+   * @returns {Promise<Object>} - returns the matching request document or null if doesn't exist
+   */
+  async findByCompanyUrlAndStatus(companyUrl, status) {
+    return await this.model.findOne({ companyUrl, status });
+  }
+
+  /**
+   * @returns {Promise<number>} - returns the total number of requests
    */
   async getRequestsCount() {
     return await this.model.countDocuments();
   }
 
+  /**
+   * updates status and other fields of specific request
+   * @param {string} id - ID of the request
+   * @param {Object} updateData - updated Data of the request
+   * @returns {Promise<Object>} - returns the result
+   */
   async updateRequestStatus(id, updateData) {
     return await this.model.updateOne({ _id: id }, updateData);
   }
 
   /**
-   * get all hits for all requests from db.
-   * @returns {Promise<number>} - total number of hits.
-   *
+   * @returns {Promise<number>} - returns the total number of requests with status 'RESOLVED'
    */
   async getHitsCount() {
-    return await this.model.countDocuments({ status: "COMPLETED" });
+    return await this.model.countDocuments({ status: "RESOLVED" });
   }
 }
 
