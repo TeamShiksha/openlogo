@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
@@ -10,6 +10,12 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
+
+  const sectionIds = useMemo(() => {
+    return NAVBAR_ITEMS.filter((item) => item.type === "section").map(
+      (item) => item.url.split("#")[1] || ""
+    );
+  }, [NAVBAR_ITEMS]);
 
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("");
@@ -27,6 +33,36 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      let found = false;
+
+      for (let id of sectionIds) {
+        const section = document.getElementById(id);
+        if (section) {
+          const { offsetTop, offsetHeight } = section;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(id);
+            found = true;
+            break;
+          }
+        }
+      }
+      if (!found && window.scrollY === 0) {
+        setActiveSection("");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sectionIds]);
 
   if (!isOpen) return null;
 
