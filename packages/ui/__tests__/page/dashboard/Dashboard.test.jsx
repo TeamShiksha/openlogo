@@ -14,7 +14,7 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
-import { BrowserRouter } from "react-router-dom";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 
 const mockUserContext = (userData, loading) => ({
   userData,
@@ -33,7 +33,9 @@ describe("Dashboard", () => {
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
-          <Dashboard />
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
         </UserContext.Provider>
       </AuthContext.Provider>
     );
@@ -45,13 +47,13 @@ describe("Dashboard", () => {
   it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuthContext(true)}>
-          <UserContext.Provider value={userContext}>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
             <Dashboard />
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     await waitFor(async () => {
@@ -83,13 +85,13 @@ describe("Dashboard", () => {
   it("should render dashboard with default values when user data is null and loading is false", async () => {
     const userContext = mockUserContext(null, false);
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuthContext(true)}>
-          <UserContext.Provider value={userContext}>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
             <Dashboard />
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     await waitFor(() => {
@@ -103,13 +105,13 @@ describe("Dashboard", () => {
   it("should render logout button if user is authenticated and user data exists", () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuthContext(true)}>
-          <UserContext.Provider value={userContext}>
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
             <Dashboard />
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
@@ -119,13 +121,13 @@ describe("Dashboard", () => {
   it("should not render logout button if user is not authenticated or user data is null", () => {
     const userContext = mockUserContext(null, false);
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuthContext(false)}>
-          <UserContext.Provider value={userContext}>
+      <AuthContext.Provider value={mockAuthContext(false)}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
             <Dashboard />
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     const logoutButton = screen.queryByText(BUTTON_TEXT.signOut);
@@ -138,13 +140,13 @@ describe("Dashboard", () => {
     const authContext = mockAuthContext(true, logoutMock);
 
     render(
-      <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
+      <AuthContext.Provider value={authContext}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
             <Dashboard />
-          </UserContext.Provider>
-        </AuthContext.Provider>
-      </BrowserRouter>
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);

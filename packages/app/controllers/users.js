@@ -117,6 +117,7 @@ async function deleteUserAccountController(req, res, next) {
     const userService = new UserService();
     const { userId } = req.userData;
     await userService.deleteUserAccount(userId);
+    res.clearCookie("jwt");
     res.status(200).json({
       status: 200,
     });
@@ -184,7 +185,7 @@ async function generateKeyController(req, res, next) {
 async function destroyKeyController(req, res, next) {
   try {
     const userService = new UserService();
-    const { error, value } = destroyKeyPayloadSchema.validate(req.query);
+    const { error, value } = destroyKeyPayloadSchema.validate(req.params);
     if (error) {
       return res.status(422).json({
         message: error.message,

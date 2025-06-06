@@ -39,6 +39,13 @@
   padding: 32px;
 }
 
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
