@@ -18,7 +18,6 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
-import { ToastProvider } from "../../../src/contexts/Contexts";
 
 const mockToastContext = {
   success: vi.fn(),
@@ -171,16 +170,16 @@ describe("Dashboard", () => {
   it("should allow ADMIN to switch between ADMIN, OPERATOR, and USER dashboards", async () => {
     const adminUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "ADMIN" }, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={adminUserContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={adminUserContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
-    const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
+    const dropdown = await screen.findByTestId("testid-dropdown");
     const options = within(dropdown).getAllByRole("option");
     expect(options.map(opt => opt.value)).toEqual(["ADMIN", "OPERATOR", "USER"]);
     expect(dropdown.value).toBe("USER");
@@ -203,16 +202,16 @@ describe("Dashboard", () => {
   it("should allow OPERATOR to switch between OPERATOR and USER dashboards", async () => {
     const operatorUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "OPERATOR" }, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={operatorUserContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={operatorUserContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
-    const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
+    const dropdown = await screen.findByTestId("testid-dropdown");
     const options = within(dropdown).getAllByRole("option");
     expect(options.map(opt => opt.value)).toEqual(["OPERATOR", "USER"]);
     expect(dropdown.value).toBe("USER");
@@ -227,17 +226,17 @@ describe("Dashboard", () => {
   it("should not render dashboard dropdown if user role is USER", () => {
     const userContext = mockUserContext({ ...MOCK_USER_DATA, role: "USER" }, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
-    const dashboarDropdown = screen.getByTestId("testid-dashboard-dropdown");
-    expect(dashboarDropdown).not.toBeInTheDocument();
+    const dropdown = screen.queryByTestId("testid-dropdown");
+    expect(dropdown).not.toBeInTheDocument();
     const dashboard = screen.getByTestId("testid-dashboard");
     expect(dashboard).toBeInTheDocument();
   });

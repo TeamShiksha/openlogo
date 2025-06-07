@@ -12,7 +12,7 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
-import DashboardDropdown from "../../components/dashboarddropdown/DashboardDropdown.jsx";
+import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 import AdminDashboard from "../admin/Admin.jsx";
 import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
@@ -87,6 +87,13 @@ function Dashboard() {
     }
   };
 
+  const dashboardDropdownOptions = [];
+  if (userData?.role === "ADMIN") {
+    dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
+  } else if (userData?.role === "OPERATOR") {
+    dashboardDropdownOptions.push("OPERATOR", "USER");
+  }
+
   return (
     <div
       className={`container ${styles["dashboard-container"]}`}
@@ -94,7 +101,7 @@ function Dashboard() {
     >
       <div>
         {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
-          <DashboardDropdown role = {userData.role} setSelectedDashboard={setSelectedDashboard} selectedDashboard={selectedDashboard}/>
+          <Dropdown options={dashboardDropdownOptions} selectedOption={selectedDashboard} setSelectedOption={setSelectedDashboard}/>
         )}
       </div>
 
