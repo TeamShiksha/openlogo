@@ -154,4 +154,81 @@ describe("Dashboard", () => {
 
     expect(logoutMock).toHaveBeenCalled();
   });
+
+  it("should allow ADMIN to switch between ADMIN, OPERATOR, and USER dashboards", async () => {
+    const adminUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "ADMIN" }, false);
+
+    render(
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={adminUserContext}>
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
+
+    const options = within(dropdown).getAllByRole("option");
+    expect(options.map(opt => opt.value)).toEqual(["ADMIN", "OPERATOR", "USER"]);
+
+    expect(dropdown.value).toBe("USER");
+
+    fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
+    await waitFor(() => {
+      expect(dropdown.value).toBe("OPERATOR");
+      expect(screen.getByTestId("testid-operator-dashboard")).toBeInTheDocument();
+    });
+
+    fireEvent.change(dropdown, { target: { value: "ADMIN" } });
+    await waitFor(() => {
+      expect(dropdown.value).toBe("ADMIN");
+      expect(screen.getByTestId("testid-admin-dashboard")).toBeInTheDocument();
+    });
+  });
+
+  it("should allow OPERATOR to switch between OPERATOR and USER dashboards", async () => {
+    const operatorUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "OPERATOR" }, false);
+
+    render(
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={operatorUserContext}>
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
+
+    const options = within(dropdown).getAllByRole("option");
+    expect(options.map(opt => opt.value)).toEqual(["OPERATOR", "USER"]);
+
+    expect(dropdown.value).toBe("USER");
+
+    fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
+    await waitFor(() => {
+      expect(dropdown.value).toBe("OPERATOR");
+      expect(screen.getByTestId("testid-operator-dashboard")).toBeInTheDocument();
+    });
+  });
+
+  it("should not render dashboard dropdown if user role is USER", () => {
+    const userContext = mockUserContext({ ...MOCK_USER_DATA, role: "USER" }, false);
+
+    render(
+      <AuthContext.Provider value={mockAuthContext(true)}>
+        <UserContext.Provider value={userContext}>
+          <ToastProvider>
+            <Dashboard />
+          </ToastProvider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    expect(screen.queryByTestId("testid-dashboard-dropdown")).not.toBeInTheDocument();
+    expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+  });
 });

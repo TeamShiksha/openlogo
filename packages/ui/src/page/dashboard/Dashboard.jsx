@@ -12,7 +12,9 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
-import DashboardDropdown from "../../components/dashboarddropdown/dashboardDropDown.jsx";
+import DashboardDropdown from "../../components/dashboarddropdown/DashboardDropdown.jsx";
+import AdminDashboard from "../admin/Admin.jsx";
+import OperatorDashboard from "../../components/operatordashboard/DummyOperatorDashboard.jsx";
 import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
@@ -20,6 +22,7 @@ import { useToast } from "../../hooks/useToast.js";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const [selectedDashboard, setSelectedDashboard]  = useState("USER")
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
@@ -87,16 +90,23 @@ function Dashboard() {
 
   return (
     <div
-      className={styles["dashboard-container"]}
+      className={`container ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
       <div>
-        {userData?.role !== "CUSTOMER" || userData?.role !== "GUEST" ? (
-          <DashboardDropdown role={userData?.role} />
-        ) : (
-          <></>
+        {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
+          <DashboardDropdown role = {userData.role} setSelectedDashboard={setSelectedDashboard} selectedDashboard={selectedDashboard}/>
         )}
       </div>
+
+        {selectedDashboard === "ADMIN" ? (
+      <AdminDashboard/>
+    ) : selectedDashboard === "OPERATOR" ? (
+      <OperatorDashboard/>
+    ) : (
+      // Default dashboard
+      <>
+
       <div className={styles["dashboard-content-container"]}>
         <section className={styles["dashboard-content-section"]}>
           <CardWrapper title="Usage">
@@ -159,6 +169,8 @@ function Dashboard() {
           ""
         )}
       </div>
+      </>
+    )}
 
       {showDeleteModal && (
         <DeleteKeyModal

@@ -4,7 +4,8 @@ import styles from "./Admin.module.css";
 
 function AdminDashboard() {
   return (
-    <div className={`container ${styles["admin-page-container"]}`}>
+      //no need to add 'container class' along with styles in classname as it has been included inside parent div in Dashboard.jsx
+    <div className={styles["admin-page-container"]} data-testid="testid-admin-dashboard"> 
       <Analytics />
       <Catalog />
     </div>

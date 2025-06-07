@@ -1,32 +1,12 @@
-import PropTypes from "prop-types";
 import styles from "./DashboardDropdown.module.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-function DashboardDropdown({ role }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname.substring(1);
+function DashboardDropdown({role, setSelectedDashboard, selectedDashboard}) {
 
-  const [currentDashboard, setCurrentDashboard] = useState(currentPath);
-  useEffect(() => {
-    setCurrentDashboard(
-      currentDashboard === "dashboard" ? "USER" : currentDashboard
-    );
-  }, [currentDashboard]);
-
-  const navigateDashboard = (route) => {
-    if (route == "USER") {
-      navigate("/dashboard");
-    } else {
-      navigate(`/${route.toLowerCase()}`);
-    }
-  };
-
-  const options = [];
-  if (role == "ADMIN") {
+    const options = [];
+  if (role === "ADMIN") {
     options.push("ADMIN", "OPERATOR", "USER");
-  } else if (role == "OPERATOR") {
+  } else if (role === "OPERATOR") {
     options.push("OPERATOR", "USER");
   }
 
@@ -36,11 +16,12 @@ function DashboardDropdown({ role }) {
         name="dashboard"
         id="dashboard"
         className={styles["dropdown"]}
-        value={currentDashboard}
-        onChange={(e) => navigateDashboard(e.target.value)}
+        value={selectedDashboard}
+        onChange={(e) => setSelectedDashboard(e.target.value)}
+        data-testid="testid-dashboard-dropdown"
       >
         {options.map((option) => (
-          <option key={option} value={option}>
+          <option key={option} className={styles["option"]} value={option}>
             {option.toUpperCase()}
           </option>
         ))}
@@ -51,5 +32,8 @@ function DashboardDropdown({ role }) {
 
 DashboardDropdown.propTypes = {
   role: PropTypes.string.isRequired,
+  selectedDashboard: PropTypes.string.isRequired,
+  setSelectedDashboard: PropTypes.func.isRequired,
 };
+
 export default DashboardDropdown;
