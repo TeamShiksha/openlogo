@@ -6,7 +6,11 @@ import {
   within,
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { UserContext, AuthContext } from "../../../src/contexts/Contexts";
+import {
+  UserContext,
+  AuthContext,
+  ToastContext,
+} from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
 import {
   API_KEY_TABLE,
@@ -14,7 +18,16 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
-import { ToastProvider } from "../../../src/contexts/ToastContext";
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 const mockUserContext = (userData, loading) => ({
   userData,
@@ -31,13 +44,13 @@ describe("Dashboard", () => {
   it("should render loading text when loading is true", () => {
     const userContext = mockUserContext(null, true);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     expect(screen.getByText(/loading../i)).toBeInTheDocument();
@@ -47,13 +60,13 @@ describe("Dashboard", () => {
   it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     await waitFor(async () => {
@@ -85,13 +98,13 @@ describe("Dashboard", () => {
   it("should render dashboard with default values when user data is null and loading is false", async () => {
     const userContext = mockUserContext(null, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     await waitFor(() => {
@@ -105,13 +118,13 @@ describe("Dashboard", () => {
   it("should render logout button if user is authenticated and user data exists", () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(true)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
@@ -121,13 +134,13 @@ describe("Dashboard", () => {
   it("should not render logout button if user is not authenticated or user data is null", () => {
     const userContext = mockUserContext(null, false);
     render(
-      <AuthContext.Provider value={mockAuthContext(false)}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(false)}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     const logoutButton = screen.queryByText(BUTTON_TEXT.signOut);
@@ -140,13 +153,13 @@ describe("Dashboard", () => {
     const authContext = mockAuthContext(true, logoutMock);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <UserContext.Provider value={userContext}>
-          <ToastProvider>
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={authContext}>
+          <UserContext.Provider value={userContext}>
             <Dashboard />
-          </ToastProvider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
     );
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);

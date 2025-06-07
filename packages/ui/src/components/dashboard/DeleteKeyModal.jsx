@@ -21,7 +21,7 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
     if (errorMsg) {
       toast.error(errorMsg);
     }
-  }, [errorMsg]);
+  }, [errorMsg, toast]);
 
   const handleDeleteConfirm = async () => {
     if (!selectedKey?._id) {

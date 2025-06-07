@@ -7,13 +7,11 @@ function AnalyticsCard({ title, api }) {
   const [change, setChange] = useState(255);
 
   async function fetchAndUpdateValue() {
-    // get value from API
-    setValue(1454); // Example value
+    setValue(api);
   }
 
   async function fetchAndUpdatePercentageChange(api) {
-    // get value from API
-    setChange(api); // Use the api value directly for change
+    setChange(api);
   }
 
   useEffect(() => {

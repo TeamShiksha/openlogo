@@ -3,18 +3,21 @@ import Modal from "../../common/modal/Modal";
 import PropTypes from "prop-types";
 import styles from "./DeleteAccountConfirmationModal.module.css";
 import CustomInput from "../../common/input/CustomInput";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useApi } from "../../../hooks/useApi";
-import { UserContext } from "../../../contexts/Contexts";
-import { DELETE_ACCOUNT_CONFIRMATION_MODAL } from "../../../utils/Constants";
+import { AuthContext, UserContext } from "../../../contexts/Contexts";
+import {
+  DELETE_ACCOUNT_CONFIRMATION_MODAL,
+  MESSAGES,
+} from "../../../utils/Constants";
 import { useToast } from "../../../hooks/useToast.js";
 
 function DeleteAccountConfirmationModal({ isOpen, onClose }) {
   const toast = useToast();
-
   const [email, setEmail] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const { userData } = useContext(UserContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const { makeRequest, errorMsg } = useApi({
     method: "DELETE",
@@ -23,6 +26,10 @@ function DeleteAccountConfirmationModal({ isOpen, onClose }) {
       userData,
     },
   });
+
+  useEffect(() => {
+    if (errorMsg) toast.error(errorMsg);
+  }, [errorMsg, toast]);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -35,10 +42,8 @@ function DeleteAccountConfirmationModal({ isOpen, onClose }) {
       if (success) {
         setEmail("");
         onClose();
-        toast.success("Account deleted successfully");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 500);
+        toast.success(MESSAGES.ACCOUNT_DELETE_SUCCESS);
+        setIsAuthenticated(false);
       }
     } finally {
       setIsDeleting(false);

@@ -720,3 +720,12 @@ export const API_KEY = {
     },
   },
 };
+
+export const MESSAGES = {
+  ACCOUNT_DELETE_SUCCESS: "Account deleted successfully",
+  SIGN_IN_SUCCESS: "Sign in successfully",
+  GUEST_SIGN_IN_SUCCESS: "Signed in as guest successfully",
+  SIGN_OUT_SUCCESS: "Sign out successfully",
+  SIGN_UP_SUCCESS: "Sign up successfully",
+  USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+};
