@@ -9,11 +9,11 @@ const { logoLimiter, baseLimiter } = require("../middlewares/rateLimiter");
 
 const privateRouteCORS = {
   origin: (origin, callback) => {
-    if (origin === process.env.CLIENT_PROXY_URL || !origin) {
+    if (origin === process.env.CLIENT_URL || !origin) {
       callback(null, true);
     } else {
       console.error(
-        `origin=${origin} and CLIENT_PROXY_URL=${process.env.CLIENT_PROXY_URL} do not match..`
+        `origin=${origin} and CLIENT_URL=${process.env.CLIENT_URL} do not match..`
       );
       console.error(
         "What is cors ? Learn here: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
