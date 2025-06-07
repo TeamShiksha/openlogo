@@ -11,7 +11,6 @@ function ProtectedRoute({ adminOnly = false, children }) {
   useEffect(() => {
     if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
       setHasFetched(true);
-
       fetchUserData();
     }
   }, [
