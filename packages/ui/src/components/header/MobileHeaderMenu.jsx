@@ -6,9 +6,10 @@ import styles from "./MobileHeaderMenu.module.css";
 import {
   handleNavigation,
   observeActiveSectionOnScroll,
+  extractSectionIds,
 } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
-import { extractSectionIds } from "../../utils/Helpers";
+
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
