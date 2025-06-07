@@ -14,7 +14,6 @@ import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
 import DashboardDropdown from "../../components/dashboarddropdown/DashboardDropdown.jsx";
 import AdminDashboard from "../admin/Admin.jsx";
-import OperatorDashboard from "../../components/operatordashboard/DummyOperatorDashboard.jsx";
 import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
@@ -102,9 +101,8 @@ function Dashboard() {
         {selectedDashboard === "ADMIN" ? (
       <AdminDashboard/>
     ) : selectedDashboard === "OPERATOR" ? (
-      <OperatorDashboard/>
+      <div data-testid="testid-operator-dashboard">Operator Dashboard to be added here</div>
     ) : (
-      // Default dashboard
       <>
 
       <div className={styles["dashboard-content-container"]}>

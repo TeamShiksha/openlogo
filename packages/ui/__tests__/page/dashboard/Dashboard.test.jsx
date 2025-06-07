@@ -18,6 +18,7 @@ import {
   DASHBOARD_CARDS_TITLE,
   MOCK_USER_DATA,
 } from "../../../src/utils/Constants";
+import { ToastProvider } from "../../../src/contexts/Contexts";
 
 const mockToastContext = {
   success: vi.fn(),
@@ -53,7 +54,8 @@ describe("Dashboard", () => {
       </ToastContext.Provider>
     );
 
-    expect(screen.getByText(/loading../i)).toBeInTheDocument();
+    const loading = screen.getByText(/loading../i);
+    expect(loading).toBeInTheDocument();
     expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 
@@ -151,7 +153,6 @@ describe("Dashboard", () => {
     const logoutMock = vi.fn();
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     const authContext = mockAuthContext(true, logoutMock);
-
     render(
       <ToastContext.Provider value={mockToastContext}>
         <AuthContext.Provider value={authContext}>
@@ -164,13 +165,11 @@ describe("Dashboard", () => {
 
     const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
     fireEvent.click(logoutButton);
-
     expect(logoutMock).toHaveBeenCalled();
   });
 
   it("should allow ADMIN to switch between ADMIN, OPERATOR, and USER dashboards", async () => {
     const adminUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "ADMIN" }, false);
-
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={adminUserContext}>
@@ -182,28 +181,27 @@ describe("Dashboard", () => {
     );
 
     const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
-
     const options = within(dropdown).getAllByRole("option");
     expect(options.map(opt => opt.value)).toEqual(["ADMIN", "OPERATOR", "USER"]);
-
     expect(dropdown.value).toBe("USER");
-
     fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
+
     await waitFor(() => {
       expect(dropdown.value).toBe("OPERATOR");
-      expect(screen.getByTestId("testid-operator-dashboard")).toBeInTheDocument();
+      const operatorDashboard = screen.getByTestId("testid-operator-dashboard");
+      expect(operatorDashboard).toBeInTheDocument();
     });
 
     fireEvent.change(dropdown, { target: { value: "ADMIN" } });
     await waitFor(() => {
       expect(dropdown.value).toBe("ADMIN");
-      expect(screen.getByTestId("testid-admin-dashboard")).toBeInTheDocument();
+      const adminDashboard = screen.getByTestId("testid-admin-dashboard");
+      expect(adminDashboard).toBeInTheDocument();
     });
   });
 
   it("should allow OPERATOR to switch between OPERATOR and USER dashboards", async () => {
     const operatorUserContext = mockUserContext({ ...MOCK_USER_DATA, role: "OPERATOR" }, false);
-
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={operatorUserContext}>
@@ -215,22 +213,19 @@ describe("Dashboard", () => {
     );
 
     const dropdown = await screen.findByTestId("testid-dashboard-dropdown");
-
     const options = within(dropdown).getAllByRole("option");
     expect(options.map(opt => opt.value)).toEqual(["OPERATOR", "USER"]);
-
     expect(dropdown.value).toBe("USER");
-
     fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
     await waitFor(() => {
       expect(dropdown.value).toBe("OPERATOR");
-      expect(screen.getByTestId("testid-operator-dashboard")).toBeInTheDocument();
+      const operatorDashboard = screen.getByTestId("testid-operator-dashboard");
+      expect(operatorDashboard).toBeInTheDocument();
     });
   });
 
   it("should not render dashboard dropdown if user role is USER", () => {
     const userContext = mockUserContext({ ...MOCK_USER_DATA, role: "USER" }, false);
-
     render(
       <AuthContext.Provider value={mockAuthContext(true)}>
         <UserContext.Provider value={userContext}>
@@ -241,7 +236,9 @@ describe("Dashboard", () => {
       </AuthContext.Provider>
     );
 
-    expect(screen.queryByTestId("testid-dashboard-dropdown")).not.toBeInTheDocument();
-    expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+    const dashboarDropdown = screen.getByTestId("testid-dashboard-dropdown");
+    expect(dashboarDropdown).not.toBeInTheDocument();
+    const dashboard = screen.getByTestId("testid-dashboard");
+    expect(dashboard).toBeInTheDocument();
   });
 });
