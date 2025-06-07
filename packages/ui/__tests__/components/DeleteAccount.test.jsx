@@ -4,13 +4,13 @@ import { BrowserRouter } from "react-router-dom";
 import {
   DELETE_ACCOUNT_CONFIRMATION_MODAL,
   MOCK_USER_DATA,
-} from "../../../../src/utils/Constants";
+} from "../../src/utils/Constants";
 import {
   AuthContext,
   ToastContext,
   UserContext,
-} from "../../../../src/contexts/Contexts";
-import DeleteAccountConfirmationModal from "../../../../src/components/dashboard/settingpage/DeleteAccountConfirmationModal";
+} from "../../src/contexts/Contexts";
+import DeleteAccountConfirmationModal from "../../src/components/settings/DeleteAccountConfirmationModal";
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => ({

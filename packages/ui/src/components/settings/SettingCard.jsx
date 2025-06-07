@@ -1,6 +1,6 @@
 import styles from "./SettingCard.module.css";
-import Button from "../../common/button/Button";
-import { SETTING } from "../../../utils/Constants";
+import Button from "../common/button/Button";
+import { SETTING } from "../../utils/Constants";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import DeleteAccountConfirmationModal from "./DeleteAccountConfirmationModal";

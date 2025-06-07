@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import DeleteKeyModal from "../../../src/components/dashboard/DeleteKeyModal";
-import { ToastProvider } from "../../../src/contexts/ToastContext";
+import DeleteKeyModal from "../../src/components/confirm/DeleteKeyModal";
+import { ToastProvider } from "../../src/contexts/ToastContext";
 
 const mockedDeleteKeyRequest = vi.fn();
 

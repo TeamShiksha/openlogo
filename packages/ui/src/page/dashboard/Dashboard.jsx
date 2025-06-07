@@ -1,18 +1,18 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
-import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
-import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
-import Usage from "../../components/dashboard/usage/Usage";
-import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
-import UserInfo from "../../components/dashboard/userinfo/UserInfo";
+import ApiKeyForm from "../../components/apikeyform/ApiKeyForm";
+import CurrentPlan from "../../components/currentplan/CurrentPlan";
+import Usage from "../../components/usage/Usage";
+import ChangePassword from "../../components/changepassword/ChangePassword";
+import UserInfo from "../../components/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
-import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
-import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
+import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
-import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
+import DeleteKeyModal from "../../components/confirm/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
 
