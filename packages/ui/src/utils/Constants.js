@@ -131,7 +131,7 @@ export const LOGGEDIN_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "/#home",
+    url: "/#",
     type: "section",
   },
   {

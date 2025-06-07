@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -12,7 +12,11 @@ import {
   LOGGEDIN_ITEMS,
 } from "../../utils/Constants";
 import styles from "./Header.module.css";
-import { handleNavigation } from "../../utils/Helpers";
+import {
+  handleNavigation,
+  observeActiveSectionOnScroll,
+  extractSectionIds,
+} from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
 
 const Header = ({ openAuthModal }) => {
@@ -26,6 +30,8 @@ const Header = ({ openAuthModal }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
+  const sectionIds = useMemo(() => extractSectionIds(NAVBAR_ITEMS));
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -36,6 +42,11 @@ const Header = ({ openAuthModal }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const cleanup = observeActiveSectionOnScroll(sectionIds, setActiveSection);
+    return cleanup;
+  }, [sectionIds]);
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
