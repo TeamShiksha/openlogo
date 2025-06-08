@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import AdminDashboard from "./page/admin/Admin";
 import Home from "./page/home/Home";
 import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
@@ -37,14 +36,6 @@ function App() {
             element={
               <ProtectedRoute adminOnly={false}>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminDashboard />
               </ProtectedRoute>
             }
           />
