@@ -1,22 +1,22 @@
 const router = require("express").Router();
 const authMiddleware = require("../middlewares/auth");
 const {
-  getMessagesController,
-  respondMessagesController,
-  addMessagesController,
-} = require("../controllers/operator");
+  addRequestController,
+  getRequestsController,
+  updateRequestController,
+} = require("../controllers/request");
 const { UserType } = require("../utils/constants");
 
 router.put(
-  "/:messageId",
+  "/:requestId",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  respondMessagesController
+  updateRequestController
 );
 router.get(
   "/",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  getMessagesController
+  getRequestsController
 );
-router.post("/contact-us", addMessagesController);
+router.post("/", authMiddleware({ customerOnly: true }), addRequestController);
 
 module.exports = router;

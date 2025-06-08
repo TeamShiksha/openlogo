@@ -5,6 +5,7 @@ const userRouter = require("./users");
 const authRouter = require("./auth");
 const businessRouter = require("./logo");
 const adminRouter = require("./catalog");
+const requestRouter = require("./request");
 const { logoLimiter, baseLimiter } = require("../middlewares/rateLimiter");
 
 const privateRouteCORS = {
@@ -29,5 +30,6 @@ router.use("/users/me", baseLimiter, cors(privateRouteCORS), userRouter);
 router.use("/auth", baseLimiter, cors(privateRouteCORS), authRouter);
 router.use("/logo", logoLimiter, cors(privateRouteCORS), businessRouter);
 router.use("/catalog", baseLimiter, cors(privateRouteCORS), adminRouter);
+router.use("/requests", baseLimiter, cors(privateRouteCORS), requestRouter);
 
 module.exports = router;
