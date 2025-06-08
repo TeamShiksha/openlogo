@@ -1,8 +1,6 @@
 import { useState } from "react";
-import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import AdminDashboard from "./page/admin/Admin";
 import Home from "./page/home/Home";
 import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
@@ -13,6 +11,7 @@ import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import VerifyEmail from "./components/verification/VerifyEmail";
 import NotFound from "./page/notfound/NotFound";
+import "./index.css";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -40,15 +39,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} /> {/* Catch-all routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
