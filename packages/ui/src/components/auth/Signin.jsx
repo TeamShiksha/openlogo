@@ -21,7 +21,6 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [localErrorMsg, setLocalErrorMsg] = useState("");
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
@@ -32,7 +31,6 @@ const SignIn = ({ toggleForm, onClose }) => {
     url: `/auth/signin?type=guest`,
   });
   useEffect(() => {
-    setLocalErrorMsg(errorMsg);
     if (errorMsg || guestErrorMsg) toast.error(errorMsg || guestErrorMsg);
   }, [errorMsg, guestErrorMsg, toast]);
 
@@ -95,7 +93,6 @@ const SignIn = ({ toggleForm, onClose }) => {
     }
   };
   const handleToggleForgotPassword = () => {
-    setLocalErrorMsg("");
     setFormErrors({});
     setFocusedField(null);
     setIsSubmit(false);
@@ -110,13 +107,6 @@ const SignIn = ({ toggleForm, onClose }) => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
-
-        <div
-          className={`"error-container" ${localErrorMsg ? "has-error" : ""}`}
-        >
-          <p className="input-error">{localErrorMsg}</p>
-        </div>
-
         <div className={styles["form-width"]}>
           {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))

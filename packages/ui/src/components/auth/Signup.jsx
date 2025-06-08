@@ -78,9 +78,6 @@ function SignUp({ toggleForm }) {
         onSubmit={handleSubmit}
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
-        <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
-          <p className="input-error">{errorMsg}</p>
-        </div>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => (
             <CustomInput
