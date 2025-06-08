@@ -5,7 +5,10 @@ const { ContactUsService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 
 jest.mock("../../../middlewares/auth", () =>
-  jest.fn(() => (req, res, next) => next())
+  jest.fn(() => (req, res, next) => {
+    req.userData = { userId: "mock-operator-id" };
+    next();
+  })
 );
 
 jest.mock("../../../services", () => ({
@@ -118,6 +121,36 @@ describe("RESPOND MESSAGES API", () => {
     });
   });
 
+  it("422 - Status is required", async () => {
+    const dummyRequestId = new mongoose.Types.ObjectId().toString();
+    const response = await request(app)
+      .put(`${ENDPOINTS.MESSAGES}/${dummyRequestId}`)
+      .send({
+        reply: "could you provide more details how to use this platform",
+      });
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Status is required",
+    });
+  });
+  it("422 - Status must be one of PENDING, REJECTED, or RESOLVED", async () => {
+    const dummyRequestId = new mongoose.Types.ObjectId().toString();
+    const response = await request(app)
+      .put(`${ENDPOINTS.MESSAGES}/${dummyRequestId}`)
+      .send({
+        reply: "could you provide more details how to use this platform",
+        status: "CREATED",
+      });
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Status must be one of PENDING, REJECTED, or RESOLVED",
+    });
+  });
+
   it("404 - Message not found", async () => {
     mockGetForm.mockResolvedValue(null);
     const id = new mongoose.Types.ObjectId();
@@ -125,6 +158,7 @@ describe("RESPOND MESSAGES API", () => {
       .put(`${ENDPOINTS.MESSAGES}/${id}`)
       .send({
         reply: "This is a valid reply with a minimum of twenty characters",
+        status: "RESOLVED",
       });
 
     expect(response.status).toBe(404);
@@ -144,6 +178,7 @@ describe("RESPOND MESSAGES API", () => {
       .put(`${ENDPOINTS.MESSAGES}/${id}`)
       .send({
         reply: "This is a valid reply with a minimum of twenty characters",
+        status: "RESOLVED",
       });
 
     expect(response.status).toBe(409);
@@ -164,6 +199,7 @@ describe("RESPOND MESSAGES API", () => {
       .put(`${ENDPOINTS.MESSAGES}/${id}`)
       .send({
         reply: "This is a valid reply with a minimum of twenty characters",
+        status: "RESOLVED",
       });
 
     expect(response.status).toBe(500);
@@ -178,12 +214,16 @@ describe("RESPOND MESSAGES API", () => {
       .put(`${ENDPOINTS.MESSAGES}/${id}`)
       .send({
         reply: "This is a valid reply with a minimum of twenty characters",
+        status: "RESOLVED",
       });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       message: Messages.UPDATE_SUCCESS,
-      data: {},
+      data: {
+        operator: "mock-operator-id",
+        reply: "This is a valid reply with a minimum of twenty characters",
+      },
     });
   });
 });

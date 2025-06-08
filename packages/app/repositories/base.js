@@ -13,10 +13,16 @@ class BaseRepository {
     return await this.model.findById(id).select("-__v");
   }
 
-  async getAll(page = 1, limit = 10) {
+  async getAll(page = 1, limit = 10, tab = "active") {
     const skip = (page - 1) * limit;
-    const total = await this.model.countDocuments();
-    const data = await this.model.find().skip(skip).limit(limit);
+    let filter = {};
+    if (tab === "active") {
+      filter.status = "PENDING";
+    } else if (tab === "archived") {
+      filter.status = { $in: ["REJECTED", "RESOLVED", "COMPLETED"] };
+    }
+    const total = await this.model.countDocuments(filter);
+    const data = await this.model.find(filter).skip(skip).limit(limit);
     return {
       data,
       total,
