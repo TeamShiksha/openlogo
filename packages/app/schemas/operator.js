@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const { isValidObjectId } = require("mongoose");
+const { TAB_OPTIONS, StatusTypes } = require("../utils/constants");
 
 const querySchema = Joi.object({
   page: Joi.number().required().messages({
@@ -10,6 +11,14 @@ const querySchema = Joi.object({
     "any.required": "Limit is required",
     "number.base": "Limit must be a number",
   }),
+  tab: Joi.string()
+    .valid(...Object.values(TAB_OPTIONS))
+    .required()
+    .messages({
+      "string.base": "Tab must be a string",
+      "any.required": "Tab is required",
+      "any.only": "Tab must be either 'active' or 'archived'",
+    }),
 });
 
 const revertToCustomerPayloadSchema = Joi.object().keys({
@@ -37,6 +46,14 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
       "string.max": "Reply must be 500 or fewer characters",
       "any.required": "Reply is required",
       "string.pattern.base": "Reply should only contain alphabets",
+    }),
+  status: Joi.string()
+    .valid(...Object.values(StatusTypes))
+    .required()
+    .messages({
+      "string.base": "Status must be a string",
+      "any.only": "Status must be one of PENDING, REJECTED, or RESOLVED",
+      "any.required": "Status is required",
     }),
 });
 

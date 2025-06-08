@@ -27,6 +27,12 @@ const StatusTypes = {
   PENDING: "PENDING",
   REJECTED: "REJECTED",
   COMPLETED: "COMPLETED",
+  RESOLVED: "RESOLVED",
+};
+
+const TAB_OPTIONS = {
+  ACTIVE: "active",
+  ARCHIVED: "archived",
 };
 
 const DefaultSubscriptionPlan = {
@@ -71,6 +77,12 @@ const Messages = {
   NAME_REQUIRED: "Name is required",
   INVALID_EMAIL: "Invalid email",
   FORM_SUBMITTED: "Form submitted, our team will get in touch shortly",
+  FETCH_ALL_REQUESTS: "Fetched all logo requests",
+  LOGO_REQUEST_NOT_FOUND: "Logo request not found",
+  LOGO_REQUEST_ALREADY_PROCESSED: "Request already processed",
+  LOGO_REQUEST_CREATED: "Logo request created successfully",
+  USER_ALREADY_HAS_PENDING: "You already have a pending request.",
+  COMPANY_URL_ALREADY_PENDING: "This company url is already under review.",
 };
 
 module.exports = {
@@ -81,4 +93,5 @@ module.exports = {
   StatusTypes,
   DefaultSubscriptionPlan,
   Messages,
+  TAB_OPTIONS,
 };
