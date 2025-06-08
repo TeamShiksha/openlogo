@@ -1,16 +1,16 @@
-import Button from "../../common/button/Button";
-import Modal from "../../common/modal/Modal";
+import Button from "../common/button/Button.jsx";
+import Modal from "../common/modal/Modal.jsx";
 import PropTypes from "prop-types";
 import styles from "./DeleteAccountConfirmationModal.module.css";
-import CustomInput from "../../common/input/CustomInput";
+import CustomInput from "../common/input/CustomInput.jsx";
 import { useContext, useEffect, useState } from "react";
-import { useApi } from "../../../hooks/useApi";
-import { AuthContext, UserContext } from "../../../contexts/Contexts";
+import { useApi } from "../../hooks/useApi.js";
+import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
 import {
   DELETE_ACCOUNT_CONFIRMATION_MODAL,
   MESSAGES,
-} from "../../../utils/Constants";
-import { useToast } from "../../../hooks/useToast.js";
+} from "../../utils/Constants.js";
+import { useToast } from "../../hooks/useToast.js";
 
 function DeleteAccountConfirmationModal({ isOpen, onClose }) {
   const toast = useToast();

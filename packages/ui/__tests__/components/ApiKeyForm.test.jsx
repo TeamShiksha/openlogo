@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import ApiKeyForm from "../../../src/components/dashboard/apikeyform/ApiKeyForm";
-import { ToastProvider } from "../../../src/contexts/ToastContext";
+import ApiKeyForm from "../../src/components/apikeyform/ApiKeyForm";
+import { ToastProvider } from "../../src/contexts/ToastContext";
 
 const mockedMakeRequest = vi.fn();
 const mockApiData = {

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import Usage from "../../../../src/components/dashboard/usage/Usage";
-import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
+import Usage from "../../src/components/usage/Usage";
+import { MOCK_USER_DATA } from "../../src/utils/Constants";
 
 describe("Usage Component", () => {
   it("Should show correct usage count, usage limit", () => {

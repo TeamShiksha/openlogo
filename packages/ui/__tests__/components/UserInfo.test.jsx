@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import UserInfo from "../../../../src/components/dashboard/userinfo/UserInfo";
-import { MOCK_USER_DATA } from "../../../../src/utils/Constants";
-import { ToastContext } from "../../../../src/contexts/Contexts";
+import UserInfo from "../../src/components/userinfo/UserInfo";
+import { MOCK_USER_DATA } from "../../src/utils/Constants";
+import { ToastContext } from "../../src/contexts/Contexts";
 
 const mockMakeRequest = vi.fn();
 vi.mock("../../../../src/hooks/useApi.js", () => ({

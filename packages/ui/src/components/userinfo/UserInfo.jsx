@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { MESSAGES, USER_INFO_FIELDS } from "../../../utils/Constants";
+import { MESSAGES, USER_INFO_FIELDS } from "../../utils/Constants";
 import styles from "./UserInfo.module.css";
-import CustomInput from "../../common/input/CustomInput";
-import Button from "../../common/button/Button";
-import { useApi } from "../../../hooks/useApi";
-import { useToast } from "../../../hooks/useToast";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
+import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 
 function UserInfo({ name, email, isGuest }) {
   const toast = useToast();

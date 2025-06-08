@@ -1,27 +1,24 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
-import ApiKeyForm from "../../components/dashboard/apikeyform/ApiKeyForm";
-import CurrentPlan from "../../components/dashboard/currentplan/CurrentPlan";
-import Usage from "../../components/dashboard/usage/Usage";
-import ChangePassword from "../../components/dashboard/changepassword/ChangePassword";
-import UserInfo from "../../components/dashboard/userinfo/UserInfo";
+import ApiKeyForm from "../../components/apikeyform/ApiKeyForm";
+import CurrentPlan from "../../components/currentplan/CurrentPlan";
+import Usage from "../../components/usage/Usage";
+import ChangePassword from "../../components/changepassword/ChangePassword";
+import UserInfo from "../../components/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
-import CardWrapper from "../../components/dashboard/cardwrapper/CardWrapper.jsx";
-import SettingCard from "../../components/dashboard/settingpage/SettingCard";
+import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
+import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
-import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
-import AdminDashboard from "../admin/Admin.jsx";
-import DeleteKeyModal from "../../components/dashboard/DeleteKeyModal.jsx";
+import DeleteKeyModal from "../../components/confirm/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
-  const [selectedDashboard, setSelectedDashboard]  = useState("USER")
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
@@ -87,31 +84,11 @@ function Dashboard() {
     }
   };
 
-  const dashboardDropdownOptions = [];
-  if (userData?.role === "ADMIN") {
-    dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
-  } else if (userData?.role === "OPERATOR") {
-    dashboardDropdownOptions.push("OPERATOR", "USER");
-  }
-
   return (
     <div
-      className={`container ${styles["dashboard-container"]}`}
+      className={styles["dashboard-container"]}
       data-testid="testid-dashboard"
     >
-      <div>
-        {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
-          <Dropdown options={dashboardDropdownOptions} selectedOption={selectedDashboard} setSelectedOption={setSelectedDashboard}/>
-        )}
-      </div>
-
-        {selectedDashboard === "ADMIN" ? (
-      <AdminDashboard/>
-    ) : selectedDashboard === "OPERATOR" ? (
-      <div data-testid="testid-operator-dashboard">Operator Dashboard to be added here</div>
-    ) : (
-      <>
-
       <div className={styles["dashboard-content-container"]}>
         <section className={styles["dashboard-content-section"]}>
           <CardWrapper title="Usage">
@@ -174,8 +151,6 @@ function Dashboard() {
           ""
         )}
       </div>
-      </>
-    )}
 
       {showDeleteModal && (
         <DeleteKeyModal

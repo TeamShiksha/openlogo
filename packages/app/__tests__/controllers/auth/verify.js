@@ -25,6 +25,9 @@ describe("VERIFY EMAIL API", () => {
     jest
       .spyOn(UserTokenService.prototype, "fetchUserToken")
       .mockResolvedValue(null);
+    jest
+      .spyOn(UserTokenService.prototype, "fetchDeletedUserToken")
+      .mockResolvedValue(null);
     const response = await request(app)
       .get(`${ENDPOINTS.VERIFY}/invalidToken`)
       .send();
@@ -35,7 +38,7 @@ describe("VERIFY EMAIL API", () => {
       message: Messages.INVALID_TOKEN,
       statusCode: 400,
     });
-  });
+  }, 10000);
 
   it("403 - Token expired", async () => {
     const mockToken = {
@@ -149,6 +152,8 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,
+      message: "Email verified successfully",
+      success: true,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });

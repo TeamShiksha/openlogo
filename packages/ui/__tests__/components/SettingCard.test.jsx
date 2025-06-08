@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import SettingCard from "../../src/components/dashboard/settingpage/SettingCard";
+import SettingCard from "../../src/components/settings/SettingCard";
 import { SETTING } from "../../src/utils/Constants";
 
 describe("SettingCard Component", () => {

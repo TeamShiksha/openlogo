@@ -30,7 +30,6 @@ const DeleteKeyModal = ({ selectedKey, isOpen, onClose }) => {
     }
 
     setIsDeleting(true);
-
     const success = await deleteKeyRequest();
     if (success) {
       toast.success(API_KEY.delete.success);

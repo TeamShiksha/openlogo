@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import PieGraph from "../PieGraph";
+import PieGraph from "./PieGraph";
 import styles from "./Usage.module.css";
 
 function Usage({ usageCount, usageLimit }) {

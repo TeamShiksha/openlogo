@@ -1,6 +1,6 @@
 import { useState } from "react";
-import CustomInput from "../../common/input/CustomInput";
-import Button from "../../common/button/Button";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 import styles from "./ChangePassword.module.css";
 import PropTypes from "prop-types";
 

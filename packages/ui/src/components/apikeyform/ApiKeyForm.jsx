@@ -1,13 +1,13 @@
-import CustomInput from "../../common/input/CustomInput";
-import Button from "../../common/button/Button";
-import Modal from "../../common/modal/Modal";
+import CustomInput from "../common/input/CustomInput.jsx";
+import Button from "../common/button/Button.jsx";
+import Modal from "../common/modal/Modal.jsx";
 import styles from "./ApiKeyForm.module.css";
 import PropTypes from "prop-types";
-import { useApi } from "../../../hooks/useApi";
+import { useApi } from "../../hooks/useApi.js";
 import { useState, useEffect } from "react";
-import LoadingSpinner from "../../common/loadingspinner/LoadingSpinner.jsx";
-import { COPY, API_KEY, BUTTON_TEXT } from "../../../utils/Constants.js";
-import { useToast } from "../../../hooks/useToast";
+import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
+import { COPY, API_KEY, BUTTON_TEXT } from "../../utils/Constants.js";
+import { useToast } from "../../hooks/useToast.js";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
