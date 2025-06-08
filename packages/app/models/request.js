@@ -31,11 +31,11 @@ const raiseRequestSchema = new mongoose.Schema({
   },
   openedAt: {
     type: Date,
-    default: Date.now, // automatically set when created
+    default: Date.now,
   },
   closedAt: {
     type: Date,
-    default: null, // will be set once status is RESOLVED
+    default: null,
   },
   updated_at: {
     type: Date,

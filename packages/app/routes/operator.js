@@ -9,7 +9,7 @@ const { UserType } = require("../utils/constants");
 
 router.put(
   "/:messageId",
-  authMiddleware({ operatorOnly: true }),
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   respondMessagesController
 );
 router.get(

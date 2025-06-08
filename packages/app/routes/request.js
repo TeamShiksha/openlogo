@@ -9,7 +9,7 @@ const { UserType } = require("../utils/constants");
 
 router.put(
   "/:requestId",
-  authMiddleware({ operatorOnly: true }),
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   updateRequestController
 );
 router.get(
