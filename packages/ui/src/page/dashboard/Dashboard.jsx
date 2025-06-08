@@ -12,6 +12,7 @@ import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
+import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 import DeleteKeyModal from "../../components/confirm/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
@@ -19,6 +20,7 @@ import { useToast } from "../../hooks/useToast.js";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const [selectedDashboard, setSelectedDashboard] = useState("USER");
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
@@ -84,73 +86,105 @@ function Dashboard() {
     }
   };
 
+  const dashboardDropdownOptions = [];
+  if (userData?.role === "ADMIN") {
+    dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
+  } else if (userData?.role === "OPERATOR") {
+    dashboardDropdownOptions.push("OPERATOR", "USER");
+  }
+
   return (
     <div
-      className={styles["dashboard-container"]}
+      className={`container ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
-      <div className={styles["dashboard-content-container"]}>
-        <section className={styles["dashboard-content-section"]}>
-          <CardWrapper title="Usage">
-            <Usage
-              usageCount={userData?.subscription.usage_count || 0}
-              usageLimit={userData?.subscription.usage_limit || 0}
-            />
-          </CardWrapper>
-          <CardWrapper title="Generate New API Key">
-            <ApiKeyForm isGuest={isGuest} onKeyGenerated={handleKeyGenerated} />
-          </CardWrapper>
-          <CardWrapper
-            title="Plan"
-            status="Active"
-            statusClass={styles["active-status"]}
-          >
-            <CurrentPlan isGuest={isGuest} />
-          </CardWrapper>
-        </section>
-      </div>
-      <div className={styles["table-wrapper"]}>
-        <Table
-          headers={API_KEY_TABLE.headers}
-          rows={apiKeyTableData}
-          emptyMessage={API_KEY_TABLE.emptyMessage}
-          onDelete={handleDeleteClick}
-          isGuest={isGuest}
-        />
-      </div>
-
-      <div className={styles["dashboard-content-container"]}>
-        <section className={styles["dashboard-content-section"]}>
-          <CardWrapper title="User Info">
-            <UserInfo
-              name={userData?.name || ""}
-              email={userData?.email || ""}
-              isGuest={isGuest}
-            />
-          </CardWrapper>
-          <CardWrapper title="Change Password">
-            <ChangePassword isGuest={isGuest} />
-          </CardWrapper>
-          <CardWrapper title="Setting">
-            <SettingCard isGuest={isGuest} />
-          </CardWrapper>
-        </section>
-      </div>
-
-      <div className={styles["logout-wrapper"]}>
-        {isAuthenticated ? (
-          <Button
-            variant="danger"
-            className={styles["logout-btn"]}
-            onClick={handleLogout}
-            isLoading={isLoading}
-          >
-            {BUTTON_TEXT.signOut}
-          </Button>
-        ) : (
-          ""
+      <div>
+        {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
+          <Dropdown
+            options={dashboardDropdownOptions}
+            selectedOption={selectedDashboard}
+            setSelectedOption={setSelectedDashboard}
+          />
         )}
       </div>
+
+      {selectedDashboard === "ADMIN" ? (
+        <div data-testid="testid-admin-dashboard">
+          Admin Dashboard to be added here
+        </div>
+      ) : selectedDashboard === "OPERATOR" ? (
+        <div data-testid="testid-operator-dashboard">
+          Operator Dashboard to be added here
+        </div>
+      ) : (
+        <>
+          <div className={styles["dashboard-content-container"]}>
+            <section className={styles["dashboard-content-section"]}>
+              <CardWrapper title="Usage">
+                <Usage
+                  usageCount={userData?.subscription.usage_count || 0}
+                  usageLimit={userData?.subscription.usage_limit || 0}
+                />
+              </CardWrapper>
+              <CardWrapper title="Generate New API Key">
+                <ApiKeyForm
+                  isGuest={isGuest}
+                  onKeyGenerated={handleKeyGenerated}
+                />
+              </CardWrapper>
+              <CardWrapper
+                title="Plan"
+                status="Active"
+                statusClass={styles["active-status"]}
+              >
+                <CurrentPlan isGuest={isGuest} />
+              </CardWrapper>
+            </section>
+          </div>
+          <div className={styles["table-wrapper"]}>
+            <Table
+              headers={API_KEY_TABLE.headers}
+              rows={apiKeyTableData}
+              emptyMessage={API_KEY_TABLE.emptyMessage}
+              onDelete={handleDeleteClick}
+              isGuest={isGuest}
+            />
+          </div>
+
+          <div className={styles["dashboard-content-container"]}>
+            <section className={styles["dashboard-content-section"]}>
+              <CardWrapper title="User Info">
+                <UserInfo
+                  name={userData?.name || ""}
+                  email={userData?.email || ""}
+                  isGuest={isGuest}
+                />
+              </CardWrapper>
+              <CardWrapper title="Change Password">
+                <ChangePassword isGuest={isGuest} />
+              </CardWrapper>
+              <CardWrapper title="Setting">
+                <SettingCard isGuest={isGuest} />
+              </CardWrapper>
+            </section>
+          </div>
+
+          <div className={styles["logout-wrapper"]}>
+            {isAuthenticated ? (
+              <Button
+                variant="danger"
+                className={styles["logout-btn"]}
+                onClick={handleLogout}
+                isLoading={isLoading}
+              >
+                {BUTTON_TEXT.signOut}
+              </Button>
+            ) : (
+              ""
+            )}
+          </div>
+        </>
+      )}
 
       {showDeleteModal && (
         <DeleteKeyModal
