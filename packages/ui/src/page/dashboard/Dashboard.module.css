@@ -8,7 +8,7 @@
 .dashboard-content-container {
   display: flex;
   flex-grow: 1;
-  gap: 55psx;
+  gap: 55px;
   padding: 0rem 0rem 2rem 0rem;
 }
 
