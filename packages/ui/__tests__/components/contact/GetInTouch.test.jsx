@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, it, describe } from "vitest";
 import GetInTouch from "../../../src/components/contact/GetInTouch";
 import { BUTTON_TEXT } from "../../../src/utils/Constants";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 
 describe("GetInTouch Component", () => {
   it("renders the GetInTouch card with title and description", () => {
@@ -21,7 +22,11 @@ describe("GetInTouch Component", () => {
   });
 
   it("opens the ContactForm modal when 'Get in touch' button is clicked", () => {
-    render(<GetInTouch />);
+    render(
+      <ToastProvider>
+        <GetInTouch />
+      </ToastProvider>
+    );
     const button = screen.getByText("Get in touch");
     fireEvent.click(button);
     const modal = screen.getByText("Contact Us");
@@ -29,7 +34,11 @@ describe("GetInTouch Component", () => {
   });
 
   it("closes the ContactForm modal when the close button is clicked", () => {
-    render(<GetInTouch />);
+    render(
+      <ToastProvider>
+        <GetInTouch />
+      </ToastProvider>
+    );
     const button = screen.getByText("Get in touch");
     fireEvent.click(button);
     const modal = screen.getByText("Contact Us");

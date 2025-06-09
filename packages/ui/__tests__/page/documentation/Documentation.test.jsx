@@ -4,6 +4,7 @@ import Documentation from "../../../src/page/documentation/Documentation";
 import { DOCUMENTATION } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
 import { getBaseApiUrl } from "../../../src/utils/Helpers";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 
 describe("Documentation Component", () => {
   it("renders the introduction heading, text, and base URL", () => {
@@ -53,7 +54,9 @@ describe("Documentation Component", () => {
   it("displays and closes the contact form modal when clicking 'contact us'", () => {
     render(
       <BrowserRouter>
-        <Documentation />
+        <ToastProvider>
+          <Documentation />
+        </ToastProvider>
       </BrowserRouter>
     );
 

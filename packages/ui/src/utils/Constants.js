@@ -418,6 +418,10 @@ export const BUTTON_TEXT = {
   submit: "Submit",
   backToSignIn: " Back to Sign In",
   cancel: "Cancel",
+  respond: "Respond",
+  reject: "Reject",
+  sendResponse: "Send Response",
+  confirmRejection: "Confirm Rejection",
 };
 
 export const BRANDING = {
@@ -727,4 +731,9 @@ export const MESSAGES = {
   SIGN_OUT_SUCCESS: "Sign out successfully",
   SIGN_UP_SUCCESS: "Sign up successfully",
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+};
+
+export const MODAL_MESSAGES = {
+  RESPOND: "Type your response here...",
+  REJECT: "Reason for rejection...",
 };

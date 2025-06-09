@@ -8,6 +8,7 @@ import {
 import ContactForm from "../../../src/components/contact/ContactForm";
 import { BUTTON_TEXT, CONTACT } from "../../../src/utils/Constants";
 import { expect, it, describe, vi, beforeEach } from "vitest";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 
 const mockMakeRequest = vi.fn();
 const mockLoading = vi.fn();
@@ -53,7 +54,11 @@ beforeEach(() => {
 
 describe("ContactForm Component", () => {
   it("renders the ContactForm with heading and input fields", () => {
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
 
     const title = screen.getByText(CONTACT.title);
     expect(title).toBeInTheDocument();
@@ -69,7 +74,11 @@ describe("ContactForm Component", () => {
 
   describe("shows validation errors for input fields", () => {
     it("shows validation error for empty name field", async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
 
       const nameInput = screen.getByLabelText("Name");
       fireEvent.focus(nameInput);
@@ -88,7 +97,11 @@ describe("ContactForm Component", () => {
     });
 
     it("shows validation error for empty email field", async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
 
       const emailInput = screen.getByLabelText("Email");
       await act(async () => {
@@ -104,7 +117,11 @@ describe("ContactForm Component", () => {
     });
 
     it("shows validation error for invalid email format", async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
 
       const emailInput = screen.getByLabelText("Email");
       await act(async () => {
@@ -133,7 +150,11 @@ describe("ContactForm Component", () => {
     });
 
     it("shows validation error for empty message field", async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
 
       const messageInput = screen.getByPlaceholderText(
         "Type your message here ...."
@@ -151,7 +172,11 @@ describe("ContactForm Component", () => {
     });
 
     it("shows validation error for short message", async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
 
       const errorMessage = "Message should be at least 20 characters";
       const messageInput = screen.getByPlaceholderText(
@@ -186,7 +211,11 @@ describe("ContactForm Component", () => {
   });
 
   it("enables submit button only when form is valid", async () => {
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
     const submitButton = screen.getByRole("button", {
       name: BUTTON_TEXT.sendMessage,
     });
@@ -208,7 +237,11 @@ describe("ContactForm Component", () => {
   });
 
   it("shows loading state while submitting the form", async () => {
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
 
     await fillFormWithValidData();
     const submitButton = screen.getByRole("button", {
@@ -222,7 +255,11 @@ describe("ContactForm Component", () => {
       mockLoading.mockReturnValue(true);
     });
     await act(async () => {
-      render(<ContactForm closeModal={() => {}} />);
+      render(
+        <ToastProvider>
+          <ContactForm closeModal={() => {}} />
+        </ToastProvider>
+      );
     });
     await waitFor(() => {
       expect(screen.getByText("Sending")).toBeInTheDocument();
@@ -233,7 +270,11 @@ describe("ContactForm Component", () => {
   it("shows success message when form is submitted successfully", async () => {
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
 
     await fillFormWithValidData();
     const submitButton = screen.getByRole("button", {
@@ -256,7 +297,11 @@ describe("ContactForm Component", () => {
   it("shows error message when form submission fails", async () => {
     mockMakeRequest.mockResolvedValue(false);
     mockIsSuccess.mockReturnValue(false);
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
 
     await fillFormWithValidData();
     const submitButton = screen.getByRole("button", {
@@ -270,7 +315,9 @@ describe("ContactForm Component", () => {
       fireEvent.click(submitButton);
     });
     await waitFor(() => {
-      const errorElement = screen.getByText("An error occurred");
+      const errorElement = screen.getByText(
+        "Form already submitted, try again later"
+      );
       expect(errorElement).toBeInTheDocument();
     });
   });
@@ -280,7 +327,11 @@ describe("ContactForm Component", () => {
     const mockCloseModal = vi.fn(() => {});
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-    render(<ContactForm closeModal={mockCloseModal} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={mockCloseModal} />
+      </ToastProvider>
+    );
 
     await fillFormWithValidData();
     const submitButton = screen.getByRole("button", {
@@ -300,7 +351,11 @@ describe("ContactForm Component", () => {
     vi.useFakeTimers();
     mockMakeRequest.mockResolvedValue(true);
     mockIsSuccess.mockReturnValue(true);
-    render(<ContactForm closeModal={() => {}} />);
+    render(
+      <ToastProvider>
+        <ContactForm closeModal={() => {}} />
+      </ToastProvider>
+    );
 
     const { nameInput, emailInput, messageInput } =
       await fillFormWithValidData();

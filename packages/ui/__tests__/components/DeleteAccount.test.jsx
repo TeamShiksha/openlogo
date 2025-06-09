@@ -19,7 +19,7 @@ vi.mock("react-router-dom", async () => ({
 }));
 
 const mockMakeRequest = vi.fn();
-vi.mock("../../../../src/hooks/useApi.js", () => ({
+vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: () => ({
     makeRequest: mockMakeRequest,
     errorMsg: "",
