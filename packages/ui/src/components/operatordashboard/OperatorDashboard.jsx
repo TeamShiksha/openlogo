@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import styles from "./Operator.module.css";
-import Modal from "../../components/common/modal/Modal";
-import OperatorCard from "../../components/operator/OperatorCard";
-import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner";
+import styles from "./OperatorDashboard.module.css";
+import Modal from "../common/modal/Modal";
+import OperatorCard from "../operator/OperatorCard";
+import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
 import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";
-import Button from "../../components/common/button/Button";
+import Button from "../common/button/Button";
 import { useToast } from "../../hooks/useToast";
 import { BUTTON_TEXT, MODAL_MESSAGES } from "../../utils/Constants";
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import Operator from "../../../src/page/operator/Operator";
+import OperatorDashboard from "../../../src/components/operatordashboard/OperatorDashboard";
 import { instance as apiInstance } from "../../../src/api/api_instance";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
 import { BUTTON_TEXT, MODAL_MESSAGES } from "../../../src/utils/Constants";
@@ -53,7 +53,7 @@ describe("Operator Page", () => {
     apiInstance.get.mockResolvedValueOnce(messages);
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
 
@@ -68,7 +68,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
 
@@ -84,7 +84,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
     fireEvent.click(screen.getByText("Archived"));
@@ -115,7 +115,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
     fireEvent.change(screen.getByRole("combobox"), {
@@ -140,7 +140,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
 
@@ -163,7 +163,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
     fireEvent.change(screen.getByRole("combobox"), {
@@ -183,7 +183,7 @@ describe("Operator Page", () => {
 
     render(
       <ToastProvider>
-        <Operator />
+        <OperatorDashboard />
       </ToastProvider>
     );
 
