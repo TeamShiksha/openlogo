@@ -16,6 +16,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
+      title: "Error",
       message: Messages.INVALID_TOKEN,
       statusCode: 422,
     });
@@ -35,6 +36,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
+      title: "Error",
       message: Messages.INVALID_TOKEN,
       statusCode: 400,
     });
@@ -55,6 +57,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       error: STATUS_CODES[403],
+      title: "Error",
       message: Messages.EXPIRED_TOKEN,
       statusCode: 403,
     });
@@ -77,6 +80,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       error: STATUS_CODES[404],
+      title: "Error",
       message: Messages.INVALID_TOKEN,
       statusCode: 404,
     });
@@ -100,6 +104,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       error: STATUS_CODES[500],
+      title: "Error",
       message: Messages.VERIFICATION_FAIL,
       statusCode: 500,
     });
@@ -126,6 +131,7 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       error: STATUS_CODES[500],
+      title: "Error",
       message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 500,
     });
@@ -152,7 +158,9 @@ describe("VERIFY EMAIL API", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,
-      message: "Email verified successfully",
+      title: "Verified",
+      message:
+        "Your email has been verified successfully. Redirecting to homepage...",
       success: true,
     });
     expect(mockToken.isExpired).toHaveBeenCalled();

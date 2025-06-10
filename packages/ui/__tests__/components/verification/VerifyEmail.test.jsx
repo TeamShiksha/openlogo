@@ -1,8 +1,21 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import VerifyEmail from "../../../src/components/verification/VerifyEmail";
-import { VERIFICATION } from "../../../src/utils/Constants";
+import VerifyEmail from "../../../src/page/verification/VerifyEmail";
+
+const mockMakeRequest = vi.fn();
+const mockData = { title: "Test Title", message: "Test Message" };
+const mockErrorMsg = "";
+const mockIsSuccess = false;
+
+vi.mock("../../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    makeRequest: mockMakeRequest,
+    data: mockData,
+    errorMsg: mockErrorMsg,
+    isSuccess: mockIsSuccess,
+  }),
+}));
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -10,7 +23,7 @@ vi.mock("react-router-dom", async () => {
     ...actual,
     useSearchParams: () => [
       {
-        get: () => null,
+        get: () => "test-token",
       },
       vi.fn(),
     ],
@@ -18,42 +31,31 @@ vi.mock("react-router-dom", async () => {
 });
 
 describe("VerifyEmail component", () => {
-  it("renders without crashing", () => {
+  it("renders loading state initially", () => {
     render(
       <BrowserRouter>
         <VerifyEmail />
       </BrowserRouter>
     );
 
-    const title = screen.getByText(VERIFICATION.title);
+    const title = screen.getByText("Verifying");
     expect(title).toBeInTheDocument();
-  });
 
-  it("displays loading animation", () => {
-    render(
-      <BrowserRouter>
-        <VerifyEmail />
-      </BrowserRouter>
+    const message = screen.getByText(
+      "Please wait, while we verify your email."
     );
-
-    const loadingDots = document.querySelector(".loading-dots");
-    expect(loadingDots).not.toBeNull();
-    expect(loadingDots.children.length).toBe(3);
-  });
-
-  it("displays correct title and message", () => {
-    render(
-      <BrowserRouter>
-        <VerifyEmail />
-      </BrowserRouter>
-    );
-
-    const title = screen.getByText(VERIFICATION.title);
-    expect(title).toBeInTheDocument();
-    expect(title.tagName).toBe("H2");
-
-    const message = screen.getByText(VERIFICATION.message);
     expect(message).toBeInTheDocument();
+  });
+
+  it("displays loading spinner during verification", () => {
+    render(
+      <BrowserRouter>
+        <VerifyEmail />
+      </BrowserRouter>
+    );
+
+    const loadingContainer = document.querySelector(".loading-container");
+    expect(loadingContainer).not.toBeNull();
   });
 
   it("has correct container structure", () => {
@@ -81,11 +83,10 @@ describe("VerifyEmail component", () => {
       </BrowserRouter>
     );
 
-    const title = screen.getByText(VERIFICATION.title);
+    const title = screen.getByText("Verifying");
     expect(title.classList.contains("verify-title")).toBe(true);
 
-    const loadingDotsContainer = document.querySelector(".loading-dots");
-    const spans = loadingDotsContainer.querySelectorAll("span");
-    expect(spans.length).toBe(3);
+    const loadingContainer = document.querySelector(".loading-container");
+    expect(loadingContainer).not.toBeNull();
   });
 });

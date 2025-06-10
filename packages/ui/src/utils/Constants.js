@@ -682,11 +682,6 @@ export const NOT_FOUND_PAGE = {
   MESSAGE: "The page you are looking for does not exist.",
 };
 
-export const VERIFICATION = {
-  title: "Verifying",
-  message: "Please wait, while we verify your email.",
-};
-
 export const DELETE_ACCOUNT_CONFIRMATION_MODAL = {
   title: "Confirm Deletion",
   subText:

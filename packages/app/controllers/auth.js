@@ -178,6 +178,7 @@ async function verifyEmailController(req, res, next) {
     if (!token) {
       return res.status(422).json({
         error: STATUS_CODES[422],
+        title: "Error",
         message: Messages.INVALID_TOKEN,
         statusCode: 422,
       });
@@ -191,6 +192,7 @@ async function verifyEmailController(req, res, next) {
       if (deletedToken) {
         return res.status(200).json({
           statusCode: 200,
+          title: "Already Verified",
           message: Messages.EMAIL_ALREADY_VERIFIED,
           success: true,
           alreadyVerified: true,
@@ -199,6 +201,7 @@ async function verifyEmailController(req, res, next) {
 
       return res.status(400).json({
         error: STATUS_CODES[400],
+        title: "Error",
         message: Messages.INVALID_TOKEN,
         statusCode: 400,
       });
@@ -207,6 +210,7 @@ async function verifyEmailController(req, res, next) {
     if (userToken.isExpired()) {
       return res.status(403).json({
         error: STATUS_CODES[403],
+        title: "Error",
         message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
       });
@@ -216,6 +220,7 @@ async function verifyEmailController(req, res, next) {
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
+        title: "Error",
         message: Messages.INVALID_TOKEN,
         statusCode: 404,
       });
@@ -226,6 +231,7 @@ async function verifyEmailController(req, res, next) {
 
       return res.status(200).json({
         statusCode: 200,
+        title: "Already Verified",
         message: Messages.EMAIL_ALREADY_VERIFIED,
         success: true,
         alreadyVerified: true,
@@ -236,6 +242,7 @@ async function verifyEmailController(req, res, next) {
     if (!verifyResult) {
       return res.status(500).json({
         error: STATUS_CODES[500],
+        title: "Error",
         message: Messages.VERIFICATION_FAIL,
         statusCode: 500,
       });
@@ -245,6 +252,7 @@ async function verifyEmailController(req, res, next) {
     if (!result) {
       return res.status(500).json({
         error: STATUS_CODES[500],
+        title: "Error",
         message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
       });
@@ -252,7 +260,9 @@ async function verifyEmailController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      message: "Email verified successfully",
+      title: "Verified",
+      message:
+        "Your email has been verified successfully. Redirecting to homepage...",
       success: true,
     });
   } catch (err) {

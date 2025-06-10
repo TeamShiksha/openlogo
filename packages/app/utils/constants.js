@@ -46,6 +46,9 @@ const Messages = {
     "We're experiencing high demand. Please try again later.",
   INCORRECT_EMAIL_PASS: "Incorrect email or password.",
   EMAIL_NOT_VERIFIED: "Email not verified",
+  EMAIL_ALREADY_VERIFIED:
+    "This email has already been verified. You can sign in to your account.",
+  EMAIL_VERIFICATION_IN_PROGRESS: "Please wait, while we verify your email.",
   SESSION_FAIL: "User session validation failed.",
   INVALID_TOKEN: "Invalid token.",
   EXPIRED_TOKEN: "Token expired.",

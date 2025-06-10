@@ -11,7 +11,7 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import VerifyEmail from "./components/verification/VerifyEmail";
+import VerifyEmail from "./page/verification/VerifyEmail";
 import NotFound from "./page/notfound/NotFound";
 
 function App() {
