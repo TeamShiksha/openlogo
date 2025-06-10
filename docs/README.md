@@ -1,6 +1,9 @@
 ## Openlogo
 Openlogo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos.
 
+1. [Stage](https://stage.openlogo.fyi/)
+2. [Prod](https://www.openlogo.fyi/) - outdated
+
 ## Made with
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
