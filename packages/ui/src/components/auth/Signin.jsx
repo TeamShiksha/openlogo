@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
+import { BUTTON_TEXT, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
@@ -21,18 +21,19 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [localErrorMsg, setLocalErrorMsg] = useState("");
   const { makeRequest, errorMsg } = useApi({
     method: "post",
-    url: isForgotPassword ? `/auth/forgot-password` : `/auth/signin`,
-    data: formData,
+    url: isForgotPassword ? `/auth/password/forgot` : `/auth/signin`,
+    data: isForgotPassword ? { email: formData.email } : formData,
   });
-  const { makeRequest: makeGuestRequest, errorMsg: guestErrorMsg } = useApi({
+  const { makeRequest: makeGuestRequest } = useApi({
     method: "post",
     url: `/auth/signin?type=guest`,
   });
   useEffect(() => {
-    if (errorMsg || guestErrorMsg) toast.error(errorMsg || guestErrorMsg);
-  }, [errorMsg, guestErrorMsg, toast]);
+    setLocalErrorMsg(errorMsg);
+  }, [errorMsg]);
 
   useEffect(() => {
     if (focusedField !== "email") {
@@ -52,9 +53,12 @@ const SignIn = ({ toggleForm, onClose }) => {
   }, [focusedField, formData]);
 
   useEffect(() => {
-    const errors = validate({ email: formData.email });
+    const fieldsToValidate = isForgotPassword
+      ? { email: formData.email }
+      : formData;
+    const errors = validate(fieldsToValidate);
     setIsFormValid(Object.keys(errors).length === 0);
-  }, [formData]);
+  }, [formData, isForgotPassword]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -67,6 +71,7 @@ const SignIn = ({ toggleForm, onClose }) => {
     const success = await makeRequest();
     if (success) {
       if (isForgotPassword) {
+        toast.success("Password reset link sent to your email");
         setIsForgotPassword(false);
       } else {
         setFormData(SIGNIN.initialValues);
@@ -76,8 +81,9 @@ const SignIn = ({ toggleForm, onClose }) => {
       }
 
       setFocusedField(null);
-      toast.success(MESSAGES.SIGN_IN_SUCCESS);
+      toast.success("Sign in successfully");
     }
+
     setIsLoading(false);
   };
   const handleGuestSignIn = async (submitEvent) => {
@@ -89,10 +95,10 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsSubmit(false);
       onClose();
       navigate("/dashboard");
-      toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
     }
   };
   const handleToggleForgotPassword = () => {
+    setLocalErrorMsg("");
     setFormErrors({});
     setFocusedField(null);
     setIsSubmit(false);
@@ -107,6 +113,13 @@ const SignIn = ({ toggleForm, onClose }) => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
+
+        <div
+          className={`"error-container" ${localErrorMsg ? "has-error" : ""}`}
+        >
+          <p className="input-error">{localErrorMsg}</p>
+        </div>
+
         <div className={styles["form-width"]}>
           {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))
