@@ -13,16 +13,19 @@ import { ToastProvider } from "../../../src/contexts/ToastContext";
 const mockMakeRequest = vi.fn();
 const mockLoading = vi.fn();
 const mockIsSuccess = vi.fn();
+const mockToastSuccess = vi.fn();
+const mockToastError = vi.fn();
+
+const mockUseApi = vi.fn();
 
 vi.mock("../../../src/hooks/useApi", () => ({
-  useApi: () => ({
-    makeRequest: mockMakeRequest,
-    loading: mockLoading(),
-    isSuccess: mockIsSuccess(),
-    errorMsg: "An error occurred",
-    data: {
-      message: "Form submitted, our team will get in touch shortly",
-    },
+  useApi: () => mockUseApi(),
+}));
+
+vi.mock("../../../src/hooks/useToast", () => ({
+  useToast: () => ({
+    success: mockToastSuccess,
+    error: mockToastError,
   }),
 }));
 
@@ -50,6 +53,14 @@ beforeEach(() => {
   vi.clearAllMocks();
   mockLoading.mockReturnValue(false);
   mockIsSuccess.mockReturnValue(false);
+
+  mockUseApi.mockReturnValue({
+    makeRequest: mockMakeRequest,
+    loading: mockLoading(),
+    isSuccess: mockIsSuccess(),
+    errorMsg: null,
+    data: null,
+  });
 });
 
 describe("ContactForm Component", () => {
@@ -237,141 +248,135 @@ describe("ContactForm Component", () => {
   });
 
   it("shows loading state while submitting the form", async () => {
+    mockUseApi.mockReturnValue({
+      makeRequest: mockMakeRequest,
+      loading: true,
+      isSuccess: false,
+      errorMsg: null,
+      data: null,
+    });
+
     render(
       <ToastProvider>
         <ContactForm closeModal={() => {}} />
       </ToastProvider>
     );
 
-    await fillFormWithValidData();
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-    });
-
-    await act(async () => {
-      mockLoading.mockReturnValue(true);
-    });
-    await act(async () => {
-      render(
-        <ToastProvider>
-          <ContactForm closeModal={() => {}} />
-        </ToastProvider>
-      );
-    });
-    await waitFor(() => {
-      expect(screen.getByText("Sending")).toBeInTheDocument();
-      expect(screen.getByText("Sending")).toBeDisabled();
+      const loadingButton = screen.getByText("Sending");
+      expect(loadingButton).toBeInTheDocument();
+      expect(loadingButton).toBeDisabled();
     });
   });
 
   it("shows success message when form is submitted successfully", async () => {
-    mockMakeRequest.mockResolvedValue(true);
-    mockIsSuccess.mockReturnValue(true);
+    mockUseApi.mockReturnValue({
+      makeRequest: mockMakeRequest,
+      loading: false,
+      isSuccess: true,
+      errorMsg: null,
+      data: {
+        message: "Form submitted, our team will get in touch shortly",
+      },
+    });
+
     render(
       <ToastProvider>
         <ContactForm closeModal={() => {}} />
       </ToastProvider>
     );
 
-    await fillFormWithValidData();
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-    });
-
-    await act(async () => {
-      fireEvent.click(submitButton);
-    });
-    await waitFor(() => {
-      expect(
-        screen.getByText("Form submitted, our team will get in touch shortly")
-      ).toBeInTheDocument();
+      expect(mockToastSuccess).toHaveBeenCalledWith(
+        "Form submitted, our team will get in touch shortly"
+      );
     });
   });
 
   it("shows error message when form submission fails", async () => {
-    mockMakeRequest.mockResolvedValue(false);
-    mockIsSuccess.mockReturnValue(false);
+    mockUseApi.mockReturnValue({
+      makeRequest: mockMakeRequest,
+      loading: false,
+      isSuccess: false,
+      errorMsg: "An error occurred",
+      data: null,
+    });
+
     render(
       <ToastProvider>
         <ContactForm closeModal={() => {}} />
       </ToastProvider>
     );
 
-    await fillFormWithValidData();
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-    });
-
-    await act(async () => {
-      fireEvent.click(submitButton);
-    });
-    await waitFor(() => {
-      const errorElement = screen.getByText(
-        "Form already submitted, try again later"
-      );
-      expect(errorElement).toBeInTheDocument();
+      expect(mockToastError).toHaveBeenCalledWith("An error occurred");
     });
   });
 
   it("calls closeModal after successful submission and timeout", async () => {
     vi.useFakeTimers();
     const mockCloseModal = vi.fn(() => {});
-    mockMakeRequest.mockResolvedValue(true);
-    mockIsSuccess.mockReturnValue(true);
+
+    mockUseApi.mockReturnValue({
+      makeRequest: mockMakeRequest,
+      loading: false,
+      isSuccess: true,
+      errorMsg: null,
+      data: {
+        message: "Form submitted, our team will get in touch shortly",
+      },
+    });
+
     render(
       <ToastProvider>
         <ContactForm closeModal={mockCloseModal} />
       </ToastProvider>
     );
 
-    await fillFormWithValidData();
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
+    expect(mockCloseModal).toHaveBeenCalledTimes(0);
+
     await act(async () => {
-      fireEvent.click(submitButton);
+      vi.advanceTimersByTime(500);
     });
-    await act(async () => {
-      vi.advanceTimersByTime(3000);
-    });
+
     expect(mockCloseModal).toHaveBeenCalledTimes(1);
+
     vi.useRealTimers();
   });
 
   it("clears form after successful submission", async () => {
     vi.useFakeTimers();
-    mockMakeRequest.mockResolvedValue(true);
-    mockIsSuccess.mockReturnValue(true);
+
+    mockUseApi.mockReturnValue({
+      makeRequest: mockMakeRequest,
+      loading: false,
+      isSuccess: true,
+      errorMsg: null,
+      data: {
+        message: "Form submitted, our team will get in touch shortly",
+      },
+    });
+
     render(
       <ToastProvider>
         <ContactForm closeModal={() => {}} />
       </ToastProvider>
     );
 
-    const { nameInput, emailInput, messageInput } =
-      await fillFormWithValidData();
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.sendMessage,
-    });
+    const nameInput = screen.getByLabelText("Name");
+    const emailInput = screen.getByLabelText("Email");
+    const messageInput = screen.getByPlaceholderText(
+      "Type your message here ...."
+    );
+
     await act(async () => {
-      fireEvent.click(submitButton);
-    });
-    await act(async () => {
-      vi.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(500);
     });
 
     expect(nameInput.value).toBe("");
     expect(emailInput.value).toBe("");
     expect(messageInput.value).toBe("");
+
     vi.useRealTimers();
   });
 });

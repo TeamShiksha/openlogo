@@ -14,34 +14,46 @@ function ContactForm({ closeModal }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const { makeRequest, loading } = useApi({
+  const { makeRequest, loading, data, errorMsg } = useApi({
     url: `/messages/contact-us`,
     method: "POST",
     data: formValues,
   });
 
   const toast = useToast();
-  const customValidate = (values) => {
-    const errors = validate(values);
 
-    if ("name" in values) {
-      if (values.name.length > 20) {
-        errors.name = "Name must be 20 characters or fewer";
-      }
-      if (!/^[a-zA-Z0-9\s]+$/.test(values.name)) {
-        errors.name = "Name is required";
-      }
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+      const timeout = setTimeout(() => {
+        setFormErrors({});
+        setFocusedField(null);
+        setFormValues(CONTACT.initialValues);
+        closeModal();
+      }, 500);
+      return () => clearTimeout(timeout);
     }
+  }, [errorMsg, toast, closeModal]);
 
-    return errors;
-  };
+  useEffect(() => {
+    if (data?.message) {
+      toast.success(data.message);
+      const timeout = setTimeout(() => {
+        setFormErrors({});
+        setFocusedField(null);
+        setFormValues(CONTACT.initialValues);
+        closeModal();
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [data, toast, closeModal]);
 
   useEffect(() => {
     if (!focusedField) {
       const filledFields = Object.keys(formValues).filter(
         (field) => formValues[field] !== CONTACT.initialValues[field]
       );
-      const errors = customValidate(
+      const errors = validate(
         filledFields.reduce((acc, field) => {
           acc[field] = formValues[field];
           return acc;
@@ -51,13 +63,23 @@ function ContactForm({ closeModal }) {
       return;
     }
 
+    // Show validation error immediately on focus
+    const validationErrors = validate({
+      [focusedField]: formValues[focusedField],
+    });
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [focusedField]: validationErrors[focusedField],
+    }));
+
+    // Then update after delay if value changes
     const timeout = setTimeout(() => {
-      const validationErrors = customValidate({
+      const updatedErrors = validate({
         [focusedField]: formValues[focusedField],
       });
       setFormErrors((prevErrors) => ({
         ...prevErrors,
-        [focusedField]: validationErrors[focusedField],
+        [focusedField]: updatedErrors[focusedField],
       }));
     }, 500);
 
@@ -76,23 +98,7 @@ function ContactForm({ closeModal }) {
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-
-    const success = await makeRequest();
-    if (!success) {
-      setFormErrors({});
-      setFocusedField(null);
-      setFormValues(CONTACT.initialValues);
-      closeModal();
-      toast.error("Form already submitted, try again later");
-      return;
-    }
-    setTimeout(() => {
-      setFormErrors({});
-      setFocusedField(null);
-      setFormValues(CONTACT.initialValues);
-      closeModal();
-    }, 500);
-    toast.success("Form submitted, our team will get in touch shortly");
+    await makeRequest();
   };
 
   return (
