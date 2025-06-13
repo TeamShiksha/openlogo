@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./OperatorDashboard.module.css";
 import Modal from "../common/modal/Modal";
-import OperatorCard from "../operator/OperatorCard";
+import OperatorCard from "../operatorcard/OperatorCard";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
 import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";

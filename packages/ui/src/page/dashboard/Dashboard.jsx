@@ -16,7 +16,7 @@ import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 import DeleteKeyModal from "../../components/confirm/DeleteKeyModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
-import OperatorDashboard from "../../components/operatordashboard/OperatorDashboard.jsx";
+import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);

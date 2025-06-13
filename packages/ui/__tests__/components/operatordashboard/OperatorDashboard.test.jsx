@@ -1,9 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import OperatorDashboard from "../../../src/components/operatordashboard/OperatorDashboard";
+import OperatorDashboard from "../../../src/components/operator/OperatorDashboard";
 import { instance as apiInstance } from "../../../src/api/api_instance";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
 import { BUTTON_TEXT, MODAL_MESSAGES } from "../../../src/utils/Constants";
+import {
+  OPERATOR_MESSAGES,
+  OPERATOR_ARCHIVED_MESSAGES,
+} from "../../../src/utils/Constants";
 
 vi.mock("../../../src/api/api_instance", () => ({
   instance: {
@@ -12,45 +16,13 @@ vi.mock("../../../src/api/api_instance", () => ({
   },
 }));
 
-const messages = {
-  data: {
-    results: [
-      {
-        _id: "1",
-        status: "PENDING",
-        name: "Test User",
-        email: "test@example.com",
-        message: "Test message",
-        openedAt: "2025-06-01T00:00:00Z",
-      },
-    ],
-    totalPages: 1,
-  },
-};
-const archivedMessages = {
-  data: {
-    results: [
-      {
-        _id: "2",
-        status: "RESOLVED",
-        name: "Test User",
-        email: "test@example.com",
-        message: "Test message",
-        openedAt: "2025-06-01T00:00:00Z",
-        closedAt: "2025-06-02T00:00:00Z",
-        comment: "Resolved this comment a long ago",
-      },
-    ],
-    totalPages: 1,
-  },
-};
 describe("Operator Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
   it("renders and fetches messages by default", async () => {
-    apiInstance.get.mockResolvedValueOnce(messages);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
     render(
       <ToastProvider>
         <OperatorDashboard />
@@ -58,13 +30,15 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("test@example.com")).toBeInTheDocument();
-      expect(screen.getByText("Test message")).toBeInTheDocument();
+      const email = screen.getByText("test@example.com");
+      expect(email).toBeInTheDocument();
+      const message = screen.getByText("Test message");
+      expect(message).toBeInTheDocument();
     });
   });
 
   it("displays PENDING label in OperatorCard when Active tab is selected", async () => {
-    apiInstance.get.mockResolvedValueOnce(messages);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
 
     render(
       <ToastProvider>
@@ -73,14 +47,16 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText("Closed at")).not.toBeInTheDocument();
-      expect(screen.getByText("PENDING")).toBeInTheDocument();
+      const closedAt = screen.queryByText("Closed at");
+      expect(closedAt).not.toBeInTheDocument();
+      const pending = screen.getByText("PENDING");
+      expect(pending).toBeInTheDocument();
     });
   });
 
   it("switches to archived tab and fetches data", async () => {
-    apiInstance.get.mockResolvedValueOnce(messages);
-    apiInstance.get.mockResolvedValueOnce(archivedMessages);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_ARCHIVED_MESSAGES);
 
     render(
       <ToastProvider>
@@ -110,7 +86,7 @@ describe("Operator Page", () => {
         totalPages: 1,
       },
     };
-    apiInstance.get.mockResolvedValueOnce(messages);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
     apiInstance.get.mockResolvedValueOnce(requests);
 
     render(
@@ -123,9 +99,10 @@ describe("Operator Page", () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByText(`Company URL: ${requests.data.results[0].companyUrl}`)
-      ).toBeInTheDocument();
+      const companyUrl = screen.getByText(
+        `Company URL: ${requests.data.results[0].companyUrl}`
+      );
+      expect(companyUrl).toBeInTheDocument();
     });
   });
 
@@ -145,9 +122,8 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText("No messages found for this filter.")
-      ).toBeInTheDocument();
+      const noMessages = screen.getByText("No messages found for this filter.");
+      expect(noMessages).toBeInTheDocument();
     });
   });
 
@@ -158,7 +134,7 @@ describe("Operator Page", () => {
         totalPages: 0,
       },
     };
-    apiInstance.get.mockResolvedValueOnce(messages);
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
     apiInstance.get.mockResolvedValueOnce(emptyRequests);
 
     render(
@@ -171,14 +147,13 @@ describe("Operator Page", () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByText("No requests found for this filter.")
-      ).toBeInTheDocument();
+      const noRequests = screen.getByText("No requests found for this filter.");
+      expect(noRequests).toBeInTheDocument();
     });
   });
 
   it("opens respond and reject modals and sends update requests with messages", async () => {
-    apiInstance.get.mockResolvedValue(messages);
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
     apiInstance.put.mockResolvedValue({ data: {} });
 
     render(
@@ -188,7 +163,8 @@ describe("Operator Page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Respond")).toBeInTheDocument();
+      const respond = screen.getByText("Respond");
+      expect(respond).toBeInTheDocument();
     });
 
     const validTestText =
@@ -218,7 +194,8 @@ describe("Operator Page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(BUTTON_TEXT.reject)).toBeInTheDocument();
+      const rejectButton = screen.getByText(BUTTON_TEXT.reject);
+      expect(rejectButton).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByText("Reject"));

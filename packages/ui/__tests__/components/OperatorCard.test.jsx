@@ -1,18 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, it, describe, vi } from "vitest";
-import OperatorCard from "../../src/components/operator/OperatorCard";
-
-const mockItem = {
-  _id: "683c76bdc92459606a4f",
-  name: "Charan Praveen",
-  email: "charan@example.com",
-  companyUrl: "https://example.com",
-  message: "This is a sample message to test",
-  status: "PENDING",
-  openedAt: "2024-01-01T00:00:00Z",
-  closedAt: "2024-01-02T00:00:00Z",
-  comment: "Issue resolved after the discussion",
-};
+import OperatorCard from "../../src/components/operatorcard/OperatorCard";
+import { MOCK_OPERATOR_CARD_DATA } from "../../src/utils/Constants";
 
 const onRespondClick = vi.fn();
 
@@ -20,22 +9,23 @@ describe("OperatorCard Component", () => {
   it("shows request ID, status, and opened date", () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.getByText(mockItem._id)).toBeInTheDocument();
-    expect(screen.getByText(mockItem.status)).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        `Opened at : ${new Date(mockItem.openedAt).toLocaleDateString()}`
-      )
-    ).toBeInTheDocument();
+    const requestId = screen.getByText(MOCK_OPERATOR_CARD_DATA._id);
+    expect(requestId).toBeInTheDocument();
+    const status = screen.getByText(MOCK_OPERATOR_CARD_DATA.status);
+    expect(status).toBeInTheDocument();
+    const openedDate = screen.getByText(
+      `Opened at : ${new Date(MOCK_OPERATOR_CARD_DATA.openedAt).toLocaleDateString()}`
+    );
+    expect(openedDate).toBeInTheDocument();
   });
 
   it("show closed date when status is RESOLVED or REJECTED", () => {
-    const resolvedItem = { ...mockItem, status: "RESOLVED" };
+    const resolvedItem = { ...MOCK_OPERATOR_CARD_DATA, status: "RESOLVED" };
     render(
       <OperatorCard
         item={resolvedItem}
@@ -43,13 +33,12 @@ describe("OperatorCard Component", () => {
         searchType="messages"
       />
     );
-    expect(
-      screen.getByText(
-        `Closed at : ${new Date(mockItem.closedAt).toLocaleDateString()}`
-      )
-    ).toBeInTheDocument();
+    const closedDate = screen.getByText(
+      `Closed at : ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+    );
+    expect(closedDate).toBeInTheDocument();
 
-    const rejectedItem = { ...mockItem, status: "REJECTED" };
+    const rejectedItem = { ...MOCK_OPERATOR_CARD_DATA, status: "REJECTED" };
     render(
       <OperatorCard
         item={rejectedItem}
@@ -57,96 +46,104 @@ describe("OperatorCard Component", () => {
         searchType="messages"
       />
     );
-    expect(
-      screen.getAllByText(
-        `Closed at : ${new Date(mockItem.closedAt).toLocaleDateString()}`
-      ).length
-    ).toBe(2);
+    const closedDates = screen.getAllByText(
+      `Closed at : ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+    );
+    expect(closedDates.length).toBe(2);
   });
 
   it("does not show closed date when status is PENDING", () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.queryByText(/Closed at/)).not.toBeInTheDocument();
+    const closedDate = screen.queryByText(/Closed at/);
+    expect(closedDate).not.toBeInTheDocument();
   });
 
   it('displays user name and email when searchType is "messages"', () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.getByText(mockItem.name)).toBeInTheDocument();
-    expect(screen.getByText(mockItem.email)).toBeInTheDocument();
+    const name = screen.getByText(MOCK_OPERATOR_CARD_DATA.name);
+    expect(name).toBeInTheDocument();
+    const email = screen.getByText(MOCK_OPERATOR_CARD_DATA.email);
+    expect(email).toBeInTheDocument();
   });
 
   it('displays company URL when searchType is "requests"', () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="requests"
       />
     );
-    expect(
-      screen.getByText(`Company URL: ${mockItem.companyUrl}`)
-    ).toBeInTheDocument();
+    const companyUrl = screen.getByText(
+      `Company URL: ${MOCK_OPERATOR_CARD_DATA.companyUrl}`
+    );
+    expect(companyUrl).toBeInTheDocument();
   });
 
   it('does not display user info when searchType is "requests"', () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="requests"
       />
     );
-    expect(screen.queryByText(mockItem.name)).not.toBeInTheDocument();
-    expect(screen.queryByText(mockItem.email)).not.toBeInTheDocument();
+    const name = screen.queryByText(MOCK_OPERATOR_CARD_DATA.name);
+    expect(name).not.toBeInTheDocument();
+    const email = screen.queryByText(MOCK_OPERATOR_CARD_DATA.email);
+    expect(email).not.toBeInTheDocument();
   });
 
   it('displays message title when searchType is "messages"', () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.getByText("Message")).toBeInTheDocument();
+    const messageTitle = screen.getByText("Message");
+    expect(messageTitle).toBeInTheDocument();
   });
 
   it("displays the correct message content", () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.getByText(mockItem.message)).toBeInTheDocument();
+    const messageContent = screen.getByText(MOCK_OPERATOR_CARD_DATA.message);
+    expect(messageContent).toBeInTheDocument();
   });
 
   it('does not display message title when searchType is "requests"', () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="requests"
       />
     );
-    expect(screen.queryByText("Message")).not.toBeInTheDocument();
+    const messageTitle = screen.queryByText("Message");
+    expect(messageTitle).not.toBeInTheDocument();
   });
 
   it("does not render Respond and Reject buttons when status is RESOLVED", () => {
-    const resolvedItem = { ...mockItem, status: "RESOLVED" };
+    const resolvedItem = { ...MOCK_OPERATOR_CARD_DATA, status: "RESOLVED" };
     render(
       <OperatorCard
         item={resolvedItem}
@@ -154,50 +151,60 @@ describe("OperatorCard Component", () => {
         searchType="messages"
       />
     );
-    expect(screen.queryByText("Respond")).not.toBeInTheDocument();
-    expect(screen.queryByText("Reject")).not.toBeInTheDocument();
+    const respondButton = screen.queryByText("Respond");
+    expect(respondButton).not.toBeInTheDocument();
+    const rejectButton = screen.queryByText("Reject");
+    expect(rejectButton).not.toBeInTheDocument();
   });
 
   it("renders Respond and Reject buttons when status is PENDING", () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.getByText("Respond")).toBeInTheDocument();
-    expect(screen.getByText("Reject")).toBeInTheDocument();
+    const respondButton = screen.getByText("Respond");
+    expect(respondButton).toBeInTheDocument();
+    const rejectButton = screen.getByText("Reject");
+    expect(rejectButton).toBeInTheDocument();
   });
 
   it("calls onRespondClick with 'respond' on Respond button click", async () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
     const respondButton = screen.getByText("Respond");
     fireEvent.click(respondButton);
-    expect(onRespondClick).toHaveBeenCalledWith(mockItem, "respond");
+    expect(onRespondClick).toHaveBeenCalledWith(
+      MOCK_OPERATOR_CARD_DATA,
+      "respond"
+    );
   });
 
   it("calls onRespondClick with 'reject' on Reject button click", async () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
     const rejectButton = screen.getByText("Reject");
     fireEvent.click(rejectButton);
-    expect(onRespondClick).toHaveBeenCalledWith(mockItem, "reject");
+    expect(onRespondClick).toHaveBeenCalledWith(
+      MOCK_OPERATOR_CARD_DATA,
+      "reject"
+    );
   });
 
   it("displays summary when status is RESOLVED", () => {
-    const resolvedItem = { ...mockItem, status: "RESOLVED" };
+    const resolvedItem = { ...MOCK_OPERATOR_CARD_DATA, status: "RESOLVED" };
     render(
       <OperatorCard
         item={resolvedItem}
@@ -205,18 +212,21 @@ describe("OperatorCard Component", () => {
         searchType="messages"
       />
     );
-    expect(screen.getByText("Summary")).toBeInTheDocument();
-    expect(screen.getByText(mockItem.comment)).toBeInTheDocument();
+    const summary = screen.getByText("Summary");
+    expect(summary).toBeInTheDocument();
+    const comment = screen.getByText(MOCK_OPERATOR_CARD_DATA.comment);
+    expect(comment).toBeInTheDocument();
   });
 
   it("does not display summary when status is PENDING", () => {
     render(
       <OperatorCard
-        item={mockItem}
+        item={MOCK_OPERATOR_CARD_DATA}
         onRespondClick={onRespondClick}
         searchType="messages"
       />
     );
-    expect(screen.queryByText("Summary")).not.toBeInTheDocument();
+    const summary = screen.queryByText("Summary");
+    expect(summary).not.toBeInTheDocument();
   });
 });
