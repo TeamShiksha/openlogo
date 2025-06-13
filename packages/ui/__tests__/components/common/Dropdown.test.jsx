@@ -1,15 +1,9 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import Dropdown from "../../../src/components/common/dropdown/Dropdown";
 
 describe("Dropdown Component", () => {
-
   it("should render nothing if options array is empty", () => {
     render(
       <Dropdown options={[]} selectedOption="" setSelectedOption={vi.fn()} />

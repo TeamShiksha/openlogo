@@ -418,6 +418,10 @@ export const BUTTON_TEXT = {
   submit: "Submit",
   backToSignIn: " Back to Sign In",
   cancel: "Cancel",
+  respond: "Respond",
+  reject: "Reject",
+  sendResponse: "Send Response",
+  confirmRejection: "Confirm Rejection",
 };
 
 export const BRANDING = {
@@ -727,4 +731,54 @@ export const MESSAGES = {
   SIGN_OUT_SUCCESS: "Sign out successfully",
   SIGN_UP_SUCCESS: "Sign up successfully",
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+};
+
+export const MODAL_MESSAGES = {
+  RESPOND: "Type your response here...",
+  REJECT: "Reason for rejection...",
+};
+
+export const MOCK_OPERATOR_CARD_DATA = {
+  _id: "683c76bdc92459606a4f",
+  name: "Charan Praveen",
+  email: "charan@example.com",
+  companyUrl: "https://example.com",
+  message: "This is a sample message to test",
+  status: "PENDING",
+  openedAt: "2024-01-01T00:00:00Z",
+  closedAt: "2024-01-02T00:00:00Z",
+  comment: "Issue resolved after the discussion",
+};
+
+export const OPERATOR_MESSAGES = {
+  data: {
+    results: [
+      {
+        _id: "1",
+        status: "PENDING",
+        name: "Test User",
+        email: "test@example.com",
+        message: "Test message",
+        openedAt: "2025-06-01T00:00:00Z",
+      },
+    ],
+    totalPages: 1,
+  },
+};
+export const OPERATOR_ARCHIVED_MESSAGES = {
+  data: {
+    results: [
+      {
+        _id: "2",
+        status: "RESOLVED",
+        name: "Test User",
+        email: "test@example.com",
+        message: "Test message",
+        openedAt: "2025-06-01T00:00:00Z",
+        closedAt: "2025-06-02T00:00:00Z",
+        comment: "Resolved this comment a long ago",
+      },
+    ],
+    totalPages: 1,
+  },
 };
