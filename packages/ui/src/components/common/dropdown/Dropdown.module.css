@@ -5,8 +5,8 @@
 }
 
 .dropdown {
-  background:var(--white);
-  color: var(--primary); 
+  background: var(--white);
+  color: var(--primary);
   border-radius: 6px;
   padding: 4px 11px;
   min-width: 100px;

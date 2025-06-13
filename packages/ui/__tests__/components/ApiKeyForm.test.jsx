@@ -10,7 +10,7 @@ const mockApiData = {
   },
 };
 
-vi.mock("../../../src/hooks/useApi", () => ({
+vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: () => ({
     makeRequest: mockedMakeRequest,
     data: mockApiData,
@@ -25,7 +25,7 @@ const mockToast = {
   info: vi.fn(),
 };
 
-vi.mock("../../../src/hooks/useToast", () => ({
+vi.mock("../../src/hooks/useToast.js", () => ({
   useToast: () => mockToast,
 }));
 
@@ -233,7 +233,7 @@ describe("ApiKeyForm Component", () => {
   });
 
   it("shows loading state when generating key", async () => {
-    vi.mocked(vi.importActual("../../../src/hooks/useApi")).useApi = () => ({
+    vi.mocked(vi.importActual("../../src/hooks/useApi.js")).useApi = () => ({
       makeRequest: mockedMakeRequest,
       data: mockApiData,
       loading: true,

@@ -27,6 +27,7 @@ export const useApi = (config) => {
       success = true;
     } catch (err) {
       setIsSuccess(false);
+
       if (err?.response?.data?.message) {
         setErrorMsg(err?.response?.data?.message);
       } else {

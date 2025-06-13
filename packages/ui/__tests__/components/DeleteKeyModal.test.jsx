@@ -5,7 +5,7 @@ import { ToastProvider } from "../../src/contexts/ToastContext";
 
 const mockedDeleteKeyRequest = vi.fn();
 
-vi.mock("../../../src/hooks/useApi", () => ({
+vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: () => ({
     makeRequest: mockedDeleteKeyRequest,
     errorMsg: null,
@@ -17,7 +17,7 @@ const mockToast = {
   error: vi.fn(),
 };
 
-vi.mock("../../../src/hooks/useToast", () => ({
+vi.mock("../../src/hooks/useToast.js", () => ({
   useToast: () => mockToast,
 }));
 
@@ -126,7 +126,7 @@ describe("DeleteKeyModal Component", () => {
   });
 
   it("shows error toast when API returns an error", async () => {
-    vi.mock("../../../src/hooks/useApi", () => ({
+    vi.mock("../../src/hooks/useApi.js", () => ({
       useApi: () => ({
         makeRequest: mockedDeleteKeyRequest,
         errorMsg: "Failed to delete API key",
