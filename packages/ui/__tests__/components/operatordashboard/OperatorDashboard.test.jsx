@@ -3,8 +3,9 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import OperatorDashboard from "../../../src/components/operator/OperatorDashboard";
 import { instance as apiInstance } from "../../../src/api/api_instance";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
-import { BUTTON_TEXT, MODAL_MESSAGES } from "../../../src/utils/Constants";
 import {
+  BUTTON_TEXT,
+  MODAL_MESSAGES,
   OPERATOR_MESSAGES,
   OPERATOR_ARCHIVED_MESSAGES,
 } from "../../../src/utils/Constants";
