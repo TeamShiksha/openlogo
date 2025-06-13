@@ -28,6 +28,10 @@ export const useApi = (config) => {
     } catch (err) {
       setIsSuccess(false);
 
+      if (err?.response?.data) {
+        setData(err.response.data);
+      }
+
       if (err?.response?.data?.message) {
         setErrorMsg(err?.response?.data?.message);
       } else {

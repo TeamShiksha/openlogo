@@ -19,14 +19,7 @@ const Verification = () => {
   const performVerification = useCallback(async () => {
     if (!token || hasVerified.current) return;
     hasVerified.current = true;
-
-    try {
-      await makeRequest();
-    } catch (err) {
-      if (err?.response?.data?.ui) {
-        setUiState(err.response.data.ui);
-      }
-    }
+    await makeRequest();
   }, [token, makeRequest]);
 
   useEffect(() => {
