@@ -85,7 +85,7 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
             <div className={styles.imageIcon}>
               <img src={SVGS.dragAndDropBg} alt="Upload icon" />
             </div>
-            <p>Drop and drop image</p>
+            <p>Drag and drop image</p>
             <p>OR</p>
             <input
               ref={inputRef}
