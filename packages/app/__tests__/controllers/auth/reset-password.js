@@ -30,10 +30,10 @@ describe("RESET PASSWORD API", () => {
       message: Messages.VERIFICATION_FAIL,
       statusCode: 401,
       ui: {
-        message: "Verification failed.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.VERIFICATION_FAIL,
+        showLoader: false,
       },
     });
   });
@@ -50,10 +50,10 @@ describe("RESET PASSWORD API", () => {
       message: "New password is required",
       statusCode: 422,
       ui: {
-        message: "New password is required",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "New password is required",
+        showLoader: false,
       },
     });
   });
@@ -70,10 +70,10 @@ describe("RESET PASSWORD API", () => {
       message: "New password must be 30 characters or fewer",
       statusCode: 422,
       ui: {
-        message: "New password must be 30 characters or fewer",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "New password must be 30 characters or fewer",
+        showLoader: false,
       },
     });
   });
@@ -90,10 +90,10 @@ describe("RESET PASSWORD API", () => {
       message: "New password must be at least 8 characters",
       statusCode: 422,
       ui: {
-        message: "New password must be at least 8 characters",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "New password must be at least 8 characters",
+        showLoader: false,
       },
     });
   });
@@ -114,10 +114,10 @@ describe("RESET PASSWORD API", () => {
       message: "Password and confirm password do not match",
       statusCode: 422,
       ui: {
-        message: "Password and confirm password do not match",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "Password and confirm password do not match",
+        showLoader: false,
       },
     });
   });
@@ -137,10 +137,10 @@ describe("RESET PASSWORD API", () => {
       message: "Confirm password is required",
       statusCode: 422,
       ui: {
-        message: "Confirm password is required",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "Confirm password is required",
+        showLoader: false,
       },
     });
   });
@@ -161,10 +161,10 @@ describe("RESET PASSWORD API", () => {
       message: "Token must be a string",
       statusCode: 422,
       ui: {
-        message: "Token must be a string",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "Token must be a string",
+        showLoader: false,
       },
     });
   });
@@ -184,10 +184,10 @@ describe("RESET PASSWORD API", () => {
       message: "Token is required",
       statusCode: 422,
       ui: {
-        message: "Token is required",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: "Token is required",
+        showLoader: false,
       },
     });
   });
@@ -213,10 +213,10 @@ describe("RESET PASSWORD API", () => {
       message: Messages.PASS_FAILED,
       statusCode: 400,
       ui: {
-        message: "Failed to update password.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.PASS_FAILED,
+        showLoader: false,
       },
     });
   });
@@ -245,10 +245,10 @@ describe("RESET PASSWORD API", () => {
       message: Messages.PASS_FAILED,
       statusCode: 403,
       ui: {
-        message: "Failed to update password.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.PASS_FAILED,
+        showLoader: false,
       },
     });
   });

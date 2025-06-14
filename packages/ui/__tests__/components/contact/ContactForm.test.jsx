@@ -313,7 +313,7 @@ describe("ContactForm Component", () => {
     });
   });
 
-  it.skip("calls closeModal after successful submission and timeout", async () => {
+  it("calls closeModal after successful submission and timeout", async () => {
     vi.useFakeTimers();
     const mockCloseModal = vi.fn(() => {});
 
@@ -344,7 +344,7 @@ describe("ContactForm Component", () => {
     vi.useRealTimers();
   });
 
-  it.skip("clears form after successful submission", async () => {
+  it("clears form after successful submission", async () => {
     vi.useFakeTimers();
 
     mockUseApi.mockReturnValue({

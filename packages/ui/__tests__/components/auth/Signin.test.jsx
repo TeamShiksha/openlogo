@@ -18,10 +18,10 @@ vi.mock("react-router-dom", async () => ({
 }));
 
 const mockedMakeRequest = vi.fn();
-vi.mock("../../src/hooks/useApi.js", () => ({
+vi.mock("../../../src/hooks/useApi", () => ({
   useApi: () => ({
     makeRequest: mockedMakeRequest,
-    errorMsg: null,
+    errorMsg: "Incorrect email or password.",
   }),
 }));
 
@@ -94,9 +94,10 @@ describe("SignInForm UI and Functionality Tests", () => {
     });
   });
 
-  it.skip("connectivity test passed", async () => {
+  it("connectivity test passed", async () => {
     const authContext = mockAuthContext(false);
     const oncloseMock = vi.fn();
+    mockedMakeRequest.mockResolvedValue(true);
 
     render(
       <BrowserRouter>
@@ -125,8 +126,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
-  it.skip("connectivity test failed", async () => {
+  it("connectivity test failed", async () => {
     const authContext = mockAuthContext(false);
+    mockedMakeRequest.mockResolvedValue(false);
     const errorMsg = "Incorrect email or password.";
 
     render(

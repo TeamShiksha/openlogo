@@ -30,10 +30,10 @@ describe("RESET PASSWORD SESSION API", () => {
       message: Messages.INVALID_TOKEN,
       statusCode: 422,
       ui: {
-        message: "Invalid token.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.INVALID_TOKEN,
+        showLoader: false,
       },
     });
   });
@@ -53,10 +53,10 @@ describe("RESET PASSWORD SESSION API", () => {
       message: Messages.USER_NOT_FOUND,
       statusCode: 404,
       ui: {
-        message: "User not found.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.USER_NOT_FOUND,
+        showLoader: false,
       },
     });
   });
@@ -79,10 +79,10 @@ describe("RESET PASSWORD SESSION API", () => {
       message: Messages.EXPIRED_TOKEN,
       statusCode: 403,
       ui: {
-        message: "Token expired.",
-        showLoader: false,
         state: "ERROR",
         title: "Error",
+        message: Messages.EXPIRED_TOKEN,
+        showLoader: false,
       },
     });
   });
