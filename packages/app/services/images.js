@@ -109,8 +109,8 @@ class ImageServices {
     };
   }
 
-  async getImagesByUserId(userId) {
-    return await this.imageRepository.getAllImageByUserId(userId);
+  async getImagesByUserId(userId, skip, limit) {
+    return await this.imageRepository.getAllImageByUserId(userId, skip, limit);
   }
 
   async getImageById(id) {

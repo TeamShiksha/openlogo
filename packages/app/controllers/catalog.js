@@ -91,7 +91,10 @@ async function getCatalogController(req, res, next) {
       });
     }
 
-    const imageData = await imageService.getImagesByUserId(userId);
+    const skip = parseInt(req.query.skip) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const imageData = await imageService.getImagesByUserId(userId, skip, limit);
     if (!imageData)
       return res.status(200).json({
         statusCode: 200,
