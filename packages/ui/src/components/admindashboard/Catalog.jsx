@@ -13,24 +13,55 @@ function Catalog() {
   const [pageNum, setPageNum] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const limit = 10;
   const skip = pageNum * limit;
 
   const { data, loading, errorMsg, makeRequest } = useApi({
     method: "GET",
-    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+    // url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+    url: `/catalog/logos?skip=0&limit=0`,
+  });
+
+  const {
+    data: uploadData,
+    loading: uploadLoading,
+    errorMsg: uploadErrorMsg,
+    makeRequest: uploadMakeRequest,
+  } = useApi({
+    method: "POST",
+    url: `/catalog/logo`,
+    headers: { "Content-Type": "multipart/form-data" }, // Set headers for file upload
   });
 
   useEffect(() => {
-    makeRequest().then((responseData) => {
-      if (responseData?.totalCount) {
-        const pages = Math.ceil(responseData.totalCount / limit);
-        setTotalPages(pages - 1); // subtract 1 because pageNum is 0-indexed
-      }
-    });
+    makeRequest();
   }, [pageNum]);
+
+  useEffect(() => {
+    if (data?.data?.totalPages) {
+      setTotalPages(data.data.totalPages - 1); // Adjust for 0-based indexing
+    }
+  }, [data]);
+
+  const handleImageUpload = async ({ file, companyUri }) => {
+    if (!file || !companyUri) return;
+
+    const formData = new FormData();
+    formData.append("logo", file); // Adjust the field name based on your API's requirements
+    formData.append("companyUri", companyUri);
+
+    try {
+      const success = await uploadMakeRequest({ data: formData }); // Pass FormData dynamically
+      if (success) {
+        setIsModalOpen(false); // Close modal on successful upload
+        makeRequest(); // Refresh catalog data after upload
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+    }
+  };
 
   const handleSearchTermChange = (inputChangeEvent) => {
     setSearchTerm(inputChangeEvent.target.value);
@@ -44,16 +75,18 @@ function Catalog() {
   };
 
   const handleNextBtnClick = () => {
-    if (data && data?.length === limit) {
+    if (pageNum < totalPages) {
       setSearchTerm("");
       setPageNum((prev) => prev + 1);
     }
   };
 
+  console.log({ pageNum, totalPages });
+
   const filteredCompanies =
-    data && data.length > 0
-      ? data.filter((company) =>
-          company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
+    data?.data?.data?.length > 0
+      ? data.data.data.filter((company) =>
+          company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
 
@@ -82,6 +115,7 @@ function Catalog() {
         <ImageUploadModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          onUpload={handleImageUpload}
         />
       </div>
       {/* catalog table */}
@@ -100,7 +134,7 @@ function Catalog() {
         <div className={styles["catalog-table-content"]}>
           {filteredCompanies.length > 0 ? (
             filteredCompanies.map((company) => (
-              <CatalogItem key={company.id} company={company} />
+              <CatalogItem key={company._id} company={company} />
             ))
           ) : (
             <p className={styles["catalog-table-no-content"]}>
@@ -125,6 +159,7 @@ function Catalog() {
           </div>
           <button
             onClick={handleNextBtnClick}
+            disabled={pageNum === totalPages}
             className={`${pageNum === totalPages && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-right-arrow"]}`}
           >
             <img src={rightArrow} alt="right-arrow" />
