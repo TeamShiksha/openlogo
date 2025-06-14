@@ -3,10 +3,12 @@ import { useState, useRef } from "react";
 import styles from "./ImageUploadModal.module.css";
 import { SVGS } from "../../utils/Constants";
 import Modal from "../common/modal/Modal";
+import CustomInput from "../common/input/CustomInput";
 
 const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [companyUri, setCompanyUri] = useState("");
   const inputRef = useRef(null);
 
   if (!isOpen) return null;
@@ -55,13 +57,14 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
 
   const handleUpload = () => {
     if (selectedImage) {
-      onUpload(selectedImage.file);
-      onClose();
+      onUpload({ file: selectedImage.file, companyUri });
+      onCloseModal();
     }
   };
   const onCloseModal = () => {
     onClose();
     setSelectedImage(null);
+    setCompanyUri("");
   };
 
   return (
@@ -71,7 +74,6 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
       customClass={`${styles.imageUploadModal} ${selectedImage ? styles.modalWithImage : ""}`}
       size="custom"
       customWidth="500px"
-      customHeight="400px"
     >
       {!selectedImage ? (
         <div
@@ -110,6 +112,14 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
             className={styles.imagePreview}
           />
           <p>{selectedImage.file.name}</p>
+          <CustomInput
+            type="text"
+            name="companyUri"
+            label="Company URI"
+            value={companyUri}
+            onChange={(e) => setCompanyUri(e.target.value)}
+            className={styles.companyUriInput}
+          />
           <button className={styles.uploadButton} onClick={handleUpload}>
             Upload
           </button>
