@@ -5,7 +5,7 @@ import { MOCK_USER_DATA } from "../../src/utils/Constants";
 import { ToastContext } from "../../src/contexts/Contexts";
 
 const mockMakeRequest = vi.fn();
-vi.mock("../../../../src/hooks/useApi.js", () => ({
+vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: () => ({
     makeRequest: mockMakeRequest,
     errorMsg: "",

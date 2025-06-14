@@ -1,8 +1,7 @@
 import styles from "./Dropdown.module.css";
 import PropTypes from "prop-types";
 
-function Dropdown({options, selectedOption, setSelectedOption}) {
-
+function Dropdown({ options, selectedOption, setSelectedOption }) {
   return (
     <div className={styles["dropdown-div"]}>
       <select

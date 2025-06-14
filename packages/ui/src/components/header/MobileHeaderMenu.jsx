@@ -10,7 +10,6 @@ import {
 } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
 
-
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
