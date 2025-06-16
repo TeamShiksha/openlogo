@@ -3,11 +3,7 @@ import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import styles from "./ChangePassword.module.css";
 import PropTypes from "prop-types";
-
-const PASSWORD_FIELDS = [
-  { type: "password", name: "currPassword", label: "Current Password" },
-  { type: "password", name: "newPassword", label: "New Password" },
-];
+import { BUTTON_TEXT, CHANGE_PASSWORD_FIELDS } from "../../utils/Constants";
 
 function ChangePassword({ isGuest }) {
   const [formValues, setFormValues] = useState({
@@ -32,7 +28,7 @@ function ChangePassword({ isGuest }) {
       onSubmit={handleSubmit}
       className={styles["change-password-input-group"]}
     >
-      {PASSWORD_FIELDS.map((field) => (
+      {CHANGE_PASSWORD_FIELDS.map((field) => (
         <CustomInput
           key={field.name}
           type={field.type}
@@ -44,7 +40,7 @@ function ChangePassword({ isGuest }) {
         />
       ))}
       <Button type="submit" variant="primary" disabled={isGuest}>
-        Change password
+        {BUTTON_TEXT.changePassword}
       </Button>
     </form>
   );

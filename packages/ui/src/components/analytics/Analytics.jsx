@@ -2,19 +2,25 @@ import AnalyticsCard from "./AnalyticsCard";
 import styles from "./Analytics.module.css";
 import { useState, useEffect } from "react";
 import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 
 function Analytics() {
+  const toast = useToast();
   const [stats, setStats] = useState([]);
-  const { makeRequest, data } = useApi({
+  const { makeRequest, data, error } = useApi({
     method: "GET",
     url: "/catalog/stats",
   });
 
   useEffect(() => {
-    makeRequest().catch((err) => {
-      console.error("Error fetching analytics data:", err);
-    });
-  }, []);
+    if (error) {
+      toast.error(error);
+    }
+  }, [error, toast]);
+
+  useEffect(() => {
+    makeRequest();
+  }, [makeRequest]);
 
   useEffect(() => {
     if (data) {

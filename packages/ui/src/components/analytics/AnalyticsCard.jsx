@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import propTypes from "prop-types";
 import styles from "./AnalyticsCard.module.css";
 
@@ -6,18 +6,18 @@ function AnalyticsCard({ title, api }) {
   const [value, setValue] = useState(1000);
   const [change, setChange] = useState(255);
 
-  async function fetchAndUpdateValue() {
+  const fetchAndUpdateValue = useCallback(async () => {
     setValue(api);
-  }
+  }, [api, setValue]);
 
-  async function fetchAndUpdatePercentageChange(api) {
+  const fetchAndUpdatePercentageChange = useCallback(async () => {
     setChange(api);
-  }
+  }, [api, setChange]);
 
   useEffect(() => {
     fetchAndUpdateValue();
     fetchAndUpdatePercentageChange(api);
-  }, [api]);
+  }, [api, fetchAndUpdateValue, fetchAndUpdatePercentageChange]);
 
   return (
     <div className={styles.card} data-testid="analytics-card">
