@@ -7,16 +7,16 @@ import { useToast } from "../../hooks/useToast";
 function Analytics() {
   const toast = useToast();
   const [stats, setStats] = useState([]);
-  const { makeRequest, data, error } = useApi({
+  const { makeRequest, data, errorMsg } = useApi({
     method: "GET",
     url: "/catalog/stats",
   });
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (errorMsg) {
+      toast.error(errorMsg);
     }
-  }, [error, toast]);
+  }, [errorMsg, toast]);
 
   useEffect(() => {
     makeRequest();
