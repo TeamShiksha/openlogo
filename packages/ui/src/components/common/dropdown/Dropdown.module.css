@@ -1,32 +1,30 @@
 .dropdown-div {
   display: flex;
   justify-content: flex-end;
-  margin: 1rem 0;
+  margin: 2rem 0;
 }
 
 .dropdown {
+  border: var(--border);
   background: var(--white);
-  color: var(--primary);
-  border-radius: 6px;
+  color: var(--black);
+  border-radius: 7px;
   padding: 4px 11px;
-  min-width: 100px;
-  width: 15vw;
+  min-width: 80px;
+  width: 120px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
-  box-shadow: none;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .dropdown:focus {
   outline: none;
-  /* box-shadow: 0 0 0 2px var(--primary); */
 }
 
 .option {
-  background-color: var(--white);
-  color: var(--primary);
-  font-weight: bold;
+  color: var(--black);
+  font-weight: 500;
 }
 
 .option:hover {
@@ -35,9 +33,9 @@
 
 @media screen and (max-width: 768px) {
   .dropdown-div {
-    margin: 1rem 0;
+    margin: 2rem 0;
   }
   .dropdown {
-    width: 25vw;
+    width: 20vw;
   }
 }
