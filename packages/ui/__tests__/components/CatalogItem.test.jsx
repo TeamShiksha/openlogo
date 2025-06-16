@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import CatalogItem from "../../src/components/admindashboard/CatalogItem";
+import CatalogItem from "../../src/components/catalog/CatalogItem";
 import { companies } from "../../src/utils/Constants";
 
 describe("CatalogItem Component", () => {

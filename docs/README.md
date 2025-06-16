@@ -1,6 +1,9 @@
 ## Openlogo
 Openlogo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos.
 
+1. [Stage](https://stage.openlogo.fyi/)
+2. [Prod](https://www.openlogo.fyi/) - outdated
+
 ## Made with
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
@@ -12,34 +15,9 @@ Openlogo is your partner in logo exploration. Our platform boasts a collection o
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-### Clone and run the project locally
-   ```
-   git clone https://github.com/TeamShiksha/openlogo.git
-   cd openlogo
-   pnpm install
-   pnpm start
-   ```
+Read [DEVELOPMENT](./DEVELOPMENT.md) for instructions to develop features locally.
 
-### Environment variables
-
-Most of the environment variables can be used by copying them from the `.env.example` file. However, if you are trying to run the business APIs locally, you will need some additional environment variables associated with AWS.
-
-### Get the AWS environment variables
-
-- Create a stack using `cloudformation_dev_test.yml` file given inside `server/aws` directory.
-- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html).
-- After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
-   - `BUCKET_NAME`
-   - `BUCKET_REGION`
-   - `KEY`
-   - `DISTRIBUTION_DOMAIN`
-   - `CLOUD_FRONT_KEYPAIR_ID`
-   - `ACCESS_KEY`
-   - `SECRET_ACCESS_KEY`
-
-    **NOTE**: These values will be comma seperated.
-
-### More
+## More
 
 - [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
 

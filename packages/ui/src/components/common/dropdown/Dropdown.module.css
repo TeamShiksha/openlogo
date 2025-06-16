@@ -1,0 +1,41 @@
+.dropdown-div {
+  display: flex;
+  justify-content: flex-end;
+  margin: 2rem 0;
+}
+
+.dropdown {
+  border: var(--border);
+  background: var(--white);
+  color: var(--black);
+  border-radius: 7px;
+  padding: 4px 11px;
+  min-width: 80px;
+  width: 120px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.dropdown:focus {
+  outline: none;
+}
+
+.option {
+  color: var(--black);
+  font-weight: 500;
+}
+
+.option:hover {
+  background-color: var(--primary);
+}
+
+@media screen and (max-width: 768px) {
+  .dropdown-div {
+    margin: 2rem 0;
+  }
+  .dropdown {
+    width: 20vw;
+  }
+}

@@ -43,19 +43,19 @@ describe("GET /api/catalog/stats", () => {
   it("200 - Returns analytics data successfully", async () => {
     jest
       .spyOn(UserService.prototype, "getUsersCount")
-      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT.Users);
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[0].value);
     jest
       .spyOn(KeyService.prototype, "getKeysCount")
-      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT.Keys);
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[1].value);
     jest
       .spyOn(RequestService.prototype, "getRequestsCount")
-      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT.Requests);
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[2].value);
     jest
       .spyOn(SubscriptionService.prototype, "getSubscriptionUsageCount")
-      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT.Hits);
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[4].value);
     jest
       .spyOn(ContactUsService.prototype, "getFormsCount")
-      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT.ContactUs);
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[3].value);
 
     const response = await request(app)
       .get("/api/catalog/stats")

@@ -4,22 +4,22 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
-import notion from "../assets/notion.png";
-import slack from "../assets/slack.png";
-import google_drive from "../assets/google_drive.png";
-import whatsapp from "../assets/whatsapp.png";
-import g_calendar from "../assets/g_calendar.png";
-import mailchimp from "../assets/mailchimp.png";
-import zapier from "../assets/zapier.png";
-import zendesk from "../assets/zendesk.png";
-import stripe from "../assets/stripe.png";
-import jira from "../assets/jira.png";
-import intercom from "../assets/intercom.png";
-import figma from "../assets/figma.png";
-import discord from "../assets/discord.png";
-import bitbucket from "../assets/bitbucket.png";
-import confluence from "../assets/confluence.png";
-import dropbox from "../assets/dropbox.png";
+import apple from "../assets/apple.png";
+import amazon from "../assets/amazon.png";
+import united_healthcare from "../assets/united_healthcare.png";
+import microsoft from "../assets/microsoft.png";
+import nvidia from "../assets/nvidia.png";
+import mastercard from "../assets/mastercard.png";
+import target from "../assets/target.png";
+import ford from "../assets/ford.png";
+import adobe from "../assets/adobe.png";
+import ibm from "../assets/ibm.png";
+import alphabet from "../assets/alphabet.png";
+import nike from "../assets/nike.png";
+import tesla from "../assets/tesla.png";
+import walmart from "../assets/walmart.png";
+import salesforce from "../assets/salesforce.png";
+import meta from "../assets/meta.png";
 import jsLogo from "../assets/js.png";
 import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
@@ -30,8 +30,7 @@ export const SVGS = {
   searchIcon,
   curvedArrow,
   amazon: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg",
-  apple:
-    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+  apple: "https://upload.wikimedia.org/wikipedia/commons/f/fa/apple_black.svg",
   adobe:
     "https://upload.wikimedia.org/wikipedia/commons/8/8d/Adobe_Corporate_Logo.png",
   google:
@@ -132,7 +131,7 @@ export const LOGGEDIN_ITEMS = [
   {
     name: "home",
     title: "Home",
-    url: "/#home",
+    url: "/#",
     type: "section",
   },
   {
@@ -270,22 +269,22 @@ export const ABOUT = {
   DESCRIPTION:
     "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding. Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
   INTEGRATIONS: [
-    { id: 1, src: notion, alt: "Notion" },
-    { id: 2, src: slack, alt: "Slack" },
-    { id: 3, src: google_drive, alt: "Google Drive" },
-    { id: 4, src: intercom, alt: "Intercom" },
-    { id: 5, src: stripe, alt: "Stripe" },
-    { id: 6, src: dropbox, alt: "Dropbox" },
-    { id: 7, src: jira, alt: "Jira" },
-    { id: 8, src: zapier, alt: "Zapier" },
-    { id: 9, src: figma, alt: "Figma" },
-    { id: 10, src: confluence, alt: "Confluence" },
-    { id: 11, src: mailchimp, alt: "Mailchimp" },
-    { id: 12, src: zendesk, alt: "Zendesk" },
-    { id: 13, src: g_calendar, alt: "Google Calendar" },
-    { id: 14, src: whatsapp, alt: "WhatsApp" },
-    { id: 15, src: discord, alt: "Discord" },
-    { id: 16, src: bitbucket, alt: "Bitbucket" },
+    { id: 1, src: apple, alt: "Apple" },
+    { id: 2, src: amazon, alt: "Amazon" },
+    { id: 3, src: united_healthcare, alt: "United Health Care" },
+    { id: 4, src: alphabet, alt: "Alphabet" },
+    { id: 5, src: adobe, alt: "Adobe" },
+    { id: 6, src: meta, alt: "Meta" },
+    { id: 7, src: ibm, alt: "Ibm" },
+    { id: 8, src: target, alt: "target" },
+    { id: 9, src: nike, alt: "Nike" },
+    { id: 10, src: salesforce, alt: "Salesforce" },
+    { id: 11, src: mastercard, alt: "Master Card" },
+    { id: 12, src: ford, alt: "Ford" },
+    { id: 13, src: nvidia, alt: "Google Calendar" },
+    { id: 14, src: microsoft, alt: "microsoft" },
+    { id: 15, src: tesla, alt: "tesla" },
+    { id: 16, src: walmart, alt: "walmart" },
   ],
 };
 
@@ -419,6 +418,10 @@ export const BUTTON_TEXT = {
   submit: "Submit",
   backToSignIn: " Back to Sign In",
   cancel: "Cancel",
+  respond: "Respond",
+  reject: "Reject",
+  sendResponse: "Send Response",
+  confirmRejection: "Confirm Rejection",
 };
 
 export const BRANDING = {
@@ -718,5 +721,64 @@ export const API_KEY = {
       description: "Are you sure you want to delete the API key ? ",
       warning: " This action cannot be undone.",
     },
+  },
+};
+
+export const MESSAGES = {
+  ACCOUNT_DELETE_SUCCESS: "Account deleted successfully",
+  SIGN_IN_SUCCESS: "Sign in successfully",
+  GUEST_SIGN_IN_SUCCESS: "Signed in as guest successfully",
+  SIGN_OUT_SUCCESS: "Sign out successfully",
+  SIGN_UP_SUCCESS: "Sign up successfully",
+  USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+};
+
+export const MODAL_MESSAGES = {
+  RESPOND: "Type your response here...",
+  REJECT: "Reason for rejection...",
+};
+
+export const MOCK_OPERATOR_CARD_DATA = {
+  _id: "683c76bdc92459606a4f",
+  name: "Charan Praveen",
+  email: "charan@example.com",
+  companyUrl: "https://example.com",
+  message: "This is a sample message to test",
+  status: "PENDING",
+  openedAt: "2024-01-01T00:00:00Z",
+  closedAt: "2024-01-02T00:00:00Z",
+  comment: "Issue resolved after the discussion",
+};
+
+export const OPERATOR_MESSAGES = {
+  data: {
+    results: [
+      {
+        _id: "1",
+        status: "PENDING",
+        name: "Test User",
+        email: "test@example.com",
+        message: "Test message",
+        openedAt: "2025-06-01T00:00:00Z",
+      },
+    ],
+    totalPages: 1,
+  },
+};
+export const OPERATOR_ARCHIVED_MESSAGES = {
+  data: {
+    results: [
+      {
+        _id: "2",
+        status: "RESOLVED",
+        name: "Test User",
+        email: "test@example.com",
+        message: "Test message",
+        openedAt: "2025-06-01T00:00:00Z",
+        closedAt: "2025-06-02T00:00:00Z",
+        comment: "Resolved this comment a long ago",
+      },
+    ],
+    totalPages: 1,
   },
 };
