@@ -130,12 +130,14 @@ async function signinController(req, res, next) {
     }
     const currentDate = new Date();
     const oneDayValidityTimestamp = new Date(
-      currentDate.getTime() + 24 * 60 * 60 * 1000
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
     res.cookie("jwt", user.generateJWT(), {
       expires: oneDayValidityTimestamp,
       sameSite: "none",
       secure: true,
+      httpOnly: true,
+      domain: ".openlogo.fyi",
     });
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
