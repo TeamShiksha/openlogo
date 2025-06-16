@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useApi } from "../../hooks/useApi";
+import { instance } from "../../api/api_instance";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner";
 import styles from "./Verification.module.css";
 
@@ -9,52 +9,49 @@ const Verification = () => {
   const navigate = useNavigate();
   const token = searchParams.get("token");
   const hasVerified = useRef(false);
-  const [uiState, setUiState] = useState(null);
-
-  const { makeRequest, data } = useApi({
-    url: `/auth/verify/${token}`,
-    method: "GET",
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [title, setTitle] = useState("Verifying");
+  const [message, setMessage] = useState(
+    "Please wait, while we verify your email."
+  );
 
   const performVerification = useCallback(async () => {
     if (!token || hasVerified.current) return;
     hasVerified.current = true;
-    await makeRequest();
-  }, [token, makeRequest]);
 
-  useEffect(() => {
-    if (data?.ui) {
-      setUiState(data.ui);
-    }
-  }, [data]);
+    try {
+      const response = await instance.get(`/auth/verify/${token}`);
+      setIsLoading(false);
 
-  useEffect(() => {
-    if (uiState?.redirectAfter) {
-      const timer = setTimeout(() => navigate("/"), uiState.redirectAfter);
-      return () => clearTimeout(timer);
+      if (response.status === 200) {
+        setTitle("Verified");
+        setMessage(response.data?.message || "Email verified successfully");
+        setTimeout(() => navigate("/"), 3000);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      const errorMessage =
+        error.response?.data?.message || "Verification failed";
+
+      setTitle("Error");
+      setMessage(errorMessage);
     }
-  }, [uiState?.redirectAfter, navigate]);
+  }, [token, navigate]);
 
   useEffect(() => {
     performVerification();
   }, [performVerification]);
 
-  const currentState = uiState || {
-    title: "Verifying",
-    message: "Please wait, while we verify your email.",
-    showLoader: true,
-  };
-
   return (
     <div className={styles.verificationPageContainer}>
       <div className={styles.verificationCard}>
-        {currentState.showLoader && (
+        {isLoading && (
           <div className={styles.loadingContainer}>
             <LoadingSpinner size={40} border={4} color="var(--primary)" />
           </div>
         )}
-        <h2 className={styles.verifyTitle}>{currentState.title}</h2>
-        <p className={styles.verifyMessage}>{currentState.message}</p>
+        <h2 className={styles.verifyTitle}>{title}</h2>
+        <p className={styles.verifyMessage}>{message}</p>
       </div>
     </div>
   );

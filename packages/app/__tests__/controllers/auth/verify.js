@@ -18,12 +18,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[422],
       message: Messages.INVALID_TOKEN,
       statusCode: 422,
-      ui: {
-        message: "Invalid token.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
   });
 
@@ -43,12 +37,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[400],
       message: Messages.INVALID_TOKEN,
       statusCode: 400,
-      ui: {
-        message: "Invalid token.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
   }, 10000);
 
@@ -69,12 +57,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[403],
       message: Messages.EXPIRED_TOKEN,
       statusCode: 403,
-      ui: {
-        message: "Token expired.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });
@@ -97,12 +79,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[404],
       message: Messages.INVALID_TOKEN,
       statusCode: 404,
-      ui: {
-        message: "Invalid token.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });
@@ -126,12 +102,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[500],
       message: Messages.VERIFICATION_FAIL,
       statusCode: 500,
-      ui: {
-        message: "Verification failed.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });
@@ -158,12 +128,6 @@ describe("VERIFY EMAIL API", () => {
       error: STATUS_CODES[500],
       message: Messages.SOMETHING_WENT_WRONG,
       statusCode: 500,
-      ui: {
-        message: "We're experiencing high demand. Please try again later.",
-        showLoader: false,
-        state: "ERROR",
-        title: "Error",
-      },
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });
@@ -190,14 +154,6 @@ describe("VERIFY EMAIL API", () => {
       statusCode: 200,
       message: "Email verified successfully",
       success: true,
-      ui: {
-        message:
-          "Your email has been verified successfully. Redirecting to homepage...",
-        redirectAfter: 3000,
-        showLoader: false,
-        state: "SUCCESS",
-        title: "Verified",
-      },
     });
     expect(mockToken.isExpired).toHaveBeenCalled();
   });

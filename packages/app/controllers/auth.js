@@ -130,12 +130,14 @@ async function signinController(req, res, next) {
     }
     const currentDate = new Date();
     const oneDayValidityTimestamp = new Date(
-      currentDate.getTime() + 24 * 60 * 60 * 1000
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
     res.cookie("jwt", user.generateJWT(), {
       expires: oneDayValidityTimestamp,
       sameSite: "none",
       secure: true,
+      httpOnly: true,
+      domain: ".openlogo.fyi",
     });
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
@@ -180,12 +182,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[422],
         message: Messages.INVALID_TOKEN,
         statusCode: 422,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.INVALID_TOKEN,
-          showLoader: false,
-        },
       });
     }
 
@@ -200,12 +196,6 @@ async function verifyEmailController(req, res, next) {
           message: Messages.EMAIL_ALREADY_VERIFIED,
           success: true,
           alreadyVerified: true,
-          ui: {
-            state: "SUCCESS",
-            title: "Already Verified",
-            message: Messages.EMAIL_ALREADY_VERIFIED,
-            showLoader: false,
-          },
         });
       }
 
@@ -213,12 +203,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[400],
         message: Messages.INVALID_TOKEN,
         statusCode: 400,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.INVALID_TOKEN,
-          showLoader: false,
-        },
       });
     }
 
@@ -227,12 +211,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[403],
         message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.EXPIRED_TOKEN,
-          showLoader: false,
-        },
       });
     }
 
@@ -242,12 +220,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[404],
         message: Messages.INVALID_TOKEN,
         statusCode: 404,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.INVALID_TOKEN,
-          showLoader: false,
-        },
       });
     }
 
@@ -259,12 +231,6 @@ async function verifyEmailController(req, res, next) {
         message: Messages.EMAIL_ALREADY_VERIFIED,
         success: true,
         alreadyVerified: true,
-        ui: {
-          state: "SUCCESS",
-          title: "Already Verified",
-          message: Messages.EMAIL_ALREADY_VERIFIED,
-          showLoader: false,
-        },
       });
     }
 
@@ -274,12 +240,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[500],
         message: Messages.VERIFICATION_FAIL,
         statusCode: 500,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.VERIFICATION_FAIL,
-          showLoader: false,
-        },
       });
     }
 
@@ -289,12 +249,6 @@ async function verifyEmailController(req, res, next) {
         error: STATUS_CODES[500],
         message: Messages.SOMETHING_WENT_WRONG,
         statusCode: 500,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.SOMETHING_WENT_WRONG,
-          showLoader: false,
-        },
       });
     }
 
@@ -302,14 +256,6 @@ async function verifyEmailController(req, res, next) {
       statusCode: 200,
       message: "Email verified successfully",
       success: true,
-      ui: {
-        state: "SUCCESS",
-        title: "Verified",
-        message:
-          "Your email has been verified successfully. Redirecting to homepage...",
-        showLoader: false,
-        redirectAfter: 3000,
-      },
     });
   } catch (err) {
     next(err);
@@ -379,12 +325,6 @@ async function resetPasswordSessionController(req, res, next) {
         error: STATUS_CODES[422],
         message: Messages.INVALID_TOKEN,
         statusCode: 422,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.INVALID_TOKEN,
-          showLoader: false,
-        },
       });
 
     const userToken = await userTokenService.fetchUserToken(token);
@@ -393,12 +333,6 @@ async function resetPasswordSessionController(req, res, next) {
         error: STATUS_CODES[404],
         message: Messages.USER_NOT_FOUND,
         statusCode: 404,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.USER_NOT_FOUND,
-          showLoader: false,
-        },
       });
 
     if (userToken.isExpired()) {
@@ -406,12 +340,6 @@ async function resetPasswordSessionController(req, res, next) {
         error: STATUS_CODES[403],
         message: Messages.EXPIRED_TOKEN,
         statusCode: 403,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.EXPIRED_TOKEN,
-          showLoader: false,
-        },
       });
     }
 
@@ -444,12 +372,6 @@ async function resetPasswordController(req, res, next) {
         error: STATUS_CODES[401],
         message: Messages.VERIFICATION_FAIL,
         statusCode: 401,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.VERIFICATION_FAIL,
-          showLoader: false,
-        },
       });
     }
 
@@ -464,12 +386,6 @@ async function resetPasswordController(req, res, next) {
         error: STATUS_CODES[422],
         message: error.message,
         statusCode: 422,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: error.message,
-          showLoader: false,
-        },
       });
     }
 
@@ -483,12 +399,6 @@ async function resetPasswordController(req, res, next) {
         error: STATUS_CODES[400],
         message: Messages.PASS_FAILED,
         statusCode: 400,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.PASS_FAILED,
-          showLoader: false,
-        },
       });
     }
 
@@ -498,12 +408,6 @@ async function resetPasswordController(req, res, next) {
         error: STATUS_CODES[403],
         message: Messages.PASS_FAILED,
         statusCode: 403,
-        ui: {
-          state: "ERROR",
-          title: "Error",
-          message: Messages.PASS_FAILED,
-          showLoader: false,
-        },
       });
     }
     await userTokenService.deleteUserToken(userToken);
