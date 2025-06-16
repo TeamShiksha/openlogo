@@ -40,7 +40,7 @@ function ChangePassword({ isGuest }) {
         />
       ))}
       <Button type="submit" variant="primary" disabled={isGuest}>
-        {BUTTON_TEXT.changePassword}
+        {BUTTON_TEXT.changePasswordLabel}
       </Button>
     </form>
   );
