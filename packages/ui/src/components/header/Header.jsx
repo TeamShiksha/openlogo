@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
@@ -30,7 +30,7 @@ const Header = ({ openAuthModal }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
 
-  const sectionIds = useMemo(() => extractSectionIds(NAVBAR_ITEMS));
+  const sectionIds = extractSectionIds(NAVBAR_ITEMS);
 
   useEffect(() => {
     const handleResize = () => {

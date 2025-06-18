@@ -5,7 +5,21 @@ import Footer from "../../src/components/footer/Footer";
 import Home from "../../src/page/home/Home";
 import PrivacyPolicy from "../../src/page/privacypolicy/PrivacyPolicy";
 import { BRANDING, FOOTER_ITEMS } from "../../src/utils/Constants";
-import { AuthContext, UserContext } from "../../src/contexts/Contexts";
+import {
+  AuthContext,
+  ToastContext,
+  UserContext,
+} from "../../src/contexts/Contexts";
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 describe("Footer Component", () => {
   it("Render footer branding", () => {
@@ -67,18 +81,20 @@ describe("Footer Component", () => {
     const openCloseAuthModal = vi.fn();
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={{ isAuthenticated: false }}>
-          <UserContext.Provider
-            value={{
-              userData: null,
-              loading: false,
-            }}
-          >
-            <Home openAuthModal={openCloseAuthModal} />
-            <Footer />
-            <PrivacyPolicy />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ToastContext.Provider value={mockToastContext}>
+          <AuthContext.Provider value={{ isAuthenticated: false }}>
+            <UserContext.Provider
+              value={{
+                userData: null,
+                loading: false,
+              }}
+            >
+              <Home openAuthModal={openCloseAuthModal} />
+              <Footer />
+              <PrivacyPolicy />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ToastContext.Provider>
       </BrowserRouter>
     );
 

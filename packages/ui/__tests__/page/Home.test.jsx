@@ -1,7 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
-import { AuthContext, UserContext } from "../../src/contexts/Contexts";
+import {
+  AuthContext,
+  ToastContext,
+  UserContext,
+} from "../../src/contexts/Contexts";
 import Home from "../../src/page/home/Home";
 import { BUTTON_TEXT, MOCK_USER_DATA } from "../../src/utils/Constants";
 
@@ -26,11 +30,13 @@ describe("Home Page", () => {
     const userContext = mockUserContext(null, false);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Home openAuthModal={mockOpenAuthModel} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ToastContext.Provider value={mockAuthContext}>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Home openAuthModal={mockOpenAuthModel} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ToastContext.Provider>
       </BrowserRouter>
     );
   });
@@ -40,11 +46,13 @@ describe("Home Page", () => {
     const userContext = mockUserContext(null, false);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Home openAuthModal={mockOpenAuthModel} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ToastContext.Provider value={mockAuthContext}>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Home openAuthModal={mockOpenAuthModel} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ToastContext.Provider>
       </BrowserRouter>
     );
 
@@ -61,11 +69,13 @@ describe("Home Page", () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Home openAuthModal={mockOpenAuthModel} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ToastContext.Provider value={mockAuthContext}>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Home openAuthModal={mockOpenAuthModel} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ToastContext.Provider>
       </BrowserRouter>
     );
 

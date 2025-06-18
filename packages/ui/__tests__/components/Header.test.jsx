@@ -1,7 +1,11 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContext, UserContext } from "../../src/contexts/Contexts";
+import {
+  AuthContext,
+  ToastContext,
+  UserContext,
+} from "../../src/contexts/Contexts";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -57,12 +61,14 @@ describe("Header component", () => {
     const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={{ userData: null }}>
-            <Header openAuthModal={openCloseAuthModal} />
-            <Home openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ToastContext.Provider value={mockAuthContext}>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={{ userData: null }}>
+              <Header openAuthModal={openCloseAuthModal} />
+              <Home openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ToastContext.Provider>
       </BrowserRouter>
     );
 

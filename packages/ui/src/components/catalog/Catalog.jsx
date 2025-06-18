@@ -50,7 +50,6 @@ function Catalog() {
 
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
-      {/*catalog search bar*/}
       <div className={styles["catalog-search"]}>
         <img
           src={searchLogo}
