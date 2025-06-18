@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const authMiddleware = require("../middlewares/auth");
+
 const {
   signupController,
   signinController,
@@ -7,6 +9,7 @@ const {
   forgotPasswordController,
   resetPasswordSessionController,
   resetPasswordController,
+  validateSessionController,
 } = require("../controllers/auth");
 
 router.post("/signup", signupController);
@@ -16,5 +19,6 @@ router.get("/verify/:token?", verifyEmailController);
 router.post("/password/forgot", forgotPasswordController);
 router.get("/password/forgot/:token?", resetPasswordSessionController);
 router.patch("/password/reset", resetPasswordController);
+router.get("/validate-session", authMiddleware(), validateSessionController);
 
 module.exports = router;
