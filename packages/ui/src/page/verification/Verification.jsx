@@ -1,7 +1,8 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { instance } from "../../api/api_instance";
+import { useApi } from "../../hooks/useApi";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner";
+import { VERIFICATION } from "../../utils/Constants";
 import styles from "./Verification.module.css";
 
 const Verification = () => {
@@ -10,37 +11,41 @@ const Verification = () => {
   const token = searchParams.get("token");
   const hasVerified = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [title, setTitle] = useState("Verifying");
-  const [message, setMessage] = useState(
-    "Please wait, while we verify your email."
-  );
+  const [title, setTitle] = useState(VERIFICATION.title);
+  const [message, setMessage] = useState(VERIFICATION.message);
+
+  const { makeRequest, data, errorMsg } = useApi({
+    method: "get",
+    url: `/auth/verify/${token}`,
+  });
 
   const performVerification = useCallback(async () => {
     if (!token || hasVerified.current) return;
     hasVerified.current = true;
 
-    try {
-      const response = await instance.get(`/auth/verify/${token}`);
-      setIsLoading(false);
-
-      if (response.status === 200) {
-        setTitle("Verified");
-        setMessage(response.data?.message || "Email verified successfully");
-        setTimeout(() => navigate("/"), 3000);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      const errorMessage =
-        error.response?.data?.message || "Verification failed";
-
-      setTitle("Error");
-      setMessage(errorMessage);
-    }
-  }, [token, navigate]);
+    await makeRequest();
+  }, [token, makeRequest]);
 
   useEffect(() => {
     performVerification();
   }, [performVerification]);
+
+  useEffect(() => {
+    if (data) {
+      setIsLoading(false);
+      setTitle("Verified");
+      setMessage(data?.message);
+      setTimeout(() => navigate("/"), 3000);
+    }
+  }, [data, navigate]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      setIsLoading(false);
+      setTitle("Error");
+      setMessage(errorMsg);
+    }
+  }, [errorMsg]);
 
   return (
     <div className={styles.verificationPageContainer}>
