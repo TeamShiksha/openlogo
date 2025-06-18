@@ -148,6 +148,7 @@ const SignIn = ({ toggleForm, onClose }) => {
           type="submit"
           variant="primary"
           disabled={!isFormValid || isSubmit || isLoading}
+          isLoading={isLoading || isSubmit}
         >
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>

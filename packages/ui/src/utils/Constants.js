@@ -40,33 +40,11 @@ export const SVGS = {
   dragAndDropBg,
 };
 
-export const COMPANIES = [
-  {
-    id: 1,
-    name: "Amazon",
-    logo: SVGS.amazon,
-  },
-  {
-    id: 2,
-    name: "Apple",
-    logo: SVGS.apple,
-  },
-  {
-    id: 3,
-    name: "Adobe",
-    logo: SVGS.adobe,
-  },
-  {
-    id: 4,
-    name: "Google",
-    logo: SVGS.google,
-  },
-  {
-    id: 5,
-    name: "Microsoft",
-    logo: SVGS.microsoft,
-  },
-];
+export const DEMO = {
+  heading: "See In Action",
+  summary:
+    "Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.",
+};
 
 export const FEATURES = {
   heading: "Features",
@@ -389,16 +367,6 @@ export const COPY = {
   alt: "Copy Icon",
 };
 
-export const VISIBLE = {
-  src: "visible-icon.svg",
-  alt: "Visible Icon",
-};
-
-export const VISIBLEOFF = {
-  src: "visible-off-icon.svg",
-  alt: "Visible Off Icon",
-};
-
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",
@@ -408,6 +376,7 @@ export const BUTTON_TEXT = {
   signUp: "Sign Up",
   signIn: "Sign In",
   signOut: "Sign Out",
+  changePasswordLabel: "Change password",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
@@ -418,6 +387,7 @@ export const BUTTON_TEXT = {
   submit: "Submit",
   backToSignIn: " Back to Sign In",
   cancel: "Cancel",
+  upgrade: "Upgrade",
   respond: "Respond",
   reject: "Reject",
   sendResponse: "Send Response",
@@ -437,18 +407,6 @@ export const CODEBLOCK = {
   javaLogo,
   tick,
   copycodeicon,
-};
-
-export const TABLE_DATA = {
-  headers: ["Parameter", "Type", "Description", "Required"],
-  logoRows: [
-    ["key", "string", "The domain name of the company.", "Yes"],
-    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
-  ],
-  searchRows: [
-    ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
-    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
-  ],
 };
 
 export const HERO_SECTION = {
@@ -781,4 +739,24 @@ export const OPERATOR_ARCHIVED_MESSAGES = {
     ],
     totalPages: 1,
   },
+};
+
+export const USAGE = {
+  callsText: "Calls",
+  limitText: "Limit",
+  resetText: "Resets 1st of every month.",
+};
+
+export const CURRENT_PLAN = {
+  plan: "Hobby",
+  tagline: "Empower your projects with essential tools, at no cost.",
+};
+
+export const CHANGE_PASSWORD_FIELDS = [
+  { type: "password", name: "currPassword", label: "Current Password" },
+  { type: "password", name: "newPassword", label: "New Password" },
+];
+
+export const API_KEY_FORM = {
+  tagLine: "Generate a new API key to use in your projects.",
 };

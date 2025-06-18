@@ -6,7 +6,12 @@ import PropTypes from "prop-types";
 import { useApi } from "../../hooks/useApi.js";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
-import { COPY, API_KEY, BUTTON_TEXT } from "../../utils/Constants.js";
+import {
+  COPY,
+  API_KEY,
+  BUTTON_TEXT,
+  API_KEY_FORM,
+} from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
@@ -68,9 +73,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
         noValidate
         onSubmit={handleGenerateKey}
       >
-        <p className={styles["dashboard-reset-date"]}>
-          Generate a new API key to use in your projects.
-        </p>
+        <p className={styles["dashboard-reset-date"]}>{API_KEY_FORM.tagLine}</p>
         <CustomInput
           type="text"
           name="apikey"

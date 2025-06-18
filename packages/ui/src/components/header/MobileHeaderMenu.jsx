@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useMemo } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
@@ -14,7 +14,7 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-  const sectionIds = useMemo(() => extractSectionIds(NAVBAR_ITEMS));
+  const sectionIds = extractSectionIds(NAVBAR_ITEMS);
 
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("");
