@@ -417,6 +417,10 @@ async function resetPasswordController(req, res, next) {
   }
 }
 
+function validateSessionController(req, res) {
+  return res.status(200).json({ statusCode: 200, userData: req.userData });
+}
+
 module.exports = {
   signupController,
   signinController,
@@ -425,4 +429,5 @@ module.exports = {
   forgotPasswordController,
   resetPasswordSessionController,
   resetPasswordController,
+  validateSessionController,
 };

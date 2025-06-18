@@ -181,6 +181,34 @@
 > **Response:** `401 Unauthorized` - Invalid or expired token
 > </details>
 
+---
+| URL | Method | Auth Required | Description |
+|-----|--------|---------------|-------------|
+| `/auth/password/validate-session` | GET | False | Validate user session cookie |
+
+> <details>
+> <summary>Response body</summary>
+>
+> ```json
+> {
+>   "statusCode": 200,
+>   "userData" : {
+>     "name": "john",
+>     "email": "johndoe@example.com",
+>     "role": "ADMIN",
+>     "is_verified": true,
+>     "subscription_id": "6850237718e51707367387bd",
+>     "userId": "6850237718e51707367387bf",
+>     "created_at": "2025-06-16T14:00:23.000Z",
+>     "is_deleted": false,
+>     "updated_at": "2025-06-16T14:00:23.183Z"
+>   }
+> }
+> ```
+> **Response:** `200 OK` - successfully Validated</br>
+> **Response:** `401 Unauthorized` - Invalid Credentials
+> </details>
+
 </details>
 
 
