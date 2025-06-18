@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import ApiKeyForm from "../../src/components/apikeyform/ApiKeyForm";
 import { ToastProvider } from "../../src/contexts/ToastContext";
+import { API_KEY_FORM, BUTTON_TEXT } from "../../src/utils/Constants";
 
 const mockedMakeRequest = vi.fn();
 const mockApiData = {
@@ -57,12 +58,10 @@ describe("ApiKeyForm Component", () => {
   it("renders all form elements correctly", () => {
     renderApiKeyForm();
 
-    expect(
-      screen.getByText("Generate a new API key to use in your projects.")
-    ).toBeInTheDocument();
+    expect(screen.getByText(API_KEY_FORM.tagLine)).toBeInTheDocument();
     expect(screen.getByLabelText("Add the description")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Generate Key" })
+      screen.getByRole("button", { name: BUTTON_TEXT.generateKey })
     ).toBeInTheDocument();
   });
 
@@ -78,7 +77,9 @@ describe("ApiKeyForm Component", () => {
   it("disables generate button when user is guest", () => {
     renderApiKeyForm({ isGuest: true });
 
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
     expect(generateButton).toBeDisabled();
   });
 
@@ -90,14 +91,18 @@ describe("ApiKeyForm Component", () => {
       target: { value: "Test Description" },
     });
 
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
     expect(generateButton).not.toBeDisabled();
   });
 
   it("disables generate button when description is empty", () => {
     renderApiKeyForm({ isGuest: false });
 
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
     expect(generateButton).toBeDisabled();
   });
 
@@ -106,7 +111,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, {
       target: { value: "Production API Key" },
@@ -123,7 +130,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
@@ -140,7 +149,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
@@ -155,7 +166,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
@@ -176,7 +189,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
@@ -200,7 +215,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm({ onKeyGenerated: onKeyGeneratedMock });
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
@@ -221,7 +238,9 @@ describe("ApiKeyForm Component", () => {
     renderApiKeyForm();
 
     const descriptionInput = screen.getByLabelText("Add the description");
-    const generateButton = screen.getByRole("button", { name: "Generate Key" });
+    const generateButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.generateKey,
+    });
 
     fireEvent.change(descriptionInput, { target: { value: "Test Key" } });
     fireEvent.click(generateButton);
