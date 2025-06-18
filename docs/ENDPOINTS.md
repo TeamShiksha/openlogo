@@ -2,6 +2,13 @@
 
 <details>
 <summary>AUTH</summary>
+POST /auth/signup – Register a new user.
+POST /auth/signin – Log in and start a session.
+POST /auth/signout – Terminate the session.
+GET /auth/verify – Validate the user session token.
+POST /auth/password/forgot – Initiate password recovery.(also use it for resending email)
+POST /auth/password/reset – Reset user password.
+GET /auth/validate-session - Validate user session cookie
 
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
