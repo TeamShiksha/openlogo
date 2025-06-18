@@ -6,6 +6,8 @@ import minusCircle from "../../assets/minusCircle.svg";
 import styles from "./FAQs.module.css";
 
 const FAQs = () => {
+  const [openQuestion, setOpenQuestion] = useState(null); // Track the open FAQ
+
   return (
     <div className={styles["faq-container"]}>
       <h1 className={styles.heading}>{FAQ.TITLE}</h1>
@@ -15,6 +17,12 @@ const FAQs = () => {
             key={faq.question}
             question={faq.question}
             answer={faq.answer}
+            isOpen={openQuestion === faq.question} // Pass isOpen state
+            toggleFAQ={() =>
+              setOpenQuestion(
+                openQuestion === faq.question ? null : faq.question
+              )
+            } // Toggle open/close
           />
         ))}
       </div>
@@ -22,10 +30,8 @@ const FAQs = () => {
   );
 };
 
-const CollapsibleFAQ = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CollapsibleFAQ = ({ question, answer, isOpen, toggleFAQ }) => {
   const answerRef = useRef(null);
-  const toggleFAQ = () => setIsOpen((prev) => !prev);
 
   return (
     <div className={styles["faq-list"]}>
@@ -54,6 +60,8 @@ const CollapsibleFAQ = ({ question, answer }) => {
 CollapsibleFAQ.propTypes = {
   question: PropTypes.string.isRequired,
   answer: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  toggleFAQ: PropTypes.func.isRequired,
 };
 
 export default FAQs;
