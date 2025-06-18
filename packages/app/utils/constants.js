@@ -56,6 +56,8 @@ const Messages = {
   INVALID_TOKEN: "Invalid token.",
   EXPIRED_TOKEN: "Token expired.",
   VERIFICATION_FAIL: "Verification failed.",
+  EMAIL_ALREADY_VERIFIED:
+    "This email has already been verified. You can sign in to your account.",
   PASS_FAILED: "Failed to update password.",
   IMAGE_REQUIRED: "Image not found in request.",
   NAME_AND_EXT_SAME: "Name and extension should be same.",

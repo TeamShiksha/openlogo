@@ -9,7 +9,7 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import VerifyEmail from "./components/verification/VerifyEmail";
+import Verification from "./page/verification/Verification";
 import NotFound from "./page/notfound/NotFound";
 import "./index.css";
 
@@ -30,7 +30,7 @@ function App() {
           />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/docs" element={<Documentation />} />
-          <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/verify" element={<Verification />} />
           <Route
             path="/dashboard"
             element={
