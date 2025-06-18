@@ -2,13 +2,6 @@
 
 <details>
 <summary>AUTH</summary>
-POST /auth/signup – Register a new user.
-POST /auth/signin – Log in and start a session.
-POST /auth/signout – Terminate the session.
-GET /auth/verify – Validate the user session token.
-POST /auth/password/forgot – Initiate password recovery.(also use it for resending email)
-POST /auth/password/reset – Reset user password.
-GET /auth/validate-session - Validate user session cookie
 
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
@@ -186,6 +179,34 @@ GET /auth/validate-session - Validate user session cookie
 > **Response:** `200 OK` - Password reset successful</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Invalid or expired token
+> </details>
+
+---
+| URL | Method | Auth Required | Description |
+|-----|--------|---------------|-------------|
+| `/auth/password/validate-session` | GET | False | Validate user session cookie |
+
+> <details>
+> <summary>Response body</summary>
+>
+> ```json
+> {
+>   "statusCode": 200,
+>   "userData" : {
+>     "name": "john",
+>     "email": "johndoe@example.com",
+>     "role": "ADMIN",
+>     "is_verified": true,
+>     "subscription_id": "6850237718e51707367387bd",
+>     "userId": "6850237718e51707367387bf",
+>     "created_at": "2025-06-16T14:00:23.000Z",
+>     "is_deleted": false,
+>     "updated_at": "2025-06-16T14:00:23.183Z"
+>   }
+> }
+> ```
+> **Response:** `200 OK` - successfully Validated</br>
+> **Response:** `401 Unauthorized` - Invalid Credentials
 > </details>
 
 </details>
