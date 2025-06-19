@@ -28,6 +28,7 @@ const mockToastContext = {
   show: vi.fn(),
   clear: vi.fn(),
   clearToast: vi.fn(),
+  addToast: vi.fn(),
 };
 
 const mockUserContext = (userData, loading) => ({
@@ -368,4 +369,85 @@ describe("Dashboard", () => {
       "us3r_1",
     ]);
   });
+  it("should call fetchUserData only once", () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
+    );
+
+    expect(userContext.fetchUserData).toHaveBeenCalledTimes(1);
+  });
+
+  it("should show empty message if user has no API keys", async () => {
+    const userWithoutKeys = {
+      ...MOCK_USER_DATA,
+      keys: [],
+    };
+
+    const userContext = mockUserContext(userWithoutKeys, false);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("empty-api-message")).toHaveTextContent(
+        API_KEY_TABLE.emptyMessage
+      );
+    });
+  });
+
+  it("should not allow delete if confirmation input does not match", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <AuthContext.Provider value={mockAuthContext(true)}>
+          <UserContext.Provider value={userContext}>
+            <Dashboard />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ToastContext.Provider>
+    );
+
+    const deleteButtons = await screen.findAllByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    fireEvent.click(deleteButtons[0]);
+    screen.debug();
+    const modal = await screen.findByTestId("confirmation-modal");
+    const confirmInput = within(modal).getByTestId("api-key-confirm-input");
+    expect(confirmInput).toBeInTheDocument();
+
+    fireEvent.change(confirmInput, {
+      target: { value: "incorrect-key" },
+    });
+
+    const confirmButton = within(modal).getByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    expect(confirmButton).toBeDisabled();
+  });
+});
+
+it("should not crash if selectedOption is not in options", () => {
+  expect(() => {
+    render(
+      <Dropdown
+        options={["ADMIN", "USER"]}
+        selectedOption="GUEST"
+        setSelectedOption={vi.fn()}
+      />
+    );
+  }).not.toThrow();
 });
