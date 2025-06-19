@@ -54,8 +54,8 @@ describe("Dashboard", () => {
       </ToastContext.Provider>
     );
 
-    const loading = screen.getByText(/loading../i);
-    expect(loading).toBeInTheDocument();
+    const spinner = screen.getByTestId("loading-spinner");
+    expect(spinner).toBeInTheDocument();
     expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 

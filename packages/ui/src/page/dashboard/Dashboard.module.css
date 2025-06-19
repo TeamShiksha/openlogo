@@ -5,11 +5,24 @@
   max-width: 1440px;
 }
 
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
 .dashboard-content-container {
   display: flex;
   flex-grow: 1;
-  gap: 55px;
-  padding: 0rem 0rem 2rem 0rem;
+  padding: 2rem 0rem 2rem 0rem;
 }
 
 .dashboard-content-section {
@@ -20,7 +33,7 @@
 
 .table-wrapper {
   width: 100%;
-  padding: 0rem 0rem 2rem 0rem;
+  padding: 0rem 0rem 0rem 0rem;
 }
 
 .active-status {
@@ -53,7 +66,7 @@
   }
 
   .dashboard-content-container {
-    padding: 0rem 0rem 1rem 0rem;
+    padding: 1rem 0rem 1rem 0rem;
   }
 
   .dashboard-content-section {
@@ -70,5 +83,6 @@
 
   .logout-btn {
     width: 100%;
+    margin: 1rem 0 0 0;
   }
 }
