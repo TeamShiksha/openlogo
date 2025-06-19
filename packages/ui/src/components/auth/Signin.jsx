@@ -53,9 +53,8 @@ const SignIn = ({ toggleForm, onClose }) => {
   }, [focusedField, formData]);
 
   useEffect(() => {
-    const fieldsToValidate = isForgotPassword
-      ? { email: formData.email }
-      : formData;
+    const fieldsToValidate = { email: formData.email };
+
     const errors = validate(fieldsToValidate);
     setIsFormValid(Object.keys(errors).length === 0);
   }, [formData, isForgotPassword]);
