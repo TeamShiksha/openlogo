@@ -7,16 +7,11 @@
 
 .spinner-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 9999;
-
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
 }
 
 .dashboard-content-container {
@@ -59,6 +54,10 @@
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
+  }
+
+  .spinner-container {
+    margin-bottom: 30%;
   }
 
   .dashboard-container > aside {
