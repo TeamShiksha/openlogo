@@ -14,20 +14,25 @@ export const AuthProvider = ({ children }) => {
     url: `/auth/signout`,
   });
 
+  const { makeRequest: validateSession } = useApi({
+    method: "GET",
+    url: `/auth/validate-session`,
+  });
+
   useEffect(() => {
     if (errorMsg) toast.error(errorMsg);
   }, [errorMsg, toast]);
 
   useEffect(() => {
-    const checkCookieExists = () => {
-      const jwtCookie = document.cookie
-        .split(";")
-        .some((item) => item.trim().startsWith("jwt="));
-      setIsAuthenticated(jwtCookie);
-      setIsAuthCheckComplete(true);
-    };
-
-    checkCookieExists();
+    validateSession()
+      .then((data) => {
+        if (data) {
+          setIsAuthenticated(true);
+        }
+      })
+      .finally(() => {
+        setIsAuthCheckComplete(true);
+      });
   }, []);
 
   const logout = useCallback(async () => {

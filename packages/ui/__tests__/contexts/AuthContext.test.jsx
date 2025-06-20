@@ -4,7 +4,7 @@ import { AuthProvider } from "../../src/contexts/AuthContext";
 import { AuthContext, ToastContext } from "../../src/contexts/Contexts";
 import { useContext } from "react";
 
-const makeRequestMock = vi.fn(() => Promise.resolve(true));
+const makeRequestMock = vi.fn();
 
 vi.mock("../../src/hooks/useApi", () => ({
   useApi: () => ({
@@ -38,22 +38,14 @@ const TestComponent = () => {
   );
 };
 
-const clearCookies = () => {
-  document.cookie.split(";").forEach((cookie) => {
-    const eqPos = cookie.indexOf("=");
-    const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
-    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-  });
-};
-
-beforeEach(() => {
-  clearCookies();
-  vi.clearAllMocks();
-});
-
 describe("AuthProvider", () => {
-  it("should set isAuthenticated to true if jwt cookie exists", async () => {
-    document.cookie = "jwt=valid_token; path=/";
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("Successfully authenticates after success response", async () => {
+    makeRequestMock.mockImplementation(() => Promise.resolve(true));
+
     render(
       <ToastContext.Provider value={mockToastContext}>
         <AuthProvider>
@@ -68,8 +60,8 @@ describe("AuthProvider", () => {
     });
   });
 
-  it("should set isAuthenticated to false if jwt cookie does not exist", async () => {
-    clearCookies();
+  it("Not authenticated after fialure", async () => {
+    makeRequestMock.mockImplementation(() => Promise.resolve(false));
 
     render(
       <ToastContext.Provider value={mockToastContext}>
@@ -85,8 +77,9 @@ describe("AuthProvider", () => {
     });
   });
 
-  it("should call API on logout and set isAuthenticated to false", async () => {
-    document.cookie = "jwt=valid_token; path=/";
+  it("Set authenticated to false on logout", async () => {
+    makeRequestMock.mockImplementation(() => Promise.resolve(true));
+
     render(
       <ToastContext.Provider value={mockToastContext}>
         <AuthProvider>
