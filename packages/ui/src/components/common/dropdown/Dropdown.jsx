@@ -1,9 +1,14 @@
 import styles from "./Dropdown.module.css";
 import PropTypes from "prop-types";
 
-function Dropdown({ options, selectedOption, setSelectedOption }) {
+function Dropdown({
+  options,
+  selectedOption,
+  setSelectedOption,
+  className = "",
+}) {
   return (
-    <div className={styles["dropdown-div"]}>
+    <div className={`${styles["dropdown-div"]} ${className}`}>
       <select
         name="dropdown"
         id="dropdown"
@@ -26,6 +31,7 @@ Dropdown.propTypes = {
   options: PropTypes.array.isRequired,
   selectedOption: PropTypes.string.isRequired,
   setSelectedOption: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 export default Dropdown;

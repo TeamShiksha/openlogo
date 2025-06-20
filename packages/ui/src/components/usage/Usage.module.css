@@ -28,7 +28,7 @@
 }
 
 .usage-statistics {
-  width: 110px;
+  min-width: 110px;
   max-height: 250px;
 }
 
@@ -39,4 +39,11 @@
   color: var(--description);
   display: flex;
   justify-content: center;
+}
+
+@media (min-width: 768px) and (max-width: 1300px) {
+  .usage-statistics {
+    display: flex;
+    gap: 1.3rem;
+  }
 }
