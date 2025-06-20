@@ -57,7 +57,7 @@
   }
 
   .spinner-container {
-    margin-bottom: 30%;
+    background: rgba(255, 255, 255, 0.4);
   }
 
   .dashboard-container > aside {
