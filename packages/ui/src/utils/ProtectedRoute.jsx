@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext, UserContext } from "../contexts/Contexts";
+import LoadingSpinner from "../components/common/loadingspinner/LoadingSpinner";
 
 function ProtectedRoute({ adminOnly = false, children }) {
   const location = useLocation();
@@ -36,7 +37,18 @@ function ProtectedRoute({ adminOnly = false, children }) {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <LoadingSpinner size={40} border={4} color="var(--primary)" />
+      </div>
+    );
   }
 
   if (userData.userType !== "ADMIN") {
