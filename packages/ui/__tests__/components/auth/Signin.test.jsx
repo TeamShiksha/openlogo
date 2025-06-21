@@ -116,7 +116,7 @@ describe("SignInForm UI and Functionality Tests", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: SIGNIN.submitButton }));
+    fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.signIn }));
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
@@ -148,13 +148,14 @@ describe("SignInForm UI and Functionality Tests", () => {
       target: { value: "wrongpass" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: SIGNIN.submitButton }));
+    fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.signIn }));
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(errorMsg)).toBeInTheDocument();
+    const errorMsgText = screen.getAllByText(errorMsg);
+    errorMsgText.forEach((msg) => expect(msg).toBeInTheDocument());
   });
 
   const delayedResolve = () =>

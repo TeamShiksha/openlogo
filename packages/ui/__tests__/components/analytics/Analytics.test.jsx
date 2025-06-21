@@ -1,18 +1,50 @@
-import { render, screen } from "@testing-library/react";
-import { expect, describe, it } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { expect, describe, it, vi, afterEach } from "vitest";
 import Analytics from "../../../src/components/analytics/Analytics";
-import { ANALYTIC_CARDS } from "../../../src/utils/Constants";
+import { instance } from "../../../src/api/api_instance";
+import { ToastContext } from "../../../src/contexts/Contexts";
+
+const mockData = [
+  { title: "Users", value: 10 },
+  { title: "Keys", value: 20 },
+  { title: "Requests", value: 40 },
+  { title: "Hits", value: 40 },
+];
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
+
+vi.mock("../../../src/api/api_instance", () => ({
+  instance: vi.fn(() => Promise.resolve({ data: { data: mockData } })),
+}));
 
 describe("Analytics component", () => {
-  it("renders correct number of AnalyticsCard components ", () => {
-    render(<Analytics />);
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
-    const analytics = screen.getByTestId("analytics");
+  it("renders correct number of AnalyticsCard components ", async () => {
+    instance.mockResolvedValueOnce({ data: { data: mockData } });
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Analytics />
+      </ToastContext.Provider>
+    );
+
+    const analytics = await screen.findByTestId("analytics");
 
     expect(analytics).toBeInTheDocument();
-    ANALYTIC_CARDS.forEach((item) => {
-      const titleElement = screen.getByText(item.title);
-      expect(titleElement).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(analytics.children.length).toBe(mockData.length);
     });
   });
 });

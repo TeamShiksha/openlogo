@@ -3,13 +3,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_ITEMS } from "../../utils/Constants";
 import styles from "./MobileHeaderMenu.module.css";
-import { handleNavigation } from "../../utils/Helpers";
+import {
+  handleNavigation,
+  observeActiveSectionOnScroll,
+  extractSectionIds,
+} from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
 
 const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
+  const sectionIds = extractSectionIds(NAVBAR_ITEMS);
 
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("");
@@ -27,6 +32,11 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const cleanup = observeActiveSectionOnScroll(sectionIds, setActiveSection);
+    return cleanup;
+  }, [sectionIds]);
 
   if (!isOpen) return null;
 

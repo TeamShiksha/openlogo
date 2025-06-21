@@ -29,6 +29,14 @@ const raiseRequestSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  openedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  closedAt: {
+    type: Date,
+    default: null,
+  },
   updated_at: {
     type: Date,
     required: true,

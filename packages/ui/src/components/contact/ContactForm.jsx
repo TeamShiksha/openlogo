@@ -7,17 +7,46 @@ import styles from "./ContactForm.module.css";
 import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 
 function ContactForm({ closeModal }) {
   const [formValues, setFormValues] = useState(CONTACT.initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const { errorMsg, makeRequest, data, loading, isSuccess } = useApi({
+  const { makeRequest, loading, data, errorMsg } = useApi({
     url: `/messages/contact-us`,
     method: "POST",
     data: formValues,
   });
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+      const timeout = setTimeout(() => {
+        setFormErrors({});
+        setFocusedField(null);
+        setFormValues(CONTACT.initialValues);
+        closeModal();
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [errorMsg, toast, closeModal]);
+
+  useEffect(() => {
+    if (data?.message) {
+      toast.success(data.message);
+      const timeout = setTimeout(() => {
+        setFormErrors({});
+        setFocusedField(null);
+        setFormValues(CONTACT.initialValues);
+        closeModal();
+      }, 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [data, toast, closeModal]);
 
   useEffect(() => {
     if (!focusedField) {
@@ -34,13 +63,23 @@ function ContactForm({ closeModal }) {
       return;
     }
 
+    // Show validation error immediately on focus
+    const validationErrors = validate({
+      [focusedField]: formValues[focusedField],
+    });
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [focusedField]: validationErrors[focusedField],
+    }));
+
+    // Then update after delay if value changes
     const timeout = setTimeout(() => {
-      const validationErrors = validate({
+      const updatedErrors = validate({
         [focusedField]: formValues[focusedField],
       });
       setFormErrors((prevErrors) => ({
         ...prevErrors,
-        [focusedField]: validationErrors[focusedField],
+        [focusedField]: updatedErrors[focusedField],
       }));
     }, 500);
 
@@ -59,16 +98,7 @@ function ContactForm({ closeModal }) {
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-
-    const success = await makeRequest();
-    if (!success) return;
-
-    setTimeout(() => {
-      setFormErrors({});
-      setFocusedField(null);
-      setFormValues(CONTACT.initialValues);
-      closeModal();
-    }, 3000);
+    await makeRequest();
   };
 
   return (
@@ -106,13 +136,6 @@ function ContactForm({ closeModal }) {
             </p>
           </div>
         </div>
-        {isSuccess ? (
-          <p className="success-message">{data?.message}</p>
-        ) : (
-          <p className={`${styles["input-error"]} ${styles["has-error"]}`}>
-            {errorMsg}
-          </p>
-        )}
         <Button
           type="submit"
           variant="primary"

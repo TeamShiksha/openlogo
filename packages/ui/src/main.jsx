@@ -11,13 +11,13 @@ import { ToastProvider } from "./contexts/ToastContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <UserProvider>
-          <ToastProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <UserProvider>
             <App />
-          </ToastProvider>
-        </UserProvider>
-      </AuthProvider>
+          </UserProvider>
+        </AuthProvider>
+      </ToastProvider>
     </BrowserRouter>
   </StrictMode>
 );

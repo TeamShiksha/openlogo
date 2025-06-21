@@ -26,12 +26,25 @@ async function getAnalyticsController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      data: {
-        Users: totalUsers,
-        Keys: totalKeys,
-        Requests: totalRequests + totalContactUs,
-        Hits: totalHits,
-      },
+      data: [
+        {
+          title: "Users",
+          value: totalUsers,
+        },
+        {
+          title: "Keys",
+          value: totalKeys,
+        },
+
+        {
+          title: "Requests",
+          value: totalRequests + totalContactUs,
+        },
+        {
+          title: "Hits",
+          value: totalHits,
+        },
+      ],
     });
   } catch (err) {
     next(err);

@@ -75,6 +75,35 @@ describe("GET MESSAGES API", () => {
     });
   });
 
+  it("422 - Tab is required", async () => {
+    const response = await request(app).get(ENDPOINTS.MESSAGES).query({
+      page: 1,
+      limit: 10,
+    });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Tab is required",
+    });
+  });
+
+  it("422 - Tab must be either 'active' or 'archived'", async () => {
+    const response = await request(app).get(ENDPOINTS.MESSAGES).query({
+      page: 1,
+      limit: 10,
+      tab: "unknown",
+    });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      statusCode: 422,
+      error: STATUS_CODES[422],
+      message: "Tab must be either 'active' or 'archived'",
+    });
+  });
+
   it("200 - No messages found", async () => {
     mockGetAll.mockResolvedValue({
       data: [],
@@ -86,6 +115,7 @@ describe("GET MESSAGES API", () => {
     const response = await request(app).get(ENDPOINTS.MESSAGES).query({
       page: 1,
       limit: 10,
+      tab: "active",
     });
 
     expect(response.status).toBe(200);
@@ -107,6 +137,7 @@ describe("GET MESSAGES API", () => {
     const response = await request(app).get(ENDPOINTS.MESSAGES).query({
       page: 1,
       limit: 10,
+      tab: "active",
     });
 
     expect(response.status).toBe(500);
@@ -123,6 +154,7 @@ describe("GET MESSAGES API", () => {
     const response = await request(app).get(ENDPOINTS.MESSAGES).query({
       page: 1,
       limit: 10,
+      tab: "active",
     });
 
     expect(response.status).toBe(200);

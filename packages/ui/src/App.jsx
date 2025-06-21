@@ -1,8 +1,6 @@
 import { useState } from "react";
-import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
-import AdminDashboard from "./page/admin/Admin";
 import Home from "./page/home/Home";
 import Dashboard from "./page/dashboard/Dashboard";
 import Footer from "./components/footer/Footer";
@@ -11,8 +9,9 @@ import PrivacyPolicy from "./page/privacypolicy/PrivacyPolicy";
 import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import VerifyEmail from "./components/verification/VerifyEmail";
+import Verification from "./page/verification/Verification";
 import NotFound from "./page/notfound/NotFound";
+import "./index.css";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -31,7 +30,7 @@ function App() {
           />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/docs" element={<Documentation />} />
-          <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/verify" element={<Verification />} />
           <Route
             path="/dashboard"
             element={
@@ -40,15 +39,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} /> {/* Catch-all routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />

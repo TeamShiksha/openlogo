@@ -6,7 +6,7 @@
   align-items: center;
   gap: 8px;
   max-width: 90%;
-  width: 360px;
+  min-width: 360px;
   pointer-events: none;
   top: 30px;
   left: 50%;

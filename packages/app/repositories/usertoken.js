@@ -16,6 +16,10 @@ class UserTokenRepository extends BaseRepository {
   async fetchUserToken(token) {
     return await UserToken.findOne({ token: token, is_deleted: false });
   }
+
+  async fetchDeletedUserToken(token) {
+    return await UserToken.findOne({ token: token, is_deleted: true });
+  }
 }
 
 module.exports = UserTokenRepository;

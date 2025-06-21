@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import Catalog from "../../src/components/admindashboard/Catalog";
+import Catalog from "../../src/components/catalog/Catalog";
 import { companies, BUTTON_TEXT } from "../../src/utils/Constants";
 
 describe("Catalog Component", () => {
