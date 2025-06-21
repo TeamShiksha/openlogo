@@ -43,7 +43,8 @@ function ProtectedRoute({ adminOnly = false, children }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          position: "fixed",
+          inset: "0",
         }}
       >
         <LoadingSpinner size={40} border={4} color="var(--primary)" />
