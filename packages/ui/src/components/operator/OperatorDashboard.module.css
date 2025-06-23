@@ -7,7 +7,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
 }
 
 .tabs-container {
@@ -20,7 +19,7 @@
   background: transparent;
   border: none;
   padding: 1rem 2rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--description);
   cursor: pointer;
@@ -48,18 +47,7 @@
 }
 
 .type-selector {
-  background: var(--white);
-  padding: 0.5rem 1rem;
-  color: var(--input-color);
-  font-size: 1rem;
-  cursor: pointer;
-  outline: none;
-  border-radius: var(--bradius);
-  border: 1px solid var(--border-color);
-}
-
-.type-selector:focus-within {
-  border-color: var(--primary);
+  margin: 0;
 }
 
 .cards-container {
@@ -124,6 +112,7 @@
   background-color: var(--white);
   border-radius: var(--bradius);
   border: 1px solid var(--border-color);
+  margin-top: 1.5rem;
 }
 
 .response-modal {
@@ -180,15 +169,19 @@
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.2rem;
     align-items: flex-start;
   }
 
   .type-selector {
-    width: 100%;
+    margin: 2rem 0rem 0.5rem 0rem;
   }
 
   .tab-button {
     padding: 0.75rem 1.25rem;
+  }
+
+  .tabs-container {
+    margin-bottom: 0;
   }
 }

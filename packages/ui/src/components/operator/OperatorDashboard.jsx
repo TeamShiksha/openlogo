@@ -8,6 +8,7 @@ import { validate } from "../../utils/Helpers";
 import Button from "../common/button/Button";
 import { useToast } from "../../hooks/useToast";
 import { BUTTON_TEXT, MODAL_MESSAGES } from "../../utils/Constants";
+import Dropdown from "../common/dropdown/Dropdown";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -44,6 +45,7 @@ const Operator = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [responseAction, setResponseAction] = useState("respond");
   const toast = useToast();
+  const OperatorDashboardDropdownOptions = ["messages", "requests"];
 
   // Data states
   const [messages, setMessages] = useState([]);
@@ -178,12 +180,6 @@ const Operator = () => {
       ? filterItemsByStatus(requests)
       : filterItemsByStatus(messages);
 
-  // Handle search type change (requests vs messages)
-  const handleSearchTypeChange = (e) => {
-    setSearchType(e.target.value);
-    setCurrentPage(1);
-  };
-
   // Handle tab change (active vs archived)
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -268,7 +264,7 @@ const Operator = () => {
   }
 
   return (
-    <div className={`container ${styles["operator-container"]}`}>
+    <div className={styles["operator-container"]}>
       <div className={styles.header}>
         <div className={styles["tabs-container"]}>
           <button
@@ -284,14 +280,12 @@ const Operator = () => {
             Archived
           </button>
         </div>
-        <select
+        <Dropdown
+          options={OperatorDashboardDropdownOptions}
+          selectedOption={searchType}
+          setSelectedOption={setSearchType}
           className={styles["type-selector"]}
-          value={searchType}
-          onChange={handleSearchTypeChange}
-        >
-          <option value="messages">Messages</option>
-          <option value="requests">Requests</option>
-        </select>
+        />
       </div>
 
       {contentToRender}
