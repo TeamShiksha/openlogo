@@ -40,8 +40,8 @@ const Modal = ({
       className={styles["modal-overlay"]}
       onClick={handleOverlayClick}
     >
-      <div
-        role="dialog"
+      <dialog
+        open
         className={`${styles.modal} ${customClass || ""}`}
         style={{
           ...(customWidth ? { width: customWidth } : {}),
@@ -54,7 +54,7 @@ const Modal = ({
           </button>
         )}
         {children}
-      </div>
+      </dialog>
     </div>
   );
 };

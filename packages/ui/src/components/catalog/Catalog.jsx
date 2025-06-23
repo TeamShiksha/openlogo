@@ -148,30 +148,27 @@ function Catalog() {
         </div>
 
         <div className={styles["catalog-table-content"]}>
-          {uploadLoading ? (
-            <div
-              style={{
-                display: "grid",
-                placeItems: "center",
-                width: "100%",
-                marginTop: "2rem",
-              }}
-            >
+          {uploadLoading && (
+            <div className={styles["catalog-loading-spinner"]}>
               <LoadingSpinner color="blue" />
             </div>
-          ) : filteredCompanies.length > 0 ? (
+          )}
+
+          {!uploadLoading && filteredCompanies.length === 0 && (
+            <p className={styles["catalog-table-no-content"]}>
+              No results found matching your query!
+            </p>
+          )}
+
+          {!uploadLoading &&
+            filteredCompanies.length > 0 &&
             filteredCompanies.map((company) => (
               <CatalogItem
                 key={company._id}
                 company={company}
                 onUpdate={handleReuploadBtnClick}
               />
-            ))
-          ) : (
-            <p className={styles["catalog-table-no-content"]}>
-              No results found matching your query!
-            </p>
-          )}
+            ))}
         </div>
 
         <div className={styles["catalog-table-footer"]}>

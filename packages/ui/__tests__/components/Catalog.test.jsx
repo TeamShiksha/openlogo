@@ -16,7 +16,7 @@ vi.mock("../../src/hooks/useApi", () => {
       const [errorMsg, setErrorMsg] = useState(null);
 
       useEffect(() => {
-        if (method === "GET" && url && url.includes("/catalog/logos")) {
+        if (method === "GET" && url?.includes("/catalog/logos")) {
           setLoading(true);
           setErrorMsg(null);
 
