@@ -1,7 +1,7 @@
 .dropdown-div {
   display: flex;
   justify-content: flex-end;
-  margin: 2rem 0;
+  margin: 2rem 0 0 0;
 }
 
 .dropdown {
