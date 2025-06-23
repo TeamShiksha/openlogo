@@ -102,8 +102,8 @@ describe("Dashboard", () => {
     const userContext = mockUserContext(null, true);
     renderDashboard({ userContextValue: userContext });
 
-    const loading = screen.getByText(/loading../i);
-    expect(loading).toBeInTheDocument();
+    const spinner = screen.getByTestId("loading-spinner");
+    expect(spinner).toBeInTheDocument();
     expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 

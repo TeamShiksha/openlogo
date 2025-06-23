@@ -19,6 +19,7 @@ import { useToast } from "../../hooks/useToast.js";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
+import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -102,7 +103,14 @@ function Dashboard() {
   };
 
   if (loading) {
-    return <div>loading..</div>;
+    return (
+      <div
+        data-testid="loading-spinner"
+        className={styles["spinner-container"]}
+      >
+        <LoadingSpinner size={40} border={4} color={`gray`} />
+      </div>
+    );
   }
 
   const handleLogout = () => {
