@@ -141,6 +141,8 @@ async function updateCatalogController(req, res, next) {
       });
     }
 
+    const imageSize = file.size;
+
     const { error } = imageReuploadSchema.validate({ id });
     if (error) {
       return res.status(422).json({
@@ -150,18 +152,10 @@ async function updateCatalogController(req, res, next) {
       });
     }
 
-    const exsitingImage = await imageServices.getImageById(id);
     const imageName = file.originalname;
     const Imagename = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-    const companyName = Imagename + "." + Extension;
-    if (companyName !== exsitingImage.company_name) {
-      return res.status(400).json({
-        error: STATUS_CODES[400],
-        statusCode: 400,
-        message: Messages.NAME_AND_EXT_SAME,
-      });
-    }
+    const companyName = Imagename;
 
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
@@ -175,6 +169,9 @@ async function updateCatalogController(req, res, next) {
     const imageData = await imageServices.updateImageById(id, {
       uploadedBy: userId,
       updatedAt: Date.now(),
+      imageSize,
+      companyName,
+      Extension,
     });
     if (!imageData) {
       res.status(500).json({

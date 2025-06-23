@@ -40,8 +40,7 @@
 }
 
 .dragActive {
-  border-color: var(--smooth-purple);
-  background-color: var(--light-purple);
+  border-color: var(--primary);
 }
 
 .dropzoneContent {
@@ -65,15 +64,10 @@
   font-size: 1rem;
 }
 
-.imageUploadModal {
-  background-color: var(--gray-drag-drop-background);
-}
-
 .previewContainer {
   text-align: center;
   justify-items: center;
   align-content: center;
-  background-color: var(--gray-drag-drop-background);
   margin: -42px;
   padding: 32px;
   border-radius: 8px;

@@ -10,7 +10,12 @@ import { useToast } from "../../hooks/useToast.js";
 const Demo = ({ openAuthModal }) => {
   const toast = useToast();
   const [searchTerm, setSearchTerm] = useState("");
-  const { makeRequest, data, loading, errorMsg } = useApi({
+  const {
+    makeRequest,
+    data: response,
+    loading,
+    errorMsg,
+  } = useApi({
     method: "GET",
     url: "/logo/demo-search",
     params: {
@@ -18,7 +23,8 @@ const Demo = ({ openAuthModal }) => {
     },
   });
   const showResults = searchTerm.length > 1;
-  const apiResults = data && showResults ? data.slice(0, 3) : [];
+
+  const apiResults = response && showResults ? response.data.slice(0, 3) : [];
 
   useEffect(() => {
     if (errorMsg) {

@@ -18,6 +18,7 @@ import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
+import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -119,7 +120,7 @@ function Dashboard() {
 
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
-          Admin Dashboard to be added here
+          <AdminDashboard />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
         <div data-testid="testid-operator-dashboard">

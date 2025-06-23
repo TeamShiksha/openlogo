@@ -24,14 +24,15 @@ class ImageServices {
     default_extension = "png",
     checkDb = true
   ) {
-    let domainName = company;
+    let domainName = company.company_name;
     if (checkDb) {
-      const image = await this.imageRepository.fetchImage(company);
+      const image = await this.imageRepository.fetchImage(company.company_name);
       if (!image) return null;
       domainName = image.company_name;
     }
 
-    const imageUrl = `${default_extension}/${domainName}`;
+    const version = new Date(company.updated_at).getTime();
+    const imageUrl = `${default_extension}/${domainName}?v=${version}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -57,7 +58,7 @@ class ImageServices {
     const dataList = [];
     for (const company of companyList) {
       const signedUrl = await this.fetchImageByCompanyFree(
-        company.company_name,
+        company,
         undefined,
         false
       );
@@ -102,7 +103,13 @@ class ImageServices {
   }
 
   async updateImageById(id, updateObj) {
-    const updatingImage = await this.imageRepository.update(id, updateObj);
+    const updatingImage = await this.imageRepository.update(id, {
+      user_id: updateObj.uploadedBy,
+      company_name: updateObj.companyName,
+      image_size: Number(updateObj.imageSize),
+      extension: updateObj.Extension,
+      updated_at: updateObj.updatedAt,
+    });
     return {
       _id: updatingImage._id,
       updatedAt: updatingImage.updatedAt,

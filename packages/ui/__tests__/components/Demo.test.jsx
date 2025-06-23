@@ -27,7 +27,9 @@ describe("Demo Component", () => {
     vi.clearAllMocks();
     mockUseApi.mockReturnValue({
       makeRequest: vi.fn(),
-      data: [],
+      data: {
+        data: [],
+      },
       loading: false,
       errorMsg: null,
     });
@@ -46,12 +48,14 @@ describe("Demo Component", () => {
   it("displays up to 3 search results after fetching", async () => {
     mockUseApi.mockReturnValue({
       makeRequest: vi.fn(),
-      data: [
-        { companyName: "Apple", image: "apple-logo.svg" },
-        { companyName: "Amazon", image: "amazon-logo.svg" },
-        { companyName: "Adobe", image: "adobe-logo.svg" },
-        { companyName: "Airbnb", image: "airbnb-logo.svg" },
-      ],
+      data: {
+        data: [
+          { companyName: "Apple", image: "apple-logo.svg" },
+          { companyName: "Amazon", image: "amazon-logo.svg" },
+          { companyName: "Adobe", image: "adobe-logo.svg" },
+          { companyName: "Airbnb", image: "airbnb-logo.svg" },
+        ],
+      },
       loading: false,
       errorMsg: null,
     });

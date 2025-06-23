@@ -35,8 +35,13 @@ const Modal = ({
   };
 
   return (
-    <div className={styles["modal-overlay"]} onClick={handleOverlayClick}>
+    <div
+      data-testid="modal-overlay"
+      className={styles["modal-overlay"]}
+      onClick={handleOverlayClick}
+    >
       <div
+        role="dialog"
         className={`${styles.modal} ${customClass || ""}`}
         style={{
           ...(customWidth ? { width: customWidth } : {}),

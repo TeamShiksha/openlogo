@@ -8,31 +8,27 @@ import ImageUploadModal from "./ImageUploadModal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
+import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 
 function Catalog() {
   const [pageNum, setPageNum] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+  const [updateImageId, setUpdateImageId] = useState(null);
 
   const limit = 10;
   const skip = pageNum * limit;
 
-  const { data, loading, errorMsg, makeRequest } = useApi({
+  const { data, makeRequest } = useApi({
     method: "GET",
-    // url: `/catalog/logos?skip=${skip}&limit=${limit}`,
-    url: `/catalog/logos?skip=0&limit=0`,
+    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
   });
 
-  const {
-    data: uploadData,
-    loading: uploadLoading,
-    errorMsg: uploadErrorMsg,
-    makeRequest: uploadMakeRequest,
-  } = useApi({
-    method: "POST",
+  const { loading: uploadLoading, makeRequest: uploadMakeRequest } = useApi({
+    method: updateImageId ? "PUT" : "POST",
     url: `/catalog/logo`,
-    headers: { "Content-Type": "multipart/form-data" }, // Set headers for file upload
+    headers: { "Content-Type": "multipart/form-data" },
   });
 
   useEffect(() => {
@@ -41,7 +37,7 @@ function Catalog() {
 
   useEffect(() => {
     if (data?.data?.totalPages) {
-      setTotalPages(data.data.totalPages - 1); // Adjust for 0-based indexing
+      setTotalPages(data.data.totalPages - 1);
     }
   }, [data]);
 
@@ -49,17 +45,37 @@ function Catalog() {
     if (!file || !companyUri) return;
 
     const formData = new FormData();
-    formData.append("logo", file); // Adjust the field name based on your API's requirements
+    formData.append("logo", file);
     formData.append("companyUri", companyUri);
 
     try {
-      const success = await uploadMakeRequest({ data: formData }); // Pass FormData dynamically
+      const success = await uploadMakeRequest({ data: formData });
       if (success) {
-        setIsModalOpen(false); // Close modal on successful upload
-        makeRequest(); // Refresh catalog data after upload
+        setIsModalOpen(false);
+        makeRequest();
       }
     } catch (err) {
       console.error("Upload error:", err);
+    }
+  };
+
+  const handleUpdateImage = async ({ file }) => {
+    if (!file || !updateImageId) return;
+
+    const formData = new FormData();
+    formData.append("logo", file);
+    formData.append("id", updateImageId);
+
+    try {
+      const success = await uploadMakeRequest({ data: formData });
+      if (success) {
+        setIsModalOpen(false);
+        makeRequest();
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setUpdateImageId(null);
     }
   };
 
@@ -81,7 +97,10 @@ function Catalog() {
     }
   };
 
-  console.log({ pageNum, totalPages });
+  const handleReuploadBtnClick = (id) => {
+    setIsModalOpen(true);
+    setUpdateImageId(id);
+  };
 
   const filteredCompanies =
     data?.data?.data?.length > 0
@@ -114,26 +133,39 @@ function Catalog() {
         <ImageUploadModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onUpload={handleImageUpload}
+          onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
+          isUpdate={!!updateImageId}
         />
       </div>
-      {/* catalog table */}
       <div className={styles["catalog-table-wrapper"]}>
-        {/* catalog table header */}
         <div className={styles["catalog-table-header"]}>
           <div className={styles["catalog-table-column-first"]}>Images</div>
           <div className={styles["catalog-table-header-inner"]}>
             <div>Created</div>
             <div>Updated</div>
           </div>
-          {/* empty table header for reupload button column */}
           <div className={styles["catalog-table-column-last"]}></div>
         </div>
-        {/* catalog table content */}
+
         <div className={styles["catalog-table-content"]}>
-          {filteredCompanies.length > 0 ? (
+          {uploadLoading ? (
+            <div
+              style={{
+                display: "grid",
+                placeItems: "center",
+                width: "100%",
+                marginTop: "2rem",
+              }}
+            >
+              <LoadingSpinner color="blue" />
+            </div>
+          ) : filteredCompanies.length > 0 ? (
             filteredCompanies.map((company) => (
-              <CatalogItem key={company._id} company={company} />
+              <CatalogItem
+                key={company._id}
+                company={company}
+                onUpdate={handleReuploadBtnClick}
+              />
             ))
           ) : (
             <p className={styles["catalog-table-no-content"]}>
@@ -141,10 +173,11 @@ function Catalog() {
             </p>
           )}
         </div>
-        {/* catalog table footer */}
+
         <div className={styles["catalog-table-footer"]}>
           <button
             onClick={handlePreviousBtnClick}
+            disabled={pageNum === 0}
             className={`${pageNum === 0 && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-left-arrow"]}`}
           >
             <img src={leftArrow} alt="left-arrow" />
