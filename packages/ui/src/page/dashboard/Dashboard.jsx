@@ -19,7 +19,6 @@ import { useToast } from "../../hooks/useToast.js";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
-import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -225,28 +224,24 @@ function Dashboard() {
         </>
       )}
       {showModal && (
-        <div data-testid="confirmation-modal">
+        <div data-testid="delete-api-key-modal">
           <ConfirmationModal
             isOpen={showModal}
             onClose={handleModalClose}
             onConfirm={handleDeleteKey}
             isConfirmDisabled={confirmKeyName !== selectedKey?.key_description}
             isConfirmLoading={isDeleting}
-            confirmButtonContent={
-              isDeleting ? <LoadingSpinner /> : BUTTON_TEXT.delete
-            }
+            confirmButtonContent={BUTTON_TEXT.delete}
             customHeading={API_KEY.delete.modal.title}
             customDescription={
-              <>
-                <div>
-                  {`${API_KEY.delete.modal.description}`}
-                  <strong> {selectedKey.key_description}</strong>?
-                </div>
-                <div>{API_KEY.delete.modal.warning}</div>
-              </>
+              <div>
+                {API_KEY.delete.modal.description}{" "}
+                <strong className={styles["deletekey-name"]}>
+                  {selectedKey.key_description}
+                </strong>
+                ? {API_KEY.delete.modal.warning}
+              </div>
             }
-            headingClassName={styles["deletekey-modal-title"]}
-            descriptionClassName={styles["deletekey-modal-p"]}
           >
             <CustomInput
               data-testid="api-key-confirm-input"

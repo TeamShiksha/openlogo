@@ -6,6 +6,7 @@ import LoadingSpinner from "../loadingspinner/LoadingSpinner";
 const Button = ({
   children,
   variant,
+  type = "button",
   onClick = () => {},
   disabled = false,
   className = "",
@@ -47,6 +48,7 @@ const Button = ({
   return (
     <button
       ref={buttonRef}
+      type={type}
       onClick={onClick}
       disabled={disabled || isLoading}
       className={`${styles[variant]} ${className} ${styles.button}`}
@@ -68,6 +70,7 @@ const Button = ({
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   variant: PropTypes.oneOf(["primary", "secondary", "danger"]).isRequired,
+  type: PropTypes.oneOf(["button", "submit", "reset"]),
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   className: PropTypes.string,

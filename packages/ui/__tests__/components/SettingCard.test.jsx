@@ -116,7 +116,7 @@ describe("Delete Account Confirmation Flow", () => {
     renderWithProviders();
     fireEvent.click(screen.getByText(/delete account/i));
     await userEvent.type(screen.getByLabelText(/email/i), "wrong@example.com");
-    const modal = screen.getByTestId("confirmation-modal");
+    const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
       name: /delete/i,
     });
@@ -128,7 +128,7 @@ describe("Delete Account Confirmation Flow", () => {
     fireEvent.click(screen.getByText(/delete account/i));
     await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
 
-    const modal = screen.getByTestId("confirmation-modal");
+    const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
       name: /delete/i,
     });
@@ -142,7 +142,7 @@ describe("Delete Account Confirmation Flow", () => {
     fireEvent.click(screen.getByText(/delete account/i));
     await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
 
-    const modal = screen.getByTestId("confirmation-modal");
+    const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
       name: /delete/i,
     });
@@ -164,7 +164,7 @@ describe("Delete Account Confirmation Flow", () => {
     fireEvent.click(screen.getByText(/delete account/i));
     await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
 
-    const modal = screen.getByTestId("confirmation-modal");
+    const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
       name: /delete/i,
     });

@@ -10,40 +10,40 @@ function ConfirmationModal({
   children,
   onConfirm,
   isConfirmDisabled = false,
+  isConfirmLoading = false,
   confirmButtonContent,
   customHeading,
   customDescription,
-  headingClassName = "",
-  descriptionClassName = "",
 }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onConfirm();
+  };
+
   return (
-    <Modal data-testid="confirmation-modal" onClose={onClose} isOpen={isOpen}>
-      <div>
-        <h2
-          className={`${styles["confirm-modal-heading"]}, ${headingClassName}`}
-        >
+    <Modal onClose={onClose} isOpen={isOpen}>
+      <form noValidate onSubmit={handleSubmit}>
+        <h2 className={styles["confirm-modal-heading"]}>
           {customHeading || CONFIRMATION_MODAL.heading}
         </h2>
-        <div
-          className={`${styles["confirm-modal-description"]} ${descriptionClassName}`}
-        >
+        <div className={styles["confirm-modal-description"]}>
           {customDescription || CONFIRMATION_MODAL.description}
         </div>
-      </div>
-      <div>{children}</div>
-      <div className={styles["confirm-modal-button-wrapper"]}>
-        <Button type="button" variant="secondary" onClick={onClose}>
-          {CONFIRMATION_MODAL.secondaryButtonText}
-        </Button>
-        <Button
-          type="button"
-          variant="danger"
-          onClick={onConfirm}
-          disabled={isConfirmDisabled}
-        >
-          {confirmButtonContent || CONFIRMATION_MODAL.primaryButtonText}
-        </Button>
-      </div>
+        <div>{children}</div>
+        <div className={styles["confirm-modal-button-wrapper"]}>
+          <Button type="button" variant="secondary" onClick={onClose}>
+            {CONFIRMATION_MODAL.secondaryButtonText}
+          </Button>
+          <Button
+            variant="danger"
+            type="submit"
+            disabled={isConfirmDisabled}
+            isLoading={isConfirmLoading}
+          >
+            {confirmButtonContent || CONFIRMATION_MODAL.primaryButtonText}
+          </Button>
+        </div>
+      </form>
     </Modal>
   );
 }
@@ -58,9 +58,6 @@ ConfirmationModal.propTypes = {
   confirmButtonContent: PropTypes.node,
   customHeading: PropTypes.node,
   customDescription: PropTypes.node,
-
-  headingClassName: PropTypes.string,
-  descriptionClassName: PropTypes.string,
 };
 
 export default ConfirmationModal;

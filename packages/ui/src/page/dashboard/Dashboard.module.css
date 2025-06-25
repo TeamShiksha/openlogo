@@ -51,17 +51,8 @@
   margin-top: 20px;
 }
 
-.deletekey-modal-title {
-  margin-bottom: 15px;
-  text-align: center;
-  color: var(--text-primary);
-}
-
-.deletekey-modal-p {
-  text-align: center;
-  margin-bottom: 10px;
-  color: var(--description);
-  font-size: var(--medium-text);
+.deletekey-name {
+  color: var(--primary);
 }
 
 @media screen and (max-width: 768px) {

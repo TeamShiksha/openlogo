@@ -13,7 +13,6 @@ import { AuthContext, UserContext } from "../../contexts/Contexts";
 import ConfirmationModal from "../confirm/ConfirmationModal";
 import { useToast } from "../../hooks/useToast";
 import { useApi } from "../../hooks/useApi";
-import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
 
 function SettingCard({ isGuest }) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -90,20 +89,16 @@ function SettingCard({ isGuest }) {
         </div>
       ))}
       {showConfirmationModal && (
-        <div data-testid="confirmation-modal">
+        <div data-testid="delete-account-modal">
           <ConfirmationModal
             isOpen={showConfirmationModal}
             onClose={handleCloseModal}
             onConfirm={handleDeleteAccount}
-            isConfirmDisabled={!email || userData.email !== email || isDeleting}
+            isConfirmDisabled={!email || userData.email !== email}
             isConfirmLoading={isDeleting}
-            confirmButtonContent={
-              isDeleting ? <LoadingSpinner /> : DELETE_ACCOUNT.primaryButtonText
-            }
+            confirmButtonContent={DELETE_ACCOUNT.primaryButtonText}
             customHeading={DELETE_ACCOUNT.title}
             customDescription={DELETE_ACCOUNT.subText}
-            headingClassName={styles["delete-account-modal-title"]}
-            descriptionClassName={styles["delete-account-modal-description"]}
           >
             <CustomInput
               type="email"

@@ -345,7 +345,8 @@ describe("API Key Deletion", () => {
       name: BUTTON_TEXT.delete,
     });
     fireEvent.click(deleteButtons[0]);
-    const modal = await screen.findByTestId("confirmation-modal");
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
     expect(modal).toBeInTheDocument();
   });
 
@@ -356,7 +357,8 @@ describe("API Key Deletion", () => {
       name: BUTTON_TEXT.delete,
     });
     fireEvent.click(deleteButtons[0]);
-    const modal = await screen.findByTestId("confirmation-modal");
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
     const input = within(modal).getByTestId("api-key-confirm-input");
     fireEvent.change(input, { target: { value: "Wrong_Key_Name" } });
 
@@ -373,7 +375,8 @@ describe("API Key Deletion", () => {
       name: BUTTON_TEXT.delete,
     });
     fireEvent.click(deleteButtons[0]);
-    const modal = await screen.findByTestId("confirmation-modal");
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
     const keyDescriptionEl = within(modal).getByText((_, element) => {
       return element?.tagName === "STRONG";
     });
@@ -403,7 +406,8 @@ describe("API Key Deletion", () => {
       name: BUTTON_TEXT.delete,
     });
     fireEvent.click(deleteButtons[0]);
-    const modal = await screen.findByTestId("confirmation-modal");
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
     const input = within(modal).getByTestId("api-key-confirm-input");
     fireEvent.change(input, {
       target: { value: MOCK_USER_DATA.keys[0].key_description },
@@ -415,7 +419,7 @@ describe("API Key Deletion", () => {
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalled();
       expect(
-        screen.queryByTestId("confirmation-modal")
+        screen.queryByTestId("delete-api-key-modal")
       ).not.toBeInTheDocument();
       expect(mockToastContext.success).toHaveBeenCalled();
     });

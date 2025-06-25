@@ -19,16 +19,3 @@
 .action-button {
   width: 100%;
 }
-.delete-account-modal-title {
-  margin-bottom: 15px;
-  text-align: center;
-  color: var(--text-primary);
-}
-
-.delete-account-modal-description {
-  font-size: 1rem;
-  color: var(--description);
-  font-weight: 500;
-  text-align: center;
-  margin: 10px 0;
-}
