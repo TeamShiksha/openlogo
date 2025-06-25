@@ -26,7 +26,7 @@ class ImageServices {
   ) {
     let domainName = company.company_name;
     if (checkDb) {
-      const image = await this.imageRepository.fetchImage(company.company_name);
+      const image = await this.imageRepository.fetchImage(domainName);
       if (!image) return null;
       domainName = image.company_name;
     }
@@ -56,18 +56,27 @@ class ImageServices {
    **/
   async getDataList(companyList) {
     const dataList = [];
-    for (const company of companyList) {
-      const signedUrl = await this.fetchImageByCompanyFree(
-        company,
-        undefined,
-        false
-      );
-      if (!signedUrl) continue;
-      dataList.push({
-        companyName: company.company_name.split(".")[0],
-        image: signedUrl,
-      });
+    const results = await Promise.allSettled(
+      companyList.map(async (company) => {
+        const signedUrl = await this.fetchImageByCompanyFree(
+          company,
+          undefined,
+          false
+        );
+        return { company, signedUrl };
+      })
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value.signedUrl) {
+        const { company, signedUrl } = result.value;
+        dataList.push({
+          companyName: company.company_name.split(".")[0],
+          image: signedUrl,
+        });
+      }
     }
+
     return dataList;
   }
 

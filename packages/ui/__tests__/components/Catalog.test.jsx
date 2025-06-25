@@ -143,11 +143,9 @@ describe("Catalog Component", () => {
 
     const firstPageCompanies = COMPANIES.slice(0, 10);
     firstPageCompanies.forEach((company) => {
-      expect(
-        screen.getByText(
-          `${company.company_name.toLowerCase()}.${company.extension}`
-        )
-      ).toBeInTheDocument();
+      screen.getByText(
+        `${company.company_name.toLowerCase()}.${company.extension}`
+      );
     });
     if (COMPANIES.length > 10) {
       expect(
@@ -189,7 +187,7 @@ describe("Catalog Component", () => {
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
     vi.runAllTimers();
 
-    expect(screen.getByText("amazon.png")).toBeInTheDocument();
+    screen.getByText("amazon.png");
     expect(screen.queryByText("apple.png")).not.toBeInTheDocument();
   });
 
@@ -248,7 +246,7 @@ describe("Catalog Component", () => {
     fireEvent.click(addImageButton);
     vi.runAllTimers();
 
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
     expect(screen.getByTestId("modal-overlay")).toBeInTheDocument();
   });
 
@@ -260,12 +258,12 @@ describe("Catalog Component", () => {
     fireEvent.click(addImageButton);
     vi.runAllTimers();
 
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
     const closeButton = screen.getByText(BUTTON_TEXT.cross);
     fireEvent.click(closeButton);
     vi.runAllTimers();
 
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
     expect(
       screen.queryByTestId("image-upload-modal-overlay")
     ).not.toBeInTheDocument();
@@ -279,12 +277,12 @@ describe("Catalog Component", () => {
     fireEvent.click(addImageButton);
     vi.runAllTimers();
 
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
     const modalOverlay = screen.getByTestId("modal-overlay");
     fireEvent.click(modalOverlay);
     vi.runAllTimers();
 
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
     expect(screen.queryByTestId("modal-overlay")).not.toBeInTheDocument();
   });
 });

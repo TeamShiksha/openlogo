@@ -52,11 +52,10 @@ class ImagesRepository extends BaseRepository {
   }
 
   async getAllImageByUserId(userId, skip, limit) {
-    const total = await this.model.countDocuments({ user_id: userId });
-    const images = await this.model
-      .find({ user_id: userId })
-      .skip(skip)
-      .limit(limit);
+    const [total, images] = await Promise.all([
+      this.model.countDocuments({ user_id: userId }),
+      this.model.find({ user_id: userId }).skip(skip).limit(limit),
+    ]);
 
     return {
       data: images.map((image) => image.data()),

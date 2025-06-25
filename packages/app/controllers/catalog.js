@@ -153,9 +153,8 @@ async function updateCatalogController(req, res, next) {
     }
 
     const imageName = file.originalname;
-    const Imagename = imageName.split(".")[0].toUpperCase();
+    const companyName = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-    const companyName = Imagename;
 
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
@@ -212,9 +211,9 @@ async function addCatalogController(req, res, next) {
     }
 
     const imageName = file.originalname;
-    const Imagename = imageName.split(".")[0].toUpperCase();
+    const companyName = imageName.split(".")[0].toUpperCase();
     const Extension = imageName.split(".")[1].toLowerCase();
-    const companyName = Imagename;
+
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {
       res.status(500).json({

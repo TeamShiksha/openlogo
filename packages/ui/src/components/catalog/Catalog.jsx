@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import searchLogo from "../../assets/searchIcon.svg";
@@ -102,12 +102,12 @@ function Catalog() {
     setUpdateImageId(id);
   };
 
-  const filteredCompanies =
-    data?.data?.data?.length > 0
-      ? data.data.data.filter((company) =>
-          company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : [];
+  const filteredCompanies = useMemo(() => {
+    const companies = data?.data?.data || [];
+    return companies.filter((company) =>
+      company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [data, searchTerm]);
 
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
