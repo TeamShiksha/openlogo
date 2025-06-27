@@ -1,7 +1,7 @@
 import styles from "./SettingCard.module.css";
 import Button from "../common/button/Button";
 import {
-  DELETE_ACCOUNT,
+  DELETE_ACCOUNT_MODAL,
   EMAIL_DOES_NOT_EXIST,
   MESSAGES,
   SETTING,
@@ -96,9 +96,9 @@ function SettingCard({ isGuest }) {
             onConfirm={handleDeleteAccount}
             isConfirmDisabled={!email || userData.email !== email}
             isConfirmLoading={isDeleting}
-            confirmButtonContent={DELETE_ACCOUNT.primaryButtonText}
-            customHeading={DELETE_ACCOUNT.title}
-            customDescription={DELETE_ACCOUNT.subText}
+            confirmButtonContent={DELETE_ACCOUNT_MODAL.primaryButtonText}
+            customHeading={DELETE_ACCOUNT_MODAL.title}
+            customDescription={DELETE_ACCOUNT_MODAL.subText}
           >
             <CustomInput
               type="email"

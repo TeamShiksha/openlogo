@@ -652,7 +652,7 @@ export const VERIFICATION = {
   message: "Please wait, while we verify your email.",
 };
 
-export const DELETE_ACCOUNT = {
+export const DELETE_ACCOUNT_MODAL = {
   title: "Confirm Deletion",
   subText:
     "Are you sure you want to delete your account? This action cannot be undone.",

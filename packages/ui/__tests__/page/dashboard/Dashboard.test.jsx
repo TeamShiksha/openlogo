@@ -5,7 +5,6 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import {
   UserContext,
@@ -383,8 +382,7 @@ describe("API Key Deletion", () => {
 
     const keyDescription = keyDescriptionEl.textContent.trim();
     const input = within(modal).getByTestId("api-key-confirm-input");
-    await userEvent.clear(input);
-    await userEvent.type(input, keyDescription);
+    fireEvent.change(input, { target: { value: keyDescription } });
 
     const confirmButton = within(modal).getByRole("button", {
       name: BUTTON_TEXT.delete,

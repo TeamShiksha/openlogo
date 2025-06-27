@@ -6,16 +6,17 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import SettingCard from "../../src/components/settings/SettingCard";
-import { SETTING, MOCK_USER_DATA } from "../../src/utils/Constants";
+import {
+  SETTING,
+  MOCK_USER_DATA,
+  DELETE_ACCOUNT_MODAL,
+} from "../../src/utils/Constants";
 import {
   ToastContext,
   UserContext,
   AuthContext,
 } from "../../src/contexts/Contexts";
-
-const mockUserData = MOCK_USER_DATA;
 
 const mockAuthContext = {
   isAuthenticated: true,
@@ -47,7 +48,7 @@ const renderWithProviders = (isGuest = false) =>
   render(
     <AuthContext.Provider value={mockAuthContext}>
       <ToastContext.Provider value={mockToastContext}>
-        <UserContext.Provider value={{ userData: mockUserData }}>
+        <UserContext.Provider value={{ userData: MOCK_USER_DATA }}>
           <SettingCard isGuest={isGuest} />
         </UserContext.Provider>
       </ToastContext.Provider>
@@ -106,31 +107,39 @@ describe("SettingCard Component", () => {
 describe("Delete Account Confirmation Flow", () => {
   it("opens confirmation modal on delete button click", () => {
     renderWithProviders();
-    fireEvent.click(screen.getByText(/delete account/i));
-    expect(
-      screen.getByText(/are you sure you want to delete/i)
-    ).toBeInTheDocument();
+    const deleteBtn = screen.getByText(SETTING[1].buttontitle);
+    fireEvent.click(deleteBtn);
+
+    const deleteModalSubText = screen.getByText(DELETE_ACCOUNT_MODAL.subText);
+    expect(deleteModalSubText).toBeInTheDocument();
   });
 
-  it("disables confirm button if email does not match", async () => {
+  it("disables confirm button if email does not match", () => {
     renderWithProviders();
-    fireEvent.click(screen.getByText(/delete account/i));
-    await userEvent.type(screen.getByLabelText(/email/i), "wrong@example.com");
+    const deleteBtn = screen.getByText(SETTING[1].buttontitle);
+    fireEvent.click(deleteBtn);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    fireEvent.change(emailInput, { value: "wrong@example.com" });
+
     const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
-      name: /delete/i,
+      name: DELETE_ACCOUNT_MODAL.primaryButtonText,
     });
     expect(confirmButton).toBeDisabled();
   });
 
-  it("enables confirm button if email matches", async () => {
-    renderWithProviders();
-    fireEvent.click(screen.getByText(/delete account/i));
-    await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
+  it("enables confirm button if email matches", () => {
+    renderWithProviders(false);
+    const deleteBtn = screen.getByText(SETTING[1].buttontitle);
+    fireEvent.click(deleteBtn);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    fireEvent.change(emailInput, { target: { value: MOCK_USER_DATA.email } });
 
     const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
-      name: /delete/i,
+      name: DELETE_ACCOUNT_MODAL.primaryButtonText,
     });
     expect(confirmButton).not.toBeDisabled();
   });
@@ -138,37 +147,39 @@ describe("Delete Account Confirmation Flow", () => {
   it("calls API and closes modal on successful deletion", async () => {
     mockMakeRequest.mockResolvedValue(true);
     renderWithProviders();
+    const deleteBtn = screen.getByText(SETTING[1].buttontitle);
+    fireEvent.click(deleteBtn);
 
-    fireEvent.click(screen.getByText(/delete account/i));
-    await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
+    const emailInput = screen.getByLabelText(/email/i);
+    fireEvent.change(emailInput, { target: { value: MOCK_USER_DATA.email } });
 
     const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
-      name: /delete/i,
+      name: DELETE_ACCOUNT_MODAL.primaryButtonText,
     });
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(mockMakeRequest).toHaveBeenCalled();
       expect(mockToastContext.success).toHaveBeenCalled();
-      expect(
-        screen.queryByText(/are you sure you want to delete/i)
-      ).not.toBeInTheDocument();
+      const deleteModalDesc = screen.queryByText(DELETE_ACCOUNT_MODAL.subText);
+      expect(deleteModalDesc).not.toBeInTheDocument();
     });
   });
 
   it("shows error toast on API failure", async () => {
     mockMakeRequest.mockResolvedValue(false);
     renderWithProviders();
+    const deleteBtn = screen.getByText(SETTING[1].buttontitle);
+    fireEvent.click(deleteBtn);
 
-    fireEvent.click(screen.getByText(/delete account/i));
-    await userEvent.type(screen.getByLabelText(/email/i), mockUserData.email);
+    const emailInput = screen.getByLabelText(/email/i);
+    fireEvent.change(emailInput, { target: { value: MOCK_USER_DATA.email } });
 
     const modal = screen.getByTestId("delete-account-modal");
     const confirmButton = within(modal).getByRole("button", {
-      name: /delete/i,
+      name: DELETE_ACCOUNT_MODAL.primaryButtonText,
     });
-
     fireEvent.click(confirmButton);
 
     await waitFor(() => {

@@ -22,14 +22,14 @@ function ConfirmationModal({
 
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
-      <form noValidate onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <h2 className={styles["confirm-modal-heading"]}>
           {customHeading || CONFIRMATION_MODAL.heading}
         </h2>
         <div className={styles["confirm-modal-description"]}>
           {customDescription || CONFIRMATION_MODAL.description}
         </div>
-        <div>{children}</div>
+        {children}
         <div className={styles["confirm-modal-button-wrapper"]}>
           <Button type="button" variant="secondary" onClick={onClose}>
             {CONFIRMATION_MODAL.secondaryButtonText}
