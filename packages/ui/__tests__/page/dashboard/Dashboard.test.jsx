@@ -22,7 +22,7 @@ import Dropdown from "../../../src/components/common/dropdown/Dropdown";
 
 vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: vi.fn(() => ({
-    makeRequest: vi.fn(() => Promise.resolve(true)),
+    makeRequest: vi.fn(),
     errorMsg: null,
   })),
 }));
@@ -40,7 +40,7 @@ const mockToastContext = {
 
 const mockUserContext = (userData, loading) => ({
   userData,
-  loading: loading,
+  loading,
   fetchUserData: vi.fn(),
 });
 
