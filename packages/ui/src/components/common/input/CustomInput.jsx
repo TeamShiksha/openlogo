@@ -12,6 +12,7 @@ function CustomInput({
   disabled = false,
   onFocus = () => {},
   onBlur = () => {},
+  ...rest
 }) {
   const isFocused = false;
 
@@ -27,6 +28,7 @@ function CustomInput({
         onFocus={onFocus}
         onBlur={onBlur}
         onChange={onChange}
+        {...rest}
       />
       <label
         className={`${styles["input-label"]} ${
@@ -54,6 +56,7 @@ CustomInput.propTypes = {
   disabled: PropTypes.bool,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 export default CustomInput;

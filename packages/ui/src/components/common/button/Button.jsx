@@ -13,6 +13,7 @@ const Button = ({
   spinnerSize,
   spinnerBorder,
   spinnerColor,
+  ...rest
 }) => {
   const [buttonWidth, setButtonWidth] = useState(null);
   const buttonRef = useRef(null);
@@ -51,6 +52,7 @@ const Button = ({
       disabled={disabled || isLoading}
       className={`${styles[variant]} ${className} ${styles.button}`}
       style={buttonStyle}
+      {...rest}
     >
       {isLoading ? (
         <LoadingSpinner
