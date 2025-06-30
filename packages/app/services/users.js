@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
+
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
@@ -165,11 +166,26 @@ class UserService {
    */
   async updateUserToAdmin(email) {
     const user = await this.getUserByEmail(email);
+    if (!user) {
+      return false; // User not found
+    }
     const updatedData = {
       role: UserType.ADMIN,
     };
     const updatedUser = await this.userRepository.update(user._id, updatedData);
     if (!updatedUser || updatedUser.role != UserType.ADMIN) {
+      return false;
+    }
+    return true;
+  }
+
+  async updateUserToOperator(email) {
+    const user = await this.getUserByEmail(email);
+    const updatedData = {
+      role: UserType.OPERATOR,
+    };
+    const updatedUser = await this.userRepository.update(user._id, updatedData);
+    if (!updatedUser || updatedUser.role != UserType.OPERATOR) {
       return false;
     }
     return true;

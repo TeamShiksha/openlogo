@@ -10,6 +10,7 @@ const {
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { companyUriSchema } = require("../schemas/catalog");
 const { Messages } = require("../utils/constants");
+const { default: mongoose } = require("mongoose");
 
 async function getAnalyticsController(req, res, next) {
   try {
@@ -58,7 +59,58 @@ async function getAnalyticsController(req, res, next) {
 async function addPermissionController(req, res, next) {
   try {
     const userService = new UserService();
+    const { role, userId } = req.params;
+
+    console.log("Role in req.params:", role);
+
+    if (!role || !userId) {
+      return res.status(422).json({
+        statusCode: 422,
+        message: Messages.INVALID_ROLE_OR_USER_ID || "Invalid role or user ID",
+        error: STATUS_CODES[422],
+      });
+    }
+
+    console.log("Role:", role);
+    console.log("User ID:", userId);
+
+    if (role.toLowerCase() !== "admin" && role.toLowerCase() !== "operator") {
+      // console.log("Invalid role:", role);
+      return res.status(422).json({
+        statusCode: 422,
+        message: Messages.INVALID_ROLE || "Invalid role",
+        error: STATUS_CODES[422],
+      });
+    }
+
+    if (userId) {
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Invalid user ID format",
+          error: STATUS_CODES[400],
+        });
+      }
+      const user = await userService.getUser(userId);
+      console.log("User:", user);
+      if (!user) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: Messages.USER_NOT_FOUND || "User not found",
+          error: STATUS_CODES[404],
+        });
+      }
+    }
+
     const email = req.body.email;
+
+    if (!email) {
+      return res.status(422).json({
+        statusCode: 422,
+        message: Messages.EMAIL_REQUIRED,
+        error: STATUS_CODES[422],
+      });
+    }
     const { error } = addAdminSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -68,17 +120,34 @@ async function addPermissionController(req, res, next) {
       });
     }
 
-    const response = await userService.updateUserToAdmin(email);
-    if (!response) {
-      return res.status(404).json({
-        statusCode: 404,
-        message: Messages.USER_NOT_FOUND,
-        error: STATUS_CODES[404],
-      });
-    }
+    if (role.toLowerCase() === "admin") {
+      const response = await userService.updateUserToAdmin(email);
 
+      if (!response) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: Messages.USER_NOT_FOUND,
+          error: STATUS_CODES[404],
+        });
+      }
+    }
+    if (role.toLowerCase() === "operator") {
+      const response = await userService.updateUserToOperator(email);
+      if (!response) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: Messages.USER_NOT_FOUND,
+          error: STATUS_CODES[404],
+        });
+      }
+    }
     return res.status(200).json({
       statusCode: 200,
+      message: Messages.PERMISSION_UPDATED,
+      data: {
+        email,
+        role: role.toUpperCase(),
+      },
     });
   } catch (err) {
     next(err);

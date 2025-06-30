@@ -23,6 +23,9 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
   it("422 - Email is not valid", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
 
     const response = await request(app)
       .put(
@@ -43,17 +46,21 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
 
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+
     const response = await request(app)
       .put(
         `/api/catalog/permission/${mockUserModel._id}/roles/${mockUserModel.role}`
       )
       .set("Cookie", `jwt=${mockToken}`)
-      .send({});
+      .send({}); // No email
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       statusCode: 422,
-      message: "Email is required",
+      message: Messages.EMAIL_REQUIRED,
       error: STATUS_CODES[422],
     });
   });
@@ -62,6 +69,12 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
+
     jest
       .spyOn(UserService.prototype, "updateUserToAdmin")
       .mockResolvedValue(false);
@@ -84,21 +97,31 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
   it("200 - User role updated to admin", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
+    console.log("Test role passed in path:", mockUserModel.role);
+
     const mockToken = mockUserModel.generateJWT();
+
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+
     jest
       .spyOn(UserService.prototype, "updateUserToAdmin")
       .mockResolvedValue(mockUpdateUser);
 
     const response = await request(app)
-      .put(
-        `/api/catalog/permission/${mockUserModel._id}/roles/${mockUserModel.role}`
-      )
+      .put(`/api/catalog/permission/${mockUserModel._id}/roles/admin`)
       .set("Cookie", `jwt=${mockToken}`)
       .send({ email: mockUpdateUser.email });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       statusCode: 200,
+      message: Messages.PERMISSION_UPDATED,
+      data: {
+        email: mockUpdateUser.email,
+        role: "ADMIN",
+      },
     });
   });
 

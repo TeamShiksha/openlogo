@@ -9,6 +9,7 @@ module.exports = (options = {}) => {
   return function (req, res, next) {
     try {
       const { jwt } = req.cookies;
+      console.log("JWT from cookies:", jwt);
       if (!jwt) {
         return res.status(401).json({
           error: STATUS_CODES[401],
@@ -18,6 +19,7 @@ module.exports = (options = {}) => {
       }
       const decodedData = JWT.verify(jwt, process.env.JWT_SECRET);
       const { data } = decodedData;
+
       if (!data || !data.email || !data.userId)
         return res.status(403).json({
           error: STATUS_CODES[403],
