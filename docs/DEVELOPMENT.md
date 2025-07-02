@@ -1,3 +1,12 @@
+## Index
+
+- [Prerequisites](#prerequisites)
+- [Clone and run the project locally](#clone-and-run-the-project-locally)
+- [Environment variables](#environment-variables)
+- [Running latest code using docker](#running-latest-code-using-docker)
+- [Running with Docker Compose (including MongoDB)](#running-with-docker-compose-including-mongodb)
+- [Postman API Collection](#postman-api-collection)
+
 ## Prerequisites
 - Node.js (version 18 or higher recommended, 20+ supported)
 - pnpm (package manager). Install globally with `npm install -g pnpm`
@@ -66,3 +75,18 @@ To stop the services, press `Ctrl+C` and run:
 ```sh
 docker compose down
 ```
+
+## Postman API Collection
+
+The Postman API collection and environment files are located in the ```/docs/Postman Collection``` directory. These files can be used to test the API endpoints:
+
+```postman_collection.json```: Contains the collection of API requests for testing the Openlogo application.
+
+```postman_environment.json```: Contains environment variables for configuring the API requests, such as base URLs and authentication tokens.
+
+To use the Postman collection:
+
+- Import ```postman_collection.json``` into Postman.
+- Import ```postman_environment.json``` into Postman.
+- Configure the environment variables in Postman from the ```.env``` file.
+- Use the collection to test the API endpoints.
