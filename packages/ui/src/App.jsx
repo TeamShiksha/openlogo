@@ -12,6 +12,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import Verification from "./page/verification/Verification";
 import NotFound from "./page/notfound/NotFound";
 import "./index.css";
+import ResetPassword from "./components/auth/ResetPassword";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -31,6 +32,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/docs" element={<Documentation />} />
           <Route path="/verify" element={<Verification />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/dashboard"
             element={
