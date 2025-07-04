@@ -26,7 +26,10 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
           textClass: styles["text-pending"],
         };
       default:
-        return "";
+        return {
+          ballClass: "",
+          textClass: "",
+        };
     }
   };
 
