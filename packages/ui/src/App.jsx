@@ -12,7 +12,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import Verification from "./page/verification/Verification";
 import NotFound from "./page/notfound/NotFound";
 import "./index.css";
-import ResetPassword from "./components/auth/ResetPassword";
+import ResetPassword from "./components/auth/ResetPassword.jsx";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
