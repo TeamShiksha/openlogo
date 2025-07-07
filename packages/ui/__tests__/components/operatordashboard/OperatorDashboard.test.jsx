@@ -100,9 +100,7 @@ describe("Operator Page", () => {
     });
 
     await waitFor(() => {
-      const companyUrl = screen.getByText(
-        `Company URL: ${requests.data.results[0].companyUrl}`
-      );
+      const companyUrl = screen.getByText(requests.data.results[0].companyUrl);
       expect(companyUrl).toBeInTheDocument();
     });
   });
