@@ -1,11 +1,11 @@
-.modal-title {
+.confirm-modal-heading {
   text-align: center;
   font-size: 1.8rem;
   color: var(--black);
   margin-bottom: 1rem;
 }
 
-.modal-description {
+.confirm-modal-description {
   font-size: 1rem;
   color: var(--description);
   font-weight: 500;
@@ -13,7 +13,7 @@
   margin: 10px 0;
 }
 
-.modal-button-wrapper {
+.confirm-modal-button-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;

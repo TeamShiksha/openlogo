@@ -51,6 +51,10 @@
   margin-top: 20px;
 }
 
+.deletekey-name {
+  color: var(--primary);
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;

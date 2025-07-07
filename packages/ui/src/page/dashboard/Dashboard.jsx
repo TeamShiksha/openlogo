@@ -10,29 +10,36 @@ import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
-import { API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
+import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
 import Button from "../../components/common/button/Button.jsx";
 import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
-import DeleteKeyModal from "../../components/confirm/DeleteKeyModal.jsx";
+import ConfirmationModal from "../../components/confirm/ConfirmationModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
-import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
+import CustomInput from "../../components/common/input/CustomInput.jsx";
+import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
+  const [confirmKeyName, setConfirmKeyName] = useState("");
   const [selectedDashboard, setSelectedDashboard] = useState("USER");
   const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
   const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
     url: "/users/me",
+  });
+  const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
+    method: "delete",
+    url: `/users/me/api-key/${selectedKey?._id}`,
   });
 
   const apiKeyTableData = useMemo(() => {
@@ -59,9 +66,40 @@ function Dashboard() {
     }
   }, [userDataResponse]);
 
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+    }
+  }, [errorMsg, toast]);
+
   const handleDeleteClick = (index) => {
     setSelectedKey(apiKeys[index]);
-    setShowDeleteModal(true);
+    setConfirmKeyName("");
+    setShowModal(true);
+  };
+
+  const handleKeyNameChange = (e) => {
+    setConfirmKeyName(e.target.value);
+  };
+
+  const handleDeleteKey = async () => {
+    if (!selectedKey?._id) {
+      toast.error(API_KEY.delete.invalidKey);
+      return;
+    }
+    setIsDeleting(true);
+    const success = await deleteKeyRequest();
+    if (success) {
+      toast.success(API_KEY.delete.success);
+      setShowModal(false);
+      await fetchUserKeys();
+    }
+    setIsDeleting(false);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setConfirmKeyName("");
   };
 
   if (loading) {
@@ -82,14 +120,6 @@ function Dashboard() {
   };
 
   const handleKeyGenerated = async () => {
-    const success = await fetchUserKeys();
-    if (!success) {
-      toast.error("Failed to fetch updated API keys");
-    }
-  };
-
-  const handleDeleteModalClose = async () => {
-    setShowDeleteModal(false);
     const success = await fetchUserKeys();
     if (!success) {
       toast.error("Failed to fetch updated API keys");
@@ -155,12 +185,11 @@ function Dashboard() {
             <Table
               headers={API_KEY_TABLE.headers}
               rows={apiKeyTableData}
-              emptyMessage={API_KEY_TABLE.emptyMessage}
               onDelete={handleDeleteClick}
               isGuest={isGuest}
+              emptyMessage={API_KEY_TABLE.emptyMessage}
             />
           </div>
-
           <div className={styles["dashboard-content-container"]}>
             <section className={styles["dashboard-content-section"]}>
               <CardWrapper title="User Info">
@@ -195,16 +224,38 @@ function Dashboard() {
           </div>
         </>
       )}
-
-      {showDeleteModal && (
-        <DeleteKeyModal
-          selectedKey={selectedKey}
-          isOpen={showDeleteModal}
-          onClose={handleDeleteModalClose}
-        />
+      {showModal && (
+        <div data-testid="delete-api-key-modal">
+          <ConfirmationModal
+            isOpen={showModal}
+            onClose={handleModalClose}
+            onConfirm={handleDeleteKey}
+            isConfirmDisabled={confirmKeyName !== selectedKey?.key_description}
+            isConfirmLoading={isDeleting}
+            confirmButtonContent={BUTTON_TEXT.delete}
+            customHeading={API_KEY.delete.modal.title}
+            customDescription={
+              <div>
+                {API_KEY.delete.modal.description}{" "}
+                <strong className={styles["deletekey-name"]}>
+                  {selectedKey.key_description}
+                </strong>
+                ? {API_KEY.delete.modal.warning}
+              </div>
+            }
+          >
+            <CustomInput
+              data-testid="api-key-confirm-input"
+              type="text"
+              name="apiKeyName"
+              label="API Key Name"
+              value={confirmKeyName}
+              onChange={handleKeyNameChange}
+            />
+          </ConfirmationModal>
+        </div>
       )}
     </div>
   );
 }
-
 export default Dashboard;
