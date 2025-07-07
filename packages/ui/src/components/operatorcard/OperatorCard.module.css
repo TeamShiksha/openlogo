@@ -3,7 +3,6 @@
   border-radius: var(--bradius);
   border: var(--border);
   box-shadow: var(--shadow);
-  padding: 1.5rem;
   transition: transform 0.2s ease;
   position: relative;
 }
@@ -11,8 +10,6 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 0.5rem;
 }
 
 .header {
@@ -25,13 +22,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .status-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  background-color: rgb(226, 224, 224, 0.3);
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
 }
 
 .status-container-left {
@@ -44,37 +37,59 @@
 .request-id {
   color: var(--description);
   font-weight: 600;
-  border: 1px solid var(--description);
-  border-radius: 100px;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0rem;
+}
+
+.status-ball {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 1rem;
 }
 
 .status {
-  border: 1px solid var(--description);
-  border-radius: 100px;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0rem;
   font-size: 0.8rem;
   font-weight: 600;
   width: fit-content;
 }
 
-.status-pending {
+.ball-pending {
+  background-color: var(--warning);
+}
+
+.ball-resolved {
+  background-color: var(--success);
+}
+
+.ball-rejected {
+  background-color: var(--error);
+}
+
+.text-pending {
   color: var(--warning);
-  border-color: var(--warning);
 }
 
-.status-resolved {
+.text-resolved {
   color: var(--success);
-  border-color: var(--success);
 }
 
-.status-rejected {
+.text-rejected {
   color: var(--error);
-  border-color: var(--error);
 }
 
 .date-container {
-  color: var(--description);
+  font-size: 0.85rem;
+  color: rgb(134, 137, 139);
+  display: flex;
+  gap: 0.3rem;
+}
+
+.operator-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .user-info {
@@ -97,18 +112,30 @@
   line-height: 1.4;
 }
 
-.message-title,
-.resolution-title,
-.summary-title {
-  color: var(--black);
-  font-weight: 500;
+.user-name {
+  font-weight: 600;
 }
 
-.message,
-.resolution,
+.message-title,
+.summary-title {
+  color: rgb(134, 137, 139);
+  font-size: 1rem;
+}
+
 .summary {
-  color: var(--description);
+  color: var(--black);
   word-break: break-all;
+}
+
+.company-url {
+  text-decoration: none;
+}
+
+.company-url,
+.company-url:visited,
+.company-url:hover,
+.company-url:active {
+  color: #0000ee;
 }
 
 .button-container {
@@ -124,4 +151,5 @@
 
 .reject-button {
   height: 2.5rem;
+  padding: 16px 36px;
 }

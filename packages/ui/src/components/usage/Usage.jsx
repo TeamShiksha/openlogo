@@ -16,10 +16,14 @@ function Usage({ usageCount, usageLimit }) {
           />
         </div>
         <div className={styles["usage-statistics"]}>
-          <div className={styles["data-heading"]}>{USAGE.callsText}</div>
-          <div className={styles.data}>{usageCount}</div>
-          <div className={styles["data-heading"]}>{USAGE.limitText}</div>
-          <div className={styles.data}>{usageLimit}</div>
+          <div>
+            <div className={styles["data-heading"]}>{USAGE.callsText}</div>
+            <div className={styles.data}>{usageCount}</div>
+          </div>
+          <div>
+            <div className={styles["data-heading"]}>{USAGE.limitText}</div>
+            <div className={styles.data}>{usageLimit}</div>
+          </div>
         </div>
       </div>
       <div className={styles["dashboard-reset-date"]}>{USAGE.resetText}</div>
