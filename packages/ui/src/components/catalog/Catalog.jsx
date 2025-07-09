@@ -132,7 +132,10 @@ function Catalog() {
         </Button>
         <ImageUploadModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setUpdateImageId(null);
+            setIsModalOpen(false);
+          }}
           onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
           isUpdate={!!updateImageId}
         />

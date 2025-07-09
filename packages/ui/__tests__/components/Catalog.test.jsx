@@ -1,64 +1,25 @@
 import { expect, describe, it, vi, afterEach, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { useState, useEffect } from "react";
 import Catalog from "../../src/components/catalog/Catalog";
 import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
 
+const mockData = {
+  data: {
+    data: COMPANIES,
+    totalPages: 1,
+  },
+};
+
 vi.useFakeTimers();
 
-vi.mock("../../src/hooks/useApi", () => {
-  const pageSize = 10;
-
-  return {
-    useApi: ({ method, url }) => {
-      const [data, setData] = useState(undefined);
-      const [loading, setLoading] = useState(false);
-      const [errorMsg, setErrorMsg] = useState(null);
-
-      useEffect(() => {
-        if (method === "GET" && url?.includes("/catalog/logos")) {
-          setLoading(true);
-          setErrorMsg(null);
-
-          const urlParams = new URLSearchParams(url.split("?")[1]);
-          const skip = parseInt(urlParams.get("skip") || "0", 10);
-          const limit = parseInt(
-            urlParams.get("limit") || pageSize.toString(),
-            10
-          );
-
-          const filteredCompanies = urlParams.get("search")
-            ? COMPANIES.filter((c) =>
-                c.company_name
-                  .toLowerCase()
-                  .includes(urlParams.get("search").toLowerCase())
-              )
-            : COMPANIES;
-
-          const slicedCompanies = filteredCompanies.slice(skip, skip + limit);
-          const totalPages = Math.ceil(filteredCompanies.length / limit);
-
-          setData({
-            data: {
-              data: slicedCompanies,
-              totalPages,
-            },
-          });
-          setLoading(false);
-        }
-      }, [url, method]);
-
-      const makeRequest = vi.fn(() => {
-        return Promise.resolve({
-          success: true,
-          message: "Mock operation successful",
-        });
-      });
-
-      return { data, loading, errorMsg, makeRequest };
-    },
-  };
-});
+vi.mock("../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    data: mockData,
+    loading: false,
+    errorMsg: null,
+    makeRequest: vi.fn(),
+  }),
+}));
 
 describe("Catalog Component", () => {
   beforeEach(() => {
@@ -72,7 +33,6 @@ describe("Catalog Component", () => {
 
   it("Search bar should be visible", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const searchInput = screen.getByLabelText("search");
     const searchIcon = screen.getByAltText("search-logo");
@@ -83,7 +43,6 @@ describe("Catalog Component", () => {
 
   it("Add image button should be visible", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const addImageButton = screen.getByText("Add image");
     expect(addImageButton).toBeInTheDocument();
@@ -91,7 +50,6 @@ describe("Catalog Component", () => {
 
   it("Table headers should be visible", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const imageHeader = screen.getByText("Images");
     const createdHeader = screen.getByText("Created");
@@ -104,7 +62,6 @@ describe("Catalog Component", () => {
 
   it("Should not change page when Previous button is clicked on first page", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const prevButton = screen.getByAltText("left-arrow").closest("button");
     expect(screen.getByTestId("current-page")).toHaveTextContent("1");
@@ -117,7 +74,6 @@ describe("Catalog Component", () => {
 
   it("Should not change page when Next button is clicked on last page", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const pageSize = 10;
     const totalPages = Math.ceil(COMPANIES.length / pageSize);
@@ -139,7 +95,6 @@ describe("Catalog Component", () => {
 
   it("Companies list should be visible with correct number of items", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const firstPageCompanies = COMPANIES.slice(0, 10);
     firstPageCompanies.forEach((company) => {
@@ -158,7 +113,6 @@ describe("Catalog Component", () => {
 
   it("Should navigate to next page when Next button is clicked", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     expect(screen.getByTestId("current-page")).toHaveTextContent("1");
     const nextButton = screen.getByAltText("right-arrow").closest("button");
@@ -169,7 +123,6 @@ describe("Catalog Component", () => {
 
   it("Should navigate to previous page when Prev button is clicked", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
     const prevButton = screen.getByAltText("left-arrow").closest("button");
@@ -181,7 +134,6 @@ describe("Catalog Component", () => {
 
   it("Should filter companies when search term is entered", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
@@ -192,8 +144,16 @@ describe("Catalog Component", () => {
   });
 
   it("Should show 'No results found' message when search has no matches", () => {
+    vi.doMock("../../src/hooks/useApi", () => ({
+      useApi: () => ({
+        data: { data: { data: [], totalPages: 1 } },
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+      }),
+    }));
+
     render(<Catalog />);
-    vi.runAllTimers();
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "NonExistentCompany" } });
@@ -206,7 +166,6 @@ describe("Catalog Component", () => {
 
   it("Should reset search when navigating to another page", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
@@ -223,7 +182,6 @@ describe("Catalog Component", () => {
 
   it("Should display correct total page count", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const totalPages = Math.ceil(COMPANIES.length / 10);
     const pageNavSection = screen.getByTestId("current-page").closest("div");
@@ -232,7 +190,6 @@ describe("Catalog Component", () => {
 
   it("Should disable Next button on last page", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
     expect(nextButton).toBeDisabled();
@@ -240,7 +197,6 @@ describe("Catalog Component", () => {
 
   it("Should open modal when Add image button is clicked", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
@@ -252,7 +208,6 @@ describe("Catalog Component", () => {
 
   it("Should close modal when close button is clicked", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
@@ -271,7 +226,6 @@ describe("Catalog Component", () => {
 
   it("Should close modal when clicking on overlay", () => {
     render(<Catalog />);
-    vi.runAllTimers();
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
