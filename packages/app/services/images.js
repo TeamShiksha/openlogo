@@ -111,6 +111,15 @@ class ImageServices {
     };
   }
 
+  /**
+   * Updates an image document by its unique identifier.
+   *
+   * @async
+   * @param {string} id - The unique identifier of the image to update.
+   * @param {Object} updateObj - The fields and values to update in the image document.
+   * @returns {Promise<Object>} The updated image document.
+   * @throws {Error} If the update operation fails.
+   */
   async updateImageById(id, updateObj) {
     const updatingImage = await this.imageRepository.update(id, {
       user_id: updateObj.uploadedBy,
@@ -125,6 +134,16 @@ class ImageServices {
     };
   }
 
+  /**
+   * Retrieves a paginated list of images for a specific user.
+   *
+   * @async
+   * @param {string} userId - The unique identifier of the user whose images are to be retrieved.
+   * @param {number} skip - The number of images to skip (for pagination).
+   * @param {number} limit - The maximum number of images to return.
+   * @returns {Promise<Array<Object>>} A promise that resolves to an array of image documents.
+   * @throws {Error} If the retrieval operation fails.
+   */
   async getImagesByUserId(userId, skip, limit) {
     return await this.imageRepository.getAllImageByUserId(userId, skip, limit);
   }

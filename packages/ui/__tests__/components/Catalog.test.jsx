@@ -107,7 +107,7 @@ describe("Catalog Component", () => {
         screen.queryByText(
           `${COMPANIES[10].company_name.toLowerCase()}.${COMPANIES[10].extension}`
         )
-      ).not.toBeInTheDocument();
+      ).not.null();
     }
   });
 
