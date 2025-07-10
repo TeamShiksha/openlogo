@@ -97,7 +97,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
   it("200 - User role updated to admin", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
-    console.log("Test role passed in path:", mockUserModel.role);
+    expect(mockUserModel.role).toBe("admin");
 
     const mockToken = mockUserModel.generateJWT();
 
