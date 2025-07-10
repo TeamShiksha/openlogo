@@ -1,21 +1,31 @@
 .dropdown-div {
   display: flex;
   justify-content: flex-end;
-  margin: 2rem 0;
+  margin: 2rem 0 1rem 0;
 }
 
 .dropdown {
   border: var(--border);
   background: var(--white);
-  color: var(--black);
-  border-radius: 7px;
-  padding: 4px 11px;
+  color: var(--description);
+  border-radius: var(--bradius);
+  padding: 0.5rem 1rem;
   min-width: 80px;
-  width: 120px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
   font-weight: 500;
+  outline: none;
+  padding-right: 4rem;
+
+  /* Arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("/drop-down-arrow.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
 }
 
 .dropdown:focus {
@@ -23,7 +33,7 @@
 }
 
 .option {
-  color: var(--black);
+  color: var(--description);
   font-weight: 500;
 }
 
@@ -33,9 +43,9 @@
 
 @media screen and (max-width: 768px) {
   .dropdown-div {
-    margin: 2rem 0;
+    width: 100%;
   }
   .dropdown {
-    width: 20vw;
+    width: 100%;
   }
 }

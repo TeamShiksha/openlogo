@@ -1,8 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import VerifyEmail from "../../../src/components/verification/VerifyEmail";
-import { VERIFICATION } from "../../../src/utils/Constants";
+import Verification from "../../../src/page/verification/Verification";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -17,75 +16,74 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-describe("VerifyEmail component", () => {
+describe("Verification page", () => {
   it("renders without crashing", () => {
     render(
       <BrowserRouter>
-        <VerifyEmail />
+        <Verification />
       </BrowserRouter>
     );
 
-    const title = screen.getByText(VERIFICATION.title);
+    const title = screen.getByText("Verifying");
     expect(title).toBeInTheDocument();
   });
 
-  it("displays loading animation", () => {
+  it("displays loading spinner", () => {
     render(
       <BrowserRouter>
-        <VerifyEmail />
+        <Verification />
       </BrowserRouter>
     );
 
-    const loadingDots = document.querySelector(".loading-dots");
-    expect(loadingDots).not.toBeNull();
-    expect(loadingDots.children.length).toBe(3);
+    const loadingContainer = document.querySelector(
+      "[class*='loadingContainer']"
+    );
+    expect(loadingContainer).not.toBeNull();
   });
 
   it("displays correct title and message", () => {
     render(
       <BrowserRouter>
-        <VerifyEmail />
+        <Verification />
       </BrowserRouter>
     );
 
-    const title = screen.getByText(VERIFICATION.title);
+    const title = screen.getByText("Verifying");
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe("H2");
 
-    const message = screen.getByText(VERIFICATION.message);
+    const message = screen.getByText(
+      "Please wait, while we verify your email."
+    );
     expect(message).toBeInTheDocument();
   });
 
   it("has correct container structure", () => {
     render(
       <BrowserRouter>
-        <VerifyEmail />
+        <Verification />
       </BrowserRouter>
     );
 
     const pageContainer = document.querySelector(
-      ".verification-page-container"
+      "[class*='verificationPageContainer']"
     );
     expect(pageContainer).not.toBeNull();
 
-    const card = document.querySelector(".verification-card");
+    const card = document.querySelector("[class*='verificationCard']");
     expect(card).not.toBeNull();
 
     expect(pageContainer.contains(card)).toBe(true);
   });
 
-  it("has appropriate CSS classes for styling", () => {
+  it("has appropriate CSS module classes for styling", () => {
     render(
       <BrowserRouter>
-        <VerifyEmail />
+        <Verification />
       </BrowserRouter>
     );
 
-    const title = screen.getByText(VERIFICATION.title);
-    expect(title.classList.contains("verify-title")).toBe(true);
-
-    const loadingDotsContainer = document.querySelector(".loading-dots");
-    const spans = loadingDotsContainer.querySelectorAll("span");
-    expect(spans.length).toBe(3);
+    const title = screen.getByText("Verifying");
+    expect(title.classList.toString()).toContain("verifyTitle");
   });
 });

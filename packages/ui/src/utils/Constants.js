@@ -40,33 +40,11 @@ export const SVGS = {
   dragAndDropBg,
 };
 
-export const COMPANIES = [
-  {
-    id: 1,
-    name: "Amazon",
-    logo: SVGS.amazon,
-  },
-  {
-    id: 2,
-    name: "Apple",
-    logo: SVGS.apple,
-  },
-  {
-    id: 3,
-    name: "Adobe",
-    logo: SVGS.adobe,
-  },
-  {
-    id: 4,
-    name: "Google",
-    logo: SVGS.google,
-  },
-  {
-    id: 5,
-    name: "Microsoft",
-    logo: SVGS.microsoft,
-  },
-];
+export const DEMO = {
+  heading: "See In Action",
+  summary:
+    "Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.",
+};
 
 export const FEATURES = {
   heading: "Features",
@@ -389,16 +367,6 @@ export const COPY = {
   alt: "Copy Icon",
 };
 
-export const VISIBLE = {
-  src: "visible-icon.svg",
-  alt: "Visible Icon",
-};
-
-export const VISIBLEOFF = {
-  src: "visible-off-icon.svg",
-  alt: "Visible Off Icon",
-};
-
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",
@@ -408,6 +376,7 @@ export const BUTTON_TEXT = {
   signUp: "Sign Up",
   signIn: "Sign In",
   signOut: "Sign Out",
+  changePasswordLabel: "Change password",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
   sendMessage: "Send message",
@@ -418,6 +387,7 @@ export const BUTTON_TEXT = {
   submit: "Submit",
   backToSignIn: " Back to Sign In",
   cancel: "Cancel",
+  upgrade: "Upgrade",
   respond: "Respond",
   reject: "Reject",
   sendResponse: "Send Response",
@@ -437,18 +407,6 @@ export const CODEBLOCK = {
   javaLogo,
   tick,
   copycodeicon,
-};
-
-export const TABLE_DATA = {
-  headers: ["Parameter", "Type", "Description", "Required"],
-  logoRows: [
-    ["key", "string", "The domain name of the company.", "Yes"],
-    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
-  ],
-  searchRows: [
-    ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
-    ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
-  ],
 };
 
 export const HERO_SECTION = {
@@ -680,6 +638,10 @@ export const MOCK_USER_DATA = {
   ],
 };
 
+export const EMAIL_DOES_NOT_EXIST = {
+  MESSAGE: "This email does not exist",
+};
+
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
   MESSAGE: "The page you are looking for does not exist.",
@@ -690,11 +652,18 @@ export const VERIFICATION = {
   message: "Please wait, while we verify your email.",
 };
 
-export const DELETE_ACCOUNT_CONFIRMATION_MODAL = {
+export const DELETE_ACCOUNT_MODAL = {
   title: "Confirm Deletion",
   subText:
     "Are you sure you want to delete your account? This action cannot be undone.",
   primaryButtonText: "Delete",
+  secondaryButtonText: "Cancel",
+};
+
+export const CONFIRMATION_MODAL = {
+  heading: "Confirm Action",
+  description: "Are Your Sure?",
+  primaryButtonText: "Confirm",
   secondaryButtonText: "Cancel",
 };
 
@@ -718,8 +687,8 @@ export const API_KEY = {
     invalidKey: "Invalid API key selected",
     modal: {
       title: "Delete API Key",
-      description: "Are you sure you want to delete the API key ? ",
-      warning: " This action cannot be undone.",
+      description: "Are you sure you want to delete the API key",
+      warning: "This action cannot be undone.",
     },
   },
 };
@@ -781,4 +750,24 @@ export const OPERATOR_ARCHIVED_MESSAGES = {
     ],
     totalPages: 1,
   },
+};
+
+export const USAGE = {
+  callsText: "Calls",
+  limitText: "Limit",
+  resetText: "Resets 1st of every month.",
+};
+
+export const CURRENT_PLAN = {
+  plan: "Hobby",
+  tagline: "Empower your projects with essential tools, at no cost.",
+};
+
+export const CHANGE_PASSWORD_FIELDS = [
+  { type: "password", name: "currPassword", label: "Current Password" },
+  { type: "password", name: "newPassword", label: "New Password" },
+];
+
+export const API_KEY_FORM = {
+  tagLine: "Generate a new API key to use in your projects.",
 };

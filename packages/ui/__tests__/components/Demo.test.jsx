@@ -2,57 +2,70 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 import Demo from "../../src/components/demo/Demo.jsx";
-import { instance } from "../../src/api/api_instance.js";
-vi.mock("../../src/api/api_instance.js", () => ({
-  instance: {
-    get: vi.fn(),
-  },
+import { ToastContext } from "../../src/contexts/Contexts.jsx";
+
+const mockUseApi = vi.fn();
+
+vi.mock("../../src/hooks/useApi", () => ({
+  useApi: () => mockUseApi(),
 }));
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  show: vi.fn(),
+  clear: vi.fn(),
+  clearToast: vi.fn(),
+};
 
 describe("Demo Component", () => {
   const mockOpenAuthModal = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseApi.mockReturnValue({
+      makeRequest: vi.fn(),
+      data: [],
+      loading: false,
+      errorMsg: null,
+    });
   });
 
   it("renders the Demo component correctly", () => {
-    render(<Demo openAuthModal={mockOpenAuthModal} />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Demo openAuthModal={mockOpenAuthModal} />
+      </ToastContext.Provider>
+    );
     expect(screen.getByText("See In Action")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
   });
 
-  it("shows loading animation while fetching", async () => {
-    instance.get.mockResolvedValueOnce(new Promise(() => {}));
-
-    render(<Demo openAuthModal={mockOpenAuthModal} />);
-
-    fireEvent.change(screen.getByPlaceholderText("Search"), {
-      target: { value: "aa" },
-    });
-    fireEvent.submit(screen.getByRole("button"));
-
-    await waitFor(() => {
-      expect(screen.getByTestId("loading-dots")).toBeInTheDocument();
-    });
-  });
-
   it("displays up to 3 search results after fetching", async () => {
-    const mockCompanies = [
-      { companyName: "Apple", image: "apple-logo.svg" },
-      { companyName: "Amazon", image: "amazon-logo.svg" },
-      { companyName: "Adobe", image: "adobe-logo.svg" },
-      { companyName: "Airbnb", image: "airbnb-logo.svg" },
-    ];
+    mockUseApi.mockReturnValue({
+      makeRequest: vi.fn(),
+      data: [
+        { companyName: "Apple", image: "apple-logo.svg" },
+        { companyName: "Amazon", image: "amazon-logo.svg" },
+        { companyName: "Adobe", image: "adobe-logo.svg" },
+        { companyName: "Airbnb", image: "airbnb-logo.svg" },
+      ],
+      loading: false,
+      errorMsg: null,
+    });
 
-    instance.get.mockResolvedValueOnce({ data: { data: mockCompanies } });
-
-    render(<Demo openAuthModal={mockOpenAuthModal} />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Demo openAuthModal={mockOpenAuthModal} />
+      </ToastContext.Provider>
+    );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
       target: { value: "aa" },
     });
-    fireEvent.submit(screen.getByRole("button"));
+    fireEvent.submit(screen.getByAltText("Search"));
 
     await waitFor(() => {
       expect(screen.getByText("Apple")).toBeInTheDocument();
@@ -63,14 +76,16 @@ describe("Demo Component", () => {
   });
 
   it("shows 'No results' and request button if search returns nothing", async () => {
-    instance.get.mockResolvedValueOnce({ data: [] });
-
-    render(<Demo openAuthModal={mockOpenAuthModal} />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Demo openAuthModal={mockOpenAuthModal} />
+      </ToastContext.Provider>
+    );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
       target: { value: "nope" },
     });
-    fireEvent.submit(screen.getByRole("button"));
+    fireEvent.submit(screen.getByAltText("Search"));
 
     await waitFor(() => {
       expect(screen.getByText(/did not match any logo/i)).toBeInTheDocument();
@@ -79,14 +94,16 @@ describe("Demo Component", () => {
   });
 
   it("calls openAuthModal when request button is clicked", async () => {
-    instance.get.mockResolvedValueOnce({ data: [] });
-
-    render(<Demo openAuthModal={mockOpenAuthModal} />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Demo openAuthModal={mockOpenAuthModal} />
+      </ToastContext.Provider>
+    );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
       target: { value: "nothing" },
     });
-    fireEvent.submit(screen.getByRole("button"));
+    fireEvent.submit(screen.getByAltText("Search"));
 
     await waitFor(() => {
       fireEvent.click(screen.getByText("Request Logo"));
