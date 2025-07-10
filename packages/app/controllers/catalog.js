@@ -61,7 +61,7 @@ async function addPermissionController(req, res, next) {
     const userService = new UserService();
     const { role, userId } = req.params;
 
-    console.log("Role in req.params:", role);
+    
 
     if (!role || !userId) {
       return res.status(422).json({
