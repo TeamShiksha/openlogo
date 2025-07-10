@@ -9,7 +9,10 @@ module.exports = (options = {}) => {
   return function (req, res, next) {
     try {
       const { jwt } = req.cookies;
-      console.log("JWT from cookies:", jwt);
+      if (process.env.NODE_ENV !== "production") {
+        const maskedJwt = jwt ? `${jwt.slice(0, 5)}...${jwt.slice(-5)}` : "undefined";
+        console.log("JWT from cookies (masked):", maskedJwt);
+      }
       if (!jwt) {
         return res.status(401).json({
           error: STATUS_CODES[401],
