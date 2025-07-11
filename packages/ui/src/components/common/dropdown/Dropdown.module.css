@@ -1,7 +1,7 @@
 .dropdown-div {
   display: flex;
   justify-content: flex-end;
-  margin: 2rem 0 0 0;
+  margin: 2rem 0 1rem 0;
 }
 
 .dropdown {
@@ -22,7 +22,7 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("drop-down-arrow.svg");
+  background-image: url("/drop-down-arrow.svg");
   background-repeat: no-repeat;
   background-position: right 0.7rem top 50%;
   background-size: 0.65rem auto;

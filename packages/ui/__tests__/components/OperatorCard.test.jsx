@@ -14,12 +14,14 @@ describe("OperatorCard Component", () => {
         searchType="messages"
       />
     );
-    const requestId = screen.getByText(MOCK_OPERATOR_CARD_DATA._id);
+    const requestId = screen.getByText(
+      `Ticket #${MOCK_OPERATOR_CARD_DATA._id.slice(-8)}`
+    );
     expect(requestId).toBeInTheDocument();
     const status = screen.getByText(MOCK_OPERATOR_CARD_DATA.status);
     expect(status).toBeInTheDocument();
     const openedDate = screen.getByText(
-      `Opened at : ${new Date(MOCK_OPERATOR_CARD_DATA.openedAt).toLocaleDateString()}`
+      new Date(MOCK_OPERATOR_CARD_DATA.openedAt).toLocaleDateString()
     );
     expect(openedDate).toBeInTheDocument();
   });
@@ -34,7 +36,7 @@ describe("OperatorCard Component", () => {
       />
     );
     const closedDate = screen.getByText(
-      `Closed at : ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+      `- ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
     );
     expect(closedDate).toBeInTheDocument();
 
@@ -47,7 +49,7 @@ describe("OperatorCard Component", () => {
       />
     );
     const closedDates = screen.getAllByText(
-      `Closed at : ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+      `- ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
     );
     expect(closedDates.length).toBe(2);
   });
@@ -86,9 +88,7 @@ describe("OperatorCard Component", () => {
         searchType="requests"
       />
     );
-    const companyUrl = screen.getByText(
-      `Company URL: ${MOCK_OPERATOR_CARD_DATA.companyUrl}`
-    );
+    const companyUrl = screen.getByText(MOCK_OPERATOR_CARD_DATA.companyUrl);
     expect(companyUrl).toBeInTheDocument();
   });
 

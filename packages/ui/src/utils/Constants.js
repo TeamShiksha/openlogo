@@ -638,6 +638,10 @@ export const MOCK_USER_DATA = {
   ],
 };
 
+export const EMAIL_DOES_NOT_EXIST = {
+  MESSAGE: "This email does not exist",
+};
+
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
   MESSAGE: "The page you are looking for does not exist.",
@@ -648,11 +652,18 @@ export const VERIFICATION = {
   message: "Please wait, while we verify your email.",
 };
 
-export const DELETE_ACCOUNT_CONFIRMATION_MODAL = {
+export const DELETE_ACCOUNT_MODAL = {
   title: "Confirm Deletion",
   subText:
     "Are you sure you want to delete your account? This action cannot be undone.",
   primaryButtonText: "Delete",
+  secondaryButtonText: "Cancel",
+};
+
+export const CONFIRMATION_MODAL = {
+  heading: "Confirm Action",
+  description: "Are Your Sure?",
+  primaryButtonText: "Confirm",
   secondaryButtonText: "Cancel",
 };
 
@@ -676,8 +687,8 @@ export const API_KEY = {
     invalidKey: "Invalid API key selected",
     modal: {
       title: "Delete API Key",
-      description: "Are you sure you want to delete the API key ? ",
-      warning: " This action cannot be undone.",
+      description: "Are you sure you want to delete the API key",
+      warning: "This action cannot be undone.",
     },
   },
 };

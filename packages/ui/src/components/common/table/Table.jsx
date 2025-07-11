@@ -45,7 +45,11 @@ const Table = ({ headers, rows, emptyMessage, onDelete, isGuest }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={headers?.length} className={styles["no-data"]}>
+              <td
+                colSpan={headers?.length}
+                className={styles["no-data"]}
+                data-testid="empty-api-message"
+              >
                 {emptyMessage || "No data to display"}
               </td>
             </tr>
