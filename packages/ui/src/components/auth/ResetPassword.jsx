@@ -99,7 +99,7 @@ const ResetPassword = () => {
       password: formData.newPassword,
       confirmPassword: formData.confirmPassword,
     });
-    // Only check if confirmPassword is valid for form validation
+
     setIsFormValid(
       !errors.confirmPassword &&
         formData.newPassword &&
@@ -145,26 +145,8 @@ const ResetPassword = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "70vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          width: "400px",
-          height: "400px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          marginTop: "60px",
-        }}
-      >
+    <div className={styles["centered-outer"]}>
+      <div className={styles["centered-inner"]}>
         <CardWrapper
           title={
             <span className={styles["centered-title"]}>
@@ -204,13 +186,7 @@ const ResetPassword = () => {
                   disabled={resetLoading || tokenLoading}
                   required
                 />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
+                <div className={styles["button-row"]}>
                   <Button
                     type="submit"
                     variant="primary"
