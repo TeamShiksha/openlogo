@@ -43,7 +43,7 @@ vi.mock("../../../src/hooks/useToast.js", () => ({
   useToast: () => mockToast,
 }));
 
-describe("ResetPassword Component Tests", () => {
+describe("ResetPassword Component Tests", async () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSearchParams.set("token", "valid-token-123");
@@ -206,5 +206,221 @@ describe("ResetPassword Component Tests", () => {
     });
 
     expect(screen.queryByLabelText("New Password")).not.toBeInTheDocument();
+  });
+
+  it("shows error message when token is missing", async () => {
+    mockSearchParams.delete("token");
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("Invalid or missing token.").length
+      ).toBeGreaterThan(0);
+    });
+    expect(screen.queryByLabelText("New Password")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Confirm Password")).not.toBeInTheDocument();
+  });
+
+  it("calls setFormData and clears localErrorMsg on input change", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    fireEvent.change(newPasswordInput, { target: { value: "newpass" } });
+
+    expect(
+      screen.queryByText("Failed to reset password.")
+    ).not.toBeInTheDocument();
+    expect(newPasswordInput.value).toBe("newpass");
+  });
+
+  it("sets focusedField on input focus and resets isSubmit", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+    });
+
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    fireEvent.focus(confirmPasswordInput);
+
+    fireEvent.change(confirmPasswordInput, { target: { value: "abc" } });
+    expect(confirmPasswordInput.value).toBe("abc");
+  });
+
+  it("sets focusedField to null on blur", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    fireEvent.focus(newPasswordInput);
+    fireEvent.blur(newPasswordInput);
+
+    expect(newPasswordInput).toBeInTheDocument();
+  });
+
+  it("does not submit if confirmPassword validation fails", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.submit,
+    });
+
+    fireEvent.change(newPasswordInput, { target: { value: "password123" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "wrong" } });
+    fireEvent.click(submitButton);
+
+    expect(mockedResetPasswordRequest).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.getByText(/confirm password/i)).toBeInTheDocument();
+    });
+  });
+
+  it("does not submit when passwords do not match", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.submit,
+    });
+    fireEvent.change(newPasswordInput, { target: { value: "password123" } });
+    fireEvent.change(confirmPasswordInput, { target: { value: "different" } });
+    fireEvent.click(submitButton);
+    expect(mockedResetPasswordRequest).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.getByText(/confirm password/i)).toBeInTheDocument();
+    });
+  });
+
+  it("shows success toast and navigates to home on successful password reset", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+    mockedResetPasswordRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.submit,
+    });
+
+    fireEvent.change(newPasswordInput, { target: { value: "password123" } });
+    fireEvent.change(confirmPasswordInput, {
+      target: { value: "password123" },
+    });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockedResetPasswordRequest).toHaveBeenCalled();
+      expect(mockToast.success).toHaveBeenCalledWith(
+        "Password reset successful! Please sign in."
+      );
+      expect(mockNavigate).toHaveBeenCalledWith("/");
+    });
+  });
+  it("shows error toast and error message on failed password reset", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+    mockedResetPasswordRequest.mockResolvedValue(false);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const submitButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.submit,
+    });
+
+    fireEvent.change(newPasswordInput, { target: { value: "password123" } });
+    fireEvent.change(confirmPasswordInput, {
+      target: { value: "password123" },
+    });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockedResetPasswordRequest).toHaveBeenCalled();
+      expect(mockToast.error).toHaveBeenCalledWith("Failed to reset password.");
+      expect(
+        screen.getAllByText("Failed to reset password.").length
+      ).toBeGreaterThan(0);
+    });
   });
 });
