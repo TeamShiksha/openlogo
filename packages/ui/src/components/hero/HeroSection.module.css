@@ -3,7 +3,7 @@
   flex-direction: row;
   align-items: center;
   gap: 6rem;
-  background-image: url("hero-background.png");
+  background-image: url("/hero-background.png");
   padding: 6rem 0;
   background-position: center;
 }
