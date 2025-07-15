@@ -764,7 +764,7 @@ export const CURRENT_PLAN = {
 };
 
 export const CHANGE_PASSWORD_FIELDS = [
-  { type: "password", name: "currPassword", label: "Confirm Password" },
+  { type: "password", name: "currPassword", label: "Current Password" },
   { type: "password", name: "newPassword", label: "New Password" },
 ];
 

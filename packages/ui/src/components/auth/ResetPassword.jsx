@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BUTTON_TEXT, DASHBOARD_CARDS_TITLE } from "../../utils/Constants";
+import { BUTTON_TEXT } from "../../utils/Constants";
 import { validate } from "../../utils/Helpers.js";
 
 import { useApi } from "../../hooks/useApi";
@@ -149,9 +149,7 @@ const ResetPassword = () => {
       <div className={styles["centered-inner"]}>
         <CardWrapper
           title={
-            <span className={styles["centered-title"]}>
-              {DASHBOARD_CARDS_TITLE[4]}
-            </span>
+            <span className={styles["centered-title"]}>Change Password</span>
           }
         >
           <form className={styles["form-container"]} onSubmit={handleSubmit}>
