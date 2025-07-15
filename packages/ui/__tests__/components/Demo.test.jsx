@@ -1,14 +1,24 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import Demo from "../../src/components/demo/Demo.jsx";
-import { ToastContext } from "../../src/contexts/Contexts.jsx";
+import { ToastContext, AuthContext } from "../../src/contexts/Contexts.jsx";
+import { BUTTON_TEXT } from "../../src/utils/Constants.js";
 
 const mockUseApi = vi.fn();
 
 vi.mock("../../src/hooks/useApi", () => ({
   useApi: () => mockUseApi(),
 }));
+
+const mockAuthContext = (isAuthenticated) => ({
+  isAuthenticated,
+});
 
 const mockToastContext = {
   success: vi.fn(),
@@ -34,16 +44,20 @@ describe("Demo Component", () => {
   });
 
   it("renders the Demo component correctly", () => {
+    const authContext = mockAuthContext(true);
     render(
-      <ToastContext.Provider value={mockToastContext}>
-        <Demo openAuthModal={mockOpenAuthModal} />
-      </ToastContext.Provider>
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
     );
     expect(screen.getByText("See In Action")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
   });
 
   it("displays up to 3 search results after fetching", async () => {
+    const authContext = mockAuthContext(true);
     mockUseApi.mockReturnValue({
       makeRequest: vi.fn(),
       data: [
@@ -57,9 +71,11 @@ describe("Demo Component", () => {
     });
 
     render(
-      <ToastContext.Provider value={mockToastContext}>
-        <Demo openAuthModal={mockOpenAuthModal} />
-      </ToastContext.Provider>
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -76,10 +92,13 @@ describe("Demo Component", () => {
   });
 
   it("shows 'No results' and request button if search returns nothing", async () => {
+    const authContext = mockAuthContext(true);
     render(
-      <ToastContext.Provider value={mockToastContext}>
-        <Demo openAuthModal={mockOpenAuthModal} />
-      </ToastContext.Provider>
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -93,21 +112,78 @@ describe("Demo Component", () => {
     });
   });
 
-  it("calls openAuthModal when request button is clicked", async () => {
+  it("opens LogoRequestForm modal when request logo is clicked and user is authenticated", async () => {
+    const authContext = mockAuthContext(true);
     render(
-      <ToastContext.Provider value={mockToastContext}>
-        <Demo openAuthModal={mockOpenAuthModal} />
-      </ToastContext.Provider>
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
     );
-
-    fireEvent.change(screen.getByPlaceholderText("Search"), {
-      target: { value: "nothing" },
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("Search"), {
+        target: { value: "nothing" },
+      });
+      fireEvent.submit(screen.getByAltText("Search"));
+      fireEvent.click(
+        screen.getByRole("button", { name: BUTTON_TEXT.requestLogo })
+      );
     });
-    fireEvent.submit(screen.getByAltText("Search"));
-
     await waitFor(() => {
-      fireEvent.click(screen.getByText("Request Logo"));
-      expect(mockOpenAuthModal).toHaveBeenCalledTimes(1);
+      const logoRequestFormModal = screen.getAllByText("Request Logo");
+      expect(logoRequestFormModal.length).toBe(2);
     });
+  });
+
+  it("opens auth modal when request logo is clicked and user is not authenticated", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
+    );
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("Search"), {
+        target: { value: "nothing" },
+      });
+      fireEvent.submit(screen.getByAltText("Search"));
+      fireEvent.click(
+        screen.getByRole("button", { name: BUTTON_TEXT.requestLogo })
+      );
+    });
+    await waitFor(() => {
+      expect(mockOpenAuthModal).toHaveBeenCalled();
+    });
+  });
+
+  it("closes the LogoRequestForm modal when the close button is clicked", async () => {
+    const authContext = mockAuthContext(true);
+    render(
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
+    );
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("Search"), {
+        target: { value: "nothing" },
+      });
+      fireEvent.submit(screen.getByAltText("Search"));
+      fireEvent.click(
+        screen.getByRole("button", { name: BUTTON_TEXT.requestLogo })
+      );
+    });
+    await waitFor(() => {
+      const logoRequestFormModal = screen.getAllByText("Request Logo");
+      expect(logoRequestFormModal.length).toBe(2);
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.cross }));
+    const modalClosed = screen.getAllByText("Request Logo");
+    expect(modalClosed.length).toBe(1);
   });
 });
