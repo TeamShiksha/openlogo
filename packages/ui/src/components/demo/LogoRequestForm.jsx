@@ -10,20 +10,22 @@ import { validate } from "../../utils/Helpers";
 import { BUTTON_TEXT, LOGOREQUEST } from "../../utils/Constants";
 
 const LogoRequestForm = ({ closeModal }) => {
-  const [formValues, setFormValues] = useState(LOGOREQUEST.initialValues);
-  const [formErrors, setFormErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [focusedField, setFocusedField] = useState(null);
+  const [requestFormValues, setRequestFormValues] = useState(
+    LOGOREQUEST.initialValues
+  );
+  const [requestFormErrors, setRequestFormErrors] = useState({});
+  const [isRequestFormValid, setIsRequestFormValid] = useState(false);
+  const [activeFormField, setActiveFormField] = useState(null);
   const toast = useToast();
   const { makeRequest, loading, data, errorMsg } = useApi({
     url: "/requests/",
     method: "POST",
-    data: { companyUrl: formValues.companyUrl },
+    data: { companyUrl: requestFormValues.companyUrl },
   });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+    setRequestFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = async (submitEvent) => {
@@ -31,77 +33,67 @@ const LogoRequestForm = ({ closeModal }) => {
     await makeRequest();
   };
 
-  // on error response
+  // on success or Error response
   useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
-      const timeout = setTimeout(() => {
-        setFormErrors({});
-        setFocusedField(null);
-        setFormValues(LOGOREQUEST.initialValues);
+    if (errorMsg || data?.message) {
+      if (errorMsg) {
+        toast.error(errorMsg);
+      } else if (data?.message) {
+        toast.success(data.message);
+      }
+      const timeId = setTimeout(() => {
+        setRequestFormErrors({});
+        setActiveFormField(null);
+        setRequestFormValues(LOGOREQUEST.initialValues);
         closeModal();
       }, 500);
-      return () => clearTimeout(timeout);
+      return () => clearTimeout(timeId);
     }
-  }, [errorMsg, toast, closeModal]);
-
-  //on success response
-  useEffect(() => {
-    if (data?.message) {
-      toast.success(data.message);
-      const timeout = setTimeout(() => {
-        setFormErrors({});
-        setFocusedField(null);
-        setFormValues(LOGOREQUEST.initialValues);
-        closeModal();
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [data, toast, closeModal]);
+  }, [errorMsg, data, toast, closeModal]);
 
   useEffect(() => {
-    if (!focusedField) {
-      const filledFields = Object.keys(formValues).filter(
-        (field) => formValues[field] !== LOGOREQUEST.initialValues[field]
+    if (!activeFormField) {
+      const filledFields = Object.keys(requestFormValues).filter(
+        (field) => requestFormValues[field] !== LOGOREQUEST.initialValues[field]
       );
       const errors = validate(
         filledFields.reduce((acc, field) => {
-          acc[field] = formValues[field];
+          acc[field] = requestFormValues[field];
           return acc;
         }, {})
       );
-      setFormErrors(errors);
+      setRequestFormErrors(errors);
       return;
     }
 
     // Show validation error immediately on focus
     const validationErrors = validate({
-      [focusedField]: formValues[focusedField],
+      [activeFormField]: requestFormValues[activeFormField],
     });
-    setFormErrors((prevErrors) => ({
+    setRequestFormErrors((prevErrors) => ({
       ...prevErrors,
-      [focusedField]: validationErrors[focusedField],
+      [activeFormField]: validationErrors[activeFormField],
     }));
 
     // Then update after delay if value changes
-    const timeout = setTimeout(() => {
+    const timeId = setTimeout(() => {
       const updatedErrors = validate({
-        [focusedField]: formValues[focusedField],
+        [activeFormField]: requestFormValues[activeFormField],
       });
-      setFormErrors((prevErrors) => ({
+      setRequestFormErrors((prevErrors) => ({
         ...prevErrors,
-        [focusedField]: updatedErrors[focusedField],
+        [activeFormField]: updatedErrors[activeFormField],
       }));
     }, 500);
 
-    return () => clearTimeout(timeout);
-  }, [focusedField, formValues]);
+    return () => clearTimeout(timeId);
+  }, [activeFormField, requestFormValues]);
 
   //overall validation
   useEffect(() => {
-    const errors = validate(formValues);
-    setIsFormValid(Object.keys(errors).length === 0);
-  }, [formValues]);
+    const errors = validate(requestFormValues);
+    setIsRequestFormValid(Object.keys(errors).length === 0);
+  }, [requestFormValues]);
 
   return (
     <Modal onClose={closeModal} isOpen={true}>
@@ -109,33 +101,33 @@ const LogoRequestForm = ({ closeModal }) => {
         <h3 className={styles["logo-form-title"]}>{LOGOREQUEST.title}</h3>
         <div className={styles["logo-form-content"]}>
           <CustomInput
-            error={formErrors["companyUrl"]}
+            error={requestFormErrors["companyUrl"]}
             label="Company Url"
             name="companyUrl"
-            value={formValues["companyUrl"]}
+            value={requestFormValues["companyUrl"]}
             onChange={handleInputChange}
-            onFocus={() => setFocusedField("companyUrl")}
-            onBlur={() => setFocusedField(null)}
+            onFocus={() => setActiveFormField("companyUrl")}
+            onBlur={() => setActiveFormField(null)}
           />
           <textarea
             name="companyDescription"
             placeholder="Type company description here ..."
-            value={formValues.companyDescription}
+            value={requestFormValues.companyDescription}
             onChange={handleInputChange}
             className={styles["logo-form-textarea"]}
-            onFocus={() => setFocusedField("companyDescription")}
-            onBlur={() => setFocusedField(null)}
+            onFocus={() => setActiveFormField("companyDescription")}
+            onBlur={() => setActiveFormField(null)}
           ></textarea>
           <p
-            className={`${styles["input-error"]} ${formErrors.companyDescription ? styles["has-error"] : ""}`}
+            className={`${styles["input-error"]} ${requestFormErrors.companyDescription ? styles["has-error"] : ""}`}
           >
-            {formErrors.companyDescription}
+            {requestFormErrors.companyDescription}
           </p>
         </div>
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || loading}
+          disabled={!isRequestFormValid || loading}
         >
           {loading ? "Sending" : BUTTON_TEXT.sendRequest}
         </Button>
