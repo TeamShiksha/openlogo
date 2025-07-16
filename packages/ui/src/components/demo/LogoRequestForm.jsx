@@ -103,6 +103,7 @@ const LogoRequestForm = ({ closeModal }) => {
           <CustomInput
             error={requestFormErrors["companyUrl"]}
             label="Company Url"
+            type="text"
             name="companyUrl"
             value={requestFormValues["companyUrl"]}
             onChange={handleInputChange}
