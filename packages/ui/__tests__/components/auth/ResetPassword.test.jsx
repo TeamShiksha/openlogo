@@ -61,11 +61,13 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
-      expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: BUTTON_TEXT.submit })
-      ).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+      const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
+      
+      expect(newPasswordInput).toBeInTheDocument();
+      expect(confirmPasswordInput).toBeInTheDocument();
+      expect(submitButton).toBeInTheDocument();
     });
   });
 
@@ -81,9 +83,7 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      const submitButton = screen.getByRole("button", {
-        name: BUTTON_TEXT.submit,
-      });
+      const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
       expect(submitButton).toBeDisabled();
     });
   });
@@ -100,19 +100,16 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
-    });
+    fireEvent.change(confirmPasswordInput, { target: { value: "password123" } });
 
     expect(submitButton).toBeEnabled();
   });
@@ -130,19 +127,16 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
-    });
+    fireEvent.change(confirmPasswordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -164,19 +158,16 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
-    });
+    fireEvent.change(confirmPasswordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -205,7 +196,8 @@ describe("ResetPassword Component Tests", async () => {
       expect(errorMessage).toBeInTheDocument();
     });
 
-    expect(screen.queryByLabelText("New Password")).not.toBeInTheDocument();
+    const newPasswordInput = screen.queryByLabelText("New Password");
+    expect(newPasswordInput).not.toBeInTheDocument();
   });
 
   it("shows error message when token is missing", async () => {
@@ -217,13 +209,16 @@ describe("ResetPassword Component Tests", async () => {
         </ToastProvider>
       </BrowserRouter>
     );
+    
     await waitFor(() => {
-      expect(
-        screen.getAllByText("Invalid or missing token.").length
-      ).toBeGreaterThan(0);
+      const errorMessages = screen.getAllByText("Invalid or missing token.");
+      expect(errorMessages.length).toBeGreaterThan(0);
     });
-    expect(screen.queryByLabelText("New Password")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Confirm Password")).not.toBeInTheDocument();
+    
+    const newPasswordInput = screen.queryByLabelText("New Password");
+    const confirmPasswordInput = screen.queryByLabelText("Confirm Password");
+    expect(newPasswordInput).not.toBeInTheDocument();
+    expect(confirmPasswordInput).not.toBeInTheDocument();
   });
 
   it("calls setFormData and clears localErrorMsg on input change", async () => {
@@ -238,15 +233,15 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     fireEvent.change(newPasswordInput, { target: { value: "newpass" } });
 
-    expect(
-      screen.queryByText("Failed to reset password.")
-    ).not.toBeInTheDocument();
+    const errorMessage = screen.queryByText("Failed to reset password.");
+    expect(errorMessage).not.toBeInTheDocument();
     expect(newPasswordInput.value).toBe("newpass");
   });
 
@@ -262,13 +257,14 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+      const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+      expect(confirmPasswordInput).toBeInTheDocument();
     });
 
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
     fireEvent.focus(confirmPasswordInput);
-
     fireEvent.change(confirmPasswordInput, { target: { value: "abc" } });
+    
     expect(confirmPasswordInput.value).toBe("abc");
   });
 
@@ -284,7 +280,8 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
@@ -306,14 +303,13 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "wrong" } });
@@ -321,7 +317,8 @@ describe("ResetPassword Component Tests", async () => {
 
     expect(mockedResetPasswordRequest).not.toHaveBeenCalled();
     await waitFor(() => {
-      expect(screen.getByText(/confirm password/i)).toBeInTheDocument();
+      const errorMessage = screen.getByText(/confirm password/i);
+      expect(errorMessage).toBeInTheDocument();
     });
   });
 
@@ -334,20 +331,24 @@ describe("ResetPassword Component Tests", async () => {
         </ToastProvider>
       </BrowserRouter>
     );
+    
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
+    
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
+    
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
     fireEvent.change(confirmPasswordInput, { target: { value: "different" } });
     fireEvent.click(submitButton);
+    
     expect(mockedResetPasswordRequest).not.toHaveBeenCalled();
     await waitFor(() => {
-      expect(screen.getByText(/confirm password/i)).toBeInTheDocument();
+      const errorMessage = screen.getByText(/confirm password/i);
+      expect(errorMessage).toBeInTheDocument();
     });
   });
 
@@ -364,19 +365,16 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
-    });
+    fireEvent.change(confirmPasswordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -387,6 +385,7 @@ describe("ResetPassword Component Tests", async () => {
       expect(mockNavigate).toHaveBeenCalledWith("/");
     });
   });
+
   it("shows error toast and error message on failed password reset", async () => {
     mockedValidateTokenRequest.mockResolvedValue(true);
     mockedResetPasswordRequest.mockResolvedValue(false);
@@ -400,27 +399,24 @@ describe("ResetPassword Component Tests", async () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
     });
 
     const newPasswordInput = screen.getByLabelText("New Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.submit,
-    });
+    const submitButton = screen.getByRole("button", { name: BUTTON_TEXT.submit });
 
     fireEvent.change(newPasswordInput, { target: { value: "password123" } });
-    fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
-    });
+    fireEvent.change(confirmPasswordInput, { target: { value: "password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(mockedResetPasswordRequest).toHaveBeenCalled();
       expect(mockToast.error).toHaveBeenCalledWith("Failed to reset password.");
-      expect(
-        screen.getAllByText("Failed to reset password.").length
-      ).toBeGreaterThan(0);
+      
+      const errorMessages = screen.getAllByText("Failed to reset password.");
+      expect(errorMessages.length).toBeGreaterThan(0);
     });
   });
 });
