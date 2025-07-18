@@ -4771,42 +4771,7 @@
 					},
 					"response": [
 						{
-							"name": "Succeccful Response",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\",\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{openlogo_base_url}}/requests",
-									"host": [
-										"{{openlogo_base_url}}"
-									],
-									"path": [
-										"requests"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": "{\r\n    \"statusCode\": 201,\r\n    \"message\": \"Logo request created successfully\",\r\n    \"data\": {\r\n        \"user_id\": \"6856985b1f344eb6525043d1\",\r\n        \"companyUrl\": \"https://www.google.com\",\r\n        \"status\": \"PENDING\",\r\n        \"operator\": null,\r\n        \"comment\": null,\r\n        \"closedAt\": null,\r\n        \"_id\": \"6857edbc7f2775c16193d103\",\r\n        \"openedAt\": \"2025-06-22T11:49:16.579Z\",\r\n        \"updated_at\": \"2025-06-22T11:49:16.580Z\",\r\n        \"__v\": 0\r\n    }\r\n}"
-						},
-						{
-							"name": "User Id is required",
+							"name": "Successful Response",
 							"originalRequest": {
 								"method": "POST",
 								"header": [
@@ -4838,7 +4803,7 @@
 							"_postman_previewlanguage": null,
 							"header": null,
 							"cookie": [],
-							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"User ID is required\"\r\n}"
+							"body": "{\r\n    \"statusCode\": 201,\r\n    \"message\": \"Logo request created successfully\",\r\n    \"data\": {\r\n        \"user_id\": \"6856985b1f344eb6525043d1\",\r\n        \"companyUrl\": \"https://www.google.com\",\r\n        \"status\": \"PENDING\",\r\n        \"operator\": null,\r\n        \"comment\": null,\r\n        \"closedAt\": null,\r\n        \"_id\": \"6857edbc7f2775c16193d103\",\r\n        \"openedAt\": \"2025-06-22T11:49:16.579Z\",\r\n        \"updated_at\": \"2025-06-22T11:49:16.580Z\",\r\n        \"__v\": 0\r\n    }\r\n}"
 						},
 						{
 							"name": "Company URL is required",
@@ -4853,7 +4818,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\"\r\n}",
+									"raw": "{}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4888,7 +4853,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\",\r\n    \"companyUrl\":\"\"\r\n}",
+									"raw": "{\r\n    \"companyUrl\":\"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4923,7 +4888,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\",\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4958,7 +4923,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\",\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4993,7 +4958,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_id\":\"6856985b1f344eb6525043d1\",\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

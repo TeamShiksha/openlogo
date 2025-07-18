@@ -1,20 +1,7 @@
 const Joi = require("joi");
-const { isValidObjectId } = require("mongoose");
 const { StatusTypes, TAB_OPTIONS } = require("../utils/constants");
 
 const createRequestSchema = Joi.object({
-  user_id: Joi.string()
-    .custom((value, helpers) => {
-      if (!isValidObjectId(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
-    .required()
-    .messages({
-      "any.invalid": "User ID must be a valid MongoDB ObjectId",
-      "any.required": "User ID is required",
-    }),
   companyUrl: Joi.string()
     .trim()
     .required()

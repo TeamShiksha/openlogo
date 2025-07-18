@@ -129,9 +129,10 @@ async function addRequestController(req, res, next) {
         message: error.message,
       });
     }
+    const data = { companyUrl: value.companyUrl, user_id: req.userData.userId };
 
-    const requestedUserId = value.user_id;
-    const requestedCompanyUrl = value.companyUrl;
+    const requestedUserId = data.user_id;
+    const requestedCompanyUrl = data.companyUrl;
 
     const userHasPending =
       await requestService.requestExistsForUser(requestedUserId);
@@ -153,7 +154,7 @@ async function addRequestController(req, res, next) {
       });
     }
 
-    const newRequest = await requestService.createRaiseRequest(value);
+    const newRequest = await requestService.createRaiseRequest(data);
     return res.status(201).json({
       statusCode: 201,
       message: Messages.LOGO_REQUEST_CREATED,
