@@ -9,7 +9,10 @@ const {
 } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
 const { companyUriSchema } = require("../schemas/catalog");
-const { Messages } = require("../utils/constants");
+const {
+  Messages,
+  ExtractCompanyNameFromUrlRegex,
+} = require("../utils/constants");
 
 async function getAnalyticsController(req, res, next) {
   try {
@@ -152,8 +155,17 @@ async function updateCatalogController(req, res, next) {
       });
     }
 
+    const previousImageData = await imageServices.getImageById(id);
+    if (!previousImageData) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        statusCode: 404,
+        message: Messages.UPLOAD_FAILED,
+      });
+    }
+
     const imageName = file.originalname;
-    const companyName = imageName.split(".")[0].toUpperCase();
+    const companyName = previousImageData.company_name;
     const Extension = imageName.split(".")[1].toLowerCase();
 
     const key = await imageServices.uploadToS3(file, companyName, Extension);
@@ -211,8 +223,20 @@ async function addCatalogController(req, res, next) {
     }
 
     const imageName = file.originalname;
-    const companyName = imageName.split(".")[0].toUpperCase();
+    const match = companyUri
+      .toUpperCase()
+      .match(ExtractCompanyNameFromUrlRegex);
+    const companyName = match[1];
     const Extension = imageName.split(".")[1].toLowerCase();
+
+    const imageExist = await imageServices.getImageByCompanyName(companyName);
+    if (imageExist) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        statusCode: 400,
+        message: Messages.IMAGE_ALREADY_EXISTS,
+      });
+    }
 
     const key = await imageServices.uploadToS3(file, companyName, Extension);
     if (!key) {

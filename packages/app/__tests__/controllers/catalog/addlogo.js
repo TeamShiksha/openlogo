@@ -29,6 +29,9 @@ describe("POST /api/catalog/logo", () => {
     const mockBuffer = Buffer.from("test image");
     const mockFileName = "GOOGLE.png";
 
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
     jest.spyOn(ImageService.prototype, "uploadToS3").mockResolvedValue(null);
 
     const res = await request(app)
@@ -56,6 +59,9 @@ describe("POST /api/catalog/logo", () => {
       .mockResolvedValue("logos/png/GOOGLE.png");
     jest
       .spyOn(ImageService.prototype, "createImageData")
+      .mockResolvedValue(null);
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockResolvedValue(null);
 
     const res = await request(app)
@@ -127,6 +133,9 @@ describe("POST /api/catalog/logo", () => {
     jest
       .spyOn(ImageService.prototype, "createImageData")
       .mockResolvedValue(mockImageData);
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
 
     const res = await request(app)
       .post("/api/catalog/logo")

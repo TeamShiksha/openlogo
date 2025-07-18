@@ -2,12 +2,18 @@ import { expect, describe, it, vi, afterEach, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Catalog from "../../src/components/catalog/Catalog";
 import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
+import { ToastContext } from "../../src/contexts/Contexts";
 
 const mockData = {
   data: {
     data: COMPANIES,
     totalPages: 1,
   },
+};
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
 };
 
 vi.useFakeTimers();
@@ -32,24 +38,33 @@ describe("Catalog Component", () => {
   });
 
   it("Search bar should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
-    const searchIcon = screen.getByAltText("search-logo");
-
     expect(searchInput).toBeInTheDocument();
-    expect(searchIcon).toBeInTheDocument();
   });
 
   it("Add image button should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     expect(addImageButton).toBeInTheDocument();
   });
 
   it("Table headers should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const imageHeader = screen.getByText("Images");
     const createdHeader = screen.getByText("Created");
@@ -61,7 +76,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should not change page when Previous button is clicked on first page", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const prevButton = screen.getByAltText("left-arrow").closest("button");
     expect(screen.getByTestId("current-page")).toHaveTextContent("1");
@@ -73,7 +92,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should not change page when Next button is clicked on last page", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const pageSize = 10;
     const totalPages = Math.ceil(COMPANIES.length / pageSize);
@@ -94,7 +117,11 @@ describe("Catalog Component", () => {
   });
 
   it("Companies list should be visible with correct number of items", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const firstPageCompanies = COMPANIES.slice(0, 10);
     firstPageCompanies.forEach((company) => {
@@ -112,7 +139,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should navigate to next page when Next button is clicked", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     expect(screen.getByTestId("current-page")).toHaveTextContent("1");
     const nextButton = screen.getByAltText("right-arrow").closest("button");
@@ -122,7 +153,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should navigate to previous page when Prev button is clicked", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
     const prevButton = screen.getByAltText("left-arrow").closest("button");
@@ -133,7 +168,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should filter companies when search term is entered", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
@@ -153,7 +192,11 @@ describe("Catalog Component", () => {
       }),
     }));
 
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "NonExistentCompany" } });
@@ -165,7 +208,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should reset search when navigating to another page", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
@@ -181,7 +228,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should display correct total page count", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const totalPages = Math.ceil(COMPANIES.length / 10);
     const pageNavSection = screen.getByTestId("current-page").closest("div");
@@ -189,14 +240,22 @@ describe("Catalog Component", () => {
   });
 
   it("Should disable Next button on last page", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
     expect(nextButton).toBeDisabled();
   });
 
   it("Should open modal when Add image button is clicked", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
@@ -207,7 +266,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should close modal when close button is clicked", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
@@ -225,7 +288,11 @@ describe("Catalog Component", () => {
   });
 
   it("Should close modal when clicking on overlay", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
@@ -238,5 +305,21 @@ describe("Catalog Component", () => {
 
     expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
     expect(screen.queryByTestId("modal-overlay")).not.toBeInTheDocument();
+  });
+
+  it("Should open modal in update mode when reupload is clicked", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    const reuploadButtons = screen.getAllByText("Reupload");
+    expect(reuploadButtons.length).toBeGreaterThan(0);
+
+    fireEvent.click(reuploadButtons[0]);
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
   });
 });

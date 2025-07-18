@@ -50,10 +50,10 @@ describe("Demo Component", () => {
       makeRequest: vi.fn(),
       data: {
         data: [
-          { companyName: "Apple", image: "apple-logo.svg" },
-          { companyName: "Amazon", image: "amazon-logo.svg" },
-          { companyName: "Adobe", image: "adobe-logo.svg" },
-          { companyName: "Airbnb", image: "airbnb-logo.svg" },
+          { companyName: "Google", image: "google-logo.svg" },
+          { companyName: "Facebook", image: "facebook-logo.svg" },
+          { companyName: "Zoom", image: "zoom-logo.svg" },
+          { companyName: "DoorDash", image: "doordash-logo.svg" },
         ],
       },
       loading: false,
@@ -67,15 +67,15 @@ describe("Demo Component", () => {
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
-      target: { value: "aa" },
+      target: { value: "oo" },
     });
     fireEvent.submit(screen.getByAltText("Search"));
 
     await waitFor(() => {
-      expect(screen.getByText("Apple")).toBeInTheDocument();
-      expect(screen.getByText("Amazon")).toBeInTheDocument();
-      expect(screen.getByText("Adobe")).toBeInTheDocument();
-      expect(screen.queryByText("Airbnb")).not.toBeInTheDocument();
+      expect(screen.getByText("Google")).toBeInTheDocument();
+      expect(screen.getByText("Facebook")).toBeInTheDocument();
+      expect(screen.getByText("Zoom")).toBeInTheDocument();
+      expect(screen.queryByText("DoorDash")).not.toBeInTheDocument();
     });
   });
 

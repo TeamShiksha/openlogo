@@ -678,6 +678,8 @@ export const MESSAGES = {
   SIGN_OUT_SUCCESS: "Sign out successfully",
   SIGN_UP_SUCCESS: "Sign up successfully",
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+  IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
+  IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
 };
 
 export const MODAL_MESSAGES = {
@@ -749,3 +751,10 @@ export const CHANGE_PASSWORD_FIELDS = [
 export const API_KEY_FORM = {
   tagLine: "Generate a new API key to use in your projects.",
 };
+
+export const MOCK_DEMO_COMPANIES = [
+  { companyName: "Google", image: "google-logo.svg" },
+  { companyName: "Facebook", image: "facebook-logo.svg" },
+  { companyName: "Zoom", image: "zoom-logo.svg" },
+  { companyName: "DoorDash", image: "doordash-logo.svg" },
+];

@@ -32,7 +32,7 @@ class ImageServices {
     }
 
     const version = new Date(company.updated_at).getTime();
-    const imageUrl = `${default_extension}/${domainName}?v=${version}`;
+    const imageUrl = `${process.env.KEY}/${default_extension}/${domainName}?v=${version}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -60,7 +60,7 @@ class ImageServices {
       companyList.map(async (company) => {
         const signedUrl = await this.fetchImageByCompanyFree(
           company,
-          undefined,
+          company?.extension,
           false
         );
         return { company, signedUrl };
@@ -123,7 +123,6 @@ class ImageServices {
   async updateImageById(id, updateObj) {
     const updatingImage = await this.imageRepository.update(id, {
       user_id: updateObj.uploadedBy,
-      company_name: updateObj.companyName,
       image_size: Number(updateObj.imageSize),
       extension: updateObj.Extension,
       updated_at: updateObj.updatedAt,
@@ -150,6 +149,10 @@ class ImageServices {
 
   async getImageById(id) {
     return await this.imageRepository.getById(id);
+  }
+
+  async getImageByCompanyName(companyName) {
+    return await this.imageRepository.fetchImage(companyName);
   }
 }
 

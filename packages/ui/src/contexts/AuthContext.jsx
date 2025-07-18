@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
       .finally(() => {
         setIsAuthCheckComplete(true);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = useCallback(async () => {

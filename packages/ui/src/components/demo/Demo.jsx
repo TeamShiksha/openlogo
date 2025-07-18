@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SVGS, BUTTON_TEXT, DEMO } from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
@@ -24,7 +24,16 @@ const Demo = ({ openAuthModal }) => {
   });
   const showResults = searchTerm.length > 1;
 
-  const apiResults = response && showResults ? response.data.slice(0, 3) : [];
+  const apiResults = useMemo(() => {
+    if (errorMsg || loading || !response || !showResults) {
+      return [];
+    }
+    return response.data
+      .filter(({ companyName }) =>
+        companyName.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .slice(0, 3);
+  }, [response, errorMsg, loading, showResults, searchTerm]);
 
   useEffect(() => {
     if (errorMsg) {

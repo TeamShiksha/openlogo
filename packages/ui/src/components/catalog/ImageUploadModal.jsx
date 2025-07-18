@@ -1,15 +1,29 @@
 import PropTypes from "prop-types";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./ImageUploadModal.module.css";
 import { SVGS } from "../../utils/Constants";
 import Modal from "../common/modal/Modal";
 import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 
-const ImageUploadModal = ({ isOpen, onClose, onUpload, isUpdate }) => {
+const ImageUploadModal = ({
+  isOpen,
+  onClose,
+  onUpload,
+  isUpdate,
+  isLoading,
+}) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [companyUri, setCompanyUri] = useState("");
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedImage(null);
+      setCompanyUri("");
+    }
+  }, [isOpen, setSelectedImage, setCompanyUri]);
 
   if (!isOpen) return null;
 
@@ -55,10 +69,10 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload, isUpdate }) => {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = (e) => {
+    e.preventDefault();
     if (selectedImage) {
       onUpload({ file: selectedImage.file, ...(!isUpdate && { companyUri }) });
-      onCloseModal();
     }
   };
   const onCloseModal = () => {
@@ -81,6 +95,7 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload, isUpdate }) => {
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
+          onClick={() => inputRef.current.click()}
         >
           <div className={styles.dropzoneContent}>
             <div className={styles.imageIcon}>
@@ -95,16 +110,16 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload, isUpdate }) => {
               onChange={handleChange}
               style={{ display: "none" }}
             />
-            <button
+            <Button
               className={styles.selectButton}
               onClick={() => inputRef.current.click()}
             >
               Select an image
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
-        <div className={styles.previewContainer}>
+        <form className={styles.previewContainer} onSubmit={handleUpload}>
           <img
             src={selectedImage.preview}
             alt="Preview"
@@ -121,10 +136,14 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload, isUpdate }) => {
               className={styles.companyUriInput}
             />
           )}
-          <button className={styles.uploadButton} onClick={handleUpload}>
+          <Button
+            className={styles.uploadButton}
+            isLoading={isLoading}
+            onClick={handleUpload}
+          >
             Upload
-          </button>
-        </div>
+          </Button>
+        </form>
       )}
     </Modal>
   );
@@ -135,6 +154,7 @@ ImageUploadModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onUpload: PropTypes.func,
   isUpdate: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 export default ImageUploadModal;

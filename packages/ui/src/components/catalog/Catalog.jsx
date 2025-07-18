@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
-import searchLogo from "../../assets/searchIcon.svg";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
+import { MESSAGES } from "../../utils/Constants.js";
 
 function Catalog() {
+  const toast = useToast();
   const [pageNum, setPageNum] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,12 +22,16 @@ function Catalog() {
   const limit = 10;
   const skip = pageNum * limit;
 
-  const { data, makeRequest } = useApi({
+  const { data, loading, makeRequest, errorMsg } = useApi({
     method: "GET",
     url: `/catalog/logos?skip=${skip}&limit=${limit}`,
   });
 
-  const { loading: uploadLoading, makeRequest: uploadMakeRequest } = useApi({
+  const {
+    loading: uploadLoading,
+    makeRequest: uploadMakeRequest,
+    errorMsg: uploadErrorMsg,
+  } = useApi({
     method: updateImageId ? "PUT" : "POST",
     url: `/catalog/logo`,
     headers: { "Content-Type": "multipart/form-data" },
@@ -33,7 +39,20 @@ function Catalog() {
 
   useEffect(() => {
     makeRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum]);
+
+  useEffect(() => {
+    if (uploadErrorMsg) {
+      toast.error(uploadErrorMsg);
+    }
+  }, [uploadErrorMsg, toast]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+    }
+  }, [errorMsg, toast]);
 
   useEffect(() => {
     if (data?.data?.totalPages) {
@@ -52,9 +71,12 @@ function Catalog() {
       const success = await uploadMakeRequest({ data: formData });
       if (success) {
         setIsModalOpen(false);
+        setUpdateImageId(null);
+        toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         makeRequest();
       }
     } catch (err) {
+      toast.error(`Upload error: ${err}`);
       console.error("Upload error:", err);
     }
   };
@@ -70,12 +92,13 @@ function Catalog() {
       const success = await uploadMakeRequest({ data: formData });
       if (success) {
         setIsModalOpen(false);
+        setUpdateImageId(null);
+        toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
         makeRequest();
       }
     } catch (err) {
+      toast.error(`Upload error: ${err}`);
       console.error("Upload error:", err);
-    } finally {
-      setUpdateImageId(null);
     }
   };
 
@@ -112,11 +135,6 @@ function Catalog() {
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
       <div className={styles["catalog-search"]}>
-        <img
-          src={searchLogo}
-          alt="search-logo"
-          className={styles["search-icon"]}
-        />
         <CustomInput
           type="search"
           label="search"
@@ -124,7 +142,10 @@ function Catalog() {
           onChange={handleSearchTermChange}
         />
         <Button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setUpdateImageId(null);
+            setIsModalOpen(true);
+          }}
           variant="primary"
           className={styles["catalog-add-image-btn"]}
         >
@@ -138,6 +159,7 @@ function Catalog() {
           }}
           onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
           isUpdate={!!updateImageId}
+          isLoading={uploadLoading}
         />
       </div>
       <div className={styles["catalog-table-wrapper"]}>
@@ -151,19 +173,19 @@ function Catalog() {
         </div>
 
         <div className={styles["catalog-table-content"]}>
-          {uploadLoading && (
+          {loading && (
             <div className={styles["catalog-loading-spinner"]}>
               <LoadingSpinner color="blue" />
             </div>
           )}
 
-          {!uploadLoading && filteredCompanies.length === 0 && (
+          {!loading && filteredCompanies.length === 0 && (
             <p className={styles["catalog-table-no-content"]}>
               No results found matching your query!
             </p>
           )}
 
-          {!uploadLoading &&
+          {!loading &&
             filteredCompanies.length > 0 &&
             filteredCompanies.map((company) => (
               <CatalogItem
