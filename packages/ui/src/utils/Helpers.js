@@ -64,6 +64,12 @@ export const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+export const isValidUrl = (url) => {
+  const urlRegex =
+    /^(https?:\/\/)?([a-zA-Z0-9-]+\.){0,5}[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(:\d+)?(\/.*)?$/;
+  return urlRegex.test(url);
+};
+
 export const isSQLInjectionAttempt = (message) => {
   const sqlInjectionRegex = /(')|(--)|(\/\*)|(\bSELECT\b)|\bunion\b/i;
   return sqlInjectionRegex.test(message);
@@ -203,6 +209,24 @@ export const validate = (values) => {
     "message",
     values.message && values.message.length < 20,
     "Message should be at least 20 characters"
+  );
+
+  validateField("companyUrl", !values.companyUrl, "Company Url is required");
+  validateField(
+    "companyUrl",
+    values.companyUrl && !isValidUrl(values.companyUrl),
+    "This is not a valid url"
+  );
+
+  validateField(
+    "companyDescription",
+    !values.companyDescription,
+    "Company Description is required"
+  );
+  validateField(
+    "companyDescription",
+    values.companyDescription && values.companyDescription.length < 20,
+    "Description should be at least 20 characters"
   );
 
   return errors;

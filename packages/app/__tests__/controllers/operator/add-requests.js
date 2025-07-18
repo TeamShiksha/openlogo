@@ -7,7 +7,10 @@ const { RequestService } = require("../../../services");
 const { default: mongoose } = require("mongoose");
 
 jest.mock("../../../middlewares/auth", () =>
-  jest.fn(() => (req, res, next) => next())
+  jest.fn(() => (req, res, next) => {
+    req.userData = { userId: "mock-operator-id" };
+    next();
+  })
 );
 
 describe("POST : /api/requests", () => {
@@ -15,32 +18,8 @@ describe("POST : /api/requests", () => {
     jest.clearAllMocks();
   });
 
-  it("422 - User ID is required", async () => {
-    const response = await request(app).post(ENDPOINTS.REQUESTS);
-
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      statusCode: 422,
-      error: STATUS_CODES[422],
-      message: "User ID is required",
-    });
-  });
-
-  it("422 - User ID must be a valid MongoDB ObjectId", async () => {
-    const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: "invalid_user_id",
-    });
-    expect(response.status).toBe(422);
-    expect(response.body).toEqual({
-      statusCode: 422,
-      error: STATUS_CODES[422],
-      message: "User ID must be a valid MongoDB ObjectId",
-    });
-  });
   it("422 - Company URL is required", async () => {
-    const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: new mongoose.Types.ObjectId(),
-    });
+    const response = await request(app).post(ENDPOINTS.REQUESTS).send({});
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -51,7 +30,6 @@ describe("POST : /api/requests", () => {
   });
   it("422 - company url should be a valid url", async () => {
     const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: new mongoose.Types.ObjectId(),
       companyUrl: "123@com",
     });
 
@@ -68,7 +46,6 @@ describe("POST : /api/requests", () => {
       .mockResolvedValue(true);
 
     const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: new mongoose.Types.ObjectId(),
       companyUrl: "https://google.com",
     });
 
@@ -88,7 +65,6 @@ describe("POST : /api/requests", () => {
       .mockResolvedValue(true);
 
     const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: new mongoose.Types.ObjectId(),
       companyUrl: "https://google.com",
     });
 
@@ -119,7 +95,6 @@ describe("POST : /api/requests", () => {
       .mockResolvedValue(mockRequest);
 
     const response = await request(app).post(ENDPOINTS.REQUESTS).send({
-      user_id: mockRequest.user_id,
       companyUrl: "https://google.com",
     });
 

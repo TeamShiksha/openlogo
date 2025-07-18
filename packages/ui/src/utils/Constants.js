@@ -392,6 +392,7 @@ export const BUTTON_TEXT = {
   reject: "Reject",
   sendResponse: "Send Response",
   confirmRejection: "Confirm Rejection",
+  sendRequest: "Send Request",
 };
 
 export const BRANDING = {
@@ -492,6 +493,14 @@ export const CONTACT = {
     name: "",
     email: "",
     message: "",
+  },
+};
+
+export const LOGOREQUEST = {
+  title: "Request Logo",
+  initialValues: {
+    companyUrl: "",
+    companyDescription: "",
   },
 };
 
