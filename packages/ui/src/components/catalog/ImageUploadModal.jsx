@@ -95,7 +95,6 @@ const ImageUploadModal = ({
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={() => inputRef.current.click()}
         >
           <div className={styles.dropzoneContent}>
             <div className={styles.imageIcon}>
