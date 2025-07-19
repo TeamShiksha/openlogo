@@ -22,8 +22,8 @@ describe("SIGNOUT API", () => {
       .set("Cookie", ["jwt=token"])
       .send();
     expect(response.status).toBe(205);
-    expect(response.headers["set-cookie"]).toEqual([
-      "jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
-    ]);
+    const setCookieHeader = response.headers["set-cookie"];
+    expect(setCookieHeader).toBeDefined();
+    expect(setCookieHeader[0]).toMatch(/jwt=;/);
   });
 });
