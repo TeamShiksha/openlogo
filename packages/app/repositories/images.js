@@ -51,8 +51,18 @@ class ImagesRepository extends BaseRepository {
     return cloudFrontUrl;
   }
 
-  async getAllImageByUserId(userId) {
-    return await this.model.find({ user_id: userId });
+  async getAllImageByUserId(userId, skip, limit) {
+    const [total, images] = await Promise.all([
+      this.model.countDocuments({ user_id: userId }),
+      this.model.find({ user_id: userId }).skip(skip).limit(limit),
+    ]);
+
+    return {
+      data: images.map((image) => image.data()),
+      total,
+      currentPage: Math.floor(skip / limit) + 1,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }
 
