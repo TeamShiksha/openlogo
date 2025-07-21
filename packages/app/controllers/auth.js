@@ -159,7 +159,12 @@ function signoutController(req, res, next) {
       });
     }
 
-    res.clearCookie("jwt");
+    res.clearCookie("jwt", {
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      domain: ".openlogo.fyi",
+    });
     return res.status(205).send();
   } catch (err) {
     next(err);
