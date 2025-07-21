@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { SVGS, BUTTON_TEXT, DEMO } from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
@@ -21,7 +21,16 @@ const Demo = ({ openAuthModal }) => {
     },
   });
   const showResults = searchTerm.length > 1;
-  const apiResults = data && showResults ? data.slice(0, 3) : [];
+  const apiResults = useMemo(() => {
+    if (errorMsg || !data?.data || !showResults) {
+      return [];
+    }
+    return data.data
+      .filter(({ companyName }) =>
+        companyName.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .slice(0, 3);
+  }, [errorMsg, data, showResults, searchTerm]);
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
