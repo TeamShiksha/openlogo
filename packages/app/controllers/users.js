@@ -117,7 +117,12 @@ async function deleteUserAccountController(req, res, next) {
     const userService = new UserService();
     const { userId } = req.userData;
     await userService.deleteUserAccount(userId);
-    res.clearCookie("jwt");
+    res.clearCookie("jwt", {
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      domain: ".openlogo.fyi",
+    });
     res.status(200).json({
       status: 200,
     });
