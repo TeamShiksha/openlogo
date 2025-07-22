@@ -11,6 +11,7 @@ class ImageServices {
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
       },
     });
+    this.s3BucketKey = process.env.BUCKET_KEY;
   }
 
   /**
@@ -24,14 +25,15 @@ class ImageServices {
     default_extension = "png",
     checkDb = true
   ) {
-    let domainName = company;
+    let domainName = company.company_name;
     if (checkDb) {
-      const image = await this.imageRepository.fetchImage(company);
+      const image = await this.imageRepository.fetchImage(domainName);
       if (!image) return null;
       domainName = image.company_name;
     }
 
-    const imageUrl = `${default_extension}/${domainName}`;
+    const version = new Date(company.updated_at).getTime();
+    const imageUrl = `${this.s3BucketKey}/${default_extension}/${domainName}?v=${version}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -55,18 +57,27 @@ class ImageServices {
    **/
   async getDataList(companyList) {
     const dataList = [];
-    for (const company of companyList) {
-      const signedUrl = await this.fetchImageByCompanyFree(
-        company.company_name,
-        undefined,
-        false
-      );
-      if (!signedUrl) continue;
-      dataList.push({
-        companyName: company.company_name.split(".")[0],
-        image: signedUrl,
-      });
+    const results = await Promise.allSettled(
+      companyList.map(async (company) => {
+        const signedUrl = await this.fetchImageByCompanyFree(
+          company,
+          company?.extension,
+          false
+        );
+        return { company, signedUrl };
+      })
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value.signedUrl) {
+        const { company, signedUrl } = result.value;
+        dataList.push({
+          companyName: company.company_name.split(".")[0],
+          image: signedUrl,
+        });
+      }
     }
+
     return dataList;
   }
 
@@ -74,11 +85,11 @@ class ImageServices {
     const uploadParams = {
       Bucket: process.env.BUCKET_NAME,
       Body: file.buffer,
-      Key: `${process.env.KEY}/${extension}/${imageName}`,
+      Key: `${this.s3BucketKey}/${extension}/${imageName}`,
     };
 
     await this.s3.send(new PutObjectCommand(uploadParams));
-    return `${process.env.KEY}/${extension}/${imageName}`;
+    return `${this.s3BucketKey}/${extension}/${imageName}`;
   }
 
   async createImageData(
@@ -101,20 +112,46 @@ class ImageServices {
     };
   }
 
+  /**
+   * Updates an image document by its unique identifier.
+   *
+   * @async
+   * @param {string} id - The unique identifier of the image to update.
+   * @param {Object} updateObj - The fields and values to update in the image document.
+   * @throws {Error} If the update operation fails.
+   */
   async updateImageById(id, updateObj) {
-    const updatingImage = await this.imageRepository.update(id, updateObj);
+    const updatingImage = await this.imageRepository.update(id, {
+      user_id: updateObj.uploadedBy,
+      image_size: Number(updateObj.imageSize),
+      extension: updateObj.Extension,
+      updated_at: updateObj.updatedAt,
+    });
     return {
       _id: updatingImage._id,
       updatedAt: updatingImage.updatedAt,
     };
   }
 
-  async getImagesByUserId(userId) {
-    return await this.imageRepository.getAllImageByUserId(userId);
+  /**
+   * Retrieves a paginated list of images for a specific user.
+   *
+   * @async
+   * @param {string} userId - The unique identifier of the user whose images are to be retrieved.
+   * @param {number} skip - The number of images to skip (for pagination).
+   * @param {number} limit - The maximum number of images to return.
+   * @throws {Error} If the retrieval operation fails.
+   */
+  async getImagesByUserId(userId, skip, limit) {
+    return await this.imageRepository.getAllImageByUserId(userId, skip, limit);
   }
 
   async getImageById(id) {
     return await this.imageRepository.getById(id);
+  }
+
+  async getImageByCompanyName(companyName) {
+    return await this.imageRepository.fetchImage(companyName);
   }
 }
 

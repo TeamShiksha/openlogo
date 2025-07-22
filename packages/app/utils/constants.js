@@ -62,6 +62,7 @@ const Messages = {
   IMAGE_REQUIRED: "Image not found in request.",
   NAME_AND_EXT_SAME: "Name and extension should be same.",
   UPLOAD_FAILED: "Image upload failed.",
+  IMAGE_ALREADY_EXISTS: "Image already exists.",
   UPDATE_IMAGE_FAILED: "Failed to update image record.",
   UPLOAD_SUCCESS: "Image updated successfully.",
   INVALID_KEY: "Invalid API key.",
@@ -87,8 +88,11 @@ const Messages = {
   COMPANY_URL_ALREADY_PENDING: "This company url is already under review.",
 };
 
+const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
+
 module.exports = {
   EmailValidationRegex,
+  ExtractCompanyNameFromUrlRegex,
   UserTokenTypes,
   UserType,
   SubscriptionTypes,
