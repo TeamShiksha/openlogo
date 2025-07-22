@@ -11,6 +11,7 @@ class ImageServices {
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
       },
     });
+    this.s3BucketKey = process.env.BUCKET_KEY;
   }
 
   /**
@@ -32,7 +33,7 @@ class ImageServices {
     }
 
     const version = new Date(company.updated_at).getTime();
-    const imageUrl = `${process.env.KEY}/${default_extension}/${domainName}?v=${version}`;
+    const imageUrl = `${this.s3BucketKey}/${default_extension}/${domainName}?v=${version}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -84,11 +85,11 @@ class ImageServices {
     const uploadParams = {
       Bucket: process.env.BUCKET_NAME,
       Body: file.buffer,
-      Key: `${process.env.KEY}/${extension}/${imageName}`,
+      Key: `${this.s3BucketKey}/${extension}/${imageName}`,
     };
 
     await this.s3.send(new PutObjectCommand(uploadParams));
-    return `${process.env.KEY}/${extension}/${imageName}`;
+    return `${this.s3BucketKey}/${extension}/${imageName}`;
   }
 
   async createImageData(
