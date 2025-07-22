@@ -1,41 +1,46 @@
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import CatalogItem from "../../src/components/catalog/CatalogItem";
-import { companies } from "../../src/utils/Constants";
+import { COMPANIES } from "../../src/utils/Constants";
+import { formatDate } from "../../src/utils/Helpers";
 
 describe("CatalogItem Component", () => {
-  const mockCompany = companies[0];
+  const mockCompany = COMPANIES[0];
+  const mockOnUpdate = vi.fn();
 
   it("Should render company image name correctly", () => {
-    render(<CatalogItem company={mockCompany} />);
+    render(<CatalogItem company={mockCompany} onUpdate={mockOnUpdate} />);
 
-    const companyImageElement = screen.getByText(mockCompany.companyImage);
+    const expectedText = `${mockCompany.company_name.toLowerCase()}.${mockCompany.extension}`;
+    const companyImageElement = screen.getByText(expectedText);
     expect(companyImageElement).toBeInTheDocument();
   });
 
   it("Should render creation date correctly", () => {
-    render(<CatalogItem company={mockCompany} />);
+    render(<CatalogItem company={mockCompany} onUpdate={mockOnUpdate} />);
 
-    const createdDateElement = screen.getByText(mockCompany.createdAt);
+    const expectedFormattedDate = formatDate(mockCompany.created_at);
+    const createdDateElement = screen.getByText(expectedFormattedDate);
     expect(createdDateElement).toBeInTheDocument();
   });
 
   it("Should render update date correctly", () => {
-    render(<CatalogItem company={mockCompany} />);
+    render(<CatalogItem company={mockCompany} onUpdate={mockOnUpdate} />);
 
-    const updatedDateElement = screen.getByText(mockCompany.updatedAt);
+    const expectedFormattedDate = formatDate(mockCompany.updated_at);
+    const updatedDateElement = screen.getByText(expectedFormattedDate);
     expect(updatedDateElement).toBeInTheDocument();
   });
 
   it("Should render reupload button", () => {
-    render(<CatalogItem company={mockCompany} />);
+    render(<CatalogItem company={mockCompany} onUpdate={mockOnUpdate} />);
 
     const reuploadButton = screen.getByText("Reupload");
     expect(reuploadButton).toBeInTheDocument();
   });
 
   it("Should pass correct props to Button component", () => {
-    render(<CatalogItem company={mockCompany} />);
+    render(<CatalogItem company={mockCompany} onUpdate={mockOnUpdate} />);
 
     const button = screen.getByText("Reupload");
     expect(button).toHaveAttribute(

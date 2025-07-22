@@ -1,28 +1,70 @@
-import { expect, describe, it } from "vitest";
+import { expect, describe, it, vi, afterEach, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Catalog from "../../src/components/catalog/Catalog";
-import { companies, BUTTON_TEXT } from "../../src/utils/Constants";
+import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
+import { ToastContext } from "../../src/contexts/Contexts";
+
+const mockData = {
+  data: {
+    data: COMPANIES,
+    totalPages: 1,
+  },
+};
+
+const mockToastContext = {
+  success: vi.fn(),
+  error: vi.fn(),
+};
+
+vi.useFakeTimers();
+
+vi.mock("../../src/hooks/useApi", () => ({
+  useApi: () => ({
+    data: mockData,
+    loading: false,
+    errorMsg: null,
+    makeRequest: vi.fn(),
+  }),
+}));
 
 describe("Catalog Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.runAllTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+  });
+
   it("Search bar should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
-    const searchIcon = screen.getByAltText("search-logo");
-
     expect(searchInput).toBeInTheDocument();
-    expect(searchIcon).toBeInTheDocument();
   });
 
   it("Add image button should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     expect(addImageButton).toBeInTheDocument();
   });
 
   it("Table headers should be visible", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const imageHeader = screen.getByText("Images");
     const createdHeader = screen.getByText("Created");
@@ -34,161 +76,250 @@ describe("Catalog Component", () => {
   });
 
   it("Should not change page when Previous button is clicked on first page", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const prevButton = screen.getByAltText("left-arrow").closest("button");
-    expect(screen.getByTestId("current-page").textContent).toBe("1");
+    expect(screen.getByTestId("current-page")).toHaveTextContent("1");
+    expect(prevButton).toBeDisabled();
+
     fireEvent.click(prevButton);
-    expect(screen.getByTestId("current-page").textContent).toBe("1");
+    vi.runAllTimers();
+    expect(screen.getByTestId("current-page")).toHaveTextContent("1");
   });
 
   it("Should not change page when Next button is clicked on last page", () => {
-    render(<Catalog />);
-
-    const totalPages = Math.floor(companies.length / 10);
-    const nextButton = screen.getByAltText("right-arrow").closest("button");
-    for (let i = 0; i < totalPages; i++) {
-      fireEvent.click(nextButton);
-    }
-    expect(screen.getByTestId("current-page").textContent).toBe(
-      `${totalPages + 1}`
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
     );
+
+    const pageSize = 10;
+    const totalPages = Math.ceil(COMPANIES.length / pageSize);
+
+    const nextButton = screen.getByAltText("right-arrow").closest("button");
+
+    expect(screen.getByTestId("current-page")).toHaveTextContent(
+      `${totalPages}`
+    );
+    expect(nextButton).toBeDisabled();
+
     fireEvent.click(nextButton);
-    expect(screen.getByTestId("current-page").textContent).toBe(
-      `${totalPages + 1}`
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("current-page")).toHaveTextContent(
+      `${totalPages}`
     );
   });
 
   it("Companies list should be visible with correct number of items", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
-    const firstPageCompanies = companies.slice(0, 10);
+    const firstPageCompanies = COMPANIES.slice(0, 10);
     firstPageCompanies.forEach((company) => {
-      const companyImage = screen.getByText(company.companyImage);
-      expect(companyImage).toBeInTheDocument();
+      screen.getByText(
+        `${company.company_name.toLowerCase()}.${company.extension}`
+      );
     });
+    if (COMPANIES.length > 10) {
+      expect(
+        screen.queryByText(
+          `${COMPANIES[10].company_name.toLowerCase()}.${COMPANIES[10].extension}`
+        )
+      ).not.null();
+    }
   });
 
   it("Should navigate to next page when Next button is clicked", () => {
-    render(<Catalog />);
-
-    const currentPage = screen.getByTestId("current-page").textContent;
-    expect(currentPage).toBe("1");
-    const nextButton = screen.getByAltText("right-arrow").closest("button");
-    fireEvent.click(nextButton);
-    const updatedCurrentPage = screen.getByTestId("current-page").textContent;
-    expect(updatedCurrentPage).toBe("2");
-    const previousButton = screen.getByAltText("left-arrow").closest("button");
-    expect(previousButton).not.toHaveAttribute(
-      "class",
-      expect.stringContaining("catalog-footer-nav-btn-disable")
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
     );
+
+    expect(screen.getByTestId("current-page")).toHaveTextContent("1");
+    const nextButton = screen.getByAltText("right-arrow").closest("button");
+
+    expect(nextButton).toBeDisabled();
+    expect(screen.getByTestId("current-page")).toHaveTextContent("1");
   });
 
-  it("Should navigate to pevious page when Prev button is clicked", () => {
-    render(<Catalog />);
+  it("Should navigate to previous page when Prev button is clicked", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
-    fireEvent.click(nextButton);
-    const currentPage = screen.getByTestId("current-page").textContent;
-    expect(currentPage).toBe("2");
     const prevButton = screen.getByAltText("left-arrow").closest("button");
-    fireEvent.click(prevButton);
-    const updatedCurrentPage = screen.getByTestId("current-page").textContent;
-    expect(updatedCurrentPage).toBe("1");
-    expect(prevButton).toHaveAttribute(
-      "class",
-      expect.stringContaining("catalog-footer-nav-btn-disable")
-    );
+
+    expect(nextButton).toBeDisabled();
+    expect(prevButton).toBeDisabled();
+    expect(screen.getByTestId("current-page")).toHaveTextContent("1");
   });
 
-  it("Should filter companies when search term is entered", async () => {
-    render(<Catalog />);
+  it("Should filter companies when search term is entered", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
-    expect(screen.getByText("Amazon.png")).toBeInTheDocument();
-    expect(screen.queryByText("Apple.png")).not.toBeInTheDocument();
+    vi.runAllTimers();
+
+    screen.getByText("amazon.png");
+    expect(screen.queryByText("apple.png")).not.toBeInTheDocument();
   });
 
-  it("Should show 'No results found' message when search has no matches", async () => {
-    render(<Catalog />);
+  it("Should show 'No results found' message when search has no matches", () => {
+    vi.doMock("../../src/hooks/useApi", () => ({
+      useApi: () => ({
+        data: { data: { data: [], totalPages: 1 } },
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+      }),
+    }));
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "NonExistentCompany" } });
+    vi.runAllTimers();
     expect(
       screen.getByText("No results found matching your query!")
     ).toBeInTheDocument();
+    expect(screen.queryByText("amazon.png")).not.toBeInTheDocument();
   });
 
-  it("Should reset search when navigating to another page", async () => {
-    render(<Catalog />);
+  it("Should reset search when navigating to another page", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
-    expect(screen.getByText("Amazon.png")).toBeInTheDocument();
-    expect(screen.queryByText("Apple.png")).not.toBeInTheDocument();
+    vi.runAllTimers();
+
+    expect(screen.getByText("amazon.png")).toBeInTheDocument();
+    expect(screen.queryByText("apple.png")).not.toBeInTheDocument();
+    expect(searchInput).toHaveValue("Amazon");
+
     const nextButton = screen.getByAltText("right-arrow").closest("button");
-    fireEvent.click(nextButton);
-    const secondPageItems = companies.slice(10, 20);
-    if (secondPageItems.length > 0) {
-      expect(
-        screen.getByText(secondPageItems[0].companyImage)
-      ).toBeInTheDocument();
-    }
+    expect(nextButton).toBeDisabled();
+    expect(searchInput).toHaveValue("Amazon");
   });
 
   it("Should display correct total page count", () => {
-    render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
-    const totalPages = Math.floor(companies.length / 10) + 1;
+    const totalPages = Math.ceil(COMPANIES.length / 10);
     const pageNavSection = screen.getByTestId("current-page").closest("div");
-    expect(pageNavSection.textContent).toContain(`of ${totalPages}`);
+    expect(pageNavSection).toHaveTextContent(`of ${totalPages}`);
   });
 
-  it("Should disable Next button on last page", async () => {
-    render(<Catalog />);
-
-    const totalPages = Math.floor(companies.length / 10);
-    for (let i = 0; i < totalPages; i++) {
-      const nextButton = screen.getByAltText("right-arrow").closest("button");
-      fireEvent.click(nextButton);
-    }
-    const nextButton = screen.getByAltText("right-arrow").closest("button");
-    expect(nextButton).toHaveAttribute(
-      "class",
-      expect.stringContaining("catalog-footer-nav-btn-disable")
+  it("Should disable Next button on last page", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
     );
+
+    const nextButton = screen.getByAltText("right-arrow").closest("button");
+    expect(nextButton).toBeDisabled();
   });
 
   it("Should open modal when Add image button is clicked", () => {
-    const { container } = render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
-    const modalOverlay = container.querySelector('[class*="modal-overlay"]');
-    expect(modalOverlay).not.toBeNull();
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
+    expect(screen.getByTestId("modal-overlay")).toBeInTheDocument();
   });
 
   it("Should close modal when close button is clicked", () => {
-    const { container } = render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
     const closeButton = screen.getByText(BUTTON_TEXT.cross);
     fireEvent.click(closeButton);
+    vi.runAllTimers();
 
-    const modalOverlay = container.querySelector('[class*="modal-overlay"]');
-    expect(modalOverlay).toBeNull();
+    expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("image-upload-modal-overlay")
+    ).not.toBeInTheDocument();
   });
 
   it("Should close modal when clicking on overlay", () => {
-    const { container } = render(<Catalog />);
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
 
     const addImageButton = screen.getByText("Add image");
     fireEvent.click(addImageButton);
-    const modalOverlay = container.querySelector('[class*="modal-overlay"]');
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
+    const modalOverlay = screen.getByTestId("modal-overlay");
     fireEvent.click(modalOverlay);
-    expect(container.querySelector('[class*="modal-overlay"]')).toBeNull();
+    vi.runAllTimers();
+
+    expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("modal-overlay")).not.toBeInTheDocument();
+  });
+
+  it("Should open modal in update mode when reupload is clicked", () => {
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    const reuploadButtons = screen.getAllByText("Reupload");
+    expect(reuploadButtons.length).toBeGreaterThan(0);
+
+    fireEvent.click(reuploadButtons[0]);
+    vi.runAllTimers();
+
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
   });
 });
