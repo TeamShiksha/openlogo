@@ -60,12 +60,14 @@ describe("Demo Component", () => {
     const authContext = mockAuthContext(true);
     mockUseApi.mockReturnValue({
       makeRequest: vi.fn(),
-      data: [
-        { companyName: "Apple", image: "apple-logo.svg" },
-        { companyName: "Amazon", image: "amazon-logo.svg" },
-        { companyName: "Adobe", image: "adobe-logo.svg" },
-        { companyName: "Airbnb", image: "airbnb-logo.svg" },
-      ],
+      data: {
+        data: [
+          { companyName: "Aalto", image: "aalto-logo.svg" },
+          { companyName: "Aareon", image: "aareon-logo.svg" },
+          { companyName: "Aavid", image: "aavid-logo.svg" },
+          { companyName: "Aastra", image: "aastra-logo.svg" },
+        ],
+      },
       loading: false,
       errorMsg: null,
     });
@@ -84,10 +86,10 @@ describe("Demo Component", () => {
     fireEvent.submit(screen.getByAltText("Search"));
 
     await waitFor(() => {
-      expect(screen.getByText("Apple")).toBeInTheDocument();
-      expect(screen.getByText("Amazon")).toBeInTheDocument();
-      expect(screen.getByText("Adobe")).toBeInTheDocument();
-      expect(screen.queryByText("Airbnb")).not.toBeInTheDocument();
+      expect(screen.getByText("Aalto")).toBeInTheDocument();
+      expect(screen.getByText("Aareon")).toBeInTheDocument();
+      expect(screen.getByText("Aavid")).toBeInTheDocument();
+      expect(screen.queryByText("Aastra")).not.toBeInTheDocument();
     });
   });
 
