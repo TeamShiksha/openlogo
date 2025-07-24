@@ -44,6 +44,10 @@
   position: relative;
 }
 
+.search-term {
+  color: var(--primary);
+}
+
 form {
   position: relative;
 }

@@ -5,12 +5,10 @@ import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";
 import { firstLetterCapitalString } from "../../utils/Helpers.js";
 import { useApi } from "../../hooks/useApi.js";
-import { useToast } from "../../hooks/useToast.js";
 import LogoRequestForm from "./LogoRequestForm.jsx";
 import { AuthContext } from "../../contexts/Contexts.jsx";
 
 const Demo = ({ openAuthModal }) => {
-  const toast = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const { makeRequest, data, loading, errorMsg } = useApi({
@@ -32,12 +30,6 @@ const Demo = ({ openAuthModal }) => {
       .slice(0, 3);
   }, [errorMsg, data, showResults, searchTerm]);
   const { isAuthenticated } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
-    }
-  }, [errorMsg, toast]);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -94,7 +86,11 @@ const Demo = ({ openAuthModal }) => {
               >
                 {apiResults.length === 0 ? (
                   <div className={styles["no-result"]}>
-                    <p>{`Your search “${searchTerm}” did not match any logo.`}</p>
+                    <p>
+                      {"Your search “"}
+                      <b className={styles["search-term"]}>{searchTerm}</b>
+                      {"” did not match any logo."}
+                    </p>
                     <Button onClick={handleRequestClick} variant={"primary"}>
                       {BUTTON_TEXT.requestLogo}
                     </Button>

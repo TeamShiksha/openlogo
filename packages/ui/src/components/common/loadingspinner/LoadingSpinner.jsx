@@ -9,7 +9,13 @@ const LoadingSpinner = ({ size = 20, border = 4, color = "white" }) => {
     borderColor: `${color} ${color} transparent ${color}`,
   };
 
-  return <div className={styles.spinner} style={spinnerStyle}></div>;
+  return (
+    <div
+      data-testid="spinner"
+      className={styles.spinner}
+      style={spinnerStyle}
+    ></div>
+  );
 };
 
 LoadingSpinner.propTypes = {

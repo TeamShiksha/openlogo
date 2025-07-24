@@ -128,9 +128,10 @@ const LogoRequestForm = ({ closeModal }) => {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isRequestFormValid || loading}
+          disabled={!isRequestFormValid}
+          isLoading={loading}
         >
-          {loading ? "Sending" : BUTTON_TEXT.sendRequest}
+          {BUTTON_TEXT.sendRequest}
         </Button>
       </form>
     </Modal>

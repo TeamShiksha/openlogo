@@ -194,7 +194,7 @@ describe("LogoRequestForm", () => {
       </ToastProvider>
     );
     await waitFor(() => {
-      const loadingButton = screen.getByRole("button", { name: "Sending" });
+      const loadingButton = screen.getByTestId("spinner").closest("button");
       expect(loadingButton).toBeInTheDocument();
       expect(loadingButton).toBeDisabled();
     });
