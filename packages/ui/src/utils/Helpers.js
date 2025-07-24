@@ -180,6 +180,15 @@ export const validate = (values) => {
     "This is not a valid email format"
   );
 
+  if ("currPassword" in values) {
+    validateField("currPassword", !values.currPassword, "Password is required");
+  }
+
+  if ("currPassword" in values && "newPassword" in values) {
+    if (values.currPassword === values.newPassword) {
+      errors.newPassword = "New password cannot be same as current one";
+    }
+  }
   if ("password" in values) {
     const passwordErrors = isValidPassword(values.password);
     if (Object.keys(passwordErrors).length > 0) {
@@ -187,6 +196,12 @@ export const validate = (values) => {
     }
   }
 
+  if ("newPassword" in values) {
+    const newPasswordErrors = isValidPassword(values.newPassword);
+    if (Object.keys(newPasswordErrors).length > 0) {
+      errors.newPassword = newPasswordErrors.password;
+    }
+  }
   validateField(
     "confirmPassword",
     !values.confirmPassword,

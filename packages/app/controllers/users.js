@@ -276,6 +276,7 @@ async function updatePasswordController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
+      message: Messages.UPDATE,
     });
   } catch (err) {
     next(err);
