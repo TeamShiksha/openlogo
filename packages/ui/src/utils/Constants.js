@@ -336,6 +336,11 @@ export const COPY = {
   alt: "Copy Icon",
 };
 
+export const TICK = {
+  src: tick,
+  alt: "Tick Icon",
+};
+
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",

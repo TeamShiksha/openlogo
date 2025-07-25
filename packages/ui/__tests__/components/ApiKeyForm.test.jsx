@@ -33,7 +33,7 @@ vi.mock("../../src/hooks/useToast", () => ({
 vi.stubGlobal("navigator", {
   ...navigator,
   clipboard: {
-    writeText: vi.fn(),
+    writeText: vi.fn().mockResolvedValue(undefined),
   },
 });
 
@@ -202,9 +202,6 @@ describe("ApiKeyForm Component", () => {
 
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
         "TEST_API_KEY_123456789"
-      );
-      expect(mockToast.info).toHaveBeenCalledWith(
-        "API key copied to clipboard"
       );
     });
   });
