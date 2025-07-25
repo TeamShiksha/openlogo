@@ -32,6 +32,11 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     if (errorMsg) toast.error(errorMsg);
   }, [errorMsg, toast]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => setCopyMessage(""), 900);
+    return () => clearInterval(timeout);
+  }, [copyMessage]);
+
   const handleGenerateKey = async (e) => {
     e.preventDefault();
     if (!description.trim()) {
@@ -51,7 +56,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     if (data?.data?.api_key && !copyMessage.trim()) {
       navigator.clipboard.writeText(data.data.api_key).then(() => {
         setCopyMessage("Copied!");
-        setTimeout(() => setCopyMessage(""), 900);
       });
     }
   };
