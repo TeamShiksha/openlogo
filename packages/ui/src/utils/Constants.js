@@ -161,66 +161,35 @@ export const FOOTER_ITEMS = [
     url: "/privacy#terms",
   },
 ];
-export const companies = [
+
+export const COMPANIES = [
   {
-    id: "A1B2C3D4E5",
-    companyImage: "Amazon.png",
-    createdAt: "15 Sep 2023",
-    updatedAt: "17 Sep 2023",
+    _id: "A1B2C3D4E5",
+    company_name: "Amazon",
+    extension: "png",
+    created_at: "15 Sep 2023",
+    updated_at: "17 Sep 2023",
   },
   {
-    id: "F6G7H8I9J0",
-    companyImage: "Apple.png",
-    createdAt: "01 Oct 2024",
-    updatedAt: "12 Oct 2024",
+    _id: "F6G7H8I9J0",
+    company_name: "Apple",
+    extension: "png",
+    created_at: "01 Oct 2024",
+    updated_at: "12 Oct 2024",
   },
   {
-    id: "K1L2M3N4O5",
-    companyImage: "Google.png",
-    createdAt: "11 Aug 2024",
-    updatedAt: "12 Aug 2024",
+    _id: "O1P2Q3R4S5",
+    company_name: "Walmart",
+    extension: "png",
+    created_at: "19 Jun 2024",
+    updated_at: "23 Jun 2024",
   },
   {
-    id: "P6Q7R8S9T0",
-    companyImage: "Microsoft.png",
-    createdAt: "22 Jul 2023",
-    updatedAt: "23 Jul 2023",
-  },
-  {
-    id: "U1V2W3X4Y5",
-    companyImage: "Tesla.png",
-    createdAt: "09 Feb 2024",
-    updatedAt: "18 Feb 2024",
-  },
-  {
-    id: "Z6A7B8C9D0",
-    companyImage: "Meta.png",
-    createdAt: "13 Dec 2023",
-    updatedAt: "15 Dec 2023",
-  },
-  {
-    id: "E1F2G3H4I5",
-    companyImage: "JohnsonAndJohnson.png",
-    createdAt: "27 Nov 2024",
-    updatedAt: "30 Nov 2024",
-  },
-  {
-    id: "J6K7L8M9N0",
-    companyImage: "JPMorganChase.png",
-    createdAt: "04 Apr 2024",
-    updatedAt: "08 Apr 2024",
-  },
-  {
-    id: "O1P2Q3R4S5",
-    companyImage: "Walmart.png",
-    createdAt: "19 Jun 2024",
-    updatedAt: "23 Jun 2024",
-  },
-  {
-    id: "T6U7V8W9X0",
-    companyImage: "BerkshireHathaway.png",
-    createdAt: "01 Mar 2024",
-    updatedAt: "10 Mar 2024",
+    _id: "T6U7V8W9X0",
+    company_name: "BerkshireHathaway",
+    extension: "png",
+    created_at: "01 Mar 2024",
+    updated_at: "10 Mar 2024",
   },
 ];
 
@@ -398,6 +367,8 @@ export const BUTTON_TEXT = {
   sendResponse: "Send Response",
   confirmRejection: "Confirm Rejection",
   sendRequest: "Send Request",
+  upload: "Upload",
+  selectAnImage: "Select an image",
 };
 
 export const BRANDING = {
@@ -714,6 +685,10 @@ export const MESSAGES = {
   SIGN_OUT_SUCCESS: "Sign out successfully",
   SIGN_UP_SUCCESS: "Sign up successfully",
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
+  IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
+  IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
+  NO_RESULT_FOUND: "No results found matching your query!",
+  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG, PNG, or SVG)",
 };
 
 export const MODAL_MESSAGES = {
@@ -784,4 +759,9 @@ export const CHANGE_PASSWORD_FIELDS = [
 
 export const API_KEY_FORM = {
   tagLine: "Generate a new API key to use in your projects.",
+};
+
+export const IMAGE_UPLOAD_MODEL = {
+  dragAndDropImage: "Drag and drop image",
+  or: "OR",
 };
