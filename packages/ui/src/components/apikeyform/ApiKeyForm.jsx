@@ -33,6 +33,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   }, [errorMsg, toast]);
 
   useEffect(() => {
+    if (!copyMessage) return;
     const timeout = setTimeout(() => setCopyMessage(""), 900);
     return () => clearInterval(timeout);
   }, [copyMessage]);
