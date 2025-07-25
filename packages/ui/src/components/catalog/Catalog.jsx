@@ -76,7 +76,6 @@ function Catalog() {
         makeRequest();
       }
     } catch (err) {
-      toast.error(`Upload error: ${err}`);
       console.error("Upload error:", err);
     }
   };
@@ -97,7 +96,6 @@ function Catalog() {
         makeRequest();
       }
     } catch (err) {
-      toast.error(`Upload error: ${err}`);
       console.error("Upload error:", err);
     }
   };
@@ -131,8 +129,6 @@ function Catalog() {
       company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [data, searchTerm]);
-
-  console.log(filteredCompanies);
 
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
