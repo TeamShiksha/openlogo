@@ -1,61 +1,138 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
-import searchLogo from "../../assets/searchIcon.svg";
-import { companies } from "../../utils/Constants";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
+import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
+import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
+import { MESSAGES } from "../../utils/Constants.js";
 
 function Catalog() {
+  const toast = useToast();
   const [pageNum, setPageNum] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [updateImageId, setUpdateImageId] = useState(null);
 
   const limit = 10;
-  const totalPages = Math.floor(companies.length / 10);
+  const skip = pageNum * limit;
 
-  const skip = pageNum;
-  const skipCount = skip * limit;
+  const { data, loading, makeRequest, errorMsg } = useApi({
+    method: "GET",
+    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+  });
 
-  const companiesInfo = companies.slice(
-    skipCount,
-    Math.min(skipCount + limit, companies.length)
-  );
-  const filteredCompanies = companiesInfo.filter((company) =>
-    company.companyImage.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const {
+    loading: uploadLoading,
+    makeRequest: uploadMakeRequest,
+    errorMsg: uploadErrorMsg,
+  } = useApi({
+    method: updateImageId ? "PUT" : "POST",
+    url: `/catalog/logo`,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  useEffect(() => {
+    makeRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNum]);
+
+  useEffect(() => {
+    if (uploadErrorMsg) {
+      toast.error(uploadErrorMsg);
+    }
+  }, [uploadErrorMsg, toast]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+    }
+  }, [errorMsg, toast]);
+
+  useEffect(() => {
+    if (data?.data?.totalPages) {
+      setTotalPages(data.data.totalPages - 1);
+    }
+  }, [data]);
+
+  const handleImageUpload = async ({ file, companyUri }) => {
+    if (!file || !companyUri) return;
+
+    const formData = new FormData();
+    formData.append("logo", file);
+    formData.append("companyUri", companyUri);
+
+    try {
+      const success = await uploadMakeRequest({ data: formData });
+      if (success) {
+        setIsModalOpen(false);
+        setUpdateImageId(null);
+        toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
+        makeRequest();
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+    }
+  };
+
+  const handleUpdateImage = async ({ file }) => {
+    if (!file || !updateImageId) return;
+
+    const formData = new FormData();
+    formData.append("logo", file);
+    formData.append("id", updateImageId);
+
+    try {
+      const success = await uploadMakeRequest({ data: formData });
+      if (success) {
+        setIsModalOpen(false);
+        setUpdateImageId(null);
+        toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
+        makeRequest();
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+    }
+  };
 
   const handleSearchTermChange = (inputChangeEvent) => {
     setSearchTerm(inputChangeEvent.target.value);
   };
 
   const handlePreviousBtnClick = () => {
-    if (pageNum == 0) {
-      return;
+    if (pageNum > 0) {
+      setSearchTerm("");
+      setPageNum((prev) => prev - 1);
     }
-    setSearchTerm("");
-    setPageNum((prevPageNum) => prevPageNum - 1);
   };
 
   const handleNextBtnClick = () => {
-    if (pageNum == totalPages) {
-      return;
+    if (pageNum < totalPages) {
+      setSearchTerm("");
+      setPageNum((prev) => prev + 1);
     }
-    setSearchTerm("");
-    setPageNum((prevPageNum) => prevPageNum + 1);
   };
+
+  const handleReuploadBtnClick = (id) => {
+    setIsModalOpen(true);
+    setUpdateImageId(id);
+  };
+
+  const filteredCompanies = useMemo(() => {
+    const companies = data?.data?.data || [];
+    return companies.filter((company) =>
+      company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [data, searchTerm]);
 
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
       <div className={styles["catalog-search"]}>
-        <img
-          src={searchLogo}
-          alt="search-logo"
-          className={styles["search-icon"]}
-        />
         <CustomInput
           type="search"
           label="search"
@@ -63,7 +140,10 @@ function Catalog() {
           onChange={handleSearchTermChange}
         />
         <Button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setUpdateImageId(null);
+            setIsModalOpen(true);
+          }}
           variant="primary"
           className={styles["catalog-add-image-btn"]}
         >
@@ -71,37 +151,53 @@ function Catalog() {
         </Button>
         <ImageUploadModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setUpdateImageId(null);
+            setIsModalOpen(false);
+          }}
+          onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
+          isUpdate={!!updateImageId}
+          isLoading={uploadLoading}
         />
       </div>
-      {/* catalog table */}
       <div className={styles["catalog-table-wrapper"]}>
-        {/* catalog table header */}
         <div className={styles["catalog-table-header"]}>
           <div className={styles["catalog-table-column-first"]}>Images</div>
           <div className={styles["catalog-table-header-inner"]}>
             <div>Created</div>
             <div>Updated</div>
           </div>
-          {/* empty table header for reupload button column */}
           <div className={styles["catalog-table-column-last"]}></div>
         </div>
-        {/* catalog table content */}
+
         <div className={styles["catalog-table-content"]}>
-          {filteredCompanies.length > 0 ? (
-            filteredCompanies.map((company) => (
-              <CatalogItem key={company.id} company={company} />
-            ))
-          ) : (
+          {loading && (
+            <div className={styles["catalog-loading-spinner"]}>
+              <LoadingSpinner color="blue" />
+            </div>
+          )}
+
+          {!loading && filteredCompanies.length === 0 && (
             <p className={styles["catalog-table-no-content"]}>
-              No results found matching your query!
+              {MESSAGES.NO_RESULT_FOUND}
             </p>
           )}
+
+          {!loading &&
+            filteredCompanies.length > 0 &&
+            filteredCompanies.map((company) => (
+              <CatalogItem
+                key={company._id}
+                company={company}
+                onUpdate={handleReuploadBtnClick}
+              />
+            ))}
         </div>
-        {/* catalog table footer */}
+
         <div className={styles["catalog-table-footer"]}>
           <button
             onClick={handlePreviousBtnClick}
+            disabled={pageNum === 0}
             className={`${pageNum === 0 && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-left-arrow"]}`}
           >
             <img src={leftArrow} alt="left-arrow" />
@@ -115,6 +211,7 @@ function Catalog() {
           </div>
           <button
             onClick={handleNextBtnClick}
+            disabled={pageNum === totalPages}
             className={`${pageNum === totalPages && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-right-arrow"]}`}
           >
             <img src={rightArrow} alt="right-arrow" />

@@ -1,13 +1,34 @@
 import PropTypes from "prop-types";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./ImageUploadModal.module.css";
-import { SVGS } from "../../utils/Constants";
+import {
+  BUTTON_TEXT,
+  IMAGE_UPLOAD_MODEL,
+  MESSAGES,
+  SVGS,
+} from "../../utils/Constants";
 import Modal from "../common/modal/Modal";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 
-const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
+const ImageUploadModal = ({
+  isOpen,
+  onClose,
+  onUpload,
+  isUpdate,
+  isLoading,
+}) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [companyUri, setCompanyUri] = useState("");
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedImage(null);
+      setCompanyUri("");
+    }
+  }, [isOpen, setSelectedImage, setCompanyUri]);
 
   if (!isOpen) return null;
 
@@ -49,29 +70,28 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
       };
       reader.readAsDataURL(file);
     } else {
-      alert("Please upload a valid image file (JPG, PNG, or SVG)");
+      alert(MESSAGES.UPLOAD_VALID_IMAGE);
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = (e) => {
+    e.preventDefault();
     if (selectedImage) {
-      onUpload(selectedImage.file);
-      onClose();
+      onUpload({ file: selectedImage.file, ...(!isUpdate && { companyUri }) });
     }
   };
   const onCloseModal = () => {
     onClose();
     setSelectedImage(null);
+    setCompanyUri("");
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onCloseModal}
-      customClass={`${styles.imageUploadModal} ${selectedImage ? styles.modalWithImage : ""}`}
       size="custom"
       customWidth="500px"
-      customHeight="400px"
     >
       {!selectedImage ? (
         <div
@@ -85,8 +105,8 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
             <div className={styles.imageIcon}>
               <img src={SVGS.dragAndDropBg} alt="Upload icon" />
             </div>
-            <p>Drop and drop image</p>
-            <p>OR</p>
+            <p>{IMAGE_UPLOAD_MODEL.dragAndDropImage}</p>
+            <p>{IMAGE_UPLOAD_MODEL.or}</p>
             <input
               ref={inputRef}
               type="file"
@@ -94,26 +114,40 @@ const ImageUploadModal = ({ isOpen, onClose, onUpload }) => {
               onChange={handleChange}
               style={{ display: "none" }}
             />
-            <button
+            <Button
               className={styles.selectButton}
               onClick={() => inputRef.current.click()}
             >
-              Select an image
-            </button>
+              {BUTTON_TEXT.selectAnImage}
+            </Button>
           </div>
         </div>
       ) : (
-        <div className={styles.previewContainer}>
+        <form className={styles.previewContainer} onSubmit={handleUpload}>
           <img
             src={selectedImage.preview}
             alt="Preview"
             className={styles.imagePreview}
           />
           <p>{selectedImage.file.name}</p>
-          <button className={styles.uploadButton} onClick={handleUpload}>
-            Upload
-          </button>
-        </div>
+          {!isUpdate && (
+            <CustomInput
+              type="text"
+              name="companyUri"
+              label="Company URI"
+              value={companyUri}
+              onChange={(e) => setCompanyUri(e.target.value)}
+              className={styles.companyUriInput}
+            />
+          )}
+          <Button
+            className={styles.uploadButton}
+            isLoading={isLoading}
+            onClick={handleUpload}
+          >
+            {BUTTON_TEXT.upload}
+          </Button>
+        </form>
       )}
     </Modal>
   );
@@ -123,6 +157,8 @@ ImageUploadModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onUpload: PropTypes.func,
+  isUpdate: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 export default ImageUploadModal;
