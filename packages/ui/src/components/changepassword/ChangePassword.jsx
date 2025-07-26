@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { BUTTON_TEXT, CHANGE_PASSWORD_FIELDS } from "../../utils/Constants";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
-import { validate } from "../../utils/Helpers";
+import { validateChangePassword } from "../../utils/Helpers";
 
 function ChangePassword({ isGuest }) {
   const [formValues, setFormValues] = useState({
@@ -37,9 +37,8 @@ function ChangePassword({ isGuest }) {
     newPassword: false,
   });
 
-  // Live validation effect
   useEffect(() => {
-    const validationErrors = validate(formValues);
+    const validationErrors = validateChangePassword(formValues);
     const filteredErrors = {};
     for (let key in validationErrors) {
       if (touched[key]) {
@@ -49,7 +48,6 @@ function ChangePassword({ isGuest }) {
     setErrors(filteredErrors);
   }, [formValues, touched]);
 
-  // Handle response messages
   useEffect(() => {
     if (!submitted || loading) return;
 
@@ -77,11 +75,6 @@ function ChangePassword({ isGuest }) {
       ...prevValues,
       [name]: value,
     }));
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
   };
 
   const handleBlur = (e) => {
@@ -92,7 +85,7 @@ function ChangePassword({ isGuest }) {
       [name]: true,
     }));
 
-    const validationErrors = validate(formValues);
+    const validationErrors = validateChangePassword(formValues);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: validationErrors[name] || "",
@@ -101,7 +94,7 @@ function ChangePassword({ isGuest }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate(formValues);
+    const validationErrors = validateChangePassword(formValues);
     setErrors(validationErrors);
     setTouched({
       currPassword: true,
