@@ -242,6 +242,11 @@ export const PASSWORD_VALIDATION_MESSAGES = {
   generalError: "Password is not secure",
 };
 
+export const CHANGE_PASSWORD = {
+  required_password: "Password is required",
+  same_password: "New password cannot be same as current one",
+};
+
 export const ABOUT = {
   TITLE: "What is Openlogo",
   DESCRIPTION:
