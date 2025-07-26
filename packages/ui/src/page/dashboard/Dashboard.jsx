@@ -17,6 +17,7 @@ import ConfirmationModal from "../../components/confirm/ConfirmationModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
 import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinner.jsx";
+import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 
@@ -149,7 +150,7 @@ function Dashboard() {
 
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
-          Admin Dashboard to be added here
+          <AdminDashboard />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
         <div data-testid="testid-operator-dashboard">

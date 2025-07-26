@@ -1,18 +1,27 @@
 import PropTypes from "prop-types";
 import styles from "./CatalogItem.module.css";
 import Button from "../common/button/Button";
-function CatalogItem({ company }) {
+import { formatDate } from "../../utils/Helpers";
+function CatalogItem({ company, onUpdate }) {
   return (
     <div className={styles["catalog-item"]}>
       <div className={styles["catalog-item-column-first"]}>
-        {company.companyImage}
+        {company.company_name.toLowerCase()}.{company.extension}
       </div>
       <div className={styles["catalog-item-inner"]}>
-        <div className={styles["created"]}>{company.createdAt}</div>
-        <div className={styles["updated"]}>{company.updatedAt}</div>
+        <div className={styles["created"]}>
+          {formatDate(company.created_at)}
+        </div>
+        <div className={styles["updated"]}>
+          {formatDate(company.updated_at)}
+        </div>
       </div>
       <div className={styles["catalog-item-column-last"]}>
-        <Button variant="primary" className={styles["reupload-btn"]}>
+        <Button
+          onClick={() => onUpdate(company._id)}
+          variant="primary"
+          className={styles["reupload-btn"]}
+        >
           Reupload
         </Button>
       </div>
@@ -22,11 +31,13 @@ function CatalogItem({ company }) {
 
 CatalogItem.propTypes = {
   company: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    companyImage: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
+    company_name: PropTypes.string.isRequired,
+    extension: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    updated_at: PropTypes.string.isRequired,
   }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default CatalogItem;

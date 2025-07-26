@@ -5,9 +5,9 @@ import styles from "./ApiKeyForm.module.css";
 import PropTypes from "prop-types";
 import { useApi } from "../../hooks/useApi.js";
 import { useState, useEffect } from "react";
-import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import {
   COPY,
+  TICK,
   API_KEY,
   BUTTON_TEXT,
   API_KEY_FORM,
@@ -17,10 +17,10 @@ import { useToast } from "../../hooks/useToast.js";
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
   const toast = useToast();
 
-  const { makeRequest, data, errorMsg } = useApi({
+  const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
     url: "/users/me/api-key",
     data: {
@@ -29,11 +29,14 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   });
 
   useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
-      setIsGenerating(false);
-    }
+    if (errorMsg) toast.error(errorMsg);
   }, [errorMsg, toast]);
+
+  useEffect(() => {
+    if (!copyMessage) return;
+    const timeout = setTimeout(() => setCopyMessage(""), 900);
+    return () => clearInterval(timeout);
+  }, [copyMessage]);
 
   const handleGenerateKey = async (e) => {
     e.preventDefault();
@@ -42,20 +45,19 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
       return;
     }
 
-    setIsGenerating(true);
     const success = await makeRequest();
     if (success) {
       setShowApiKeyModal(true);
       setDescription("");
       toast.success(API_KEY.generation.success);
     }
-    setIsGenerating(false);
   };
 
   const handleCopyKey = () => {
-    if (data?.data?.api_key) {
-      navigator.clipboard.writeText(data.data.api_key);
-      toast.info(API_KEY.copy.success);
+    if (data?.data?.api_key && !copyMessage.trim()) {
+      navigator.clipboard.writeText(data.data.api_key).then(() => {
+        setCopyMessage("Copied!");
+      });
     }
   };
 
@@ -80,7 +82,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           label="Add the description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
-          disabled={isGenerating}
+          disabled={loading}
         />
         <Modal
           isOpen={showApiKeyModal}
@@ -100,7 +102,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
                   aria-label="Copy API key"
                 >
                   <img
-                    src={COPY.src}
+                    src={copyMessage ? TICK.src : COPY.src}
                     className={styles["copy-icon"]}
                     alt="Copy API key"
                   />
@@ -113,9 +115,10 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={isGuest || isGenerating || !description.trim()}
+          disabled={isGuest || !description.trim()}
+          isLoading={loading}
         >
-          {isGenerating ? <LoadingSpinner /> : BUTTON_TEXT.generateKey}
+          {BUTTON_TEXT.generateKey}
         </Button>
       </form>
     </section>

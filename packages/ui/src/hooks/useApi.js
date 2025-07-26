@@ -15,13 +15,15 @@ export const useApi = (config) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const makeRequest = async () => {
+  const makeRequest = async (dynamicConfig = {}) => {
     setErrorMsg(null);
     setIsSuccess(false);
     setLoading(true);
+
+    const finalConfig = { ...config, ...dynamicConfig };
     let success = false;
     try {
-      const response = await instance(config);
+      const response = await instance(finalConfig);
       setData(response.data);
       setIsSuccess(true);
       success = true;
