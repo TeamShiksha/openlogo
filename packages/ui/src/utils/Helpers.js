@@ -233,24 +233,17 @@ export const validate = (values) => {
 
 export const validateChangePassword = (values) => {
   const errors = {};
-
-  const check = (field, condition, errorMessage) => {
-    if (field in values && condition) {
-      errors[field] = errorMessage;
-    }
-  };
-
-  check("currPassword", !values.currPassword, CHANGE_PASSWORD.requiredPassword);
-  check("newPassword", !values.newPassword, CHANGE_PASSWORD.requiredPassword);
-
-  if ("currPassword" in values && values.currPassword && !errors.currPassword) {
+  if (!values.currPassword) {
+    errors.currPassword = CHANGE_PASSWORD.requiredPassword;
+  } else {
     const currPasswordErrors = isValidPassword(values.currPassword);
     if (currPasswordErrors?.password) {
       errors.currPassword = currPasswordErrors.password;
     }
   }
-
-  if ("newPassword" in values && values.newPassword && !errors.newPassword) {
+  if (!values.newPassword) {
+    errors.newPassword = CHANGE_PASSWORD.requiredPassword;
+  } else {
     const newPasswordErrors = isValidPassword(values.newPassword);
     if (newPasswordErrors?.password) {
       errors.newPassword = newPasswordErrors.password;
@@ -264,6 +257,12 @@ export const validateChangePassword = (values) => {
     values.currPassword === values.newPassword
   ) {
     errors.newPassword = CHANGE_PASSWORD.samePassword;
+  }
+
+  if (!values.confirmPassword) {
+    errors.confirmPassword = CHANGE_PASSWORD.requiredConfirmPassword;
+  } else if (values.confirmPassword !== values.newPassword) {
+    errors.confirmPassword = CHANGE_PASSWORD.passwordsDoNotMatch;
   }
   return errors;
 };
