@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { vi } from "vitest";
+import { vi, expect, describe, it, beforeEach } from "vitest";
 import ChangePassword from "../../src/components/changepassword/ChangePassword.jsx";
 import { BUTTON_TEXT, CHANGE_PASSWORD_FIELDS } from "../../src/utils/Constants";
 
