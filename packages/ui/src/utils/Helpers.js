@@ -258,12 +258,6 @@ export const validateChangePassword = (values) => {
   ) {
     errors.newPassword = CHANGE_PASSWORD.samePassword;
   }
-
-  if (!values.confirmPassword) {
-    errors.confirmPassword = CHANGE_PASSWORD.requiredConfirmPassword;
-  } else if (values.confirmPassword !== values.newPassword) {
-    errors.confirmPassword = CHANGE_PASSWORD.passwordsDoNotMatch;
-  }
   return errors;
 };
 
