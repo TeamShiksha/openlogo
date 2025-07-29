@@ -134,10 +134,10 @@ async function signinController(req, res, next) {
     );
     res.cookie("jwt", user.generateJWT(), {
       expires: oneDayValidityTimestamp,
-      //   sameSite: "none",
-      //   secure: true,
-      //   httpOnly: true,
-      //   domain: ".openlogo.fyi",
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      domain: ".openlogo.fyi",
     });
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
