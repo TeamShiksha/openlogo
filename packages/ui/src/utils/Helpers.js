@@ -234,22 +234,14 @@ export const validate = (values) => {
 export const validateChangePassword = (values) => {
   const errors = {};
 
-  const validateField = (field, condition, errorMessage) => {
+  const check = (field, condition, errorMessage) => {
     if (field in values && condition) {
       errors[field] = errorMessage;
     }
   };
 
-  validateField(
-    "currPassword",
-    !values.currPassword,
-    CHANGE_PASSWORD.required_password
-  );
-  validateField(
-    "newPassword",
-    !values.newPassword,
-    CHANGE_PASSWORD.required_password
-  );
+  check("currPassword", !values.currPassword, CHANGE_PASSWORD.requiredPassword);
+  check("newPassword", !values.newPassword, CHANGE_PASSWORD.requiredPassword);
 
   if ("currPassword" in values && values.currPassword && !errors.currPassword) {
     const currPasswordErrors = isValidPassword(values.currPassword);
@@ -264,7 +256,6 @@ export const validateChangePassword = (values) => {
       errors.newPassword = newPasswordErrors.password;
     }
   }
-
   if (
     values.currPassword?.trim() &&
     values.newPassword?.trim() &&
@@ -272,7 +263,7 @@ export const validateChangePassword = (values) => {
     !errors.newPassword &&
     values.currPassword === values.newPassword
   ) {
-    errors.newPassword = CHANGE_PASSWORD.same_password;
+    errors.newPassword = CHANGE_PASSWORD.samePassword;
   }
   return errors;
 };

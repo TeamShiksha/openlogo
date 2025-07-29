@@ -133,8 +133,13 @@ function ChangePassword({ isGuest }) {
           }
         />
       ))}
-      <Button type="submit" variant="primary" disabled={isFormInvalid}>
-        {loading ? "Updating..." : BUTTON_TEXT.changePasswordLabel}
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={isFormInvalid}
+        isLoading={loading}
+      >
+        {BUTTON_TEXT.changePasswordLabel}
       </Button>
     </form>
   );
