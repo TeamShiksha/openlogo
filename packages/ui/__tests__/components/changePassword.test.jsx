@@ -1,7 +1,11 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, expect, describe, it, beforeEach } from "vitest";
 import ChangePassword from "../../src/components/changepassword/ChangePassword.jsx";
-import { BUTTON_TEXT, CHANGE_PASSWORD_FIELDS } from "../../src/utils/Constants";
+import {
+  BUTTON_TEXT,
+  CHANGE_PASSWORD,
+  CHANGE_PASSWORD_FIELDS,
+} from "../../src/utils/Constants";
 
 vi.mock("../../src/hooks/useApi", () => ({
   useApi: vi.fn(),
@@ -55,7 +59,7 @@ describe("ChangePassword", () => {
 
   it("validates fields on blur", async () => {
     validateChangePassword.mockReturnValue({
-      currPassword: "Current password is required",
+      currPassword: CHANGE_PASSWORD.currRequired,
       newPassword: "",
     });
 
@@ -167,7 +171,7 @@ describe("ChangePassword", () => {
 
   it("does not submit form when validation errors exist", async () => {
     validateChangePassword.mockReturnValue({
-      currPassword: "Required",
+      currPassword: CHANGE_PASSWORD.currRequired,
     });
 
     render(<ChangePassword isGuest={false} />);

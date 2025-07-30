@@ -212,7 +212,8 @@ export const PASSWORD_VALIDATION_MESSAGES = {
 };
 
 export const CHANGE_PASSWORD = {
-  requiredPassword: "Password is required",
+  currRequired: "Current password is required",
+  newRequired: "New password is required",
   samePassword: "New password cannot be same as current one",
 };
 

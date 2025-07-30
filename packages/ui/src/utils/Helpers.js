@@ -234,7 +234,7 @@ export const validate = (values) => {
 export const validateChangePassword = (values) => {
   const errors = {};
   if (!values.currPassword) {
-    errors.currPassword = CHANGE_PASSWORD.requiredPassword;
+    errors.currPassword = CHANGE_PASSWORD.currRequired;
   } else {
     const currPasswordErrors = isValidPassword(values.currPassword);
     if (currPasswordErrors?.password) {
@@ -242,7 +242,7 @@ export const validateChangePassword = (values) => {
     }
   }
   if (!values.newPassword) {
-    errors.newPassword = CHANGE_PASSWORD.requiredPassword;
+    errors.newPassword = CHANGE_PASSWORD.newRequired;
   } else {
     const newPasswordErrors = isValidPassword(values.newPassword);
     if (newPasswordErrors?.password) {
