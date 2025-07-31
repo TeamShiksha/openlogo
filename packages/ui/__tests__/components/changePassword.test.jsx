@@ -89,44 +89,37 @@ describe("ChangePassword", () => {
   });
 
   it("shows success toast on successful response", async () => {
-    const mockResponse = {
-      statusCode: 200,
-      message: "Password changed",
-    };
+    makeRequestMock = vi.fn().mockResolvedValue(true);
+    toastSuccessMock = vi.fn();
 
-    let apiState = {
-      makeRequest: vi.fn(),
-      data: null,
+    useApi.mockReturnValue({
+      makeRequest: makeRequestMock,
       errorMsg: "",
-      isSuccess: false,
       loading: false,
-    };
+    });
 
-    useApi.mockImplementation(() => apiState);
+    useToast.mockReturnValue({
+      success: toastSuccessMock,
+      error: vi.fn(),
+    });
+
+    validateChangePassword.mockReturnValue({});
+
     render(<ChangePassword isGuest={false} />);
 
     const currInput = screen.getByLabelText(/current password/i);
     const newInput = screen.getByLabelText(/new password/i);
-    const button = screen.getByRole("button");
+    const button = screen.getByRole("button", { name: /change password/i });
 
     fireEvent.change(currInput, { target: { value: "oldpass" } });
     fireEvent.change(newInput, { target: { value: "newpass123" } });
 
-    validateChangePassword.mockReturnValue({});
-
-    apiState.makeRequest.mockImplementation(async () => {
-      apiState = {
-        ...apiState,
-        data: mockResponse,
-        isSuccess: true,
-        loading: false,
-      };
-    });
-
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(toastSuccessMock).toHaveBeenCalledWith("Password changed");
+      expect(toastSuccessMock).toHaveBeenCalledWith(
+        "Password updated successfully"
+      );
     });
   });
 

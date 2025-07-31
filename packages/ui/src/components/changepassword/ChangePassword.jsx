@@ -3,7 +3,11 @@ import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import styles from "./ChangePassword.module.css";
 import PropTypes from "prop-types";
-import { BUTTON_TEXT, CHANGE_PASSWORD_FIELDS } from "../../utils/Constants";
+import {
+  BUTTON_TEXT,
+  CHANGE_PASSWORD_FIELDS,
+  MESSAGES,
+} from "../../utils/Constants";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import { validateChangePassword } from "../../utils/Helpers";
@@ -16,9 +20,7 @@ function ChangePassword({ isGuest }) {
 
   const {
     makeRequest: updatePasswordRequest,
-    data,
     errorMsg,
-    isSuccess,
     loading,
   } = useApi({
     method: "put",
@@ -31,7 +33,6 @@ function ChangePassword({ isGuest }) {
 
   const toast = useToast();
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
   useEffect(() => {
@@ -51,21 +52,8 @@ function ChangePassword({ isGuest }) {
   }, [focusedField, formValues]);
 
   useEffect(() => {
-    if (!submitted || loading) return;
-    if (data?.statusCode === 200) {
-      toast.success(data?.message || "Your password updated successfully");
-      setFormValues({ currPassword: "", newPassword: "" });
-      setErrors({});
-    } else if (
-      data?.statusCode === 400 ||
-      errorMsg?.toLowerCase().includes("incorrect")
-    ) {
-      toast.error("Incorrect current password");
-    } else {
-      toast.error(errorMsg || "Something went wrong");
-    }
-    setSubmitted(false);
-  }, [data, errorMsg, isSuccess, loading, submitted, toast]);
+    if (errorMsg) toast.error(errorMsg);
+  }, [errorMsg, toast]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -80,8 +68,11 @@ function ChangePassword({ isGuest }) {
     const validationErrors = validateChangePassword(formValues);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
-    setSubmitted(true);
-    await updatePasswordRequest();
+    const success = await updatePasswordRequest();
+    if (success) {
+      setErrors({});
+      toast.success(MESSAGES.UPDATE_PASSWORD_SUCCESS);
+    }
   };
 
   const isFormInvalid =
