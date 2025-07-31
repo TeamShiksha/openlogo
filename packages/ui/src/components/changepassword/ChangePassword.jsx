@@ -32,29 +32,29 @@ function ChangePassword({ isGuest }) {
   const toast = useToast();
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [touched, setTouched] = useState({
-    currPassword: false,
-    newPassword: false,
-  });
+  const [focusedField, setFocusedField] = useState(null);
 
   useEffect(() => {
-    const validationErrors = validateChangePassword(formValues);
-    const filteredErrors = {};
-    for (let key of Object.keys(validationErrors)) {
-      if (touched[key]) {
-        filteredErrors[key] = validationErrors[key];
-      }
+    if (!focusedField) {
+      setErrors({});
+      return;
     }
-    setErrors(filteredErrors);
-  }, [formValues, touched]);
+    const timeout = setTimeout(() => {
+      const validationErrors = validateChangePassword({
+        [focusedField]: formValues[focusedField],
+      });
+      setErrors({
+        [focusedField]: validationErrors[focusedField] || "",
+      });
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [focusedField, formValues]);
 
   useEffect(() => {
     if (!submitted || loading) return;
-
     if (data?.statusCode === 200) {
       toast.success(data?.message || "Your password updated successfully");
       setFormValues({ currPassword: "", newPassword: "" });
-      setTouched({ currPassword: false, newPassword: false });
       setErrors({});
     } else if (
       data?.statusCode === 400 ||
@@ -64,31 +64,14 @@ function ChangePassword({ isGuest }) {
     } else {
       toast.error(errorMsg || "Something went wrong");
     }
-
     setSubmitted(false);
   }, [data, errorMsg, isSuccess, loading, submitted, toast]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
-    }));
-  };
-
-  const handleBlur = (e) => {
-    const { name } = e.target;
-
-    setTouched((prev) => ({
-      ...prev,
-      [name]: true,
-    }));
-
-    const validationErrors = validateChangePassword(formValues);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: validationErrors[name] || "",
     }));
   };
 
@@ -96,13 +79,7 @@ function ChangePassword({ isGuest }) {
     e.preventDefault();
     const validationErrors = validateChangePassword(formValues);
     setErrors(validationErrors);
-    setTouched({
-      currPassword: true,
-      newPassword: true,
-    });
-
     if (Object.keys(validationErrors).length > 0) return;
-
     setSubmitted(true);
     await updatePasswordRequest();
   };
@@ -115,6 +92,7 @@ function ChangePassword({ isGuest }) {
 
   return (
     <form
+      noValidate
       onSubmit={handleSubmit}
       className={styles["change-password-input-group"]}
     >
@@ -126,11 +104,9 @@ function ChangePassword({ isGuest }) {
           label={field.label}
           value={formValues[field.name]}
           onChange={handleChange}
-          onBlur={handleBlur}
-          required
-          error={
-            touched[field.name] && errors[field.name] ? errors[field.name] : ""
-          }
+          onFocus={() => setFocusedField(field.name)}
+          onBlur={() => setFocusedField(null)}
+          error={errors[field.name]}
         />
       ))}
       <Button

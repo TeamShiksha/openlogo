@@ -57,7 +57,7 @@ describe("ChangePassword", () => {
     ).toBeInTheDocument();
   });
 
-  it("validates fields on blur", async () => {
+  it("validates fields on focus", async () => {
     validateChangePassword.mockReturnValue({
       currPassword: CHANGE_PASSWORD.currRequired,
       newPassword: "",
@@ -65,7 +65,7 @@ describe("ChangePassword", () => {
 
     render(<ChangePassword isGuest={false} />);
     const currPasswordInput = screen.getByLabelText(/current password/i);
-    fireEvent.blur(currPasswordInput);
+    fireEvent.focus(currPasswordInput);
 
     await waitFor(() => {
       expect(
