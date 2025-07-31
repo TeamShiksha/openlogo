@@ -40,7 +40,7 @@ function ChangePassword({ isGuest }) {
   useEffect(() => {
     const validationErrors = validateChangePassword(formValues);
     const filteredErrors = {};
-    for (let key in validationErrors) {
+    for (let key of Object.keys(validationErrors)) {
       if (touched[key]) {
         filteredErrors[key] = validationErrors[key];
       }
