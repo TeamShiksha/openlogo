@@ -40,14 +40,15 @@ function ChangePassword({ isGuest }) {
       setErrors({});
       return;
     }
+
     const timeout = setTimeout(() => {
-      const validationErrors = validateChangePassword({
-        [focusedField]: formValues[focusedField],
-      });
-      setErrors({
+      const validationErrors = validateChangePassword(formValues);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
         [focusedField]: validationErrors[focusedField] || "",
-      });
+      }));
     }, 500);
+
     return () => clearTimeout(timeout);
   }, [focusedField, formValues]);
 
