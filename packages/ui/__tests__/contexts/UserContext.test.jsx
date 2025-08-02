@@ -88,7 +88,7 @@ describe("UserProvider", () => {
       expect(errorText).toBe("No Error");
     });
 
-    expect(instance.get).toHaveBeenCalledWith("users/me");
+    expect(instance.get).toHaveBeenCalledWith("user/me");
   });
 
   it("should set error when fetchUserData fails", async () => {
@@ -112,6 +112,6 @@ describe("UserProvider", () => {
       expect(loadingText).toBe("Not Loading");
     });
 
-    expect(instance.get).toHaveBeenCalledWith("users/me");
+    expect(instance.get).toHaveBeenCalledWith("user/me");
   });
 });

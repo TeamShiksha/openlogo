@@ -26,7 +26,7 @@ const privateRouteCORS = {
 };
 
 router.use("/messages", baseLimiter, cors(privateRouteCORS), operatorRouter);
-router.use("/users/me", baseLimiter, cors(privateRouteCORS), userRouter);
+router.use("/user", baseLimiter, cors(privateRouteCORS), userRouter);
 router.use("/auth", baseLimiter, cors(privateRouteCORS), authRouter);
 router.use("/logo", logoLimiter, cors(privateRouteCORS), businessRouter);
 router.use("/catalog", baseLimiter, cors(privateRouteCORS), adminRouter);

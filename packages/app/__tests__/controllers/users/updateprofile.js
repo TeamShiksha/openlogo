@@ -27,7 +27,7 @@ describe("Update User Profile", () => {
     };
 
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -48,7 +48,7 @@ describe("Update User Profile", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -72,7 +72,7 @@ describe("Update User Profile", () => {
     jest.spyOn(UserService.prototype, "updateUser").mockReturnValue(false);
 
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -98,7 +98,7 @@ describe("Update User Profile", () => {
     });
 
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -120,7 +120,7 @@ describe("Update User Profile", () => {
       .mockResolvedValue(mockUpdatedResponse);
 
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
