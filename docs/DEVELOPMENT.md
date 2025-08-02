@@ -42,7 +42,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
 ## Running latest code using docker
 
-On every merge we pushed the latest code to docker hub. 
+On every merge we pushed the latest code to docker hub.
 - [Stage](https://hub.docker.com/u/aps08dev)
 - [Prod](https://hub.docker.com/u/aps08)
 
@@ -252,7 +252,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - User registered successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `409 Conflict` - Email already exists
@@ -282,7 +282,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Login successful</br>
 > **Response:** `401 Unauthorized` - Invalid credentials</br>
 > **Response:** `400 Bad Request` - Invalid input data
@@ -302,7 +302,7 @@ To use the Postman collection:
 >   "success": true
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logout successful</br>
 > **Response:** `401 Unauthorized` - Not authenticated
 > </details>
@@ -320,7 +320,7 @@ To use the Postman collection:
 >   "statusCode" : 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Token valid or email verified</br>
 > **Response:** `400 Bad Request` - Invalid token</br>
 > **Response:** `401 Unauthorized` - Invalid session
@@ -349,7 +349,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password reset email sent</br>
 > **Response:** `400 Bad Request` - Invalid email</br>
 > **Response:** `404 Not Found` - Email not found
@@ -368,7 +368,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Token valid</br>
 > **Response:** `400 Bad Request` - Invalid token</br>
 > **Response:** `401 Unauthorized` - Token expired
@@ -399,7 +399,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password reset successful</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Invalid or expired token
@@ -441,7 +441,7 @@ To use the Postman collection:
 
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | GET | True | Retrieve authenticated user profile |
+| `/user/me` | GET | True | Retrieve authenticated user profile |
 
 > <details>
 > <summary>Response body</summary>
@@ -472,7 +472,7 @@ To use the Postman collection:
 >    }
 >}
 > ```
-> 
+>
 > **Response:** `200 OK` - User profile retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
@@ -481,7 +481,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | PATCH | True | Update user profile details |
+| `/user/me` | PATCH | True | Update user profile details |
 
 > <details>
 > <summary>Request body</summary>
@@ -502,7 +502,7 @@ To use the Postman collection:
 >   "statusCode" : 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Profile updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated
@@ -511,7 +511,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | DELETE | True | Permanently delete the user account |
+| `/user/me` | DELETE | True | Permanently delete the user account |
 
 > <details>
 > <summary>Response body</summary>
@@ -521,7 +521,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Account deleted successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
@@ -530,7 +530,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/api-key` | POST | True | Generate a new API key |
+| `/user/api-key` | POST | True | Generate a new API key |
 
 > <details>
 > <summary>Request body</summary>
@@ -558,7 +558,7 @@ To use the Postman collection:
 >    }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key generated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -568,7 +568,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/api-key/:keyId` | DELETE | True | Revoke an API key |
+| `/user/api-key/:keyId` | DELETE | True | Revoke an API key |
 
 > <details>
 > <summary>Response body</summary>
@@ -578,7 +578,7 @@ To use the Postman collection:
 >   "statusCode":200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key revoked successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - API key not found
@@ -587,7 +587,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/password` | PUT | True | Update user password |
+| `/user/password` | PUT | True | Update user password |
 
 > <details>
 > <summary>Request body</summary>
@@ -608,7 +608,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated or invalid current password
@@ -617,7 +617,7 @@ To use the Postman collection:
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/request` | POST | True | Raise logo Request |
+| `/user/request` | POST | True | Raise logo Request |
 
 > <details>
 > <summary>Request body</summary>
@@ -638,7 +638,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo request submitted successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated
@@ -668,7 +668,7 @@ To use the Postman collection:
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Statistics retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `403 Forbidden` - Not authorized
@@ -697,7 +697,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Role updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid role</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -733,7 +733,7 @@ To use the Postman collection:
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo uploaded successfully </br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -768,7 +768,7 @@ To use the Postman collection:
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -800,7 +800,7 @@ To use the Postman collection:
 >   ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `403 Forbidden` - Not authorized
@@ -841,7 +841,7 @@ To use the Postman collection:
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Message updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -856,7 +856,7 @@ To use the Postman collection:
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `page`: Page number for pagination (optional)
 > - `limit`: Number of items per page (optional)
 > </details>
@@ -886,7 +886,7 @@ To use the Postman collection:
 >   ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Messages retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid pagination parameters</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -919,7 +919,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Message submitted successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data
 > </details>
@@ -936,7 +936,7 @@ To use the Postman collection:
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domain`: The domain name of the company (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
@@ -950,7 +950,7 @@ To use the Postman collection:
 >   "data": "https://api.example.com/logos/company-logo.png"
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters</br>
 > **Response:** `401 Unauthorized` - Invalid API key</br>
@@ -964,7 +964,7 @@ To use the Postman collection:
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domainKey`: Prefix of the domain name to filter logos (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
@@ -983,7 +983,7 @@ To use the Postman collection:
 >    ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters</br>
 > **Response:** `401 Unauthorized` - Invalid API key
@@ -996,7 +996,7 @@ To use the Postman collection:
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domainKey`: Prefix of the domain name to filter logos (required)
 > </details>
 >
@@ -1014,7 +1014,7 @@ To use the Postman collection:
 >    ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters
 > </details>
