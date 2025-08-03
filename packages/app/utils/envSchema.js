@@ -24,6 +24,8 @@ const EnvSchema = Joi.object()
     NODE_ENV: Joi.string().valid("dev", "test", "prod"),
     EMAIL_SERVICE_URL: Joi.string().optional(),
     EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
+    ADMINSEMAILS: Joi.string().required(),
+    BUCKET_KEY: Joi.string().required(),
   })
   .unknown(true);
 

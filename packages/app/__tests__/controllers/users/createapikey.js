@@ -31,7 +31,7 @@ describe("Generate User Key", () => {
     };
 
     const response = await request(app)
-      .post("/api/users/me/api-key")
+      .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -52,7 +52,7 @@ describe("Generate User Key", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .post("/api/users/me/api-key")
+      .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -80,7 +80,7 @@ describe("Generate User Key", () => {
       .mockResolvedValue({ key_limit: 2 });
 
     const response = await request(app)
-      .post("/api/users/me/api-key")
+      .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({ key_description: "description three" });
 
@@ -119,7 +119,7 @@ describe("Generate User Key", () => {
       });
 
     const response = await request(app)
-      .post("/api/users/me/api-key")
+      .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({ key_description: "description three" });
 
@@ -154,7 +154,7 @@ describe("Generate User Key", () => {
     });
 
     const response = await request(app)
-      .post("/api/users/me/api-key")
+      .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({ key_description: "description three" });
 

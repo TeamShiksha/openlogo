@@ -35,11 +35,11 @@ function Dashboard() {
   const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
-    url: "/users/me",
+    url: "/user/me",
   });
   const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
     method: "delete",
-    url: `/users/me/api-key/${selectedKey?._id}`,
+    url: `/user/api-key/${selectedKey?._id}`,
   });
 
   const apiKeyTableData = useMemo(() => {
