@@ -10,6 +10,7 @@ import {
 import Modal from "../common/modal/Modal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
+import { useToast } from "../../hooks/useToast";
 
 const ImageUploadModal = ({
   isOpen,
@@ -18,6 +19,7 @@ const ImageUploadModal = ({
   isUpdate,
   isLoading,
 }) => {
+  const toast = useToast();
   const [dragActive, setDragActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [companyUri, setCompanyUri] = useState("");
@@ -57,10 +59,7 @@ const ImageUploadModal = ({
   };
 
   const handleFile = (file) => {
-    if (
-      file &&
-      ["image/jpeg", "image/png", "image/svg+xml"].includes(file.type)
-    ) {
+    if (file && ["image/jpeg", "image/png"].includes(file.type)) {
       const reader = new FileReader();
       reader.onload = (fileRead) => {
         setSelectedImage({
@@ -70,7 +69,7 @@ const ImageUploadModal = ({
       };
       reader.readAsDataURL(file);
     } else {
-      alert(MESSAGES.UPLOAD_VALID_IMAGE);
+      toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
     }
   };
 
@@ -110,7 +109,7 @@ const ImageUploadModal = ({
             <input
               ref={inputRef}
               type="file"
-              accept=".jpg,.jpeg,.png,.svg"
+              accept=".jpg,.jpeg,.png"
               onChange={handleChange}
               style={{ display: "none" }}
             />

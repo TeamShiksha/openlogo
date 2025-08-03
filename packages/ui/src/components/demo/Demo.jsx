@@ -7,6 +7,7 @@ import { firstLetterCapitalString } from "../../utils/Helpers.js";
 import { useApi } from "../../hooks/useApi.js";
 import LogoRequestForm from "./LogoRequestForm.jsx";
 import { AuthContext } from "../../contexts/Contexts.jsx";
+import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 
 const Demo = ({ openAuthModal }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,7 +85,12 @@ const Demo = ({ openAuthModal }) => {
               <div
                 className={`${styles["result-container"]} ${styles["show"]}`}
               >
-                {apiResults.length === 0 ? (
+                {loading && (
+                  <div className={styles.loading}>
+                    <LoadingSpinner color="blue" />
+                  </div>
+                )}
+                {!loading && apiResults.length === 0 ? (
                   <div className={styles["no-result"]}>
                     <p>
                       {"Your search “"}
