@@ -7,54 +7,55 @@ import {
   CHANGE_PASSWORD_FIELDS,
 } from "../../src/utils/Constants";
 
+const mockUseApi = vi.fn();
+const mockMakeRequest = vi.fn();
+const mockToastSuccess = vi.fn();
+const mockToastError = vi.fn();
+
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: vi.fn(),
+  useApi: () => mockUseApi(),
 }));
 
 vi.mock("../../src/hooks/useToast", () => ({
-  useToast: vi.fn(),
+  useToast: () => ({
+    success: mockToastSuccess,
+    error: mockToastError,
+  }),
 }));
 
 vi.mock("../../src/utils/Helpers", () => ({
   validateChangePassword: vi.fn(() => ({})),
 }));
 
-import { useApi } from "../../src/hooks/useApi";
-import { useToast } from "../../src/hooks/useToast";
+let mockApiReturn;
+
 import { validateChangePassword } from "../../src/utils/Helpers";
 
 describe("ChangePassword", () => {
-  let makeRequestMock, toastSuccessMock, toastErrorMock;
-
   beforeEach(() => {
-    makeRequestMock = vi.fn();
-    toastSuccessMock = vi.fn();
-    toastErrorMock = vi.fn();
-
-    useApi.mockReturnValue({
-      makeRequest: makeRequestMock,
+    vi.clearAllMocks();
+    mockApiReturn = {
+      makeRequest: mockMakeRequest,
       data: null,
       errorMsg: "",
       isSuccess: false,
       loading: false,
-    });
+    };
 
-    useToast.mockReturnValue({
-      success: toastSuccessMock,
-      error: toastErrorMock,
-    });
-
+    mockUseApi.mockImplementation(() => mockApiReturn);
     validateChangePassword.mockImplementation(() => ({}));
   });
 
   it("renders form fields and button", () => {
     render(<ChangePassword isGuest={false} />);
     CHANGE_PASSWORD_FIELDS.forEach((field) => {
-      expect(screen.getByLabelText(field.label)).toBeInTheDocument();
+      const fieldLabel = screen.getByLabelText(field.label);
+      expect(fieldLabel).toBeInTheDocument();
     });
-    expect(
-      screen.getByRole("button", { name: BUTTON_TEXT.changePasswordLabel })
-    ).toBeInTheDocument();
+    const changepasswordButton = screen.getByRole("button", {
+      name: BUTTON_TEXT.changePasswordLabel,
+    });
+    expect(changepasswordButton).toBeInTheDocument();
   });
 
   it("validates fields on focus", async () => {
@@ -62,103 +63,59 @@ describe("ChangePassword", () => {
       currPassword: CHANGE_PASSWORD.currRequired,
       newPassword: "",
     });
-
     render(<ChangePassword isGuest={false} />);
     const currPasswordInput = screen.getByLabelText(/current password/i);
     fireEvent.focus(currPasswordInput);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Current password is required")
-      ).toBeInTheDocument();
+      const currPasswordRequired = screen.getByText(
+        CHANGE_PASSWORD.currRequired
+      );
+      expect(currPasswordRequired).toBeInTheDocument();
     });
   });
 
   it("disables button when form is invalid or loading", () => {
-    useApi.mockReturnValueOnce({
-      makeRequest: makeRequestMock,
-      data: null,
-      errorMsg: "",
-      isSuccess: false,
-      loading: true,
-    });
-
+    mockApiReturn.loading = true;
     render(<ChangePassword isGuest={false} />);
     const button = screen.getByRole("button");
     expect(button).toBeDisabled();
   });
 
   it("shows success toast on successful response", async () => {
-    makeRequestMock = vi.fn().mockResolvedValue(true);
-    toastSuccessMock = vi.fn();
-
-    useApi.mockReturnValue({
-      makeRequest: makeRequestMock,
-      errorMsg: "",
-      loading: false,
-    });
-
-    useToast.mockReturnValue({
-      success: toastSuccessMock,
-      error: vi.fn(),
-    });
-
+    mockMakeRequest.mockResolvedValue({ statusCode: 200 });
+    mockApiReturn.loading = false;
+    mockApiReturn.errorMsg = "";
     validateChangePassword.mockReturnValue({});
-
     render(<ChangePassword isGuest={false} />);
-
     const currInput = screen.getByLabelText(/current password/i);
     const newInput = screen.getByLabelText(/new password/i);
     const button = screen.getByRole("button", { name: /change password/i });
-
     fireEvent.change(currInput, { target: { value: "oldpass" } });
     fireEvent.change(newInput, { target: { value: "newpass123" } });
-
     fireEvent.click(button);
-
     await waitFor(() => {
-      expect(toastSuccessMock).toHaveBeenCalledWith(
+      expect(mockToastSuccess).toHaveBeenCalledWith(
         "Password updated successfully"
       );
     });
   });
 
   it("shows error toast on incorrect password", async () => {
-    let apiState = {
-      makeRequest: vi.fn(),
-      data: null,
-      errorMsg: "",
-      isSuccess: false,
-      loading: false,
-    };
-
-    useApi.mockImplementation(() => apiState);
+    mockMakeRequest.mockResolvedValue({ statusCode: 400 });
+    mockApiReturn.errorMsg = "Incorrect current password";
     render(<ChangePassword isGuest={false} />);
-
-    fireEvent.change(screen.getByLabelText(/current password/i), {
-      target: { value: "wrongpass" },
-    });
-
-    fireEvent.change(screen.getByLabelText(/new password/i), {
+    const currPassword = screen.getByLabelText(/current password/i);
+    fireEvent.change(currPassword, { target: { value: "wrongpass" } });
+    const newPassword = screen.getByLabelText(/new password/i);
+    fireEvent.change(newPassword, {
       target: { value: "newpass123" },
     });
-
     validateChangePassword.mockReturnValue({});
-
-    apiState.makeRequest.mockImplementation(async () => {
-      apiState = {
-        ...apiState,
-        data: { statusCode: 400 },
-        errorMsg: "Incorrect current password",
-        loading: false,
-        isSuccess: false,
-      };
-    });
-
-    fireEvent.click(screen.getByRole("button"));
-
+    const button = screen.getByRole("button");
+    fireEvent.click(button);
     await waitFor(() => {
-      expect(toastErrorMock).toHaveBeenCalledWith("Incorrect current password");
+      expect(mockToastError).toHaveBeenCalledWith("Incorrect current password");
     });
   });
 
@@ -166,12 +123,11 @@ describe("ChangePassword", () => {
     validateChangePassword.mockReturnValue({
       currPassword: CHANGE_PASSWORD.currRequired,
     });
-
     render(<ChangePassword isGuest={false} />);
-    fireEvent.click(screen.getByRole("button"));
-
+    const button = screen.getByRole("button");
+    fireEvent.click(button);
     await waitFor(() => {
-      expect(makeRequestMock).not.toHaveBeenCalled();
+      expect(mockMakeRequest).not.toHaveBeenCalled();
     });
   });
 

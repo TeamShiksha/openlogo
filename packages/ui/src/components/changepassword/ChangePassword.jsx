@@ -24,7 +24,7 @@ function ChangePassword({ isGuest }) {
     loading,
   } = useApi({
     method: "put",
-    url: "/users/me/password",
+    url: "user/password",
     data: {
       currPassword: formValues.currPassword,
       newPassword: formValues.newPassword,
