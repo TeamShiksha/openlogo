@@ -23,7 +23,7 @@ function SettingCard({ isGuest }) {
 
   const { makeRequest, errorMsg } = useApi({
     method: "DELETE",
-    url: "/users/me",
+    url: "/user/me",
     data: {
       userData,
     },

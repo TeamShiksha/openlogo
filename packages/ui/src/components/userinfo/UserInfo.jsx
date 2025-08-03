@@ -22,7 +22,7 @@ function UserInfo({ name, email, isGuest }) {
   });
   const { makeRequest, errorMsg } = useApi({
     method: "PATCH",
-    url: "/users/me",
+    url: "/user/me",
     data: {
       name: formData.name,
     },
