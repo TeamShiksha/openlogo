@@ -93,6 +93,33 @@ describe("Demo Component", () => {
     });
   });
 
+  it("shows Loading spinner when loading is true", async () => {
+    const authContext = mockAuthContext(true);
+    mockUseApi.mockReturnValue({
+      makeRequest: vi.fn(),
+      data: [],
+      loading: true,
+      errorMsg: null,
+    });
+    render(
+      <AuthContext.Provider value={authContext}>
+        <ToastContext.Provider value={mockToastContext}>
+          <Demo openAuthModal={mockOpenAuthModal} />
+        </ToastContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.change(screen.getByPlaceholderText("Search"), {
+      target: { value: "nope" },
+    });
+    fireEvent.submit(screen.getByAltText("Search"));
+
+    await waitFor(() => {
+      const loadingSpinner = screen.getByTestId("spinner");
+      expect(loadingSpinner).toBeInTheDocument();
+    });
+  });
+
   it("shows 'No results' and request button if search returns nothing", async () => {
     const authContext = mockAuthContext(true);
     render(
