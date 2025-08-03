@@ -32,7 +32,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
    - `BUCKET_NAME`
    - `BUCKET_REGION`
-   - `KEY`
+   - `BUCKET_KEY`
    - `DISTRIBUTION_DOMAIN`
    - `CLOUD_FRONT_KEYPAIR_ID`
    - `ACCESS_KEY`
