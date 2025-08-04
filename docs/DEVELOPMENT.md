@@ -32,7 +32,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
    - `BUCKET_NAME`
    - `BUCKET_REGION`
-   - `KEY`
+   - `BUCKET_KEY`
    - `DISTRIBUTION_DOMAIN`
    - `CLOUD_FRONT_KEYPAIR_ID`
    - `ACCESS_KEY`
@@ -42,7 +42,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
 ## Running latest code using docker
 
-On every merge we pushed the latest code to docker hub. 
+On every merge we pushed the latest code to docker hub.
 - [Stage](https://hub.docker.com/u/aps08dev)
 - [Prod](https://hub.docker.com/u/aps08)
 
@@ -252,7 +252,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - User registered successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `409 Conflict` - Email already exists
@@ -282,7 +282,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Login successful</br>
 > **Response:** `401 Unauthorized` - Invalid credentials</br>
 > **Response:** `400 Bad Request` - Invalid input data
@@ -302,7 +302,7 @@ To use the Postman collection:
 >   "success": true
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logout successful</br>
 > **Response:** `401 Unauthorized` - Not authenticated
 > </details>
@@ -320,7 +320,7 @@ To use the Postman collection:
 >   "statusCode" : 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Token valid or email verified</br>
 > **Response:** `400 Bad Request` - Invalid token</br>
 > **Response:** `401 Unauthorized` - Invalid session
@@ -349,7 +349,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password reset email sent</br>
 > **Response:** `400 Bad Request` - Invalid email</br>
 > **Response:** `404 Not Found` - Email not found
@@ -368,7 +368,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Token valid</br>
 > **Response:** `400 Bad Request` - Invalid token</br>
 > **Response:** `401 Unauthorized` - Token expired
@@ -399,7 +399,7 @@ To use the Postman collection:
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password reset successful</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Invalid or expired token
@@ -441,7 +441,7 @@ To use the Postman collection:
 
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | GET | True | Retrieve authenticated user profile |
+| `/user/me` | GET | True | Retrieve authenticated user profile |
 
 > <details>
 > <summary>Response body</summary>
@@ -472,7 +472,7 @@ To use the Postman collection:
 >    }
 >}
 > ```
-> 
+>
 > **Response:** `200 OK` - User profile retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
@@ -523,7 +523,7 @@ class Partial206 warning
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | PATCH | True | Update user profile details |
+| `/user/me` | PATCH | True | Update user profile details |
 
 > <details>
 > <summary>Request body</summary>
@@ -544,7 +544,7 @@ class Partial206 warning
 >   "statusCode" : 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Profile updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated
@@ -590,7 +590,7 @@ class Auth401,Input422,User404,Server500 error
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me` | DELETE | True | Permanently delete the user account |
+| `/user/me` | DELETE | True | Permanently delete the user account |
 
 > <details>
 > <summary>Response body</summary>
@@ -600,7 +600,7 @@ class Auth401,Input422,User404,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Account deleted successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
@@ -645,7 +645,7 @@ class SoftDelete,UpdateUser,ClearCookies process
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/api-key` | POST | True | Generate a new API key |
+| `/user/api-key` | POST | True | Generate a new API key |
 
 > <details>
 > <summary>Request body</summary>
@@ -673,7 +673,7 @@ class SoftDelete,UpdateUser,ClearCookies process
 >    }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key generated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -725,7 +725,7 @@ class Limit403 warning
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/api-key/:keyId` | DELETE | True | Revoke an API key |
+| `/user/api-key/:keyId` | DELETE | True | Revoke an API key |
 
 > <details>
 > <summary>Response body</summary>
@@ -735,7 +735,7 @@ class Limit403 warning
 >   "statusCode":200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key revoked successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - API key not found
@@ -781,7 +781,7 @@ class Auth401,Key404,Server500 error
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/password` | PUT | True | Update user password |
+| `/user/password` | PUT | True | Update user password |
 
 > <details>
 > <summary>Request body</summary>
@@ -802,7 +802,7 @@ class Auth401,Key404,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated or invalid current password
@@ -853,7 +853,7 @@ class Auth401,Input422,User404,Password400,Server500 error
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/users/me/request` | POST | True | Raise logo Request |
+| `/user/request` | POST | True | Raise logo Request |
 
 > <details>
 > <summary>Request body</summary>
@@ -874,7 +874,7 @@ class Auth401,Input422,User404,Password400,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo request submitted successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated
@@ -939,7 +939,7 @@ class Auth401,Input400,User403,Server500 error
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Statistics retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `403 Forbidden` - Not authorized
@@ -968,7 +968,7 @@ class Auth401,Input400,User403,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Role updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid role</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1004,7 +1004,7 @@ class Auth401,Input400,User403,Server500 error
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo uploaded successfully </br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1039,7 +1039,7 @@ class Auth401,Input400,User403,Server500 error
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1071,7 +1071,7 @@ class Auth401,Input400,User403,Server500 error
 >   ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `403 Forbidden` - Not authorized
@@ -1112,7 +1112,7 @@ class Auth401,Input400,User403,Server500 error
 >   }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Message updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1127,7 +1127,7 @@ class Auth401,Input400,User403,Server500 error
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `page`: Page number for pagination (optional)
 > - `limit`: Number of items per page (optional)
 > </details>
@@ -1157,7 +1157,7 @@ class Auth401,Input400,User403,Server500 error
 >   ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Messages retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid pagination parameters</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1190,7 +1190,7 @@ class Auth401,Input400,User403,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Message submitted successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data
 > </details>
@@ -1207,7 +1207,7 @@ class Auth401,Input400,User403,Server500 error
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domain`: The domain name of the company (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
@@ -1221,7 +1221,7 @@ class Auth401,Input400,User403,Server500 error
 >   "data": "https://api.example.com/logos/company-logo.png"
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logo retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters</br>
 > **Response:** `401 Unauthorized` - Invalid API key</br>
@@ -1235,7 +1235,7 @@ class Auth401,Input400,User403,Server500 error
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domainKey`: Prefix of the domain name to filter logos (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
@@ -1254,7 +1254,7 @@ class Auth401,Input400,User403,Server500 error
 >    ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters</br>
 > **Response:** `401 Unauthorized` - Invalid API key
@@ -1267,7 +1267,7 @@ class Auth401,Input400,User403,Server500 error
 
 > <details>
 > <summary>Query parameters</summary>
-> 
+>
 > - `domainKey`: Prefix of the domain name to filter logos (required)
 > </details>
 >
@@ -1285,7 +1285,7 @@ class Auth401,Input400,User403,Server500 error
 >    ]
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Logos retrieved successfully</br>
 > **Response:** `400 Bad Request` - Invalid input parameters
 > </details>

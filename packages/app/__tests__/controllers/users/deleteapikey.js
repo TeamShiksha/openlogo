@@ -33,7 +33,7 @@ describe("Destroy User Key", () => {
       .mockResolvedValue(false);
 
     const response = await request(app)
-      .delete(`/api/users/me/api-key/${keyId}`)
+      .delete(`/api/user/api-key/${keyId}`)
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(404);
@@ -51,7 +51,7 @@ describe("Destroy User Key", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .delete(`/api/users/me/api-key/${keyId}`)
+      .delete(`/api/user/api-key/${keyId}`)
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(404);
@@ -77,7 +77,7 @@ describe("Destroy User Key", () => {
       });
 
     const response = await request(app)
-      .delete(`/api/users/me/api-key/${keyId}`)
+      .delete(`/api/user/api-key/${keyId}`)
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(500);
@@ -94,7 +94,7 @@ describe("Destroy User Key", () => {
     jest.spyOn(UserService.prototype, "destroyUserKey").mockResolvedValue(true);
 
     const response = await request(app)
-      .delete(`/api/users/me/api-key/${keyId}`)
+      .delete(`/api/user/api-key/${keyId}`)
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(200);

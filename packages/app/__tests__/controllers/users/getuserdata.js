@@ -33,7 +33,7 @@ describe("GETUSERDATA", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .get("/api/users/me")
+      .get("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(404);
@@ -56,7 +56,7 @@ describe("GETUSERDATA", () => {
     jest.spyOn(KeyService.prototype, "getAllUserKeys").mockResolvedValue(null);
 
     const response = await request(app)
-      .get("/api/users/me")
+      .get("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(206);
@@ -75,7 +75,7 @@ describe("GETUSERDATA", () => {
     });
 
     const response = await request(app)
-      .get("/api/users/me")
+      .get("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(500);
@@ -97,7 +97,7 @@ describe("GETUSERDATA", () => {
       .mockResolvedValue([mockKeyModel]);
 
     const response = await request(app)
-      .get("/api/users/me")
+      .get("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`);
 
     expect(response.status).toBe(200);

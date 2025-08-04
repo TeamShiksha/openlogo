@@ -30,7 +30,7 @@ describe("Delete User Account", () => {
       });
 
     const response = await request(app)
-      .delete("/api/users/me")
+      .delete("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -48,7 +48,7 @@ describe("Delete User Account", () => {
       .mockReturnValue(true);
 
     const response = await request(app)
-      .delete("/api/users/me")
+      .delete("/api/user/me")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
