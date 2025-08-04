@@ -31,7 +31,7 @@ describe("Update User Password", () => {
     };
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -52,7 +52,7 @@ describe("Update User Password", () => {
     };
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -74,7 +74,7 @@ describe("Update User Password", () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -98,7 +98,7 @@ describe("Update User Password", () => {
       .mockResolvedValue(new Users(MOCK_USERS[1]));
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -128,7 +128,7 @@ describe("Update User Password", () => {
       .mockReturnValue(false);
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -160,7 +160,7 @@ describe("Update User Password", () => {
       });
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -185,7 +185,7 @@ describe("Update User Password", () => {
       .mockResolvedValue(true);
 
     const response = await request(app)
-      .put("/api/users/me/password")
+      .put("/api/user/password")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 

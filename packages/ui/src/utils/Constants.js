@@ -694,7 +694,7 @@ export const MESSAGES = {
   IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
   IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
   NO_RESULT_FOUND: "No results found matching your query!",
-  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG, PNG, or SVG)",
+  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG or PNG)",
   UPDATE_PASSWORD_SUCCESS: "Password updated successfully",
 };
 
