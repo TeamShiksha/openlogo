@@ -117,12 +117,28 @@ async function deleteUserAccountController(req, res, next) {
     const userService = new UserService();
     const { userId } = req.userData;
     await userService.deleteUserAccount(userId);
-    res.clearCookie("jwt", {
-      sameSite: "none",
-      secure: true,
+
+    let cookieOptions = {
       httpOnly: true,
       domain: ".openlogo.fyi",
-    });
+    };
+
+    if (process.env.NODE_ENV === "prod") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "none",
+        secure: true,
+      };
+    } else if (process.env.NODE_ENV === "dev") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "Lax",
+        secure: false,
+      };
+    }
+
+    res.clearCookie("jwt", cookieOptions);
+
     res.status(200).json({
       status: 200,
     });

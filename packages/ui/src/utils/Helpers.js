@@ -237,12 +237,12 @@ export const validate = (values) => {
  *
  * @param {string} domain - The domain to check against.
  * @returns {string} - The base API URL corresponding to the domain.
- * If the domain includes "localhost", it returns the local URL.
+ * If the domain includes "local", it returns the local URL.
  * If the domain includes "stage", it returns the staging URL.
  * Otherwise, it returns the production URL.
  */
 export const getBaseApiUrl = (domain) => {
-  if (domain.includes("localhost")) {
+  if (domain.includes("local")) {
     return DOCUMENTATION.localUrl;
   } else if (domain.includes("stage")) {
     return DOCUMENTATION.baseStageUrl;

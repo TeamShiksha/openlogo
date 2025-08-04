@@ -24,7 +24,9 @@ describe("Documentation Component", () => {
   });
 
   it("returns correct BASE API URL for different environments", () => {
-    expect(getBaseApiUrl("http://localhost:3000")).toBe(DOCUMENTATION.localUrl);
+    expect(getBaseApiUrl("http://local.openlogo.fyi:3000")).toBe(
+      DOCUMENTATION.localUrl
+    );
     expect(getBaseApiUrl("https://stage-openlogo.vercel.app")).toBe(
       DOCUMENTATION.baseStageUrl
     );

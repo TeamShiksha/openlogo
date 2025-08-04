@@ -132,13 +132,29 @@ async function signinController(req, res, next) {
     const oneDayValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
-    res.cookie("jwt", user.generateJWT(), {
+
+    let cookieOptions = {
       expires: oneDayValidityTimestamp,
-      sameSite: "none",
-      secure: true,
       httpOnly: true,
       domain: ".openlogo.fyi",
-    });
+    };
+
+    if (process.env.NODE_ENV === "prod") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "none",
+        secure: true,
+      };
+    } else if (process.env.NODE_ENV === "dev") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "Lax",
+        secure: false,
+      };
+    }
+
+    res.cookie("jwt", user.generateJWT(), cookieOptions);
+
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
@@ -159,12 +175,27 @@ function signoutController(req, res, next) {
       });
     }
 
-    res.clearCookie("jwt", {
-      sameSite: "none",
-      secure: true,
+    let cookieOptions = {
       httpOnly: true,
       domain: ".openlogo.fyi",
-    });
+    };
+
+    if (process.env.NODE_ENV === "prod") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "none",
+        secure: true,
+      };
+    } else if (process.env.NODE_ENV === "dev") {
+      cookieOptions = {
+        ...cookieOptions,
+        sameSite: "Lax",
+        secure: false,
+      };
+    }
+
+    res.clearCookie("jwt", cookieOptions);
+
     return res.status(205).send();
   } catch (err) {
     next(err);
