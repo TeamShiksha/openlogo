@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: true,
       port: 3000,
+      allowedHosts: [".openlogo.fyi"],
     },
     define: {
       "process.env.VITE_BASE_URL": JSON.stringify(env.VITE_BASE_URL),
