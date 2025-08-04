@@ -73,6 +73,11 @@ function ChangePassword({ isGuest }) {
     if (success) {
       setErrors({});
       toast.success(MESSAGES.UPDATE_PASSWORD_SUCCESS);
+      setFormValues({
+        currPassword: "",
+        newPassword: "",
+      });
+      setFocusedField(null);
     }
   };
 
