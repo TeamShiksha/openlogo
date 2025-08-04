@@ -478,12 +478,13 @@ To use the Postman collection:
 > **Response:** `404 Not Found` - User not found
 > </details>
 
-### Api Flow diagram
+<details>
+<summary>Api Flow diagram</summary>
 
 ```mermaid
  flowchart TD
-%% API Flow: GET /users/me
-Start[GET /users/me] --> Auth{Authorized?}
+%% API Flow: GET /user/me
+Start[GET /user/me] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -519,6 +520,7 @@ class Auth401,User404,FormatError500 error
 class Partial206 warning
 
 ``` 
+</details>
 
 ---
 | URL | Method | Auth Required | Description |
@@ -550,11 +552,13 @@ class Partial206 warning
 > **Response:** `401 Unauthorized` - Not authenticated
 > </details>
 
-### Api Flow diagram
+<details>
+<summary>Api Flow diagram</summary>
+
 ```mermaid
 flowchart TD
-%% API Flow: PATCH /users/me
-Start[PATCH /users/me<br/>Request Body: name] --> Auth{Authorized?}
+%% API Flow: PATCH /user/me
+Start[PATCH /user/me<br/>Request Body: name] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -586,6 +590,7 @@ class Success200 success
 class Auth401,Input422,User404,Server500 error
 
 ```
+</details>
 
 ---
 | URL | Method | Auth Required | Description |
@@ -600,17 +605,20 @@ class Auth401,Input422,User404,Server500 error
 >   "statusCode": 200
 > }
 > ```
->
+> 
 > **Response:** `200 OK` - Account deleted successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
 > </details>
 
-### Api Flow diagram
+
+<details>
+<summary>Api Flow diagram</summary>
+
 ```mermaid
 flowchart TD
-%% API Flow: DELETE /users/me
-Start[DELETE /users/me] --> Auth{Authorized?}
+%% API Flow: DELETE /user/me
+Start[DELETE /user/me] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -642,10 +650,12 @@ class Auth401,User404,Server500 error
 class SoftDelete,UpdateUser,ClearCookies process
 
 ```
+</details>
+
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/user/api-key` | POST | True | Generate a new API key |
+| `/user/me/api-key` | POST | True | Generate a new API key |
 
 > <details>
 > <summary>Request body</summary>
@@ -673,18 +683,20 @@ class SoftDelete,UpdateUser,ClearCookies process
 >    }
 > }
 > ```
->
+> 
 > **Response:** `200 OK` - API key generated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `403 Forbidden` - Key limit reached
 > </details>
 
-### Api Flow diagram
+<details>
+<summary>Api Flow diagram</summary>
+
 ```mermaid
 flowchart TD
-%% API Flow: POST /users/me/api-key
-Start[POST /users/me/api-key<br/>Request Body: key_description] --> Auth{Authorized?}
+%% API Flow: POST /user/me/api-key
+Start[POST /user/me/api-key<br/>Request Body: key_description] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -722,10 +734,12 @@ class Auth401,Input422,User404,Server500 error
 class Limit403 warning
 
 ```
+</details>
+
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/user/api-key/:keyId` | DELETE | True | Revoke an API key |
+| `/user/me/api-key/:keyId` | DELETE | True | Revoke an API key |
 
 > <details>
 > <summary>Response body</summary>
@@ -735,17 +749,19 @@ class Limit403 warning
 >   "statusCode":200
 > }
 > ```
->
+> 
 > **Response:** `200 OK` - API key revoked successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - API key not found
 > </details>
 
-### Api Flow diagram
+<details>
+<summary>Api Flow diagram</summary>
+
  ```mermaid
 flowchart TD
-%% API Flow: DELETE /users/me/api-key/:keyId
-Start[DELETE /users/me/api-key/:keyId<br/>Param: keyId] --> Auth{Authorized?}
+%% API Flow: DELETE /user/me/api-key/:keyId
+Start[DELETE /user/me/api-key/:keyId<br/>Param: keyId] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -778,10 +794,12 @@ class Success200 success
 class Auth401,Key404,Server500 error
 
 ```
+</details>
+
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/user/password` | PUT | True | Update user password |
+| `/user/me/password` | PUT | True | Update user password |
 
 > <details>
 > <summary>Request body</summary>
@@ -802,18 +820,19 @@ class Auth401,Key404,Server500 error
 >   "statusCode": 200
 > }
 > ```
->
+> 
 > **Response:** `200 OK` - Password updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated or invalid current password
 > </details>
-> <details>
 
-### Api Flow diagram
+ <details>
+<summary>Api Flow diagram</summary>
+
  ```mermaid
 flowchart TD
-%% API Flow: PUT /users/me/password
-Start[PUT /users/me/password<br/>Request Body: currPassword + newPassword] --> Auth{Authorized?}
+%% API Flow: PUT /user/me/password
+Start[PUT /user/me/password<br/>Request Body: currPassword + newPassword] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -850,10 +869,12 @@ class Success200 success
 class Auth401,Input422,User404,Password400,Server500 error
 
 ```
+</details>
+
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/user/request` | POST | True | Raise logo Request |
+| `/user/me/request` | POST | True | Raise logo Request |
 
 > <details>
 > <summary>Request body</summary>
@@ -880,11 +901,13 @@ class Auth401,Input422,User404,Password400,Server500 error
 > **Response:** `401 Unauthorized` - Not authenticated
 > </details>
 
-### Api Flow diagram
+<details>
+<summary>Api Flow diagram</summary>
+
 ```mermaid
 flowchart TD
-%% API Flow: POST /users/me/request
-Start[POST /users/me/request<br/>Request Body: user_id + companyUrl] --> Auth{Authorized?}
+%% API Flow: POST /user/me/request
+Start[POST /user/me/request<br/>Request Body: user_id + companyUrl] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -915,7 +938,7 @@ class Success200 success
 class Auth401,Input400,User403,Server500 error
 
 ```
-
+</details>
 </details>
 
 <details>
