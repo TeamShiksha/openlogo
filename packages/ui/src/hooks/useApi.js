@@ -29,10 +29,11 @@ export const useApi = (config) => {
       success = true;
     } catch (err) {
       setIsSuccess(false);
+      setData(err?.response?.data || null);
       if (err?.response?.data?.message) {
         setErrorMsg(err?.response?.data?.message);
       } else {
-        setErrorMsg(err?.message);
+        setErrorMsg(err?.message || "Network error");
       }
     } finally {
       setLoading(false);
