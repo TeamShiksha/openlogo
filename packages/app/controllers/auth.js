@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, getIsProduction } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -139,8 +139,7 @@ async function signinController(req, res, next) {
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    const isProduction =
-      process.env.NODE_ENV === "prod" || process.env.NODE_ENV === "PROD";
+    const isProduction = getIsProduction();
     if (!isProduction) {
       cookieOptions = {
         ...cookieOptions,
@@ -173,8 +172,7 @@ function signoutController(req, res, next) {
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    const isProduction =
-      process.env.NODE_ENV === "prod" || process.env.NODE_ENV === "PROD";
+    const isProduction = getIsProduction();
     if (!isProduction) {
       cookieOptions = {
         ...cookieOptions,

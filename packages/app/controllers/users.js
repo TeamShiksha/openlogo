@@ -12,7 +12,7 @@ const {
   updatePasswordPayloadSchema,
   logoRequestPyaloadSchema,
 } = require("../schemas/user");
-const { Messages } = require("../utils/constants");
+const { Messages, getIsProduction } = require("../utils/constants");
 
 /**
  * This controller fetches the authenticated user's data from the database
@@ -123,8 +123,7 @@ async function deleteUserAccountController(req, res, next) {
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    const isProduction =
-      process.env.NODE_ENV === "prod" || process.env.NODE_ENV === "PROD";
+    const isProduction = getIsProduction();
     if (!isProduction) {
       cookieOptions = {
         ...cookieOptions,

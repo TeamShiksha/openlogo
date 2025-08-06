@@ -90,6 +90,9 @@ const Messages = {
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
 
+const getIsProduction = () =>
+  process.env.NODE_ENV?.trim().toLowerCase() === "prod";
+
 module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
@@ -100,4 +103,5 @@ module.exports = {
   DefaultSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
+  getIsProduction,
 };
