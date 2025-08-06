@@ -123,7 +123,9 @@ async function deleteUserAccountController(req, res, next) {
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    if (process.env.NODE_ENV !== "prod") {
+    const isProduction =
+      process.env.NODE_ENV === "prod" || process.env.NODE_ENV === "PROD";
+    if (!isProduction) {
       cookieOptions = {
         ...cookieOptions,
         domain: "localhost",

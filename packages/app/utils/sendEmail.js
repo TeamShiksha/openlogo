@@ -17,10 +17,9 @@ async function sendEmail({ id, subject, recipient, body, cc = [], bcc = [] }) {
   const payload = { id, subject, recipient, body, cc, bcc };
 
   try {
-    if (
-      process.env.NODE_ENV === "production" ||
-      process.env.NODE_ENV === "prod"
-    ) {
+    const isProduction =
+      process.env.NODE_ENV === "prod" || process.env.NODE_ENV === "PROD";
+    if (isProduction) {
       const response = await axios.post(
         `${process.env.EMAIL_SERVICE_URL}`,
         payload,
