@@ -13,7 +13,7 @@ export function UserProvider({ children }) {
   const fetchUserData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await instance.get("users/me");
+      const res = await instance.get("user/me");
       const data = res.data.data;
       setUserData(data);
     } catch (err) {

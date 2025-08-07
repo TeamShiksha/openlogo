@@ -811,7 +811,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me",
+							"raw": "{{openlogo_base_url}}/user/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -829,7 +829,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -850,7 +850,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -871,7 +871,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -915,7 +915,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me",
+							"raw": "{{openlogo_base_url}}/user/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -942,7 +942,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -972,7 +972,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1002,7 +1002,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1032,7 +1032,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1062,7 +1062,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1097,7 +1097,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me",
+							"raw": "{{openlogo_base_url}}/user/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1115,7 +1115,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1136,7 +1136,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1157,7 +1157,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me",
+									"raw": "{{openlogo_base_url}}/user/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1201,7 +1201,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me/api-key",
+							"raw": "{{openlogo_base_url}}/user/api-key",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1229,7 +1229,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1260,7 +1260,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1291,7 +1291,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1322,7 +1322,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1353,7 +1353,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1384,7 +1384,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key",
+									"raw": "{{openlogo_base_url}}/user/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1420,7 +1420,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me/api-key/:keyId",
+							"raw": "{{openlogo_base_url}}/user/api-key/:keyId",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1446,7 +1446,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f79830AFD3EED",
+									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f79830AFD3EED",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1469,7 +1469,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1492,7 +1492,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1515,7 +1515,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1538,7 +1538,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1584,7 +1584,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me/password",
+							"raw": "{{openlogo_base_url}}/user/password",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1612,7 +1612,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/password",
+									"raw": "{{openlogo_base_url}}/user/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1643,7 +1643,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/password",
+									"raw": "{{openlogo_base_url}}/user/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1674,7 +1674,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/password",
+									"raw": "{{openlogo_base_url}}/user/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1705,7 +1705,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/password",
+									"raw": "{{openlogo_base_url}}/user/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1750,7 +1750,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/users/me/request",
+							"raw": "{{openlogo_base_url}}/user/request",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1778,7 +1778,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/request",
+									"raw": "{{openlogo_base_url}}/user/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1809,7 +1809,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/request",
+									"raw": "{{openlogo_base_url}}/user/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1840,7 +1840,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/request",
+									"raw": "{{openlogo_base_url}}/user/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1871,7 +1871,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/request",
+									"raw": "{{openlogo_base_url}}/user/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1902,7 +1902,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/users/me/request",
+									"raw": "{{openlogo_base_url}}/user/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
