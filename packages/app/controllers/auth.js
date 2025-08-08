@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, getIsProduction } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -132,13 +132,21 @@ async function signinController(req, res, next) {
     const oneDayValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
-    res.cookie("jwt", user.generateJWT(), {
+    let cookieOptions = {
       expires: oneDayValidityTimestamp,
       sameSite: "none",
       secure: true,
       httpOnly: true,
       domain: ".openlogo.fyi",
-    });
+    };
+    const isProduction = getIsProduction();
+    if (!isProduction) {
+      cookieOptions = {
+        ...cookieOptions,
+        domain: "localhost",
+      };
+    }
+    res.cookie("jwt", user.generateJWT(), cookieOptions);
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
@@ -158,13 +166,20 @@ function signoutController(req, res, next) {
         statusCode: 400,
       });
     }
-
-    res.clearCookie("jwt", {
+    let cookieOptions = {
       sameSite: "none",
       secure: true,
       httpOnly: true,
       domain: ".openlogo.fyi",
-    });
+    };
+    const isProduction = getIsProduction();
+    if (!isProduction) {
+      cookieOptions = {
+        ...cookieOptions,
+        domain: "localhost",
+      };
+    }
+    res.clearCookie("jwt", cookieOptions);
     return res.status(205).send();
   } catch (err) {
     next(err);
