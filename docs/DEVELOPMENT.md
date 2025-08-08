@@ -302,6 +302,7 @@ class Success201 warning
 
 ``` 
 </details>
+
 ---
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
