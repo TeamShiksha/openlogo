@@ -23,13 +23,7 @@ vi.mock("../../src/hooks/useToast", () => ({
   }),
 }));
 
-vi.mock("../../src/utils/Helpers", () => ({
-  validateChangePassword: vi.fn(() => ({})),
-}));
-
 let mockApiReturn;
-
-import { validateChangePassword } from "../../src/utils/Helpers";
 
 describe("ChangePassword", () => {
   beforeEach(() => {
@@ -43,7 +37,6 @@ describe("ChangePassword", () => {
     };
 
     mockUseApi.mockImplementation(() => mockApiReturn);
-    validateChangePassword.mockImplementation(() => ({}));
   });
 
   it("renders form fields and button", () => {
@@ -59,10 +52,6 @@ describe("ChangePassword", () => {
   });
 
   it("validates fields on focus", async () => {
-    validateChangePassword.mockReturnValue({
-      currPassword: CHANGE_PASSWORD.currRequired,
-      newPassword: "",
-    });
     render(<ChangePassword isGuest={false} />);
     const currPasswordInput = screen.getByLabelText(/current password/i);
     fireEvent.focus(currPasswordInput);
@@ -86,13 +75,12 @@ describe("ChangePassword", () => {
     mockMakeRequest.mockResolvedValue({ statusCode: 200 });
     mockApiReturn.loading = false;
     mockApiReturn.errorMsg = "";
-    validateChangePassword.mockReturnValue({});
     render(<ChangePassword isGuest={false} />);
     const currInput = screen.getByLabelText(/current password/i);
     const newInput = screen.getByLabelText(/new password/i);
     const button = screen.getByRole("button", { name: /change password/i });
-    fireEvent.change(currInput, { target: { value: "oldpass" } });
-    fireEvent.change(newInput, { target: { value: "newpass123" } });
+    fireEvent.change(currInput, { target: { value: "Oldpass@123" } });
+    fireEvent.change(newInput, { target: { value: "Newpass@121" } });
     fireEvent.click(button);
     await waitFor(() => {
       expect(mockToastSuccess).toHaveBeenCalledWith(
@@ -106,12 +94,11 @@ describe("ChangePassword", () => {
     mockApiReturn.errorMsg = "Incorrect current password";
     render(<ChangePassword isGuest={false} />);
     const currPassword = screen.getByLabelText(/current password/i);
-    fireEvent.change(currPassword, { target: { value: "wrongpass" } });
+    fireEvent.change(currPassword, { target: { value: "wrongpass@123" } });
     const newPassword = screen.getByLabelText(/new password/i);
     fireEvent.change(newPassword, {
-      target: { value: "newpass123" },
+      target: { value: "Newpass@123" },
     });
-    validateChangePassword.mockReturnValue({});
     const button = screen.getByRole("button");
     fireEvent.click(button);
     await waitFor(() => {
@@ -120,9 +107,6 @@ describe("ChangePassword", () => {
   });
 
   it("does not submit form when validation errors exist", async () => {
-    validateChangePassword.mockReturnValue({
-      currPassword: CHANGE_PASSWORD.currRequired,
-    });
     render(<ChangePassword isGuest={false} />);
     const button = screen.getByRole("button");
     fireEvent.click(button);
