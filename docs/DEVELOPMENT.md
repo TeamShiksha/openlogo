@@ -718,6 +718,7 @@ class Session401,Input422,Password400,Token403 error
 > **Response:** `401 Unauthorized` - Invalid Credentials
 > </details>
 
+</details>
 
 
 <details>
@@ -745,7 +746,7 @@ class Auth401 error
 
 ``` 
 </details>
-</details>
+
 
 <details>
 <summary>USER</summary>
