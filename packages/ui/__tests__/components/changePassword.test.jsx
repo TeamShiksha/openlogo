@@ -94,7 +94,7 @@ describe("ChangePassword", () => {
     mockApiReturn.errorMsg = "Incorrect current password";
     render(<ChangePassword isGuest={false} />);
     const currPassword = screen.getByLabelText(/current password/i);
-    fireEvent.change(currPassword, { target: { value: "wrongpass@123" } });
+    fireEvent.change(currPassword, { target: { value: "Wrongpass@123" } });
     const newPassword = screen.getByLabelText(/new password/i);
     fireEvent.change(newPassword, {
       target: { value: "Newpass@123" },
