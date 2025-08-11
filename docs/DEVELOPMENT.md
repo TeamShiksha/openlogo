@@ -1603,7 +1603,7 @@ class Auth401,Input400,User403,Server500 error
 > <details>
 > <summary>Query parameters</summary>
 >
-> - `domainKey`: Prefix of the domain name to filter logos (required)
+> - `key`: Prefix of the domain name to filter logos (required)
 > </details>
 >
 > <details>

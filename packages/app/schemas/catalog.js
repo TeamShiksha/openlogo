@@ -47,21 +47,21 @@ const getSearchQuerySchema = Joi.object({
 });
 
 const getDemoSearchQuerySchema = Joi.object({
-  domainKey: Joi.string()
+  key: Joi.string()
     .regex(/^[A-Za-z0-9&/:.-]+$/)
     .required()
     .messages({
-      "any.required": "domainKey is required",
-      "string.pattern.base": "Invalid domainKey",
+      "any.required": "key is required",
+      "string.pattern.base": "Invalid key",
     }),
 }).custom((value, helpers) => {
-  const { domainKey } = value;
-  const companyNameBeginsWith = domainKey
+  const { key } = value;
+  const companyNameBeginsWith = key
     .replace(/^(https?:\/\/)?(www\.)?/, "")
     .match(/([A-Za-z0-9-]+)/)[1]
     .toUpperCase();
   if (companyNameBeginsWith === "") {
-    return helpers.error("domainKey cannot be empty");
+    return helpers.error("key cannot be empty");
   }
   return { ...value, companyNameBeginsWith };
 });
