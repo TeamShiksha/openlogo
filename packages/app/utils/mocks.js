@@ -122,6 +122,22 @@ const MOCK_USERTOKENS = [
     is_deleted: false,
     expireAt: new Date(Date.now() - 1),
   },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    token: "123e4567e89b12d3a456426614174000",
+    user_id: "user@4",
+    type: UserTokenTypes.VERIFY,
+    is_deleted: true,
+    expireAt: new Date(Date.now() - 1),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    token: "a8f1b3c4e17f492abac541a6e2d37391",
+    user_id: "user@5",
+    type: UserTokenTypes.FORGOT,
+    is_deleted: true,
+    expireAt: new Date(Date.now() - 1),
+  },
 ];
 
 const MOCK_KEYS = [
