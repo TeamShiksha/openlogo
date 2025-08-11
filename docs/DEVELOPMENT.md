@@ -718,34 +718,8 @@ class Session401,Input422,Password400,Token403 error
 > **Response:** `401 Unauthorized` - Invalid Credentials
 > </details>
 
-
-
-<details>
-<summary>Api Flow diagram</summary>
-
-```mermaid
-
-flowchart TD
-%% API Flow: GET /auth/validate-session
-Start[GET /auth/validate-session] --> Auth{Authorized?}
-
-Auth -->|No| Auth401[Return 401 Unauthorized]
-Auth -->|Yes| Success200[Return 200 OK + User Data]
-
-classDef startEnd fill:#81C8FF,stroke:#4682B4,stroke-width:2px,color:#000;
-classDef decision fill:#FFD54F,stroke:#FFB300,stroke-width:2px,color:#000;
-classDef success fill:#A5D6A7,stroke:#388E3C,stroke-width:2px,color:#000;
-classDef error fill:#EF9A9A,stroke:#D32F2F,stroke-width:2px,color:#000;
-classDef warning fill:#FFCC80,stroke:#F57C00,stroke-width:2px,color:#000;
-
-class Start,Success200 startEnd
-class Auth decision
-class Success200 success
-class Auth401 error
-
-``` 
 </details>
-</details>
+
 
 <details>
 <summary>USER</summary>
