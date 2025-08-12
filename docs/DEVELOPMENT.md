@@ -300,7 +300,7 @@ class Success200 success
 class Input422,Email400,Server500 error
 class Success201 warning
 
-``` 
+```
 </details>
 
 ---
@@ -374,7 +374,7 @@ class GuestCheck,InputValid,UserExists,CheckVerified,PasswordMatch decision
 class Success200 success
 class Input422,User404,Verify403 error
 
-``` 
+```
 </details>
 
 ---
@@ -420,7 +420,7 @@ class Start,Success205 startEnd
 class CheckCookie decision
 class Success205 success
 class Cookie400 error
-``` 
+```
 </details>
 
 ---
@@ -492,7 +492,7 @@ class ValidateToken,TokenExists,DeletedExists,CheckExpiry,UserExists,AlreadyVeri
 class Success200,Already200 success
 class Token422,Token400,Expired403,User404,Verify500,Server500 error
 
-``` 
+```
 </details>
 
 ---
@@ -559,7 +559,7 @@ class InputValid,UserExists,TokenCreated decision
 class Success200 success
 class Input422,User404,Server500 error
 
-``` 
+```
 </details>
 
 ---
@@ -614,7 +614,7 @@ class ValidateToken,TokenExists,CheckExpiry decision
 class Success200 success
 class Token422,User404,Expired403 error
 
-``` 
+```
 </details>
 
 ---
@@ -687,7 +687,7 @@ class CheckSession,InputValid,UpdateSuccess,TokenValid decision
 class Success200 success
 class Session401,Input422,Password400,Token403 error
 
-``` 
+```
 </details>
 
 ---
@@ -743,7 +743,7 @@ class Auth decision
 class Success200 success
 class Auth401 error
 
-``` 
+```
 </details>
 </details>
 
@@ -830,7 +830,7 @@ class Success200 success
 class Auth401,User404,FormatError500 error
 class Partial206 warning
 
-``` 
+```
 </details>
 
 ---
@@ -916,7 +916,7 @@ class Auth401,Input422,User404,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Account deleted successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - User not found
@@ -994,7 +994,7 @@ class SoftDelete,UpdateUser,ClearCookies process
 >    }
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key generated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
@@ -1060,7 +1060,7 @@ class Limit403 warning
 >   "statusCode":200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - API key revoked successfully</br>
 > **Response:** `401 Unauthorized` - Not authenticated</br>
 > **Response:** `404 Not Found` - API key not found
@@ -1131,7 +1131,7 @@ class Auth401,Key404,Server500 error
 >   "statusCode": 200
 > }
 > ```
-> 
+>
 > **Response:** `200 OK` - Password updated successfully</br>
 > **Response:** `400 Bad Request` - Invalid input data</br>
 > **Response:** `401 Unauthorized` - Not authenticated or invalid current password
@@ -1827,7 +1827,7 @@ class Input400,Save500 error
 > <details>
 > <summary>Query parameters</summary>
 >
-> - `domain`: The domain name of the company (required)
+> - `key`: The domain name of the company (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
 >
@@ -1888,7 +1888,7 @@ class Params400,Key401,Logo404 error
 > <details>
 > <summary>Query parameters</summary>
 >
-> - `domainKey`: Prefix of the domain name to filter logos (required)
+> - `key`: Prefix of the domain name to filter logos (required)
 > - `API_KEY`: API key for authentication (required)
 > </details>
 >
@@ -1952,7 +1952,7 @@ class Success200 success
 > <details>
 > <summary>Query parameters</summary>
 >
-> - `domainKey`: Prefix of the domain name to filter logos (required)
+> - `key`: Prefix of the domain name to filter logos (required)
 > </details>
 >
 > <details>
