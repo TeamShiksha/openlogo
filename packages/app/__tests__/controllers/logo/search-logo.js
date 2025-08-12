@@ -28,19 +28,33 @@ describe("searchLogoController", () => {
 
   const apiUrl = "/api/logo/search";
 
+  const wrongBaseQuery = {
+    API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa5",
+    domainKey: "google.com",
+  };
+
+  const baseQuery = {
+    API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    domainKey: "google.com",
+  };
+
+  const keyServiceMockResolve = {
+    _id: "1234",
+    key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    key_description: "API-KEY-1",
+    subscription_id: "mockSubscriptionID@123",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+
   it("should return 422 if query validation fails", async () => {
     const response = await request(app).get(apiUrl).query({});
     expect(response.status).toBe(422);
   });
 
   it("if API_KEY is invalid it should return 403", async () => {
-    const baseQuery = {
-      API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa5",
-      domainKey: "google.com",
-    };
-
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
-    const response = await request(app).get(apiUrl).query(baseQuery);
+    const response = await request(app).get(apiUrl).query(wrongBaseQuery);
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       message: Messages.INVALID_KEY,
@@ -50,18 +64,8 @@ describe("searchLogoController", () => {
   });
 
   it("if usage limit is reached it should return 403", async () => {
-    const baseQuery = {
-      API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      domainKey: "google.com",
-    };
-
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      _id: "1234",
-      key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      key_description: "API-KEY-1",
-      subscription_id: "mockSubscriptionID@123",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      ...keyServiceMockResolve,
     });
 
     jest
@@ -85,18 +89,8 @@ describe("searchLogoController", () => {
   });
 
   it("if Company not found it should return 404", async () => {
-    const baseQuery = {
-      API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      domainKey: "google.com",
-    };
-
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      _id: "1234",
-      key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      key_description: "API-KEY-1",
-      subscription_id: "mockSubscriptionID@123",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      ...keyServiceMockResolve,
     });
 
     jest
@@ -124,18 +118,8 @@ describe("searchLogoController", () => {
   });
 
   it("if Company found it should return 200", async () => {
-    const baseQuery = {
-      API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      domainKey: "google.com",
-    };
-
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      _id: "1234",
-      key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      key_description: "API-KEY-1",
-      subscription_id: "mockSubscriptionID@123",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      ...keyServiceMockResolve,
     });
 
     jest
@@ -188,18 +172,8 @@ describe("searchLogoController", () => {
   });
 
   it("500-unexpected error", async () => {
-    const baseQuery = {
-      API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      domainKey: "google.com",
-    };
-
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      _id: "1234",
-      key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      key_description: "API-KEY-1",
-      subscription_id: "mockSubscriptionID@123",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      ...keyServiceMockResolve,
     });
 
     jest
