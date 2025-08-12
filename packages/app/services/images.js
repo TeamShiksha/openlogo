@@ -32,8 +32,7 @@ class ImageServices {
       domainName = image.company_name;
     }
 
-    const version = new Date(company.updated_at).getTime();
-    const imageUrl = `${this.s3BucketKey}/${default_extension}/${domainName}.${default_extension}?v=${version}`;
+    const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
