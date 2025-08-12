@@ -204,6 +204,42 @@ const MOCK_IMAGES = [
     is_deleted: false,
     updatedAt: new Date(),
   },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    company_uri: "https://example.com/microsoft",
+    company_name: "MICROSOFT.png",
+    image_size: 2048,
+    is_deleted: false,
+    updatedAt: new Date("2025-05-12T10:00:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[1]._id,
+    company_uri: "https://example.com/amazon",
+    company_name: "AMAZON.png",
+    image_size: 512,
+    is_deleted: true,
+    updatedAt: new Date("2025-04-18T15:30:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[3]._id,
+    company_uri: "https://example.com/apple",
+    company_name: "APPLE.png",
+    image_size: 3072,
+    is_deleted: false,
+    updatedAt: new Date("2025-02-01T08:45:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[4]._id,
+    company_uri: "https://example.com/meta",
+    company_name: "META.png",
+    image_size: 4096,
+    is_deleted: false,
+    updatedAt: new Date(),
+  },
 ];
 
 module.exports = {
