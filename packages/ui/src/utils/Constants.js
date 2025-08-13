@@ -589,7 +589,7 @@ export const DOCUMENTATION = {
     ". Our team will be happy to assist you in locating the appropriate logo. Additionally, you can refer to the provided examples for guidance. If you still require further support, our dedicated support team is available to help with any additional questions or concerns.",
   ],
   localUrl: "Base URL: http://localhost:5000/api",
-  baseStageUrl: "Base URL: https://api-stage-openlogo.fyi/api",
+  baseStageUrl: "Base URL: https://api-stage.openlogo.fyi/api",
   baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
 };
 
