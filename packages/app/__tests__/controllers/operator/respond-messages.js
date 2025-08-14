@@ -107,7 +107,7 @@ describe("RESPOND MESSAGES API", () => {
     });
   });
 
-  it("422 - Reply should only contain alphabets", async () => {
+  it("422 - Reply should only contain alphabets, comma, period., question mark?", async () => {
     const id = new mongoose.Types.ObjectId();
     const response = await request(app)
       .put(`${ENDPOINTS.MESSAGES}/${id}`)
@@ -116,7 +116,8 @@ describe("RESPOND MESSAGES API", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Reply should only contain alphabets",
+      message:
+        "Reply should only contain alphabets, comma, period., question mark?",
       statusCode: 422,
     });
   });

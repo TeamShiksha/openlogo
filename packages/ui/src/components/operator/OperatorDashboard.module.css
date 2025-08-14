@@ -130,6 +130,12 @@
   text-align: center;
 }
 
+.response-modal p {
+  margin: 0;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
 .response-field {
   display: flex;
   flex-direction: column;

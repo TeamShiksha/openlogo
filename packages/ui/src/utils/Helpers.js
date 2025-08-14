@@ -80,7 +80,7 @@ export const isSQLInjectionAttempt = (message) => {
 };
 
 export const isValidMessage = (message) => {
-  const messageRegex = /^[^!@#$%^&*(){}[\];'",.<>/?`~|0-9]*$/;
+  const messageRegex = /^[^!@#$%^&*(){}[\];'"<>/`~|0-9]*$/;
   return messageRegex.test(message);
 };
 
@@ -205,12 +205,17 @@ export const validate = (values) => {
   validateField(
     "message",
     values.message && !isValidMessage(values.message),
-    "Only letters and spaces allowed"
+    "Only letters,spaces and punctation marks(.?,) allowed"
   );
   validateField(
     "message",
     values.message && values.message.length < 20,
     "Message should be at least 20 characters"
+  );
+  validateField(
+    "message",
+    values.message && values.message.length > 500,
+    "Message should be less than 500 characters"
   );
   validateField("companyUrl", !values.companyUrl, "Company Url is required");
   validateField(

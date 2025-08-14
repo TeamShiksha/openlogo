@@ -324,6 +324,7 @@ const Operator = () => {
         customClass={styles["response-modal"]}
       >
         <h2>{modalTitle}</h2>
+        <p>{MODAL_MESSAGES.CHARACTER_LIMIT}</p>
 
         <div className={styles["response-field"]}>
           <textarea
