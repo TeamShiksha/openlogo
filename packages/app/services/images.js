@@ -32,8 +32,7 @@ class ImageServices {
       domainName = image.company_name;
     }
 
-    const version = new Date(company.updated_at).getTime();
-    const imageUrl = `${this.s3BucketKey}/${default_extension}/${domainName}?v=${version}`;
+    const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -85,11 +84,11 @@ class ImageServices {
     const uploadParams = {
       Bucket: process.env.BUCKET_NAME,
       Body: file.buffer,
-      Key: `${this.s3BucketKey}/${extension}/${imageName}`,
+      Key: `${this.s3BucketKey}/${extension}/${imageName}.${extension}`,
     };
 
     await this.s3.send(new PutObjectCommand(uploadParams));
-    return `${this.s3BucketKey}/${extension}/${imageName}`;
+    return `${this.s3BucketKey}/${extension}/${imageName}.${extension}`;
   }
 
   async createImageData(

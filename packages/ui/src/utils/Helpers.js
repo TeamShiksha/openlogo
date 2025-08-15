@@ -1,4 +1,8 @@
-import { DOCUMENTATION, PASSWORD_VALIDATION_MESSAGES } from "./Constants";
+import {
+  DOCUMENTATION,
+  PASSWORD_VALIDATION_MESSAGES,
+  CHANGE_PASSWORD,
+} from "./Constants";
 
 const PASSWORD_RULES = {
   minLength: 6,
@@ -130,6 +134,7 @@ export const observeActiveSectionOnScroll = (sectionIds, setActiveSection) => {
 
   return () => window.removeEventListener("scroll", handleScroll);
 };
+
 export const handleNavigation = (event, url, navigate, setActiveSection) => {
   event.preventDefault();
 
@@ -186,7 +191,6 @@ export const validate = (values) => {
       errors.password = passwordErrors.password;
     }
   }
-
   validateField(
     "confirmPassword",
     !values.confirmPassword,
@@ -197,27 +201,23 @@ export const validate = (values) => {
     values.confirmPassword && values.confirmPassword !== values.password,
     "Passwords do not match"
   );
-
   validateField("message", !values.message, "Message is required");
   validateField(
     "message",
     values.message && !isValidMessage(values.message),
     "Only letters and spaces allowed"
   );
-
   validateField(
     "message",
     values.message && values.message.length < 20,
     "Message should be at least 20 characters"
   );
-
   validateField("companyUrl", !values.companyUrl, "Company Url is required");
   validateField(
     "companyUrl",
     values.companyUrl && !isValidUrl(values.companyUrl),
     "This is not a valid url"
   );
-
   validateField(
     "companyDescription",
     !values.companyDescription,
@@ -228,7 +228,36 @@ export const validate = (values) => {
     values.companyDescription && values.companyDescription.length < 20,
     "Description should be at least 20 characters"
   );
+  return errors;
+};
 
+export const validateChangePassword = (values) => {
+  const errors = {};
+  if (!values.currPassword) {
+    errors.currPassword = CHANGE_PASSWORD.currRequired;
+  } else {
+    const currPasswordErrors = isValidPassword(values.currPassword);
+    if (currPasswordErrors?.password) {
+      errors.currPassword = currPasswordErrors.password;
+    }
+  }
+  if (!values.newPassword) {
+    errors.newPassword = CHANGE_PASSWORD.newRequired;
+  } else {
+    const newPasswordErrors = isValidPassword(values.newPassword);
+    if (newPasswordErrors?.password) {
+      errors.newPassword = newPasswordErrors.password;
+    }
+  }
+  if (
+    values.currPassword?.trim() &&
+    values.newPassword?.trim() &&
+    !errors.currPassword &&
+    !errors.newPassword &&
+    values.currPassword === values.newPassword
+  ) {
+    errors.newPassword = CHANGE_PASSWORD.samePassword;
+  }
   return errors;
 };
 

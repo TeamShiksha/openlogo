@@ -28,7 +28,7 @@ describe("Logo Request", () => {
     };
 
     const response = await request(app)
-      .post("/api/users/me/request")
+      .post("/api/user/request")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -49,7 +49,7 @@ describe("Logo Request", () => {
     };
 
     const response = await request(app)
-      .post("/api/users/me/request")
+      .post("/api/user/request")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -73,7 +73,7 @@ describe("Logo Request", () => {
       .mockResolvedValue(false);
 
     const response = await request(app)
-      .post("/api/users/me/request")
+      .post("/api/user/request")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -99,7 +99,7 @@ describe("Logo Request", () => {
       });
 
     const response = await request(app)
-      .post("/api/users/me/request")
+      .post("/api/user/request")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -118,7 +118,7 @@ describe("Logo Request", () => {
       .mockResolvedValue(true);
 
     const response = await request(app)
-      .post("/api/users/me/request")
+      .post("/api/user/request")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 

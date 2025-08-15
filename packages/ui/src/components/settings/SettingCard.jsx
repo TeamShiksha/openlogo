@@ -23,7 +23,7 @@ function SettingCard({ isGuest }) {
 
   const { makeRequest, errorMsg } = useApi({
     method: "DELETE",
-    url: "/users/me",
+    url: "/user/me",
     data: {
       userData,
     },
@@ -81,7 +81,9 @@ function SettingCard({ isGuest }) {
                 : "primary"
             }
             className={styles["action-button"]}
-            disabled={isGuest}
+            disabled={
+              setting.buttontitle.toLowerCase().includes("download") || isGuest
+            }
             onClick={() => handleActionItem(setting.action)}
           >
             {setting.buttontitle}

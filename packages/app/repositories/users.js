@@ -26,7 +26,10 @@ class UsersRepository extends BaseRepository {
    * @returns {Promise<number>} - Total number of users.
    */
   async getUsersCount() {
-    return await User.countDocuments();
+    return await User.countDocuments({
+      is_verified: true,
+      is_deleted: false,
+    });
   }
   /**
    *

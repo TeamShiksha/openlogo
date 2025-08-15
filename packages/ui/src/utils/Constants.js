@@ -211,6 +211,12 @@ export const PASSWORD_VALIDATION_MESSAGES = {
   generalError: "Password is not secure",
 };
 
+export const CHANGE_PASSWORD = {
+  currRequired: "Current password is required",
+  newRequired: "New password is required",
+  samePassword: "New password cannot be same as current one",
+};
+
 export const ABOUT = {
   TITLE: "What is Openlogo",
   DESCRIPTION:
@@ -688,7 +694,8 @@ export const MESSAGES = {
   IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
   IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
   NO_RESULT_FOUND: "No results found matching your query!",
-  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG, PNG, or SVG)",
+  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG or PNG)",
+  UPDATE_PASSWORD_SUCCESS: "Password updated successfully",
 };
 
 export const MODAL_MESSAGES = {

@@ -22,7 +22,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
 
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
-    url: "/users/me/api-key",
+    url: "/user/api-key",
     data: {
       key_description: description,
     },

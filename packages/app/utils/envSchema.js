@@ -21,9 +21,14 @@ const EnvSchema = Joi.object()
     ACCESS_KEY: Joi.string().required(),
     SECRET_ACCESS_KEY: Joi.string().required(),
     MONGO_URL: Joi.string().required(),
-    NODE_ENV: Joi.string().valid("dev", "test", "prod"),
+    NODE_ENV: Joi.string()
+      .valid("dev", "test", "prod")
+      .insensitive()
+      .required(),
     EMAIL_SERVICE_URL: Joi.string().optional(),
     EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
+    ADMINSEMAILS: Joi.string().required(),
+    BUCKET_KEY: Joi.string().required(),
   })
   .unknown(true);
 
