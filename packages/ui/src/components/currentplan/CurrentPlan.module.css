@@ -17,8 +17,8 @@
 
 .upgrade-button {
   max-width: 100%;
-  color: var(--black);
-  background-color: var(--white);
+  color: var(--white);
+  background-color: var(--primary);
   border-radius: var(--bradius);
   box-shadow: var(--shadow);
   border: var(--border);
