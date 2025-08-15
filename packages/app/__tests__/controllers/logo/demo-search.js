@@ -9,7 +9,7 @@ describe("GET /api/logo/demo-search", () => {
     jest.clearAllMocks();
   });
 
-  it("422 - Missing domainKey query param", async () => {
+  it("422 - Missing key query param", async () => {
     const res = await request(app).get("/api/logo/demo-search");
 
     expect(res.status).toBe(422);
@@ -20,14 +20,12 @@ describe("GET /api/logo/demo-search", () => {
     });
   });
 
-  it("404 - No companies found for domainKey", async () => {
+  it("404 - No companies found for key", async () => {
     jest
       .spyOn(ImageService.prototype, "fetchCompanyList")
       .mockResolvedValue([]);
 
-    const res = await request(app).get(
-      "/api/logo/demo-search?domainKey=unknown"
-    );
+    const res = await request(app).get("/api/logo/demo-search?key=unknown");
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
@@ -51,7 +49,7 @@ describe("GET /api/logo/demo-search", () => {
       .spyOn(ImageService.prototype, "getDataList")
       .mockResolvedValue(mockDataList);
 
-    const res = await request(app).get("/api/logo/demo-search?domainKey=Go");
+    const res = await request(app).get("/api/logo/demo-search?key=Go");
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -67,7 +65,7 @@ describe("GET /api/logo/demo-search", () => {
         throw new Error("Boom!");
       });
 
-    const res = await request(app).get("/api/logo/demo-search?domainKey=Go");
+    const res = await request(app).get("/api/logo/demo-search?key=Go");
 
     expect(res.status).toBe(500);
   });

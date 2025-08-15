@@ -16,7 +16,7 @@ const Demo = ({ openAuthModal }) => {
     method: "GET",
     url: "/logo/demo-search",
     params: {
-      domainKey: searchTerm,
+      key: searchTerm,
     },
   });
   const showResults = searchTerm.length > 1;

@@ -3114,7 +3114,7 @@
 					},
 					"response": [
 						{
-							"name": "DomainKey is Required",
+							"name": "key is Required",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -3138,7 +3138,7 @@
 									"expires": "Invalid Date"
 								}
 							],
-							"body": "{\r\n    \"message\": \"domainKey is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
+							"body": "{\r\n    \"message\": \"key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
 						{
 							"name": "API KEY is Required",
@@ -3146,7 +3146,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/search?domainKey=Google",
+									"raw": "{{openlogo_base_url}}/logo/search?key=Google",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3156,7 +3156,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										}
 									]
@@ -3179,7 +3179,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/search?domainKey=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EED",
+									"raw": "{{openlogo_base_url}}/logo/search?key=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EED",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3189,7 +3189,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										},
 										{
@@ -3216,7 +3216,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/search?domainKey=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
+									"raw": "{{openlogo_base_url}}/logo/search?key=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3226,7 +3226,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										},
 										{
@@ -3253,7 +3253,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo?domain=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
+									"raw": "{{openlogo_base_url}}/logo?key=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3262,7 +3262,7 @@
 									],
 									"query": [
 										{
-											"key": "domain",
+											"key": "key",
 											"value": "Google"
 										},
 										{
@@ -3283,7 +3283,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo?domain=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
+									"raw": "{{openlogo_base_url}}/logo?key=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3292,7 +3292,7 @@
 									],
 									"query": [
 										{
-											"key": "domain",
+											"key": "key",
 											"value": "Google"
 										},
 										{
@@ -3313,7 +3313,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo?domain=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
+									"raw": "{{openlogo_base_url}}/logo?key=Google&API_KEY=AB63AF54437B47F287D9F2600AFD3EEC",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3322,7 +3322,7 @@
 									],
 									"query": [
 										{
-											"key": "domain",
+											"key": "key",
 											"value": "Google"
 										},
 										{
@@ -3370,7 +3370,7 @@
 					},
 					"response": [
 						{
-							"name": "DomainKey Required",
+							"name": "key Required",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -3388,15 +3388,15 @@
 							"_postman_previewlanguage": null,
 							"header": null,
 							"cookie": [],
-							"body": "{\r\n    \"message\": \"domainKey is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
+							"body": "{\r\n    \"message\": \"key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
 						{
-							"name": "Empty DomainKey",
+							"name": "Empty key",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/demo-search?domainKey=",
+									"raw": "{{openlogo_base_url}}/logo/demo-search?key=",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3406,7 +3406,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": ""
 										}
 									]
@@ -3415,7 +3415,7 @@
 							"_postman_previewlanguage": null,
 							"header": null,
 							"cookie": [],
-							"body": "{\r\n    \"message\": \"\\\"domainKey\\\" is not allowed to be empty\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
+							"body": "{\r\n    \"message\": \"\\\"key\\\" is not allowed to be empty\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
 						{
 							"name": "Logo Not Found",
@@ -3423,7 +3423,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/demo-search?domainKey=Google",
+									"raw": "{{openlogo_base_url}}/logo/demo-search?key=Google",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3433,7 +3433,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										}
 									]
@@ -3450,7 +3450,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/demo-search?domainKey=Google",
+									"raw": "{{openlogo_base_url}}/logo/demo-search?key=Google",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3460,7 +3460,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										}
 									]
@@ -3477,7 +3477,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/demo-search?domainKey=Google",
+									"raw": "{{openlogo_base_url}}/logo/demo-search?key=Google",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3487,7 +3487,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										}
 									]
@@ -3504,7 +3504,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/logo/demo-search?domainKey=Google",
+									"raw": "{{openlogo_base_url}}/logo/demo-search?key=Google",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -3514,7 +3514,7 @@
 									],
 									"query": [
 										{
-											"key": "domainKey",
+											"key": "key",
 											"value": "Google"
 										}
 									]
