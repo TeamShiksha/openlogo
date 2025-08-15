@@ -205,7 +205,7 @@ export const validate = (values) => {
   validateField(
     "message",
     values.message && !isValidMessage(values.message),
-    "Only letters,spaces and punctation marks(.?,) allowed"
+    "Only letters, spaces and punctuation marks (.?,) allowed"
   );
   validateField(
     "message",
