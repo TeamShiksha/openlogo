@@ -2,6 +2,7 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
 const { Messages } = require("../../../utils/constants");
+const { MOCK_KEYS, MOCK_SUBSCRIPTION } = require("../../../utils/mocks");
 
 const {
   ImageService,
@@ -10,10 +11,35 @@ const {
 } = require("../../../services");
 
 describe("searchLogoController", () => {
+  const apiUrl = "/api/logo/search";
+
+  const wrongBaseQuery = {
+    API_KEY: "28482DNDO483ND3",
+    key: "https://google.com",
+  };
+
+  const baseQuery = {
+    API_KEY: MOCK_KEYS[1].key,
+    key: "https://google.com",
+  };
+
+  const mockSubscription = [MOCK_SUBSCRIPTION[0], MOCK_SUBSCRIPTION[1]];
+
+  function mockRepetedService(mockSubscription) {
+    const keyServiceMockResolve = MOCK_KEYS[0];
+
+    jest
+      .spyOn(KeyService.prototype, "getApiKey")
+      .mockResolvedValue({ ...keyServiceMockResolve });
+
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue(mockSubscription);
+  }
+
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "http://localhost:3000";
-    process.env.KEY = "logos";
   });
 
   beforeEach(() => {
@@ -23,38 +49,16 @@ describe("searchLogoController", () => {
   afterAll(() => {
     delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
-    delete process.env.KEY;
   });
 
-  const apiUrl = "/api/logo/search";
-
-  const wrongBaseQuery = {
-    API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa5",
-    domainKey: "google.com",
-  };
-
-  const baseQuery = {
-    API_KEY: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    domainKey: "google.com",
-  };
-
-  const keyServiceMockResolve = {
-    _id: "1234",
-    key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    key_description: "API-KEY-1",
-    subscription_id: "mockSubscriptionID@123",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  };
-
   it("should return 422 if query validation fails", async () => {
-    const response = await request(app).get(apiUrl).query({});
+    const response = await request(app).get(apiUrl).query(wrongBaseQuery);
     expect(response.status).toBe(422);
   });
 
   it("if API_KEY is invalid it should return 403", async () => {
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
-    const response = await request(app).get(apiUrl).query(wrongBaseQuery);
+    const response = await request(app).get(apiUrl).query(baseQuery);
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       message: Messages.INVALID_KEY,
@@ -64,21 +68,7 @@ describe("searchLogoController", () => {
   });
 
   it("if usage limit is reached it should return 403", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...keyServiceMockResolve,
-    });
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue({
-        _id: "1234",
-        subscription_id: "mockSubscriptionID@123",
-        usage_count: 10,
-        usage_limit: 10,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-
+    mockRepetedService(mockSubscription[1]);
     const response = await request(app).get(apiUrl).query(baseQuery);
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
@@ -89,21 +79,7 @@ describe("searchLogoController", () => {
   });
 
   it("if Company not found it should return 404", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...keyServiceMockResolve,
-    });
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue({
-        _id: "1234",
-        subscription_id: "mockSubscriptionID@123",
-        usage_count: 9,
-        usage_limit: 10,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-
+    mockRepetedService(mockSubscription[0]);
     jest
       .spyOn(ImageService.prototype, "fetchCompanyList")
       .mockResolvedValue([]);
@@ -118,25 +94,12 @@ describe("searchLogoController", () => {
   });
 
   it("if Company found it should return 200", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...keyServiceMockResolve,
-    });
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue({
-        _id: "1234",
-        subscription_id: "mockSubscriptionID@123",
-        usage_count: 9,
-        usage_limit: 10,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+    mockRepetedService(mockSubscription[0]);
 
     jest.spyOn(ImageService.prototype, "fetchCompanyList").mockResolvedValue([
       {
         _id: "1234",
-        company_name: "ABC",
+        company_name: "GOOGLE",
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },
@@ -145,9 +108,8 @@ describe("searchLogoController", () => {
     jest.spyOn(ImageService.prototype, "getDataList").mockResolvedValue([
       {
         _id: "1234",
-        company_name: "ABC",
-        image:
-          "https://images.unsplash.com/photo-1470225620780-dba8ba36b0d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+        company_name: "GOOGLE",
+        image: "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
       },
     ]);
 
@@ -163,34 +125,20 @@ describe("searchLogoController", () => {
       data: [
         {
           _id: "1234",
-          company_name: "ABC",
-          image:
-            "https://images.unsplash.com/photo-1470225620780-dba8ba36b0d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+          company_name: "GOOGLE",
+          image: "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
         },
       ],
     });
   });
 
   it("500-unexpected error", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...keyServiceMockResolve,
-    });
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue({
-        _id: "1234",
-        subscription_id: "mockSubscriptionID@123",
-        usage_count: 9,
-        usage_limit: 10,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+    mockRepetedService(mockSubscription[0]);
 
     jest.spyOn(ImageService.prototype, "fetchCompanyList").mockResolvedValue([
       {
         _id: "1234",
-        company_name: "ABC",
+        company_name: "GOOGLE",
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },
