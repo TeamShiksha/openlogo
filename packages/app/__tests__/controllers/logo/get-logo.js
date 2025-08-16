@@ -29,11 +29,6 @@ describe("getLogoController", () => {
 
   const apiUrl = "/api/logo";
 
-  const wrongBaseQuery = {
-    API_KEY: "28482DNDO483ND3",
-    key: "https://google.com",
-  };
-
   const baseQuery = {
     API_KEY: MOCK_KEYS[1].key,
     key: "https://google.com",
@@ -56,6 +51,10 @@ describe("getLogoController", () => {
   }
 
   it("should return 422 if query validation fails", async () => {
+    const wrongBaseQuery = {
+      API_KEY: "28482DNDO483ND3",
+      key: "https://google.com",
+    };
     const response = await request(app).get(apiUrl).query(wrongBaseQuery);
     expect(response.status).toBe(422);
   });
@@ -64,7 +63,6 @@ describe("getLogoController", () => {
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
 
     const response = await request(app).get(apiUrl).query(baseQuery);
-    console.log("api key invalid", response.body);
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       message: Messages.INVALID_KEY,
