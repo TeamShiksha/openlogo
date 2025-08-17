@@ -95,7 +95,7 @@ const contactUsPayloadSchema = Joi.object().keys({
       "string.max": "Message must be 500 or fewer characters",
       "any.required": "Message is required",
       "string.pattern.base":
-        "Message should only contain alphabets, comma, period, question mark.",
+        "Message should only contain alphabets, comma (,), period (.), question mark (?)",
     }),
 });
 module.exports = {
