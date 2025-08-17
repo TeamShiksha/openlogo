@@ -148,6 +148,13 @@ const MOCK_KEYS = [
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
+  {
+    user: new mongoose.Types.ObjectId(),
+    key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    key_description: "API-KEY-1",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
 ];
 
 const MOCK_ANALYTICS_DATA_INPUT = [
