@@ -51,9 +51,7 @@ async function getLogoController(req, res, next) {
       });
     }
 
-    const imageUrl = await imageService.fetchImageByCompanyFree({
-      company_name: company,
-    });
+    const imageUrl = await imageService.fetchImageByCompanyFree(company);
     await subscriptionService.incrementUsageCount(userSubscription);
     if (!imageUrl) {
       return res.status(404).json({
