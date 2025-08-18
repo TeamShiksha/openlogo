@@ -155,6 +155,30 @@
   border-color: var(--primary);
 }
 
+.response-field textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-field textarea::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb:hover {
+  background: #6c63ff;
+}
+
+.response-field textarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
+}
+
 .modal-actions {
   display: flex;
   justify-content: center;
