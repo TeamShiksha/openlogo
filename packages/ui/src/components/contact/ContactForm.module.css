@@ -28,7 +28,9 @@
   transition:
     border 0.3s ease-in-out,
     box-shadow 0.3s ease-in-out;
-  color: var(--description);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
 }
 
 .text-area::-webkit-scrollbar {
@@ -47,12 +49,6 @@
 
 .text-area::-webkit-scrollbar-thumb:hover {
   background: #6c63ff;
-}
-
-.text-area {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--white);
-  resize: none;
 }
 
 .title {

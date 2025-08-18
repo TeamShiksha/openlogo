@@ -147,7 +147,9 @@
   font-size: 1rem;
   resize: vertical;
   background-color: var(--white);
-  color: var(--description);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
 }
 
 .response-field textarea:focus {
@@ -171,12 +173,6 @@
 
 .response-field textarea::-webkit-scrollbar-thumb:hover {
   background: #6c63ff;
-}
-
-.response-field textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--white);
-  resize: none;
 }
 
 .modal-actions {
