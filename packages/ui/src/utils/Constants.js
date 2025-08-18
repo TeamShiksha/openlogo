@@ -482,7 +482,6 @@ export const LOGOREQUEST = {
   title: "Request Logo",
   initialValues: {
     companyUrl: "",
-    companyDescription: "",
   },
 };
 
