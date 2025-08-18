@@ -249,6 +249,92 @@ const MOCK_IMAGES = [
   },
 ];
 
+const MOCK_REQUESTS = [
+  {
+    _id: "123",
+    user_id: MOCK_USERS[0]._id,
+    companyUrl: "https://google.com",
+    operator_id: "op1",
+    status: "PENDING",
+    comment: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: "456",
+    user_id: MOCK_USERS[1]._id,
+    companyUrl: "https://microsoft.com",
+    operator_id: "op2",
+    status: "RESOLVED",
+    comment: "Resolved by operator",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: "789",
+    user_id: MOCK_USERS[0]._id,
+    companyUrl: "https://google.com",
+    operator_id: "op3",
+    status: "REJECTED",
+    comment: "Rejected by operator",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+const MOCK_REQUESTS_LIST = [
+  {
+    data: [MOCK_REQUESTS[0], MOCK_REQUESTS[1]],
+    total: 2,
+    page: 1,
+    limit: 10,
+  },
+];
+
+const MOCK_CONTACTUS_FORM_DATA = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "John Doe",
+    email: "johndoe@example.com",
+    message: "This is a test message",
+    status: "PENDING",
+    reply: "Pending",
+    assignedTo: "dev",
+    activityStatus: true,
+    operatorId: "123",
+    createdAt: new Date(),
+    closedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "John Doe",
+    email: "johndoe@example.com",
+    message: "This is a test message",
+    status: "REJECTED",
+    reply: "Rejected by operator",
+    assignedTo: "dev",
+    activityStatus: false,
+    operatorId: "123",
+    comment: "Rejected by operator",
+    createdAt: new Date(),
+    closedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "John Doe",
+    email: "johndoe@example.com",
+    message: "This is a test message",
+    status: "RESOLVED",
+    reply: "Resolved by operator",
+    assignedTo: "dev",
+    activityStatus: false,
+    operatorId: "123",
+    comment: "Resolved by operator",
+    createdAt: new Date(),
+    closedAt: new Date(),
+  },
+];
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -257,4 +343,7 @@ module.exports = {
   MOCK_ANALYTICS_DATA_INPUT,
   MOCK_ANALYTICS_DATA_OUTPUT,
   MOCK_IMAGES,
+  MOCK_REQUESTS,
+  MOCK_REQUESTS_LIST,
+  MOCK_CONTACTUS_FORM_DATA,
 };
