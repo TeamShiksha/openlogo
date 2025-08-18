@@ -110,20 +110,6 @@ const LogoRequestForm = ({ closeModal }) => {
             onFocus={() => setActiveFormField("companyUrl")}
             onBlur={() => setActiveFormField(null)}
           />
-          <textarea
-            name="companyDescription"
-            placeholder="Type company description here ..."
-            value={requestFormValues.companyDescription}
-            onChange={handleInputChange}
-            className={styles["logo-form-textarea"]}
-            onFocus={() => setActiveFormField("companyDescription")}
-            onBlur={() => setActiveFormField(null)}
-          ></textarea>
-          <p
-            className={`${styles["input-error"]} ${requestFormErrors.companyDescription ? styles["has-error"] : ""}`}
-          >
-            {requestFormErrors.companyDescription}
-          </p>
         </div>
         <Button
           type="submit"
