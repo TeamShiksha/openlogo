@@ -44,7 +44,7 @@ describe("ContactUsService", () => {
   const formData = { name, email, message };
   const formId = _id;
 
-  it("should return true if request exists ", async () => {
+  it("should return true if request exists", async () => {
     findByEmailAndStatusMock.mockResolvedValue({
       email,
       status: StatusTypes.PENDING,

@@ -88,59 +88,59 @@ describe("RequestService", () => {
     expect(result).toBeTruthy();
   });
 
-  it("throw error if request creation fails", async () => {
+  it("Should throw an error if request creation fails", async () => {
     mockCreate.mockRejectedValue(new Error("Request creation failed"));
 
     const result = requestService.createRaiseRequest(formData);
     await expect(result).rejects.toThrow("Request creation failed");
   });
 
-  it("returns newRaiseRequest if request creation is successful", async () => {
+  it("Returns newRaiseRequest if request creation is successful", async () => {
     mockCreate.mockResolvedValue(request);
 
     const result = await requestService.createRaiseRequest(formData);
     expect(result).toEqual(request);
   });
 
-  it("should return the total number of requests", async () => {
+  it("Should return the total number of requests", async () => {
     mockGetRequestsCount.mockResolvedValue(5);
     const result = await requestService.getRequestsCount();
     expect(result).toEqual(5);
   });
 
-  it("should return null if no request exists ", async () => {
+  it("Should return null if no request exists ", async () => {
     mockGetAll.mockResolvedValue(null);
 
     const result = await requestService.getPaginatedRequests(1, 10);
     expect(result).toEqual(null);
   });
 
-  it("should return the list of requests", async () => {
+  it("Should return the list of requests", async () => {
     const requests = MOCK_REQUESTS_LIST[0];
     mockGetAll.mockResolvedValue(requests);
     const result = await requestService.getPaginatedRequests(1, 10);
     expect(result).toEqual(requests);
   });
 
-  it("should return the total number of resolved requests", async () => {
+  it("Should return the total number of resolved requests", async () => {
     mockGetHitsCount.mockResolvedValue(5);
     const result = await requestService.getHitsCount();
     expect(result).toEqual(5);
   });
 
-  it("should return null if no request exists", async () => {
+  it("Should return null if no request exists", async () => {
     mockGetById.mockResolvedValue(null);
     const result = await requestService.getRequestById(userId);
     expect(result).toEqual(null);
   });
 
-  it("should return the request", async () => {
+  it("Should return the request", async () => {
     mockGetById.mockResolvedValue(request);
     const result = await requestService.getRequestById(userId);
     expect(result).toEqual(request);
   });
 
-  it("should return alreadyProcessed: true if request is already resolved", async () => {
+  it("Should return alreadyProcessed: true if request is already resolved", async () => {
     const { _id, user_id, status, operator_id, comment } = MOCK_REQUESTS[1];
     const mockRequest = { _id, user_id, status };
     const requestData = { _id, operator_id, status, comment };
@@ -149,7 +149,7 @@ describe("RequestService", () => {
     expect(result).toEqual({ alreadyProcessed: true });
   });
 
-  it("should return alreadyProcessed: true if request is already rejected", async () => {
+  it("Should return alreadyProcessed: true if request is already rejected", async () => {
     const { _id, user_id, status, operator_id, comment } = MOCK_REQUESTS[2];
     const mockRequest = { _id, user_id, status };
     const requestData = { _id, operator_id, status, comment };
@@ -158,7 +158,7 @@ describe("RequestService", () => {
     expect(result).toEqual({ alreadyProcessed: true });
   });
 
-  it("should return the updated request", async () => {
+  it("Should return the updated request", async () => {
     const { _id, operator_id, status, comment } = request;
     const updatedRequest = { _id, operator: operator_id, status, comment };
     mockGetById.mockResolvedValue(request);
@@ -167,7 +167,7 @@ describe("RequestService", () => {
     expect(result).toEqual(updatedRequest);
   });
 
-  it("should throw error if modifiedCount is 0", async () => {
+  it("Should throw error if modifiedCount is 0", async () => {
     const { _id, operator_id, status, comment } = request;
     const responseData = { _id, operator: operator_id, status, comment };
     mockGetById.mockResolvedValue(request);
