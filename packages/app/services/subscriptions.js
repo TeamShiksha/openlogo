@@ -9,7 +9,7 @@ class SubscriptionService {
   /**
    * Gets Subscription by Id.
    * @param {string} subscriptionId - The subscription_id of the user.
-   * @returns {Object} - Subscription Object.
+   * @returns {Promise<Object>} - Subscription Object.
    */
   async getSubscription(subscriptionId) {
     return await this.subscriptionRepository.getById(subscriptionId);
@@ -17,7 +17,7 @@ class SubscriptionService {
 
   /**
    * Create a new Default Subscription Plan for User.
-   * @returns {Object} - Subscription Object.
+   * @returns {Promise<Object>} - Subscription Object.
    */
   async createSubscription() {
     return await this.subscriptionRepository.create(DefaultSubscriptionPlan);
