@@ -81,7 +81,9 @@ function SettingCard({ isGuest }) {
                 : "primary"
             }
             className={styles["action-button"]}
-            disabled={isGuest}
+            disabled={
+              setting.buttontitle.toLowerCase().includes("download") || isGuest
+            }
             onClick={() => handleActionItem(setting.action)}
           >
             {setting.buttontitle}
