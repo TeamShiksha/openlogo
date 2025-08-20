@@ -133,7 +133,7 @@
 .response-field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0rem;
   width: 100%;
 }
 
@@ -148,6 +148,7 @@
   resize: vertical;
   background-color: var(--white);
   color: var(--description);
+  gap: 0rem;
 }
 
 .response-field textarea:focus {
@@ -158,7 +159,8 @@
 .character-limit p {
   margin: 0;
   font-size: 0.88rem;
-  padding-right: 1.75rem;
+  padding-right: 2.0rem;
+  padding-top: 0.50rem;
   text-align: right;
   color: var(--description);
 }
@@ -170,8 +172,9 @@
 }
 
 .error-container {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
+  padding-left: 4%;
 }
 
 @media (max-width: 768px) {
