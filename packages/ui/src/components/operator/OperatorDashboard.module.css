@@ -159,7 +159,8 @@
 .character-limit p {
   margin: 0;
   font-size: 0.88rem;
-  padding-right: 2.0rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
   padding-top: 0.50rem;
   text-align: right;
   color: var(--description);
