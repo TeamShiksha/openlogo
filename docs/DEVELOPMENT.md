@@ -69,13 +69,25 @@ For local development, you can use Docker Compose to run the backend, frontend, 
 This will start:
 - MongoDB (default port 27017)
 - Backend (default port 5000)
-- Frontend (default port 3000)
+- Frontend (default port 8080)
 
 You can customize ports and environment variables in the `docker-compose.yml` and `.env` files as needed.
 
 To stop the services, press `Ctrl+C` and run:
 ```sh
 docker compose down
+```
+## Hostname mapping
+To ensure parity with production and staging environment it is better to have hostname mapping.
+
+For POSIX systems, append this in your `/etc/hosts`. Make sure you have sudo priveleges while modifying the file
+```sh
+127.0.0.1  local.openlogo.fyi
+```
+
+For windows, modify `\etc\hosts` file located inside `System32\drivers` folder and append
+```sh
+127.0.0.1  local.openlogo.fyi
 ```
 
 ## Postman API Collection

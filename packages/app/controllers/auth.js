@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages, getIsProduction } = require("../utils/constants");
+const { Messages } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -89,6 +89,10 @@ async function signupController(req, res, next) {
  * This controller validates the sign-in payload, checks if the email exists,
  * verifies the user's email status, and compares the provided password with
  * the stored one. Set sets a JWT cookie and returns a successful response.
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} res
  */
 async function signinController(req, res, next) {
   try {
@@ -132,21 +136,17 @@ async function signinController(req, res, next) {
     const oneDayValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
-    let cookieOptions = {
+
+    /** @type {import("express").CookieOptions}  */
+    const cookieOptions = {
       expires: oneDayValidityTimestamp,
-      sameSite: "none",
-      secure: true,
+      sameSite: "strict",
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    const isProduction = getIsProduction();
-    if (!isProduction) {
-      cookieOptions = {
-        ...cookieOptions,
-        domain: "localhost",
-      };
-    }
+
     res.cookie("jwt", user.generateJWT(), cookieOptions);
+
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
@@ -155,6 +155,10 @@ async function signinController(req, res, next) {
 /**
  * This controller clears the JWT cookie from the user's browser.
  * It checks if a JWT cookie is present; if not, it returns a 400 error.
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} res
  */
 function signoutController(req, res, next) {
   try {
@@ -166,20 +170,16 @@ function signoutController(req, res, next) {
         statusCode: 400,
       });
     }
-    let cookieOptions = {
-      sameSite: "none",
-      secure: true,
+
+    /** @type {import("express").CookieOptions}  */
+    const cookieOptions = {
+      sameSite: "strict",
       httpOnly: true,
       domain: ".openlogo.fyi",
     };
-    const isProduction = getIsProduction();
-    if (!isProduction) {
-      cookieOptions = {
-        ...cookieOptions,
-        domain: "localhost",
-      };
-    }
+
     res.clearCookie("jwt", cookieOptions);
+
     return res.status(205).send();
   } catch (err) {
     next(err);
