@@ -143,12 +143,15 @@
   margin: 0 auto;
   border: 1px solid var(--border-color);
   border-radius: var(--bradius);
+  color: var(--description);
   font-family: inherit;
   font-size: 1rem;
-  resize: vertical;
   background-color: var(--white);
   color: var(--description);
   gap: 0rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
 }
 
 .response-field textarea:focus {
@@ -156,15 +159,31 @@
   border-color: var(--primary);
 }
 
+.response-field textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-field textarea::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
 .character-limit p {
   margin: 0;
   font-size: 0.88rem;
   padding-right: 2rem;
   padding-top: 0.5rem;
-  padding-top: 0.50rem;
   text-align: right;
-  color: var(--description);
-}
+  color: var(--descripti
 
 .modal-actions {
   display: flex;

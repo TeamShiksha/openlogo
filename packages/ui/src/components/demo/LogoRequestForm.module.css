@@ -18,27 +18,6 @@
   align-items: flex-start;
 }
 
-.logo-form-textarea {
-  width: 100%;
-  height: 100px;
-  min-height: 100px;
-  max-height: 250px;
-  padding: 12px;
-  font-size: 1rem;
-  font-family: inherit;
-  background-color: var(--white);
-  border: var(--border);
-  margin-bottom: 8px;
-  border-radius: var(--bradius);
-  outline: none;
-  resize: vertical;
-  line-height: 1.5;
-  transition:
-    border 0.3s ease-in-out,
-    box-shadow 0.3s ease-in-out;
-  color: var(--description);
-}
-
 .input-error {
   color: var(--error);
   font-size: 0.8rem;
@@ -58,16 +37,4 @@
   opacity: 1;
   max-height: 50px;
   padding: 1px;
-}
-
-.logo-form-textarea::placeholder {
-  color: var(--label-color);
-}
-
-.logo-form-textarea:focus::placeholder {
-  color: var(--primary);
-}
-
-.logo-form-textarea:focus {
-  border-color: var(--primary);
 }
