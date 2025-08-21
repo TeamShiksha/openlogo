@@ -4,7 +4,7 @@ import CustomInput from "../common/input/CustomInput";
 import Modal from "../common/modal/Modal";
 import Button from "../common/button/Button";
 import styles from "./ContactForm.module.css";
-import { BUTTON_TEXT, CONTACT } from "../../utils/Constants";
+import { BUTTON_TEXT, CONTACT, MODAL_MESSAGES } from "../../utils/Constants";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
@@ -128,6 +128,13 @@ function ContactForm({ closeModal }) {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           ></textarea>
+          <div className={styles["character-limit"]}>
+            <p>
+              {`[${formValues.message.length}/` +
+                MODAL_MESSAGES.CHARACTER_LIMIT +
+                `]`}
+            </p>
+          </div>
           <div>
             <p
               className={`${styles["input-error"]} ${formErrors.message ? styles["has-error"] : ""}`}
