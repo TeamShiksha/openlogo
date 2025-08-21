@@ -15,24 +15,26 @@ class ImageServices {
   }
 
   /**
-   * Fetches image cloudfronturl based on company name
-   * @param {string} company company name
-   * @returns {string} - Image Cloudfront URL
-   **/
-
+   * Fetch the CloudFront image URL for a given company.
+   *
+   * @param {string} companyName - The name of the company for which to fetch the image.
+   * @param {string} [imageExtension="png"] - The image file extension (e.g., "png", "jpg"), default is "png".
+   * @param {boolean} [checkDb=true] - Whether to check the database for image existence before returning the URL, default is true.
+   * @returns {Promise<string|null>} A promise that resolves to the CloudFront URL of the image, or `null` if it does not exist in the database.
+   */
   async fetchImageByCompanyFree(
-    company,
-    default_extension = "png",
+    companyName,
+    imageExtension = "png",
     checkDb = true
   ) {
-    let domainName = company.company_name;
+    let domainName = companyName;
     if (checkDb) {
       const image = await this.imageRepository.fetchImage(domainName);
       if (!image) return null;
       domainName = image.company_name;
     }
 
-    const imageUrl = `${default_extension}/${domainName}.${default_extension}`;
+    const imageUrl = `${imageExtension}/${domainName}.${imageExtension}`;
     const cloudFrontUrl =
       await this.imageRepository.fetchCloudFrontURL(imageUrl);
     return cloudFrontUrl;
@@ -59,7 +61,7 @@ class ImageServices {
     const results = await Promise.allSettled(
       companyList.map(async (company) => {
         const signedUrl = await this.fetchImageByCompanyFree(
-          company,
+          company?.company_name,
           company?.extension,
           false
         );

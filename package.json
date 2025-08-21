@@ -11,7 +11,7 @@
     "coverage": "pnpm --parallel --filter ui --filter app coverage",
     "lint": "pnpm --parallel --filter ui --filter app lint",
     "check": "pnpm --filter ui check && pnpm --filter app check",
-    "format": "pnpm --filter ui format && pnpm --filter app format",
+    "format": "pnpm --parallel --filter ui --filter app format",
     "lint:fix": "pnpm --filter ui \"lint:fix\" && pnpm --filter app \"lint:fix\"",
     "prepare": "husky"
   },
