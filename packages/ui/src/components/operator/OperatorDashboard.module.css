@@ -192,9 +192,10 @@
 }
 
 .error-container {
-  width: 85%;
+  width: 95%;
   margin: 0 auto;
-  padding-left: 4%;
+  padding-left: 1.1rem;
+  padding-right: 1.1rem;
 }
 
 @media (max-width: 768px) {
