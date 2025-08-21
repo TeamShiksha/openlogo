@@ -104,7 +104,7 @@ describe("ContactUsService", () => {
 
   it("should return the updated form", async () => {
     const { _id, comment, status, operatorId, reply, closedAt } =
-      MOCK_CONTACTUS_FORM_DATA[2];
+      MOCK_CONTACTUS_FORM_DATA[0];
     const updatedForm = {
       _id,
       comment,
@@ -113,7 +113,7 @@ describe("ContactUsService", () => {
       closedAt,
     };
     const requestData = { formId: _id, reply, status, operatorId };
-    getByIdMock.mockResolvedValue(status);
+    getByIdMock.mockResolvedValue({ status });
     updateFormStatusMock.mockResolvedValue(updatedForm);
     const result = await contactUsService.updateForm(requestData);
     expect(result).toEqual(updatedForm);

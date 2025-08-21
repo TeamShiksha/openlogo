@@ -160,16 +160,26 @@ describe("RequestService", () => {
 
   it("Should return the updated request", async () => {
     const { _id, operator_id, status, comment } = request;
-    const updatedRequest = { _id, operator: operator_id, status, comment };
+    const updatedRequest = {
+      operator_id,
+      status,
+      comment,
+      closedAt: new Date(),
+    };
     mockGetById.mockResolvedValue(request);
     mockUpdateRequestStatus.mockResolvedValue(updatedRequest);
-    const result = await requestService.respondToRequest(updatedRequest);
+    const result = await requestService.respondToRequest({
+      _id,
+      operator_id,
+      status,
+      comment,
+    });
     expect(result).toEqual(updatedRequest);
   });
 
   it("Should throw error if modifiedCount is 0", async () => {
     const { _id, operator_id, status, comment } = request;
-    const responseData = { _id, operator: operator_id, status, comment };
+    const responseData = { _id, operator_id, status, comment };
     mockGetById.mockResolvedValue(request);
     mockUpdateRequestStatus.mockResolvedValue({ modifiedCount: 0 });
     await expect(requestService.respondToRequest(responseData)).rejects.toThrow(
