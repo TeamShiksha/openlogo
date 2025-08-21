@@ -54,24 +54,6 @@
   resize: none;
 }
 
-.text-area::-webkit-scrollbar {
-  width: 8px;
-}
-
-.text-area::-webkit-scrollbar-track {
-  background: var(--white);
-  border-radius: 4px;
-}
-
-.text-area::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
-}
-
-.text-area::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
-}
-
 .title {
   font-size: 2rem;
   color: var(--black);
