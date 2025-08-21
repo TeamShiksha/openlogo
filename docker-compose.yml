@@ -22,7 +22,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ./packages/app/.env
+      - ./packages/app/.env.docker
     depends_on:
       - mongodb
     networks:
@@ -32,6 +32,8 @@ services:
     build:
       context: ./packages/ui
       dockerfile: Dockerfile
+      args:
+        VITE_BASE_URL: http://local.openlogo.fyi:5000
     container_name: openlogo-react
     restart: always
     ports:

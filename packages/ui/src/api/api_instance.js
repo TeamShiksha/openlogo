@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const VITE_BASE_URL = "https://api-stage.openlogo.fyi";
+const VITE_BASE_URL = process.env.VITE_BASE_URL;
 
 export const instance = axios.create({
   baseURL: `${VITE_BASE_URL}/api`,
