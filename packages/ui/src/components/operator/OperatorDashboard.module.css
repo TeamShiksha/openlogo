@@ -134,6 +134,7 @@
   display: flex;
   flex-direction: column;
   gap: 0rem;
+  gap: 0rem;
   width: 100%;
 }
 
@@ -183,7 +184,35 @@
   padding-right: 2rem;
   padding-top: 0.5rem;
   text-align: right;
-  color: var(--descripti
+  color: var(--description);
+}
+
+.response-field textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-field textarea::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.response-field textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+.character-limit p {
+  margin: 0;
+  font-size: 0.88rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
+  text-align: right;
+  color: var(--description);
+}
 
 .modal-actions {
   display: flex;

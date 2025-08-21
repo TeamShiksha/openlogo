@@ -49,8 +49,27 @@
 
 .text-area::-webkit-scrollbar-thumb:hover {
   background: var(--primary-hover);
-  color: var(--description);
-  gap: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
+}
+
+.text-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.text-area::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 4px;
+}
+
+.text-area::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.text-area::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
 .title {

@@ -324,7 +324,6 @@ const Operator = () => {
         customClass={styles["response-modal"]}
       >
         <h2>{modalTitle}</h2>
-      
 
         <div className={styles["response-field"]}>
           <textarea
@@ -342,7 +341,13 @@ const Operator = () => {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           />
-          <div className={styles["character-limit"]}><p>{`[${responseText.length}/`+ MODAL_MESSAGES.CHARACTER_LIMIT+`]`}</p></div>
+          <div className={styles["character-limit"]}>
+            <p>
+              {`[${responseText.length}/` +
+                MODAL_MESSAGES.CHARACTER_LIMIT +
+                `]`}
+            </p>
+          </div>
           <div
             className={`${styles["error-container"]} ${formErrors.message ? "has-error" : ""}`}
           >
