@@ -46,7 +46,7 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
       "string.max": "Reply must be 500 or fewer characters",
       "any.required": "Reply is required",
       "string.pattern.base":
-        "Reply should only contain alphabets, comma, period., question mark?",
+        "Message should only contain alphabets, comma (,), period (.), question mark (?)",
     }),
   status: Joi.string()
     .valid(...Object.values(StatusTypes))
