@@ -44,6 +44,7 @@ const DefaultSubscriptionPlan = {
 };
 
 const Messages = {
+  INVALID_USER_ID: "Invalid user id.",
   EMAIL_EXISTS: "Email already exists.",
   EMAIL_DOESNT_EXISTS: "Email doesn't exists.",
   USER_NOT_FOUND: "User not found.",
@@ -79,6 +80,7 @@ const Messages = {
   EMAIL_REQUIRED: "Email is required",
   NAME_REQUIRED: "Name is required",
   INVALID_EMAIL: "Invalid email",
+  UNSUPPORTED_ROLE: "Only admin and operator roles are allowed",
   FORM_SUBMITTED: "Form submitted, our team will get in touch shortly",
   FETCH_ALL_REQUESTS: "Fetched all logo requests",
   LOGO_REQUEST_NOT_FOUND: "Logo request not found",

@@ -165,6 +165,9 @@ class UserService {
    */
   async updateUserToAdmin(email) {
     const user = await this.getUserByEmail(email);
+    if (!user) {
+      return false;
+    }
     const updatedData = {
       role: UserType.ADMIN,
     };
