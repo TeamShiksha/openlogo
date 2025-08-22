@@ -73,24 +73,18 @@
 }
 
 .character-limit p {
-  font-size: 1rem;
+  font-size: 0.75rem;
   padding-right: 0;
-  margin-top: -1rem;
-  padding-top: 0.5rem;
-  padding-bottom: -1rem;
-  margin-bottom: 1rem;
+  margin-top: -8px;
   text-align: right;
   color: var(--description);
 }
 
 .input-error {
   color: var(--error);
-  font-size: 0.8rem;
-  margin-top: -9px;
-  margin-bottom: 9px;
-  margin-left: 3px;
+  font-size: 0.75rem;
   opacity: 0;
-  max-height: 1px;
+  margin-bottom: 8px;
   width: 100%;
   transition:
     opacity 0.2s ease-in-out 0.3s,
