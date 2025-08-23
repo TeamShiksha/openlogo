@@ -341,6 +341,13 @@ const Operator = () => {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           />
+          <div className={styles["character-limit"]}>
+            <p>
+              {`[${responseText.length}/` +
+                MODAL_MESSAGES.CHARACTER_LIMIT +
+                `]`}
+            </p>
+          </div>
           <div
             className={`${styles["error-container"]} ${formErrors.message ? "has-error" : ""}`}
           >

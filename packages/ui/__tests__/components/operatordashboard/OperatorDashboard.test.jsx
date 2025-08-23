@@ -167,7 +167,7 @@ describe("Operator Page", () => {
     });
 
     const validTestText =
-      "This is a valid test response that doest exceeds limit of characters";
+      "This is a valid test response that doest exceeds, limit of characters.?";
 
     fireEvent.click(screen.getByText(BUTTON_TEXT.respond));
 

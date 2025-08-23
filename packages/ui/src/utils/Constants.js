@@ -700,6 +700,7 @@ export const MESSAGES = {
 export const MODAL_MESSAGES = {
   RESPOND: "Type your response here...",
   REJECT: "Reason for rejection...",
+  CHARACTER_LIMIT: "500",
 };
 
 export const MOCK_OPERATOR_CARD_DATA = {
