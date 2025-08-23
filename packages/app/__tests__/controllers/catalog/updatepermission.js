@@ -63,6 +63,9 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+    jest
       .spyOn(UserService.prototype, "updateUserToAdmin")
       .mockResolvedValue(false);
 
@@ -86,6 +89,9 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+    jest
       .spyOn(UserService.prototype, "updateUserToAdmin")
       .mockResolvedValue(mockUpdateUser);
 
@@ -106,6 +112,9 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
     jest
       .spyOn(UserService.prototype, "updateUserToAdmin")
       .mockImplementation(() => {

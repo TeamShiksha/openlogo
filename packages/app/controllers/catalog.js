@@ -12,7 +12,9 @@ const { companyUriSchema } = require("../schemas/catalog");
 const {
   Messages,
   ExtractCompanyNameFromUrlRegex,
+  UserType,
 } = require("../utils/constants");
+const { default: mongoose } = require("mongoose");
 
 async function getAnalyticsController(req, res, next) {
   try {
@@ -62,6 +64,8 @@ async function addPermissionController(req, res, next) {
   try {
     const userService = new UserService();
     const email = req.body.email;
+    const { userId, role } = req.params;
+
     const { error } = addAdminSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -70,7 +74,31 @@ async function addPermissionController(req, res, next) {
         error: STATUS_CODES[422],
       });
     }
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: Messages.INVALID_USER_ID,
+        error: STATUS_CODES[400],
+      });
+    }
 
+    const validRole = [UserType.ADMIN, UserType.OPERATOR];
+    if (!validRole.includes(role.toUpperCase())) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: Messages.UNSUPPORTED_ROLE,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const user = await userService.getUser(userId);
+    if (user == null) {
+      return res.status(404).json({
+        statusCode: 404,
+        message: Messages.USER_NOT_FOUND,
+        error: STATUS_CODES[404],
+      });
+    }
     const response = await userService.updateUserToAdmin(email);
     if (!response) {
       return res.status(404).json({
