@@ -14,7 +14,7 @@ function ContactForm({ closeModal }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const { makeRequest, loading, data, errorMsg } = useApi({
+  const { makeRequest, data, loading, errorMsg } = useApi({
     url: `/messages/contact-us`,
     method: "POST",
     data: formValues,
@@ -146,9 +146,10 @@ function ContactForm({ closeModal }) {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || loading}
+          disabled={!isFormValid}
+          isLoading={loading}
         >
-          {loading ? "Sending" : BUTTON_TEXT.sendMessage}
+          {BUTTON_TEXT.sendMessage}
         </Button>
       </form>
     </Modal>

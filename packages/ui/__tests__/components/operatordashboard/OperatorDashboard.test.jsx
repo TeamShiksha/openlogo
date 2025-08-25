@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  within,
+} from "@testing-library/react";
 import OperatorDashboard from "../../../src/components/operator/OperatorDashboard";
 import { instance as apiInstance } from "../../../src/api/api_instance";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
@@ -184,7 +190,14 @@ describe("Operator Page", () => {
         value: validTestText,
       },
     });
-    fireEvent.click(screen.getByText(BUTTON_TEXT.sendResponse));
+    const sendBtn = screen.getByRole("button", {
+      name: BUTTON_TEXT.sendResponse,
+    });
+    fireEvent.click(sendBtn);
+    await waitFor(() => {
+      expect(sendBtn).toBeDisabled();
+      expect(within(sendBtn).getByTestId("spinner")).toBeInTheDocument();
+    });
     await waitFor(() => {
       expect(apiInstance.put).toHaveBeenNthCalledWith(1, "/messages/1", {
         reply: validTestText,
@@ -212,7 +225,14 @@ describe("Operator Page", () => {
         value: validTestText,
       },
     });
-    fireEvent.click(screen.getByText(BUTTON_TEXT.confirmRejection));
+    const confirmBtn = screen.getByRole("button", {
+      name: BUTTON_TEXT.confirmRejection,
+    });
+    fireEvent.click(confirmBtn);
+    await waitFor(() => {
+      expect(confirmBtn).toBeDisabled();
+      expect(within(confirmBtn).getByTestId("spinner")).toBeInTheDocument();
+    });
     await waitFor(() => {
       expect(apiInstance.put).toHaveBeenNthCalledWith(2, "/messages/1", {
         reply: validTestText,

@@ -89,9 +89,6 @@ function UserInfo({ name, email, isGuest }) {
 
   return (
     <form className={styles["user-info-input-group"]}>
-      <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
-        <p className="input-error">{errorMsg}</p>
-      </div>
       {USER_INFO_FIELDS.map((field) => (
         <CustomInput
           key={field.name}

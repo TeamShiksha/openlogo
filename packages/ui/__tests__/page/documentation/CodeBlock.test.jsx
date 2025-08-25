@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CodeBlock from "../../../src/page/documentation/CodeBlock";
 import { CODEBLOCK } from "../../../src/utils/Constants";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
 const mockCodeExamples = {
   javascript: "console.log('Hello, JavaScript!');",
@@ -9,9 +11,25 @@ const mockCodeExamples = {
   java: "System.out.println('Hello, Java!');",
 };
 
+const Harness = ({ initial = "javascript" }) => {
+  const [lang, setLang] = useState(initial);
+  return (
+    <CodeBlock
+      id="test"
+      codeExamples={mockCodeExamples}
+      selectedLanguage={lang}
+      setSelectedLanguage={setLang}
+    />
+  );
+};
+
+Harness.propTypes = {
+  initial: PropTypes.string,
+};
+
 describe("CodeBlock component", () => {
   it("Defaults to JavaScript on initial render", () => {
-    render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
+    render(<Harness />);
 
     const javascriptCode = screen.getByText(mockCodeExamples.javascript);
     expect(javascriptCode).toBeInTheDocument();
@@ -19,7 +37,14 @@ describe("CodeBlock component", () => {
 
   it("Copies code to clipboard on button click, change icon", async () => {
     const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
-    render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
+    render(
+      <CodeBlock
+        id="test"
+        codeExamples={mockCodeExamples}
+        selectedLanguage="javascript"
+        setSelectedLanguage={vi.fn()}
+      />
+    );
 
     const copyButton = screen.getByRole("img", { name: /tick-copy-code/i });
     expect(copyButton.src).toContain(CODEBLOCK.copycodeicon);
@@ -32,7 +57,7 @@ describe("CodeBlock component", () => {
   });
 
   it("Changes displayed code when clicking on language icon", () => {
-    render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
+    render(<Harness />);
 
     const pythonButton = screen.getByRole("button", { name: /python logo/i });
     fireEvent.click(pythonButton);
@@ -46,7 +71,14 @@ describe("CodeBlock component", () => {
   });
 
   it("Renders buttons for all available languages", () => {
-    render(<CodeBlock id="test" codeExamples={mockCodeExamples} />);
+    render(
+      <CodeBlock
+        id="test"
+        codeExamples={mockCodeExamples}
+        selectedLanguage="javascript"
+        setSelectedLanguage={vi.fn()}
+      />
+    );
 
     Object.keys(mockCodeExamples).forEach((lang) => {
       const button = screen.getByRole("button", {
