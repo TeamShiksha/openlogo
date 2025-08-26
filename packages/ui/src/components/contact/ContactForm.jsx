@@ -23,8 +23,12 @@ function ContactForm({ closeModal }) {
   const toast = useToast();
 
   useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
+    if (errorMsg || data?.message) {
+      if (errorMsg) {
+        toast.error(errorMsg);
+      } else if (data?.message) {
+        toast.success(data.message);
+      }
       const timeout = setTimeout(() => {
         setFormErrors({});
         setFocusedField(null);
@@ -33,20 +37,7 @@ function ContactForm({ closeModal }) {
       }, 500);
       return () => clearTimeout(timeout);
     }
-  }, [errorMsg, toast, closeModal]);
-
-  useEffect(() => {
-    if (data?.message) {
-      toast.success(data.message);
-      const timeout = setTimeout(() => {
-        setFormErrors({});
-        setFocusedField(null);
-        setFormValues(CONTACT.initialValues);
-        closeModal();
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [data, toast, closeModal]);
+  }, [errorMsg, data, toast, closeModal]);
 
   useEffect(() => {
     if (!focusedField) {

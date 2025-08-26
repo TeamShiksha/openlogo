@@ -122,6 +122,7 @@
   font-size: 1rem;
 }
 
+.message,
 .summary {
   color: var(--black);
   word-break: break-all;

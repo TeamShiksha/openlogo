@@ -74,7 +74,7 @@ describe("PUT : /api/requests/:requestId", () => {
       statusCode: 422,
     });
   });
-  it("422 - Comment must be 500 or fewer characters", async () => {
+  it("422 - Comment must be 100 or fewer characters", async () => {
     const dummyRequestId = new mongoose.Types.ObjectId();
     const response = await request(app)
       .put(`${ENDPOINTS.REQUESTS}/${dummyRequestId}`)
@@ -86,7 +86,7 @@ describe("PUT : /api/requests/:requestId", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error: STATUS_CODES[422],
-      message: "Comment must be 500 or fewer characters",
+      message: "Comment must be 100 or fewer characters",
       statusCode: 422,
     });
   });

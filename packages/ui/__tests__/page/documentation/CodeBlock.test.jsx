@@ -11,7 +11,7 @@ const mockCodeExamples = {
   java: "System.out.println('Hello, Java!');",
 };
 
-const Harness = ({ initial = "javascript" }) => {
+const CodeBlockTestComponent = ({ initial = "javascript" }) => {
   const [lang, setLang] = useState(initial);
   return (
     <CodeBlock
@@ -23,13 +23,13 @@ const Harness = ({ initial = "javascript" }) => {
   );
 };
 
-Harness.propTypes = {
+CodeBlockTestComponent.propTypes = {
   initial: PropTypes.string,
 };
 
 describe("CodeBlock component", () => {
   it("Defaults to JavaScript on initial render", () => {
-    render(<Harness />);
+    render(<CodeBlockTestComponent />);
 
     const javascriptCode = screen.getByText(mockCodeExamples.javascript);
     expect(javascriptCode).toBeInTheDocument();
@@ -37,14 +37,7 @@ describe("CodeBlock component", () => {
 
   it("Copies code to clipboard on button click, change icon", async () => {
     const clipboardSpy = vi.spyOn(navigator.clipboard, "writeText");
-    render(
-      <CodeBlock
-        id="test"
-        codeExamples={mockCodeExamples}
-        selectedLanguage="javascript"
-        setSelectedLanguage={vi.fn()}
-      />
-    );
+    render(<CodeBlockTestComponent />);
 
     const copyButton = screen.getByRole("img", { name: /tick-copy-code/i });
     expect(copyButton.src).toContain(CODEBLOCK.copycodeicon);
@@ -57,7 +50,7 @@ describe("CodeBlock component", () => {
   });
 
   it("Changes displayed code when clicking on language icon", () => {
-    render(<Harness />);
+    render(<CodeBlockTestComponent />);
 
     const pythonButton = screen.getByRole("button", { name: /python logo/i });
     fireEvent.click(pythonButton);
@@ -71,14 +64,7 @@ describe("CodeBlock component", () => {
   });
 
   it("Renders buttons for all available languages", () => {
-    render(
-      <CodeBlock
-        id="test"
-        codeExamples={mockCodeExamples}
-        selectedLanguage="javascript"
-        setSelectedLanguage={vi.fn()}
-      />
-    );
+    render(<CodeBlockTestComponent />);
 
     Object.keys(mockCodeExamples).forEach((lang) => {
       const button = screen.getByRole("button", {
