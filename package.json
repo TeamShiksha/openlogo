@@ -1,7 +1,7 @@
 {
   "name": "openlogo",
   "private": true,
-  "version": "2.0.0",
+  "version": "0.3.0",
   "repository": "https://github.com/TeamShiksha/openlogo.git",
   "scripts": {
     "build": "pnpm --filter ui build && pnpm --filter app build",
