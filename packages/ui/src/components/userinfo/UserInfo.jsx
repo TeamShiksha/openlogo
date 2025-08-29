@@ -6,6 +6,7 @@ import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
+import { validate } from "../../utils/Helpers";
 
 function UserInfo({ name, email, isGuest }) {
   const toast = useToast();
@@ -32,28 +33,23 @@ function UserInfo({ name, email, isGuest }) {
     if (errorMsg) toast.error(errorMsg);
   }, [errorMsg, toast]);
 
-  const validate = (values) => {
-    const errors = {};
-
-    if (!values.name) {
-      errors.name = "Name is required!";
-    }
-    return errors;
-  };
-
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
-
+    const validationErrors = validate({ ...formData, [name]: value });
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors({
+        type: "error",
+        message: Object.values(validationErrors)[0],
+      });
+    } else {
+      setFormErrors({ type: "", message: "" });
+    }
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
         isBtnDisabled: isGuest,
         [name]: value,
       };
-    });
-    setFormErrors({
-      type: "",
-      message: "",
     });
   };
 
@@ -89,9 +85,6 @@ function UserInfo({ name, email, isGuest }) {
 
   return (
     <form className={styles["user-info-input-group"]}>
-      <div className={`"error-container" ${errorMsg ? "has-error" : ""}`}>
-        <p className="input-error">{errorMsg}</p>
-      </div>
       {USER_INFO_FIELDS.map((field) => (
         <CustomInput
           key={field.name}

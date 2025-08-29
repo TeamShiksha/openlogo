@@ -14,7 +14,7 @@ function ContactForm({ closeModal }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const { makeRequest, loading, data, errorMsg } = useApi({
+  const { makeRequest, data, loading, errorMsg } = useApi({
     url: `/messages/contact-us`,
     method: "POST",
     data: formValues,
@@ -23,8 +23,12 @@ function ContactForm({ closeModal }) {
   const toast = useToast();
 
   useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
+    if (errorMsg || data?.message) {
+      if (errorMsg) {
+        toast.error(errorMsg);
+      } else if (data?.message) {
+        toast.success(data.message);
+      }
       const timeout = setTimeout(() => {
         setFormErrors({});
         setFocusedField(null);
@@ -33,20 +37,7 @@ function ContactForm({ closeModal }) {
       }, 500);
       return () => clearTimeout(timeout);
     }
-  }, [errorMsg, toast, closeModal]);
-
-  useEffect(() => {
-    if (data?.message) {
-      toast.success(data.message);
-      const timeout = setTimeout(() => {
-        setFormErrors({});
-        setFocusedField(null);
-        setFormValues(CONTACT.initialValues);
-        closeModal();
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [data, toast, closeModal]);
+  }, [errorMsg, data, toast, closeModal]);
 
   useEffect(() => {
     if (!focusedField) {
@@ -146,9 +137,10 @@ function ContactForm({ closeModal }) {
         <Button
           type="submit"
           variant="primary"
-          disabled={!isFormValid || loading}
+          disabled={!isFormValid}
+          isLoading={loading}
         >
-          {loading ? "Sending" : BUTTON_TEXT.sendMessage}
+          {BUTTON_TEXT.sendMessage}
         </Button>
       </form>
     </Modal>

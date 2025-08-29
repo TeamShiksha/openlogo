@@ -71,7 +71,7 @@ describe("UserInfo Component", () => {
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-      const nameErrorText = screen.getByText("Name is required!");
+      const nameErrorText = screen.getByText("Name is required");
       expect(nameErrorText).toBeInTheDocument();
     });
 
@@ -79,7 +79,7 @@ describe("UserInfo Component", () => {
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-      const nameErrorText = screen.queryByText("Name is required!");
+      const nameErrorText = screen.queryByText("Name is required");
       expect(nameErrorText).not.toBeInTheDocument();
     });
   });

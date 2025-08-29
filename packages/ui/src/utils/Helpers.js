@@ -214,8 +214,8 @@ export const validate = (values) => {
   );
   validateField(
     "message",
-    values.message && values.message.length > 500,
-    "Message should be less than 500 characters"
+    values.message && values.message.length > 100,
+    "Message should be less than 100 characters"
   );
   validateField("companyUrl", !values.companyUrl, "Company Url is required");
   validateField(
