@@ -1,0 +1,109 @@
+.card {
+  border-radius: 16px;
+  background: #f8f8f9;
+  padding: 2rem 1rem;
+  flex: 210px 1 1;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  line-height: normal;
+}
+
+.card-group,
+.left-content,
+.right-content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.card-content {
+  display: flex;
+  width: 100%;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: last baseline;
+}
+
+.card-title,
+.tracking-text {
+  color: #475467;
+  font-weight: 400;
+}
+
+.card-title {
+  font-size: 24px;
+  letter-spacing: 0.48px;
+}
+
+.card-value {
+  color: var(--Primary-blue, #4f46e5);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.change-value-positive,
+.change-value-negative {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.change-value-positive {
+  color: #00b69b;
+}
+
+.change-value-negative {
+  color: #f93c65;
+}
+
+.tracking-text {
+  font-size: 16px;
+}
+
+.left-content {
+  flex-direction: column;
+  gap: 16px;
+}
+
+.right-content {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.change-graph {
+  width: 50px;
+  height: 30px;
+}
+
+/* Separate Mobile Styles */
+@media (max-width: 768px) {
+  .card-title {
+    font-size: 20px;
+    letter-spacing: 0.4px;
+  }
+
+  .card-value {
+    font-size: 36px;
+  }
+
+  .change-value-positive,
+  .change-value-negative {
+    font-size: 16px;
+  }
+
+  .tracking-text {
+    font-size: 14px;
+  }
+
+  .left-content {
+    gap: 4px;
+    width: auto;
+  }
+
+  .right-content {
+    gap: 4px;
+  }
+
+  .change-graph {
+    width: 39.429px;
+    height: 24px;
+  }
+}

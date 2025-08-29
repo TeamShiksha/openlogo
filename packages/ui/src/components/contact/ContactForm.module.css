@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  padding-bottom: 1rem;
+}
+
+.form-width {
+  width: 100%;
+}
+
+.text-area {
+  width: 100%;
+  height: 100px;
+  min-height: 100px;
+  max-height: 250px;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--description);
+  background-color: var(--white);
+  border: var(--border);
+  margin-bottom: 8px;
+  border-radius: var(--bradius);
+  outline: none;
+  line-height: 1.5;
+  transition:
+    border 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
+}
+
+.text-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.text-area::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 4px;
+}
+
+.text-area::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.text-area::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--white);
+  resize: none;
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--black);
+  text-align: center;
+}
+
+.text-area::placeholder {
+  color: var(--label-color);
+}
+
+.text-area:focus::placeholder {
+  color: var(--primary);
+}
+
+.text-area:focus {
+  border-color: var(--primary);
+}
+
+.character-limit p {
+  font-size: 0.75rem;
+  padding-right: 0;
+  margin-top: -8px;
+  text-align: right;
+  color: var(--description);
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.75rem;
+  opacity: 0;
+  margin-bottom: 8px;
+  width: 100%;
+  transition:
+    opacity 0.2s ease-in-out 0.3s,
+    max-height 0.2s ease-in-out,
+    padding 0.2s ease-in-out;
+}
+
+.has-error {
+  opacity: 1;
+  max-height: 50px;
+  padding: 1px;
+}

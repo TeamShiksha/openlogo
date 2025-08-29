@@ -1,0 +1,92 @@
+.card {
+  width: 380px;
+  margin-top: 50px;
+  background: var(--white);
+  border-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.intro {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.intro h1 {
+  color: var(--black);
+}
+
+.plan-name {
+  font-weight: 600;
+  color: var(--description);
+}
+
+.tag-line {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--description);
+  text-align: center;
+}
+
+.point {
+  color: var(--description);
+  text-align: left;
+  font-size: 1.2rem;
+  line-height: 2.4rem;
+  font-weight: 500;
+}
+
+.point > li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.width {
+  width: 90%;
+  margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 1024px) {
+  .card {
+    width: 100%;
+  }
+
+  .width {
+    margin-top: 1rem;
+    width: 60%;
+    min-width: 350px;
+  }
+}
+
+@media (max-width: 780px) {
+  .intro {
+    padding: 12px;
+    gap: 5px;
+  }
+
+  .width {
+    width: 40%;
+    min-width: 300px;
+  }
+
+  .tag-line {
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .width {
+    width: 100%;
+    min-width: unset;
+  }
+}

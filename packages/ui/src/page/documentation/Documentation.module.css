@@ -1,0 +1,147 @@
+code {
+  font-size: 1.2rem;
+  color: var(--description);
+  width: 100%;
+  padding: 1rem;
+  line-height: 1.8rem;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--primary-hover);
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.card-heading {
+  margin-top: 2rem;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 0.75rem;
+}
+
+.text {
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  color: var(--description);
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+.base-info {
+  border-radius: 8px;
+  padding: 0.5rem 1rem 0.5rem;
+  background-color: var(--table-background);
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: var(--description);
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.code-block-wrapper {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: var(--table-background);
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.code-language {
+  font-size: 0.875rem;
+  color: var(--white);
+}
+
+.language-selector {
+  display: flex;
+  gap: 12px;
+}
+
+.language-selector img {
+  width: 32px;
+  height: 32px;
+}
+
+.language-button {
+  padding: 7px 12px;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--description);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.language-button:hover {
+  color: var(--white);
+  background: rgba(229 231 235);
+}
+
+.language-button-active {
+  background: rgba(229 231 235);
+  color: var(--white);
+}
+
+.copy-button {
+  background-color: rgb(249 250 251);
+}
+
+.code-block {
+  margin: 16px;
+  margin-top: 0;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: var(--border);
+}
+
+.table-wrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+}
+
+.code-box {
+  padding: 12px;
+  border: var(--border);
+  color: var(--black);
+}
+
+.copy-inside {
+  display: flex;
+  justify-content: space-between;
+}
+
+.copy-inside > button {
+  background-color: var(--table-background);
+  width: fit-content;
+  height: fit-content;
+  border: none;
+  padding: 0;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+}
+
+.copy-inside > button > img {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 564px) {
+  .language-selector {
+    flex-wrap: wrap;
+  }
+}

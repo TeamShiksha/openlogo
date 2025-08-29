@@ -1,0 +1,43 @@
+const BaseRepository = require("./base");
+const User = require("../models/users");
+
+/**
+ * The UsersRepository extends BaseRepository to manage User model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
+ * It passes the Users model to the base repository for database interactions.
+ * Custom methods specific to Users can also be added as needed.
+ */
+
+class UsersRepository extends BaseRepository {
+  constructor() {
+    super(User);
+  }
+
+  /**
+   * Finds a user by email.
+   * @param {string} emailId - The email address to search for.
+   * @returns {Promise<Object|null>} - Returns the user document if found, otherwise null.
+   */
+  async findUserByEmail(emailId) {
+    return await this.model.findOne({ email: emailId, is_deleted: false });
+  }
+
+  /**
+   *
+   * @returns {Promise<number>} - Total number of users.
+   */
+  async getUsersCount() {
+    return await User.countDocuments({
+      is_verified: true,
+      is_deleted: false,
+    });
+  }
+  /**
+   *
+   * @returns {Promise<Object|null>} - Returns the user document with role:GUEST if found, otherwise null.
+   */
+  async getGuestUser() {
+    return await this.model.findOne({ role: "GUEST" });
+  }
+}
+
+module.exports = UsersRepository;

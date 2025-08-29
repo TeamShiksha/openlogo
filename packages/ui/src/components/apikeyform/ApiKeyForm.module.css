@@ -1,0 +1,103 @@
+.dashboard-content-section {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.api-key-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px 32px;
+  justify-content: center;
+  flex: 1;
+}
+
+.width {
+  width: 100%;
+}
+
+.dashboard-reset-date {
+  font-size: var(--medium-text);
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--description);
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.api-key-modal {
+  padding: 6px;
+  text-align: center;
+}
+
+.api-key-modal h2 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+}
+
+.api-key-modal p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+}
+
+.key-display {
+  background: var(--table-background);
+  padding: 5px;
+  border-radius: 4px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.key-display code {
+  font-family: monospace;
+  font-size: 18px;
+  color: var(--black);
+  overflow-x: visible;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copy-icon {
+  height: 18px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.8rem;
+  text-align: center;
+}

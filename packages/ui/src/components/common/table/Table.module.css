@@ -1,0 +1,59 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  background-color: var(--table-background);
+  border: var(--border);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-bottom);
+  border-spacing: 0;
+}
+
+.custom-table th {
+  color: var(--description);
+  border-bottom: var(--border);
+}
+
+.table-header {
+  padding: 0.75rem 3.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--black);
+  background-color: var(--header-background);
+}
+
+.table-cell {
+  padding: 0.5rem 4rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--description);
+  font-weight: 500;
+}
+
+.no-data {
+  text-align: center;
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--description);
+  font-style: italic;
+  background-color: var(--table-background);
+  border: 1px solid var(--border-color);
+}
+
+.delete-btn {
+  padding: 0.5rem 1rem;
+}
+
+@media only screen and (max-width: 1024px) {
+  .table-header,
+  .table-cell {
+    padding: 0.5rem 1rem;
+  }
+
+  .custom-table {
+    min-width: 600px;
+  }
+}

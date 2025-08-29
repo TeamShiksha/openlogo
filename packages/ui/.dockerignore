@@ -1,0 +1,5 @@
+node_modules
+.env
+.env.example
+.env_example
+eslint.config.js

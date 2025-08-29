@@ -1,0 +1,32 @@
+.current-plan {
+  color: rgb(17 24 39);
+  font-size: var(--large-text);
+  line-height: 28px;
+  font-weight: 600;
+  margin: 12px 0px;
+  padding-top: 16px;
+}
+
+.current-plan-tagline {
+  color: var(--description);
+  font-size: var(--medium-text);
+  line-height: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.upgrade-button {
+  max-width: 100%;
+  color: var(--white);
+  background-color: var(--primary);
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+  cursor: pointer;
+  min-height: 39px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+}

@@ -1,0 +1,24 @@
+.text {
+  color: var(--description);
+  line-height: 1.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+.privacy-page-container {
+  margin: 2rem 0;
+}
+
+.heading {
+  font-weight: 600;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--black);
+}
+
+@media screen and (max-width: 480px) {
+  .heading {
+    font-size: 2.25rem;
+  }
+}

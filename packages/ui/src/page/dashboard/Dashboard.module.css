@@ -1,0 +1,91 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1440px;
+}
+
+.spinner-container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-content-container {
+  display: flex;
+  flex-grow: 1;
+  padding: 2rem 0rem 2rem 0rem;
+}
+
+.dashboard-content-section {
+  display: flex;
+  gap: 32px;
+  width: 100%;
+}
+
+.table-wrapper {
+  width: 100%;
+  padding: 0rem 0rem 0rem 0rem;
+}
+
+.active-status {
+  color: var(--primary);
+}
+
+.inactive-status {
+  color: var(--black);
+}
+
+.logout-wrapper {
+  width: 100%;
+  padding: 0rem 0rem 2rem 0rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.deletekey-name {
+  color: var(--primary);
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .spinner-container {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .dashboard-container > aside {
+    width: 100%;
+  }
+
+  .dashboard-content-container {
+    padding: 1rem 0rem 1rem 0rem;
+  }
+
+  .dashboard-content-section {
+    flex-direction: column;
+  }
+
+  .table-wrapper {
+    padding: 1rem;
+  }
+
+  .logout-wrapper {
+    padding: 0rem 0rem 1rem 0rem;
+  }
+
+  .logout-btn {
+    width: 100%;
+    margin: 1rem 0 0 0;
+  }
+}

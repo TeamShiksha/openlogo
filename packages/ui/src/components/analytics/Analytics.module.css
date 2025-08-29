@@ -1,0 +1,10 @@
+.analytics {
+  opacity: 0.99;
+  align-self: stretch;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0;
+  transition: all 300ms linear;
+}

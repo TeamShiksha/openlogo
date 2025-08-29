@@ -1,0 +1,21 @@
+.action-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.action-text {
+  font-size: var(--medium-text);
+  font-weight: 400;
+  line-height: 1.25rem;
+  color: var(--description);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-button {
+  width: 100%;
+}

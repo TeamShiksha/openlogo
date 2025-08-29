@@ -1,0 +1,12 @@
+const router = require("express").Router();
+const {
+  getLogoController,
+  searchLogoController,
+  demoSearchLogoController,
+} = require("../controllers/logo");
+
+router.get("/", getLogoController);
+router.get("/search", searchLogoController);
+router.get("/demo-search", demoSearchLogoController);
+
+module.exports = router;
