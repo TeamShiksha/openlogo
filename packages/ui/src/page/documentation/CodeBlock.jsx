@@ -3,8 +3,12 @@ import PropTypes from "prop-types";
 import { CODEBLOCK } from "../../utils/Constants";
 import styles from "./Documentation.module.css";
 
-const CodeBlock = ({ id, codeExamples }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+const CodeBlock = ({
+  id,
+  codeExamples,
+  selectedLanguage,
+  setSelectedLanguage,
+}) => {
   const [copyMessage, setCopyMessage] = useState("");
 
   const copyToClipboard = (code) => {
@@ -60,6 +64,8 @@ const CodeBlock = ({ id, codeExamples }) => {
 CodeBlock.propTypes = {
   id: PropTypes.string.isRequired,
   codeExamples: PropTypes.objectOf(PropTypes.string).isRequired,
+  selectedLanguage: PropTypes.string.isRequired,
+  setSelectedLanguage: PropTypes.func.isRequired,
 };
 
 export default CodeBlock;

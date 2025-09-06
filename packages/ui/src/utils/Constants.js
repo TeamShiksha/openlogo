@@ -514,9 +514,9 @@ HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
   .header("Content-Type", "application/json")
   .GET()
-  .build();  
+  .build();
 // send GET request
-HttpResponse<String> response = client.send(request, 
+HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
@@ -549,9 +549,9 @@ HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
   .header("Content-Type", "application/json")
   .GET()
-  .build();  
+  .build();
 // send GET request
-HttpResponse<String> response = client.send(request, 
+HttpResponse<String> response = client.send(request,
   HttpResponse.BodyHandlers.ofString());`,
 };
 
@@ -700,6 +700,7 @@ export const MESSAGES = {
 export const MODAL_MESSAGES = {
   RESPOND: "Type your response here...",
   REJECT: "Reason for rejection...",
+  CHARACTER_LIMIT: "100",
 };
 
 export const MOCK_OPERATOR_CARD_DATA = {

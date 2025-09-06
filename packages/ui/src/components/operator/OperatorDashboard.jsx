@@ -223,13 +223,7 @@ const Operator = () => {
   }
 
   let submitButtonText;
-  if (loading) {
-    if (responseAction === "respond") {
-      submitButtonText = "Sending Response...";
-    } else {
-      submitButtonText = "Rejecting...";
-    }
-  } else if (responseAction === "respond") {
+  if (responseAction === "respond") {
     submitButtonText = BUTTON_TEXT.sendResponse;
   } else {
     submitButtonText = BUTTON_TEXT.confirmRejection;
@@ -341,6 +335,13 @@ const Operator = () => {
             onFocus={() => setFocusedField("message")}
             onBlur={() => setFocusedField(null)}
           />
+          <div className={styles["character-limit"]}>
+            <p>
+              {`[${responseText.length}/` +
+                MODAL_MESSAGES.CHARACTER_LIMIT +
+                `]`}
+            </p>
+          </div>
           <div
             className={`${styles["error-container"]} ${formErrors.message ? "has-error" : ""}`}
           >
@@ -354,6 +355,7 @@ const Operator = () => {
             disabled={!isFormValid || loading}
             variant={responseAction === "respond" ? "primary" : "danger"}
             className={styles["send-button"]}
+            isLoading={loading}
           >
             {submitButtonText}
           </Button>

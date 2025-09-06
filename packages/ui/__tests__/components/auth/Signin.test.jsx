@@ -190,6 +190,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
+      const spinner = screen.getByTestId("spinner");
+      expect(spinner).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
       expect(emailInput).toBeDisabled();
       expect(passwordInput).toBeDisabled();
       expect(submitButton).toBeDisabled();

@@ -13,7 +13,7 @@ const Documentation = () => {
   const baseAPI = getBaseApiUrl(currentDomain);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   return (
     <section
       className="container"
@@ -41,7 +41,12 @@ const Documentation = () => {
                 emptyMessage="No data available"
               />
             </div>
-            <CodeBlock id="logo-example" codeExamples={feature.codeExample} />
+            <CodeBlock
+              id="logo-example"
+              codeExamples={feature.codeExample}
+              selectedLanguage={selectedLanguage}
+              setSelectedLanguage={setSelectedLanguage}
+            />
           </div>
         );
       })}

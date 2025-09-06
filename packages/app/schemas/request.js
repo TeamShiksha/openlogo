@@ -25,10 +25,10 @@ const updateRequestSchema = Joi.object({
       "any.only": "Status must be one of PENDING, REJECTED, or RESOLVED",
       "any.required": "Status is required",
     }),
-  comment: Joi.string().trim().allow(null).min(5).max(500).messages({
+  comment: Joi.string().trim().allow(null).min(5).max(100).messages({
     "string.base": "Comment must be a string",
     "string.min": "Comment should be at least 5 characters",
-    "string.max": "Comment must be 500 or fewer characters",
+    "string.max": "Comment must be 100 or fewer characters",
   }),
 });
 

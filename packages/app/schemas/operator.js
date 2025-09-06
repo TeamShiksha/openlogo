@@ -38,14 +38,15 @@ const revertToCustomerPayloadSchema = Joi.object().keys({
     .trim()
     .required()
     .min(20)
-    .max(500)
-    .regex(/^[^!@#$%^&*(){}[\]\\;'",.<>/?`~|0-9]*$/)
+    .max(100)
+    .regex(/^[^!@#$%^&*(){}[\]\\;'"<>/`~|0-9]*$/)
     .messages({
       "string.base": "Reply must be a string",
       "string.min": "Reply should be at least 20 characters",
-      "string.max": "Reply must be 500 or fewer characters",
+      "string.max": "Reply must be 100 or fewer characters",
       "any.required": "Reply is required",
-      "string.pattern.base": "Reply should only contain alphabets",
+      "string.pattern.base":
+        "Reply should only contain alphabets, comma, period., question mark?",
     }),
   status: Joi.string()
     .valid(...Object.values(StatusTypes))
@@ -63,7 +64,7 @@ const contactUsPayloadSchema = Joi.object().keys({
     .required()
     .min(1)
     .max(20)
-    .regex(/^[^!@#$%^&*(){}[\]\\;'",.<>/?`~|0-9]*$/)
+    .regex(/^[^!@#$%^&*(){}[\]\\;'"<>/`~|0-9]*$/)
     .messages({
       "string.base": "Name must be string",
       "string.min": "Name cannot be empty",
@@ -86,14 +87,15 @@ const contactUsPayloadSchema = Joi.object().keys({
     .trim()
     .required()
     .min(20)
-    .max(500)
-    .regex(/^[^!@#$%^&*(){}[\];'",<>/?`~|0-9]*$/)
+    .max(100)
+    .regex(/^[^!@#$%^&*(){}[\];'"<>/`~|0-9]*$/)
     .messages({
       "string.base": "Message must be string",
       "string.min": "Message should be at least be 20 characters",
-      "string.max": "Message must be 500 or fewer characters",
+      "string.max": "Message must be 100 or fewer characters",
       "any.required": "Message is required",
-      "string.pattern.base": "Message should only contain alphabets",
+      "string.pattern.base":
+        "Message should only contain alphabets, comma (,), period (.), question mark (?)",
     }),
 });
 module.exports = {

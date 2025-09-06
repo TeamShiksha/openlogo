@@ -131,6 +131,7 @@
 }
 
 .response-field {
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -139,14 +140,13 @@
 
 .response-field textarea {
   padding: 0.75rem;
-  width: 80%;
-  margin: 0 auto;
   border: 1px solid var(--border-color);
   border-radius: var(--bradius);
   color: var(--description);
   font-family: inherit;
   font-size: 1rem;
   background-color: var(--white);
+  gap: 0rem;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--white);
   resize: none;
@@ -175,15 +175,17 @@
   background: var(--primary-hover);
 }
 
+.character-limit p {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--description);
+}
+
 .modal-actions {
   display: flex;
   justify-content: center;
   width: 100%;
-}
-
-.error-container {
-  width: 80%;
-  margin: 0 auto;
 }
 
 @media (max-width: 768px) {

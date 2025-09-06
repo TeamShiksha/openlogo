@@ -263,9 +263,10 @@ describe("ContactForm Component", () => {
     );
 
     await waitFor(() => {
-      const loadingButton = screen.getByText("Sending");
-      expect(loadingButton).toBeInTheDocument();
-      expect(loadingButton).toBeDisabled();
+      const spinner = screen.getByTestId("spinner");
+      expect(spinner).toBeInTheDocument();
+      const button = spinner.closest("button");
+      expect(button).toBeDisabled();
     });
   });
 
