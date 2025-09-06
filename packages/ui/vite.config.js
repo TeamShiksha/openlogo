@@ -4,14 +4,17 @@ import process from "process";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+
   return {
     plugins: [react()],
     server: {
       host: true,
-      port: 3000,
+      port: 8080,
+      allowedHosts: [".openlogo.fyi"],
     },
     define: {
-      "process.env.VITE_BASE_URL": JSON.stringify(env.VITE_BASE_URL),
+      "process.env.VITE_BASE_URL":
+        env.VITE_BASE_URL || process.env.VITE_BASE_URL,
     },
   };
 });
