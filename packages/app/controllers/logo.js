@@ -52,7 +52,6 @@ async function getLogoController(req, res, next) {
     }
 
     const imageUrl = await imageService.fetchImageByCompanyFree(company);
-    await subscriptionService.incrementUsageCount(userSubscription);
     if (!imageUrl) {
       return res.status(404).json({
         message: Messages.LOGO_NOT_FOUND,
@@ -60,7 +59,7 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-
+    await subscriptionService.incrementUsageCount(userSubscription);
     return res.status(200).json({
       statusCode: 200,
       data: imageUrl,
