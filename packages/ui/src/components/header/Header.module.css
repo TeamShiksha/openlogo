@@ -71,6 +71,12 @@
   text-underline-offset: 6px;
 }
 
+@media only screen and (max-width: 1023px) {
+  .nav-bar {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   .brand-img {
     width: 32px;
@@ -91,10 +97,6 @@
 }
 
 @media only screen and (max-width: 1024px) {
-  .nav-bar {
-    display: none;
-  }
-
   .hamburger {
     display: flex;
     align-items: center;

@@ -67,38 +67,45 @@ const Header = ({ openAuthModal }) => {
           />
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>
-        <div className={styles["nav-bar"]}>
-          {NAVBAR_ITEMS.map((item) => {
-            const [itemPath, itemSection] = item.url.split("#");
-            const isActive =
-              item.type === "route"
-                ? currentPath === item.url
-                : currentPath === itemPath && activeSection === itemSection;
+        {!isMobile && (
+          <div className={styles["nav-bar"]}>
+            {NAVBAR_ITEMS.map((item) => {
+              const [itemPath, itemSection] = item.url.split("#");
+              const isActive =
+                item.type === "route"
+                  ? currentPath === item.url
+                  : currentPath === itemPath && activeSection === itemSection;
 
-            return (
-              <Link
-                key={item.name}
-                className={`${styles.nav} ${isActive ? styles.active : ""}`}
-                to={item.url}
-                onClick={(event) =>
-                  handleNavigation(event, item.url, navigate, setActiveSection)
-                }
+              return (
+                <Link
+                  key={item.name}
+                  className={`${styles.nav} ${isActive ? styles.active : ""}`}
+                  to={item.url}
+                  onClick={(event) =>
+                    handleNavigation(
+                      event,
+                      item.url,
+                      navigate,
+                      setActiveSection
+                    )
+                  }
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+
+            {!isAuthenticated && (
+              <Button
+                variant="primary"
+                className={styles.ml}
+                onClick={openAuthModal}
               >
-                {item.title}
-              </Link>
-            );
-          })}
-
-          {!isAuthenticated && (
-            <Button
-              variant="primary"
-              className={styles.ml}
-              onClick={openAuthModal}
-            >
-              {BUTTON_TEXT.getStarted}
-            </Button>
-          )}
-        </div>
+                {BUTTON_TEXT.getStarted}
+              </Button>
+            )}
+          </div>
+        )}
         {isMobile && (
           <button className={styles.hamburger} onClick={toggleMenu}>
             <img
