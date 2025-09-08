@@ -6,8 +6,8 @@ RUN npm install -g pnpm
 
 COPY package.json ./
 
-ARG VITE_BASE_URL=http://localhost:5000
-ENV VITE_BASE_URL=$VITE_BASE_URL
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL=${VITE_BASE_URL}
 
 RUN pnpm install
 
@@ -28,6 +28,7 @@ RUN addgroup -S nonroot && adduser -S nonroot -G nonroot \
     && touch /var/run/nginx.pid && chown nonroot:nonroot /var/run/nginx.pid || true
 
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
 
 USER nonroot
 
