@@ -12,6 +12,7 @@ function CurrentPlan({ isGuest }) {
 
       <Button
         className={styles["upgrade-button"]}
+        variant={"primary"}
         disabled={keepBtnDisabled || isGuest}
         style={{ cursor: isGuest ? "default" : "pointer" }}
       >
