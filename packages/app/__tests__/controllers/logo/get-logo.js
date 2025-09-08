@@ -138,4 +138,24 @@ describe("getLogoController", () => {
     const response = await request(app).get(apiUrl).query(baseQuery);
     expect(response.status).toBe(500);
   });
+
+  it("should handle unexpected errors if usage count is null or undefined", async () => {
+    mockRepetedService(mockSubscription[0]);
+
+    jest
+      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+      .mockResolvedValue(imageUrl);
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockResolvedValue(null);
+
+    const response = await request(app).get(apiUrl).query(baseQuery);
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({
+      message: Messages.INTERNAL_SERVER_ERROR,
+      statusCode: 500,
+      error: STATUS_CODES[500],
+    });
+  });
 });

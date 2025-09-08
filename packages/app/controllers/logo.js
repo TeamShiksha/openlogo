@@ -59,7 +59,15 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-    await subscriptionService.incrementUsageCount(userSubscription);
+    const updatedUsageCount =
+      await subscriptionService.incrementUsageCount(userSubscription);
+    if (!updatedUsageCount) {
+      return res.status(500).json({
+        message: Messages.INTERNAL_SERVER_ERROR,
+        statusCode: 500,
+        error: STATUS_CODES[500],
+      });
+    }
     return res.status(200).json({
       statusCode: 200,
       data: imageUrl,
