@@ -1,6 +1,8 @@
 name: Refresh API limit Daily
 
 on:
+  schedule:
+    - cron: "30 18 * * *" # equal to midnight 00:00 IST (UTC+5:30) as cron by default uses UTC
   workflow_dispatch:
 
 jobs:
@@ -13,7 +15,7 @@ jobs:
           sudo timedatectl set-timezone Asia/Kolkata
           sudo timedatectl set-ntp true
           timedatectl
-      
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -23,5 +25,4 @@ jobs:
       - name: Run refreshUsageCount script
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
-        run: node ./server/scripts/refreshUsageCount.js
-        # The above script needs to be created or updated
+        run: node ./packages/app/scripts/refreshUsageCount.js
