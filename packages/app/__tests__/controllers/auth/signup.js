@@ -61,6 +61,78 @@ describe("SIGNUP API", () => {
     });
   });
 
+  it("422 - Password should contain at least one uppercase letter", async () => {
+    const mockRequest = {
+      ...SIGNUP_PAYLOAD,
+      password: "password123!",
+      confirmPassword: "password123!",
+    };
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Password must contain at least one uppercase character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - Password should contain at least one lowercase letter", async () => {
+    const mockRequest = {
+      ...SIGNUP_PAYLOAD,
+      password: "PASSWORD123!",
+      confirmPassword: "PASSWORD123!",
+    };
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Password must contain at least one lowercase character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - Password should contain at least one digit", async () => {
+    const mockRequest = {
+      ...SIGNUP_PAYLOAD,
+      password: "Password!",
+      confirmPassword: "Password!",
+    };
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Password must contain at least one digit character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - Password should contain at least one special character", async () => {
+    const mockRequest = {
+      ...SIGNUP_PAYLOAD,
+      password: "Password123",
+      confirmPassword: "Password123",
+    };
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "Password must contain at least one special character",
+      statusCode: 422,
+    });
+  });
+
   it("422 - ConfirmPassword and Password should match", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
