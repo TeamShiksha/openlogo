@@ -2,11 +2,12 @@ name: Refresh API limit Daily
 
 on:
   schedule:
-    - cron: "30 18 * * *" # equal to midnight 00:00 IST (UTC+5:30) as cron by default uses UTC
+    - cron: "0 0 * * *" # daily at midnight
   workflow_dispatch:
 
 jobs:
   refresh_usage_count:
+    if: github.ref == 'refs/heads/stage' # only run on stage branch
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:

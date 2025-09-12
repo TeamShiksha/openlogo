@@ -4,24 +4,29 @@ const Subscriptions = require("../models/subscriptions");
 
 async function refreshUsageCount() {
   try {
-    const today = new Date();
-    const isFirstDayOfMonth = today.getDate() === 1;
-    if (!isFirstDayOfMonth) {
-      console.log("Not the first day of the month, skipping...");
-      return;
-    }
+    const now = new Date();
+    const oneMonthAgo = new Date(now);
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
     if (!process.env.MONGO_URL) {
       throw new Error("MONGO_URL is not provided");
     }
+
     await mongoose.connect(process.env.MONGO_URL);
+
     await Subscriptions.updateMany(
-      { is_active: true },
+      {
+        is_active: true,
+        updated_at: { $lte: oneMonthAgo },
+      },
       {
         usage_count: 0,
-        updated_at: new Date(),
+        updated_at: now,
       }
     ).then(() => {
-      console.log("Usage count refreshed successfully");
+      console.log(
+        "Usage count refreshed for subscriptions older than one month since last reset"
+      );
     });
   } catch (error) {
     console.error("Error refreshing usage count:", error);
