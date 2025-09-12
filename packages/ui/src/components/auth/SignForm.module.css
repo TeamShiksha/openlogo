@@ -89,3 +89,25 @@
 .cross:hover {
   opacity: 0.8;
 }
+
+.disclaimer-container {
+  margin: 0px 0 12px 4px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.disclaimer-label {
+  font-size: 0.6rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.disclaimer-label a {
+  color: var(--primary);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.disclaimer-label a:hover {
+  color: var(--black);
+}
