@@ -64,8 +64,8 @@ describe("SIGNUP API", () => {
   it("422 - Password should contain at least one uppercase letter", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
-      password: "password123!",
-      confirmPassword: "password123!",
+      password: dummyPassword.toLowerCase(),
+      confirmPassword: dummyPassword.toLowerCase(),
     };
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
@@ -82,8 +82,8 @@ describe("SIGNUP API", () => {
   it("422 - Password should contain at least one lowercase letter", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
-      password: "PASSWORD123!",
-      confirmPassword: "PASSWORD123!",
+      password: dummyPassword.toUpperCase(),
+      confirmPassword: dummyPassword.toUpperCase(),
     };
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
@@ -100,8 +100,8 @@ describe("SIGNUP API", () => {
   it("422 - Password should contain at least one digit", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
-      password: "Password!",
-      confirmPassword: "Password!",
+      password: dummyPassword.repeat(2).replace(/\d/g, ""),
+      confirmPassword: dummyPassword.repeat(2).replace(/\d/g, ""),
     };
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
@@ -118,8 +118,12 @@ describe("SIGNUP API", () => {
   it("422 - Password should contain at least one special character", async () => {
     const mockRequest = {
       ...SIGNUP_PAYLOAD,
-      password: "Password123",
-      confirmPassword: "Password123",
+      password: dummyPassword
+        .repeat(2)
+        .replace(/[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/g, ""),
+      confirmPassword: dummyPassword
+        .repeat(2)
+        .replace(/[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/g, ""),
     };
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)

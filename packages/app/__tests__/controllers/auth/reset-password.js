@@ -106,7 +106,7 @@ describe("RESET PASSWORD API", () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
-      .send({ newPassword: "Password!" });
+      .send({ newPassword: dummyPassword.repeat(2).replace(/\d/g, "") });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
@@ -120,7 +120,11 @@ describe("RESET PASSWORD API", () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
-      .send({ newPassword: "Password123" });
+      .send({
+        newPassword: dummyPassword
+          .repeat(2)
+          .replace(/[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/g, ""),
+      });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
