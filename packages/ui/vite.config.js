@@ -1,6 +1,6 @@
-import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import process from "process";
+import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -13,6 +13,8 @@ export default defineConfig(({ mode }) => {
       allowedHosts: [".openlogo.fyi"],
     },
     define: {
+      "process.env.VITE_BASE_URL":
+        JSON.stringify(env.VITE_BASE_URL) || process.env.VITE_BASE_URL,
       "process.env.API_BASE_URL":
         JSON.stringify(env.API_BASE_URL) || process.env.API_BASE_URL,
     },
