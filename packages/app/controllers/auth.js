@@ -295,7 +295,6 @@ async function resendVerficationController(req, res, next) {
     const userTokenService = new UserTokenService();
     const email = req.body.email;
     const user = await userService.getUserByEmail(email);
-    // console.log(user);
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -311,7 +310,6 @@ async function resendVerficationController(req, res, next) {
         alreadyVerified: true,
       });
     }
-    console.log(user);
     const verificationToken = await userTokenService.createUserToken(user._id);
     if (!verificationToken) {
       return res.status(201).json({
@@ -329,7 +327,11 @@ async function resendVerficationController(req, res, next) {
       },
     });
 
-    return res.status(200).json({ statusCode: 200 });
+    return res.status(200).json({
+      message: Messages.EMAIL_SENTED,
+      success: true,
+      statusCode: 200,
+    });
   } catch (error) {
     next(error);
   }

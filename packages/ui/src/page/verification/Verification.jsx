@@ -45,6 +45,7 @@ const Verification = () => {
       setIsLoading(false);
       setTitle("Verified");
       setMessage(data?.message);
+      if (data.statusCode == 200) setTimeout(() => navigate("/"), 3000);
     }
   }, [data, navigate]);
 
