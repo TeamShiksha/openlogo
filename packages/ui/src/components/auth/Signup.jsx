@@ -4,11 +4,13 @@ import Button from "../common/button/Button";
 import PropTypes from "prop-types";
 import { SIGNUP, BUTTON_TEXT, MESSAGES } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
-import { validate } from "../../utils/Helpers";
+import { handleNavigation, validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
+import { Link, useNavigate } from "react-router-dom";
 
-function SignUp({ toggleForm }) {
+function SignUp({ toggleForm, onClose }) {
+  const navigate = useNavigate();
   const toast = useToast();
   const [formValues, setFormValues] = useState(SIGNUP.initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -93,6 +95,31 @@ function SignUp({ toggleForm }) {
               disabled={isLoading}
             />
           ))}
+        </div>
+        <div className={styles["disclaimer-container"]}>
+          <label htmlFor="agree-terms" className={styles["disclaimer-label"]}>
+            By Signing Up, you agree to our{" "}
+            <Link
+              to={SIGNUP.termsUrl}
+              onClick={(event) => {
+                onClose();
+                handleNavigation(event, SIGNUP.termsUrl, navigate);
+              }}
+            >
+              Terms of Service
+            </Link>{" "}
+            and that you have read our{" "}
+            <Link
+              to={SIGNUP.privacyUrl}
+              onClick={(event) => {
+                onClose();
+                handleNavigation(event, SIGNUP.privacyUrl, navigate);
+              }}
+            >
+              Privacy Policy
+            </Link>
+            .
+          </label>
         </div>
         <Button
           type="submit"
