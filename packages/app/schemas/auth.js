@@ -39,12 +39,23 @@ const signupPayloadSchema = Joi.object().keys({
       "any.required": "Email is required",
       "string.pattern.base": "Invalid email",
     }),
-  password: Joi.string().trim().required().min(8).max(30).messages({
-    "string.base": "Password must be string",
-    "string.min": "Password must be at least 8 characters",
-    "string.max": "Password must be 30 characters or fewer",
-    "any.required": "Password is required",
-  }),
+  password: Joi.string()
+    .trim()
+    .required()
+    .min(8)
+    .max(30)
+    .pattern(/[A-Z]/, { name: "uppercase" })
+    .pattern(/[a-z]/, { name: "lowercase" })
+    .pattern(/\d/, { name: "digit" })
+    .pattern(/[!@#$%^&*()_+{}\\[\]:;<>,.?~\\/-]/, { name: "special" })
+    .messages({
+      "string.base": "Password must be a string",
+      "string.min": "Password must be at least 8 characters",
+      "string.max": "Password must be 30 characters or fewer",
+      "any.required": "Password is required",
+      "string.pattern.name":
+        "Password must contain at least one {#name} character",
+    }),
   confirmPassword: Joi.any().required().equal(Joi.ref("password")).messages({
     "any.only": "Password and confirm password do not match",
   }),
@@ -63,11 +74,23 @@ const forgotPasswordSchema = Joi.object().keys({
 });
 
 const patchSchema = Joi.object().keys({
-  newPassword: Joi.string().trim().min(8).max(30).required().messages({
-    "any.required": "New password is required",
-    "string.max": "New password must be 30 characters or fewer",
-    "string.min": "New password must be at least 8 characters",
-  }),
+  newPassword: Joi.string()
+    .trim()
+    .required()
+    .min(8)
+    .max(30)
+    .pattern(/[A-Z]/, { name: "uppercase" })
+    .pattern(/[a-z]/, { name: "lowercase" })
+    .pattern(/\d/, { name: "digit" })
+    .pattern(/[!@#$%^&*()_+{}\\[\]:;<>,.?~\\/-]/, { name: "special" })
+    .messages({
+      "string.base": "New password must be a string",
+      "string.min": "New password must be at least 8 characters",
+      "string.max": "New password must be 30 characters or fewer",
+      "any.required": "New password is required",
+      "string.pattern.name":
+        "New password must contain at least one {#name} character",
+    }),
   confirmPassword: Joi.string()
     .required()
     .equal(Joi.ref("newPassword"))

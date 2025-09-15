@@ -74,6 +74,66 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
+  it("422 - New password must contain at least one uppercase letter", async () => {
+    const response = await request(app)
+      .patch(ENDPOINTS.RESET_PASSWORD)
+      .set("Cookie", ["resetPasswordSession=mockToken"])
+      .send({ newPassword: dummyPassword.toLowerCase() });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "New password must contain at least one uppercase character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - New password must contain at least one lowercase letter", async () => {
+    const response = await request(app)
+      .patch(ENDPOINTS.RESET_PASSWORD)
+      .set("Cookie", ["resetPasswordSession=mockToken"])
+      .send({ newPassword: dummyPassword.toUpperCase() });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "New password must contain at least one lowercase character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - New password must contain at least one digit", async () => {
+    const response = await request(app)
+      .patch(ENDPOINTS.RESET_PASSWORD)
+      .set("Cookie", ["resetPasswordSession=mockToken"])
+      .send({ newPassword: dummyPassword.repeat(2).replace(/\d/g, "") });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "New password must contain at least one digit character",
+      statusCode: 422,
+    });
+  });
+
+  it("422 - New password must contain at least one special character", async () => {
+    const response = await request(app)
+      .patch(ENDPOINTS.RESET_PASSWORD)
+      .set("Cookie", ["resetPasswordSession=mockToken"])
+      .send({
+        newPassword: dummyPassword
+          .repeat(2)
+          .replace(/[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/g, ""),
+      });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[422],
+      message: "New password must contain at least one special character",
+      statusCode: 422,
+    });
+  });
+
   it("422 - Password and confirm password do not match", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)

@@ -91,6 +91,7 @@ function SignUp({ toggleForm }) {
               onFocus={() => setFocusedField(field.name)}
               onBlur={() => setFocusedField(null)}
               disabled={isLoading}
+              autoComplete={field.autoComplete}
             />
           ))}
         </div>
