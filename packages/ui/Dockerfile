@@ -6,8 +6,8 @@ RUN npm install -g pnpm
 
 COPY package.json ./
 
-ARG VITE_BASE_URL
-ENV VITE_BASE_URL=${VITE_BASE_URL}
+ARG API_BASE_URL
+ENV API_BASE_URL=${API_BASE_URL}
 
 RUN pnpm install
 
