@@ -9,8 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       host: true,
-      port: 8080,
-      allowedHosts: [".openlogo.fyi"],
+      port: 3000,
     },
     define: {
       "process.env.VITE_BASE_URL":

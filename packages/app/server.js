@@ -30,6 +30,10 @@ const app = express();
 app.use(cookieParser());
 app.disable("x-powered-by");
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.originalUrl}`);
+  next();
+});
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", routes);
 

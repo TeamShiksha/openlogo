@@ -356,6 +356,7 @@ export const BUTTON_TEXT = {
   signUp: "Sign Up",
   signIn: "Sign In",
   signOut: "Sign Out",
+  resendEmail: "Resend Email",
   changePasswordLabel: "Change password",
   forgotPassword: "Forgot Password ?",
   cross: `×`,
