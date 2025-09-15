@@ -98,7 +98,7 @@ function SignUp({ toggleForm, onClose }) {
         </div>
         <div className={styles["disclaimer-container"]}>
           <label htmlFor="agree-terms" className={styles["disclaimer-label"]}>
-            By clicking Sign Up, you agree to our{" "}
+            By Signing Up, you agree to our{" "}
             <Link
               to={SIGNUP.termsUrl}
               onClick={(event) => {

@@ -302,7 +302,7 @@ it("renders the disclaimer with Terms and Privacy links", () => {
     </BrowserRouter>
   );
 
-  const disclaimer = screen.getByText(/By clicking Sign Up, you agree to our/i);
+  const disclaimer = screen.getByText(/By Signing Up, you agree to our/i);
   expect(disclaimer).toBeInTheDocument();
 
   const termsLink = screen.getByText("Terms of Service");

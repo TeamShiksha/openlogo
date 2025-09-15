@@ -91,15 +91,16 @@
 }
 
 .disclaimer-container {
-  margin: 0px 0 12px 4px;
+  margin: 0px 5px 12px 4px;
   display: flex;
   align-items: flex-start;
 }
 
 .disclaimer-label {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   color: #555;
   line-height: 1.5;
+  text-align: center;
 }
 
 .disclaimer-label a {
