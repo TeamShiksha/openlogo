@@ -139,7 +139,7 @@ describe("getLogoController", () => {
     expect(response.status).toBe(500);
   });
 
-  it("should handle unexpected errors if usage count is null or undefined", async () => {
+  it("should return 500 if incrementUsageCount returns a falsy value", async () => {
     mockRepetedService(mockSubscription[0]);
 
     jest
@@ -151,11 +151,10 @@ describe("getLogoController", () => {
       .mockResolvedValue(null);
 
     const response = await request(app).get(apiUrl).query(baseQuery);
+
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      message: Messages.INTERNAL_SERVER_ERROR,
-      statusCode: 500,
-      error: STATUS_CODES[500],
-    });
+    expect(response.body.message).toBe(
+      "Could not process request. Failed to update usage."
+    );
   });
 });

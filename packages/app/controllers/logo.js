@@ -59,15 +59,22 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-    const updatedUsageCount =
-      await subscriptionService.incrementUsageCount(userSubscription);
-    if (!updatedUsageCount) {
+
+    try {
+      const updatedSubscription =
+        await subscriptionService.incrementUsageCount(userSubscription);
+      if (!updatedSubscription) {
+        throw new Error("Operation returned null/undefined");
+      }
+    } catch (err) {
+      console.error("Failed to increment usage count:", err.message);
       return res.status(500).json({
-        message: Messages.INTERNAL_SERVER_ERROR,
+        message: "Could not process request. Failed to update usage.",
         statusCode: 500,
         error: STATUS_CODES[500],
       });
     }
+
     return res.status(200).json({
       statusCode: 200,
       data: imageUrl,
