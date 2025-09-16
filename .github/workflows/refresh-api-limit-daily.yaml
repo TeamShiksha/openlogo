@@ -7,9 +7,13 @@ on:
 
 jobs:
   refresh_usage_count:
-    if: github.ref == 'refs/heads/stage' # only run on stage branch
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    strategy:
+      matrix:
+        branch: [stage, prod]
+    environment: ${{ matrix.branch == 'stage' && 'STAGE' || 'PROD' }}
+
     steps:
       - name: set timezone
         run: |
@@ -18,7 +22,9 @@ jobs:
           timedatectl
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Install Mongoose
         run: npm install mongoose --legacy-peer-deps
