@@ -439,6 +439,8 @@ export const PRIVACY_AND_TERMS = [
 
 export const SIGNUP = {
   title: "Sign up for free",
+  termsUrl: "/privacy#terms",
+  privacyUrl: "/privacy#privacy",
   fields: [
     { type: "text", name: "name", label: "Name" },
     { type: "email", name: "email", label: "Email" },
