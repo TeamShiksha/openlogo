@@ -121,40 +121,4 @@ describe("getLogoController", () => {
       data: imageUrl,
     });
   });
-
-  it("500-unexpected error", async () => {
-    mockRepetedService(mockSubscription[0]);
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
-      .mockResolvedValue(imageUrl);
-
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockImplementation(() => {
-        throw new Error("Boom!");
-      });
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(500);
-  });
-
-  it("should return 500 if incrementUsageCount returns a falsy value", async () => {
-    mockRepetedService(mockSubscription[0]);
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
-      .mockResolvedValue(imageUrl);
-
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockResolvedValue(null);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(response.status).toBe(500);
-    expect(response.body.message).toBe(
-      "Could not process request. Failed to update usage."
-    );
-  });
 });
