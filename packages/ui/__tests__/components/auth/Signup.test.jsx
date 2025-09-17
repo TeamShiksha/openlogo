@@ -289,3 +289,53 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
   });
 });
+
+it("renders the disclaimer with Terms and Privacy links", () => {
+  const authContext = mockAuthContext(false);
+  render(
+    <BrowserRouter>
+      <AuthContext.Provider value={authContext}>
+        <ToastProvider>
+          <SignUpForm toggleForm={vi.fn()} onClose={vi.fn()} />
+        </ToastProvider>
+      </AuthContext.Provider>
+    </BrowserRouter>
+  );
+
+  const disclaimer = screen.getByText(/By Signing Up, you agree to our/i);
+  expect(disclaimer).toBeInTheDocument();
+
+  const termsLink = screen.getByText("Terms of Service");
+  expect(termsLink).toBeInTheDocument();
+  expect(
+    termsLink.getAttribute("to") || termsLink.getAttribute("href")
+  ).toContain("terms");
+
+  const privacyLink = screen.getByText("Privacy Policy");
+  expect(privacyLink).toBeInTheDocument();
+  expect(
+    privacyLink.getAttribute("to") || privacyLink.getAttribute("href")
+  ).toContain("privacy");
+});
+
+it("navigates to Terms and Privacy sections on link click", () => {
+  const onCloseMock = vi.fn();
+  const authContext = mockAuthContext(false);
+  render(
+    <BrowserRouter>
+      <AuthContext.Provider value={authContext}>
+        <ToastProvider>
+          <SignUpForm toggleForm={vi.fn()} onClose={onCloseMock} />
+        </ToastProvider>
+      </AuthContext.Provider>
+    </BrowserRouter>
+  );
+
+  const termsLink = screen.getByText("Terms of Service");
+  fireEvent.click(termsLink);
+  expect(onCloseMock).toHaveBeenCalled();
+
+  const privacyLink = screen.getByText("Privacy Policy");
+  fireEvent.click(privacyLink);
+  expect(onCloseMock).toHaveBeenCalled();
+});
