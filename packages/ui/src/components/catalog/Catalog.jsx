@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
@@ -24,7 +24,7 @@ function Catalog() {
 
   const { data, loading, makeRequest, errorMsg } = useApi({
     method: "GET",
-    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+    url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${searchTerm}`,
   });
 
   const {
@@ -40,7 +40,7 @@ function Catalog() {
   useEffect(() => {
     makeRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNum]);
+  }, [pageNum, searchTerm]);
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -102,6 +102,7 @@ function Catalog() {
 
   const handleSearchTermChange = (inputChangeEvent) => {
     setSearchTerm(inputChangeEvent.target.value);
+    setPageNum(0);
   };
 
   const handlePreviousBtnClick = () => {
@@ -123,17 +124,11 @@ function Catalog() {
     setUpdateImageId(id);
   };
 
-  const filteredCompanies = useMemo(() => {
-    const companies = data?.data?.data || [];
-    return companies.filter((company) =>
-      company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [data, searchTerm]);
-
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
       <div className={styles["catalog-search"]}>
         <CustomInput
+          name="search"
           type="search"
           label="search"
           value={searchTerm}
@@ -177,15 +172,15 @@ function Catalog() {
             </div>
           )}
 
-          {!loading && filteredCompanies.length === 0 && (
+          {!loading && data?.data?.data?.length === 0 && (
             <p className={styles["catalog-table-no-content"]}>
               {MESSAGES.NO_RESULT_FOUND}
             </p>
           )}
 
           {!loading &&
-            filteredCompanies.length > 0 &&
-            filteredCompanies.map((company) => (
+            data?.data?.data?.length > 0 &&
+            data.data.data.map((company) => (
               <CatalogItem
                 key={company._id}
                 company={company}

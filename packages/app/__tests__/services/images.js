@@ -136,7 +136,8 @@ describe("Image Service", () => {
     expect(ImagesRepository.prototype.getAllImageByUserId).toHaveBeenCalledWith(
       "user1",
       0,
-      10
+      10,
+      ""
     );
   });
 
