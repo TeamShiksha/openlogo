@@ -188,6 +188,11 @@
   width: 100%;
 }
 
+.catalog-add-image-btn {
+  width: 160px;
+  max-height: 45px;
+}
+
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
