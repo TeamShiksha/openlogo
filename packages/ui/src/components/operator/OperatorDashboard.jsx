@@ -7,8 +7,10 @@ import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";
 import Button from "../common/button/Button";
 import { useToast } from "../../hooks/useToast";
-import { BUTTON_TEXT, MODAL_MESSAGES } from "../../utils/Constants";
+import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
 import Dropdown from "../common/dropdown/Dropdown";
+import ImageUploadModal from "../catalog/ImageUploadModal";
+import { useApi } from "../../hooks/useApi";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -44,6 +46,7 @@ const Operator = () => {
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [responseAction, setResponseAction] = useState("respond");
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const toast = useToast();
   const OperatorDashboardDropdownOptions = ["messages", "requests"];
 
@@ -209,6 +212,40 @@ const Operator = () => {
     setResponseText(e.target.value);
   };
 
+  const {
+    loading: uploadLoading,
+    makeRequest: uploadMakeRequest,
+    errorMsg: uploadErrorMsg,
+  } = useApi({
+    method: "POST",
+    url: `/catalog/logo`,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  useEffect(() => {
+    if (uploadErrorMsg) {
+      toast.error(uploadErrorMsg);
+    }
+  }, [uploadErrorMsg, toast]);
+
+  const handleImageUpload = async ({ file, companyUri }) => {
+    if (!file || !companyUri) return;
+
+    const formData = new FormData();
+    formData.append("logo", file);
+    formData.append("companyUri", companyUri);
+
+    try {
+      const success = await uploadMakeRequest({ data: formData });
+      if (success) {
+        setIsUploadModalOpen(false);
+        toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+    }
+  };
+
   let modalTitle;
   if (responseAction === "respond") {
     if (searchType === "messages") {
@@ -281,7 +318,23 @@ const Operator = () => {
           className={styles["type-selector"]}
         />
       </div>
-
+      <Button
+        onClick={() => {
+          setIsUploadModalOpen(true);
+        }}
+        variant="primary"
+        className={styles["catalog-add-image-btn"]}
+      >
+        Add image
+      </Button>
+      <ImageUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => {
+          setIsUploadModalOpen(false);
+        }}
+        onUpload={handleImageUpload}
+        isLoading={uploadLoading}
+      />
       {contentToRender}
 
       {totalPages > 1 && (
