@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { ToastProvider } from "../../../src/contexts/ToastContext";
 import Verification from "../../../src/page/verification/Verification";
 
 vi.mock("react-router-dom", async () => {
@@ -20,7 +21,9 @@ describe("Verification page", () => {
   it("renders without crashing", () => {
     render(
       <BrowserRouter>
-        <Verification />
+        <ToastProvider>
+          <Verification />
+        </ToastProvider>
       </BrowserRouter>
     );
 
@@ -31,7 +34,9 @@ describe("Verification page", () => {
   it("displays loading spinner", () => {
     render(
       <BrowserRouter>
-        <Verification />
+        <ToastProvider>
+          <Verification />
+        </ToastProvider>
       </BrowserRouter>
     );
 
@@ -44,7 +49,9 @@ describe("Verification page", () => {
   it("displays correct title and message", () => {
     render(
       <BrowserRouter>
-        <Verification />
+        <ToastProvider>
+          <Verification />
+        </ToastProvider>
       </BrowserRouter>
     );
 
@@ -61,7 +68,9 @@ describe("Verification page", () => {
   it("has correct container structure", () => {
     render(
       <BrowserRouter>
-        <Verification />
+        <ToastProvider>
+          <Verification />
+        </ToastProvider>
       </BrowserRouter>
     );
 
@@ -79,7 +88,9 @@ describe("Verification page", () => {
   it("has appropriate CSS module classes for styling", () => {
     render(
       <BrowserRouter>
-        <Verification />
+        <ToastProvider>
+          <Verification />
+        </ToastProvider>
       </BrowserRouter>
     );
 

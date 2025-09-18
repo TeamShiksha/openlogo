@@ -283,6 +283,61 @@ async function verifyEmailController(req, res, next) {
 }
 
 /**
+ * This controller processes the resend verification request.
+ * It first checks if the user is signed up and not yet verified.
+ * Only then does it send a verification link to the email address
+ * provided by the user for resending the verification link.
+ */
+
+async function resendVerficationController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const userTokenService = new UserTokenService();
+    const email = req.body.email;
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: "Email doesn't exist",
+        statusCode: 404,
+      });
+    }
+    if (user.is_verified) {
+      return res.status(200).json({
+        statusCode: 200,
+        message: Messages.EMAIL_ALREADY_VERIFIED,
+        success: true,
+        alreadyVerified: true,
+      });
+    }
+    const verificationToken = await userTokenService.createUserToken(user._id);
+    if (!verificationToken) {
+      return res.status(201).json({
+        message: Messages.SOMETHING_WENT_WRONG,
+        statusCode: 201,
+      });
+    }
+
+    await sendEmail({
+      id: 2,
+      subject: "Openlogo: Email Verification",
+      recipient: email,
+      body: {
+        url: verificationToken.tokenURL(),
+      },
+    });
+
+    return res.status(200).json({
+      message: Messages.EMAIL_SENTED,
+      success: true,
+      statusCode: 200,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
  * This controller processes a token provided in the request query.
  * It validates the token, checks its expiration, fetches the associated user,
  * and attempts to verify the user's account.
@@ -446,6 +501,7 @@ module.exports = {
   signinController,
   signoutController,
   verifyEmailController,
+  resendVerficationController,
   forgotPasswordController,
   resetPasswordSessionController,
   resetPasswordController,
