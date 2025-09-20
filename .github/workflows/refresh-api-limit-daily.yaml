@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 2
     strategy:
       matrix:
-        branch: [stage, prod]
+        branch: [prod]
     environment: ${{ matrix.branch == 'stage' && 'STAGE' || 'PROD' }}
 
     steps:
@@ -33,3 +33,4 @@ jobs:
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
         run: node ./packages/app/scripts/refreshUsageCount.js
+
