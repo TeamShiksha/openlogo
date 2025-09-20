@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => {
       allowedHosts: [".openlogo.fyi"],
     },
     define: {
-      "process.env.VITE_BASE_URL":
-        JSON.stringify(env.VITE_BASE_URL) || process.env.VITE_BASE_URL,
+      "process.env.API_BASE_URL":
+        JSON.stringify(env.API_BASE_URL) || process.env.API_BASE_URL,
     },
   };
 });

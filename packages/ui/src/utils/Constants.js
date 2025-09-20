@@ -442,10 +442,20 @@ export const SIGNUP = {
   termsUrl: "/privacy#terms",
   privacyUrl: "/privacy#privacy",
   fields: [
-    { type: "text", name: "name", label: "Name" },
-    { type: "email", name: "email", label: "Email" },
-    { type: "password", name: "password", label: "Password" },
-    { type: "password", name: "confirmPassword", label: "Confirm Password" },
+    { type: "text", name: "name", label: "Name", autoComplete: "username" },
+    { type: "email", name: "email", label: "Email", autoComplete: "email" },
+    {
+      type: "password",
+      name: "password",
+      label: "Password",
+      autoComplete: "new-password",
+    },
+    {
+      type: "password",
+      name: "confirmPassword",
+      label: "Confirm Password",
+      autoComplete: "new-password",
+    },
   ],
   footerText: "Already have an account ?",
   initialValues: {
@@ -460,7 +470,12 @@ export const SIGNIN = {
   title: "Go to dashboard",
   fields: [
     { type: "email", name: "email", label: "Email" },
-    { type: "password", name: "password", label: "Password" },
+    {
+      type: "password",
+      name: "password",
+      label: "Password",
+      autoComplete: "current-password",
+    },
   ],
   guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
@@ -753,7 +768,7 @@ export const OPERATOR_ARCHIVED_MESSAGES = {
 export const USAGE = {
   callsText: "Calls",
   limitText: "Limit",
-  resetText: "Resets 1st of every month.",
+  resetText: "Resets every month.",
 };
 
 export const CURRENT_PLAN = {

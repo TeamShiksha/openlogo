@@ -1,21 +1,30 @@
 name: Refresh API limit Daily
 
 on:
+  schedule:
+    - cron: "0 0 * * *" # daily at midnight
   workflow_dispatch:
 
 jobs:
   refresh_usage_count:
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    strategy:
+      matrix:
+        branch: [prod]
+    environment: ${{ matrix.branch == 'stage' && 'STAGE' || 'PROD' }}
+
     steps:
       - name: set timezone
         run: |
           sudo timedatectl set-timezone Asia/Kolkata
           sudo timedatectl set-ntp true
           timedatectl
-      
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Install Mongoose
         run: npm install mongoose --legacy-peer-deps
@@ -23,5 +32,5 @@ jobs:
       - name: Run refreshUsageCount script
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}
-        run: node ./server/scripts/refreshUsageCount.js
-        # The above script needs to be created or updated
+        run: node ./packages/app/scripts/refreshUsageCount.js
+

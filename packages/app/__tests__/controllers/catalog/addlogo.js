@@ -48,6 +48,86 @@ describe("POST /api/catalog/logo", () => {
     });
   });
 
+  it("200 - Admin should successfully upload a new logo", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]); // Admin user
+    const token = mockAdmin.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "GOOGLE.png";
+    const mockImageData = {
+      _id: "mock-image-id",
+      updatedAt: new Date().toISOString(),
+    };
+
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
+    jest
+      .spyOn(ImageService.prototype, "uploadToS3")
+      .mockResolvedValue("logos/png/GOOGLE.png");
+    jest
+      .spyOn(ImageService.prototype, "createImageData")
+      .mockResolvedValue(mockImageData);
+
+    const res = await request(app)
+      .post("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://validcompany.com/")
+      .attach("logo", mockBuffer, mockFileName);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      statusCode: 200,
+      message: Messages.UPLOAD_SUCCESS,
+      data: mockImageData,
+    });
+  });
+
+  it("200 - Operator should successfully upload a new logo", async () => {
+    const mockOperator = new Users(MOCK_USERS[3]); // Operator user
+    const token = mockOperator.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "YAHOO.png";
+    const mockImageData = {
+      _id: "mock-image-id-2",
+      updatedAt: new Date().toISOString(),
+    };
+
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
+    jest
+      .spyOn(ImageService.prototype, "uploadToS3")
+      .mockResolvedValue("logos/png/YAHOO.png");
+    jest
+      .spyOn(ImageService.prototype, "createImageData")
+      .mockResolvedValue(mockImageData);
+
+    const res = await request(app)
+      .post("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://yahoo.com/")
+      .attach("logo", mockBuffer, mockFileName);
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe(Messages.UPLOAD_SUCCESS);
+  });
+
+  it("401 - Customer should be unauthorized to upload a logo", async () => {
+    const mockCustomer = new Users(MOCK_USERS[1]); // Customer user
+    const token = mockCustomer.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "customer-logo.png";
+
+    const res = await request(app)
+      .post("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .field("companyUri", "https://customer.com/")
+      .attach("logo", mockBuffer, mockFileName);
+
+    expect(res.status).toBe(401);
+    expect(res.body.message).toBe("Unauthorized");
+  });
+
   it("500 - createImageData fails", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]); // Admin user
     const token = mockAdmin.generateJWT();
