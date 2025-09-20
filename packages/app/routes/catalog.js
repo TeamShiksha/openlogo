@@ -25,7 +25,7 @@ router.get(
 router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
 router.post(
   "/logo",
-  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }), // To allow the admin, oprator to upload the image
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   upload.single("logo"),
   addCatalogController
 );
