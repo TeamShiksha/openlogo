@@ -768,7 +768,7 @@ export const OPERATOR_ARCHIVED_MESSAGES = {
 export const USAGE = {
   callsText: "Calls",
   limitText: "Limit",
-  resetText: "Resets 1st of every month.",
+  resetText: "Resets every month.",
 };
 
 export const CURRENT_PLAN = {
