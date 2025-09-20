@@ -8,6 +8,7 @@ const {
   addCatalogController,
   getAnalyticsController,
 } = require("../controllers/catalog");
+const { UserType } = require("../utils/constants");
 
 router.put(
   "/permission/:userId/roles/:role",
@@ -24,13 +25,13 @@ router.get(
 router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
 router.post(
   "/logo",
-  authMiddleware({ adminOnly: true }),
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   upload.single("logo"),
   addCatalogController
 );
 router.put(
   "/logo",
-  authMiddleware({ adminOnly: true }),
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   upload.single("logo"),
   updateCatalogController
 );

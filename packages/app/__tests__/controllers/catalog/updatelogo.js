@@ -21,6 +21,54 @@ describe("PUT /api/catalog/logo", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
+  it("200 - Operator should update an image successfully", async () => {
+    const mockOperator = new Users(MOCK_USERS[3]); // Operator User
+    const token = mockOperator.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "MICROSOFT.png";
+    const mockImage = new Images(MOCK_IMAGES[1]);
+    const mockImageData = {
+      _id: mockImage._id.toString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    jest
+      .spyOn(ImageService.prototype, "getImageById")
+      .mockResolvedValue(mockImage);
+    jest
+      .spyOn(ImageService.prototype, "uploadToS3")
+      .mockResolvedValue("logos/png/MICROSOFT.png");
+    jest
+      .spyOn(ImageService.prototype, "updateImageById")
+      .mockResolvedValue(mockImageData);
+
+    const response = await request(app)
+      .put("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .attach("logo", mockBuffer, mockFileName)
+      .field("id", mockImage._id.toString());
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe(Messages.UPLOAD_SUCCESS);
+  });
+
+  it("401 - Customer should be unauthorized to update a logo", async () => {
+    const mockCustomer = new Users(MOCK_USERS[1]); // Customer user
+    const token = mockCustomer.generateJWT();
+    const mockBuffer = Buffer.from("test image");
+    const mockFileName = "customer-logo.png";
+    const mockImage = new Images(MOCK_IMAGES[2]);
+
+    const response = await request(app)
+      .put("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .attach("logo", mockBuffer, mockFileName)
+      .field("id", mockImage._id.toString());
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Unauthorized");
+  });
+
   it("422 - Image is required", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
