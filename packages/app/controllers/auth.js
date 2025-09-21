@@ -328,7 +328,7 @@ async function resendVerficationController(req, res, next) {
     });
 
     return res.status(200).json({
-      message: Messages.EMAIL_SENTED,
+      message: Messages.EMAIL_SENT,
       success: true,
       statusCode: 200,
     });
