@@ -81,7 +81,7 @@ const Verification = () => {
         <p className={styles.verifyMessage}>{message}</p>
       </div>
       <form
-        onSubmit={(e) => handleResendEmail(e)}
+        onSubmit={handleResendEmail}
         className={styles.resendVerficationContainer}
       >
         <CustomInput
