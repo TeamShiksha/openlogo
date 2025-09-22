@@ -122,3 +122,79 @@ describe("getLogoController", () => {
     });
   });
 });
+
+describe("getLogoController - Operations Order Test", () => {
+  beforeAll(() => {
+    process.env.JWT_SECRET = "Your_JWT_SECRET";
+    process.env.CLIENT_PROXY_URL = "http://localhost:3000";
+    process.env.KEY = "logos";
+  });
+
+  afterAll(() => {
+    delete process.env.JWT_SECRET;
+    delete process.env.CLIENT_PROXY_URL;
+    delete process.env.KEY;
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const apiUrl = "/api/logo";
+
+  it("should ensure image is fetched before usage count is incremented - operations order test", async () => {
+    const operationsOrder = [];
+    const imageUrl = "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
+
+    const mockKeyRef = {
+      subscription_id: "test_subscription_id",
+      ...MOCK_KEYS[0],
+    };
+
+    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(mockKeyRef);
+
+    const mockSubscription = {
+      usage_count: 5,
+      usage_limit: 100,
+      ...MOCK_SUBSCRIPTION[0],
+    };
+
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue(mockSubscription);
+
+    jest
+      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+      .mockImplementation(() => {
+        operationsOrder.push("image_fetched");
+        return imageUrl;
+      });
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockImplementation(() => {
+        operationsOrder.push("usage_count_incremented");
+        return Promise.resolve();
+      });
+
+    const baseQuery = {
+      API_KEY: MOCK_KEYS[1].key,
+      key: "https://google.com",
+    };
+
+    const response = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      statusCode: 200,
+      data: imageUrl,
+    });
+
+    expect(operationsOrder).toEqual([
+      "image_fetched",
+      "usage_count_incremented",
+    ]);
+    expect(operationsOrder[0]).toBe("image_fetched");
+    expect(operationsOrder[1]).toBe("usage_count_incremented");
+  });
+});
