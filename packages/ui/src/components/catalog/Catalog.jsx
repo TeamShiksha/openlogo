@@ -10,6 +10,7 @@ import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
+import { useRef } from "react";
 
 function Catalog() {
   const toast = useToast();
@@ -18,7 +19,7 @@ function Catalog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [updateImageId, setUpdateImageId] = useState(null);
-
+  const pageBeforeSearchRef = useRef(0);
   const limit = 10;
   const skip = pageNum * limit;
 
@@ -101,20 +102,25 @@ function Catalog() {
   };
 
   const handleSearchTermChange = (inputChangeEvent) => {
-    setSearchTerm(inputChangeEvent.target.value);
-    setPageNum(0);
+    const newSearchTerm = inputChangeEvent.target.value;
+    const previousSearchTerm = searchTerm;
+    setSearchTerm(newSearchTerm);
+    if (newSearchTerm !== "" && previousSearchTerm === "") {
+      pageBeforeSearchRef.current = pageNum;
+      setPageNum(0);
+    } else if (newSearchTerm !== "" && previousSearchTerm !== "") {
+      setPageNum(0);
+    }
   };
 
   const handlePreviousBtnClick = () => {
     if (pageNum > 0) {
-      setSearchTerm("");
       setPageNum((prev) => prev - 1);
     }
   };
 
   const handleNextBtnClick = () => {
     if (pageNum < totalPages) {
-      setSearchTerm("");
       setPageNum((prev) => prev + 1);
     }
   };

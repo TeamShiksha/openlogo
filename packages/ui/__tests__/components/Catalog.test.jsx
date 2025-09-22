@@ -31,7 +31,6 @@ vi.mock("../../src/hooks/useApi", () => ({
 describe("Catalog Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.runAllTimers();
   });
 
   afterEach(() => {
