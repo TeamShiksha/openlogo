@@ -509,6 +509,7 @@ module.exports = {
   signoutController,
   verifyEmailController,
   forgotPasswordController,
+  resendVerficationController,
   resetPasswordSessionController,
   resetPasswordController,
   validateSessionController,

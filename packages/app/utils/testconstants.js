@@ -13,6 +13,7 @@ const ENDPOINTS = {
   SIGNOUT: "/api/auth/signout",
   VERIFY: "/api/auth/verify",
   FORGOT_PASSWORD: "/api/auth/password/forgot",
+  RESEND_VERIFICATION: "/api/auth/resend-verification",
   RESET_PASSWORD_SESSION: "/api/auth/password/forgot",
   RESET_PASSWORD: "/api/auth/password/reset",
   MESSAGES: "/api/messages",
