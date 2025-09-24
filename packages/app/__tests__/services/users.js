@@ -82,22 +82,17 @@ describe("User Service", () => {
     expect(result).toEqual(key);
   });
 
-  it("delete user succesfully", async () => {
-    const user = new User(MOCK_USERS[0]);
-
-    jest.spyOn(UsersRepository.prototype, "delete").mockResolvedValue(user);
-
-    const result = await userService.deleteUserAccount(user.id);
-
-    expect(result).toBe(true);
+  it("deleting user returns false if user not found", async () => {
+    jest.spyOn(UsersRepository.prototype, "softDelete").mockResolvedValue(null);
+    const result = await userService.deleteUserAccount("nonexistent-id");
+    expect(result).toBe(false);
   });
 
-  it("deleting user returns false if user not found", async () => {
-    jest.spyOn(UsersRepository.prototype, "delete").mockResolvedValue(null);
-
-    const result = await userService.deleteUserAccount("nonexistent-id");
-
-    expect(result).toBe(false);
+  it("delete user successfully", async () => {
+    const user = new User(MOCK_USERS[0]);
+    jest.spyOn(UsersRepository.prototype, "softDelete").mockResolvedValue(user);
+    const result = await userService.deleteUserAccount(user.id);
+    expect(result).toBe(true);
   });
 
   it("finds a user with valid email who is registered", async () => {

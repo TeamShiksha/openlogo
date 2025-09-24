@@ -37,15 +37,27 @@ class BaseRepository {
   }
 
   async update(id, data) {
-    return await this.model.findByIdAndUpdate(id, data);
+    return await this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
   async delete(id) {
     return await this.model.findByIdAndDelete(id);
   }
 
-  async mark_deleted(id) {
-    return await this.model.findByIdAndUpdate(id, { isDeleted: true });
+  //Tenure-based soft delete
+  async softDelete(id, tenureDays = 30) {
+    const blockUntil = new Date();
+    blockUntil.setDate(blockUntil.getDate() + tenureDays);
+
+    return await this.model.findByIdAndUpdate(
+      id,
+      {
+        is_deleted: true,
+        deleted_at: new Date(),
+        block_until: blockUntil,
+      },
+      { new: true }
+    );
   }
 }
 

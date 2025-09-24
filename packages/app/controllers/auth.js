@@ -33,10 +33,11 @@ async function signupController(req, res, next) {
     }
 
     const { email } = value;
-    const emailExists = await userService.getUserByEmail(email);
-    if (emailExists) {
+    try {
+      await userService.canRegister(email);
+    } catch (tenureError) {
       return res.status(400).json({
-        message: Messages.EMAIL_EXISTS,
+        message: tenureError.message,
         error: STATUS_CODES[400],
         statusCode: 400,
       });
@@ -110,19 +111,27 @@ async function signinController(req, res, next) {
           error: STATUS_CODES[422],
         });
       const { email, password } = value;
-      user = await userService.getUserByEmail(email);
+      user = await userService.getAnyUserByEmail(email);
       if (!user)
         return res.status(404).json({
           error: STATUS_CODES[404],
           message: Messages.INCORRECT_EMAIL_PASS,
           statusCode: 404,
         });
+
       if (!user.is_verified)
         return res.status(403).json({
           error: STATUS_CODES[403],
           message: Messages.EMAIL_NOT_VERIFIED,
           statusCode: 403,
         });
+      if (user.is_deleted) {
+        return res.status(400).json({
+          error: STATUS_CODES[400],
+          message: "This email is already used",
+          statusCode: 400,
+        });
+      }
       const matchPassword = await user.matchPassword(password);
       if (!matchPassword) {
         return res.status(404).json({
@@ -140,9 +149,9 @@ async function signinController(req, res, next) {
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       expires: oneDayValidityTimestamp,
-      sameSite: "strict",
-      httpOnly: true,
-      domain: ".openlogo.fyi",
+      // sameSite: "strict",
+      // httpOnly: true,
+      // domain: ".openlogo.fyi",
     };
 
     res.cookie("jwt", user.generateJWT(), cookieOptions);
@@ -173,9 +182,9 @@ function signoutController(req, res, next) {
 
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
-      sameSite: "strict",
-      httpOnly: true,
-      domain: ".openlogo.fyi",
+      // sameSite: "strict",
+      // httpOnly: true,
+      // domain: ".openlogo.fyi",
     };
 
     res.clearCookie("jwt", cookieOptions);

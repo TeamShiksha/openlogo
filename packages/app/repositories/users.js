@@ -21,6 +21,15 @@ class UsersRepository extends BaseRepository {
     return await this.model.findOne({ email: emailId, is_deleted: false });
   }
 
+  async findAnyUserByEmail(email) {
+    return await this.model.findOne({ email });
+  }
+
+  //Soft delete user with tenure
+  softDelete(userId, tenureDays = 30) {
+    return super.softDelete(userId, tenureDays);
+  }
+
   /**
    *
    * @returns {Promise<number>} - Total number of users.
