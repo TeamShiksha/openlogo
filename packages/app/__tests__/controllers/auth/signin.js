@@ -73,7 +73,6 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
-    // const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
       .send({ email: user.email, password: dummyPassword });
@@ -125,7 +124,6 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
-    // const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
       .send({ email: user.email, password: dummyPassword });
