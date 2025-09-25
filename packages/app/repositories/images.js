@@ -60,7 +60,7 @@ class ImagesRepository extends BaseRepository {
 
     const [total, images] = await Promise.all([
       this.model.countDocuments(query),
-      this.model.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }),
+      this.model.find(query).skip(skip).limit(limit).sort({ updated_at: -1 }),
     ]);
 
     return {

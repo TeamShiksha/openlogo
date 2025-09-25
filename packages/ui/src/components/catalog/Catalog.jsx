@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
@@ -10,7 +10,6 @@ import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
-import { useRef } from "react";
 
 function Catalog() {
   const toast = useToast();
