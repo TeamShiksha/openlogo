@@ -10,6 +10,7 @@ import Documentation from "./page/documentation/Documentation";
 import ScrollManager from "./components/common/ScrollManager";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Verification from "./page/verification/Verification";
+import ResendVerification from "./page/resend-verification/ResendVerification.jsx";
 import NotFound from "./page/notfound/NotFound";
 import "./index.css";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/docs" element={<Documentation />} />
           <Route path="/verify" element={<Verification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/resend-verification" element={<ResendVerification />} />
           <Route
             path="/dashboard"
             element={

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
@@ -21,8 +21,8 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-
-  const { makeRequest, errorMsg } = useApi({
+  const [showResendVerify, setShowResendVerify] = useState(false);
+  const { makeRequest, data, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/password/forgot` : `/auth/signin`,
     data: isForgotPassword ? { email: formData.email } : formData,
@@ -63,6 +63,12 @@ const SignIn = ({ toggleForm, onClose }) => {
     const errors = validate(fieldsToValidate);
     setIsFormValid(Object.keys(errors).length === 0);
   }, [formData, isForgotPassword]);
+
+  useEffect(() => {
+    if (data?.statusCode === 403) {
+      setShowResendVerify(true);
+    }
+  }, [data]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -164,7 +170,14 @@ const SignIn = ({ toggleForm, onClose }) => {
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>
       </form>
-
+      {showResendVerify && (
+        <p className={styles.resendLink}>
+          <Link to="/resend-verification" onClick={onClose}>
+            Click here
+          </Link>{" "}
+          to resend verification link
+        </p>
+      )}
       <hr className={styles.separator} />
       <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
         {SIGNIN.guestAccount}

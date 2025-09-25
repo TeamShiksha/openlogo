@@ -47,14 +47,6 @@
   margin-bottom: 1.5rem;
 }
 
-.resendVerficationContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 10px;
-}
-
 @media only screen and (max-width: 1024px) {
   .verificationPageContainer {
     padding: 2rem;

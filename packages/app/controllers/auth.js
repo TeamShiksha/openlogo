@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, EmailValidationRegex } = require("../utils/constants");
 
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -140,9 +140,9 @@ async function signinController(req, res, next) {
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       expires: oneDayValidityTimestamp,
-      sameSite: "strict",
-      httpOnly: true,
-      domain: ".openlogo.fyi",
+      // sameSite: "strict",
+      // httpOnly: true,
+      // domain: ".openlogo.fyi",
     };
 
     res.cookie("jwt", user.generateJWT(), cookieOptions);
@@ -294,12 +294,19 @@ async function resendVerficationController(req, res, next) {
     const userService = new UserService();
     const userTokenService = new UserTokenService();
     const email = req.body.email;
-    if(!email){
+    if (!email) {
       return res.status(422).json({
         error: STATUS_CODES[422],
         message: Messages.DATA_NOT_FOUND,
-        statusCode: 422
-      })
+        statusCode: 422,
+      });
+    }
+    if (!EmailValidationRegex.test(email)) {
+      return res.status(400).json({
+        error: 400,
+        message: "Invalid email format",
+        statusCode: 400,
+      });
     }
     const user = await userService.getUserByEmail(email);
     if (!user) {

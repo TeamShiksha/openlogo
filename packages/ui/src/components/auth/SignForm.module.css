@@ -61,7 +61,9 @@
 .form-width {
   width: 245px;
 }
-
+.resendLink {
+  font-size: 15px;
+}
 .logo {
   width: 100px;
   height: auto;
