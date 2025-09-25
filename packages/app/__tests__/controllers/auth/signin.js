@@ -71,9 +71,10 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
+    const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: "password123" });
+      .send({ email: user.email, password: TESTPASSWORD });
 
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
@@ -96,9 +97,10 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
+    const INVAILD = "wrongpassword";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: "wrongpassword" });
+      .send({ email: user.email, password: INVAILD });
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -121,9 +123,10 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
+    const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: "password123" });
+      .send({ email: user.email, password: TESTPASSWORD });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ statusCode: 200 });
