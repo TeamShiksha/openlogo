@@ -6,6 +6,8 @@ const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
+const dummyPassword =
+  require("../../../utils/generatePassword").generatePassword();
 
 describe("SIGNIN API", () => {
   beforeAll(() => {
@@ -71,10 +73,10 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
-    const TESTPASSWORD = "password123";
+    // const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: TESTPASSWORD });
+      .send({ email: user.email, password: dummyPassword });
 
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
@@ -123,10 +125,10 @@ describe("SIGNIN API", () => {
       .spyOn(UserService.prototype, "getAnyUserByEmail")
       .mockResolvedValue(user);
 
-    const TESTPASSWORD = "password123";
+    // const TESTPASSWORD = "password123";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: TESTPASSWORD });
+      .send({ email: user.email, password: dummyPassword });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ statusCode: 200 });
