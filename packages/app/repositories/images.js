@@ -52,7 +52,7 @@ class ImagesRepository extends BaseRepository {
   }
 
   async getAllImageByUserId(userId, skip, limit, search = "") {
-    const query = { user_id: userId };
+    const query = {};
 
     if (search) {
       query.company_name = { $regex: search, $options: "i" };
