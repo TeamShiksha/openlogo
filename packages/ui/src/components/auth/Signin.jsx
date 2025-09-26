@@ -132,6 +132,7 @@ const SignIn = ({ toggleForm, onClose }) => {
                 onFocus={() => setFocusedField(field.name)}
                 onBlur={() => setFocusedField(null)}
                 disabled={isLoading}
+                autoComplete={field.autoComplete}
               />
             ))}
         </div>
