@@ -16,6 +16,12 @@ import {
   OPERATOR_ARCHIVED_MESSAGES,
 } from "../../../src/utils/Constants";
 
+import { useApi } from "../../../src/hooks/useApi";
+
+vi.mock("../../../src/hooks/useApi", () => ({
+  useApi: vi.fn(),
+}));
+
 vi.mock("../../../src/api/api_instance", () => ({
   instance: {
     get: vi.fn(),
@@ -23,9 +29,37 @@ vi.mock("../../../src/api/api_instance", () => ({
   },
 }));
 
+vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
+  __esModule: true,
+  default: ({ isOpen, onClose, onUpload, isLoading }) => {
+    if (!isOpen) return null;
+    return (
+      <div data-testid="image-upload-modal">
+        <button data-testid="close-modal" onClick={onClose}>
+          Close
+        </button>
+        <button
+          data-testid="upload-button"
+          onClick={() =>
+            onUpload({ file: "test-file", companyUri: "test-uri" })
+          }
+        >
+          Upload
+        </button>
+        {isLoading && <span>Loading...</span>}
+      </div>
+    );
+  },
+}));
+
 describe("Operator Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    useApi.mockReturnValue({
+      loading: false,
+      makeRequest: vi.fn(),
+      errorMsg: null,
+    });
   });
 
   it("renders and fetches messages by default", async () => {
@@ -238,6 +272,110 @@ describe("Operator Page", () => {
         reply: validTestText,
         status: "REJECTED",
       });
+    });
+  });
+
+  it("should render the 'Add image' button", async () => {
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Add image" })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("should not show the ImageUploadModal initially", async () => {
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("image-upload-modal")
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("should open the ImageUploadModal when 'Add image' button is clicked", async () => {
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Add image" })
+      ).toBeInTheDocument();
+    });
+    const addButton = screen.getByRole("button", { name: "Add image" });
+    fireEvent.click(addButton);
+    await waitFor(() => {
+      expect(screen.getByTestId("image-upload-modal")).toBeInTheDocument();
+    });
+  });
+
+  it("should close the ImageUploadModal when close button is clicked", async () => {
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Add image" })
+      ).toBeInTheDocument();
+    });
+    const addButton = screen.getByRole("button", { name: "Add image" });
+    fireEvent.click(addButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("image-upload-modal")).toBeInTheDocument();
+    });
+
+    const closeButton = screen.getByTestId("close-modal");
+    fireEvent.click(closeButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("image-upload-modal")
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("should call onUpload with correct data when upload is triggered from modal", async () => {
+    const uploadMakeRequest = vi.fn();
+    useApi.mockReturnValue({
+      loading: false,
+      makeRequest: uploadMakeRequest,
+      errorMsg: null,
+    });
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Add image" })
+      ).toBeInTheDocument();
+    });
+    const addButton = screen.getByRole("button", { name: "Add image" });
+    fireEvent.click(addButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("upload-button")).toBeInTheDocument();
+    });
+    const uploadButton = screen.getByTestId("upload-button");
+    fireEvent.click(uploadButton);
+
+    await waitFor(() => {
+      expect(uploadMakeRequest).toHaveBeenCalled();
     });
   });
 });

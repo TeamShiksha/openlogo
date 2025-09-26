@@ -296,6 +296,23 @@ const Operator = () => {
 
   return (
     <div className={styles["operator-container"]}>
+      <Button
+        onClick={() => {
+          setIsUploadModalOpen(true);
+        }}
+        variant="primary"
+        className={styles["catalog-add-image-btn"]}
+      >
+        Add image
+      </Button>
+      <ImageUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => {
+          setIsUploadModalOpen(false);
+        }}
+        onUpload={handleImageUpload}
+        isLoading={uploadLoading}
+      />
       <div className={styles.header}>
         <div className={styles["tabs-container"]}>
           <button
@@ -318,23 +335,7 @@ const Operator = () => {
           className={styles["type-selector"]}
         />
       </div>
-      <Button
-        onClick={() => {
-          setIsUploadModalOpen(true);
-        }}
-        variant="primary"
-        className={styles["catalog-add-image-btn"]}
-      >
-        Add image
-      </Button>
-      <ImageUploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => {
-          setIsUploadModalOpen(false);
-        }}
-        onUpload={handleImageUpload}
-        isLoading={uploadLoading}
-      />
+
       {contentToRender}
 
       {totalPages > 1 && (
