@@ -10,6 +10,7 @@ import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
+import axios from "axios";
 
 function Catalog() {
   const toast = useToast();
@@ -33,9 +34,16 @@ function Catalog() {
     errorMsg: uploadErrorMsg,
   } = useApi({
     method: updateImageId ? "PUT" : "POST",
-    url: `/catalog/logo`,
-    headers: { "Content-Type": "multipart/form-data" },
+    url: `/catalog/logoMetadata`,
+    headers: { "Content-Type": "application/json" },
   });
+
+  const { makeRequest: signedUrlRequest, errorMsg: signedUrlerrorMsg } = useApi(
+    {
+      method: "POST",
+      url: `/catalog/signedUrl`,
+    }
+  );
 
   useEffect(() => {
     makeRequest();
@@ -55,6 +63,12 @@ function Catalog() {
   }, [errorMsg, toast]);
 
   useEffect(() => {
+    if (signedUrlerrorMsg) {
+      toast.error(signedUrlerrorMsg);
+    }
+  }, [signedUrlerrorMsg, toast]);
+
+  useEffect(() => {
     if (data?.data?.totalPages) {
       setTotalPages(data.data.totalPages - 1);
     }
@@ -62,14 +76,27 @@ function Catalog() {
 
   const handleImageUpload = async ({ file, companyUri }) => {
     if (!file || !companyUri) return;
-
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("companyUri", companyUri);
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const signedUrlResp = await signedUrlRequest({
+        data: { companyUri, extension },
+      });
+      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+
+      const { presignedUrl, key } = signedUrlRequest.data?.data || {};
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+      await axios.post(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: { companyUri, extension, size },
+      });
+      if (metadataSaved) {
         setIsModalOpen(false);
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);

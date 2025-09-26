@@ -29,5 +29,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "3.3.3"
+  },
+  "dependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.894.0"
   }
 }

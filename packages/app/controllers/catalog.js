@@ -117,6 +117,59 @@ async function addPermissionController(req, res, next) {
 }
 
 /**
+ * Handles presignedUrl & faciliate with uploading images on AWS s3 bucket.
+ */
+async function getPreSignedController(req, res, next) {
+  try {
+    const imageService = new ImageService();
+    const { companyUri, extension } = req.body;
+    const { error } = companyUriSchema.validate(companyUri);
+
+    if (error) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        statusCode: 500,
+        message: error.message,
+      });
+    }
+
+    const match = companyUri
+      .toUpperCase()
+      .match(ExtractCompanyNameFromUrlRegex);
+
+    const companyName = match[1];
+
+    const imageExist = await imageService.getImageByCompanyName(companyName);
+    if (imageExist) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        statusCode: 400,
+        message: Messages.IMAGE_ALREADY_EXISTS,
+      });
+    }
+    const { key, presignedUrl } = await imageService.getPreSignedUrl(
+      companyName,
+      extension
+    );
+
+    if (!key || !presignedUrl) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        statusCode: 500,
+        message: Messages.UPLOAD_FAILED,
+      });
+    }
+
+    res.status(200).json({
+      statusCode: 200,
+      data: { key, presignedUrl },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * Retrieves the list of images uploaded by a specific user.
  * Validates the user existence and fetches associated images from the database.
  * Returns an empty array if no images are found.
@@ -231,17 +284,17 @@ async function updateCatalogController(req, res, next) {
 }
 
 /**
- * Handles admin image uploads: saves to S3, records metadata in the database.
+ * Handles metadata of file in the database.
  * Extracts `userId` and file details, processes and uploads file.
  */
 async function addCatalogController(req, res, next) {
   try {
     const imageServices = new ImageService();
     let { userId } = req.userData;
-    const file = req.file;
-    const imageSize = file.size;
+    let imageSize = req.body.size;
     const companyUri = req.body.companyUri;
     const { error } = companyUriSchema.validate(companyUri);
+
     if (error) {
       return res.status(500).json({
         error: STATUS_CODES[500],
@@ -250,30 +303,11 @@ async function addCatalogController(req, res, next) {
       });
     }
 
-    const imageName = file.originalname;
     const match = companyUri
       .toUpperCase()
       .match(ExtractCompanyNameFromUrlRegex);
     const companyName = match[1];
-    const Extension = imageName.split(".")[1].toLowerCase();
-
-    const imageExist = await imageServices.getImageByCompanyName(companyName);
-    if (imageExist) {
-      return res.status(400).json({
-        error: STATUS_CODES[400],
-        statusCode: 400,
-        message: Messages.IMAGE_ALREADY_EXISTS,
-      });
-    }
-
-    const key = await imageServices.uploadToS3(file, companyName, Extension);
-    if (!key) {
-      res.status(500).json({
-        error: STATUS_CODES[500],
-        statusCode: 500,
-        message: Messages.UPLOAD_FAILED,
-      });
-    }
+    const Extension = req.body.extension;
 
     const imageData = await imageServices.createImageData(
       userId,
@@ -283,13 +317,12 @@ async function addCatalogController(req, res, next) {
       Extension
     );
     if (!imageData) {
-      res.status(500).json({
+      return res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
         message: Messages.UPDATE_IMAGE_FAILED,
       });
     }
-
     res.status(200).json({
       statusCode: 200,
       message: Messages.UPLOAD_SUCCESS,
@@ -299,11 +332,11 @@ async function addCatalogController(req, res, next) {
     next(err);
   }
 }
-
 module.exports = {
   addPermissionController,
   getCatalogController,
   updateCatalogController,
   addCatalogController,
   getAnalyticsController,
+  getPreSignedController,
 };
