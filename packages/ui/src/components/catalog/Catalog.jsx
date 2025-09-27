@@ -11,6 +11,7 @@ import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
 import axios from "axios";
+import { instance } from "../../api/api_instance.js";
 
 function Catalog() {
   const toast = useToast();
@@ -38,13 +39,6 @@ function Catalog() {
     headers: { "Content-Type": "application/json" },
   });
 
-  const { makeRequest: signedUrlRequest, errorMsg: signedUrlerrorMsg } = useApi(
-    {
-      method: "POST",
-      url: `/catalog/signedUrl`,
-    }
-  );
-
   useEffect(() => {
     makeRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,12 +57,6 @@ function Catalog() {
   }, [errorMsg, toast]);
 
   useEffect(() => {
-    if (signedUrlerrorMsg) {
-      toast.error(signedUrlerrorMsg);
-    }
-  }, [signedUrlerrorMsg, toast]);
-
-  useEffect(() => {
     if (data?.data?.totalPages) {
       setTotalPages(data.data.totalPages - 1);
     }
@@ -80,16 +68,15 @@ function Catalog() {
     const size = file.size;
 
     try {
-      const signedUrlResp = await signedUrlRequest({
-        data: { companyUri, extension },
+      const signedUrlResp = await instance.post("/catalog/signedUrl", {
+        companyUri,
+        extension,
       });
-      if (!signedUrlResp) throw new Error("Failed to proceed your request");
-
-      const { presignedUrl, key } = signedUrlRequest.data?.data || {};
+      const { presignedUrl, key } = signedUrlResp.data?.data || {};
       if (!presignedUrl || !key) {
         throw new Error("Presigned url or key is missing");
       }
-      await axios.post(presignedUrl, file, {
+      await axios.put(presignedUrl, file, {
         headers: { "Content-Type": file.type },
       });
 
