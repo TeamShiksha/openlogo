@@ -143,13 +143,8 @@ class ImageServices {
    * @param {number} limit - The maximum number of images to return.
    * @throws {Error} If the retrieval operation fails.
    */
-  async getImagesByUserId(userId, skip, limit, search = "") {
-    return await this.imageRepository.getAllImageByUserId(
-      userId,
-      skip,
-      limit,
-      search
-    );
+  async getImages(skip, limit, search = "") {
+    return await this.imageRepository.getAllImages(skip, limit, search);
   }
 
   async getImageById(id) {

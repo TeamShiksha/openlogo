@@ -139,12 +139,7 @@ async function getCatalogController(req, res, next) {
     const limit = parseInt(req.query.limit) || 10;
 
     const search = req.query.search || "";
-    const imageData = await imageService.getImagesByUserId(
-      userId,
-      skip,
-      limit,
-      search
-    );
+    const imageData = await imageService.getImages(skip, limit, search);
     if (!imageData)
       return res.status(200).json({
         statusCode: 200,

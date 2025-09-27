@@ -51,7 +51,7 @@ class ImagesRepository extends BaseRepository {
     return cloudFrontUrl;
   }
 
-  async getAllImageByUserId(userId, skip, limit, search = "") {
+  async getAllImages(skip, limit, search = "") {
     const query = {};
 
     if (search) {

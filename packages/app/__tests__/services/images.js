@@ -127,14 +127,13 @@ describe("Image Service", () => {
     };
 
     jest
-      .spyOn(ImagesRepository.prototype, "getAllImageByUserId")
+      .spyOn(ImagesRepository.prototype, "getAllImages")
       .mockResolvedValue(mockResponse);
 
-    const result = await imageService.getImagesByUserId("user1", 0, 10);
+    const result = await imageService.getImages(0, 10);
 
     expect(result).toEqual(mockResponse);
-    expect(ImagesRepository.prototype.getAllImageByUserId).toHaveBeenCalledWith(
-      "user1",
+    expect(ImagesRepository.prototype.getAllImages).toHaveBeenCalledWith(
       0,
       10,
       ""

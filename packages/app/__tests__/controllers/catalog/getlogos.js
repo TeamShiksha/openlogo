@@ -45,9 +45,7 @@ describe("GET /api/catalog/logos", () => {
     const token = mockAdmin.generateJWT();
 
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
-    jest
-      .spyOn(ImageService.prototype, "getImagesByUserId")
-      .mockResolvedValue([]);
+    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue([]);
 
     const res = await request(app)
       .get("/api/catalog/logos")
@@ -76,7 +74,7 @@ describe("GET /api/catalog/logos", () => {
 
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest
-      .spyOn(ImageService.prototype, "getImagesByUserId")
+      .spyOn(ImageService.prototype, "getImages")
       .mockResolvedValue([mockImage]);
 
     const res = await request(app)
