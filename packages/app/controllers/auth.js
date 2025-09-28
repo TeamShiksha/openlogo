@@ -49,7 +49,7 @@ async function signupController(req, res, next) {
         expiry.setDate(expiry.getDate() + tenureDays);
         if (expiry > new Date()) {
           const daysLeft = Math.ceil(
-            (expiry - new Date()) / (1000 * 60 * 60 * 24)
+            (expiry - Date.now()) / (1000 * 60 * 60 * 24)
           );
           return res.status(400).json({
             message: `Account exists. You may re-register after ${daysLeft} days.`,

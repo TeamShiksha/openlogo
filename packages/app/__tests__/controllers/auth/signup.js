@@ -323,7 +323,7 @@ describe("SIGNUP API", () => {
     const tenureDays = 30;
     const expiry = new Date(deletedUser.deleted_at);
     expiry.setDate(expiry.getDate() + tenureDays);
-    const daysLeft = Math.ceil((expiry - new Date()) / (1000 * 60 * 60 * 24));
+    const daysLeft = Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24));
 
     expect(response.status).toBe(400);
     expect(response.body.error).toBe(STATUS_CODES[400]);
