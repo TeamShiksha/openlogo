@@ -52,11 +52,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
-  block_until: {
-    type: Date,
-    default: null,
-  },
-
   updated_at: {
     type: Date,
     required: true,

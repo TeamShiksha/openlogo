@@ -45,9 +45,7 @@ describe("SIGNIN API", () => {
   });
 
   it("404 - Incorrect email or password", async () => {
-    jest
-      .spyOn(UserService.prototype, "getAnyUserByEmail")
-      .mockResolvedValue(null);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
@@ -69,9 +67,7 @@ describe("SIGNIN API", () => {
       generateJWT: jest.fn().mockReturnValue("jwt-token"),
     };
 
-    jest
-      .spyOn(UserService.prototype, "getAnyUserByEmail")
-      .mockResolvedValue(user);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
@@ -94,9 +90,7 @@ describe("SIGNIN API", () => {
       generateJWT: jest.fn().mockReturnValue("jwt-token"),
     };
 
-    jest
-      .spyOn(UserService.prototype, "getAnyUserByEmail")
-      .mockResolvedValue(user);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
 
     const INVAILD = "wrongpassword";
     const response = await request(app)
@@ -120,9 +114,7 @@ describe("SIGNIN API", () => {
       generateJWT: jest.fn().mockReturnValue("jwt-token"),
     };
 
-    jest
-      .spyOn(UserService.prototype, "getAnyUserByEmail")
-      .mockResolvedValue(user);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)

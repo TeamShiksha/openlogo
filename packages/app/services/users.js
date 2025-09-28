@@ -91,30 +91,8 @@ class UserService {
    * @returns {boolean} - true if user was successfully deleted.
    */
   async deleteUserAccount(userId) {
-    const TENURE_DAYS = 30;
-    const deletedUser = await this.userRepository.softDelete(
-      userId,
-      TENURE_DAYS
-    );
+    const deletedUser = await this.userRepository.delete(userId);
     return deletedUser ? true : false;
-  }
-
-  async canRegister(email) {
-    const user = await this.userRepository.findAnyUserByEmail(email);
-
-    if (!user) return true;
-
-    if (!user.is_deleted) throw new Error("Account already exists.");
-
-    if (user.block_until && user.block_until > new Date()) {
-      const daysLeft = Math.ceil(
-        (user.block_until - new Date()) / (1000 * 60 * 60 * 24)
-      );
-      throw new Error(
-        `Account exists. You may re-register after ${daysLeft} days.`
-      );
-    }
-    return true;
   }
 
   /**
@@ -128,10 +106,6 @@ class UserService {
   /**
    * Fetches a user by email, including deleted users.
    */
-  async getAnyUserByEmail(email) {
-    return await this.userRepository.findAnyUserByEmail(email);
-  }
-
   async getGuestUser() {
     return await this.userRepository.getGuestUser();
   }

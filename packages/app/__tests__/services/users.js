@@ -83,14 +83,14 @@ describe("User Service", () => {
   });
 
   it("deleting user returns false if user not found", async () => {
-    jest.spyOn(UsersRepository.prototype, "softDelete").mockResolvedValue(null);
+    jest.spyOn(UsersRepository.prototype, "delete").mockResolvedValue(null);
     const result = await userService.deleteUserAccount("nonexistent-id");
     expect(result).toBe(false);
   });
 
   it("delete user successfully", async () => {
     const user = new User(MOCK_USERS[0]);
-    jest.spyOn(UsersRepository.prototype, "softDelete").mockResolvedValue(user);
+    jest.spyOn(UsersRepository.prototype, "delete").mockResolvedValue(user);
     const result = await userService.deleteUserAccount(user.id);
     expect(result).toBe(true);
   });

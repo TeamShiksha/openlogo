@@ -17,17 +17,13 @@ class UsersRepository extends BaseRepository {
    * @param {string} emailId - The email address to search for.
    * @returns {Promise<Object|null>} - Returns the user document if found, otherwise null.
    */
-  async findUserByEmail(emailId) {
-    return await this.model.findOne({ email: emailId, is_deleted: false });
-  }
-
-  async findAnyUserByEmail(email) {
+  async findUserByEmail(email) {
     return await this.model.findOne({ email });
   }
 
-  //Soft delete user with tenure
-  softDelete(userId, tenureDays = 30) {
-    return super.softDelete(userId, tenureDays);
+  //delete user with tenure
+  delete(userId, tenureDays = 30) {
+    return super.delete(userId, tenureDays);
   }
 
   /**

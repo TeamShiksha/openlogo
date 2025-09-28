@@ -159,9 +159,15 @@ describe("SIGNUP API", () => {
 
   it("400 - Email already registered", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD, email: "testname@gmail.com" };
+
+    const existingUser = {
+      email: "testname@gmail.com",
+      is_deleted: false,
+    };
+
     jest
-      .spyOn(UserService.prototype, "canRegister")
-      .mockRejectedValue(new Error(Messages.EMAIL_EXISTS));
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(existingUser);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
@@ -170,14 +176,14 @@ describe("SIGNUP API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: Messages.EMAIL_EXISTS,
+      message: "Account already exists.",
       statusCode: 400,
     });
   });
 
   it("500 - Failed creating subscription", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD };
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(null);
@@ -194,7 +200,7 @@ describe("SIGNUP API", () => {
 
   it("500 - Failed creating user", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD };
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
@@ -213,7 +219,7 @@ describe("SIGNUP API", () => {
 
   it("201 - Failed creating verificiation token", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD };
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
@@ -236,7 +242,7 @@ describe("SIGNUP API", () => {
 
   it("200 - User created successfully", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD };
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue({ _id: "mockSubId" });
@@ -272,7 +278,7 @@ describe("SIGNUP API", () => {
       ...SIGNUP_PAYLOAD,
       email: process.env.ADMINSEMAILS.split(",")[0],
     };
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue({ _id: "mockSubId" });
@@ -299,25 +305,38 @@ describe("SIGNUP API", () => {
   it("400 - Deleted user within block period cannot signup", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
 
-    const blockMessage = "Account exists. You may re-register after 5 days.";
+    // Deleted user within the 30-day tenure
+    const deletedUser = {
+      email: "deleted@example.com",
+      is_deleted: true,
+      deleted_at: new Date(), // today, within 30 days
+    };
+
     jest
-      .spyOn(UserService.prototype, "canRegister")
-      .mockRejectedValue(new Error(blockMessage));
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(deletedUser);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
+    const tenureDays = 30;
+    const expiry = new Date(deletedUser.deleted_at);
+    expiry.setDate(expiry.getDate() + tenureDays);
+    const daysLeft = Math.ceil((expiry - new Date()) / (1000 * 60 * 60 * 24));
+
     expect(response.status).toBe(400);
     expect(response.body.error).toBe(STATUS_CODES[400]);
     expect(response.body.statusCode).toBe(400);
-    expect(response.body.message).toBe(blockMessage);
+    expect(response.body.message).toBe(
+      `Account exists. You may re-register after ${daysLeft} days.`
+    );
   });
 
   it("200 - Deleted user block expired can signup", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
 
-    jest.spyOn(UserService.prototype, "canRegister").mockResolvedValue(true);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue({ _id: "mockSubId" });

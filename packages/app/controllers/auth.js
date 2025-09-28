@@ -33,14 +33,31 @@ async function signupController(req, res, next) {
     }
 
     const { email } = value;
-    try {
-      await userService.canRegister(email);
-    } catch (tenureError) {
-      return res.status(400).json({
-        message: tenureError.message,
-        error: STATUS_CODES[400],
-        statusCode: 400,
-      });
+    const user = await userService.getUserByEmail(email);
+
+    if (user) {
+      if (!user.is_deleted) {
+        return res.status(400).json({
+          message: "Account already exists.",
+          error: STATUS_CODES[400],
+          statusCode: 400,
+        });
+      }
+      if (user.deleted_at) {
+        const tenureDays = 30;
+        const expiry = new Date(user.deleted_at);
+        expiry.setDate(expiry.getDate() + tenureDays);
+        if (expiry > new Date()) {
+          const daysLeft = Math.ceil(
+            (expiry - new Date()) / (1000 * 60 * 60 * 24)
+          );
+          return res.status(400).json({
+            message: `Account exists. You may re-register after ${daysLeft} days.`,
+            error: STATUS_CODES[400],
+            statusCode: 400,
+          });
+        }
+      }
     }
 
     const newSubscription = await subscriptionService.createSubscription();
@@ -111,7 +128,7 @@ async function signinController(req, res, next) {
           error: STATUS_CODES[422],
         });
       const { email, password } = value;
-      user = await userService.getAnyUserByEmail(email);
+      user = await userService.getUserByEmail(email);
       if (!user)
         return res.status(404).json({
           error: STATUS_CODES[404],
@@ -128,7 +145,7 @@ async function signinController(req, res, next) {
       if (user.is_deleted) {
         return res.status(400).json({
           error: STATUS_CODES[400],
-          message: "This email is already used",
+          message: "Account does not exist.",
           statusCode: 400,
         });
       }
