@@ -166,9 +166,9 @@ async function signinController(req, res, next) {
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       expires: oneDayValidityTimestamp,
-      // sameSite: "strict",
-      // httpOnly: true,
-      // domain: ".openlogo.fyi",
+      sameSite: "strict",
+      httpOnly: true,
+      domain: ".openlogo.fyi",
     };
 
     res.cookie("jwt", user.generateJWT(), cookieOptions);
@@ -199,9 +199,9 @@ function signoutController(req, res, next) {
 
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
-      // sameSite: "strict",
-      // httpOnly: true,
-      // domain: ".openlogo.fyi",
+      sameSite: "strict",
+      httpOnly: true,
+      domain: ".openlogo.fyi",
     };
 
     res.clearCookie("jwt", cookieOptions);
