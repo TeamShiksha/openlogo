@@ -18,13 +18,22 @@ function Catalog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [updateImageId, setUpdateImageId] = useState(null);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
   const pageBeforeSearchRef = useRef(0);
   const limit = 10;
   const skip = pageNum * limit;
 
   const { data, loading, makeRequest, errorMsg } = useApi({
     method: "GET",
-    url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${searchTerm}`,
+    url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${debouncedSearchTerm}`,
   });
 
   const {
@@ -38,9 +47,11 @@ function Catalog() {
   });
 
   useEffect(() => {
-    makeRequest();
+    if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
+      makeRequest();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNum, searchTerm]);
+  }, [pageNum, debouncedSearchTerm]);
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -104,11 +115,15 @@ function Catalog() {
     const newSearchTerm = inputChangeEvent.target.value;
     const previousSearchTerm = searchTerm;
     setSearchTerm(newSearchTerm);
-    if (newSearchTerm !== "" && previousSearchTerm === "") {
+
+    if (newSearchTerm.length >= 2 && previousSearchTerm.length < 2) {
       pageBeforeSearchRef.current = pageNum;
       setPageNum(0);
-    } else if (newSearchTerm !== "" && previousSearchTerm !== "") {
+    } else if (newSearchTerm.length >= 2 && previousSearchTerm.length >= 2) {
       setPageNum(0);
+    } else if (newSearchTerm.length < 2 && previousSearchTerm.length >= 2) {
+      // Reset to previous page before search
+      setPageNum(pageBeforeSearchRef.current);
     }
   };
 

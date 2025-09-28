@@ -333,4 +333,57 @@ describe("Catalog Component", () => {
 
     expect(screen.getByTestId("dialog")).toBeInTheDocument();
   });
+
+  it("should debounce search input and only call makeRequest after 500ms", async () => {
+    const makeRequestMock = vi.fn();
+
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: makeRequestMock,
+    });
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(1);
+
+    const searchInput = screen.getByLabelText("search");
+    fireEvent.change(searchInput, { target: { value: "Amazon" } });
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(1);
+
+    await vi.runAllTimersAsync();
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("should not call makeRequest if search input is less than 2 characters", () => {
+    const makeRequestMock = vi.fn();
+
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: makeRequestMock,
+    });
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    makeRequestMock.mockClear();
+
+    const searchInput = screen.getByLabelText("search");
+    fireEvent.change(searchInput, { target: { value: "A" } });
+    vi.advanceTimersByTime(500);
+
+    expect(makeRequestMock).not.toHaveBeenCalled();
+  });
 });
