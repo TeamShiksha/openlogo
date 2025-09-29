@@ -3,13 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid green; */
   row-gap: 10px;
   width: 100%;
   height: 70vh;
 }
 .resendForm {
-  /* border: 1px solid red; */
   width: fit-content;
   display: flex;
   flex-direction: column;

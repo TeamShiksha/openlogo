@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
@@ -11,18 +11,23 @@ const ResendVerification = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [resendEmail, setResendEmail] = useState("");
+  const timerRef = useRef(null);
 
   const { makeRequest, data, errorMsg } = useApi({
     method: "post",
     url: "/auth/resend-verification",
   });
-
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
   const handleResendEmail = async (e) => {
     e.preventDefault();
     await makeRequest({ data: { email: resendEmail } });
     if (data?.statusCode == 200) {
       toast.success(data.message);
-      setTimeout(() => navigate("/"), 3000);
+      timerRef.current = setTimeout(() => navigate("/"), 3000);
     }
     if (errorMsg) {
       toast.error(errorMsg);

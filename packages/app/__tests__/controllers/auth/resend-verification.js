@@ -1,4 +1,3 @@
-jest.setTimeout(15000);
 const request = require("supertest");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { UserTokenService, UserService } = require("../../../services");
@@ -7,6 +6,9 @@ const { MOCK_USERS, MOCK_USERTOKENS } = require("../../../utils/mocks");
 const app = require("../../../server");
 
 describe("RESEND VERIFICATION API", () => {
+  beforeAll(() => {
+    jest.setTimeout(15000);
+  });
   beforeEach(() => {
     jest.restoreAllMocks();
   });

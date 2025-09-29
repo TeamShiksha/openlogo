@@ -14,6 +14,8 @@ const Verification = () => {
   const [title, setTitle] = useState(VERIFICATION.title);
   const [message, setMessage] = useState(VERIFICATION.message);
   const [showResendVerify, setShowResendVerify] = useState(false);
+  const timerRef = useRef(null);
+
   const { makeRequest, data, errorMsg } = useApi({
     method: "get",
     url: `/auth/verify/${token}`,
@@ -27,6 +29,12 @@ const Verification = () => {
   }, [token, makeRequest]);
 
   useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     performVerification();
   }, [performVerification]);
 
@@ -35,7 +43,9 @@ const Verification = () => {
       setIsLoading(false);
       setTitle("Verified");
       setMessage(data?.message);
-      if (data.statusCode == 200) setTimeout(() => navigate("/"), 3000);
+      if (data.statusCode == 200) {
+        timerRef.current = setTimeout(() => navigate("/"), 3000);
+      }
       if (data.statusCode == 403) setShowResendVerify(true);
     }
   }, [data, navigate]);
