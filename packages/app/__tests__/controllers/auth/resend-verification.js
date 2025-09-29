@@ -56,7 +56,7 @@ describe("RESEND VERIFICATION API", () => {
       .spyOn(UserTokenService.prototype, "createUserToken")
       .mockResolvedValue({
         ...MOCK_USERTOKENS[0],
-        tokenURL: () => "http://mocked-verification-link",
+        tokenURL: () => "https://mocked-verification-link",
       });
     const response = await request(app)
       .post(ENDPOINTS.RESEND_VERIFICATION)
