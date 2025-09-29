@@ -36,7 +36,7 @@ router.post(
 );
 
 router.put(
-  "/logo",
+  "/logoMetadata",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   updateCatalogController
 );

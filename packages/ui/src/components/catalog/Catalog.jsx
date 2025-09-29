@@ -20,6 +20,7 @@ function Catalog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [updateImageId, setUpdateImageId] = useState(null);
+  const [updatedImageCompanyUri, setUpdatedImageCompanyUri] = useState(null);
 
   const limit = 10;
   const skip = pageNum * limit;
@@ -71,7 +72,10 @@ function Catalog() {
       const signedUrlResp = await instance.post("/catalog/signedUrl", {
         companyUri,
         extension,
+        type: "upload",
       });
+      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+
       const { presignedUrl, key } = signedUrlResp.data?.data || {};
       if (!presignedUrl || !key) {
         throw new Error("Presigned url or key is missing");
@@ -91,19 +95,47 @@ function Catalog() {
       }
     } catch (err) {
       console.error("Upload error:", err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+      }
     }
   };
 
   const handleUpdateImage = async ({ file }) => {
     if (!file || !updateImageId) return;
 
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("id", updateImageId);
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const signedUrlResp = await instance.post("/catalog/signedUrl", {
+        companyUri: updatedImageCompanyUri,
+        extension: extension,
+        type: "update",
+      });
+      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+      const { presignedUrl, key } = signedUrlResp?.data?.data || {};
+
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: {
+          companyUri: updatedImageCompanyUri,
+          extension: extension,
+          size: size,
+          id: updateImageId,
+        },
+      });
+
+      if (metadataSaved) {
         setIsModalOpen(false);
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
@@ -111,6 +143,11 @@ function Catalog() {
       }
     } catch (err) {
       console.error("Upload error:", err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
+      }
     }
   };
 
@@ -132,9 +169,10 @@ function Catalog() {
     }
   };
 
-  const handleReuploadBtnClick = (id) => {
+  const handleReuploadBtnClick = (id, companyuri) => {
     setIsModalOpen(true);
     setUpdateImageId(id);
+    setUpdatedImageCompanyUri(companyuri);
   };
 
   const filteredCompanies = useMemo(() => {

@@ -7,8 +7,11 @@ import { instance } from "../../api/api_instance";
 import { validate } from "../../utils/Helpers";
 import Button from "../common/button/Button";
 import { useToast } from "../../hooks/useToast";
-import { BUTTON_TEXT, MODAL_MESSAGES } from "../../utils/Constants";
+import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
 import Dropdown from "../common/dropdown/Dropdown";
+import ImageUploadModal from "../catalog/ImageUploadModal";
+import { useApi } from "../../hooks/useApi";
+import axios from "axios";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -44,6 +47,7 @@ const Operator = () => {
   const [focusedField, setFocusedField] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [responseAction, setResponseAction] = useState("respond");
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const toast = useToast();
   const OperatorDashboardDropdownOptions = ["messages", "requests"];
 
@@ -209,6 +213,61 @@ const Operator = () => {
     setResponseText(e.target.value);
   };
 
+  const {
+    loading: uploadLoading,
+    makeRequest: uploadMakeRequest,
+    errorMsg: uploadErrorMsg,
+  } = useApi({
+    method: "POST",
+    url: `/catalog/logoMetadata`,
+    headers: { "Content-Type": "application/json" },
+  });
+
+  useEffect(() => {
+    if (uploadErrorMsg) {
+      toast.error(uploadErrorMsg);
+    }
+  }, [uploadErrorMsg, toast]);
+
+  const handleImageUpload = async ({ file, companyUri }) => {
+    if (!file || !companyUri) return;
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
+
+    try {
+      const signedUrlResp = await instance.post("/catalog/signedUrl", {
+        companyUri,
+        extension,
+        type: "upload",
+      });
+      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+
+      const { presignedUrl, key } = signedUrlResp.data?.data || {};
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: { companyUri: companyUri, extension: extension, size: size },
+      });
+      if (metadataSaved) {
+        setIsUploadModalOpen(false);
+        setIsModalOpen(false);
+        toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+      }
+    }
+  };
+
   let modalTitle;
   if (responseAction === "respond") {
     if (searchType === "messages") {
@@ -259,6 +318,23 @@ const Operator = () => {
 
   return (
     <div className={styles["operator-container"]}>
+      <Button
+        onClick={() => {
+          setIsUploadModalOpen(true);
+        }}
+        variant="primary"
+        className={styles["catalog-add-image-btn"]}
+      >
+        Add image
+      </Button>
+      <ImageUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => {
+          setIsUploadModalOpen(false);
+        }}
+        onUpload={handleImageUpload}
+        isLoading={uploadLoading}
+      />
       <div className={styles.header}>
         <div className={styles["tabs-container"]}>
           <button
