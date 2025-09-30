@@ -51,10 +51,16 @@ class ImagesRepository extends BaseRepository {
     return cloudFrontUrl;
   }
 
-  async getAllImageByUserId(userId, skip, limit) {
+  async getAllImages(skip, limit, search = "") {
+    const query = {};
+
+    if (search) {
+      query.company_name = { $regex: search, $options: "i" };
+    }
+
     const [total, images] = await Promise.all([
-      this.model.countDocuments({ user_id: userId }),
-      this.model.find({ user_id: userId }).skip(skip).limit(limit),
+      this.model.countDocuments(query),
+      this.model.find(query).skip(skip).limit(limit).sort({ updated_at: -1 }),
     ]);
 
     return {

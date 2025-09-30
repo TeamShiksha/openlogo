@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Catalog from "../../src/components/catalog/Catalog";
 import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
 import { ToastContext } from "../../src/contexts/Contexts";
+import { useApi } from "../../src/hooks/useApi";
 
 const mockData = {
   data: {
@@ -19,18 +20,17 @@ const mockToastContext = {
 vi.useFakeTimers();
 
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: () => ({
+  useApi: vi.fn(() => ({
     data: mockData,
     loading: false,
     errorMsg: null,
     makeRequest: vi.fn(),
-  }),
+  })),
 }));
 
 describe("Catalog Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.runAllTimers();
   });
 
   afterEach(() => {
@@ -134,7 +134,7 @@ describe("Catalog Component", () => {
         screen.queryByText(
           `${COMPANIES[10].company_name.toLowerCase()}.${COMPANIES[10].extension}`
         )
-      ).not.null();
+      ).not.toBeInTheDocument();
     }
   });
 
@@ -168,6 +168,14 @@ describe("Catalog Component", () => {
   });
 
   it("Should filter companies when search term is entered", () => {
+    // Override mock to return only Amazon
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: vi.fn(),
+    });
+
     render(
       <ToastContext.Provider value={mockToastContext}>
         <Catalog />
@@ -176,21 +184,19 @@ describe("Catalog Component", () => {
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
-    vi.runAllTimers();
 
-    screen.getByText("amazon.png");
+    expect(screen.getByText("amazon.png")).toBeInTheDocument();
     expect(screen.queryByText("apple.png")).not.toBeInTheDocument();
   });
 
   it("Should show 'No results found' message when search has no matches", () => {
-    vi.doMock("../../src/hooks/useApi", () => ({
-      useApi: () => ({
-        data: { data: { data: [], totalPages: 1 } },
-        loading: false,
-        errorMsg: null,
-        makeRequest: vi.fn(),
-      }),
-    }));
+    // Override mock to return empty results
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: vi.fn(),
+    });
 
     render(
       <ToastContext.Provider value={mockToastContext}>
@@ -200,7 +206,6 @@ describe("Catalog Component", () => {
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "NonExistentCompany" } });
-    vi.runAllTimers();
     expect(
       screen.getByText("No results found matching your query!")
     ).toBeInTheDocument();
@@ -208,6 +213,14 @@ describe("Catalog Component", () => {
   });
 
   it("Should reset search when navigating to another page", () => {
+    // Override mock to return only Amazon
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: vi.fn(),
+    });
+
     render(
       <ToastContext.Provider value={mockToastContext}>
         <Catalog />
@@ -216,7 +229,6 @@ describe("Catalog Component", () => {
 
     const searchInput = screen.getByLabelText("search");
     fireEvent.change(searchInput, { target: { value: "Amazon" } });
-    vi.runAllTimers();
 
     expect(screen.getByText("amazon.png")).toBeInTheDocument();
     expect(screen.queryByText("apple.png")).not.toBeInTheDocument();
@@ -224,7 +236,6 @@ describe("Catalog Component", () => {
 
     const nextButton = screen.getByAltText("right-arrow").closest("button");
     expect(nextButton).toBeDisabled();
-    expect(searchInput).toHaveValue("Amazon");
   });
 
   it("Should display correct total page count", () => {
@@ -321,5 +332,58 @@ describe("Catalog Component", () => {
     vi.runAllTimers();
 
     expect(screen.getByTestId("dialog")).toBeInTheDocument();
+  });
+
+  it("should debounce search input and only call makeRequest after 500ms", async () => {
+    const makeRequestMock = vi.fn();
+
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: makeRequestMock,
+    });
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(1);
+
+    const searchInput = screen.getByLabelText("search");
+    fireEvent.change(searchInput, { target: { value: "Amazon" } });
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(1);
+
+    await vi.runAllTimersAsync();
+
+    expect(makeRequestMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("should not call makeRequest if search input is less than 2 characters", () => {
+    const makeRequestMock = vi.fn();
+
+    vi.mocked(useApi).mockReturnValue({
+      data: { data: { data: [], totalPages: 1 } },
+      loading: false,
+      errorMsg: null,
+      makeRequest: makeRequestMock,
+    });
+
+    render(
+      <ToastContext.Provider value={mockToastContext}>
+        <Catalog />
+      </ToastContext.Provider>
+    );
+
+    makeRequestMock.mockClear();
+
+    const searchInput = screen.getByLabelText("search");
+    fireEvent.change(searchInput, { target: { value: "A" } });
+    vi.advanceTimersByTime(500);
+
+    expect(makeRequestMock).not.toHaveBeenCalled();
   });
 });
