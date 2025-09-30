@@ -9,18 +9,12 @@ jobs:
   refresh_usage_count:
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    strategy:
-      matrix:
-        branch: [prod]
-    environment: ${{ matrix.branch == 'stage' && 'STAGE' || 'PROD' }}
-
     steps:
       - name: Set timezone
         run: |
           sudo timedatectl set-timezone Asia/Kolkata
           sudo timedatectl set-ntp true
           timedatectl
-
       - name: Checkout stage branch
         uses: actions/checkout@v4
         with:
