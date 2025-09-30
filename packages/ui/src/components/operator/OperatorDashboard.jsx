@@ -11,6 +11,7 @@ import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
 import Dropdown from "../common/dropdown/Dropdown";
 import ImageUploadModal from "../catalog/ImageUploadModal";
 import { useApi } from "../../hooks/useApi";
+import axios from "axios";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -218,8 +219,8 @@ const Operator = () => {
     errorMsg: uploadErrorMsg,
   } = useApi({
     method: "POST",
-    url: `/catalog/logo`,
-    headers: { "Content-Type": "multipart/form-data" },
+    url: `/catalog/logoMetadata`,
+    headers: { "Content-Type": "application/json" },
   });
 
   useEffect(() => {
@@ -230,19 +231,40 @@ const Operator = () => {
 
   const handleImageUpload = async ({ file, companyUri }) => {
     if (!file || !companyUri) return;
-
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("companyUri", companyUri);
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const signedUrlResp = await instance.post("/catalog/signedUrl", {
+        companyUri,
+        extension,
+        type: "upload",
+      });
+      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+
+      const { presignedUrl, key } = signedUrlResp.data?.data || {};
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: { companyUri: companyUri, extension: extension, size: size },
+      });
+      if (metadataSaved) {
         setIsUploadModalOpen(false);
+        setIsModalOpen(false);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
       }
     } catch (err) {
       console.error("Upload error:", err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+      }
     }
   };
 

@@ -59,7 +59,7 @@ const ImageUploadModal = ({
   };
 
   const handleFile = (file) => {
-    if (file && ["image/jpeg", "image/png"].includes(file.type)) {
+    if (file && ["image/png"].includes(file.type)) {
       const reader = new FileReader();
       reader.onload = (fileRead) => {
         setSelectedImage({
