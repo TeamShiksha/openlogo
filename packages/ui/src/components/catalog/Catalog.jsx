@@ -22,6 +22,7 @@ function Catalog() {
   const [updateImageId, setUpdateImageId] = useState(null);
   const [updatedImageCompanyUri, setUpdatedImageCompanyUri] = useState(null);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const [uploadLoading, setUploadLoading] = useState(false);
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -39,11 +40,7 @@ function Catalog() {
     url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${debouncedSearchTerm}`,
   });
 
-  const {
-    loading: uploadLoading,
-    makeRequest: uploadMakeRequest,
-    errorMsg: uploadErrorMsg,
-  } = useApi({
+  const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: updateImageId ? "PUT" : "POST",
     url: `/catalog/logoMetadata`,
     headers: { "Content-Type": "application/json" },
@@ -75,6 +72,7 @@ function Catalog() {
   }, [data]);
 
   const handleImageUpload = async ({ file, companyUri }) => {
+    setUploadLoading(true);
     if (!file || !companyUri) return;
     const extension = file.name.split(".").pop().toLowerCase();
     const size = file.size;
@@ -103,8 +101,10 @@ function Catalog() {
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         makeRequest();
+        setUploadLoading(false);
       }
     } catch (err) {
+      setUploadLoading(false);
       console.error("Upload error:", err);
       if (err?.response?.data?.message) {
         toast.error(err?.response?.data?.message);
@@ -115,6 +115,7 @@ function Catalog() {
   };
 
   const handleUpdateImage = async ({ file }) => {
+    setUploadLoading(true);
     if (!file || !updateImageId) return;
 
     const extension = file.name.split(".").pop().toLowerCase();
@@ -151,8 +152,10 @@ function Catalog() {
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
         makeRequest();
+        setUploadLoading(false);
       }
     } catch (err) {
+      setUploadLoading(false);
       console.error("Upload error:", err);
       if (err?.response?.data?.message) {
         toast.error(err?.response?.data?.message);
