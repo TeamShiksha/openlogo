@@ -56,6 +56,7 @@ const Operator = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const ITEMS_PER_PAGE = 6;
 
@@ -213,11 +214,7 @@ const Operator = () => {
     setResponseText(e.target.value);
   };
 
-  const {
-    loading: uploadLoading,
-    makeRequest: uploadMakeRequest,
-    errorMsg: uploadErrorMsg,
-  } = useApi({
+  const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: "POST",
     url: `/catalog/logoMetadata`,
     headers: { "Content-Type": "application/json" },
@@ -230,6 +227,7 @@ const Operator = () => {
   }, [uploadErrorMsg, toast]);
 
   const handleImageUpload = async ({ file, companyUri }) => {
+    setUploadLoading(true);
     if (!file || !companyUri) return;
     const extension = file.name.split(".").pop().toLowerCase();
     const size = file.size;
@@ -257,8 +255,10 @@ const Operator = () => {
         setIsUploadModalOpen(false);
         setIsModalOpen(false);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
+        setUploadLoading(false);
       }
     } catch (err) {
+      setUploadLoading(false);
       console.error("Upload error:", err);
       if (err?.response?.data?.message) {
         toast.error(err?.response?.data?.message);
