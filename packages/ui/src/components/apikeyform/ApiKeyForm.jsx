@@ -69,6 +69,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
       setShowApiKeyModal(true);
       setDescription("");
       setFormErrors({});
+      setFocusedField(null);
       toast.success(API_KEY.generation.success);
     }
   };
