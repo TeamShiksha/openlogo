@@ -117,7 +117,7 @@ function Dashboard() {
   const handleLogout = () => {
     setIsLoading(true);
     logout();
-    setUserData(null); 
+    setUserData(null);
     setIsLoading(false);
   };
 

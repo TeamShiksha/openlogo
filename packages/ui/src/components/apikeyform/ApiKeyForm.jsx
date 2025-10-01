@@ -13,10 +13,13 @@ import {
   API_KEY_FORM,
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
+import { validate } from "../../utils/Helpers.js";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
   const toast = useToast();
 
@@ -27,6 +30,18 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
       key_description: description,
     },
   });
+
+  useEffect(() => {
+    if (focusedField !== "apikey") {
+      setFormErrors({});
+      return;
+    }
+    const timer = setTimeout(() => {
+      const validationErrors = validate({ description });
+      setFormErrors({ apikey: validationErrors.description || "" });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [focusedField, description]);
 
   useEffect(() => {
     if (errorMsg) toast.error(errorMsg);
@@ -44,11 +59,16 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
       toast.error(API_KEY.generation.descriptionRequired);
       return;
     }
-
+    const validationErrors = validate({ description });
+    if (validationErrors.description) {
+      setFormErrors({ apikey: validationErrors.description });
+      return;
+    }
     const success = await makeRequest();
     if (success) {
       setShowApiKeyModal(true);
       setDescription("");
+      setFormErrors({});
       toast.success(API_KEY.generation.success);
     }
   };
@@ -68,6 +88,10 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     }
   };
 
+  const isFieldValid =
+    Object.values(formErrors).every((error) => !error) ||
+    Object.values(description).some((val) => !val);
+
   return (
     <section className={styles["dashboard-content-section"]}>
       <form
@@ -83,6 +107,9 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
           disabled={loading}
+          error={formErrors.apikey}
+          onFocus={() => setFocusedField("apikey")}
+          onBlur={() => setFocusedField(null)}
         />
         <Modal
           isOpen={showApiKeyModal}
@@ -115,7 +142,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           className={styles.width}
           variant="primary"
           type="submit"
-          disabled={isGuest || !description.trim()}
+          disabled={isGuest || !description.trim() || !isFieldValid}
           isLoading={loading}
         >
           {BUTTON_TEXT.generateKey}
