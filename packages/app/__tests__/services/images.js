@@ -22,6 +22,23 @@ describe("Image Service", () => {
     expect(result).toBeNull();
   });
 
+  it("should return presigned URL & S3 key", async () => {
+    const imageName = MOCK_IMAGES[0].company_name.split(".")[0];
+    const extension = MOCK_IMAGES[0].company_name.split(".")[1];
+
+    jest.spyOn(imageService, "getPreSignedUrl").mockResolvedValue({
+      presignedUrl: "mockPresignedUrl",
+      key: `mockBucketKey/${extension}/${imageName}.${extension}`,
+    });
+
+    const result = await imageService.getPreSignedUrl(imageName, extension);
+
+    expect(result).toEqual({
+      presignedUrl: "mockPresignedUrl",
+      key: `mockBucketKey/${extension}/${imageName}.${extension}`,
+    });
+  });
+
   it("should return cloudfront URL using domain from DB", async () => {
     const image = new Image(MOCK_IMAGES[0]);
     jest
