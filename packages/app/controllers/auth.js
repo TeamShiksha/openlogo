@@ -44,7 +44,7 @@ async function signupController(req, res, next) {
     let user = await userService.getUserByEmail(email);
 
     // If the user is active (not deleted), block signup
-    if (user && !user.is_deleted) {
+    if (user?.is_deleted === false) {
       return res.status(400).json({
         message: "Account already exists.",
         error: STATUS_CODES[400],
@@ -52,7 +52,7 @@ async function signupController(req, res, next) {
       });
     }
     // Handle soft-deleted users
-    if (user && user.deleted_at) {
+    if (user?.deleted_at) {
       const tenureDays = 30;
       const expiry = new Date(user.deleted_at);
       expiry.setDate(expiry.getDate() + tenureDays);
