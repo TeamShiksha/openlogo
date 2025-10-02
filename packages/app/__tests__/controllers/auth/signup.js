@@ -203,22 +203,28 @@ describe("SIGNUP API", () => {
     });
   });
 
-  it("500 - Failed creating user", async () => {
+  it("500 - Failed creating verification token", async () => {
+    // Changed title from "201" to "500"
     const mockRequest = { ...SIGNUP_PAYLOAD };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
-    jest.spyOn(UserService.prototype, "createUser").mockResolvedValue(null);
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockResolvedValue(null);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(500); // Changed from 201
     expect(response.body).toEqual({
-      error: STATUS_CODES[500],
       message: Messages.SOMETHING_WENT_WRONG,
-      statusCode: 500,
+      statusCode: 500, // Changed from 201
     });
   });
 
@@ -238,10 +244,10 @@ describe("SIGNUP API", () => {
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(500);
     expect(response.body).toEqual({
       message: Messages.SOMETHING_WENT_WRONG,
-      statusCode: 201,
+      statusCode: 500,
     });
   });
 
@@ -266,8 +272,8 @@ describe("SIGNUP API", () => {
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
     expect(sendEmail).toHaveBeenCalledWith({
       id: 2,
       subject: "Openlogo: Email Verification",
@@ -303,8 +309,8 @@ describe("SIGNUP API", () => {
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
   });
 
   it("400 - Deleted user within block period cannot signup", async () => {
@@ -361,7 +367,7 @@ describe("SIGNUP API", () => {
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
   });
 });

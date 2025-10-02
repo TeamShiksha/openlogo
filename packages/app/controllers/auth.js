@@ -23,6 +23,7 @@ async function signupController(req, res, next) {
     const userService = new UserService();
     const userTokenService = new UserTokenService();
     const subscriptionService = new SubscriptionService();
+
     const { error, value } = signupPayloadSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -32,15 +33,7 @@ async function signupController(req, res, next) {
       });
     }
 
-    const newSubscription = await subscriptionService.createSubscription();
-    if (!newSubscription) {
-      return res.status(500).json({
-        message: Messages.SOMETHING_WENT_WRONG,
-        statusCode: 500,
-      });
-    }
-
-    const { email, password, name } = value;
+    const { email } = value;
     let user = await userService.getUserByEmail(email);
 
     // If the user is active (not deleted), block signup
@@ -51,11 +44,13 @@ async function signupController(req, res, next) {
         statusCode: 400,
       });
     }
+
     // Handle soft-deleted users
     if (user?.deleted_at) {
       const tenureDays = 30;
       const expiry = new Date(user.deleted_at);
       expiry.setDate(expiry.getDate() + tenureDays);
+
       if (expiry > new Date()) {
         const daysLeft = Math.ceil(
           (expiry - Date.now()) / (1000 * 60 * 60 * 24)
@@ -66,23 +61,24 @@ async function signupController(req, res, next) {
           statusCode: 400,
         });
       }
+
       await User.deleteOne({ _id: user._id });
       user = null;
     }
 
-    if (user) {
-      await userService.createUser({
-        name,
-        email,
-        password,
-        subscription_id: newSubscription._id,
+    // Create subscription only after validation passes
+    const newSubscription = await subscriptionService.createSubscription();
+    if (!newSubscription) {
+      return res.status(500).json({
+        message: Messages.SOMETHING_WENT_WRONG,
+        statusCode: 500,
       });
-      return res.status(201).json({ message: "User created successfully." });
     }
 
     Object.assign(value, { subscription_id: newSubscription._id });
     const newUser = await userService.createUser(value);
     if (!newUser) {
+      await subscriptionService.deleteSubscription(newSubscription._id);
       return res.status(500).json({
         message: Messages.SOMETHING_WENT_WRONG,
         error: STATUS_CODES[500],
@@ -94,9 +90,9 @@ async function signupController(req, res, next) {
       newUser._id
     );
     if (!verificationToken) {
-      return res.status(201).json({
+      return res.status(500).json({
         message: Messages.SOMETHING_WENT_WRONG,
-        statusCode: 201,
+        statusCode: 500,
       });
     }
 
@@ -109,7 +105,10 @@ async function signupController(req, res, next) {
       },
     });
 
-    return res.status(200).json({ statusCode: 200 });
+    return res.status(201).json({
+      message: "User created successfully. Please verify your email.",
+      statusCode: 201,
+    });
   } catch (err) {
     next(err);
   }
