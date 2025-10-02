@@ -124,9 +124,9 @@ async function getPreSignedController(req, res, next) {
     const { error } = companyUriSchema.validate(companyUri);
 
     if (error) {
-      return res.status(500).json({
-        error: STATUS_CODES[500],
-        statusCode: 500,
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        statusCode: 400,
         message: error.message,
       });
     }
@@ -151,7 +151,7 @@ async function getPreSignedController(req, res, next) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         statusCode: 400,
-        message: Messages.IMAGE_NOT_FOUND,
+        message: Messages.IMAGE_NOT_EXIST,
       });
     }
 
