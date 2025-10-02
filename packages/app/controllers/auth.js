@@ -43,44 +43,41 @@ async function signupController(req, res, next) {
     const { email, password, name } = value;
     let user = await userService.getUserByEmail(email);
 
-    if (user) {
-      // If the user is active (not deleted), block signup
-      if (!user.is_deleted) {
+    // If the user is active (not deleted), block signup
+    if (user && !user.is_deleted) {
+      return res.status(400).json({
+        message: "Account already exists.",
+        error: STATUS_CODES[400],
+        statusCode: 400,
+      });
+    }
+    // Handle soft-deleted users
+    if (user && user.deleted_at) {
+      const tenureDays = 30;
+      const expiry = new Date(user.deleted_at);
+      expiry.setDate(expiry.getDate() + tenureDays);
+      if (expiry > new Date()) {
+        const daysLeft = Math.ceil(
+          (expiry - Date.now()) / (1000 * 60 * 60 * 24)
+        );
         return res.status(400).json({
-          message: "Account already exists.",
+          message: `Account exists. You may re-register after ${daysLeft} days.`,
           error: STATUS_CODES[400],
           statusCode: 400,
         });
       }
-      // Handle soft-deleted users
-      if (user.deleted_at) {
-        const tenureDays = 30;
-        const expiry = new Date(user.deleted_at);
-        expiry.setDate(expiry.getDate() + tenureDays);
-        if (expiry > new Date()) {
-          const daysLeft = Math.ceil(
-            (expiry - Date.now()) / (1000 * 60 * 60 * 24)
-          );
-          return res.status(400).json({
-            message: `Account exists. You may re-register after ${daysLeft} days.`,
-            error: STATUS_CODES[400],
-            statusCode: 400,
-          });
-        } else {
-          await User.deleteOne({ _id: user._id });
-          user = null;
-        }
-      }
+      await User.deleteOne({ _id: user._id });
+      user = null;
+    }
 
-      if (!user) {
-        await userService.createUser({
-          name,
-          email,
-          password,
-          subscription_id: newSubscription._id,
-        });
-        return res.status(201).json({ message: "User created successfully." });
-      }
+    if (user) {
+      await userService.createUser({
+        name,
+        email,
+        password,
+        subscription_id: newSubscription._id,
+      });
+      return res.status(201).json({ message: "User created successfully." });
     }
 
     Object.assign(value, { subscription_id: newSubscription._id });
