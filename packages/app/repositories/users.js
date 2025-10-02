@@ -22,8 +22,8 @@ class UsersRepository extends BaseRepository {
   }
 
   //delete user with tenure
-  delete(userId, tenureDays = 30) {
-    return super.delete(userId, tenureDays);
+  delete(userId) {
+    return super.delete(userId);
   }
 
   /**

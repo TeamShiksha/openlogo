@@ -169,6 +169,11 @@ describe("SIGNUP API", () => {
       .spyOn(UserService.prototype, "getUserByEmail")
       .mockResolvedValue(existingUser);
 
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue({
+        _id: "sub123",
+      });
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);

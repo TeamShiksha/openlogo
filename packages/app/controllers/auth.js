@@ -13,7 +13,7 @@ const {
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
 const { Messages } = require("../utils/constants");
-
+const User = require("../models/users");
 /**
  * This controller validates the signup payload, checks if the email already exists,
  * creates a new subscription, registers a new user, and send a verification email.
@@ -32,10 +32,19 @@ async function signupController(req, res, next) {
       });
     }
 
-    const { email } = value;
-    const user = await userService.getUserByEmail(email);
+    const newSubscription = await subscriptionService.createSubscription();
+    if (!newSubscription) {
+      return res.status(500).json({
+        message: Messages.SOMETHING_WENT_WRONG,
+        statusCode: 500,
+      });
+    }
+
+    const { email, password, name } = value;
+    let user = await userService.getUserByEmail(email);
 
     if (user) {
+      // If the user is active (not deleted), block signup
       if (!user.is_deleted) {
         return res.status(400).json({
           message: "Account already exists.",
@@ -43,6 +52,7 @@ async function signupController(req, res, next) {
           statusCode: 400,
         });
       }
+      // Handle soft-deleted users
       if (user.deleted_at) {
         const tenureDays = 30;
         const expiry = new Date(user.deleted_at);
@@ -56,16 +66,21 @@ async function signupController(req, res, next) {
             error: STATUS_CODES[400],
             statusCode: 400,
           });
+        } else {
+          await User.deleteOne({ _id: user._id });
+          user = null;
         }
       }
-    }
 
-    const newSubscription = await subscriptionService.createSubscription();
-    if (!newSubscription) {
-      return res.status(500).json({
-        message: Messages.SOMETHING_WENT_WRONG,
-        statusCode: 500,
-      });
+      if (!user) {
+        await userService.createUser({
+          name,
+          email,
+          password,
+          subscription_id: newSubscription._id,
+        });
+        return res.status(201).json({ message: "User created successfully." });
+      }
     }
 
     Object.assign(value, { subscription_id: newSubscription._id });
