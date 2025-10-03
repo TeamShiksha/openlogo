@@ -246,7 +246,7 @@ async function updateCatalogController(req, res, next) {
       return res.status(404).json({
         error: STATUS_CODES[404],
         statusCode: 404,
-        message: Messages.UPLOAD_FAILED,
+        message: Messages.IMAGE_NOT_EXIST,
       });
     }
 
@@ -315,9 +315,9 @@ async function addCatalogController(req, res, next) {
       Extension
     );
     if (!imageData) {
-      return res.status(500).json({
-        error: STATUS_CODES[500],
-        statusCode: 500,
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        statusCode: 400,
         message: Messages.UPDATE_IMAGE_FAILED,
       });
     }
