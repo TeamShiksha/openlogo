@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
@@ -18,13 +18,22 @@ function Catalog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [updateImageId, setUpdateImageId] = useState(null);
-
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+  const pageBeforeSearchRef = useRef(0);
   const limit = 10;
   const skip = pageNum * limit;
 
   const { data, loading, makeRequest, errorMsg } = useApi({
     method: "GET",
-    url: `/catalog/logos?skip=${skip}&limit=${limit}`,
+    url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${debouncedSearchTerm}`,
   });
 
   const {
@@ -38,9 +47,11 @@ function Catalog() {
   });
 
   useEffect(() => {
-    makeRequest();
+    if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
+      makeRequest();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNum]);
+  }, [pageNum, debouncedSearchTerm]);
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -101,19 +112,29 @@ function Catalog() {
   };
 
   const handleSearchTermChange = (inputChangeEvent) => {
-    setSearchTerm(inputChangeEvent.target.value);
+    const newSearchTerm = inputChangeEvent.target.value;
+    const previousSearchTerm = searchTerm;
+    setSearchTerm(newSearchTerm);
+
+    if (newSearchTerm.length >= 2 && previousSearchTerm.length < 2) {
+      pageBeforeSearchRef.current = pageNum;
+      setPageNum(0);
+    } else if (newSearchTerm.length >= 2 && previousSearchTerm.length >= 2) {
+      setPageNum(0);
+    } else if (newSearchTerm.length < 2 && previousSearchTerm.length >= 2) {
+      // Reset to previous page before search
+      setPageNum(pageBeforeSearchRef.current);
+    }
   };
 
   const handlePreviousBtnClick = () => {
     if (pageNum > 0) {
-      setSearchTerm("");
       setPageNum((prev) => prev - 1);
     }
   };
 
   const handleNextBtnClick = () => {
     if (pageNum < totalPages) {
-      setSearchTerm("");
       setPageNum((prev) => prev + 1);
     }
   };
@@ -123,17 +144,11 @@ function Catalog() {
     setUpdateImageId(id);
   };
 
-  const filteredCompanies = useMemo(() => {
-    const companies = data?.data?.data || [];
-    return companies.filter((company) =>
-      company.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [data, searchTerm]);
-
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
       <div className={styles["catalog-search"]}>
         <CustomInput
+          name="search"
           type="search"
           label="search"
           value={searchTerm}
@@ -177,15 +192,15 @@ function Catalog() {
             </div>
           )}
 
-          {!loading && filteredCompanies.length === 0 && (
+          {!loading && data?.data?.data?.length === 0 && (
             <p className={styles["catalog-table-no-content"]}>
               {MESSAGES.NO_RESULT_FOUND}
             </p>
           )}
 
           {!loading &&
-            filteredCompanies.length > 0 &&
-            filteredCompanies.map((company) => (
+            data?.data?.data?.length > 0 &&
+            data.data.data.map((company) => (
               <CatalogItem
                 key={company._id}
                 company={company}
