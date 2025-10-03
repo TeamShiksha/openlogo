@@ -17,6 +17,13 @@ import {
 } from "../../../src/utils/Constants";
 
 import { useApi } from "../../../src/hooks/useApi";
+import axios from "axios";
+
+vi.mock("axios", () => ({
+  default: {
+    put: vi.fn(),
+  },
+}));
 
 vi.mock("../../../src/hooks/useApi", () => ({
   useApi: vi.fn(),
@@ -26,6 +33,7 @@ vi.mock("../../../src/api/api_instance", () => ({
   instance: {
     get: vi.fn(),
     put: vi.fn(),
+    post: vi.fn(),
   },
 }));
 
@@ -40,9 +48,12 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
         </button>
         <button
           data-testid="upload-button"
-          onClick={() =>
-            onUpload({ file: "test-file", companyUri: "test-uri" })
-          }
+          onClick={() => {
+            const file = new File(["test content"], "test.jpg", {
+              type: "image/jpeg",
+            });
+            onUpload({ file, companyUri: "test-uri" });
+          }}
         >
           Upload
         </button>
@@ -347,12 +358,29 @@ describe("Operator Page", () => {
     });
   });
 
-  it.skip("should call onUpload with correct data when upload is triggered from modal", async () => {
-    const uploadMakeRequest = vi.fn();
+  it("should call onUpload with correct data when upload is triggered from modal", async () => {
+    const uploadMakeRequest = vi.fn().mockResolvedValue({
+      success: true,
+      message: "Image uploaded successfully",
+    });
     useApi.mockReturnValue({
       loading: false,
       makeRequest: uploadMakeRequest,
       errorMsg: null,
+    });
+
+    apiInstance.post.mockResolvedValue({
+      data: {
+        data: {
+          presignedUrl: "https://example.com/presigned-url",
+          key: "image.jpg",
+        },
+      },
+    });
+
+    axios.put.mockResolvedValue({
+      status: 200,
+      statusText: "Ok",
     });
 
     render(
@@ -360,6 +388,7 @@ describe("Operator Page", () => {
         <OperatorDashboard />
       </ToastProvider>
     );
+
     await waitFor(() => {
       expect(
         screen.getByRole("button", { name: "Add image" })
@@ -375,7 +404,37 @@ describe("Operator Page", () => {
     fireEvent.click(uploadButton);
 
     await waitFor(() => {
-      expect(uploadMakeRequest).toHaveBeenCalled();
+      expect(uploadMakeRequest).toHaveBeenCalledWith({
+        data: {
+          companyUri: "test-uri",
+          extension: "jpg",
+          size: expect.any(Number),
+        },
+      });
+    });
+
+    expect(apiInstance.post).toHaveBeenCalledWith("/catalog/signedUrl", {
+      companyUri: "test-uri",
+      extension: "jpg",
+      type: "upload",
+    });
+
+    expect(axios.put).toHaveBeenCalledWith(
+      "https://example.com/presigned-url",
+      expect.any(File),
+      {
+        headers: {
+          "Content-Type": "image/jpeg",
+        },
+      }
+    );
+
+    expect(uploadMakeRequest).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("image-upload-modal")
+      ).not.toBeInTheDocument();
     });
   });
 });
