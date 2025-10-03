@@ -16,13 +16,20 @@ class BaseRepository {
   async getAll(page = 1, limit = 10, tab = "active") {
     const skip = (page - 1) * limit;
     let filter = {};
+    let sort = {};
     if (tab === "active") {
       filter.status = "PENDING";
+      sort = { openedAt: 1 }; //old -> new
     } else if (tab === "archived") {
       filter.status = { $in: ["REJECTED", "RESOLVED", "COMPLETED"] };
+      sort = { closedAt: -1 }; //new -> old
     }
     const total = await this.model.countDocuments(filter);
-    const data = await this.model.find(filter).skip(skip).limit(limit);
+    const data = await this.model
+      .find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
     return {
       data,
       total,

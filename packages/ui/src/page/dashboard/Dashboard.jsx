@@ -22,7 +22,8 @@ import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 
 function Dashboard() {
-  const { userData, loading, fetchUserData } = useContext(UserContext);
+  const { userData, loading, fetchUserData, setUserData } =
+    useContext(UserContext);
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
   const [selectedDashboard, setSelectedDashboard] = useState("USER");
@@ -116,6 +117,7 @@ function Dashboard() {
   const handleLogout = () => {
     setIsLoading(true);
     logout();
+    setUserData(null);
     setIsLoading(false);
   };
 
