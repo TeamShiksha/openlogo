@@ -94,6 +94,7 @@ describe("POST /api/catalog/signedUrl", () => {
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
+        type: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.type,
       });
 
     expect(res.statusCode).toEqual(200);
@@ -105,6 +106,68 @@ describe("POST /api/catalog/signedUrl", () => {
           "https://mock-s3-bucket.s3.amazonaws.com/logos/png/GOOGLE.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=FAKECREDENTIAL&X-Amz-Date=20251002T000000Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=fake-signature",
       },
       message: Messages.UPLOAD_SUCCESS,
+    });
+  });
+
+  it("should return 500 if presigned url is missing (key exists but url is null)", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]);
+    const token = mockAdmin.generateJWT();
+
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
+
+    jest.spyOn(ImageService.prototype, "getPreSignedUrl").mockResolvedValue({
+      key: "logos/png/GOOGLE.png",
+      presignedUrl: null,
+    });
+
+    const res = await request(app)
+      .post("/api/catalog/signedUrl")
+      .set("Cookie", `jwt=${token}`)
+      .send({
+        companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
+        extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
+        type: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.type,
+      });
+
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toEqual({
+      error: STATUS_CODES[500],
+      statusCode: 500,
+      message: Messages.UPLOAD_FAILED,
+    });
+  });
+
+  it("should return 500 if key is missing (url exists but key is null)", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]);
+    const token = mockAdmin.generateJWT();
+
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
+
+    // Mock returns presignedUrl but NO key
+    jest.spyOn(ImageService.prototype, "getPreSignedUrl").mockResolvedValue({
+      key: null,
+      presignedUrl:
+        "https://mock-s3-bucket.s3.amazonaws.com/logos/png/GOOGLE.png?signature=xyz",
+    });
+
+    const res = await request(app)
+      .post("/api/catalog/signedUrl")
+      .set("Cookie", `jwt=${token}`)
+      .send({
+        companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
+        extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
+        type: "upload",
+      });
+
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toEqual({
+      error: STATUS_CODES[500],
+      statusCode: 500,
+      message: Messages.UPLOAD_FAILED,
     });
   });
 });
