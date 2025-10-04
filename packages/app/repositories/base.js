@@ -44,18 +44,15 @@ class BaseRepository {
   }
 
   async update(id, data) {
-    return await this.model.findByIdAndUpdate(id, data, { new: true });
+    return await this.model.findByIdAndUpdate(id, data);
   }
 
   async delete(id) {
-    return await this.model.findByIdAndUpdate(
-      id,
-      {
-        is_deleted: true,
-        deleted_at: new Date(),
-      },
-      { new: true }
-    );
+    return await this.model.findByIdAndDelete(id);
+  }
+
+  async mark_deleted(id) {
+    return await this.model.findByIdAndUpdate(id, { isDeleted: true });
   }
 }
 

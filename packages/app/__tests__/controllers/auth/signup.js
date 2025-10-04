@@ -15,6 +15,7 @@ const {
 } = require("../../../utils/mocks");
 const app = require("../../../server");
 const sendEmail = require("../../../utils/sendEmail");
+const dayjs = require("dayjs");
 jest.mock("../../../utils/sendEmail");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
@@ -181,7 +182,7 @@ describe("SIGNUP API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: "Account already exists.",
+      message: Messages.EMAIL_EXISTS,
       statusCode: 400,
     });
   });
@@ -369,5 +370,30 @@ describe("SIGNUP API", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.statusCode).toBe(201);
+  });
+
+  it("400 - Deleted user with 1 day left shows singular 'day'", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
+
+    const deletedUser = {
+      email: "deleted@example.com",
+      is_deleted: true,
+      deleted_at: dayjs().subtract(29, "day").toDate(),
+    };
+
+    jest
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(deletedUser);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    const expiry = dayjs(deletedUser.deleted_at).add(30, "day");
+    const daysLeft = Math.ceil(expiry.diff(dayjs(), "day", true));
+
+    expect(response.body.message).toBe(
+      `Account exists. You may re-register after ${daysLeft} day${daysLeft > 1 ? "s" : ""}.`
+    );
   });
 });

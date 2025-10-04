@@ -89,9 +89,10 @@ describe("User Service", () => {
   });
 
   it("delete user successfully", async () => {
-    const user = new User(MOCK_USERS[0]);
-    jest.spyOn(UsersRepository.prototype, "delete").mockResolvedValue(user);
-    const result = await userService.deleteUserAccount(user.id);
+    const user = { ...MOCK_USERS[0], is_deleted: false, _id: "123" };
+    jest.spyOn(UsersRepository.prototype, "getById").mockResolvedValue(user);
+    jest.spyOn(UserService.prototype, "markDeleteUser").mockResolvedValue(true);
+    const result = await userService.deleteUserAccount(user._id);
     expect(result).toBe(true);
   });
 

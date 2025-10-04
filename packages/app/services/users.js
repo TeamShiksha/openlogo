@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
+const dayjs = require("dayjs");
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
@@ -85,14 +86,43 @@ class UserService {
     return destroyedKey;
   }
 
-  /**
+  /*
+   * Soft delete a user: marks as deleted and adds deleted_at timestamp.
+   * @param {string} userId - The user id to soft delete.
+   * @returns {boolean} - true if user was successfully soft deleted.
+   */
+  async markDeleteUser(userId) {
+    const deletedUser = await this.userRepository.update(userId, {
+      is_deleted: true,
+      deleted_at: new Date(),
+    });
+    return deletedUser ? true : false;
+  }
+  /*
    * Delete a User Account.
    * @param {string} userId - The user id to delete.
    * @returns {boolean} - true if user was successfully deleted.
    */
   async deleteUserAccount(userId) {
-    const deletedUser = await this.userRepository.delete(userId);
-    return deletedUser ? true : false;
+    const user = await this.userRepository.getById(userId);
+
+    // Soft delete if not already deleted
+    if (user?.is_deleted === false) {
+      return this.markDeleteUser(userId);
+    }
+
+    // If already deleted, check tenure expiry
+    const TENURE_DAYS = 30;
+    if (user?.is_deleted && user?.deleted_at) {
+      const expiry = dayjs(user.deleted_at).add(TENURE_DAYS, "day");
+
+      if (expiry.isBefore(dayjs())) {
+        const deletedUser = await this.userRepository.delete(userId);
+        return deletedUser ? true : false;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -104,7 +134,8 @@ class UserService {
     return await this.userRepository.findUserByEmail(email);
   }
   /**
-   * Fetches a user by email, including deleted users.
+   * Fetch a user by email, including soft-deleted users.
+   * @returns {Promise<Object|null>} - The user document if found, otherwise null.
    */
   async getGuestUser() {
     return await this.userRepository.getGuestUser();

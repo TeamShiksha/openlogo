@@ -13,7 +13,7 @@ const {
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
 const { Messages } = require("../utils/constants");
-const User = require("../models/users");
+const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
  * creates a new subscription, registers a new user, and send a verification email.
@@ -36,10 +36,10 @@ async function signupController(req, res, next) {
     const { email } = value;
     let user = await userService.getUserByEmail(email);
 
-    // If the user is active (not deleted), block signup
+    // If the user is active block signup
     if (user?.is_deleted === false) {
       return res.status(400).json({
-        message: "Account already exists.",
+        message: Messages.EMAIL_EXISTS,
         error: STATUS_CODES[400],
         statusCode: 400,
       });
@@ -48,22 +48,16 @@ async function signupController(req, res, next) {
     // Handle soft-deleted users
     if (user?.deleted_at) {
       const tenureDays = 30;
-      const expiry = new Date(user.deleted_at);
-      expiry.setDate(expiry.getDate() + tenureDays);
-
-      if (expiry > new Date()) {
-        const daysLeft = Math.ceil(
-          (expiry - Date.now()) / (1000 * 60 * 60 * 24)
-        );
+      const expiry = dayjs(user.deleted_at).add(tenureDays, "day");
+      if (expiry.isAfter(dayjs())) {
+        const daysLeft = expiry.diff(dayjs(), "day") + 1;
         return res.status(400).json({
-          message: `Account exists. You may re-register after ${daysLeft} days.`,
+          message: `Account exists. You may re-register after ${daysLeft} day${daysLeft > 1 ? "s" : ""}.`,
           error: STATUS_CODES[400],
           statusCode: 400,
         });
       }
-
-      await User.deleteOne({ _id: user._id });
-      user = null;
+      await userService.deleteUserAccount(user._id);
     }
 
     // Create subscription only after validation passes
@@ -78,7 +72,6 @@ async function signupController(req, res, next) {
     Object.assign(value, { subscription_id: newSubscription._id });
     const newUser = await userService.createUser(value);
     if (!newUser) {
-      await subscriptionService.deleteSubscription(newSubscription._id);
       return res.status(500).json({
         message: Messages.SOMETHING_WENT_WRONG,
         error: STATUS_CODES[500],
@@ -106,7 +99,7 @@ async function signupController(req, res, next) {
     });
 
     return res.status(201).json({
-      message: "User created successfully. Please verify your email.",
+      message: Messages.USER_CREATED,
       statusCode: 201,
     });
   } catch (err) {

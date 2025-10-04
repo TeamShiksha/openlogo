@@ -21,11 +21,6 @@ class UsersRepository extends BaseRepository {
     return await this.model.findOne({ email });
   }
 
-  //delete user with tenure
-  delete(userId) {
-    return super.delete(userId);
-  }
-
   /**
    *
    * @returns {Promise<number>} - Total number of users.
