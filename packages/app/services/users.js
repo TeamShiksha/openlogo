@@ -96,7 +96,7 @@ class UserService {
       is_deleted: true,
       deleted_at: new Date(),
     });
-    return deletedUser ? true : false;
+    return !!deletedUser;
   }
   /*
    * Delete a User Account.
@@ -118,7 +118,7 @@ class UserService {
 
       if (expiry.isBefore(dayjs())) {
         const deletedUser = await this.userRepository.delete(userId);
-        return deletedUser ? true : false;
+        return !!deletedUser;
       }
     }
 
