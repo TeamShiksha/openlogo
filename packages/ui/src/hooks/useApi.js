@@ -47,12 +47,11 @@ export const useApi = (config) => {
     setLoading(true);
 
     const finalConfig = { ...config, ...dynamicConfig };
-    let success = false;
     try {
       const response = await instance(finalConfig);
       setData(response.data);
       setIsSuccess(true);
-      success = true;
+
       return {
         success: true,
         data: response.data,
