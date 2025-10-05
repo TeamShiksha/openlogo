@@ -6,7 +6,7 @@ const app = require("../../../server");
 const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("PUT /api/catalog/logoMetadata", () => {
+describe("PUT /api/catalog/logo", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "test-secret-key";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -28,7 +28,7 @@ describe("PUT /api/catalog/logoMetadata", () => {
     const token = mockAdmin.generateJWT();
     jest.spyOn(ImageService.prototype, "getImageById").mockResolvedValue(null);
     const res = await request(app)
-      .put("/api/catalog/logoMetadata")
+      .put("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({ id: "615f1b5e6b1f1c3f8a123456" });
     expect(res.statusCode).toEqual(404);
@@ -54,7 +54,7 @@ describe("PUT /api/catalog/logoMetadata", () => {
       .mockRejectedValue(new Error("Database update failed"));
 
     const res = await request(app)
-      .put("/api/catalog/logoMetadata")
+      .put("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({
         id: MOCK_IMAGES[0]._id.toString(),
@@ -89,7 +89,7 @@ describe("PUT /api/catalog/logoMetadata", () => {
     };
 
     const res = await request(app)
-      .put("/api/catalog/logoMetadata")
+      .put("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send(updatePayload);
 

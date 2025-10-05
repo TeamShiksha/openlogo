@@ -40,6 +40,35 @@ export const useApi = (config) => {
     }
     return success;
   };
+
+  const fetchRequest = async (dynamicConfig = {}) => {
+    setErrorMsg(null);
+    setIsSuccess(false);
+    setLoading(true);
+
+    const finalConfig = { ...config, ...dynamicConfig };
+    let success = false;
+    try {
+      const response = await instance(finalConfig);
+      setData(response.data);
+      setIsSuccess(true);
+      success = true;
+      return {
+        success: true,
+        data: response.data,
+        error: null,
+      };
+    } catch (err) {
+      setIsSuccess(false);
+      setData(err?.response?.data || null);
+      const msg =
+        err?.response?.data?.message || err?.message || "Network error";
+      setErrorMsg(msg);
+      return { success: false, data: null, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     data,
     setData,
@@ -47,6 +76,7 @@ export const useApi = (config) => {
     loading,
     setLoading,
     makeRequest,
+    fetchRequest,
     isSuccess,
     setIsSuccess,
     setErrorMsg,

@@ -200,31 +200,41 @@ const Operator = () => {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
-  // Handle clicking respond button
   const handleRespondClick = (item, actionType = "respond") => {
     setCurrentItem(item);
     setResponseAction(actionType);
     setResponseText(item.comment || "");
-    setFormErrors({}); // Clear form errors when opening a new modal
+    setFormErrors({});
     setIsModalOpen(true);
   };
 
-  // Handle response text change
   const handleResponseChange = (e) => {
     setResponseText(e.target.value);
   };
 
   const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: "POST",
-    url: `/catalog/logoMetadata`,
+    url: `/catalog/logo`,
     headers: { "Content-Type": "application/json" },
   });
+
+  const { fetchRequest: getPresignedURLRequest, errorMsg: fetchErrMsg } =
+    useApi({
+      method: "POST",
+      url: `/catalog/signed-url`,
+    });
 
   useEffect(() => {
     if (uploadErrorMsg) {
       toast.error(uploadErrorMsg);
     }
   }, [uploadErrorMsg, toast]);
+
+  useEffect(() => {
+    if (fetchErrMsg) {
+      toast.error(fetchErrMsg);
+    }
+  }, [fetchErrMsg, toast]);
 
   const handleImageUpload = async ({ file, companyUri }) => {
     setUploadLoading(true);
@@ -233,14 +243,19 @@ const Operator = () => {
     const size = file.size;
 
     try {
-      const signedUrlResp = await instance.post("/catalog/signedUrl", {
-        companyUri,
-        extension,
-        type: "upload",
+      const { success, data: uploadResp } = await getPresignedURLRequest({
+        data: {
+          companyUri,
+          extension,
+          type: "upload",
+        },
       });
-      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+      if (!success || !uploadResp) {
+        toast.error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
 
-      const { presignedUrl, key } = signedUrlResp.data?.data || {};
       if (!presignedUrl || !key) {
         throw new Error("Presigned url or key is missing");
       }
@@ -249,10 +264,9 @@ const Operator = () => {
       });
 
       const metadataSaved = await uploadMakeRequest({
-        data: { companyUri: companyUri, extension: extension, size: size },
+        data: { companyUri, extension, size },
       });
       if (metadataSaved) {
-        setIsUploadModalOpen(false);
         setIsModalOpen(false);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         setUploadLoading(false);
@@ -260,9 +274,7 @@ const Operator = () => {
     } catch (err) {
       setUploadLoading(false);
       console.error("Upload error:", err);
-      if (err?.response?.data?.message) {
-        toast.error(err?.response?.data?.message);
-      } else {
+      if (err) {
         toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
       }
     }

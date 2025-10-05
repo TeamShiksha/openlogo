@@ -10,7 +10,7 @@ const {
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
-describe("POST /api/catalog/signedUrl", () => {
+describe("POST /api/catalog/signed-url", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -35,7 +35,7 @@ describe("POST /api/catalog/signedUrl", () => {
       .mockResolvedValue({ company_name: "GOOGLE" });
 
     const res = await request(app)
-      .post("/api/catalog/signedUrl")
+      .post("/api/catalog/signed-url")
       .set("Cookie", `jwt=${token}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
@@ -59,7 +59,7 @@ describe("POST /api/catalog/signedUrl", () => {
       .mockReturnValue(null);
 
     const res = await request(app)
-      .post("/api/catalog/signedUrl")
+      .post("/api/catalog/signed-url")
       .set("Cookie", `jwt=${token}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPDATE[0].body.companyUri,
@@ -89,7 +89,7 @@ describe("POST /api/catalog/signedUrl", () => {
     });
 
     const res = await request(app)
-      .post("/api/catalog/signedUrl")
+      .post("/api/catalog/signed-url")
       .set("Cookie", `jwt=${token}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
@@ -123,7 +123,7 @@ describe("POST /api/catalog/signedUrl", () => {
     });
 
     const res = await request(app)
-      .post("/api/catalog/signedUrl")
+      .post("/api/catalog/signed-url")
       .set("Cookie", `jwt=${token}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
@@ -155,7 +155,7 @@ describe("POST /api/catalog/signedUrl", () => {
     });
 
     const res = await request(app)
-      .post("/api/catalog/signedUrl")
+      .post("/api/catalog/signed-url")
       .set("Cookie", `jwt=${token}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,

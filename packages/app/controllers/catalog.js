@@ -264,7 +264,7 @@ async function updateCatalogController(req, res, next) {
       Extension,
     });
     if (!imageData) {
-      res.status(500).json({
+      return res.status(500).json({
         error: STATUS_CODES[500],
         statusCode: 500,
         message: Messages.UPDATE_IMAGE_FAILED,
@@ -288,8 +288,8 @@ async function updateCatalogController(req, res, next) {
 async function addCatalogController(req, res, next) {
   try {
     const imageServices = new ImageService();
-    let { userId } = req.userData;
-    let imageSize = req.body.size;
+    const { userId } = req.userData;
+    const imageSize = req.body.size;
     const companyUri = req.body.companyUri;
     const { error } = companyUriSchema.validate(companyUri);
 
@@ -305,7 +305,17 @@ async function addCatalogController(req, res, next) {
       .toUpperCase()
       .match(ExtractCompanyNameFromUrlRegex);
     const companyName = match[1];
+
     const Extension = req.body.extension;
+
+    const imageExist = await imageServices.getImageByCompanyName(companyName);
+    if (imageExist) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        statusCode: 400,
+        message: Messages.IMAGE_ALREADY_EXISTS,
+      });
+    }
 
     const imageData = await imageServices.createImageData(
       userId,
@@ -315,9 +325,9 @@ async function addCatalogController(req, res, next) {
       Extension
     );
     if (!imageData) {
-      return res.status(400).json({
-        error: STATUS_CODES[400],
-        statusCode: 400,
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        statusCode: 500,
         message: Messages.UPDATE_IMAGE_FAILED,
       });
     }

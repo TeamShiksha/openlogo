@@ -42,8 +42,13 @@ function Catalog() {
 
   const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: updateImageId ? "PUT" : "POST",
-    url: `/catalog/logoMetadata`,
+    url: `/catalog/logo`,
     headers: { "Content-Type": "application/json" },
+  });
+
+  const { fetchRequest, errorMsg: fetchErrMsg } = useApi({
+    method: "POST",
+    url: `/catalog/signed-url`,
   });
 
   useEffect(() => {
@@ -52,6 +57,12 @@ function Catalog() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum, debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (fetchErrMsg) {
+      toast.error(fetchErrMsg);
+    }
+  }, [fetchErrMsg, toast]);
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -78,14 +89,19 @@ function Catalog() {
     const size = file.size;
 
     try {
-      const signedUrlResp = await instance.post("/catalog/signedUrl", {
-        companyUri,
-        extension,
-        type: "upload",
+      const { success, data: uploadResp } = await fetchRequest({
+        data: {
+          companyUri,
+          extension,
+          type: "upload",
+        },
       });
-      if (!signedUrlResp) throw new Error("Failed to proceed your request");
+      if (!success || !uploadResp) {
+        throw new Error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
 
-      const { presignedUrl, key } = signedUrlResp.data?.data || {};
       if (!presignedUrl || !key) {
         throw new Error("Presigned url or key is missing");
       }
@@ -122,7 +138,7 @@ function Catalog() {
     const size = file.size;
 
     try {
-      const signedUrlResp = await instance.post("/catalog/signedUrl", {
+      const signedUrlResp = await instance.post("/catalog/signed-Url", {
         companyUri: updatedImageCompanyUri,
         extension: extension,
         type: "update",

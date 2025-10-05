@@ -3,10 +3,10 @@ const { ImageService } = require("../../../services");
 const { Users } = require("../../../models");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("POST /api/catalog/logoMetadata", () => {
+describe("POST /api/catalog/logo", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -23,18 +23,16 @@ describe("POST /api/catalog/logoMetadata", () => {
     delete process.env.KEY;
   });
 
-  it("should return 400 if imageData is not present in response for admin", async () => {
+  it("should return 400 if image already exist as a response for admin", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
     const token = mockAdmin.generateJWT();
     jest
-      .spyOn(ImageService.prototype, "createImageData")
-      .mockResolvedValue(null);
-
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(MOCK_IMAGES[0]);
     const res = await request(app)
-      .post("/api/catalog/logoMetadata")
+      .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({
-        userId: MOCK_USERS[2],
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
         imageSize: 1024,
@@ -44,6 +42,33 @@ describe("POST /api/catalog/logoMetadata", () => {
     expect(res.body).toEqual({
       error: STATUS_CODES[400],
       statusCode: 400,
+      message: Messages.IMAGE_ALREADY_EXISTS,
+    });
+  });
+
+  it("should return 500 if imageData is not present in response for admin", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]);
+    const token = mockAdmin.generateJWT();
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue(null);
+
+    jest
+      .spyOn(ImageService.prototype, "createImageData")
+      .mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/api/catalog/logo")
+      .set("Cookie", `jwt=${token}`)
+      .send({
+        companyUri: "https://google.com/",
+        size: 1024,
+        extension: "png",
+      });
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toEqual({
+      error: STATUS_CODES[500],
+      statusCode: 500,
       message: Messages.UPDATE_IMAGE_FAILED,
     });
   });
@@ -58,10 +83,9 @@ describe("POST /api/catalog/logoMetadata", () => {
       },
     });
     const res = await request(app)
-      .post("/api/catalog/logoMetadata")
+      .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({
-        userId: MOCK_USERS[2],
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
         imageSize: 1024,
@@ -80,7 +104,7 @@ describe("POST /api/catalog/logoMetadata", () => {
     });
   });
 
-  it("should return 400 if imageData is not present in response for operator", async () => {
+  it("should return 500 if imageData is not present in response for operator", async () => {
     const mockAdmin = new Users(MOCK_USERS[3]);
     const token = mockAdmin.generateJWT();
     jest
@@ -88,19 +112,18 @@ describe("POST /api/catalog/logoMetadata", () => {
       .mockResolvedValue(null);
 
     const res = await request(app)
-      .post("/api/catalog/logoMetadata")
+      .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({
-        userId: MOCK_USERS[2],
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
         imageSize: 1024,
         Extension: "png",
       });
-    expect(res.statusCode).toEqual(400);
+    expect(res.statusCode).toEqual(500);
     expect(res.body).toEqual({
-      error: STATUS_CODES[400],
-      statusCode: 400,
+      error: STATUS_CODES[500],
+      statusCode: 500,
       message: Messages.UPDATE_IMAGE_FAILED,
     });
   });
@@ -115,10 +138,9 @@ describe("POST /api/catalog/logoMetadata", () => {
       },
     });
     const res = await request(app)
-      .post("/api/catalog/logoMetadata")
+      .post("/api/catalog/logo")
       .set("Cookie", `jwt=${token}`)
       .send({
-        userId: MOCK_USERS[2],
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
         imageSize: 1024,

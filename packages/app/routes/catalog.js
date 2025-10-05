@@ -24,19 +24,19 @@ router.get(
 router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
 
 router.post(
-  "/logoMetadata",
+  "/logo",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   addCatalogController
 );
 
 router.post(
-  "/signedUrl",
+  "/signed-url",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   getPreSignedController
 );
 
 router.put(
-  "/logoMetadata",
+  "/logo",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   updateCatalogController
 );
