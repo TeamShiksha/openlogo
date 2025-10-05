@@ -267,16 +267,14 @@ const Operator = () => {
         data: { companyUri, extension, size },
       });
       if (metadataSaved) {
-        setIsModalOpen(false);
+        setIsUploadModalOpen(false);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
-        setUploadLoading(false);
       }
     } catch (err) {
-      setUploadLoading(false);
       console.error("Upload error:", err);
-      if (err) {
-        toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
-      }
+      toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+    } finally {
+      setUploadLoading(false);
     }
   };
 

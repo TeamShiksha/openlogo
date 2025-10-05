@@ -11,7 +11,6 @@ import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
 import axios from "axios";
-import { instance } from "../../api/api_instance.js";
 
 function Catalog() {
   const toast = useToast();
@@ -138,13 +137,18 @@ function Catalog() {
     const size = file.size;
 
     try {
-      const signedUrlResp = await instance.post("/catalog/signed-Url", {
-        companyUri: updatedImageCompanyUri,
-        extension: extension,
-        type: "update",
+      const { success, data: uploadResp } = await fetchRequest({
+        data: {
+          companyUri: updatedImageCompanyUri,
+          extension: extension,
+          type: "update",
+        },
       });
-      if (!signedUrlResp) throw new Error("Failed to proceed your request");
-      const { presignedUrl, key } = signedUrlResp?.data?.data || {};
+      if (!success || !uploadResp) {
+        throw new Error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
 
       if (!presignedUrl || !key) {
         throw new Error("Presigned url or key is missing");
@@ -171,13 +175,10 @@ function Catalog() {
         setUploadLoading(false);
       }
     } catch (err) {
-      setUploadLoading(false);
       console.error("Upload error:", err);
-      if (err?.response?.data?.message) {
-        toast.error(err?.response?.data?.message);
-      } else {
-        toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
-      }
+      toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
+    } finally {
+      setUploadLoading(false);
     }
   };
 
