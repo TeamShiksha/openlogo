@@ -116,7 +116,7 @@ async function deleteUserAccountController(req, res, next) {
   try {
     const userService = new UserService();
     const { userId } = req.userData;
-    await userService.deleteUserAccount(userId);
+    await userService.markDeleteUser(userId);
     let cookieOptions = {
       sameSite: "none",
       secure: true,

@@ -87,7 +87,7 @@ class UserService {
   }
 
   /*
-   * Soft delete a user: marks as deleted and adds deleted_at timestamp.
+   * Marks `is_deleted` attribute of the user to true and adds deleted_at timestamp.
    * @param {string} userId - The user id to soft delete.
    * @returns {boolean} - true if user was successfully soft deleted.
    */
@@ -104,25 +104,8 @@ class UserService {
    * @returns {boolean} - true if user was successfully deleted.
    */
   async deleteUserAccount(userId) {
-    const user = await this.userRepository.getById(userId);
-
-    // Soft delete if not already deleted
-    if (user?.is_deleted === false) {
-      return this.markDeleteUser(userId);
-    }
-
-    // If already deleted, check tenure expiry
-    const TENURE_DAYS = 30;
-    if (user?.is_deleted && user?.deleted_at) {
-      const expiry = dayjs(user.deleted_at).add(TENURE_DAYS, "day");
-
-      if (expiry.isBefore(dayjs())) {
-        const deletedUser = await this.userRepository.delete(userId);
-        return !!deletedUser;
-      }
-    }
-
-    return false;
+    const deletedUser = await this.userRepository.delete(userId);
+    return !!deletedUser;
   }
 
   /**
@@ -133,10 +116,7 @@ class UserService {
   async getUserByEmail(email) {
     return await this.userRepository.findUserByEmail(email);
   }
-  /**
-   * Fetch a user by email, including soft-deleted users.
-   * @returns {Promise<Object|null>} - The user document if found, otherwise null.
-   */
+
   async getGuestUser() {
     return await this.userRepository.getGuestUser();
   }

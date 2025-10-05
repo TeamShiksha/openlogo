@@ -393,7 +393,7 @@ describe("SIGNUP API", () => {
     const daysLeft = Math.ceil(expiry.diff(dayjs(), "day", true));
 
     expect(response.body.message).toBe(
-      `Account exists. You may re-register after ${daysLeft} day${daysLeft > 1 ? "s" : ""}.`
+      `Account exists. You may re-register after ${daysLeft} days.`
     );
   });
 });

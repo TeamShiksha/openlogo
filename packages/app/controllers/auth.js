@@ -34,7 +34,7 @@ async function signupController(req, res, next) {
     }
 
     const { email } = value;
-    let user = await userService.getUserByEmail(email);
+    const user = await userService.getUserByEmail(email);
 
     // If the user is active block signup
     if (user?.is_deleted === false) {
@@ -52,7 +52,7 @@ async function signupController(req, res, next) {
       if (expiry.isAfter(dayjs())) {
         const daysLeft = expiry.diff(dayjs(), "day") + 1;
         return res.status(400).json({
-          message: `Account exists. You may re-register after ${daysLeft} day${daysLeft > 1 ? "s" : ""}.`,
+          message: `Account exists. You may re-register after ${daysLeft} days.`,
           error: STATUS_CODES[400],
           statusCode: 400,
         });
@@ -149,7 +149,7 @@ async function signinController(req, res, next) {
       if (user.is_deleted) {
         return res.status(400).json({
           error: STATUS_CODES[400],
-          message: "Account does not exist.",
+          message: Messages.ACCOUNT_DOESNT_EXISTS,
           statusCode: 400,
         });
       }
