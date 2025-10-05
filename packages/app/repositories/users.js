@@ -17,8 +17,8 @@ class UsersRepository extends BaseRepository {
    * @param {string} emailId - The email address to search for.
    * @returns {Promise<Object|null>} - Returns the user document if found, otherwise null.
    */
-  async findUserByEmail(emailId) {
-    return await this.model.findOne({ email: emailId, is_deleted: false });
+  async findUserByEmail(email) {
+    return await this.model.findOne({ email });
   }
 
   /**

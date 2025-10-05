@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
 const { UsersRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
+const dayjs = require("dayjs");
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
@@ -85,14 +86,26 @@ class UserService {
     return destroyedKey;
   }
 
-  /**
+  /*
+   * Marks `is_deleted` attribute of the user to true and adds deleted_at timestamp.
+   * @param {string} userId - The user id to soft delete.
+   * @returns {boolean} - true if user was successfully soft deleted.
+   */
+  async markDeleteUser(userId) {
+    const deletedUser = await this.userRepository.update(userId, {
+      is_deleted: true,
+      deleted_at: new Date(),
+    });
+    return !!deletedUser;
+  }
+  /*
    * Delete a User Account.
    * @param {string} userId - The user id to delete.
    * @returns {boolean} - true if user was successfully deleted.
    */
   async deleteUserAccount(userId) {
     const deletedUser = await this.userRepository.delete(userId);
-    return deletedUser ? true : false;
+    return !!deletedUser;
   }
 
   /**

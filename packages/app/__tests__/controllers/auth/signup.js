@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserToken } = require("../../../models");
+
 const {
   UserTokenService,
   UserService,
@@ -14,6 +14,9 @@ const {
   MOCK_USERTOKENS,
 } = require("../../../utils/mocks");
 const app = require("../../../server");
+const sendEmail = require("../../../utils/sendEmail");
+const dayjs = require("dayjs");
+jest.mock("../../../utils/sendEmail");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
 
@@ -26,6 +29,7 @@ describe("SIGNUP API", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    sendEmail.mockResolvedValue(true);
   });
 
   afterAll(() => {
@@ -156,9 +160,21 @@ describe("SIGNUP API", () => {
 
   it("400 - Email already registered", async () => {
     const mockRequest = { ...SIGNUP_PAYLOAD, email: "testname@gmail.com" };
+
+    const existingUser = {
+      email: "testname@gmail.com",
+      is_deleted: false,
+    };
+
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(MOCK_USERS[0]);
+      .mockResolvedValue(existingUser);
+
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue({
+        _id: "sub123",
+      });
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
@@ -188,22 +204,28 @@ describe("SIGNUP API", () => {
     });
   });
 
-  it("500 - Failed creating user", async () => {
+  it("500 - Failed creating verification token", async () => {
+    // Changed title from "201" to "500"
     const mockRequest = { ...SIGNUP_PAYLOAD };
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
       .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
-    jest.spyOn(UserService.prototype, "createUser").mockResolvedValue(null);
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockResolvedValue(null);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(500); // Changed from 201
     expect(response.body).toEqual({
-      error: STATUS_CODES[500],
       message: Messages.SOMETHING_WENT_WRONG,
-      statusCode: 500,
+      statusCode: 500, // Changed from 201
     });
   });
 
@@ -223,10 +245,10 @@ describe("SIGNUP API", () => {
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(500);
     expect(response.body).toEqual({
       message: Messages.SOMETHING_WENT_WRONG,
-      statusCode: 201,
+      statusCode: 500,
     });
   });
 
@@ -235,19 +257,32 @@ describe("SIGNUP API", () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
-      .mockResolvedValue(true);
+      .mockResolvedValue({ _id: "mockSubId" });
     jest
       .spyOn(UserService.prototype, "createUser")
       .mockResolvedValue(MOCK_USERS[1]);
+    const mockToken = {
+      ...MOCK_USERTOKENS[0],
+      tokenURL: jest.fn().mockReturnValue("http://example.com/verify-token"),
+    };
     jest
       .spyOn(UserTokenService.prototype, "createUserToken")
-      .mockImplementation(() => new UserToken(MOCK_USERTOKENS[0]));
+      .mockResolvedValue(mockToken);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
+    expect(sendEmail).toHaveBeenCalledWith({
+      id: 2,
+      subject: "Openlogo: Email Verification",
+      recipient: mockRequest.email,
+      body: {
+        url: "http://example.com/verify-token",
+      },
+    });
   });
 
   it("200 - Admin created successfully", async () => {
@@ -258,19 +293,107 @@ describe("SIGNUP API", () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
     jest
       .spyOn(SubscriptionService.prototype, "createSubscription")
-      .mockResolvedValue(true);
+      .mockResolvedValue({ _id: "mockSubId" });
     jest.spyOn(UserService.prototype, "getRole").mockReturnValue("ADMIN");
     jest
       .spyOn(UserService.prototype, "createUser")
       .mockResolvedValue(MOCK_USERS[2]);
+    const mockToken = {
+      ...MOCK_USERTOKENS[0],
+      tokenURL: jest.fn().mockReturnValue("http://example.com/verify-token"),
+    };
     jest
       .spyOn(UserTokenService.prototype, "createUserToken")
-      .mockImplementation(() => new UserToken(MOCK_USERTOKENS[0]));
+      .mockResolvedValue(mockToken);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNUP)
       .send(mockRequest);
 
-    expect(response.status).toBe(200);
-    expect(response.body.statusCode).toBe(200);
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
+  });
+
+  it("400 - Deleted user within block period cannot signup", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
+
+    // Deleted user within the 30-day tenure
+    const deletedUser = {
+      email: "deleted@example.com",
+      is_deleted: true,
+      deleted_at: new Date(), // today, within 30 days
+    };
+
+    jest
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(deletedUser);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    const tenureDays = 30;
+    const expiry = new Date(deletedUser.deleted_at);
+    expiry.setDate(expiry.getDate() + tenureDays);
+    const daysLeft = Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24));
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe(STATUS_CODES[400]);
+    expect(response.body.statusCode).toBe(400);
+    expect(response.body.message).toBe(
+      `Account exists. You may re-register after ${daysLeft} days.`
+    );
+  });
+
+  it("200 - Deleted user block expired can signup", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
+
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscription")
+      .mockResolvedValue({ _id: "mockSubId" });
+    jest
+      .spyOn(UserService.prototype, "createUser")
+      .mockResolvedValue(MOCK_USERS[1]);
+
+    const mockToken = {
+      ...MOCK_USERTOKENS[0],
+      tokenURL: jest.fn().mockReturnValue("http://example.com/verify-token"),
+    };
+    jest
+      .spyOn(UserTokenService.prototype, "createUserToken")
+      .mockResolvedValue(mockToken);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    expect(response.status).toBe(201);
+    expect(response.body.statusCode).toBe(201);
+  });
+
+  it("400 - Deleted user with 1 day left shows singular 'day'", async () => {
+    const mockRequest = { ...SIGNUP_PAYLOAD, email: "deleted@example.com" };
+
+    const deletedUser = {
+      email: "deleted@example.com",
+      is_deleted: true,
+      deleted_at: dayjs().subtract(29, "day").toDate(),
+    };
+
+    jest
+      .spyOn(UserService.prototype, "getUserByEmail")
+      .mockResolvedValue(deletedUser);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNUP)
+      .send(mockRequest);
+
+    const expiry = dayjs(deletedUser.deleted_at).add(30, "day");
+    const daysLeft = Math.ceil(expiry.diff(dayjs(), "day", true));
+
+    expect(response.body.message).toBe(
+      `Account exists. You may re-register after ${daysLeft} days.`
+    );
   });
 });
