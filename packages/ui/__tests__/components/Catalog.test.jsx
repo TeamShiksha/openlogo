@@ -1,5 +1,5 @@
 import { expect, describe, it, vi, afterEach, beforeEach } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, act } from "@testing-library/react";
 import Catalog from "../../src/components/catalog/Catalog";
 import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
 import { ToastContext } from "../../src/contexts/Contexts";
@@ -357,7 +357,9 @@ describe("Catalog Component", () => {
 
     expect(makeRequestMock).toHaveBeenCalledTimes(1);
 
-    await vi.runAllTimersAsync();
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
 
     expect(makeRequestMock).toHaveBeenCalledTimes(2);
   });
