@@ -1,9 +1,8 @@
-## Introduction
+## Openlogo
+Openlogo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos.
 
-Logo Executive is your partner in logo exploration. Our platform boasts a
-collection of APIs designed to simplify the process of obtaining company logos.
-Generate API keys and access logos in various sizes and formats, all while
-staying in control of your budget. Elevate your brand with Logo Executive!
+1. [Stage](https://stage.openlogo.fyi/)
+2. [Prod](https://www.openlogo.fyi/)
 
 ## Made with
 
@@ -16,26 +15,11 @@ staying in control of your budget. Elevate your brand with Logo Executive!
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-## How to run this project
+Read [DEVELOPMENT](./DEVELOPMENT.md) for instructions to develop features locally.
 
-```sh
-git clone https://github.com/TeamShiksha/logoexecutive.git
-cd logoexecutive
-yarn install
-yarn start
-```
+## More
 
-Checkout [package.json](../package.json) for more commands
+- [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
 
-## For environmental variables
-Follow [DEVELOPMENT Guide](DEVELOPMENT.md)
-
-## Before pull request
-Before pull request make sure to follow proper procedure mentioned in [CONTRIBUTING](CONTRIBUTING.md)
-
-## Some guides
-- [Project Structure](./guides/BACKEND.md) - Back-end
-- [Project Structure](./guides/FRONTEND.md) - Front-end
-- [MongoDB Collection](./guides/COLLECTIONS.md)
-- [AWS Setup](./guides/CLOUDFORMATION.md)
-- [Business APIs](./guides/BUSINESSAPI.md)
+-----------------------------------------------------------------------------------------------------------------
+<p align="center" style="text"><strong>If you liked something about this repository, do give it a 🌟.</strong></p>

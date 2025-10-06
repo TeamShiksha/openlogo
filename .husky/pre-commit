@@ -1,0 +1,4 @@
+pnpm lint
+pnpm check
+pnpm test
+pnpm lint-staged

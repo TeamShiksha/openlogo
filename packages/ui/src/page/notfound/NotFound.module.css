@@ -1,0 +1,26 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+}
+
+.not-found-title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.not-found-message {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  color: var(--black);
+}
+
+@media screen and (max-width: 640px) {
+  .not-found-title {
+    font-size: 2rem;
+  }
+}

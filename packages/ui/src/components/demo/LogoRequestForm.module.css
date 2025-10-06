@@ -1,0 +1,40 @@
+.logo-form-title {
+  font-size: 2rem;
+  color: var(--black);
+  text-align: center;
+}
+
+.logo-request-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  padding-bottom: 1rem;
+}
+
+.logo-form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.input-error {
+  color: var(--error);
+  font-size: 0.8rem;
+  margin-top: -9px;
+  margin-bottom: 9px;
+  margin-left: 3px;
+  opacity: 0;
+  max-height: 1px;
+  width: 100%;
+  transition:
+    opacity 0.2s ease-in-out 0.3s,
+    max-height 0.2s ease-in-out,
+    padding 0.2s ease-in-out;
+}
+
+.has-error {
+  opacity: 1;
+  max-height: 50px;
+  padding: 1px;
+}

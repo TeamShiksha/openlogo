@@ -1,0 +1,94 @@
+.verificationPageContainer {
+  padding: 0 8%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 300px);
+}
+
+.verificationCard {
+  background-color: var(--white);
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
+  max-width: 500px;
+  width: 100%;
+  padding: 40px 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: var(--border);
+  margin-top: 110px;
+}
+
+.verifyTitle {
+  font-size: 2.5rem;
+  color: var(--black);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.verifyMessage {
+  color: var(--description);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+@media only screen and (max-width: 1024px) {
+  .verificationPageContainer {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+  }
+
+  .verificationCard {
+    background-color: var(--white);
+    border-radius: var(--bradius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 1140px;
+    border: var(--border);
+    padding: 30px;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .verificationPageContainer {
+    padding: 1.5rem;
+  }
+
+  .verifyTitle {
+    font-size: 2rem;
+  }
+
+  .verifyMessage {
+    font-size: 1rem;
+  }
+
+  .verificationCard {
+    margin-top: 50px;
+  }
+}
+
+@media only screen and (max-width: 564px) {
+  .verificationPageContainer {
+    padding: 1rem;
+  }
+
+  .verificationCard {
+    padding: 20px;
+  }
+}

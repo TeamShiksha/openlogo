@@ -1,0 +1,156 @@
+.card {
+  background-color: var(--white);
+  border-radius: var(--bradius);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background-color: rgb(226, 224, 224, 0.3);
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.status-container-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.request-id {
+  color: var(--description);
+  font-weight: 600;
+  padding: 0.25rem 0rem;
+}
+
+.status-ball {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 1rem;
+}
+
+.status {
+  padding: 0.25rem 0rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.ball-pending {
+  background-color: var(--warning);
+}
+
+.ball-resolved {
+  background-color: var(--success);
+}
+
+.ball-rejected {
+  background-color: var(--error);
+}
+
+.text-pending {
+  color: var(--warning);
+}
+
+.text-resolved {
+  color: var(--success);
+}
+
+.text-rejected {
+  color: var(--error);
+}
+
+.date-container {
+  font-size: 0.85rem;
+  color: rgb(134, 137, 139);
+  display: flex;
+  gap: 0.3rem;
+}
+
+.operator-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.divider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--description);
+}
+
+.user-name,
+.user-email {
+  margin: 0;
+  color: var(--description);
+  line-height: 1.4;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.message-title,
+.summary-title {
+  color: rgb(134, 137, 139);
+  font-size: 1rem;
+}
+
+.message,
+.summary {
+  color: var(--black);
+  word-break: break-all;
+}
+
+.company-url {
+  text-decoration: none;
+}
+
+.company-url,
+.company-url:visited,
+.company-url:hover,
+.company-url:active {
+  color: #0000ee;
+}
+
+.button-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.respond-button {
+  height: 2.5rem;
+}
+
+.reject-button {
+  height: 2.5rem;
+  padding: 16px 36px;
+}

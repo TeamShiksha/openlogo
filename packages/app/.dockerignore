@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.example
+.env_example
+aws
+__tests__
+coverage
+Dockerfile
+eslint.config.mjs
+jest-mongodb-config.js
+jest.config.js
+.prettierrc.json
+vercel.json
