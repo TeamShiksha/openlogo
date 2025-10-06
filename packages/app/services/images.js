@@ -91,7 +91,7 @@ class ImageServices {
     const presignedUrl = await getSignedUrl(
       this.s3,
       new PutObjectCommand(uploadParams),
-      { expiresIn: 10 }
+      { expiresIn: 30 }
     );
     return {
       presignedUrl,
