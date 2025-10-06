@@ -33,10 +33,9 @@ Resources:
       CorsConfiguration:
         CorsRules:
           - AllowedOrigins:
-              - "*"
+              - "https://www.openlogo.fyi/"
             AllowedMethods:
               - PUT
-              - POST
             AllowedHeaders:
               - "*"
   S3BucketPolicy:
