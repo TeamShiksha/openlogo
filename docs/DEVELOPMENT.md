@@ -29,6 +29,10 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
 - Create a stack using `cloudformation_dev_test.yml` file given inside `app/aws` directory.
 - You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html).
+- Update cloudformation.dev_test.yml, under the S3bucket resource’s Properties → CorsConfiguration → CorsRules section, update the AllowedOrigins value from "https://stage.openlogo.fyi/" to "http://localhost:<default_frontend_port>". when running locally. This allows your local frontend to make API requests without CORS issues to S3.
+
+  **NOTE**: Remember to revert it back to the stage URL before committing or deploying.
+
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
    - `BUCKET_NAME`
    - `BUCKET_REGION`
@@ -2015,5 +2019,6 @@ class Success200 success
 
 ```
 </details>
+
 
 </details>
