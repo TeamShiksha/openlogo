@@ -42,6 +42,7 @@ const mockUserContext = (userData, loading) => ({
   userData,
   loading,
   fetchUserData: vi.fn(),
+  setUserData: vi.fn(),
 });
 
 const mockAuthContext = (isAuthenticated = true, logout = vi.fn()) => ({

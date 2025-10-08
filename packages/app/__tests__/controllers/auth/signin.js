@@ -6,6 +6,8 @@ const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
+const dummyPassword =
+  require("../../../utils/generatePassword").generatePassword();
 
 describe("SIGNIN API", () => {
   beforeAll(() => {
@@ -44,6 +46,7 @@ describe("SIGNIN API", () => {
 
   it("404 - Incorrect email or password", async () => {
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
       .send({ email: "email@example.com", password: "password" });
@@ -57,28 +60,42 @@ describe("SIGNIN API", () => {
   });
 
   it("403 - Email not verified", async () => {
-    jest
-      .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(MOCK_USERS[0]);
+    const user = {
+      ...MOCK_USERS[0],
+      is_verified: false,
+      matchPassword: jest.fn().mockResolvedValue(true),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: "johndoe@example.com", password: "password123" });
+      .send({ email: user.email, password: dummyPassword });
 
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       error: STATUS_CODES[403],
-      message: "Email not verified",
+      message: Messages.EMAIL_NOT_VERIFIED,
       statusCode: 403,
     });
   });
 
-  it("404 - Incorrect email or password", async () => {
-    jest
-      .spyOn(UserService.prototype, "getUserByEmail")
-      .mockImplementation(() => new Users(MOCK_USERS[1]));
+  it("404 - Incorrect password", async () => {
+    const user = {
+      ...MOCK_USERS[1],
+      is_verified: true,
+      is_deleted: false,
+      matchPassword: jest.fn().mockResolvedValue(false),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+
+    const INVAILD = "wrongpassword";
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: "johndoe1@example.com", password: "password122" });
+      .send({ email: user.email, password: INVAILD });
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -89,17 +106,22 @@ describe("SIGNIN API", () => {
   });
 
   it("200 - Signin successful", async () => {
-    jest
-      .spyOn(UserService.prototype, "getUserByEmail")
-      .mockImplementation(() => new Users(MOCK_USERS[1]));
+    const user = {
+      ...MOCK_USERS[1],
+      is_verified: true,
+      is_deleted: false,
+      matchPassword: jest.fn().mockResolvedValue(true),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
-      .send({ email: "johndoe1@example.com", password: "password123" });
+      .send({ email: user.email, password: dummyPassword });
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      statusCode: 200,
-    });
+    expect(response.body).toEqual({ statusCode: 200 });
     expect(response.headers["set-cookie"]).toBeDefined();
   });
 

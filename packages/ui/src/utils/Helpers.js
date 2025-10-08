@@ -89,6 +89,11 @@ export const isValidName = (name) => {
   return nameRegex.test(name);
 };
 
+export const isValidDescription = (description) => {
+  const descriptionRegex = /^[a-zA-Z\s]*$/;
+  return descriptionRegex.test(description);
+};
+
 export const formatDate = (dateString) => {
   const date = dateString ? new Date(dateString) : new Date();
   return date.toLocaleDateString("en-us", {
@@ -175,6 +180,13 @@ export const validate = (values) => {
   validateField(
     "name",
     values.name && !isValidName(values.name),
+    "Only letters and spaces allowed"
+  );
+
+  validateField("description", !values.description, "Description is required");
+  validateField(
+    "description",
+    values.description && !isValidDescription(values.description),
     "Only letters and spaces allowed"
   );
 

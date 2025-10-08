@@ -47,6 +47,7 @@ const Messages = {
   INVALID_USER_ID: "Invalid user id.",
   EMAIL_EXISTS: "Email already exists.",
   EMAIL_DOESNT_EXISTS: "Email doesn't exists.",
+  ACCOUNT_DOESNT_EXISTS: "Account does not exist.",
   USER_NOT_FOUND: "User not found.",
   DATA_NOT_FOUND: "User data not found.",
   SOMETHING_WENT_WRONG:
@@ -78,6 +79,7 @@ const Messages = {
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
+  USER_CREATED: "User created successfully. Please verify your email.",
   EMAIL_REQUIRED: "Email is required",
   NAME_REQUIRED: "Name is required",
   INVALID_EMAIL: "Invalid email",

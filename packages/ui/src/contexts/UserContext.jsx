@@ -32,6 +32,7 @@ export function UserProvider({ children }) {
           loading,
           error,
           fetchUserData,
+          setUserData,
         }),
         [userData, loading, error, fetchUserData]
       )}

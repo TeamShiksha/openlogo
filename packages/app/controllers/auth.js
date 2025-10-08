@@ -13,7 +13,7 @@ const {
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
 const { Messages } = require("../utils/constants");
-
+const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
  * creates a new subscription, registers a new user, and send a verification email.
@@ -23,6 +23,7 @@ async function signupController(req, res, next) {
     const userService = new UserService();
     const userTokenService = new UserTokenService();
     const subscriptionService = new SubscriptionService();
+
     const { error, value } = signupPayloadSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -33,8 +34,10 @@ async function signupController(req, res, next) {
     }
 
     const { email } = value;
-    const emailExists = await userService.getUserByEmail(email);
-    if (emailExists) {
+    const user = await userService.getUserByEmail(email);
+
+    // If the user is active block signup
+    if (user?.is_deleted === false) {
       return res.status(400).json({
         message: Messages.EMAIL_EXISTS,
         error: STATUS_CODES[400],
@@ -42,6 +45,22 @@ async function signupController(req, res, next) {
       });
     }
 
+    // Handle soft-deleted users
+    if (user?.deleted_at) {
+      const tenureDays = 30;
+      const expiry = dayjs(user.deleted_at).add(tenureDays, "day");
+      if (expiry.isAfter(dayjs())) {
+        const daysLeft = expiry.diff(dayjs(), "day") + 1;
+        return res.status(400).json({
+          message: `Account exists. You may re-register after ${daysLeft} days.`,
+          error: STATUS_CODES[400],
+          statusCode: 400,
+        });
+      }
+      await userService.deleteUserAccount(user._id);
+    }
+
+    // Create subscription only after validation passes
     const newSubscription = await subscriptionService.createSubscription();
     if (!newSubscription) {
       return res.status(500).json({
@@ -64,9 +83,9 @@ async function signupController(req, res, next) {
       newUser._id
     );
     if (!verificationToken) {
-      return res.status(201).json({
+      return res.status(500).json({
         message: Messages.SOMETHING_WENT_WRONG,
-        statusCode: 201,
+        statusCode: 500,
       });
     }
 
@@ -79,7 +98,10 @@ async function signupController(req, res, next) {
       },
     });
 
-    return res.status(200).json({ statusCode: 200 });
+    return res.status(201).json({
+      message: Messages.USER_CREATED,
+      statusCode: 201,
+    });
   } catch (err) {
     next(err);
   }
@@ -117,12 +139,20 @@ async function signinController(req, res, next) {
           message: Messages.INCORRECT_EMAIL_PASS,
           statusCode: 404,
         });
+
       if (!user.is_verified)
         return res.status(403).json({
           error: STATUS_CODES[403],
           message: Messages.EMAIL_NOT_VERIFIED,
           statusCode: 403,
         });
+      if (user.is_deleted) {
+        return res.status(400).json({
+          error: STATUS_CODES[400],
+          message: Messages.ACCOUNT_DOESNT_EXISTS,
+          statusCode: 400,
+        });
+      }
       const matchPassword = await user.matchPassword(password);
       if (!matchPassword) {
         return res.status(404).json({

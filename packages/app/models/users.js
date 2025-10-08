@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  deleted_at: {
+    type: Date,
+    default: null,
+  },
   updated_at: {
     type: Date,
     required: true,

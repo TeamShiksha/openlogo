@@ -20,13 +20,13 @@ describe("Delete User Account", () => {
   it("500 - Unexpected Error", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      userId: "mockUserId@123",
-    };
+    const mockInput = { userId: "mockUserId@123" };
+
+    // Spy on the actual function used in controller
     jest
-      .spyOn(UserService.prototype, "deleteUserAccount")
+      .spyOn(UserService.prototype, "markDeleteUser")
       .mockImplementation(() => {
-        throw new Error();
+        throw new Error("Unexpected error");
       });
 
     const response = await request(app)
@@ -37,15 +37,13 @@ describe("Delete User Account", () => {
     expect(response.status).toBe(500);
   });
 
-  it("200- User account deleted", async () => {
+  it("200 - User account deleted", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
-    const mockInput = {
-      userId: "mockUserId@123",
-    };
-    jest
-      .spyOn(UserService.prototype, "deleteUserAccount")
-      .mockReturnValue(true);
+    const mockInput = { userId: "mockUserId@123" };
+
+    // Spy on markDeleteUser function
+    jest.spyOn(UserService.prototype, "markDeleteUser").mockResolvedValue(true);
 
     const response = await request(app)
       .delete("/api/user/me")
