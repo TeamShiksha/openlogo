@@ -282,6 +282,26 @@ const MOCK_REQUESTS = [
   },
 ];
 
+const MOCK_PRESIGNED_REQUEST_UPLOAD = [
+  {
+    body: {
+      companyUri: "https://google.com/",
+      extension: "png",
+      type: "upload",
+    },
+  },
+];
+
+const MOCK_PRESIGNED_REQUEST_UPDATE = [
+  {
+    body: {
+      companyUri: "https://google.com/",
+      extension: "png",
+      type: "update",
+    },
+  },
+];
+
 const MOCK_REQUESTS_LIST = [
   {
     data: [MOCK_REQUESTS[0], MOCK_REQUESTS[1]],
@@ -344,6 +364,8 @@ module.exports = {
   MOCK_ANALYTICS_DATA_OUTPUT,
   MOCK_IMAGES,
   MOCK_REQUESTS,
+  MOCK_PRESIGNED_REQUEST_UPLOAD,
+  MOCK_PRESIGNED_REQUEST_UPDATE,
   MOCK_REQUESTS_LIST,
   MOCK_CONTACTUS_FORM_DATA,
 };

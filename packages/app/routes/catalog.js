@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const authMiddleware = require("../middlewares/auth");
-const upload = require("../middlewares/fileUpload");
 const {
   addPermissionController,
   getCatalogController,
+  getPreSignedController,
   updateCatalogController,
   addCatalogController,
   getAnalyticsController,
@@ -21,18 +21,23 @@ router.get(
   authMiddleware({ adminOnly: true }),
   getAnalyticsController
 );
-
 router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
+
 router.post(
   "/logo",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  upload.single("logo"),
   addCatalogController
 );
+
+router.post(
+  "/signed-url",
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
+  getPreSignedController
+);
+
 router.put(
   "/logo",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  upload.single("logo"),
   updateCatalogController
 );
 

@@ -29,7 +29,14 @@ Resources:
     Properties:
       BucketName: !Sub teamshiksha-openlogo-dev-test-${AWS::AccountId}-${AWS::Region}
       AccessControl: Private
-
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - "https://stage.openlogo.fyi/"
+            AllowedMethods:
+              - PUT
+            AllowedHeaders:
+              - "*"
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     DependsOn:

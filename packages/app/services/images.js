@@ -1,3 +1,4 @@
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { ImagesRepository } = require("../repositories");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
@@ -82,15 +83,20 @@ class ImageServices {
     return dataList;
   }
 
-  async uploadToS3(file, imageName, extension) {
+  async getPreSignedUrl(imageName, extension) {
     const uploadParams = {
       Bucket: process.env.BUCKET_NAME,
-      Body: file.buffer,
       Key: `${this.s3BucketKey}/${extension}/${imageName}.${extension}`,
     };
-
-    await this.s3.send(new PutObjectCommand(uploadParams));
-    return `${this.s3BucketKey}/${extension}/${imageName}.${extension}`;
+    const presignedUrl = await getSignedUrl(
+      this.s3,
+      new PutObjectCommand(uploadParams),
+      { expiresIn: 30 }
+    );
+    return {
+      presignedUrl,
+      key: `${this.s3BucketKey}/${extension}/${imageName}.${extension}`,
+    };
   }
 
   async createImageData(

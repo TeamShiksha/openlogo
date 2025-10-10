@@ -72,6 +72,7 @@ const Messages = {
   LOGO_NOT_FOUND: "Logo not found.",
   FETCH_ALL_MESSAGE: "Fetched all contact us messages.",
   MESSAGE_NOT_FOUND: "Message not found.",
+  IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
   INCORRECT_PASSWORD: "Current password is incorrect",

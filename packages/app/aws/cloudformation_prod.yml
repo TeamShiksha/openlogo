@@ -30,7 +30,14 @@ Resources:
     Properties:
       BucketName: !Sub teamshiksha-openlogo-prod-${AWS::AccountId}-${AWS::Region}
       AccessControl: Private
-
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - "https://www.openlogo.fyi/"
+            AllowedMethods:
+              - PUT
+            AllowedHeaders:
+              - "*"
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     DeletionPolicy: Retain

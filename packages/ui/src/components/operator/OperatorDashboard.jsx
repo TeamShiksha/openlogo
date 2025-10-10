@@ -11,6 +11,7 @@ import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
 import Dropdown from "../common/dropdown/Dropdown";
 import ImageUploadModal from "../catalog/ImageUploadModal";
 import { useApi } from "../../hooks/useApi";
+import axios from "axios";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -55,6 +56,7 @@ const Operator = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const ITEMS_PER_PAGE = 6;
 
@@ -198,29 +200,29 @@ const Operator = () => {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
-  // Handle clicking respond button
   const handleRespondClick = (item, actionType = "respond") => {
     setCurrentItem(item);
     setResponseAction(actionType);
     setResponseText(item.comment || "");
-    setFormErrors({}); // Clear form errors when opening a new modal
+    setFormErrors({});
     setIsModalOpen(true);
   };
 
-  // Handle response text change
   const handleResponseChange = (e) => {
     setResponseText(e.target.value);
   };
 
-  const {
-    loading: uploadLoading,
-    makeRequest: uploadMakeRequest,
-    errorMsg: uploadErrorMsg,
-  } = useApi({
+  const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: "POST",
     url: `/catalog/logo`,
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { "Content-Type": "application/json" },
   });
+
+  const { fetchRequest: getPresignedURLRequest, errorMsg: fetchErrMsg } =
+    useApi({
+      method: "POST",
+      url: `/catalog/signed-url`,
+    });
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -228,21 +230,51 @@ const Operator = () => {
     }
   }, [uploadErrorMsg, toast]);
 
-  const handleImageUpload = async ({ file, companyUri }) => {
-    if (!file || !companyUri) return;
+  useEffect(() => {
+    if (fetchErrMsg) {
+      toast.error(fetchErrMsg);
+    }
+  }, [fetchErrMsg, toast]);
 
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("companyUri", companyUri);
+  const handleImageUpload = async ({ file, companyUri }) => {
+    setUploadLoading(true);
+    if (!file || !companyUri) return;
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const { success, data: uploadResp } = await getPresignedURLRequest({
+        data: {
+          companyUri,
+          extension,
+          type: "upload",
+        },
+      });
+      if (!success || !uploadResp) {
+        toast.error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
+
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: { companyUri, extension, size },
+      });
+      if (metadataSaved) {
         setIsUploadModalOpen(false);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
       }
     } catch (err) {
       console.error("Upload error:", err);
+      toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+    } finally {
+      setUploadLoading(false);
     }
   };
 

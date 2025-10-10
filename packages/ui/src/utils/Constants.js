@@ -709,8 +709,10 @@ export const MESSAGES = {
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
   IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
   IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
+  IMAGE_UPLOAD_ERROR: "Failed to upload image.",
+  IMAGE_UPDATE_ERROR: "Failed to update image.",
   NO_RESULT_FOUND: "No results found matching your query!",
-  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG or PNG)",
+  UPLOAD_VALID_IMAGE: "Please upload a valid PNG image file",
   UPDATE_PASSWORD_SUCCESS: "Password updated successfully",
 };
 
