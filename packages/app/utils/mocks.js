@@ -179,6 +179,10 @@ const MOCK_ANALYTICS_DATA_INPUT = [
     title: "Hits",
     value: 40,
   },
+  {
+    title: "Images",
+    value: 28,
+  },
 ];
 
 const MOCK_ANALYTICS_DATA_OUTPUT = [
@@ -198,6 +202,10 @@ const MOCK_ANALYTICS_DATA_OUTPUT = [
   {
     title: "Hits",
     value: 40,
+  },
+  {
+    title: "Images",
+    value: 28,
   },
 ];
 

@@ -153,6 +153,10 @@ class ImageServices {
     return await this.imageRepository.getAllImages(skip, limit, search);
   }
 
+  async getImagesCount() {
+    return await this.imageRepository.getImagesCount();
+  }
+
   async getImageById(id) {
     return await this.imageRepository.getById(id);
   }

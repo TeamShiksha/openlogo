@@ -28,6 +28,8 @@ async function getAnalyticsController(req, res, next) {
     const totalRequests = await requestService.getRequestsCount();
     const subscriptionService = new SubscriptionService();
     const totalHits = await subscriptionService.getSubscriptionUsageCount();
+    const imageService = new ImageService();
+    const totalImages = await imageService.getImagesCount();
 
     return res.status(200).json({
       statusCode: 200,
@@ -48,6 +50,10 @@ async function getAnalyticsController(req, res, next) {
         {
           title: "Hits",
           value: totalHits,
+        },
+        {
+          title: "Images",
+          value: totalImages,
         },
       ],
     });
