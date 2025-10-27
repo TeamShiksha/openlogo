@@ -70,6 +70,9 @@ class ImagesRepository extends BaseRepository {
       totalPages: Math.ceil(total / limit),
     };
   }
+  async getImagesCount() {
+    return await Image.countDocuments();
+  }
 }
 
 module.exports = ImagesRepository;

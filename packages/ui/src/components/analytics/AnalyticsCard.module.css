@@ -2,7 +2,7 @@
   border-radius: 16px;
   background: #f8f8f9;
   padding: 2rem 1rem;
-  flex: 210px 1 1;
+  flex: 300px 1;
   font-family: Inter, sans-serif;
   font-style: normal;
   line-height: normal;
@@ -18,9 +18,9 @@
 .card-content {
   display: flex;
   width: 100%;
-  gap: 2rem;
+  gap: 1.5rem;
   justify-content: space-between;
-  align-items: last baseline;
+  align-items: first baseline;
 }
 
 .card-title,
