@@ -3,8 +3,6 @@
 - [Prerequisites](#prerequisites)
 - [Clone and run the project locally](#clone-and-run-the-project-locally)
 - [Environment variables](#environment-variables)
-- [Running latest code using docker](#running-latest-code-using-docker)
-- [Running with Docker Compose (including MongoDB)](#running-with-docker-compose-including-mongodb)
 - [Postman API Collection](#postman-api-collection)
 - [Collections Uses](#collections-uses)
 - [API Endpoints Documentation](#api-endpoints-documentation)
@@ -44,43 +42,6 @@ Most of the environment variables can be used by copying them from the `.env.exa
 
     **NOTE**: These values will be comma seperated.
 
-## Running latest code using docker
-
-On every merge we pushed the latest code to docker hub.
-- [Stage](https://hub.docker.com/u/aps08dev)
-- [Prod](https://hub.docker.com/u/aps08)
-
-This is to allow users run the latest code quickly just by supplying the environment variables from `.env` file. You can run the latest published frontend and backend Docker images with your own environment variables:
-- Pull the images
-```sh
-docker pull aps08dev/openlogo-backend:latest
-docker pull aps08dev/openlogo-frontend:latest
-```
-- Run the backend container (port 5000)
-```sh
-docker run --env-file .env -p 5000:5000 aps08dev/openlogo-backend:latest
-```
-- Run the frontend container (port 3000)
-```sh
-docker run --env-file ./frontend.env -p 3000:3000 aps08dev/openlogo-frontend:latest
-```
-Make sure your .env files contain all required environment variables for each service and the `.env` is in the current directory.
-
-## Running with Docker Compose (including MongoDB)
-
-For local development, you can use Docker Compose to run the backend, frontend, and MongoDB together. `docker-compose.yml` is provided in the repository.
-
-This will start:
-- MongoDB (default port 27017)
-- Backend (default port 5000)
-- Frontend (default port 8080)
-
-You can customize ports and environment variables in the `docker-compose.yml` and `.env` files as needed.
-
-To stop the services, press `Ctrl+C` and run:
-```sh
-docker compose down
-```
 ## Hostname mapping
 To ensure parity with production and staging environment it is better to have hostname mapping.
 
@@ -93,6 +54,11 @@ For windows, modify `\etc\hosts` file located inside `System32\drivers` folder a
 ```sh
 127.0.0.1  local.openlogo.fyi
 ```
+
+## Deployment flow 
+![Deployment flow](./images/deployment_flow.png)
+- [﻿deploy-frontend.yaml](https://github.com/TeamShiksha/openlogo/blob/stage/.github/workflows/deploy-frontend.yaml)
+- [﻿deploy-backend.yaml](https://github.com/TeamShiksha/openlogo/blob/stage/.github/workflows/deploy-backend.yaml)
 
 ## Postman API Collection
 
