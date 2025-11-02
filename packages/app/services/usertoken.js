@@ -24,6 +24,14 @@ class UserTokenService {
     return await this.userTokenRepository.fetchDeletedUserToken(token);
   }
 
+  async fetchUserTokenByUserId(userId) {
+    return await this.userTokenRepository.fetchUserTokenByUserId(userId);
+  }
+
+  async updateUserToken(token) {
+    return await this.userTokenRepository.updateUserToken(token);
+  }
+
   async deleteUserToken(userToken) {
     const deleteUserTokenData = {
       is_deleted: true,

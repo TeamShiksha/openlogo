@@ -119,6 +119,7 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
+    const userTokenService = new UserTokenService();
     let user = {};
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
@@ -140,12 +141,6 @@ async function signinController(req, res, next) {
           statusCode: 404,
         });
 
-      if (!user.is_verified)
-        return res.status(403).json({
-          error: STATUS_CODES[403],
-          message: Messages.EMAIL_NOT_VERIFIED,
-          statusCode: 403,
-        });
       if (user.is_deleted) {
         return res.status(400).json({
           error: STATUS_CODES[400],
@@ -159,6 +154,20 @@ async function signinController(req, res, next) {
           error: STATUS_CODES[404],
           message: Messages.INCORRECT_EMAIL_PASS,
           statusCode: 404,
+        });
+      }
+
+      if (!user.is_verified) {
+        const result = await resendEmail(
+          user,
+          userService,
+          userTokenService,
+          next
+        );
+        return res.status(result.statusCode).json({
+          message: result.message,
+          statusCode: result.statusCode,
+          source: "resendEmail",
         });
       }
     }
@@ -256,20 +265,26 @@ async function verifyEmailController(req, res, next) {
       });
     }
 
-    if (userToken.isExpired()) {
-      return res.status(403).json({
-        error: STATUS_CODES[403],
-        message: Messages.EXPIRED_TOKEN,
-        statusCode: 403,
-      });
-    }
-
     const user = await userService.getUser(userToken.user_id);
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
         message: Messages.INVALID_TOKEN,
         statusCode: 404,
+      });
+    }
+
+    if (userToken.isExpired()) {
+      const result = await resendEmail(
+        user,
+        userService,
+        userTokenService,
+        next
+      );
+      return res.status(result.statusCode).json({
+        message: result.message,
+        statusCode: result.statusCode,
+        source: "resendEmail",
       });
     }
 
@@ -469,6 +484,76 @@ async function resetPasswordController(req, res, next) {
 
 function validateSessionController(req, res) {
   return res.status(200).json({ statusCode: 200, userData: req.userData });
+}
+
+/**
+ * Resends a verification email to the user with a refreshed token.
+ *
+ * This function enforces a daily limit of 3 resend attempts per user.
+ * If 24 hours have passed since the last verification email, the resend count is reset.
+ * It updates the existing token, and sends an email
+ * containing the new verification link to the user.
+ */
+
+async function resendEmail(user, userService, userTokenService, next) {
+  try {
+    const userToken = await userTokenService.fetchUserTokenByUserId(user._id);
+    if (!userToken) {
+      return {
+        success: false,
+        message: Messages.INVALID_TOKEN,
+        statusCode: 404,
+      };
+    }
+
+    const now = dayjs();
+    const lastSent = dayjs(user.last_verification_email_sent_at);
+    const hoursSinceLastEmail = now.diff(lastSent, "hour");
+    if (hoursSinceLastEmail >= 24) {
+      await userService.updateUserEmailCount(user, true);
+    } else if (user.resend_email_count >= 3) {
+      return {
+        success: false,
+        message: Messages.TRY_AFTER,
+        statusCode: 429,
+      };
+    } else {
+      await userService.updateUserEmailCount(user, false);
+    }
+
+    const updatedToken = await userTokenService.updateUserToken(
+      userToken.token
+    );
+    if (!updatedToken) {
+      return {
+        success: false,
+        message: Messages.FAILED_UPDATE_TOKEN,
+        statusCode: 400,
+      };
+    }
+
+    await sendEmail({
+      id: 2,
+      subject: "Openlogo: Email Verification",
+      recipient: user.email,
+      body: {
+        url: updatedToken.tokenURL(),
+      },
+    });
+
+    return {
+      success: true,
+      message: Messages.RESEND_EMAIL,
+      statusCode: 201,
+    };
+  } catch (err) {
+    next(err);
+    return {
+      success: false,
+      message: Messages.RESEND_EMAIL_FAILED,
+      statusCode: 500,
+    };
+  }
 }
 
 module.exports = {
