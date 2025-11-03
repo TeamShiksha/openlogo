@@ -57,8 +57,8 @@ For windows, modify `\etc\hosts` file located inside `System32\drivers` folder a
 
 ## Deployment flow 
 ![Deployment flow](./images/deployment_flow.png)
-- [﻿deploy-frontend.yaml](https://github.com/TeamShiksha/openlogo/blob/stage/.github/workflows/deploy-frontend.yaml)
-- [﻿deploy-backend.yaml](https://github.com/TeamShiksha/openlogo/blob/stage/.github/workflows/deploy-backend.yaml)
+- [deploy-frontend.yaml](../../.github/workflows/deploy-frontend.yaml)
+- [deploy-backend.yaml](../../.github/workflows/deploy-backend.yaml)
 
 ## Postman API Collection
 
