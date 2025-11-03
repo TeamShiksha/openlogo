@@ -31,7 +31,7 @@ class UserTokenRepository extends BaseRepository {
       { token, is_deleted: false },
       {
         $set: {
-          expire_at: dayjs().add(1, "day").toDate(), // set expiry to 24h from now
+          expire_at: dayjs().add(1, "day").toDate(),
         },
       },
       { new: true }
