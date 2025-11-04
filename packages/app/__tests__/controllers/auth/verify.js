@@ -89,7 +89,7 @@ describe("VERIFY EMAIL API", () => {
     });
   });
 
-  it("429 - Too many requests", async () => {
+  it("429 -Token expired / Too many requests", async () => {
     const user = {
       ...MOCK_USERS[0],
       _id: MOCK_USERS[0]._id,
