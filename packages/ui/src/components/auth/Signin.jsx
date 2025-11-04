@@ -78,7 +78,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         toast.success("Password reset link sent to your email");
         setIsForgotPassword(false);
       } else if (data.source && data.statusCode == 201) {
-        toast.success("New Verification Email is sent. Please verify..!");
+        toast.success("Verification email sent. Please verify your account.");
       } else {
         setFormData(SIGNIN.initialValues);
         setIsAuthenticated(true);
