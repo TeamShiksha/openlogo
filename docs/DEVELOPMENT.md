@@ -26,8 +26,8 @@
 Most of the environment variables can be used by copying them from the `.env.example` file. However, if you are trying to run the business APIs locally, you will need some additional environment variables associated with AWS.
 
 - Create a stack using `cloudformation_dev_test.yml` file given inside `app/aws` directory.
-- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html).
-- Update cloudformation.dev_test.yml, under the S3bucket resource’s Properties → CorsConfiguration → CorsRules section, update the AllowedOrigins value from "https://stage.openlogo.fyi/" to "http://localhost:<default_frontend_port>". when running locally. This allows your local frontend to make API requests without CORS issues to S3.
+- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/       private-content-trusted-signers.html).
+- While creating or updating a stack make sure for `AllowedOriginInS3` parameter select is `http://localhost:8080` to avoid CORS error for S3 in your local development environment.
 
   **NOTE**: Remember to revert it back to the stage URL before committing or deploying.
 
