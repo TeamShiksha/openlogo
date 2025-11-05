@@ -565,4 +565,5 @@ module.exports = {
   resetPasswordSessionController,
   resetPasswordController,
   validateSessionController,
+  resendEmail,
 };
