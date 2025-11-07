@@ -23,6 +23,15 @@ Parameters:
       Ensure the path does not begin or end with a slash.
     AllowedPattern: ^[a-zA-Z0-9]+(/[a-zA-Z0-9]+)*$
 
+  AllowedOriginInS3:
+    Type: String
+    Default: https://stage.openlogo.fyi/
+    Description: |
+      The allowed origins for the S3 bucket
+    AllowedValues:
+      - https://stage.openlogo.fyi/
+      - http://localhost:8080
+
 Resources:
   S3bucket:
     Type: AWS::S3::Bucket
@@ -32,7 +41,7 @@ Resources:
       CorsConfiguration:
         CorsRules:
           - AllowedOrigins:
-              - "https://stage.openlogo.fyi/"
+              - !Sub ${AllowedOriginInS3}
             AllowedMethods:
               - PUT
             AllowedHeaders:
