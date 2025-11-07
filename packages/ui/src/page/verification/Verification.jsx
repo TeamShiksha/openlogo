@@ -49,7 +49,7 @@ const Verification = () => {
         verifyData.source === "resendEmail"
       ) {
         setTitle("Verification Pending");
-        setMessage("Verification email sent. Please verify your account.");
+        setMessage("Verification email sent. \nPlease verify your account.");
         setTimeout(() => navigate("/"), 6000);
       }
     }
