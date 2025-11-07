@@ -22,13 +22,26 @@ const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
 });
 
+const mockUserContext = (userData) => ({
+  userData,
+  setUserData: vi.fn(),
+});
+
+const mockUserData = {
+  email: "test@example.com",
+  name: "Test User",
+};
+
 describe("Header component", () => {
   it("Render header branding and navigate to home on click", () => {
     const authContext = mockAuthContext(true);
+    const userContext = mockUserContext(mockUserData);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -43,10 +56,13 @@ describe("Header component", () => {
 
   it("Render all header navigations", () => {
     const authContext = mockAuthContext(false);
+    const userContext = mockUserContext(null);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -88,12 +104,15 @@ describe("Header component", () => {
 
   it("Hamburger visible before and after screen width change", () => {
     const authContext = mockAuthContext(false);
+    const userContext = mockUserContext(null);
     window.innerWidth = 1200;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -108,7 +127,9 @@ describe("Header component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -121,12 +142,15 @@ describe("Header component", () => {
 
   it("Mobile header toggle icon", () => {
     const authContext = mockAuthContext(false);
+    const userContext = mockUserContext(null);
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -144,12 +168,15 @@ describe("Header component", () => {
 
   it("Mobile header auto close if width > 1024", () => {
     const authContext = mockAuthContext(false);
+    const userContext = mockUserContext(null);
     window.innerWidth = 700;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -168,10 +195,13 @@ describe("Header component", () => {
 
   it("Open and close authModal", () => {
     const authContext = mockAuthContext(false);
+    const userContext = mockUserContext(null);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -183,10 +213,13 @@ describe("Header component", () => {
 
   it("Removes Get started button if user is logged in", () => {
     const authContext = mockAuthContext(true);
+    const userContext = mockUserContext(mockUserData);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <Header openAuthModal={openCloseAuthModal} />
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -194,4 +227,25 @@ describe("Header component", () => {
     const getStartedButtonText = screen.queryByText(BUTTON_TEXT.getStarted);
     expect(getStartedButtonText).not.toBeInTheDocument();
   });
+});
+
+it("Renders UserDropDown when user is authenticated", () => {
+  const authContext = mockAuthContext(true);
+  const userContext = mockUserContext(mockUserData);
+  render(
+    <BrowserRouter>
+      <AuthContext.Provider value={authContext}>
+        <UserContext.Provider value={userContext}>
+          <Header openAuthModal={openCloseAuthModal} />
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    </BrowserRouter>
+  );
+
+  const userButton = screen.getByRole("button", { name: /t/i });
+  expect(userButton).toBeInTheDocument();
+
+  fireEvent.click(userButton);
+  const signoutButton = screen.getByText(/sign out/i);
+  expect(signoutButton).toBeInTheDocument();
 });
