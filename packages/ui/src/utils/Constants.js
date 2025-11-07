@@ -113,12 +113,6 @@ export const LOGGEDIN_ITEMS = [
     type: "section",
   },
   {
-    name: "dashboard",
-    title: "Dashboard",
-    url: "/dashboard",
-    type: "route",
-  },
-  {
     name: "docs",
     title: "Docs",
     url: "/docs",
@@ -143,6 +137,20 @@ export const LOGGEDIN_ITEMS = [
     type: "section",
   },
 ];
+
+export const DROPDOWN_ITEMS = [
+  {
+    name: "dashboard",
+    title: "Dashboard",
+    url: "/dashboard",
+    type: "route",
+  }, 
+  {
+    name: "signout",
+    title: "Sign Out",
+    type: "button",
+  }
+]
 
 export const FOOTER_ITEMS = [
   {
