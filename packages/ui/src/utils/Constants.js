@@ -113,12 +113,6 @@ export const LOGGEDIN_ITEMS = [
     type: "section",
   },
   {
-    name: "dashboard",
-    title: "Dashboard",
-    url: "/dashboard",
-    type: "route",
-  },
-  {
     name: "docs",
     title: "Docs",
     url: "/docs",
