@@ -21,6 +21,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
+  const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
 
   const { makeRequest, data, loading, errorMsg } = useApi({
@@ -28,6 +29,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     url: "/user/api-key",
     data: {
       key_description: description,
+      expires_in_days: expiresInDays,
     },
   });
 
@@ -112,6 +114,27 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           onFocus={() => setFocusedField("apikey")}
           onBlur={() => setFocusedField(null)}
         />
+        <div className={styles["expiry-dropdown"]}>
+          <label htmlFor="expiry" className={styles["expiry-label"]}>
+            Expiry Period
+          </label>
+          <select
+            id="expiry"
+            value={expiresInDays}
+            onChange={(e) => setExpiresInDays(parseInt(e.target.value))}
+            className={styles["expiry-select"]}
+            disabled={loading}
+          >
+            <option value={7}>1 week</option>
+            <option value={30}>1 month</option>
+            <option value={90}>3 months</option>
+            <option value={180}>6 months</option>
+            <option value={365}>1 year</option>
+            <option value={730}>2 years</option>
+            <option value={3650}>10 years</option>
+            <option value={-1}>Never expire</option>
+          </select>
+        </div>
         <Modal
           isOpen={showApiKeyModal}
           onClose={handleCloseModal}
@@ -137,6 +160,15 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
                 </button>
               </div>
             </div>
+
+            {data?.data?.expires_at && (
+              <div className={styles["expiry-info"]}>
+                <p>
+                  This key will expire on:{" "}
+                  {new Date(data.data.expires_at).toLocaleDateString()}
+                </p>
+              </div>
+            )}
           </div>
         </Modal>
         <Button

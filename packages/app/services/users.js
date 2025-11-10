@@ -52,7 +52,12 @@ class UserService {
    * @throws {Error} - Throws an error if the key creation or user update fails.
    */
   async createNewUserKey(newKey, user) {
-    const newUserKey = await this.keyService.createNewKey(newKey);
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (newKey.expires_in_days || 365));
+    const newUserKey = await this.keyService.createNewKey({
+      ...newKey,
+      expires_at: expiresAt,
+    });
     user.keys.push(newUserKey._id);
     await user.save();
     return newUserKey;

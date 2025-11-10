@@ -25,6 +25,15 @@ const keySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "subscriptions",
   },
+  expires_at: {
+    type: Date,
+    required: true,
+    default: function () {
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+      return oneYearFromNow;
+    },
+  },
 });
 
 keySchema.methods.matchKey = async function (key) {

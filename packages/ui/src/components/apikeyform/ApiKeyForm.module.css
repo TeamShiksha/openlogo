@@ -52,6 +52,7 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .key-display code {
   font-family: monospace;
   font-size: 18px;
@@ -85,11 +86,47 @@
   cursor: pointer;
 }
 
+.expiry-dropdown {
+  margin-bottom: 20px;
+}
+
+.expiry-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.expiry-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.expiry-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color-light);
+}
+
+.expiry-select:disabled {
+  background-color: var(--bg-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translate(-50%, 5px);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, 0);

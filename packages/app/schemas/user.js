@@ -29,6 +29,18 @@ const generateKeyPayloadSchema = Joi.object().keys({
       "string.pattern.base":
         "Description must contain only alphabets and spaces",
     }),
+  expires_in_days: Joi.number()
+    .integer()
+    .min(1)
+    .max(3650)
+    .default(365)
+    .optional()
+    .messages({
+      "number.base": "Expiry days must be a number",
+      "number.min": "Expiry days must be at least 1 day",
+      "number.max": "Expiry days cannot exceed 3650 days (10 years)",
+      "number.integer": "Expiry days must be a whole number",
+    }),
 });
 
 const logoRequestPyaloadSchema = Joi.object({

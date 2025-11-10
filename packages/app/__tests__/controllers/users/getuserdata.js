@@ -126,6 +126,7 @@ describe("GETUSERDATA", () => {
           api_key: mockKeyModel.api_key,
           key_description: mockKeyModel.key_description,
           updated_at: mockKeyModel.updated_at.toISOString(),
+          expires_at: mockKeyModel.expires_at.toISOString(),
         },
       ],
     });
