@@ -4,14 +4,24 @@
 }
 
 .profile-button {
-  border: none;
+  border: var(--border);
+  background-color: var(--white);
+  color: var(--description);
   border-radius: 50%;
   width: 40px;
   height: 40px;
   font-weight: bold;
   font-size: 16px;
+  shadow: var(--shadow);
   cursor: pointer;
   position: relative;
+}
+
+.profile-button:hover {
+  border: 1px solid var(--border-color);
+  background-color: var(--border-color);
+  color: var(--black);
+  transition: all 0.3s ease-in-out;
 }
 
 .dropdown-menu {
