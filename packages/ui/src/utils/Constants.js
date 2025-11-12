@@ -138,6 +138,20 @@ export const LOGGEDIN_ITEMS = [
   },
 ];
 
+export const DROPDOWN_ITEMS = [
+  {
+    name: "dashboard",
+    title: "Dashboard",
+    url: "/dashboard",
+    type: "route",
+  }, 
+  {
+    name: "signout",
+    title: "Sign Out",
+    type: "button",
+  }
+]
+
 export const FOOTER_ITEMS = [
   {
     name: "about",

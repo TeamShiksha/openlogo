@@ -2,6 +2,7 @@ import styles from "./OperatorCard.module.css";
 import PropTypes from "prop-types";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT } from "../../utils/Constants";
+import { formatDate } from "../../utils/Helpers";
 const OperatorCard = ({ item, onRespondClick, searchType }) => {
   const isArchived = item.status === "RESOLVED" || item.status === "REJECTED";
 
@@ -49,11 +50,11 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
             </span>
           </div>
           <div className={styles["date-container"]}>
-            <p>{new Date(item.openedAt).toLocaleDateString()}</p>
+            <p>{formatDate(item.openedAt)}</p>
             {item.status !== "PENDING" && (
               <p>
                 {" - "}
-                {new Date(item.closedAt).toLocaleDateString()}
+                {formatDate(item.closedAt)}
               </p>
             )}
           </div>
