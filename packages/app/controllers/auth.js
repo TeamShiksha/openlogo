@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages, ErrorTypes } = require("../utils/constants");
+const { Messages } = require("../utils/constants");
 const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -171,14 +171,8 @@ async function signinController(req, res, next) {
         } catch (err) {
           let statusCode = 500;
           let message = Messages.RESEND_EMAIL_FAILED;
-          if (err.type === ErrorTypes.TOKEN_NOT_FOUND) {
-            statusCode = 404;
-            message = err.message;
-          } else if (err.type === ErrorTypes.RATE_LIMIT_EXCEEDED) {
-            statusCode = 429;
-            message = err.message;
-          } else if (err.type === ErrorTypes.TOKEN_UPDATE_FAILED) {
-            statusCode = 400;
+          if (err.statusCode) {
+            statusCode = err.statusCode;
             message = err.message;
           }
           return res.status(statusCode).json({
@@ -306,14 +300,8 @@ async function verifyEmailController(req, res, next) {
       } catch (err) {
         let statusCode = 500;
         let message = Messages.RESEND_EMAIL_FAILED;
-        if (err.type === ErrorTypes.TOKEN_NOT_FOUND) {
-          statusCode = 404;
-          message = err.message;
-        } else if (err.type === ErrorTypes.RATE_LIMIT_EXCEEDED) {
-          statusCode = 429;
-          message = err.message;
-        } else if (err.type === ErrorTypes.TOKEN_UPDATE_FAILED) {
-          statusCode = 400;
+        if (err.statusCode) {
+          statusCode = err.statusCode;
           message = err.message;
         }
         return res.status(statusCode).json({

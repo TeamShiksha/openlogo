@@ -4,7 +4,7 @@ const { UserService, UserTokenService } = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
-const { Messages, ErrorTypes } = require("../../../utils/constants");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
@@ -105,7 +105,7 @@ describe("SIGNIN API", () => {
     };
 
     const rateLimitError = new Error(Messages.TRY_AGAIN);
-    rateLimitError.type = ErrorTypes.RATE_LIMIT_EXCEEDED;
+    rateLimitError.statusCode = 429;
 
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
     jest

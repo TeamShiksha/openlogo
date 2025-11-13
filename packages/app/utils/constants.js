@@ -97,12 +97,6 @@ const Messages = {
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
 };
 
-const ErrorTypes = {
-  TOKEN_NOT_FOUND: "TOKEN_NOT_FOUND",
-  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
-  TOKEN_UPDATE_FAILED: "TOKEN_UPDATE_FAILED",
-};
-
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
 
 const getIsProduction = () =>
@@ -118,6 +112,5 @@ module.exports = {
   DefaultSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
-  ErrorTypes,
   getIsProduction,
 };

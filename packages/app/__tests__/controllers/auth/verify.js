@@ -2,7 +2,7 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { UserService, UserTokenService } = require("../../../services");
-const { Messages, ErrorTypes } = require("../../../utils/constants");
+const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const sendEmail = require("../../../utils/sendEmail");
@@ -83,7 +83,7 @@ describe("VERIFY EMAIL API", () => {
     });
   });
 
-  it("429 -Token expired and failed to send verification email due to rate limit", async () => {
+  it("429 - Token expired and failed to send verification email due to rate limit", async () => {
     const user = {
       ...MOCK_USERS[0],
       _id: MOCK_USERS[0]._id,
@@ -99,7 +99,7 @@ describe("VERIFY EMAIL API", () => {
     };
 
     const rateLimitError = new Error(Messages.TRY_AGAIN);
-    rateLimitError.type = ErrorTypes.RATE_LIMIT_EXCEEDED;
+    rateLimitError.statusCode = 429;
 
     jest
       .spyOn(UserTokenService.prototype, "fetchUserToken")

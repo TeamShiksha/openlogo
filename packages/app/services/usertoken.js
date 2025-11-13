@@ -1,6 +1,6 @@
 const { v4 } = require("uuid");
 const { UserTokenRepository } = require("../repositories");
-const { UserTokenTypes, ErrorTypes } = require("../utils/constants");
+const { UserTokenTypes } = require("../utils/constants");
 const { Messages } = require("../utils/constants");
 const sendEmail = require("../utils/sendEmail");
 const dayjs = require("dayjs");
@@ -66,7 +66,7 @@ class UserTokenService {
 
     if (!userToken) {
       const error = new Error(Messages.INVALID_TOKEN);
-      error.type = ErrorTypes.TOKEN_NOT_FOUND;
+      error.statusCode = 404;
       throw error;
     }
 
@@ -78,7 +78,7 @@ class UserTokenService {
       await userService.updateUserEmailCount(user, true);
     } else if (user.resend_email_count >= 3) {
       const error = new Error(Messages.TRY_AGAIN);
-      error.type = ErrorTypes.RATE_LIMIT_EXCEEDED;
+      error.statusCode = 429;
       throw error;
     } else {
       await userService.updateUserEmailCount(user, false);
@@ -87,7 +87,7 @@ class UserTokenService {
     const updatedToken = await this.updateUserToken(userToken.token);
     if (!updatedToken) {
       const error = new Error(Messages.FAILED_UPDATE_TOKEN);
-      error.type = ErrorTypes.TOKEN_UPDATE_FAILED;
+      error.statusCode = 400;
       throw error;
     }
 

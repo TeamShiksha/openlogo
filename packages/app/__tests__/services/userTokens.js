@@ -1,11 +1,7 @@
 const UserToken = require("../../models/usertoken");
 const { UserTokenRepository } = require("../../repositories");
 const UserTokenService = require("../../services/usertoken");
-const {
-  UserTokenTypes,
-  Messages,
-  ErrorTypes,
-} = require("../../utils/constants");
+const { UserTokenTypes, Messages } = require("../../utils/constants");
 const { MOCK_USERTOKENS, MOCK_USERS } = require("../../utils/mocks");
 const dayjs = require("dayjs");
 const sendEmail = require("../../utils/sendEmail");
@@ -239,7 +235,7 @@ describe("User Token Service", () => {
     try {
       await userTokenService.resendVerificationEmail(mockUser, mockUserService);
     } catch (err) {
-      expect(err.type).toBe(ErrorTypes.TOKEN_NOT_FOUND);
+      expect(err.statusCode).toBe(404);
     }
 
     expect(sendEmail).not.toHaveBeenCalled();
@@ -269,7 +265,7 @@ describe("User Token Service", () => {
     try {
       await userTokenService.resendVerificationEmail(mockUser, mockUserService);
     } catch (err) {
-      expect(err.type).toBe(ErrorTypes.RATE_LIMIT_EXCEEDED);
+      expect(err.statusCode).toBe(429);
     }
 
     expect(sendEmail).not.toHaveBeenCalled();
@@ -300,7 +296,7 @@ describe("User Token Service", () => {
     try {
       await userTokenService.resendVerificationEmail(mockUser, mockUserService);
     } catch (err) {
-      expect(err.type).toBe(ErrorTypes.TOKEN_UPDATE_FAILED);
+      expect(err.statusCode).toBe(400);
     }
 
     expect(userTokenService.updateUserToken).toHaveBeenCalledWith(
