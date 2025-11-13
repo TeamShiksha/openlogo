@@ -3,6 +3,7 @@ import styles from "./UserDropDown.module.css";
 import { AuthContext, UserContext } from "../../contexts/Contexts";
 import { BUTTON_TEXT } from "../../utils/Constants";
 import { Link } from "react-router-dom";
+import { LogOut, LayoutDashboard } from "lucide-react";
 
 export default function UserDropDown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +25,7 @@ export default function UserDropDown() {
     logout();
     setUserData(null);
     setIsLoading(false);
-    setIsOpen(false);   // ✅ close dropdown
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -33,7 +34,6 @@ export default function UserDropDown() {
     }
   }, [userData, isAuthenticated, fetchUserData]);
 
-  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -49,7 +49,7 @@ export default function UserDropDown() {
   }, []);
 
   return (
-    <div ref={dropdownRef}>
+    <div ref={dropdownRef} className={styles.wrapper}>
       <button className={styles["profile-button"]} onClick={toggleDropdown}>
         {initial}
       </button>
@@ -60,20 +60,22 @@ export default function UserDropDown() {
             <Link
               className={`${styles.items} ${isActive ? styles.active : ""}`}
               to="/dashboard"
-              onClick={() => setIsOpen(false)}   // ✅ close when clicking menu item
+              onClick={() => setIsOpen(false)}
             >
+              <LayoutDashboard size={16} />
               Dashboard
             </Link>
           </div>
 
           <div className={styles["logout-wrapper"]}>
-            <Link
-              className={[styles.items]}
+            <button
+              className={`${styles.items} ${styles["logout-btn"]}`}
               onClick={handleLogout}
-              isLoading={isLoading}
+              disabled={isLoading}
             >
-              {BUTTON_TEXT.signOut}
-            </Link>
+              <LogOut size={16} />
+              {isLoading ? "Signing out..." : BUTTON_TEXT.signOut}
+            </button>
           </div>
         </div>
       )}
