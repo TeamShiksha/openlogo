@@ -197,7 +197,6 @@ class UserService {
    * @param {Boolean} reset - Boolean value to reset the count.
    * @returns - Returns updated user.
    */
-
   async updateUserEmailCount(user, reset = false) {
     const updatedFields = {
       last_verification_email_sent_at: new Date(),

@@ -12,7 +12,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, ErrorTypes } = require("../utils/constants");
 const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -158,17 +158,35 @@ async function signinController(req, res, next) {
       }
 
       if (!user.is_verified) {
-        const result = await resendEmail(
-          user,
-          userService,
-          userTokenService,
-          next
-        );
-        return res.status(result.statusCode).json({
-          message: result.message,
-          statusCode: result.statusCode,
-          source: "resendEmail",
-        });
+        try {
+          const result = await userTokenService.resendVerificationEmail(
+            user,
+            userService
+          );
+          return res.status(201).json({
+            message: result.message,
+            statusCode: 201,
+            source: "resendEmail",
+          });
+        } catch (err) {
+          let statusCode = 500;
+          let message = Messages.RESEND_EMAIL_FAILED;
+          if (err.type === ErrorTypes.TOKEN_NOT_FOUND) {
+            statusCode = 404;
+            message = err.message;
+          } else if (err.type === ErrorTypes.RATE_LIMIT_EXCEEDED) {
+            statusCode = 429;
+            message = err.message;
+          } else if (err.type === ErrorTypes.TOKEN_UPDATE_FAILED) {
+            statusCode = 400;
+            message = err.message;
+          }
+          return res.status(statusCode).json({
+            message: message,
+            statusCode: statusCode,
+            source: "resendEmail",
+          });
+        }
       }
     }
     const currentDate = new Date();
@@ -179,9 +197,9 @@ async function signinController(req, res, next) {
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       expires: oneDayValidityTimestamp,
-      sameSite: "strict",
-      httpOnly: true,
-      domain: ".openlogo.fyi",
+      // sameSite: "strict",
+      // httpOnly: true,
+      // domain: ".openlogo.fyi",
     };
 
     res.cookie("jwt", user.generateJWT(), cookieOptions);
@@ -275,17 +293,35 @@ async function verifyEmailController(req, res, next) {
     }
 
     if (userToken.isExpired()) {
-      const result = await resendEmail(
-        user,
-        userService,
-        userTokenService,
-        next
-      );
-      return res.status(result.statusCode).json({
-        message: result.message,
-        statusCode: result.statusCode,
-        source: "resendEmail",
-      });
+      try {
+        const result = await userTokenService.resendVerificationEmail(
+          user,
+          userService
+        );
+        return res.status(201).json({
+          message: result.message,
+          statusCode: 201,
+          source: "resendEmail",
+        });
+      } catch (err) {
+        let statusCode = 500;
+        let message = Messages.RESEND_EMAIL_FAILED;
+        if (err.type === ErrorTypes.TOKEN_NOT_FOUND) {
+          statusCode = 404;
+          message = err.message;
+        } else if (err.type === ErrorTypes.RATE_LIMIT_EXCEEDED) {
+          statusCode = 429;
+          message = err.message;
+        } else if (err.type === ErrorTypes.TOKEN_UPDATE_FAILED) {
+          statusCode = 400;
+          message = err.message;
+        }
+        return res.status(statusCode).json({
+          message: message,
+          statusCode: statusCode,
+          source: "resendEmail",
+        });
+      }
     }
 
     if (user.is_verified) {
@@ -486,76 +522,6 @@ function validateSessionController(req, res) {
   return res.status(200).json({ statusCode: 200, userData: req.userData });
 }
 
-/**
- * Resends a verification email to the user with a refreshed token.
- *
- * This function enforces a daily limit of 3 resend attempts per user.
- * If 24 hours have passed since the last verification email, the resend count is reset.
- * It updates the existing token, and sends an email
- * containing the new verification link to the user.
- */
-
-async function resendEmail(user, userService, userTokenService, next) {
-  try {
-    const userToken = await userTokenService.fetchUserTokenByUserId(user._id);
-    if (!userToken) {
-      return {
-        success: false,
-        message: Messages.INVALID_TOKEN,
-        statusCode: 404,
-      };
-    }
-
-    const now = dayjs();
-    const lastSent = dayjs(user.last_verification_email_sent_at);
-    const hoursSinceLastEmail = now.diff(lastSent, "hour");
-    if (hoursSinceLastEmail >= 24) {
-      await userService.updateUserEmailCount(user, true);
-    } else if (user.resend_email_count >= 3) {
-      return {
-        success: false,
-        message: Messages.TRY_AFTER,
-        statusCode: 429,
-      };
-    } else {
-      await userService.updateUserEmailCount(user, false);
-    }
-
-    const updatedToken = await userTokenService.updateUserToken(
-      userToken.token
-    );
-    if (!updatedToken) {
-      return {
-        success: false,
-        message: Messages.FAILED_UPDATE_TOKEN,
-        statusCode: 400,
-      };
-    }
-
-    await sendEmail({
-      id: 2,
-      subject: "Openlogo: Email Verification",
-      recipient: user.email,
-      body: {
-        url: updatedToken.tokenURL(),
-      },
-    });
-
-    return {
-      success: true,
-      message: Messages.RESEND_EMAIL,
-      statusCode: 201,
-    };
-  } catch (err) {
-    next(err);
-    return {
-      success: false,
-      message: Messages.RESEND_EMAIL_FAILED,
-      statusCode: 500,
-    };
-  }
-}
-
 module.exports = {
   signupController,
   signinController,
@@ -565,5 +531,4 @@ module.exports = {
   resetPasswordSessionController,
   resetPasswordController,
   validateSessionController,
-  resendEmail,
 };

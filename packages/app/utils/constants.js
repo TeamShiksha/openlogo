@@ -91,10 +91,16 @@ const Messages = {
   LOGO_REQUEST_CREATED: "Logo request created successfully",
   USER_ALREADY_HAS_PENDING: "You already have a pending request.",
   COMPANY_URL_ALREADY_PENDING: "This company url is already under review.",
-  TRY_AFTER: "Try again after 24 hours.",
+  TRY_AGAIN: "Try again after 24 hours.",
   FAILED_UPDATE_TOKEN: "Failed to update token.",
   RESEND_EMAIL: "Resent a new Verification Email.",
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
+};
+
+const ErrorTypes = {
+  TOKEN_NOT_FOUND: "TOKEN_NOT_FOUND",
+  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
+  TOKEN_UPDATE_FAILED: "TOKEN_UPDATE_FAILED",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
@@ -112,5 +118,6 @@ module.exports = {
   DefaultSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
+  ErrorTypes,
   getIsProduction,
 };

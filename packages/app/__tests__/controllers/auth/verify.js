@@ -2,10 +2,11 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { UserService, UserTokenService } = require("../../../services");
-const { Messages } = require("../../../utils/constants");
+const { Messages, ErrorTypes } = require("../../../utils/constants");
 const app = require("../../../server");
-const { MOCK_USERS, MOCK_USERTOKENS } = require("../../../utils/mocks");
+const { MOCK_USERS } = require("../../../utils/mocks");
 const sendEmail = require("../../../utils/sendEmail");
+const dayjs = require("dayjs");
 jest.mock("../../../utils/sendEmail");
 
 describe("VERIFY EMAIL API", () => {
@@ -44,14 +45,13 @@ describe("VERIFY EMAIL API", () => {
     });
   }, 10000);
 
-  it("201 - Token expired / Send verification email", async () => {
+  it("201 - Token is expired and successfully sends a verification email", async () => {
     const user = {
       ...MOCK_USERS[0],
       _id: MOCK_USERS[0]._id,
       is_verified: false,
       resend_email_count: 0,
-      matchPassword: jest.fn().mockResolvedValue(true),
-      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+      last_verification_email_sent_at: dayjs().subtract(25, "hour").toDate(),
     };
 
     const mockToken = {
@@ -65,16 +65,10 @@ describe("VERIFY EMAIL API", () => {
       .mockResolvedValue(mockToken);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(user);
     jest
-      .spyOn(UserService.prototype, "updateUserEmailCount")
-      .mockResolvedValue(true);
-    jest
-      .spyOn(UserTokenService.prototype, "fetchUserTokenByUserId")
-      .mockResolvedValue(MOCK_USERTOKENS[0]);
-    jest
-      .spyOn(UserTokenService.prototype, "updateUserToken")
+      .spyOn(UserTokenService.prototype, "resendVerificationEmail")
       .mockResolvedValue({
-        ...MOCK_USERTOKENS[0],
-        tokenURL: () => "http://localhost/verify?token=mocktoken",
+        success: true,
+        message: Messages.RESEND_EMAIL,
       });
 
     const response = await request(app)
@@ -89,15 +83,13 @@ describe("VERIFY EMAIL API", () => {
     });
   });
 
-  it("429 -Token expired / Too many requests", async () => {
+  it("429 -Token expired and failed to send verification email due to rate limit", async () => {
     const user = {
       ...MOCK_USERS[0],
       _id: MOCK_USERS[0]._id,
       is_verified: false,
       resend_email_count: 3,
-      last_verification_email_sent_at: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
-      matchPassword: jest.fn().mockResolvedValue(true),
-      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+      last_verification_email_sent_at: dayjs().subtract(1, "hour").toDate(),
     };
 
     const mockToken = {
@@ -106,13 +98,16 @@ describe("VERIFY EMAIL API", () => {
       isExpired: jest.fn().mockReturnValue(true),
     };
 
+    const rateLimitError = new Error(Messages.TRY_AGAIN);
+    rateLimitError.type = ErrorTypes.RATE_LIMIT_EXCEEDED;
+
     jest
       .spyOn(UserTokenService.prototype, "fetchUserToken")
       .mockResolvedValue(mockToken);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(user);
     jest
-      .spyOn(UserTokenService.prototype, "fetchUserTokenByUserId")
-      .mockResolvedValue(MOCK_USERTOKENS[0]);
+      .spyOn(UserTokenService.prototype, "resendVerificationEmail")
+      .mockRejectedValue(rateLimitError);
 
     const response = await request(app)
       .get(`${ENDPOINTS.VERIFY}/expiredToken`)
@@ -120,7 +115,7 @@ describe("VERIFY EMAIL API", () => {
 
     expect(response.status).toBe(429);
     expect(response.body).toEqual({
-      message: Messages.TRY_AFTER,
+      message: Messages.TRY_AGAIN,
       statusCode: 429,
       source: "resendEmail",
     });
