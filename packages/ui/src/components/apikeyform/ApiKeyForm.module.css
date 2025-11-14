@@ -88,6 +88,7 @@
 
 .expiry-dropdown {
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .expiry-label {
@@ -95,6 +96,7 @@
   margin-bottom: 8px;
   font-weight: 500;
   color: var(--text-primary);
+  font-size: var(--medium-text);
 }
 
 .expiry-select {
@@ -103,8 +105,10 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 14px;
+  color: var(--description);
+  font-weight: 500;
+  font-family: inherit;
+  line-height: 20px;
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -119,6 +123,26 @@
   background-color: var(--bg-disabled);
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.expiry-description {
+  font-size: var(--medium-text);
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--description);
+  margin: 0.5rem 0;
+}
+
+.expiry-select option {
+  color: var(--description);
+  background-color: var(--bg-primary);
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .expiry-select {
+    padding: 10px 14px;
+  }
 }
 
 @keyframes fadeIn {
