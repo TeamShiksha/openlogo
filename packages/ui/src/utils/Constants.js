@@ -144,13 +144,23 @@ export const DROPDOWN_ITEMS = [
     title: "Dashboard",
     url: "/dashboard",
     type: "route",
-  }, 
+  },
   {
     name: "signout",
     title: "Sign Out",
+    url: "/#",
     type: "button",
-  }
-]
+  },
+];
+
+export const LOGGEDIN_MOBILE_ITEMS = [
+  LOGGEDIN_ITEMS.find((i) => i.name === "home"),
+  DROPDOWN_ITEMS.find((i) => i.name === "dashboard"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "features"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "pricing"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "about"),
+];
 
 export const FOOTER_ITEMS = [
   {
