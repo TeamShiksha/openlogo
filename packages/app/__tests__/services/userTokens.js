@@ -114,6 +114,36 @@ describe("User Token Service", () => {
     expect(result.user_id).toBe("user@5");
   });
 
+  it("should fetch user token by user id successfully", async () => {
+    const userToken = new UserToken(MOCK_USERTOKENS[0]);
+
+    jest
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .mockResolvedValue(userToken);
+
+    const result = await userTokenService.fetchUserTokenByUserId(
+      userToken.user_id
+    );
+    expect(result).toBeDefined();
+    expect(result.type).toBe(UserTokenTypes.VERIFY);
+  });
+
+  it("should update user token successfully", async () => {
+    const userToken = new UserToken(MOCK_USERTOKENS[1]);
+    const updatedExpireAt = dayjs().add(1, "day").toDate();
+
+    jest
+      .spyOn(UserTokenRepository.prototype, "updateUserToken")
+      .mockResolvedValue({
+        ...userToken.toObject(),
+        expire_at: updatedExpireAt,
+      });
+
+    const result = await userTokenService.updateUserToken(userToken.token);
+    expect(result).toBeDefined();
+    expect(result.expire_at).toEqual(updatedExpireAt);
+  });
+
   it("should successfully resend email when 24 hours have passed", async () => {
     const mockUser = {
       _id: MOCK_USERS[0]._id,
