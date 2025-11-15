@@ -1,12 +1,15 @@
 const UserService = require("../../services/users");
 const KeyService = require("../../services/keys");
-const { UsersRepository } = require("../../repositories");
+const SubscriptionService = require("../../services/subscriptions");
+const { UsersRepository, RequestRepository } = require("../../repositories");
 const { MOCK_USERS, MOCK_KEYS } = require("../../utils/mocks");
 const User = require("../../models/users");
 const Keys = require("../../models/keys");
 const { UserType } = require("../../utils/constants");
 
 jest.mock("../../services/keys");
+jest.mock("../../services/subscriptions");
+jest.mock("../../repositories");
 
 describe("User Service", () => {
   let userService;
@@ -14,6 +17,120 @@ describe("User Service", () => {
   beforeEach(() => {
     userService = new UserService();
     jest.clearAllMocks();
+  });
+  describe("getUserDataForDownload", () => {
+    // --- Mock Data for this suite ---
+    const mockGetTimestamp = () => "2025-10-31T10:00:00.000Z";
+    const mockUserId = "user_abc_123";
+
+    const mockUser = {
+      _id: { getTimestamp: mockGetTimestamp, toString: () => mockUserId },
+      name: "Test User",
+      email: "test@example.com",
+      role: "user",
+      keys: ["key_id_1"],
+      subscription_id: "sub_id_1",
+    };
+
+    const mockRequests = [
+      {
+        _id: "req_1",
+        companyUrl: "http://example.com",
+        status: "completed",
+        openedAt: "2025-10-30T00:00:00.000Z",
+      },
+    ];
+
+    const mockKeys = [
+      {
+        _id: { getTimestamp: mockGetTimestamp },
+        usageCount: 10,
+        key_description: "Test Key",
+      },
+    ];
+
+    const mockSubscription = {
+      usage_count: 100,
+      usage_limit: 1000,
+    };
+    // --- End Mock Data ---
+
+    it("should return null if user is not found", async () => {
+      // Arrange
+      // Spy on the service's *own* method
+      jest.spyOn(userService, "getUser").mockResolvedValue(null);
+
+      // Act
+      const result =
+        await userService.getUserDataForDownload("non_existent_id");
+
+      // Assert
+      expect(result).toBeNull();
+      expect(userService.getUser).toHaveBeenCalledWith("non_existent_id");
+    });
+
+    it("should compile and return correct user data on happy path", async () => {
+      // Arrange
+      // 1. Mock the service's *own* getUser method
+      jest.spyOn(userService, "getUser").mockResolvedValue(mockUser);
+
+      // 2. Mock the *injected* dependencies (prototypes of the classes)
+      jest
+        .spyOn(RequestRepository.prototype, "find")
+        .mockResolvedValue(mockRequests);
+      jest
+        .spyOn(KeyService.prototype, "getAllUserKeys")
+        .mockResolvedValue(mockKeys);
+      jest
+        .spyOn(SubscriptionService.prototype, "getSubscription")
+        .mockResolvedValue(mockSubscription);
+
+      // Act
+      const result = await userService.getUserDataForDownload(mockUserId);
+
+      // Assert: Check data compilation
+      expect(result.profile.name).toBe("Test User");
+      expect(result.generationHistory.totalGenerations).toBe(1);
+      expect(result.generationHistory.generations[0].companyUrl).toBe(
+        "http://example.com"
+      );
+      expect(result.usageStats.apiCalls).toBe(100);
+      expect(result.security.totalApiKeys).toBe(1);
+      expect(result.security.apiKeys[0].description).toBe("Test Key");
+
+      // Assert: Check that dependencies were called correctly
+      expect(userService.getUser).toHaveBeenCalledWith(mockUserId);
+      expect(RequestRepository.prototype.find).toHaveBeenCalledWith({
+        user_id: mockUserId,
+      });
+      expect(KeyService.prototype.getAllUserKeys).toHaveBeenCalledWith(
+        mockUser.keys
+      );
+      expect(
+        SubscriptionService.prototype.getSubscription
+      ).toHaveBeenCalledWith(mockUser.subscription_id);
+    });
+
+    it("should handle empty or null related data", async () => {
+      // Arrange
+      jest.spyOn(userService, "getUser").mockResolvedValue(mockUser);
+      jest.spyOn(RequestRepository.prototype, "find").mockResolvedValue([]);
+      jest.spyOn(KeyService.prototype, "getAllUserKeys").mockResolvedValue([]);
+      jest
+        .spyOn(SubscriptionService.prototype, "getSubscription")
+        .mockResolvedValue(null);
+
+      // Act
+      const result = await userService.getUserDataForDownload(mockUserId);
+
+      // Assert: Check defaults
+      expect(result.generationHistory.totalGenerations).toBe(0);
+      expect(result.generationHistory.generations).toEqual([]);
+      expect(result.usageStats.apiCalls).toBe(0); // Test the '|| 0' logic
+      expect(result.usageStats.apiCallsLimit).toBe(0); // Test the '|| 0' logic
+      expect(result.security.totalApiKeys).toBe(0);
+      expect(result.security.apiKeys).toEqual([]);
+    });
   });
 
   it("should return a user for valid id", async () => {
