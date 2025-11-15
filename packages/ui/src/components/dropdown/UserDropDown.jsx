@@ -67,9 +67,9 @@ export default function UserDropDown() {
             </Link>
           </div>
 
-          <div className={styles["logout-wrapper"]}>
+          <div>
             <button
-              className={`${styles.items} ${styles["logout-btn"]}`}
+              className={styles.items}
               onClick={handleLogout}
               disabled={isLoading}
             >
