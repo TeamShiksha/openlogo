@@ -74,14 +74,13 @@ class UserTokenService {
     const lastSent = dayjs(user.last_verification_email_sent_at);
     const hoursSinceLastEmail = now.diff(lastSent, "hour");
 
+    let shouldResetCount = false;
     if (hoursSinceLastEmail >= 24) {
-      await userService.updateUserEmailCount(user, true);
+      shouldResetCount = true;
     } else if (user.resend_email_count >= 3) {
       const error = new Error(Messages.TRY_AGAIN);
       error.statusCode = 429;
       throw error;
-    } else {
-      await userService.updateUserEmailCount(user, false);
     }
 
     const updatedToken = await this.updateUserToken(userToken.token);
@@ -99,6 +98,8 @@ class UserTokenService {
         url: updatedToken.tokenURL(),
       },
     });
+
+    await userService.updateUserEmailCount(user, shouldResetCount);
 
     return {
       success: true,
