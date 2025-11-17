@@ -1,7 +1,11 @@
+jest.mock("../../../utils/webLogoSearch.js", () => ({
+  grabPngLogos: jest.fn(),
+}));
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ImageService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
+const { grabPngLogos } = require("../../../utils/webLogoSearch.js");
 const app = require("../../../server");
 
 describe("GET /api/logo/demo-search", () => {
@@ -9,7 +13,7 @@ describe("GET /api/logo/demo-search", () => {
     jest.clearAllMocks();
   });
 
-  it("422 - Missing key query param", async () => {
+  it("422 - Missing companyNameBeginsWith query param", async () => {
     const res = await request(app).get("/api/logo/demo-search");
 
     expect(res.status).toBe(422);
@@ -20,11 +24,14 @@ describe("GET /api/logo/demo-search", () => {
     });
   });
 
-  it("404 - No companies found for key", async () => {
+  it("404 - No companies found and web-search also fails", async () => {
     jest
       .spyOn(ImageService.prototype, "fetchCompanyList")
       .mockResolvedValue([]);
 
+    grabPngLogos.mockResolvedValue({ success: false, logos: [] });
+
+    // 'key' is the expected query param per getDemoSearchQuerySchema
     const res = await request(app).get("/api/logo/demo-search?key=unknown");
 
     expect(res.status).toBe(404);
@@ -32,6 +39,42 @@ describe("GET /api/logo/demo-search", () => {
       statusCode: 404,
       message: Messages.LOGO_NOT_FOUND,
       error: STATUS_CODES[404],
+    });
+  });
+
+  it("200 - Web search returns logos when DB empty", async () => {
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockResolvedValue([]);
+
+    grabPngLogos.mockResolvedValue({
+      success: true,
+      logos: [
+        { url: "https://a.com/x.png", variant: "v1" },
+        { url: "https://a.com/y.png", variant: "v2" },
+      ],
+    });
+
+    const res = await request(app).get("/api/logo/demo-search?key=Foo");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      statusCode: 200,
+      data: [
+        {
+          companyName: "FOO",
+          variant: "v1",
+          url: "https://a.com/x.png",
+          source: "web-search",
+        },
+        {
+          companyName: "FOO",
+          variant: "v2",
+          url: "https://a.com/y.png",
+          source: "web-search",
+        },
+      ],
+      source: "web-search",
     });
   });
 
@@ -49,7 +92,7 @@ describe("GET /api/logo/demo-search", () => {
       .spyOn(ImageService.prototype, "getDataList")
       .mockResolvedValue(mockDataList);
 
-    const res = await request(app).get("/api/logo/demo-search?key=Go");
+    const res = await request(app).get("/api/logo/demo-search?key=Goo");
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -62,11 +105,10 @@ describe("GET /api/logo/demo-search", () => {
     jest
       .spyOn(ImageService.prototype, "fetchCompanyList")
       .mockImplementation(() => {
-        throw new Error("Boom!");
+        throw new Error("Error!");
       });
 
-    const res = await request(app).get("/api/logo/demo-search?key=Go");
-
+    const res = await request(app).get("/api/logo/demo-search?key=Err");
     expect(res.status).toBe(500);
   });
 });

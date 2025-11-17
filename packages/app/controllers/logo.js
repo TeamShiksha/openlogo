@@ -10,6 +10,7 @@ const {
   getDemoSearchQuerySchema,
 } = require("../schemas/catalog");
 const { Messages } = require("../utils/constants");
+const { grabPngLogos } = require("../utils/webLogoSearch");
 
 /**
  * Handles requests for fetching a company's logo based on a domain and API key.
@@ -156,6 +157,25 @@ async function demoSearchLogoController(req, res, next) {
     const regexPattern = new RegExp(`^${companyNameBeginsWith}`, "i");
     const companyList = await imageServices.fetchCompanyList(regexPattern);
     if (companyList.length === 0) {
+      try {
+        const webSearchResult = await grabPngLogos(companyNameBeginsWith);
+        if (webSearchResult.success && webSearchResult.logos.length > 0) {
+          const logoOptions = webSearchResult.logos.map((logo) => ({
+            companyName: companyNameBeginsWith,
+            variant: logo.variant,
+            url: logo.url,
+            source: "web-search",
+          }));
+
+          return res.status(200).json({
+            statusCode: 200,
+            data: logoOptions,
+            source: "web-search",
+          });
+        }
+      } catch (webSearchError) {
+        console.error("Web search failed:", webSearchError.message);
+      }
       return res.status(404).json({
         message: Messages.LOGO_NOT_FOUND,
         statusCode: 404,
