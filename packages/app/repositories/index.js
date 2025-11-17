@@ -5,6 +5,7 @@ const SubscriptionsRepository = require("./subscriptions");
 const UserTokenRepository = require("./usertoken");
 const UsersRepository = require("./users");
 const RequestRepository = require("./request");
+const ApiRequestRepository = require("./api_request");
 module.exports = {
   ContactUsRepository,
   ImagesRepository,
@@ -13,4 +14,5 @@ module.exports = {
   UserTokenRepository,
   UsersRepository,
   RequestRepository,
+  ApiRequestRepository,
 };
