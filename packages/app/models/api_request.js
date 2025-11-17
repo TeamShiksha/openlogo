@@ -11,9 +11,9 @@ const apiRequestSchema = new Schema(
       ref: "users",
       required: true,
     },
-    subscription_id: {
+    key_id: {
       type: Schema.Types.ObjectId,
-      ref: "subscriptions",
+      ref: "keys",
     },
     image_id: {
       type: Schema.Types.ObjectId,
