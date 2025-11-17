@@ -1,11 +1,14 @@
-const api_request = require("../models/api_request");
+const { api_request } = require("../models");
 const BaseRepository = require("./base");
 const dayjs = require("dayjs");
+const mongoose = require("mongoose");
+
 /**
  * The ApiRequestRepository extends BaseRepository to manage ApiRequest model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
  * It passes the ApiRequest model to the base repository for database interactions.
  *  Custom methods specific to ApiRequest can also be added as needed.
  */
+
 class ApiRequestRepository extends BaseRepository {
   constructor() {
     super(api_request);
@@ -32,7 +35,7 @@ class ApiRequestRepository extends BaseRepository {
       },
       {
         $match: {
-          user_id: userId,
+          user_id: new mongoose.Types.ObjectId(userId),
           createdDate: {
             $gte: weekStartDate,
             $lte: weekEndDate,
@@ -101,7 +104,7 @@ class ApiRequestRepository extends BaseRepository {
       },
       {
         $match: {
-          user_id: userId,
+          user_id: new mongoose.Types.ObjectId(userId),
           createdDate: {
             $gte: monthStart,
             $lte: monthEnd,
@@ -153,4 +156,4 @@ class ApiRequestRepository extends BaseRepository {
   }
 }
 
-module.exports = ApiRequestRepository;
+module.exports = { ApiRequestRepository };
