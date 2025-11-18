@@ -4,20 +4,20 @@
 }
 
 .profile-button {
-  border: 1px solid #e5e7eb;
+  border: 0.0625rem solid #e5e7eb;
   background-color: #ffffff;
   color: #6b7280;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
   outline: none;
 }
 
@@ -36,14 +36,14 @@
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 5px);
+  top: calc(100% + 0.3125rem);
   right: 0;
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  width: 160px;
-  padding: 8px 0;
+  border: 0.0625rem solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.12);
+  width: 10rem;
+  padding: 0.5rem 0;
   z-index: 1000;
   animation: slideDown 0.2s ease;
 }
@@ -51,7 +51,7 @@
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-0.5rem);
   }
   to {
     opacity: 1;
@@ -62,10 +62,10 @@
 .items {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   width: 100%;
-  padding: 10px 16px;
-  font-size: 15px;
+  padding: 0.625rem 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: #6b7280;
   text-decoration: none;
@@ -87,7 +87,7 @@
 }
 
 .divider {
-  height: 1px;
+  height: 0.0625rem;
   background-color: #e5e7eb;
-  margin: 4px 0;
+  margin: 0.25rem 0;
 }
