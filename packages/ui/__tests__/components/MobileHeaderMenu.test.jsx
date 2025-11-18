@@ -1,4 +1,4 @@
-import { vi, describe, it, expect } from "vitest";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContext, UserContext } from "../../src/contexts/Contexts";
 import { render, screen, within, fireEvent } from "@testing-library/react";
@@ -6,13 +6,15 @@ import Documentation from "../../src/page/documentation/Documentation";
 import MobileHeaderMenu from "../../src/components/header/MobileHeaderMenu";
 
 const mockCloseMenu = vi.fn();
-const mockAuthContext = (isAuthenticated) => ({
+
+const mockAuthContext = (isAuthenticated, logout = vi.fn()) => ({
   isAuthenticated,
+  logout,
 });
 
-const mockUserContext = (userData) => ({
+const mockUserContext = (userData = null, setUserData = vi.fn()) => ({
   userData,
-  setUserData: vi.fn(),
+  setUserData,
 });
 
 const mockUserData = {
@@ -21,6 +23,10 @@ const mockUserData = {
 };
 
 describe("MobileHeaderMenu Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("Doesn't render when isOpen = false", () => {
     const authContext = mockAuthContext(false);
     const userContext = mockUserContext(mockUserData);
@@ -77,6 +83,31 @@ describe("MobileHeaderMenu Component", () => {
 
     window.innerWidth = 1100;
     window.dispatchEvent(new Event("resize"));
+    expect(mockCloseMenu).toHaveBeenCalledWith(false);
+  });
+
+  it("calls logout, clears user data, and closes menu on Sign Out", () => {
+    const mockLogout = vi.fn();
+    const mockSetUserData = vi.fn();
+
+    const authContext = mockAuthContext(true, mockLogout);
+    const userContext = mockUserContext(mockUserData, mockSetUserData);
+
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <UserContext.Provider value={userContext}>
+            <MobileHeaderMenu closeMenu={mockCloseMenu} isOpen={true} />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const logoutBtn = screen.getByRole("button", { name: "Sign Out" });
+    fireEvent.click(logoutBtn);
+
+    expect(mockLogout).toHaveBeenCalled();
+    expect(mockSetUserData).toHaveBeenCalledWith(null);
     expect(mockCloseMenu).toHaveBeenCalledWith(false);
   });
 });
