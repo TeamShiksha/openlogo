@@ -74,7 +74,7 @@ export default function UserDropDown() {
               disabled={isLoading}
             >
               <LogOut size={16} />
-              {isLoading ? "Signing out..." : BUTTON_TEXT.signOut}
+              {BUTTON_TEXT.signOut}
             </button>
           </div>
         </div>
