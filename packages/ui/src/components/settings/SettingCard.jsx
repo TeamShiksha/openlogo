@@ -69,7 +69,7 @@ function SettingCard({ isGuest }) {
     setIsDownloading(true);
     try {
       const { success, data, error } = await downloadRequest({
-        url: "/user/download-data",
+        url: "/user/download",
         method: "GET",
         responseType: "blob",
       });

@@ -25,7 +25,7 @@ describe("Controller: downloadUserData", () => {
     UserService.prototype.getUserDataForDownload = jest.fn();
   });
 
-  it("should download user data on 200 happy path", async () => {
+  it("should successfully return user data as a JSON attachment", async () => {
     const mockData = { profile: { name: "Test User" } };
     UserService.prototype.getUserDataForDownload.mockResolvedValue(mockData);
 

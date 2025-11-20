@@ -325,7 +325,9 @@ async function logoRequestController(req, res, next) {
 }
 
 /**
- * Controller function to download user data as JSON
+ * This controller retrieves the authenticated user's data using the `UserService`
+ * and compiles it into a JSON file. If the user is found, the file is sent as a
+ * downloadable attachment; otherwise, an error response is returned.
  */
 async function downloadUserData(req, res, next) {
   try {
@@ -336,7 +338,7 @@ async function downloadUserData(req, res, next) {
     const dataToDownload = await userService.getUserDataForDownload(userId);
 
     if (!dataToDownload) {
-      return res.status(404).send({ message: "User not found." });
+      return res.status(404).send({ message: Messages.USER_NOT_FOUND });
     }
 
     const fileName = `user_data_${userId}.json`;

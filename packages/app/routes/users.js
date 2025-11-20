@@ -18,6 +18,6 @@ router.post("/api-key", authMiddleware(), generateKeyController);
 router.delete("/api-key/:keyId", authMiddleware(), destroyKeyController);
 router.put("/password", authMiddleware(), updatePasswordController);
 router.post("/request", authMiddleware(), logoRequestController);
-router.get("/download-data", authMiddleware(), downloadUserData);
+router.get("/download", authMiddleware(), downloadUserData);
 
 module.exports = router;
