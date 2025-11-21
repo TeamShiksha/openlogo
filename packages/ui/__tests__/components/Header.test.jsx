@@ -242,10 +242,11 @@ it("Renders UserDropDown when user is authenticated", () => {
     </BrowserRouter>
   );
 
-  const userButton = screen.getByRole("button", { name: /t/i });
+  const userInitial = mockUserData.email[0].toUpperCase();
+  const userButton = screen.getByRole("button", { name: userInitial });
   expect(userButton).toBeInTheDocument();
 
   fireEvent.click(userButton);
-  const signoutButton = screen.getByText(/sign out/i);
+  const signoutButton = screen.getByText("Sign Out");
   expect(signoutButton).toBeInTheDocument();
 });
