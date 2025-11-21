@@ -14,7 +14,11 @@ Parameters:
       Refer to https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html for guidance.
     Description: |
       The public key is employed to verify the signed URL generated with the private key.
-
+  AllowedOriginInS3:
+    Type: String
+    Default: https://www.openlogo.fyi/
+    Description: |
+      The allowed origin for the S3 bucket
   CDNPathInS3:
     Type: String
     Default: path/to/object
@@ -33,7 +37,7 @@ Resources:
       CorsConfiguration:
         CorsRules:
           - AllowedOrigins:
-              - "https://www.openlogo.fyi/"
+              - !Sub ${AllowedOriginInS3}
             AllowedMethods:
               - PUT
             AllowedHeaders:
