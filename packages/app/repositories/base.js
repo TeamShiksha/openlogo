@@ -9,6 +9,10 @@ class BaseRepository {
     this.model = model;
   }
 
+  async find(query) {
+    return await this.model.find(query);
+  }
+
   async getById(id) {
     return await this.model.findById(id).select("-__v");
   }
