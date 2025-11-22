@@ -1,0 +1,302 @@
+const request = require("supertest");
+const { STATUS_CODES } = require("http");
+const ApiRequestService = require("../../../services/api_request");
+const {
+  MOCK_USERS,
+  MOCK_WEEKLY_STATS,
+  MOCK_MONTHLY_STATS,
+} = require("../../../utils/mocks");
+const { Users } = require("../../../models");
+const { Messages } = require("../../../utils/constants");
+const app = require("../../../server");
+
+describe("GET API STATS", () => {
+  beforeAll(() => {
+    process.env.JWT_SECRET = "Your_JWT_SECRET";
+    process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    delete process.env.JWT_SECRET;
+    delete process.env.CLIENT_PROXY_URL;
+  });
+
+  describe("Weekly Stats", () => {
+    it("200 - should return weekly stats for authenticated user", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .mockResolvedValue(MOCK_WEEKLY_STATS);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        statusCode: 200,
+        data: MOCK_WEEKLY_STATS,
+      });
+      expect(ApiRequestService.prototype.getWeeklyStats).toHaveBeenCalledWith(
+        mockUserModel._id.toString()
+      );
+    });
+
+    it("200 - should return empty weekly stats when user has no requests", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const emptyStats = {
+        period: "week",
+        startDate: "2025-11-16",
+        endDate: "2025-11-22",
+        summary: {
+          totalCount: 0,
+          totalKB: "0.00",
+        },
+        data: [],
+      };
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .mockResolvedValue(emptyStats);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.summary.totalCount).toBe(0);
+      expect(response.body.data.data).toEqual([]);
+    });
+  });
+
+  describe("Monthly Stats", () => {
+    it("200 - should return monthly stats for authenticated user", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .mockResolvedValue(MOCK_MONTHLY_STATS);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=month")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        statusCode: 200,
+        data: MOCK_MONTHLY_STATS,
+      });
+      expect(ApiRequestService.prototype.getMonthlyStats).toHaveBeenCalledWith(
+        mockUserModel._id.toString()
+      );
+    });
+
+    it("200 - should return empty monthly stats when user has no requests", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const emptyStats = {
+        period: "month",
+        startDate: "2025-11-01",
+        endDate: "2025-11-30",
+        summary: {
+          totalCount: 0,
+          totalKB: "0.00",
+        },
+        data: [],
+      };
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .mockResolvedValue(emptyStats);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=month")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.summary.totalCount).toBe(0);
+      expect(response.body.data.data).toEqual([]);
+    });
+  });
+
+  describe("Validation Errors", () => {
+    it("422 - should return validation error when period parameter is missing", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const response = await request(app)
+        .get("/api/api-requests/stats")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(422);
+      expect(response.body.statusCode).toBe(422);
+      expect(response.body.error).toBe(STATUS_CODES[422]);
+      expect(response.body.message).toContain("Period is required");
+    });
+
+    it("422 - should return validation error when period parameter is invalid", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=invalid")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(422);
+      expect(response.body.statusCode).toBe(422);
+      expect(response.body.error).toBe(STATUS_CODES[422]);
+      expect(response.body.message).toContain(
+        "Period must be either 'week' or 'month'"
+      );
+    });
+
+    it("422 - should return validation error for empty period parameter", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(422);
+      expect(response.body.statusCode).toBe(422);
+      expect(response.body.error).toBe(STATUS_CODES[422]);
+    });
+  });
+
+  describe("Error Handling", () => {
+    it("404 - should return not found when stats are null", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .mockResolvedValue(null);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.DATA_NOT_FOUND,
+      });
+    });
+
+    it("404 - should return not found when monthly stats are null", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .mockResolvedValue(null);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=month")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.DATA_NOT_FOUND,
+      });
+    });
+
+    it("500 - should handle unexpected errors during weekly stats fetch", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .mockImplementation(() => {
+          throw new Error("Unexpected database error");
+        });
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(500);
+    });
+
+    it("500 - should handle unexpected errors during monthly stats fetch", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .mockImplementation(() => {
+          throw new Error("Unexpected database error");
+        });
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=month")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(500);
+    });
+  });
+
+  describe("Authentication", () => {
+    it("401 - should return unauthorized when JWT token is missing", async () => {
+      const response = await request(app).get(
+        "/api/api-requests/stats?period=week"
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it("500 - should return error when JWT token is invalid", async () => {
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week")
+        .set("Cookie", `jwt=invalid_token`);
+
+      expect(response.status).toBe(500);
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("should handle case-sensitive period parameter", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=Week")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(422);
+      expect(response.body.message).toContain(
+        "Period must be either 'week' or 'month'"
+      );
+    });
+
+    it("should handle additional query parameters gracefully", async () => {
+      const mockUserModel = new Users(MOCK_USERS[1]);
+      const mockToken = mockUserModel.generateJWT();
+
+      jest
+        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .mockResolvedValue(MOCK_WEEKLY_STATS);
+
+      const response = await request(app)
+        .get("/api/api-requests/stats?period=week&extra=param")
+        .set("Cookie", `jwt=${mockToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toEqual(MOCK_WEEKLY_STATS);
+    });
+  });
+});
