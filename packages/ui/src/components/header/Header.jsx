@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import MobileHeaderMenu from "./MobileHeaderMenu";
 import Button from "../common/button/Button";
+import UserDropDown from "../dropdown/UserDropDown";
 import {
   HEADER_ITEMS,
   HAMBURGER,
@@ -89,7 +90,9 @@ const Header = ({ openAuthModal }) => {
             );
           })}
 
-          {!isAuthenticated && (
+          {isAuthenticated ? (
+            <UserDropDown />
+          ) : (
             <Button
               variant="primary"
               className={styles.ml}

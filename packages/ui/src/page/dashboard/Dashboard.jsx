@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { AuthContext, UserContext } from "../../contexts/Contexts.jsx";
+import { UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/apikeyform/ApiKeyForm";
 import CurrentPlan from "../../components/currentplan/CurrentPlan";
 import Usage from "../../components/usage/Usage";
@@ -11,7 +11,6 @@ import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
-import Button from "../../components/common/button/Button.jsx";
 import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 import ConfirmationModal from "../../components/confirm/ConfirmationModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
@@ -22,13 +21,10 @@ import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 
 function Dashboard() {
-  const { userData, loading, fetchUserData, setUserData } =
-    useContext(UserContext);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
   const [selectedDashboard, setSelectedDashboard] = useState("USER");
   const [isGuest, setIsGuest] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -113,13 +109,6 @@ function Dashboard() {
       </div>
     );
   }
-
-  const handleLogout = () => {
-    setIsLoading(true);
-    logout();
-    setUserData(null);
-    setIsLoading(false);
-  };
 
   const handleKeyGenerated = async () => {
     const success = await fetchUserKeys();
@@ -208,21 +197,6 @@ function Dashboard() {
                 <SettingCard isGuest={isGuest} />
               </CardWrapper>
             </section>
-          </div>
-
-          <div className={styles["logout-wrapper"]}>
-            {isAuthenticated ? (
-              <Button
-                variant="danger"
-                className={styles["logout-btn"]}
-                onClick={handleLogout}
-                isLoading={isLoading}
-              >
-                {BUTTON_TEXT.signOut}
-              </Button>
-            ) : (
-              ""
-            )}
           </div>
         </>
       )}
