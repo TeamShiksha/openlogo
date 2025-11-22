@@ -9,7 +9,7 @@ const getStatsQuerySchema = Joi.object({
     "any.required": "Period is required",
     "any.only": "Period must be either 'week' or 'month'",
   }),
-});
+}).unknown(true);
 
 module.exports = {
   getStatsQuerySchema,
