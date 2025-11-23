@@ -1,11 +1,16 @@
+jest.mock("../../../utils/webLogoSearch.js", () => ({
+  grabPngLogos: jest.fn(),
+}));
+
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { UserService, ImageService } = require("../../../services");
 const mongoose = require("mongoose");
-const { Users, Images } = require("../../../models");
+const { Users } = require("../../../models");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
+const { grabPngLogos } = require("../../../utils/webLogoSearch.js");
 
 describe("GET /api/catalog/logos", () => {
   beforeAll(() => {
@@ -15,6 +20,7 @@ describe("GET /api/catalog/logos", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    grabPngLogos.mockResolvedValue({ success: false, logos: [] });
   });
 
   afterAll(() => {
@@ -23,7 +29,7 @@ describe("GET /api/catalog/logos", () => {
   });
 
   it("404 - User not found", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]); // ADMIN
+    const mockAdmin = new Users(MOCK_USERS[2]);
     const token = mockAdmin.generateJWT();
 
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
@@ -40,42 +46,56 @@ describe("GET /api/catalog/logos", () => {
     });
   });
 
-  it("200 - No images found", async () => {
+  it("404 - ADMIN - No images found in DB and web search fails", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
     const token = mockAdmin.generateJWT();
 
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
-    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue([]);
+    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
+      data: [],
+      total: 0,
+      currentPage: 1,
+      totalPages: 0,
+    });
+    grabPngLogos.mockResolvedValue({ success: false, logos: [] });
 
     const res = await request(app)
-      .get("/api/catalog/logos")
+      .get("/api/catalog/logos?search=NonExistent")
       .set("Cookie", `jwt=${token}`);
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(404);
     expect(res.body).toEqual({
-      statusCode: 200,
-      data: [],
+      statusCode: 404,
+      error: STATUS_CODES[404],
+      message: Messages.LOGO_NOT_FOUND,
     });
   });
 
-  it("200 - Images returned", async () => {
+  it("200 - ADMIN - Images returned from DB", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
     const token = mockAdmin.generateJWT();
 
-    const mockImage = new Images({
+    const mockImage = {
       _id: new mongoose.Types.ObjectId(),
       user_id: mockAdmin._id,
       company_name: "GOOGLE.png",
       company_uri: "https://example.com/google",
       image_size: 1024,
       is_deleted: false,
-      updated_at: new Date(),
-    });
+      updated_at: new Date().toISOString(),
+    };
+
+    const imageData = {
+      data: [mockImage],
+      total: 1,
+      currentPage: 1,
+      totalPages: 1,
+    };
 
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest
       .spyOn(ImageService.prototype, "getImages")
-      .mockResolvedValue([mockImage]);
+      .mockResolvedValue(imageData);
 
     const res = await request(app)
       .get("/api/catalog/logos")
@@ -84,7 +104,16 @@ describe("GET /api/catalog/logos", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       statusCode: 200,
-      data: [expect.objectContaining({ company_name: "GOOGLE.png" })],
+      data: expect.objectContaining({
+        data: expect.arrayContaining([
+          expect.objectContaining({
+            company_name: "GOOGLE.png",
+            company_uri: "https://example.com/google",
+          }),
+        ]),
+        total: 1,
+      }),
+      source: "db-search",
     });
   });
 
@@ -101,5 +130,76 @@ describe("GET /api/catalog/logos", () => {
       .set("Cookie", `jwt=${token}`);
 
     expect(res.status).toBe(500);
+  });
+
+  it("200 - OPERATOR - Image exists in DB", async () => {
+    const mockOperator = new Users(MOCK_USERS[3]);
+    const token = mockOperator.generateJWT();
+
+    const mockImage = {
+      _id: new mongoose.Types.ObjectId(),
+      user_id: mockOperator._id,
+      company_name: "EXAMPLE.png",
+      company_uri: "https://example.com",
+      image_size: 2048,
+      is_deleted: false,
+      updated_at: new Date(),
+    };
+
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockOperator);
+    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
+      data: [mockImage],
+      total: 1,
+      currentPage: 1,
+      totalPages: 1,
+    });
+
+    const res = await request(app)
+      .get("/api/catalog/logos?search=example")
+      .set("Cookie", `jwt=${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      statusCode: 200,
+      data: "Image Exists in DB",
+      source: "db-search",
+    });
+  });
+
+  it("200 - ADMIN - Web search returns logos when DB empty", async () => {
+    const mockAdmin = new Users(MOCK_USERS[2]);
+    const token = mockAdmin.generateJWT();
+
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
+    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
+      data: [],
+      total: 0,
+      currentPage: 1,
+      totalPages: 0,
+    });
+
+    grabPngLogos.mockResolvedValue({
+      success: true,
+      logos: [
+        { url: "http://logo.png", variant: "primary", format: "png" },
+        { url: "http://logo2.png", variant: "secondary", format: "png" },
+      ],
+    });
+
+    const res = await request(app)
+      .get("/api/catalog/logos?search=TestCompany")
+      .set("Cookie", `jwt=${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      statusCode: 200,
+      source: "web-search",
+      data: [
+        { companyName: "TestCompany", url: "http://logo.png" },
+        { companyName: "TestCompany", url: "http://logo2.png" },
+      ],
+    });
   });
 });

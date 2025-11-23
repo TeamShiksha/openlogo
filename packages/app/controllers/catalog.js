@@ -15,7 +15,7 @@ const {
   UserType,
 } = require("../utils/constants");
 const { default: mongoose } = require("mongoose");
-
+const { grabPngLogos } = require("../utils/webLogoSearch.js");
 async function getAnalyticsController(req, res, next) {
   try {
     const userService = new UserService();
@@ -208,16 +208,49 @@ async function getCatalogController(req, res, next) {
 
     const search = req.query.search || "";
     const imageData = await imageService.getImages(skip, limit, search);
-    if (!imageData)
+
+    if (user.role === UserType.OPERATOR) {
+      if (imageData.length > 0 || imageData.data.length > 0) {
+        return res.status(200).json({
+          statusCode: 200,
+          data: "Image Exists in DB",
+          source: "db-search",
+        });
+      }
+    }
+    if (!imageData || !imageData.data || imageData.data.length === 0) {
+      try {
+        const webSearchResult = await grabPngLogos(search);
+        if (webSearchResult.success && webSearchResult.logos.length > 0) {
+          const logoOptions = webSearchResult.logos.map((logo) => ({
+            companyName: search,
+            url: logo.url,
+            companyUri: logo.companyUri,
+            imageSize: logo.imageSize,
+            extension: logo.type,
+          }));
+          return res.status(200).json({
+            statusCode: 200,
+            data: logoOptions,
+            source: "web-search",
+          });
+        }
+      } catch (webSearchError) {
+        console.error("Web search failed:", webSearchError.message);
+      }
+      return res.status(404).json({
+        message: Messages.LOGO_NOT_FOUND,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+    if (imageData) {
       return res.status(200).json({
         statusCode: 200,
-        data: [],
+        data: imageData,
+        source: "db-search",
       });
-
-    return res.status(200).json({
-      statusCode: 200,
-      data: imageData,
-    });
+    }
   } catch (err) {
     next(err);
   }
