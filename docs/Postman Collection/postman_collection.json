@@ -1,10 +1,11 @@
 {
 	"info": {
-		"_postman_id": "d63e3d88-017b-4301-b5df-a2dc7253aa9c",
+		"_postman_id": "d650241c-dc66-4c9e-9b3e-8936cbdfffdb",
 		"name": "OpenLogo API documentation",
 		"description": "# 📄 OpenLogo Documentation\n\nThis Postman collection contains a comprehensive set of API endpoints designed to support OpenLogo API Services. It serves as a centralized reference for developers and stakeholders to understand, test, and integrate with the system's core functionalities.  \n\n## Authentication\n\nThe OpenLogo API uses JWT for authentication.\n\nYou must include an JWT in each request to the Postman API with the Bearer Token request header.\n\n### Authentication error response\n\nIf an API key is missing, malformed, or invalid, you will receive an HTTP 401 Unauthorized response code.\n\n## Rate and usage limits\n\nAPI access rate limits apply at a per-API key basis in unit time. The limit is 60 requests per minute. Also, depending on your plan, you may have usage limits. If you exceed either limit, your request will return an HTTP 429 Too Many Requests status code.\n\nEach API response returns the following set of headers to help you identify your use status:\n\n| Header | Description |\n| --- | --- |\n| `X-RateLimit-Limit` | The maximum number of requests that the consumer is permitted to make per minute. |\n| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window. |\n| `X-RateLimit-Reset` | The time at which the current rate limit window resets in UTC epoch seconds. |\n\n### 503 response\n\nAn HTTP `503` response from our servers indicates there is an unexpected spike in API access traffic. The server is usually operational within the next five minutes.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28498108"
+		"_exporter_id": "39757166",
+		"_collection_link": "https://tarunlokesh2005-5067716.postman.co/workspace/Tarun-Aditya's-Workspace~4067ec8b-f547-45a7-885f-7fa384c6128c/collection/39757166-d650241c-dc66-4c9e-9b3e-8936cbdfffdb?action=share&source=collection_link&creator=39757166"
 	},
 	"item": [
 		{
@@ -82,11 +83,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"Fetched all contact us messages.\",\r\n    \"statusCode\": 200,\r\n    \"total\": 0,\r\n    \"currentPage\": 1,\r\n    \"totalPages\": 0,\r\n    \"results\": []\r\n}"
@@ -120,11 +123,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
@@ -154,8 +159,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Page number is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -184,8 +189,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Limit is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -214,8 +219,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Tab is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -248,8 +253,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Tab must be either 'active' or 'archived'\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -282,8 +287,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -359,8 +364,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						},
@@ -395,8 +400,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Name should only contain alphabets\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -431,8 +436,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Invalid email\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -467,8 +472,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Message should be at least be 20 characters\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -503,8 +508,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Form submitted, our team will get in touch shortly\",\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -539,8 +544,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Form submitted, our team will get in touch shortly\",\r\n    \"statusCode\": 200\r\n}"
 						}
@@ -610,11 +615,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"Responded successfully.\",\r\n    \"data\": {\r\n        \"reply\": \"this is a reply containing atleast twenty alphabets\",\r\n        \"operator\": \"6857e093e5797571e7929209\",\r\n        \"email\": \"abc@example.com\",\r\n        \"message\": \"this is a sample message\"\r\n    }\r\n}"
@@ -644,11 +651,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
@@ -678,11 +687,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"statusCode\": 404,\r\n    \"error\": \"Not Found\",\r\n    \"message\": \"Message not found.\"\r\n}"
@@ -712,11 +723,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"statusCode\": 409,\r\n    \"error\": \"Conflict\",\r\n    \"message\": \"Already sent the response.\"\r\n}"
@@ -746,11 +759,13 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Reply should be at least 20 characters\"\r\n}"
@@ -780,8 +795,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -811,7 +826,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/me",
+							"raw": "{{openlogo_base_url}}/users/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -829,7 +844,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -839,8 +854,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"data\": {\r\n        \"name\": \"Team Shiksha\",\r\n        \"email\": \"teamshiksha@example.com\",\r\n        \"role\": \"ADMIN\",\r\n        \"is_verified\": true,\r\n        \"subscription_id\": \"6839bd519e9c06126e04c40a\",\r\n        \"userId\": \"6839bd519e9c06126e04c40c\",\r\n        \"created_at\": \"2025-05-30T14:14:41.000Z\",\r\n        \"is_deleted\": false,\r\n        \"updated_at\": \"2025-05-30T14:14:41.824Z\",\r\n        \"subscription\": {\r\n            \"_id\": \"6839bd519e9c06126e04c40a\",\r\n            \"type\": \"HOBBY\",\r\n            \"key_limit\": 2,\r\n            \"usage_limit\": 500,\r\n            \"usage_count\": 0,\r\n            \"is_active\": true,\r\n            \"updated_at\": \"2025-05-30T14:14:41.659Z\"\r\n        },\r\n        \"keys\": []\r\n    }\r\n}"
 						},
@@ -850,7 +865,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -860,8 +875,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -871,7 +886,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -881,8 +896,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -915,7 +930,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/me",
+							"raw": "{{openlogo_base_url}}/users/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -942,7 +957,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -952,8 +967,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"message\": \"\\\"name\\\" is not allowed to be empty\",\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -972,7 +987,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -982,8 +997,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"message\": \"First name should only contain alphabets\",\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1002,7 +1017,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1012,8 +1027,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -1032,7 +1047,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1042,8 +1057,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1062,7 +1077,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1072,8 +1087,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -1097,7 +1112,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/me",
+							"raw": "{{openlogo_base_url}}/users/me",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1115,7 +1130,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1125,8 +1140,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "> {\r\n>   \"statusCode\": 200,\r\n    \"message\":\"Account deleted successfully\"\r\n> }"
 						},
@@ -1136,7 +1151,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1146,8 +1161,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1157,7 +1172,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/me",
+									"raw": "{{openlogo_base_url}}/users/me",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1167,8 +1182,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Not Found\",\r\n    \"message\": \"User not found\",\r\n    \"statusCode\": 404\r\n}"
 						}
@@ -1201,7 +1216,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/api-key",
+							"raw": "{{openlogo_base_url}}/users/me/api-key",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1229,7 +1244,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1240,8 +1255,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Description is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1260,7 +1275,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1271,8 +1286,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Description must be 20 characters or fewer\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1291,7 +1306,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1302,8 +1317,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"\\\"key_description\\\" is not allowed to be empty\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1322,7 +1337,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1333,8 +1348,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"data\": {\r\n        \"key_description\": \"Sample description\",\r\n        \"subscription_id\": \"6857d35f8029b997b4f45e8c\",\r\n        \"_id\": \"6858410b49a1f798366d9f65\",\r\n        \"api_key\": \"AB63AF54437B47F287D9F2600AFD3EEC\",\r\n        \"updated_at\": \"2025-06-22T17:44:43.983Z\",\r\n        \"__v\": 0\r\n    }\r\n}"
 						},
@@ -1353,7 +1368,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1364,8 +1379,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1384,7 +1399,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key",
+									"raw": "{{openlogo_base_url}}/users/me/api-key",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1395,8 +1410,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -1420,7 +1435,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/api-key/:keyId",
+							"raw": "{{openlogo_base_url}}/users/me/api-key/:keyId",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1446,7 +1461,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f79830AFD3EED",
+									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f79830AFD3EED",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1458,8 +1473,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Key ID must be a valid mongodb objectId\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1469,7 +1484,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1481,8 +1496,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -1492,7 +1507,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1504,8 +1519,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1515,7 +1530,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1527,8 +1542,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1538,7 +1553,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/api-key/6858410b49a1f798366d9f66",
+									"raw": "{{openlogo_base_url}}/users/me/api-key/6858410b49a1f798366d9f66",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1550,8 +1565,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Invalid API key.\",\r\n    \"statusCode\": \"Not Found\"\r\n}"
 						}
@@ -1584,7 +1599,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/password",
+							"raw": "{{openlogo_base_url}}/users/me/password",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1612,7 +1627,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/password",
+									"raw": "{{openlogo_base_url}}/users/me/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1623,8 +1638,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Current password is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1643,7 +1658,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/password",
+									"raw": "{{openlogo_base_url}}/users/me/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1654,8 +1669,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Current password is incorrect\",\r\n    \"statusCode\": 400,\r\n    \"error\": \"Bad Request\"\r\n}"
 						},
@@ -1674,7 +1689,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/password",
+									"raw": "{{openlogo_base_url}}/users/me/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1685,8 +1700,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -1705,7 +1720,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/password",
+									"raw": "{{openlogo_base_url}}/users/me/password",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1716,8 +1731,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -1750,7 +1765,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{openlogo_base_url}}/user/request",
+							"raw": "{{openlogo_base_url}}/users/me/request",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
@@ -1778,7 +1793,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/request",
+									"raw": "{{openlogo_base_url}}/users/me/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1789,8 +1804,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"User ID is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1809,7 +1824,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/request",
+									"raw": "{{openlogo_base_url}}/users/me/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1820,8 +1835,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Invalid URL\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -1840,7 +1855,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/request",
+									"raw": "{{openlogo_base_url}}/users/me/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1851,8 +1866,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -1871,7 +1886,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/request",
+									"raw": "{{openlogo_base_url}}/users/me/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1882,8 +1897,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -1902,7 +1917,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{openlogo_base_url}}/user/request",
+									"raw": "{{openlogo_base_url}}/users/me/request",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
@@ -1913,8 +1928,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -1961,8 +1976,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"success\": true,\r\n    \"alreadyVerified\": true\r\n}"
 						},
@@ -1983,8 +1998,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Bad Request\",\r\n    \"message\": \"Invalid token.\",\r\n    \"statusCode\": 400\r\n}"
 						}
@@ -2044,8 +2059,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Not Found\",\r\n    \"message\": \"User not found.\",\r\n    \"statusCode\": 404\r\n}"
 						},
@@ -2073,8 +2088,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						}
@@ -2124,8 +2139,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Verification failed.\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -2146,8 +2161,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"New password is required\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2183,8 +2198,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Confirm password is required\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2220,8 +2235,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Token is required\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2257,8 +2272,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						}
@@ -2339,8 +2354,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Invalid email\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2375,8 +2390,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Name should only contain alphabets\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2411,8 +2426,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Password must be at least 8 characters\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2447,8 +2462,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Password and confirm password do not match\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2483,8 +2498,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Request Body = {\r\n  \"email\": \"john.doe1@example.com\",\r\n//   \"name\": \"John Doe I\",\r\n  \"password\": \"strongpassword\",\r\n  \"confirmPassword\": \"StrongPassword123!\"\r\n}\r\n\r\n{\r\n    \"message\": \"Name is required\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}\r\n\r\nRequest Body = {\r\n//  \"email\": \"john.doe1@example.com\",\r\n   \"name\": \"John Doe I\",\r\n  \"password\": \"strongpassword\",\r\n  \"confirmPassword\": \"StrongPassword123!\"\r\n}\r\n\r\n{\r\n    \"message\": \"Email is required\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}\r\n\r\nRequest Body = {\r\n  \"email\": \"john.doe1@example.com\",\r\n   \"name\": \"John Doe I\",\r\n//  \"password\": \"strongpassword\",\r\n  \"confirmPassword\": \"StrongPassword123!\"\r\n}\r\n\r\n{\r\n    \"message\": \"Password is required\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}\r\n\r\nRequest Body = {\r\n  \"email\": \"john.doe1@example.com\",\r\n   \"name\": \"John Doe I\",\r\n  \"password\": \"strongpassword\",\r\n//  \"confirmPassword\": \"StrongPassword123!\"\r\n}\r\n\r\n{\r\n    \"message\": \"\\\"confirmPassword\\\" is required\",\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"statusCode\": 422\r\n}"
 						}
@@ -2500,7 +2515,8 @@
 									""
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"requests": {}
 							}
 						},
 						{
@@ -2517,7 +2533,8 @@
 									"}"
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"requests": {}
 							}
 						}
 					],
@@ -2526,7 +2543,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"StrongPassword123!\"\r\n}\r\n\r\n// {\r\n//     \"email\": \"john.doe1@example.com\",\r\n//     \"password\": \"strongpassword\"\r\n// }",
+							"raw": "{\r\n    \"email\": \"admin@mail.com\",\r\n    \"password\": \"password123$\"\r\n}\r\n\r\n// {\r\n//     \"email\": \"john.doe1@example.com\",\r\n//     \"password\": \"StrongPassword123!\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2570,8 +2587,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Forbidden\",\r\n    \"message\": \"Email not verified\",\r\n    \"statusCode\": 403\r\n}"
 						},
@@ -2600,8 +2617,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Not Found\",\r\n    \"message\": \"Incorrect email or password.\",\r\n    \"statusCode\": 404\r\n}"
 						},
@@ -2630,8 +2647,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						}
@@ -2682,8 +2699,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Bad Request\",\r\n    \"message\": \"User session validation failed.\",\r\n    \"statusCode\": 400\r\n}"
 						},
@@ -2703,8 +2720,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "This API request clears the JWT cookie from the user's browser."
 						}
@@ -2769,8 +2786,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Invalid email\",\r\n    \"statusCode\": 422\r\n}"
 						},
@@ -2806,8 +2823,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Not Found\",\r\n    \"message\": \"Email doesn't exists.\",\r\n    \"statusCode\": 404\r\n}"
 						},
@@ -2843,8 +2860,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						}
@@ -2900,8 +2917,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Domain is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -2926,8 +2943,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"API key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -2956,8 +2973,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Invalid API key.\",\r\n    \"statusCode\": 403,\r\n    \"error\": \"Forbidden\"\r\n}"
 						},
@@ -2986,8 +3003,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Logo not found.\",\r\n    \"statusCode\": 404,\r\n    \"error\": \"Not Found\"\r\n}"
 						},
@@ -3016,8 +3033,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n   \"statusCode\": 200,\r\n   \"data\": [\r\n     {\r\n       \"_id\": \"image_id\",\r\n       \"user_id\": \"user_id\",\r\n       \"company_name\": \"COMPANY.png\",\r\n       \"company_uri\": \"https://company.com\",\r\n       \"image_size\": 1024,\r\n       \"is_deleted\": false,\r\n       \"updated_at\": \"timestamp\"\r\n     }\r\n    ]\r\n}"
 						},
@@ -3046,8 +3063,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3076,8 +3093,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3129,13 +3146,15 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{}
 							],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
@@ -3162,13 +3181,15 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{}
 							],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"API key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
@@ -3199,13 +3220,15 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{}
 							],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"Invalid API key.\",\r\n    \"error\": \"Forbidden\",\r\n    \"statusCode\": 403\r\n}"
@@ -3236,13 +3259,15 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{}
 							],
 							"cookie": [
 								{
-									"expires": "Invalid Date"
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
 								}
 							],
 							"body": "{\r\n    \"message\": \"Logo not found.\",\r\n    \"statusCode\": 404,\r\n    \"error\": \"Not Found\"\r\n}"
@@ -3272,8 +3297,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n  \"statusCode\" : 200,\r\n  \"data\": [\r\n      {\r\n       \"companyName\" : \"companyName\",\r\n       \"image\" : \"https://api.example.com/logos/company-logo.png\"\r\n      }\r\n   ]\r\n}"
 						},
@@ -3302,8 +3327,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3332,8 +3357,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3385,8 +3410,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"key is required\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -3412,8 +3437,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"\\\"key\\\" is not allowed to be empty\",\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\"\r\n}"
 						},
@@ -3439,8 +3464,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"Logo not found.\",\r\n    \"statusCode\": 404,\r\n    \"error\": \"Not Found\"\r\n}"
 						},
@@ -3466,8 +3491,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n  \"statusCode\" : 200,\r\n  \"data\": [\r\n      {\r\n       \"companyName\" : \"companyName\",\r\n       \"image\" : \"https://api.example.com/logos/company-logo.png\"\r\n      }\r\n   ]\r\n}"
 						},
@@ -3493,8 +3518,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3520,8 +3545,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3579,8 +3604,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"data\": [\r\n        {\r\n            \"title\": \"Users\",\r\n            \"value\": 3\r\n        },\r\n        {\r\n            \"title\": \"Keys\",\r\n            \"value\": 1\r\n        },\r\n        {\r\n            \"title\": \"Requests\",\r\n            \"value\": 5\r\n        },\r\n        {\r\n            \"title\": \"Hits\",\r\n            \"value\": 0\r\n        }\r\n    ]\r\n}"
 						},
@@ -3600,8 +3625,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3621,8 +3646,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3674,8 +3699,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n  \"statusCode\": 200,\r\n  \"data\": [\r\n    {\r\n      \"_id\": \"image_id\",\r\n      \"user_id\": \"user_id\",\r\n      \"company_name\": \"COMPANY.png\",\r\n      \"company_uri\": \"https://company.com\",\r\n      \"image_size\": 1024,\r\n      \"is_deleted\": false,\r\n      \"updated_at\": \"timestamp\"\r\n    }\r\n  ]\r\n}"
 						},
@@ -3695,8 +3720,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3716,8 +3741,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3803,8 +3828,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"message\":\"Role updated successfully\"\r\n}"
 						},
@@ -3842,8 +3867,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200\r\n}"
 						},
@@ -3885,8 +3910,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -3928,8 +3953,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -3996,8 +4021,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n   \"message\": \"Image added successfully.\",\r\n   \"data\": {\r\n     \"_id\": \"6856985b1f344eb6525043d1\",\r\n     \"updatedAt\": \"timestamp\"\r\n   }\r\n}"
 						},
@@ -4050,8 +4075,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -4104,8 +4129,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -4167,8 +4192,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n  \"statusCode\": 200,\r\n  \"message\": \"Image updated successfully.\",\r\n  \"data\": {\r\n    \"_id\": \"6856985b1f344eb6525043d1\",\r\n    \"updatedAt\": \"timestamp\"\r\n  }\r\n}"
 						},
@@ -4188,8 +4213,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -4209,8 +4234,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -4290,8 +4315,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Page number is required\"\r\n}"
 						},
@@ -4320,8 +4345,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Limit is required\"\r\n}"
 						},
@@ -4350,8 +4375,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Tab is required\"\r\n}"
 						},
@@ -4384,8 +4409,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Tab must be either 'active' or 'archived'\"\r\n}"
 						},
@@ -4404,8 +4429,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"message\": \"Fetched all logo requests\",\r\n    \"total\": 0,\r\n    \"currentPage\": 1,\r\n    \"totalPages\": 0,\r\n    \"results\": []\r\n}"
 						},
@@ -4424,8 +4449,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -4444,8 +4469,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -4518,8 +4543,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Status is required\"\r\n}"
 						},
@@ -4554,8 +4579,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Status must be one of PENDING, REJECTED, or RESOLVED\"\r\n}"
 						},
@@ -4590,8 +4615,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 409,\r\n    \"error\": \"Conflict\",\r\n    \"message\": \"Request already processed\"\r\n}"
 						},
@@ -4626,8 +4651,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"message\": \"Responded successfully.\",\r\n    \"data\": {\r\n        \"companyUrl\": \"https://www.google.com\",\r\n        \"status\": \"RESOLVED\",\r\n        \"comment\": \"This is a sample comment\",\r\n        \"openedAt\": \"2025-06-22T11:49:16.579Z\"\r\n    }\r\n}"
 						},
@@ -4662,8 +4687,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 200,\r\n    \"message\": \"Responded successfully.\",\r\n    \"data\": {\r\n        \"companyUrl\": \"https://www.google.com\",\r\n        \"status\": \"REJECTED\",\r\n        \"comment\": \"This is a sample comment\",\r\n        \"openedAt\": \"2025-06-22T11:49:16.579Z\"\r\n    }\r\n}"
 						},
@@ -4698,8 +4723,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -4734,8 +4759,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -4800,8 +4825,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 201,\r\n    \"message\": \"Logo request created successfully\",\r\n    \"data\": {\r\n        \"user_id\": \"6856985b1f344eb6525043d1\",\r\n        \"companyUrl\": \"https://www.google.com\",\r\n        \"status\": \"PENDING\",\r\n        \"operator\": null,\r\n        \"comment\": null,\r\n        \"closedAt\": null,\r\n        \"_id\": \"6857edbc7f2775c16193d103\",\r\n        \"openedAt\": \"2025-06-22T11:49:16.579Z\",\r\n        \"updated_at\": \"2025-06-22T11:49:16.580Z\",\r\n        \"__v\": 0\r\n    }\r\n}"
 						},
@@ -4835,8 +4860,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Company URL is required\"\r\n}"
 						},
@@ -4870,8 +4895,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"statusCode\": 422,\r\n    \"error\": \"Unprocessable Entity\",\r\n    \"message\": \"Company URL cannot be empty\"\r\n}"
 						},
@@ -4888,7 +4913,7 @@
 								],
 								"body": {
 									"mode": "raw",
-                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+									"raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4905,8 +4930,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"message\": \"You already have a pending request.\",\r\n    \"statusCode\": 400,\r\n    \"error\": \"Bad Request\"\r\n}"
 						},
@@ -4923,7 +4948,7 @@
 								],
 								"body": {
 									"mode": "raw",
-                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+									"raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4940,8 +4965,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "{\r\n    \"error\": \"Unauthorized\",\r\n    \"message\": \"Invalid credentials\",\r\n    \"statusCode\": 401\r\n}"
 						},
@@ -4958,7 +4983,7 @@
 								],
 								"body": {
 									"mode": "raw",
-                  "raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
+									"raw": "{\r\n    \"companyUrl\":\"https://www.google.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4975,8 +5000,8 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
 							"body": "Too many requests, please try again later."
 						}
@@ -4984,6 +5009,36 @@
 				}
 			],
 			"description": "The `/me` endpoints let you manage information about the authenticated user."
+		},
+		{
+			"name": "Api Request",
+			"item": [
+				{
+					"name": "Api Usage Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{openlogo_base_url}}/api-requests/stats?period=week",
+							"host": [
+								"{{openlogo_base_url}}"
+							],
+							"path": [
+								"api-requests",
+								"stats"
+							],
+							"query": [
+								{
+									"key": "period",
+									"value": "week",
+									"description": "Time Period for Graph"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

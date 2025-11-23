@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.disable("x-powered-by");
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/", routes);
+app.use("/api", routes);
 
 if (process.env.NODE_ENV !== "test") {
   const PORT = process.env.PORT;
