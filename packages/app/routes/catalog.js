@@ -21,8 +21,11 @@ router.get(
   authMiddleware({ adminOnly: true }),
   getAnalyticsController
 );
-router.get("/logos", authMiddleware({ adminOnly: true }), getCatalogController);
-
+router.get(
+  "/logos",
+  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
+  getCatalogController
+);
 router.post(
   "/logo",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
