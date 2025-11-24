@@ -266,6 +266,15 @@ class UserService {
     );
     return updatedUser;
   }
+
+  /**
+   * Gets userId from subscriptionId.
+   * @param {String} subscriptionId - The subscriptionId of the user.
+   * @returns {Object} - User Object.
+   */
+  async getUserBySubscriptionId(subscriptionId) {
+    return await this.userRepository.findUserBySubscriptionId(subscriptionId);
+  }
 }
 
 module.exports = UserService;

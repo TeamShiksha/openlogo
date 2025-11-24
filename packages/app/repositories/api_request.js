@@ -1,4 +1,4 @@
-const { api_request } = require("../models");
+const { ApiRequest } = require("../models");
 const BaseRepository = require("./base");
 const dayjs = require("dayjs");
 const mongoose = require("mongoose");
@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 
 class ApiRequestRepository extends BaseRepository {
   constructor() {
-    super(api_request);
+    super(ApiRequest);
   }
 
   /**
