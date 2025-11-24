@@ -2543,7 +2543,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@mail.com\",\r\n    \"password\": \"password123$\"\r\n}\r\n\r\n// {\r\n//     \"email\": \"john.doe1@example.com\",\r\n//     \"password\": \"StrongPassword123!\"\r\n// }",
+							"raw": "{\r\n    \"email\": \"admin@mail.com\",\r\n    \"password\": \"Qwerty123$\"\r\n}\r\n\r\n// {\r\n//     \"email\": \"john.doe1@example.com\",\r\n//     \"password\": \"StrongPassword123!\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2883,7 +2883,8 @@
 									""
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"requests": {}
 							}
 						}
 					],
@@ -2891,12 +2892,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/logo",
+							"raw": "{{openlogo_base_url}}/logo?API_KEY=4CEEE7A797FF4E8FB1B73D4B29595978",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
 							"path": [
 								"logo"
+							],
+							"query": [
+								{
+									"key": "API_KEY",
+									"value": "4CEEE7A797FF4E8FB1B73D4B29595978"
+								}
 							]
 						},
 						"description": "Gets information about the authenticated user."
@@ -5036,7 +5043,222 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Successful Week Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{openlogo_base_url}}/api-requests/stats?period=week",
+									"host": [
+										"{{openlogo_base_url}}"
+									],
+									"path": [
+										"api-requests",
+										"stats"
+									],
+									"query": [
+										{
+											"key": "period",
+											"value": "week",
+											"description": "Time Period for Graph"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "RateLimit-Policy",
+									"value": "\"60-in-1min\"; q=60; w=60; pk=:ZWZmOGU3Y2E1MDY2:"
+								},
+								{
+									"key": "RateLimit",
+									"value": "\"60-in-1min\"; r=59; t=60"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "193"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c1-L/+5nTyGAhsKdajc0j5RRtI2Lew\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Nov 2025 16:22:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"data\": {\n        \"period\": \"week\",\n        \"startDate\": \"2025-11-23\",\n        \"endDate\": \"2025-11-29\",\n        \"summary\": {\n            \"totalCount\": 5,\n            \"totalKB\": \"25.56\"\n        },\n        \"data\": [\n            {\n                \"count\": 5,\n                \"date\": \"2025-11-24\",\n                \"totalKB\": 25.56\n            }\n        ]\n    }\n}"
+						},
+						{
+							"name": "Successful Month Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{openlogo_base_url}}/api-requests/stats?period=month",
+									"host": [
+										"{{openlogo_base_url}}"
+									],
+									"path": [
+										"api-requests",
+										"stats"
+									],
+									"query": [
+										{
+											"key": "period",
+											"value": "month",
+											"description": "Time Period for Graph"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "RateLimit-Policy",
+									"value": "\"60-in-1min\"; q=60; w=60; pk=:ZWZmOGU3Y2E1MDY2:"
+								},
+								{
+									"key": "RateLimit",
+									"value": "\"60-in-1min\"; r=59; t=60"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "194"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c2-QoY2jtu077Vj2oSKXPqiCk51nlc\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Nov 2025 16:24:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"data\": {\n        \"period\": \"month\",\n        \"startDate\": \"2025-11-01\",\n        \"endDate\": \"2025-11-30\",\n        \"summary\": {\n            \"totalCount\": 5,\n            \"totalKB\": \"25.56\"\n        },\n        \"data\": [\n            {\n                \"count\": 5,\n                \"date\": \"2025-11-24\",\n                \"totalKB\": 25.56\n            }\n        ]\n    }\n}"
+						},
+						{
+							"name": "Missing Query Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{openlogo_base_url}}/api-requests/stats",
+									"host": [
+										"{{openlogo_base_url}}"
+									],
+									"path": [
+										"api-requests",
+										"stats"
+									],
+									"query": [
+										{
+											"key": "period",
+											"value": "month",
+											"description": "Time Period for Graph",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "RateLimit-Policy",
+									"value": "\"60-in-1min\"; q=60; w=60; pk=:ZWZmOGU3Y2E1MDY2:"
+								},
+								{
+									"key": "RateLimit",
+									"value": "\"60-in-1min\"; r=58; t=35"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "80"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"50-yx4U477jm/mRNRv9uqoHj1nzOy0\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Nov 2025 16:25:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 422,\n    \"message\": \"Period is required\",\n    \"error\": \"Unprocessable Entity\"\n}"
+						}
+					]
 				}
 			]
 		}
