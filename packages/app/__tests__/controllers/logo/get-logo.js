@@ -8,6 +8,8 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
+  ApiRequestService,
+  UserService,
 } = require("../../../services");
 
 describe("getLogoController", () => {
@@ -48,6 +50,14 @@ describe("getLogoController", () => {
     jest
       .spyOn(SubscriptionService.prototype, "getSubscription")
       .mockResolvedValue(mockSubscription);
+
+    jest
+      .spyOn(ApiRequestService.prototype, "createEntry")
+      .mockResolvedValue({});
+
+    jest
+      .spyOn(UserService.prototype, "getUserBySubscriptionId")
+      .mockResolvedValue({ _id: "test_user_id" });
   }
 
   it("should return 422 if query validation fails", async () => {
@@ -111,6 +121,13 @@ describe("getLogoController", () => {
       .mockResolvedValue(imageUrl);
 
     jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue({
+        _id: "test_image_id",
+        image_size: 1024,
+      });
+
+    jest
       .spyOn(SubscriptionService.prototype, "incrementUsageCount")
       .mockResolvedValue([]);
 
@@ -169,6 +186,21 @@ describe("getLogoController - Operations Order Test", () => {
         operationsOrder.push("image_fetched");
         return imageUrl;
       });
+
+    jest
+      .spyOn(ImageService.prototype, "getImageByCompanyName")
+      .mockResolvedValue({
+        _id: "test_image_id",
+        image_size: 1024,
+      });
+
+    jest
+      .spyOn(UserService.prototype, "getUserBySubscriptionId")
+      .mockResolvedValue({ _id: "test_user_id" });
+
+    jest
+      .spyOn(ApiRequestService.prototype, "createEntry")
+      .mockResolvedValue({});
 
     jest
       .spyOn(SubscriptionService.prototype, "incrementUsageCount")

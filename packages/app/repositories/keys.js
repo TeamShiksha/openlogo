@@ -55,7 +55,7 @@ class KeysRepository extends BaseRepository {
   /**
    * Gets a given API key from the database.
    * @param {string} apiKey - API key to check.
-   * @returns {Promise<Array<Object>>} - Array of matching keys. Returns an empty array if no matches are found.
+   * @returns {Promise<Object | null>} - Returns matching key object if found.
    */
   async getApiKey(apiKey) {
     const keyRef = await Keys.findOne({ api_key: apiKey });

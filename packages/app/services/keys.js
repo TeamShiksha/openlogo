@@ -57,7 +57,7 @@ class KeyService {
   /**
    * Checks if there exists a key with matching key value
    * @param {string} apiKey - key uuid()
-   * @returns {Promise<boolean>} - True if key exists, otherwise false
+   * @returns {Promise<Object|null>} - True if key exists, otherwise false
    **/
   async getApiKey(apiKey) {
     const keyRef = await this.keyRepository.getApiKey(apiKey);
