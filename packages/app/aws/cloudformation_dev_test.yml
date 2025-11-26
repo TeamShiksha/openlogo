@@ -170,6 +170,12 @@ Resources:
             Resource: !Sub ${S3bucket.Arn}/${CDNPathInS3}/*
             Action:
               - "s3:Put*"
+          - Effect: Allow
+            Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontCDN}
+            Action:
+              - "cloudfront:CreateInvalidation"
+              - "cloudfront:GetInvalidation"
+              - "cloudfront:ListInvalidations"
       Users:
         - !Ref IAMUser
 

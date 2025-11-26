@@ -99,6 +99,8 @@ const Messages = {
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
 
+const CLOUD_FRONT_REGION = "us-east-1";
+
 const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
 
@@ -112,5 +114,6 @@ module.exports = {
   DefaultSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
+  CLOUD_FRONT_REGION,
   getIsProduction,
 };
