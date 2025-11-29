@@ -224,12 +224,11 @@ async function getCatalogController(req, res, next) {
 }
 
 /**
- * Manages re-uploading an image for admin users.
- * Validates input, uploads to S3, updates database.
- */
-/**
- * Manages the process of updating an image for admin users.
- * Validates input, updates the image in the database.
+ * Updates an existing catalog image for admin users.
+ * Validates the input, uploads the updated image to S3,
+ * updates the image record in the database, and
+ * invalidates the CloudFront cache on successful update.
+ *
  */
 async function updateCatalogController(req, res, next) {
   try {
@@ -276,6 +275,8 @@ async function updateCatalogController(req, res, next) {
         message: Messages.UPDATE_IMAGE_FAILED,
       });
     }
+
+    await imageServices.invalidateCloudFrontCache(previousImageData);
 
     res.status(200).json({
       statusCode: 200,

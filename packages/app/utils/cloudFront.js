@@ -3,6 +3,7 @@ const {
   CloudFrontClient,
   CreateInvalidationCommand,
 } = require("@aws-sdk/client-cloudfront"); // CommonJS import
+const { CLOUD_FRONT_REGION } = require("./constants");
 
 const getSignedUrl = cloudfrontSigner.getSignedUrl;
 
@@ -39,16 +40,16 @@ function cloudFrontSignedURL(path) {
  *    - Handle responses or errors as needed.
  */
 
-const config = {
-  region: process.env.BUCKET_REGION,
-  credentials: {
-    accessKeyId: process.env.ACCESS_KEY,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  },
-};
-const client = new CloudFrontClient(config);
-
 async function cloudFrontInvalidate(paths) {
+  const config = {
+    region: CLOUD_FRONT_REGION,
+    credentials: {
+      accessKeyId: process.env.ACCESS_KEY,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    },
+  };
+
+  const client = new CloudFrontClient(config);
   const distributionId = process.env.DISTRIBUTION_ID;
   const input = {
     DistributionId: distributionId,
