@@ -16,7 +16,7 @@ Parameters:
       The public key is employed to verify the signed URL generated with the private key.
   AllowedOriginInS3:
     Type: String
-    Default: https://www.openlogo.fyi/
+    Default: https://www.openlogo.fyi
     Description: |
       The allowed origin for the S3 bucket
   CDNPathInS3:
