@@ -324,6 +324,35 @@ async function logoRequestController(req, res, next) {
   }
 }
 
+/**
+ * This controller retrieves the authenticated user's data using the `UserService`
+ * and compiles it into a JSON file. If the user is found, the file is sent as a
+ * downloadable attachment; otherwise, an error response is returned.
+ */
+async function downloadUserData(req, res, next) {
+  try {
+    const { userId } = req.userData;
+
+    const userService = new UserService();
+
+    const dataToDownload = await userService.getUserDataForDownload(userId);
+
+    if (!dataToDownload) {
+      return res.status(404).send({ message: Messages.USER_NOT_FOUND });
+    }
+
+    const fileName = `user_data_${userId}.json`;
+    const jsonContent = JSON.stringify(dataToDownload, null, 2);
+
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.status(200).send(jsonContent);
+  } catch (err) {
+    next(err);
+    console.log("Error building user data export:", err);
+  }
+}
+
 module.exports = {
   getUserDataController,
   updateProfileController,
@@ -332,4 +361,5 @@ module.exports = {
   destroyKeyController,
   updatePasswordController,
   logoRequestController,
+  downloadUserData,
 };

@@ -10,6 +10,7 @@ import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
+import axios from "axios";
 
 function Catalog() {
   const toast = useToast();
@@ -18,7 +19,9 @@ function Catalog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [updateImageId, setUpdateImageId] = useState(null);
+  const [updatedImageCompanyUri, setUpdatedImageCompanyUri] = useState(null);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const [uploadLoading, setUploadLoading] = useState(false);
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -36,14 +39,15 @@ function Catalog() {
     url: `/catalog/logos?skip=${skip}&limit=${limit}&search=${debouncedSearchTerm}`,
   });
 
-  const {
-    loading: uploadLoading,
-    makeRequest: uploadMakeRequest,
-    errorMsg: uploadErrorMsg,
-  } = useApi({
+  const { makeRequest: uploadMakeRequest, errorMsg: uploadErrorMsg } = useApi({
     method: updateImageId ? "PUT" : "POST",
     url: `/catalog/logo`,
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const { fetchRequest, errorMsg: fetchErrMsg } = useApi({
+    method: "POST",
+    url: `/catalog/signed-url`,
   });
 
   useEffect(() => {
@@ -52,6 +56,12 @@ function Catalog() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum, debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (fetchErrMsg) {
+      toast.error(fetchErrMsg);
+    }
+  }, [fetchErrMsg, toast]);
 
   useEffect(() => {
     if (uploadErrorMsg) {
@@ -72,42 +82,103 @@ function Catalog() {
   }, [data]);
 
   const handleImageUpload = async ({ file, companyUri }) => {
+    setUploadLoading(true);
     if (!file || !companyUri) return;
-
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("companyUri", companyUri);
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const { success, data: uploadResp } = await fetchRequest({
+        data: {
+          companyUri,
+          extension,
+          type: "upload",
+        },
+      });
+      if (!success || !uploadResp) {
+        throw new Error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
+
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: { companyUri, extension, size },
+      });
+      if (metadataSaved) {
         setIsModalOpen(false);
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         makeRequest();
+        setUploadLoading(false);
       }
     } catch (err) {
+      setUploadLoading(false);
       console.error("Upload error:", err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
+      }
     }
   };
 
   const handleUpdateImage = async ({ file }) => {
+    setUploadLoading(true);
     if (!file || !updateImageId) return;
 
-    const formData = new FormData();
-    formData.append("logo", file);
-    formData.append("id", updateImageId);
+    const extension = file.name.split(".").pop().toLowerCase();
+    const size = file.size;
 
     try {
-      const success = await uploadMakeRequest({ data: formData });
-      if (success) {
+      const { success, data: uploadResp } = await fetchRequest({
+        data: {
+          companyUri: updatedImageCompanyUri,
+          extension: extension,
+          type: "update",
+        },
+      });
+      if (!success || !uploadResp) {
+        throw new Error("Failed to proceed your request");
+      }
+      const { data } = uploadResp;
+      const { presignedUrl, key } = data;
+
+      if (!presignedUrl || !key) {
+        throw new Error("Presigned url or key is missing");
+      }
+
+      await axios.put(presignedUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      const metadataSaved = await uploadMakeRequest({
+        data: {
+          companyUri: updatedImageCompanyUri,
+          extension: extension,
+          size: size,
+          id: updateImageId,
+        },
+      });
+
+      if (metadataSaved) {
         setIsModalOpen(false);
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
         makeRequest();
+        setUploadLoading(false);
       }
     } catch (err) {
       console.error("Upload error:", err);
+      toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
+    } finally {
+      setUploadLoading(false);
     }
   };
 
@@ -139,9 +210,10 @@ function Catalog() {
     }
   };
 
-  const handleReuploadBtnClick = (id) => {
+  const handleReuploadBtnClick = (id, companyuri) => {
     setIsModalOpen(true);
     setUpdateImageId(id);
+    setUpdatedImageCompanyUri(companyuri);
   };
 
   return (

@@ -23,13 +23,29 @@ Parameters:
       Ensure the path does not begin or end with a slash.
     AllowedPattern: ^[a-zA-Z0-9]+(/[a-zA-Z0-9]+)*$
 
+  AllowedOriginInS3:
+    Type: String
+    Default: https://stage.openlogo.fyi
+    Description: |
+      The allowed origins for the S3 bucket
+    AllowedValues:
+      - https://stage.openlogo.fyi
+      - http://localhost:8080
+
 Resources:
   S3bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub teamshiksha-openlogo-dev-test-${AWS::AccountId}-${AWS::Region}
       AccessControl: Private
-
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - !Sub ${AllowedOriginInS3}
+            AllowedMethods:
+              - PUT
+            AllowedHeaders:
+              - "*"
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     DependsOn:
@@ -154,6 +170,12 @@ Resources:
             Resource: !Sub ${S3bucket.Arn}/${CDNPathInS3}/*
             Action:
               - "s3:Put*"
+          - Effect: Allow
+            Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontCDN}
+            Action:
+              - "cloudfront:CreateInvalidation"
+              - "cloudfront:GetInvalidation"
+              - "cloudfront:ListInvalidations"
       Users:
         - !Ref IAMUser
 

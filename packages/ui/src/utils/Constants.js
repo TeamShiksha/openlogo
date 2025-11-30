@@ -113,12 +113,6 @@ export const LOGGEDIN_ITEMS = [
     type: "section",
   },
   {
-    name: "dashboard",
-    title: "Dashboard",
-    url: "/dashboard",
-    type: "route",
-  },
-  {
     name: "docs",
     title: "Docs",
     url: "/docs",
@@ -142,6 +136,20 @@ export const LOGGEDIN_ITEMS = [
     url: "/#about",
     type: "section",
   },
+];
+
+export const LOGGEDIN_MOBILE_ITEMS = [
+  LOGGEDIN_ITEMS.find((i) => i.name === "home"),
+  {
+    name: "dashboard",
+    title: "Dashboard",
+    url: "/dashboard",
+    type: "route",
+  },
+  LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "features"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "pricing"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "about"),
 ];
 
 export const FOOTER_ITEMS = [
@@ -709,8 +717,10 @@ export const MESSAGES = {
   USERNAME_UPDATE_SUCCESS: "Username updated successfully",
   IMAGE_UPLOAD_SUCCESS: "Image uploaded successfully.",
   IMAGE_UPDATE_SUCCESS: "Image updated successfully.",
+  IMAGE_UPLOAD_ERROR: "Failed to upload image.",
+  IMAGE_UPDATE_ERROR: "Failed to update image.",
   NO_RESULT_FOUND: "No results found matching your query!",
-  UPLOAD_VALID_IMAGE: "Please upload a valid image file (JPG or PNG)",
+  UPLOAD_VALID_IMAGE: "Please upload a valid PNG image file",
   UPDATE_PASSWORD_SUCCESS: "Password updated successfully",
 };
 

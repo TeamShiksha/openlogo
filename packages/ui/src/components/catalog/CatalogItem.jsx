@@ -18,7 +18,7 @@ function CatalogItem({ company, onUpdate }) {
       </div>
       <div className={styles["catalog-item-column-last"]}>
         <Button
-          onClick={() => onUpdate(company._id)}
+          onClick={() => onUpdate(company._id, company.company_uri)}
           variant="primary"
           className={styles["reupload-btn"]}
         >
@@ -33,6 +33,7 @@ CatalogItem.propTypes = {
   company: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     company_name: PropTypes.string.isRequired,
+    company_uri: PropTypes.string.isRequired,
     extension: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,

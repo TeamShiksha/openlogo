@@ -119,6 +119,7 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
+    const userTokenService = new UserTokenService();
     let user = {};
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
@@ -140,12 +141,6 @@ async function signinController(req, res, next) {
           statusCode: 404,
         });
 
-      if (!user.is_verified)
-        return res.status(403).json({
-          error: STATUS_CODES[403],
-          message: Messages.EMAIL_NOT_VERIFIED,
-          statusCode: 403,
-        });
       if (user.is_deleted) {
         return res.status(400).json({
           error: STATUS_CODES[400],
@@ -160,6 +155,32 @@ async function signinController(req, res, next) {
           message: Messages.INCORRECT_EMAIL_PASS,
           statusCode: 404,
         });
+      }
+
+      if (!user.is_verified) {
+        try {
+          const result = await userTokenService.resendVerificationEmail(
+            user,
+            userService
+          );
+          return res.status(201).json({
+            message: result.message,
+            statusCode: 201,
+            source: "resendEmail",
+          });
+        } catch (err) {
+          let statusCode = 500;
+          let message = Messages.RESEND_EMAIL_FAILED;
+          if (err.statusCode) {
+            statusCode = err.statusCode;
+            message = err.message;
+          }
+          return res.status(statusCode).json({
+            message: message,
+            statusCode: statusCode,
+            source: "resendEmail",
+          });
+        }
       }
     }
     const currentDate = new Date();
@@ -256,14 +277,6 @@ async function verifyEmailController(req, res, next) {
       });
     }
 
-    if (userToken.isExpired()) {
-      return res.status(403).json({
-        error: STATUS_CODES[403],
-        message: Messages.EXPIRED_TOKEN,
-        statusCode: 403,
-      });
-    }
-
     const user = await userService.getUser(userToken.user_id);
     if (!user) {
       return res.status(404).json({
@@ -271,6 +284,32 @@ async function verifyEmailController(req, res, next) {
         message: Messages.INVALID_TOKEN,
         statusCode: 404,
       });
+    }
+
+    if (userToken.isExpired()) {
+      try {
+        const result = await userTokenService.resendVerificationEmail(
+          user,
+          userService
+        );
+        return res.status(201).json({
+          message: result.message,
+          statusCode: 201,
+          source: "resendEmail",
+        });
+      } catch (err) {
+        let statusCode = 500;
+        let message = Messages.RESEND_EMAIL_FAILED;
+        if (err.statusCode) {
+          statusCode = err.statusCode;
+          message = err.message;
+        }
+        return res.status(statusCode).json({
+          message: message,
+          statusCode: statusCode,
+          source: "resendEmail",
+        });
+      }
     }
 
     if (user.is_verified) {
