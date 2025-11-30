@@ -5,6 +5,10 @@ Description: |
   Services include CloudFront for CDN, S3 for object storage, and a Service role for access. 
   Specifically designed for prod environment.
 
+  Some changes in this file are manually updated in the prod. As the incremental changes 
+  trigger delete and replace, however if you are creating resources for the first time using
+  this template then everthing should work fine.
+
 Parameters:
   EncodedRSAPublicKey:
     Type: String
