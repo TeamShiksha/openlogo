@@ -72,6 +72,7 @@ const Messages = {
   LOGO_NOT_FOUND: "Logo not found.",
   FETCH_ALL_MESSAGE: "Fetched all contact us messages.",
   MESSAGE_NOT_FOUND: "Message not found.",
+  IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
   INCORRECT_PASSWORD: "Current password is incorrect",
@@ -90,9 +91,15 @@ const Messages = {
   LOGO_REQUEST_CREATED: "Logo request created successfully",
   USER_ALREADY_HAS_PENDING: "You already have a pending request.",
   COMPANY_URL_ALREADY_PENDING: "This company url is already under review.",
+  TRY_AGAIN: "Try again after 24 hours.",
+  FAILED_UPDATE_TOKEN: "Failed to update token.",
+  RESEND_EMAIL: "Resent a new Verification Email.",
+  RESEND_EMAIL_FAILED: "Failed to resend verification email.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
+
+const CLOUD_FRONT_REGION = "us-east-1";
 
 const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
@@ -107,5 +114,6 @@ module.exports = {
   DefaultSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
+  CLOUD_FRONT_REGION,
   getIsProduction,
 };

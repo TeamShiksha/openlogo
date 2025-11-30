@@ -5,6 +5,10 @@ Description: |
   Services include CloudFront for CDN, S3 for object storage, and a Service role for access. 
   Specifically designed for prod environment.
 
+  Some changes in this file are manually updated in the prod. As the incremental changes 
+  trigger delete and replace, however if you are creating resources for the first time using
+  this template then everthing should work fine.
+
 Parameters:
   EncodedRSAPublicKey:
     Type: String
@@ -14,7 +18,11 @@ Parameters:
       Refer to https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html for guidance.
     Description: |
       The public key is employed to verify the signed URL generated with the private key.
-
+  AllowedOriginInS3:
+    Type: String
+    Default: https://www.openlogo.fyi
+    Description: |
+      The allowed origin for the S3 bucket
   CDNPathInS3:
     Type: String
     Default: path/to/object
@@ -30,7 +38,14 @@ Resources:
     Properties:
       BucketName: !Sub teamshiksha-openlogo-prod-${AWS::AccountId}-${AWS::Region}
       AccessControl: Private
-
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - !Sub ${AllowedOriginInS3}
+            AllowedMethods:
+              - PUT
+            AllowedHeaders:
+              - "*"
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     DeletionPolicy: Retain
@@ -163,6 +178,12 @@ Resources:
             Resource: !Sub ${S3bucket.Arn}/${CDNPathInS3}/*
             Action:
               - "s3:Put*"
+          - Effect: Allow
+            Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontCDN}
+            Action:
+              - "cloudfront:CreateInvalidation"
+              - "cloudfront:GetInvalidation"
+              - "cloudfront:ListInvalidations"
       Users:
         - !Ref IAMUser
 

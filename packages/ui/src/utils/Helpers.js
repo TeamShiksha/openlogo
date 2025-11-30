@@ -97,7 +97,7 @@ export const isValidDescription = (description) => {
 export const formatDate = (dateString) => {
   const date = dateString ? new Date(dateString) : new Date();
   return date.toLocaleDateString("en-us", {
-    month: "long",
+    month: "short",
     day: "numeric",
     year: "numeric",
   });

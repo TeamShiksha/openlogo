@@ -29,11 +29,18 @@ function SettingCard({ isGuest }) {
     },
   });
 
+  const { fetchRequest: downloadRequest, errorMsg: downloadError } = useApi();
+
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     if (errorMsg) toast.error(errorMsg);
   }, [errorMsg, toast]);
+
+  useEffect(() => {
+    if (downloadError) toast.error(downloadError);
+  }, [downloadError, toast]);
 
   const handleDeleteConfirmation = () => {
     setShowConfirmationModal(true);
@@ -57,9 +64,48 @@ function SettingCard({ isGuest }) {
       setIsDeleting(false);
     }
   };
+
+  const handleDownloadData = async () => {
+    setIsDownloading(true);
+    try {
+      const { success, data, error } = await downloadRequest({
+        url: "/user/download",
+        method: "GET",
+        responseType: "blob",
+      });
+
+      if (success && data) {
+        const blob = new Blob([data], { type: "application/json" });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.setAttribute(
+          "download",
+          `openlogo_data_${userData?.userId || "export"}.json`
+        );
+        document.body.appendChild(link);
+        link.click();
+
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } else {
+        toast.error(error || "Failed to download data.");
+      }
+    } catch (err) {
+      toast.error("An unexpected error occured during download");
+      console.log("Download error:", err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handleActionItem = (action) => {
     if (action === "delete") {
       handleDeleteConfirmation();
+    } else if (action === "download") {
+      handleDownloadData();
     }
   };
 
@@ -82,11 +128,13 @@ function SettingCard({ isGuest }) {
             }
             className={styles["action-button"]}
             disabled={
-              setting.buttontitle.toLowerCase().includes("download") || isGuest
+              isGuest || (setting.action === "download" && isDownloading)
             }
             onClick={() => handleActionItem(setting.action)}
           >
-            {setting.buttontitle}
+            {setting.action === "download" && isDownloading
+              ? "Downloading..."
+              : setting.buttontitle}
           </Button>
         </div>
       ))}

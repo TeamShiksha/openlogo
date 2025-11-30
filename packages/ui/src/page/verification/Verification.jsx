@@ -13,8 +13,10 @@ const Verification = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [title, setTitle] = useState(VERIFICATION.title);
   const [message, setMessage] = useState(VERIFICATION.message);
+  const [verifyData, setVerifyData] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
 
-  const { makeRequest, data, errorMsg } = useApi({
+  const { fetchRequest, errorMsg } = useApi({
     method: "get",
     url: `/auth/verify/${token}`,
   });
@@ -23,21 +25,35 @@ const Verification = () => {
     if (!token || hasVerified.current) return;
     hasVerified.current = true;
 
-    await makeRequest();
-  }, [token, makeRequest]);
+    const { data, success } = await fetchRequest();
+    setVerifyData(data);
+    setIsVerified(success);
+  }, [token, fetchRequest]);
 
   useEffect(() => {
     performVerification();
   }, [performVerification]);
 
   useEffect(() => {
-    if (data) {
-      setIsLoading(false);
-      setTitle("Verified");
-      setMessage(data?.message);
-      setTimeout(() => navigate("/"), 3000);
+    if (!verifyData) return;
+
+    setIsLoading(false);
+
+    if (isVerified) {
+      if (!verifyData.source) {
+        setTitle("Verified");
+        setMessage("Your email has been verified.");
+        setTimeout(() => navigate("/"), 3000);
+      } else if (
+        verifyData.statusCode === 201 &&
+        verifyData.source === "resendEmail"
+      ) {
+        setTitle("Verification Pending");
+        setMessage("Verification email sent. \nPlease verify your account.");
+        setTimeout(() => navigate("/"), 6000);
+      }
     }
-  }, [data, navigate]);
+  }, [verifyData, isVerified, navigate]);
 
   useEffect(() => {
     if (errorMsg) {

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, it, describe, vi } from "vitest";
 import OperatorCard from "../../src/components/operatorcard/OperatorCard";
 import { MOCK_OPERATOR_CARD_DATA } from "../../src/utils/Constants";
+import { formatDate } from "../../src/utils/Helpers";
 
 const onRespondClick = vi.fn();
 
@@ -21,7 +22,7 @@ describe("OperatorCard Component", () => {
     const status = screen.getByText(MOCK_OPERATOR_CARD_DATA.status);
     expect(status).toBeInTheDocument();
     const openedDate = screen.getByText(
-      new Date(MOCK_OPERATOR_CARD_DATA.openedAt).toLocaleDateString()
+      formatDate(MOCK_OPERATOR_CARD_DATA.openedAt)
     );
     expect(openedDate).toBeInTheDocument();
   });
@@ -36,7 +37,7 @@ describe("OperatorCard Component", () => {
       />
     );
     const closedDate = screen.getByText(
-      `- ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+      `- ${formatDate(MOCK_OPERATOR_CARD_DATA.closedAt)}`
     );
     expect(closedDate).toBeInTheDocument();
 
@@ -49,7 +50,7 @@ describe("OperatorCard Component", () => {
       />
     );
     const closedDates = screen.getAllByText(
-      `- ${new Date(MOCK_OPERATOR_CARD_DATA.closedAt).toLocaleDateString()}`
+      `- ${formatDate(MOCK_OPERATOR_CARD_DATA.closedAt)}`
     );
     expect(closedDates.length).toBe(2);
   });

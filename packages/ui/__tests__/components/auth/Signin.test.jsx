@@ -17,10 +17,12 @@ vi.mock("react-router-dom", async () => ({
   useNavigate: () => mockNavigate,
 }));
 
+const mockedFetchRequest = vi.fn();
 const mockedMakeRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
   useApi: () => ({
     makeRequest: mockedMakeRequest,
+    fetchRequest: mockedFetchRequest,
     errorMsg: "Incorrect email or password.",
   }),
 }));
@@ -97,7 +99,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   it("connectivity test passed", async () => {
     const authContext = mockAuthContext(false);
     const oncloseMock = vi.fn();
-    mockedMakeRequest.mockResolvedValue(true);
+    mockedFetchRequest.mockResolvedValue({
+      success: true,
+      data: { statusCode: 200 },
+      error: null,
+    });
 
     render(
       <BrowserRouter>
@@ -119,7 +125,7 @@ describe("SignInForm UI and Functionality Tests", () => {
     fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.signIn }));
 
     await waitFor(() => {
-      expect(mockedMakeRequest).toHaveBeenCalled();
+      expect(mockedFetchRequest).toHaveBeenCalled();
     });
 
     expect(oncloseMock).toHaveBeenCalled();
@@ -128,8 +134,12 @@ describe("SignInForm UI and Functionality Tests", () => {
 
   it("connectivity test failed", async () => {
     const authContext = mockAuthContext(false);
-    mockedMakeRequest.mockResolvedValue(false);
     const errorMsg = "Incorrect email or password.";
+    mockedFetchRequest.mockResolvedValue({
+      success: false,
+      data: null,
+      error: errorMsg,
+    });
 
     render(
       <BrowserRouter>
@@ -151,7 +161,7 @@ describe("SignInForm UI and Functionality Tests", () => {
     fireEvent.click(screen.getByRole("button", { name: BUTTON_TEXT.signIn }));
 
     await waitFor(() => {
-      expect(mockedMakeRequest).toHaveBeenCalled();
+      expect(mockedFetchRequest).toHaveBeenCalled();
     });
 
     const errorMsgText = screen.getAllByText(errorMsg);
@@ -159,12 +169,22 @@ describe("SignInForm UI and Functionality Tests", () => {
   });
 
   const delayedResolve = () =>
-    new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+    new Promise((resolve) =>
+      setTimeout(
+        () =>
+          resolve({
+            success: true,
+            data: { statusCode: 200 },
+            error: null,
+          }),
+        1000
+      )
+    );
   let authContext;
 
   beforeEach(() => {
     authContext = mockAuthContext(false);
-    mockedMakeRequest.mockImplementation(delayedResolve);
+    mockedFetchRequest.mockImplementation(delayedResolve);
   });
 
   it("disables input fields and submit button when loading", async () => {

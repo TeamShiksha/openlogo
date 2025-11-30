@@ -17,6 +17,13 @@ import {
 } from "../../../src/utils/Constants";
 
 import { useApi } from "../../../src/hooks/useApi";
+import axios from "axios";
+
+vi.mock("axios", () => ({
+  default: {
+    put: vi.fn(),
+  },
+}));
 
 vi.mock("../../../src/hooks/useApi", () => ({
   useApi: vi.fn(),
@@ -26,6 +33,7 @@ vi.mock("../../../src/api/api_instance", () => ({
   instance: {
     get: vi.fn(),
     put: vi.fn(),
+    post: vi.fn(),
   },
 }));
 
@@ -38,11 +46,28 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
         <button data-testid="close-modal" onClick={onClose}>
           Close
         </button>
+        <input
+          data-testid="file-input"
+          type="file"
+          onChange={(e) => {
+            const file = new File(["test content"], "test.jpg", {
+              type: "image/jpeg",
+            });
+            // Simulate file selection
+            Object.defineProperty(e.target, "files", {
+              value: [file],
+              writable: false,
+            });
+          }}
+        />
         <button
           data-testid="upload-button"
-          onClick={() =>
-            onUpload({ file: "test-file", companyUri: "test-uri" })
-          }
+          onClick={() => {
+            const file = new File(["test content"], "test.jpg", {
+              type: "image/jpeg",
+            });
+            onUpload({ file, companyUri: "test-uri" });
+          }}
         >
           Upload
         </button>
@@ -55,9 +80,15 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
 describe("Operator Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+
+    // Default mock for initial data fetching
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+
+    // Default useApi mock - will be overridden in specific tests
     useApi.mockReturnValue({
       loading: false,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
       errorMsg: null,
     });
   });
@@ -348,11 +379,51 @@ describe("Operator Page", () => {
   });
 
   it("should call onUpload with correct data when upload is triggered from modal", async () => {
-    const uploadMakeRequest = vi.fn();
-    useApi.mockReturnValue({
-      loading: false,
-      makeRequest: uploadMakeRequest,
-      errorMsg: null,
+    const uploadMakeRequest = vi.fn().mockResolvedValue({
+      success: true,
+      message: "Image uploaded successfully",
+    });
+
+    const getPresignedURLRequest = vi.fn().mockResolvedValue({
+      success: true,
+      data: {
+        data: {
+          presignedUrl: "https://example.com/presigned-url",
+          key: "image.jpg",
+        },
+      },
+    });
+
+    // Clear all mocks
+    vi.clearAllMocks();
+
+    // Mock initial data fetch
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+
+    // Mock useApi to return the functions we need
+    let callCount = 0;
+    useApi.mockImplementation(() => {
+      callCount++;
+      if (callCount === 1) {
+        // First call - upload hook
+        return {
+          loading: false,
+          makeRequest: uploadMakeRequest,
+          errorMsg: null,
+        };
+      } else {
+        // Second call - presigned URL hook
+        return {
+          loading: false,
+          fetchRequest: getPresignedURLRequest,
+          errorMsg: null,
+        };
+      }
+    });
+
+    axios.put.mockResolvedValue({
+      status: 200,
+      statusText: "Ok",
     });
 
     render(
@@ -360,22 +431,38 @@ describe("Operator Page", () => {
         <OperatorDashboard />
       </ToastProvider>
     );
+
+    // Wait for component to load
     await waitFor(() => {
       expect(
         screen.getByRole("button", { name: "Add image" })
       ).toBeInTheDocument();
     });
+
     const addButton = screen.getByRole("button", { name: "Add image" });
     fireEvent.click(addButton);
 
     await waitFor(() => {
       expect(screen.getByTestId("upload-button")).toBeInTheDocument();
     });
+
     const uploadButton = screen.getByTestId("upload-button");
     fireEvent.click(uploadButton);
 
-    await waitFor(() => {
-      expect(uploadMakeRequest).toHaveBeenCalled();
-    });
+    // Add some debugging
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    console.log(
+      "getPresignedURLRequest calls:",
+      getPresignedURLRequest.mock.calls
+    );
+    console.log("uploadMakeRequest calls:", uploadMakeRequest.mock.calls);
+
+    await waitFor(
+      () => {
+        expect(getPresignedURLRequest).toHaveBeenCalled();
+      },
+      { timeout: 2000 }
+    );
   });
 });

@@ -5,6 +5,7 @@ const {
   RequestService,
   SubscriptionService,
   ContactUsService,
+  ImageService,
 } = require("../../../services");
 const app = require("../../../server");
 const jwt = require("jsonwebtoken");
@@ -56,6 +57,10 @@ describe("GET /api/catalog/stats", () => {
     jest
       .spyOn(ContactUsService.prototype, "getFormsCount")
       .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[3].value);
+
+    jest
+      .spyOn(ImageService.prototype, "getImagesCount")
+      .mockResolvedValue(MOCK_ANALYTICS_DATA_INPUT[5].value);
 
     const response = await request(app)
       .get("/api/catalog/stats")

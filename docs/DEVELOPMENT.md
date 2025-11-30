@@ -3,8 +3,6 @@
 - [Prerequisites](#prerequisites)
 - [Clone and run the project locally](#clone-and-run-the-project-locally)
 - [Environment variables](#environment-variables)
-- [Running latest code using docker](#running-latest-code-using-docker)
-- [Running with Docker Compose (including MongoDB)](#running-with-docker-compose-including-mongodb)
 - [Postman API Collection](#postman-api-collection)
 - [Collections Uses](#collections-uses)
 - [API Endpoints Documentation](#api-endpoints-documentation)
@@ -28,7 +26,11 @@
 Most of the environment variables can be used by copying them from the `.env.example` file. However, if you are trying to run the business APIs locally, you will need some additional environment variables associated with AWS.
 
 - Create a stack using `cloudformation_dev_test.yml` file given inside `app/aws` directory.
-- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html).
+- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/       private-content-trusted-signers.html).
+- While creating or updating a stack make sure for `AllowedOriginInS3` parameter select is `http://localhost:8080` to avoid CORS error for S3 in your local development environment.
+
+  **NOTE**: Remember to revert it back to the stage URL before committing or deploying.
+
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
    - `BUCKET_NAME`
    - `BUCKET_REGION`
@@ -39,44 +41,8 @@ Most of the environment variables can be used by copying them from the `.env.exa
    - `SECRET_ACCESS_KEY`
 
     **NOTE**: These values will be comma seperated.
+    **NOTE**: Some changes in this file are manually updated in the prod. As the incremental changes trigger delete and replace, however if you are creating resources for the first time using this template then everthing should work fine.
 
-## Running latest code using docker
-
-On every merge we pushed the latest code to docker hub.
-- [Stage](https://hub.docker.com/u/aps08dev)
-- [Prod](https://hub.docker.com/u/aps08)
-
-This is to allow users run the latest code quickly just by supplying the environment variables from `.env` file. You can run the latest published frontend and backend Docker images with your own environment variables:
-- Pull the images
-```sh
-docker pull aps08dev/openlogo-backend:latest
-docker pull aps08dev/openlogo-frontend:latest
-```
-- Run the backend container (port 5000)
-```sh
-docker run --env-file .env -p 5000:5000 aps08dev/openlogo-backend:latest
-```
-- Run the frontend container (port 3000)
-```sh
-docker run --env-file ./frontend.env -p 3000:3000 aps08dev/openlogo-frontend:latest
-```
-Make sure your .env files contain all required environment variables for each service and the `.env` is in the current directory.
-
-## Running with Docker Compose (including MongoDB)
-
-For local development, you can use Docker Compose to run the backend, frontend, and MongoDB together. `docker-compose.yml` is provided in the repository.
-
-This will start:
-- MongoDB (default port 27017)
-- Backend (default port 5000)
-- Frontend (default port 8080)
-
-You can customize ports and environment variables in the `docker-compose.yml` and `.env` files as needed.
-
-To stop the services, press `Ctrl+C` and run:
-```sh
-docker compose down
-```
 ## Hostname mapping
 To ensure parity with production and staging environment it is better to have hostname mapping.
 
@@ -89,6 +55,11 @@ For windows, modify `\etc\hosts` file located inside `System32\drivers` folder a
 ```sh
 127.0.0.1  local.openlogo.fyi
 ```
+
+## Deployment flow 
+![Deployment flow](./images/deployment_flow.png)
+- [deploy-frontend.yaml](../../.github/workflows/deploy-frontend.yaml)
+- [deploy-backend.yaml](../../.github/workflows/deploy-backend.yaml)
 
 ## Postman API Collection
 
@@ -2015,5 +1986,6 @@ class Success200 success
 
 ```
 </details>
+
 
 </details>

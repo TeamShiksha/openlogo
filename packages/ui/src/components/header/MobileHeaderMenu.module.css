@@ -33,6 +33,7 @@
   color: var(--primary);
   transition: all 0.3s ease-in-out;
 }
+
 .active {
   color: var(--primary);
   text-decoration: underline;
@@ -41,11 +42,24 @@
   text-underline-offset: 6px;
 }
 
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--description);
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
 @keyframes slideInFromBottom {
   0% {
     transform: translateY(100%);
     opacity: 0;
   }
+
   100% {
     transform: translateX(0);
     opacity: 1;

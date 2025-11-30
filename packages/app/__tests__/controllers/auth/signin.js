@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserService } = require("../../../services");
+const { UserService, UserTokenService } = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
@@ -8,9 +8,13 @@ const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
+const sendEmail = require("../../../utils/sendEmail");
+const dayjs = require("dayjs");
+jest.mock("../../../utils/sendEmail");
 
 describe("SIGNIN API", () => {
   beforeAll(() => {
+    sendEmail.mockResolvedValue(true);
     process.env.JWT_SECRET = "jwtsecret";
   });
 
@@ -59,25 +63,64 @@ describe("SIGNIN API", () => {
     });
   });
 
-  it("403 - Email not verified", async () => {
+  it("201 - Email is not verified and sending verification email succeeds", async () => {
     const user = {
       ...MOCK_USERS[0],
       is_verified: false,
+      resend_email_count: 0,
+      last_verification_email_sent_at: dayjs().subtract(25, "hour").toDate(),
       matchPassword: jest.fn().mockResolvedValue(true),
       generateJWT: jest.fn().mockReturnValue("jwt-token"),
     };
 
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(UserTokenService.prototype, "resendVerificationEmail")
+      .mockResolvedValue({
+        success: true,
+        message: Messages.RESEND_EMAIL,
+      });
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)
       .send({ email: user.email, password: dummyPassword });
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(201);
     expect(response.body).toEqual({
-      error: STATUS_CODES[403],
-      message: Messages.EMAIL_NOT_VERIFIED,
-      statusCode: 403,
+      message: Messages.RESEND_EMAIL,
+      statusCode: 201,
+      source: "resendEmail",
+    });
+  });
+
+  it("429 - Email is not verified and sending verification email fails due to rate limiting", async () => {
+    const user = {
+      ...MOCK_USERS[0],
+      is_verified: false,
+      is_deleted: false,
+      resend_email_count: 3,
+      last_verification_email_sent_at: dayjs().subtract(1, "hour").toDate(),
+      matchPassword: jest.fn().mockResolvedValue(true),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+
+    const rateLimitError = new Error(Messages.TRY_AGAIN);
+    rateLimitError.statusCode = 429;
+
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(UserTokenService.prototype, "resendVerificationEmail")
+      .mockRejectedValue(rateLimitError);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNIN)
+      .send({ email: user.email, password: dummyPassword });
+
+    expect(response.status).toBe(429);
+    expect(response.body).toEqual({
+      message: Messages.TRY_AGAIN,
+      statusCode: 429,
+      source: "resendEmail",
     });
   });
 
