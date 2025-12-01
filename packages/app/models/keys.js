@@ -25,6 +25,10 @@ const keySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "subscriptions",
   },
+  expires_at: {
+    type: Date,
+    required: true,
+  },
 });
 
 keySchema.methods.matchKey = async function (key) {
