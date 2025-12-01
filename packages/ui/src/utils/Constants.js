@@ -614,7 +614,7 @@ export const DOCUMENTATION = {
   ],
   localUrl: "Base URL: http://localhost:5000/api",
   baseStageUrl: "Base URL: https://api-stage.openlogo.fyi/api",
-  baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
+  baseProdUrl: "Base URL: https://api.openlogo.fyi/api",
 };
 
 export const API_KEY_TABLE = {
