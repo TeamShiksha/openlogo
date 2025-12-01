@@ -5,10 +5,10 @@ const Subscriptions = require("./subscriptions");
 const UserToken = require("./usertoken");
 const Users = require("./users");
 const Request = require("./request");
-const ApiRequest = require("./api_request");
+const LogoRequestLogs = require("./logo-request-logs");
 
 module.exports = {
-  ApiRequest,
+  LogoRequestLogs,
   ContactUs,
   Images,
   Keys,

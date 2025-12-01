@@ -2010,9 +2010,9 @@ class Success200 success
 <details>
 <summary>API_REQUEST</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/api-request/stats` | GET | True | Fetch API request statistics for the authenticated user |
+| URL                    | Method | Auth Required | Description |
+|------------------------|--------|---------------|-------------|
+| `/logo-requests/stats` | GET | True | Fetch API request statistics for the authenticated user |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -2053,8 +2053,8 @@ class Success200 success
 
 ```mermaid
 flowchart TD
-%% API Flow: GET /api-request/stats
-Start[GET /api-request/stats<br/>Query: period] --> Auth{Authorized?}
+%% API Flow: GET /logo-requests/stats
+Start[GET /logo-requests/stats<br/>Query: period] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]

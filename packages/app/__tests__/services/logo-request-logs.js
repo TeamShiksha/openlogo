@@ -1,5 +1,5 @@
-const ApiRequestService = require("../../services/api_request");
-const { ApiRequestRepository } = require("../../repositories");
+const LogoRequestLogsService = require("../../services/logo-request-logs");
+const { LogoRequestLogsRepository } = require("../../repositories");
 const {
   MOCK_API_REQUESTS,
   MOCK_USERS,
@@ -9,11 +9,11 @@ const {
   MOCK_MONTHLY_STATS,
 } = require("../../utils/mocks");
 
-describe("ApiRequest Service", () => {
-  let apiRequestService;
+describe("Logo Request Logs Service", () => {
+  let logoRequestLogsService;
 
   beforeEach(() => {
-    apiRequestService = new ApiRequestService();
+    logoRequestLogsService = new LogoRequestLogsService();
     jest.clearAllMocks();
   });
 
@@ -34,17 +34,17 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "create")
+        .spyOn(LogoRequestLogsRepository.prototype, "create")
         .mockResolvedValue(mockCreatedRequest);
 
-      const result = await apiRequestService.createEntry(requestData);
+      const result = await logoRequestLogsService.createEntry(requestData);
 
       expect(result).toBeDefined();
       expect(result.user_id).toBe(requestData.user_id);
       expect(result.key_id).toBe(requestData.key_id);
       expect(result.image_id).toBe(requestData.image_id);
       expect(result.response_size_bytes).toBe(1024);
-      expect(ApiRequestRepository.prototype.create).toHaveBeenCalledWith({
+      expect(LogoRequestLogsRepository.prototype.create).toHaveBeenCalledWith({
         user_id: requestData.user_id,
         key_id: requestData.key_id,
         image_id: requestData.image_id,
@@ -68,14 +68,14 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "create")
+        .spyOn(LogoRequestLogsRepository.prototype, "create")
         .mockResolvedValue(mockCreatedRequest);
 
-      const result = await apiRequestService.createEntry(requestData);
+      const result = await logoRequestLogsService.createEntry(requestData);
 
       expect(result).toBeDefined();
       expect(result.response_size_bytes).toBe(0);
-      expect(ApiRequestRepository.prototype.create).toHaveBeenCalledWith({
+      expect(LogoRequestLogsRepository.prototype.create).toHaveBeenCalledWith({
         user_id: requestData.user_id,
         key_id: requestData.key_id,
         image_id: requestData.image_id,
@@ -99,10 +99,10 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "create")
+        .spyOn(LogoRequestLogsRepository.prototype, "create")
         .mockResolvedValue(mockCreatedRequest);
 
-      const result = await apiRequestService.createEntry(requestData);
+      const result = await logoRequestLogsService.createEntry(requestData);
 
       expect(result).toBeDefined();
       expect(result.response_size_bytes).toBe(0);
@@ -117,12 +117,12 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "create")
+        .spyOn(LogoRequestLogsRepository.prototype, "create")
         .mockRejectedValue(new Error("Database error"));
 
-      await expect(apiRequestService.createEntry(requestData)).rejects.toThrow(
-        "Database error"
-      );
+      await expect(
+        logoRequestLogsService.createEntry(requestData)
+      ).rejects.toThrow("Database error");
     });
   });
 
@@ -131,10 +131,10 @@ describe("ApiRequest Service", () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentWeekData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentWeekData")
         .mockResolvedValue(MOCK_WEEKLY_STATS);
 
-      const result = await apiRequestService.getWeeklyStats(userId);
+      const result = await logoRequestLogsService.getWeeklyStats(userId);
 
       expect(result).toBeDefined();
       expect(result.period).toBe("week");
@@ -146,7 +146,7 @@ describe("ApiRequest Service", () => {
       expect(result.data).toBeInstanceOf(Array);
       expect(result.data.length).toBeGreaterThan(0);
       expect(
-        ApiRequestRepository.prototype.getCurrentWeekData
+        LogoRequestLogsRepository.prototype.getCurrentWeekData
       ).toHaveBeenCalledWith(userId);
     });
 
@@ -164,10 +164,10 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentWeekData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentWeekData")
         .mockResolvedValue(emptyStats);
 
-      const result = await apiRequestService.getWeeklyStats(userId);
+      const result = await logoRequestLogsService.getWeeklyStats(userId);
 
       expect(result).toBeDefined();
       expect(result.summary.totalCount).toBe(0);
@@ -178,12 +178,12 @@ describe("ApiRequest Service", () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentWeekData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentWeekData")
         .mockRejectedValue(new Error("Database connection failed"));
 
-      await expect(apiRequestService.getWeeklyStats(userId)).rejects.toThrow(
-        "Database connection failed"
-      );
+      await expect(
+        logoRequestLogsService.getWeeklyStats(userId)
+      ).rejects.toThrow("Database connection failed");
     });
   });
 
@@ -192,10 +192,10 @@ describe("ApiRequest Service", () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentMonthData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentMonthData")
         .mockResolvedValue(MOCK_MONTHLY_STATS);
 
-      const result = await apiRequestService.getMonthlyStats(userId);
+      const result = await logoRequestLogsService.getMonthlyStats(userId);
 
       expect(result).toBeDefined();
       expect(result.period).toBe("month");
@@ -207,7 +207,7 @@ describe("ApiRequest Service", () => {
       expect(result.data).toBeInstanceOf(Array);
       expect(result.data.length).toBeGreaterThan(0);
       expect(
-        ApiRequestRepository.prototype.getCurrentMonthData
+        LogoRequestLogsRepository.prototype.getCurrentMonthData
       ).toHaveBeenCalledWith(userId);
     });
 
@@ -225,10 +225,10 @@ describe("ApiRequest Service", () => {
       };
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentMonthData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentMonthData")
         .mockResolvedValue(emptyStats);
 
-      const result = await apiRequestService.getMonthlyStats(userId);
+      const result = await logoRequestLogsService.getMonthlyStats(userId);
 
       expect(result).toBeDefined();
       expect(result.summary.totalCount).toBe(0);
@@ -239,21 +239,22 @@ describe("ApiRequest Service", () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
-        .spyOn(ApiRequestRepository.prototype, "getCurrentMonthData")
+        .spyOn(LogoRequestLogsRepository.prototype, "getCurrentMonthData")
         .mockRejectedValue(new Error("Aggregation failed"));
 
-      await expect(apiRequestService.getMonthlyStats(userId)).rejects.toThrow(
-        "Aggregation failed"
-      );
+      await expect(
+        logoRequestLogsService.getMonthlyStats(userId)
+      ).rejects.toThrow("Aggregation failed");
     });
   });
 
   describe("service instance", () => {
     it("should create service instance with repository", () => {
-      expect(apiRequestService).toBeDefined();
-      expect(apiRequestService.apiRequestRepository).toBeDefined();
+      expect(logoRequestLogsService).toBeDefined();
+      expect(logoRequestLogsService.LogoRequestLogsRepository).toBeDefined();
       expect(
-        apiRequestService.apiRequestRepository instanceof ApiRequestRepository
+        logoRequestLogsService.LogoRequestLogsRepository instanceof
+          LogoRequestLogsRepository
       ).toBe(true);
     });
   });

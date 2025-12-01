@@ -1,8 +1,8 @@
-const { ApiRequestRepository } = require("../repositories");
+const { LogoRequestLogsRepository } = require("../repositories");
 
-class ApiRequestService {
+class LogoRequestLogsService {
   constructor() {
-    this.apiRequestRepository = new ApiRequestRepository();
+    this.LogoRequestLogsRepository = new LogoRequestLogsRepository();
   }
 
   /**
@@ -21,7 +21,7 @@ class ApiRequestService {
       image_id: requestData.image_id,
       response_size_bytes: requestData.response_size_bytes || 0,
     };
-    return await this.apiRequestRepository.create(newRequest);
+    return await this.LogoRequestLogsRepository.create(newRequest);
   }
 
   /**
@@ -30,7 +30,7 @@ class ApiRequestService {
    * @returns {Promise<Object>} - An object containing weekly statistics
    */
   async getWeeklyStats(userId) {
-    return await this.apiRequestRepository.getCurrentWeekData(userId);
+    return await this.LogoRequestLogsRepository.getCurrentWeekData(userId);
   }
 
   /**
@@ -39,8 +39,8 @@ class ApiRequestService {
    * @returns {Promise<Object>} - An object containing monthly statistics
    */
   async getMonthlyStats(userId) {
-    return await this.apiRequestRepository.getCurrentMonthData(userId);
+    return await this.LogoRequestLogsRepository.getCurrentMonthData(userId);
   }
 }
 
-module.exports = ApiRequestService;
+module.exports = LogoRequestLogsService;

@@ -8,7 +8,7 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
-  ApiRequestService,
+  LogoRequestLogsService,
   UserService,
 } = require("../../../services");
 
@@ -52,7 +52,7 @@ describe("getLogoController", () => {
       .mockResolvedValue(mockSubscription);
 
     jest
-      .spyOn(ApiRequestService.prototype, "createEntry")
+      .spyOn(LogoRequestLogsService.prototype, "createEntry")
       .mockResolvedValue({});
 
     jest
@@ -199,7 +199,7 @@ describe("getLogoController - Operations Order Test", () => {
       .mockResolvedValue({ _id: "test_user_id" });
 
     jest
-      .spyOn(ApiRequestService.prototype, "createEntry")
+      .spyOn(LogoRequestLogsService.prototype, "createEntry")
       .mockResolvedValue({});
 
     jest

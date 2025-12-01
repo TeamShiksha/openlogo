@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const authMiddleware = require("../middlewares/auth");
-const { getApiStatsController } = require("../controllers/api_request");
+const {
+  getLogoRequestStatsController,
+} = require("../controllers/logo-request-logs");
 const { UserType } = require("../utils/constants");
 
 router.get(
@@ -8,7 +10,7 @@ router.get(
   authMiddleware({
     roles: [UserType.ADMIN, UserType.OPERATOR, UserType.CUSTOMER],
   }),
-  getApiStatsController
+  getLogoRequestStatsController
 );
 
 module.exports = router;

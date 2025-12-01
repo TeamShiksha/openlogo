@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const ApiRequestService = require("../../../services/api_request");
+const LogoRequestLogsService = require("../../../services/logo-request-logs");
 const {
   MOCK_USERS,
   MOCK_WEEKLY_STATS,
@@ -10,7 +10,7 @@ const { Users } = require("../../../models");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
-describe("GET API STATS", () => {
+describe("GET LOGO REQUEST STATS", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -26,16 +26,17 @@ describe("GET API STATS", () => {
   });
 
   describe("Weekly Stats", () => {
+    LogoRequestLogsService;
     it("200 - should return weekly stats for authenticated user", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getWeeklyStats")
         .mockResolvedValue(MOCK_WEEKLY_STATS);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week")
+        .get("/api/logo-requests/stats?period=week")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(200);
@@ -43,9 +44,9 @@ describe("GET API STATS", () => {
         statusCode: 200,
         data: MOCK_WEEKLY_STATS,
       });
-      expect(ApiRequestService.prototype.getWeeklyStats).toHaveBeenCalledWith(
-        mockUserModel._id.toString()
-      );
+      expect(
+        LogoRequestLogsService.prototype.getWeeklyStats
+      ).toHaveBeenCalledWith(mockUserModel._id.toString());
     });
 
     it("200 - should return empty weekly stats when user has no requests", async () => {
@@ -64,11 +65,11 @@ describe("GET API STATS", () => {
       };
 
       jest
-        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getWeeklyStats")
         .mockResolvedValue(emptyStats);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week")
+        .get("/api/logo-requests/stats?period=week")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(200);
@@ -83,11 +84,11 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getMonthlyStats")
         .mockResolvedValue(MOCK_MONTHLY_STATS);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=month")
+        .get("/api/logo-requests/stats?period=month")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(200);
@@ -95,9 +96,9 @@ describe("GET API STATS", () => {
         statusCode: 200,
         data: MOCK_MONTHLY_STATS,
       });
-      expect(ApiRequestService.prototype.getMonthlyStats).toHaveBeenCalledWith(
-        mockUserModel._id.toString()
-      );
+      expect(
+        LogoRequestLogsService.prototype.getMonthlyStats
+      ).toHaveBeenCalledWith(mockUserModel._id.toString());
     });
 
     it("200 - should return empty monthly stats when user has no requests", async () => {
@@ -116,11 +117,11 @@ describe("GET API STATS", () => {
       };
 
       jest
-        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getMonthlyStats")
         .mockResolvedValue(emptyStats);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=month")
+        .get("/api/logo-requests/stats?period=month")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(200);
@@ -135,7 +136,7 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       const response = await request(app)
-        .get("/api/api-requests/stats")
+        .get("/api/logo-requests/stats")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(422);
@@ -149,7 +150,7 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=invalid")
+        .get("/api/logo-requests/stats?period=invalid")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(422);
@@ -165,7 +166,7 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=")
+        .get("/api/logo-requests/stats?period=")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(422);
@@ -180,11 +181,11 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getWeeklyStats")
         .mockResolvedValue(null);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week")
+        .get("/api/logo-requests/stats?period=week")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(404);
@@ -200,11 +201,11 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getMonthlyStats")
         .mockResolvedValue(null);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=month")
+        .get("/api/logo-requests/stats?period=month")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(404);
@@ -220,13 +221,13 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getWeeklyStats")
         .mockImplementation(() => {
           throw new Error("Unexpected database error");
         });
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week")
+        .get("/api/logo-requests/stats?period=week")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(500);
@@ -237,13 +238,13 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getMonthlyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getMonthlyStats")
         .mockImplementation(() => {
           throw new Error("Unexpected database error");
         });
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=month")
+        .get("/api/logo-requests/stats?period=month")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(500);
@@ -253,7 +254,7 @@ describe("GET API STATS", () => {
   describe("Authentication", () => {
     it("401 - should return unauthorized when JWT token is missing", async () => {
       const response = await request(app).get(
-        "/api/api-requests/stats?period=week"
+        "/api/logo-requests/stats?period=week"
       );
 
       expect(response.status).toBe(401);
@@ -261,7 +262,7 @@ describe("GET API STATS", () => {
 
     it("500 - should return error when JWT token is invalid", async () => {
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week")
+        .get("/api/logo-requests/stats?period=week")
         .set("Cookie", `jwt=invalid_token`);
 
       expect(response.status).toBe(500);
@@ -274,7 +275,7 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=Week")
+        .get("/api/logo-requests/stats?period=Week")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(422);
@@ -288,11 +289,11 @@ describe("GET API STATS", () => {
       const mockToken = mockUserModel.generateJWT();
 
       jest
-        .spyOn(ApiRequestService.prototype, "getWeeklyStats")
+        .spyOn(LogoRequestLogsService.prototype, "getWeeklyStats")
         .mockResolvedValue(MOCK_WEEKLY_STATS);
 
       const response = await request(app)
-        .get("/api/api-requests/stats?period=week&extra=param")
+        .get("/api/logo-requests/stats?period=week&extra=param")
         .set("Cookie", `jwt=${mockToken}`);
 
       expect(response.status).toBe(200);

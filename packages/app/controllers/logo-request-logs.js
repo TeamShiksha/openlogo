@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const ApiRequestService = require("../services/api_request");
+const LogoRequestLogsService = require("../services/logo-request-logs");
 const { getStatsQuerySchema } = require("../schemas/api_request");
 const { Messages } = require("../utils/constants");
 
@@ -8,9 +8,9 @@ const { Messages } = require("../utils/constants");
  * based on the query parameter 'period' (week or month).
  * It validates the query parameter and returns the corresponding statistics.
  */
-async function getApiStatsController(req, res, next) {
+async function getLogoRequestStatsController(req, res, next) {
   try {
-    const apiRequestService = new ApiRequestService();
+    const logoRequestLogsService = new LogoRequestLogsService();
 
     // Validate query parameters
     const { error } = getStatsQuerySchema.validate(req.query);
@@ -29,9 +29,9 @@ async function getApiStatsController(req, res, next) {
 
     // Get stats based on period
     if (period === "week") {
-      stats = await apiRequestService.getWeeklyStats(userId);
+      stats = await logoRequestLogsService.getWeeklyStats(userId);
     } else if (period === "month") {
-      stats = await apiRequestService.getMonthlyStats(userId);
+      stats = await logoRequestLogsService.getMonthlyStats(userId);
     }
 
     if (!stats) {
@@ -52,5 +52,5 @@ async function getApiStatsController(req, res, next) {
 }
 
 module.exports = {
-  getApiStatsController,
+  getLogoRequestStatsController,
 };

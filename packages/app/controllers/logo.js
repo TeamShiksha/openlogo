@@ -3,7 +3,7 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
-  ApiRequestService,
+  LogoRequestLogsService,
   UserService,
 } = require("../services");
 const {
@@ -22,7 +22,7 @@ async function getLogoController(req, res, next) {
     const imageService = new ImageService();
     const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
-    const apiRequestService = new ApiRequestService();
+    const logoRequestLogsService = new LogoRequestLogsService();
     const userService = new UserService();
     const { error, value } = getLogoQuerySchema.validate(req.query);
     if (error) {
@@ -74,7 +74,7 @@ async function getLogoController(req, res, next) {
         image_id: imageDoc && imageDoc._id,
         response_size_bytes: (imageDoc && imageDoc.image_size) || 0,
       };
-      await apiRequestService.createEntry(requestPayload);
+      await logoRequestLogsService.createEntry(requestPayload);
     } catch (err) {
       // non-fatal: log and continue
       console.error("Failed to create API request entry:", err.message);

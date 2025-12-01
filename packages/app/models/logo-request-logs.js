@@ -1,10 +1,10 @@
 const Schema = require("mongoose").Schema;
 const model = require("mongoose").model;
 /**
- * API Requests Model: Lightweight records for tracking logo API requests over time.
+ * Logo Request Logs Model: Lightweight records for tracking logo requests over time.
  * Kept minimal to enable time-series graphs (createdAt) and basic aggregation.
  */
-const apiRequestSchema = new Schema(
+const logoRequestLogsSchema = new Schema(
   {
     user_id: {
       type: Schema.Types.ObjectId,
@@ -31,8 +31,12 @@ const apiRequestSchema = new Schema(
 );
 
 // Index to make descending sort faster.
-apiRequestSchema.index({ createdAt: -1 });
-apiRequestSchema.index({ user_id: 1 });
+logoRequestLogsSchema.index({ createdAt: -1 });
+logoRequestLogsSchema.index({ user_id: 1 });
 
-const ApiRequest = model("api_request", apiRequestSchema, "api_requests");
-module.exports = ApiRequest;
+const LogoRequestLogs = model(
+  "logo_request_log",
+  logoRequestLogsSchema,
+  "logo_request_logs"
+);
+module.exports = LogoRequestLogs;

@@ -1,17 +1,17 @@
-const { ApiRequest } = require("../models");
+const { LogoRequestLogs } = require("../models");
 const BaseRepository = require("./base");
 const dayjs = require("dayjs");
 const mongoose = require("mongoose");
 
 /**
- * The ApiRequestRepository extends BaseRepository to manage ApiRequest model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
- * It passes the ApiRequest model to the base repository for database interactions.
- *  Custom methods specific to ApiRequest can also be added as needed.
+ * The LogoRequestLogsRepository extends BaseRepository to manage LogoRequestLogs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
+ * It passes the LogoRequestLogs model to the base repository for database interactions.
+ *  Custom methods specific to LogoRequestLogs can also be added as needed.
  */
 
-class ApiRequestRepository extends BaseRepository {
+class LogoRequestLogsRepository extends BaseRepository {
   constructor() {
-    super(ApiRequest);
+    super(LogoRequestLogs);
   }
 
   /**
@@ -156,4 +156,4 @@ class ApiRequestRepository extends BaseRepository {
   }
 }
 
-module.exports = { ApiRequestRepository };
+module.exports = { LogoRequestLogsRepository };

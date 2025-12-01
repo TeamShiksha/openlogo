@@ -5026,12 +5026,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{openlogo_base_url}}/api-requests/stats?period=week",
+							"raw": "{{openlogo_base_url}}/logo-requests/stats?period=week",
 							"host": [
 								"{{openlogo_base_url}}"
 							],
 							"path": [
-								"api-requests",
+								"logo-requests",
 								"stats"
 							],
 							"query": [
@@ -5050,12 +5050,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/api-requests/stats?period=week",
+									"raw": "{{openlogo_base_url}}/logo-requests/stats?period=week",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
 									"path": [
-										"api-requests",
+										"logo-requests",
 										"stats"
 									],
 									"query": [
@@ -5121,12 +5121,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/api-requests/stats?period=month",
+									"raw": "{{openlogo_base_url}}/logo-requests/stats?period=month",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
 									"path": [
-										"api-requests",
+										"logo-requests",
 										"stats"
 									],
 									"query": [
@@ -5192,12 +5192,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{openlogo_base_url}}/api-requests/stats",
+									"raw": "{{openlogo_base_url}}/logo-requests/stats",
 									"host": [
 										"{{openlogo_base_url}}"
 									],
 									"path": [
-										"api-requests",
+										"logo-requests",
 										"stats"
 									],
 									"query": [
