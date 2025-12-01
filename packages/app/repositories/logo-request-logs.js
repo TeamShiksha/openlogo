@@ -15,15 +15,14 @@ class LogoRequestLogsRepository extends BaseRepository {
   }
 
   /**
-   * Get current week data (Sunday to Saturday) for a specific user
+   * Get last 7 days data for a specific user
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
   async getCurrentWeekData(userId) {
     const today = dayjs();
-    const currentDayOfWeek = today.day();
-    const weekStart = today.subtract(currentDayOfWeek, "day").startOf("day");
-    const weekEnd = weekStart.add(6, "day").endOf("day");
+    const weekStart = today.subtract(7, "day").startOf("day");
+    const weekEnd = today.endOf("day");
     const weekStartDate = weekStart.toDate();
     const weekEndDate = weekEnd.toDate();
 
@@ -87,14 +86,16 @@ class LogoRequestLogsRepository extends BaseRepository {
   }
 
   /**
-   * Get current month data for a specific user
+   * Get last 30 days data for a specific user
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
   async getCurrentMonthData(userId) {
     const today = dayjs();
-    const monthStart = today.startOf("month").toDate();
-    const monthEnd = today.endOf("month").toDate();
+    const monthStart = today.subtract(30, "day").startOf("day");
+    const monthEnd = today.endOf("day");
+    const monthStartDate = monthStart.toDate();
+    const monthEndDate = monthEnd.toDate();
 
     const result = await this.model.aggregate([
       {
@@ -106,8 +107,8 @@ class LogoRequestLogsRepository extends BaseRepository {
         $match: {
           user_id: new mongoose.Types.ObjectId(userId),
           createdDate: {
-            $gte: monthStart,
-            $lte: monthEnd,
+            $gte: monthStartDate,
+            $lte: monthEndDate,
           },
         },
       },

@@ -27,7 +27,7 @@ describe("GET LOGO REQUEST STATS", () => {
 
   describe("Weekly Stats", () => {
     LogoRequestLogsService;
-    it("200 - should return weekly stats for authenticated user", async () => {
+    it("200 - should return last 7 days stats for authenticated user", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
 
@@ -49,14 +49,14 @@ describe("GET LOGO REQUEST STATS", () => {
       ).toHaveBeenCalledWith(mockUserModel._id.toString());
     });
 
-    it("200 - should return empty weekly stats when user has no requests", async () => {
+    it("200 - should return empty stats when user has no requests in last 7 days", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
 
       const emptyStats = {
         period: "week",
-        startDate: "2025-11-16",
-        endDate: "2025-11-22",
+        startDate: "2025-11-24",
+        endDate: "2025-12-01",
         summary: {
           totalCount: 0,
           totalKB: "0.00",
@@ -79,7 +79,7 @@ describe("GET LOGO REQUEST STATS", () => {
   });
 
   describe("Monthly Stats", () => {
-    it("200 - should return monthly stats for authenticated user", async () => {
+    it("200 - should return last 30 days stats for authenticated user", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
 
@@ -101,14 +101,14 @@ describe("GET LOGO REQUEST STATS", () => {
       ).toHaveBeenCalledWith(mockUserModel._id.toString());
     });
 
-    it("200 - should return empty monthly stats when user has no requests", async () => {
+    it("200 - should return empty stats when user has no requests in last 30 days", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
 
       const emptyStats = {
         period: "month",
         startDate: "2025-11-01",
-        endDate: "2025-11-30",
+        endDate: "2025-12-01",
         summary: {
           totalCount: 0,
           totalKB: "0.00",

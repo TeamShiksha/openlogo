@@ -397,26 +397,26 @@ const MOCK_API_REQUESTS = [
 
 const MOCK_WEEKLY_STATS = {
   period: "week",
-  startDate: "2025-11-16",
-  endDate: "2025-11-22",
+  startDate: "2025-11-24",
+  endDate: "2025-12-01",
   summary: {
     totalCount: 15,
     totalKB: "45.50",
   },
   data: [
-    { date: "2025-11-16", count: 2, totalKB: 5.25 },
-    { date: "2025-11-17", count: 3, totalKB: 8.75 },
-    { date: "2025-11-18", count: 4, totalKB: 12.0 },
-    { date: "2025-11-19", count: 2, totalKB: 6.5 },
-    { date: "2025-11-20", count: 3, totalKB: 9.0 },
-    { date: "2025-11-21", count: 1, totalKB: 4.0 },
+    { date: "2025-11-24", count: 2, totalKB: 5.25 },
+    { date: "2025-11-25", count: 3, totalKB: 8.75 },
+    { date: "2025-11-26", count: 4, totalKB: 12.0 },
+    { date: "2025-11-27", count: 2, totalKB: 6.5 },
+    { date: "2025-11-28", count: 3, totalKB: 9.0 },
+    { date: "2025-11-29", count: 1, totalKB: 4.0 },
   ],
 };
 
 const MOCK_MONTHLY_STATS = {
   period: "month",
   startDate: "2025-11-01",
-  endDate: "2025-11-30",
+  endDate: "2025-12-01",
   summary: {
     totalCount: 50,
     totalKB: "150.75",

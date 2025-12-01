@@ -127,7 +127,7 @@ describe("Logo Request Logs Service", () => {
   });
 
   describe("getWeeklyStats", () => {
-    it("should return weekly stats for a valid user", async () => {
+    it("should return last 7 days stats for a valid user", async () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
@@ -150,12 +150,12 @@ describe("Logo Request Logs Service", () => {
       ).toHaveBeenCalledWith(userId);
     });
 
-    it("should return empty stats when user has no requests in current week", async () => {
+    it("should return empty stats when user has no requests in last 7 days", async () => {
       const userId = MOCK_USERS[1]._id.toString();
       const emptyStats = {
         period: "week",
-        startDate: "2025-11-16",
-        endDate: "2025-11-22",
+        startDate: "2025-11-24",
+        endDate: "2025-12-01",
         summary: {
           totalCount: 0,
           totalKB: "0.00",
@@ -188,7 +188,7 @@ describe("Logo Request Logs Service", () => {
   });
 
   describe("getMonthlyStats", () => {
-    it("should return monthly stats for a valid user", async () => {
+    it("should return last 30 days stats for a valid user", async () => {
       const userId = MOCK_USERS[0]._id.toString();
 
       jest
@@ -211,12 +211,12 @@ describe("Logo Request Logs Service", () => {
       ).toHaveBeenCalledWith(userId);
     });
 
-    it("should return empty stats when user has no requests in current month", async () => {
+    it("should return empty stats when user has no requests in last 30 days", async () => {
       const userId = MOCK_USERS[2]._id.toString();
       const emptyStats = {
         period: "month",
         startDate: "2025-11-01",
-        endDate: "2025-11-30",
+        endDate: "2025-12-01",
         summary: {
           totalCount: 0,
           totalKB: "0.00",
