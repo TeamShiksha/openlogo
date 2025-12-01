@@ -61,6 +61,21 @@ class KeysRepository extends BaseRepository {
     const keyRef = await Keys.findOne({ api_key: apiKey });
     return keyRef;
   }
+
+  async updateOldKeys(keyIds) {
+    try {
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+      const keysUpdated = await Keys.updateMany(
+        { _id: { $in: keyIds } },
+        { $set: { expires_at: oneYearFromNow } }
+      );
+      return keysUpdated.modifiedCount > 0;
+    } catch (error) {
+      console.error("Error updating old keys:", error);
+      return false;
+    }
+  }
 }
 
 module.exports = KeysRepository;
