@@ -41,6 +41,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
    - `SECRET_ACCESS_KEY`
 
     **NOTE**: These values will be comma seperated.
+    **NOTE**: Some changes in this file are manually updated in the prod. As the incremental changes trigger delete and replace, however if you are creating resources for the first time using this template then everthing should work fine.
 
 ## Hostname mapping
 To ensure parity with production and staging environment it is better to have hostname mapping.
