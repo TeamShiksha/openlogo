@@ -6,7 +6,7 @@ const authRouter = require("./auth");
 const businessRouter = require("./logo");
 const adminRouter = require("./catalog");
 const requestRouter = require("./request");
-const logoRequestLogsRouter = require("./logo-request-logs");
+const logoRequestLogsRouter = require("./logoRequestLogs");
 const { logoLimiter, baseLimiter } = require("../middlewares/rateLimiter");
 
 const privateRouteCORS = {

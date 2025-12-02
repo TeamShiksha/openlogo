@@ -1,4 +1,4 @@
-const LogoRequestLogsService = require("../../services/logo-request-logs");
+const LogoRequestLogsService = require("../../services/logoRequestLogs");
 const { LogoRequestLogsRepository } = require("../../repositories");
 const {
   MOCK_API_REQUESTS,

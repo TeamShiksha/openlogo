@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const LogoRequestLogsService = require("../../../services/logo-request-logs");
+const LogoRequestLogsService = require("../../../services/logoRequestLogs");
 const {
   MOCK_USERS,
   MOCK_WEEKLY_STATS,

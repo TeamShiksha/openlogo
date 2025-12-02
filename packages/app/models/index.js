@@ -5,7 +5,7 @@ const Subscriptions = require("./subscriptions");
 const UserToken = require("./usertoken");
 const Users = require("./users");
 const Request = require("./request");
-const LogoRequestLogs = require("./logo-request-logs");
+const LogoRequestLogs = require("./logoRequestLogs");
 
 module.exports = {
   LogoRequestLogs,

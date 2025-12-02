@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authMiddleware = require("../middlewares/auth");
 const {
   getLogoRequestStatsController,
-} = require("../controllers/logo-request-logs");
+} = require("../controllers/logoRequestLogs");
 const { UserType } = require("../utils/constants");
 
 router.get(

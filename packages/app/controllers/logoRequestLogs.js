@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const LogoRequestLogsService = require("../services/logo-request-logs");
+const LogoRequestLogsService = require("../services/logoRequestLogs");
 const { getStatsQuerySchema } = require("../schemas/api_request");
 const { Messages } = require("../utils/constants");
 

@@ -5,7 +5,7 @@ const SubscriptionsRepository = require("./subscriptions");
 const UserTokenRepository = require("./usertoken");
 const UsersRepository = require("./users");
 const RequestRepository = require("./request");
-const { LogoRequestLogsRepository } = require("./logo-request-logs");
+const { LogoRequestLogsRepository } = require("./logoRequestLogs");
 
 module.exports = {
   ContactUsRepository,
