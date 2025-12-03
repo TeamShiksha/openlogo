@@ -28,11 +28,6 @@ const keySchema = new mongoose.Schema({
   expires_at: {
     type: Date,
     required: true,
-    default: function () {
-      const oneYearFromNow = new Date();
-      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
-      return oneYearFromNow;
-    },
   },
 });
 

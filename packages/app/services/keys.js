@@ -30,8 +30,8 @@ class KeyService {
    * @param {string} keyDescription - The Key Description of the user.
    * @returns {Object} - Newly created Key.
    */
-  async createNewKey(keyDescription) {
-    return await this.keyRepository.create(keyDescription);
+  async createNewKey(keyData) {
+    return await this.keyRepository.create(keyData);
   }
 
   /**
@@ -62,6 +62,23 @@ class KeyService {
   async getApiKey(apiKey) {
     const keyRef = await this.keyRepository.getApiKey(apiKey);
     return keyRef;
+  }
+
+  /**
+   * Find and update keys without expiry field by Id.
+   * @param {string} keyId
+   * @returns {boolean} updated.
+   */
+
+  async findUpdateKeyWithoutExpiry(keyId) {
+    const allKeys = await this.keyRepository.getMultipleKeys(keyId);
+    const keysWithoutExpiry = allKeys.filter((key) => !key.expires_at);
+    if (keysWithoutExpiry.length > 0) {
+      const keyIds = keysWithoutExpiry.map((key) => key._id);
+      const keysUpdated = await this.keyRepository.updateOldKeys(keyIds);
+      return keysUpdated;
+    }
+    return false;
   }
 }
 
