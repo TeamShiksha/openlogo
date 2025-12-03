@@ -175,8 +175,12 @@ async function generateKeyController(req, res, next) {
     const userService = new UserService();
     const subscriptionService = new SubscriptionService();
 
-    const { key_description } = req.body;
-    const { error } = generateKeyPayloadSchema.validate({ key_description });
+    const { key_description, expires_at } = req.body;
+    const { error } = generateKeyPayloadSchema.validate({
+      key_description,
+      expires_at,
+    });
+
     if (error) {
       return res.status(422).json({
         message: error.message,
@@ -210,6 +214,7 @@ async function generateKeyController(req, res, next) {
     const newKey = {
       key_description: req.body.key_description,
       subscription_id: subscription._id,
+      expires_at: expires_at,
     };
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({

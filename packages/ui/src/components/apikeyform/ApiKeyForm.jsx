@@ -21,7 +21,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
-  const [expiresInDays, setExpiresInDays] = useState(365);
+  const [expiresInDays, setExpiresInDays] = useState(0);
   const toast = useToast();
 
   const { makeRequest, data, loading, errorMsg } = useApi({
@@ -29,7 +29,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     url: "/user/api-key",
     data: {
       key_description: description,
-      expires_in_days: expiresInDays,
+      expires_at: expiresInDays,
     },
   });
 
@@ -130,9 +130,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
             <option value={90}>3 months</option>
             <option value={180}>6 months</option>
             <option value={365}>1 year</option>
-            <option value={730}>2 years</option>
-            <option value={3650}>10 years</option>
-            <option value={-1}>Never expire</option>
           </select>
         </div>
         <Modal
