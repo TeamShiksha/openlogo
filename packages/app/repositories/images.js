@@ -1,7 +1,10 @@
 const BaseRepository = require("./base");
 const Image = require("../models/images");
 
-const { cloudFrontSignedURL } = require("../utils/cloudFront");
+const {
+  cloudFrontSignedURL,
+  cloudFrontInvalidate,
+} = require("../utils/cloudFront");
 
 /**
  * The ImageRepository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
@@ -72,6 +75,17 @@ class ImagesRepository extends BaseRepository {
   }
   async getImagesCount() {
     return await Image.countDocuments();
+  }
+
+  /**
+   * Invalidates the CloudFront cache for the specified image path.
+   *
+   * @param {string} imageUrl - The relative path of the image to invalidate.
+   * @returns {Promise<void>} Resolves when the cache invalidation request is completed.
+   */
+  async invalidateCloudFrontCache(imageUrl) {
+    const paths = [`/${imageUrl}`];
+    await cloudFrontInvalidate(paths);
   }
 }
 

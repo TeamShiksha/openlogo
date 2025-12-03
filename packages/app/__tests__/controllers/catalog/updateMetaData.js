@@ -81,6 +81,10 @@ describe("PUT /api/catalog/logo", () => {
       updatedAt: new Date(),
     });
 
+    jest
+      .spyOn(ImageService.prototype, "invalidateCloudFrontCache")
+      .mockResolvedValue(undefined);
+
     const updatePayload = {
       id: MOCK_IMAGES[0]._id.toString(),
       companyUri: "https://example.com/google",

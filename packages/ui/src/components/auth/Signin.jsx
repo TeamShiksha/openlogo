@@ -22,7 +22,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { makeRequest, errorMsg } = useApi({
+  const { fetchRequest, errorMsg } = useApi({
     method: "post",
     url: isForgotPassword ? `/auth/password/forgot` : `/auth/signin`,
     data: isForgotPassword ? { email: formData.email } : formData,
@@ -72,11 +72,13 @@ const SignIn = ({ toggleForm, onClose }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsLoading(true);
-    const success = await makeRequest();
+    const { data, success } = await fetchRequest();
     if (success) {
       if (isForgotPassword) {
         toast.success("Password reset link sent to your email");
         setIsForgotPassword(false);
+      } else if (data.source && data.statusCode == 201) {
+        toast.success("Verification email sent. Please verify your account.");
       } else {
         setFormData(SIGNIN.initialValues);
         setIsAuthenticated(true);

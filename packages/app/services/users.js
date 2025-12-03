@@ -1,12 +1,16 @@
 const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
-const { UsersRepository } = require("../repositories");
+const SubscriptionService = require("../services/subscriptions");
+const { UsersRepository, RequestRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
 
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
     this.keyService = new KeyService();
+
+    this.subscriptionService = new SubscriptionService();
+    this.requestRepository = new RequestRepository();
   }
 
   /**
@@ -16,6 +20,59 @@ class UserService {
    */
   async getUser(userId) {
     return await this.userRepository.getById(userId);
+  }
+
+  /**
+   * Compiles all data for a user download.
+   * @param {string} userId - The user's ID.
+   * @returns {Object|null} - The compiled data object or null if user not found.
+   */
+  async getUserDataForDownload(userId) {
+    const userData = await this.getUser(userId);
+
+    if (!userData) {
+      return null;
+    }
+
+    const [userRequests, apiKeys, subscription] = await Promise.all([
+      this.requestRepository.find({ user_id: userId }),
+      this.keyService.getAllUserKeys(userData.keys),
+      this.subscriptionService.getSubscription(userData.subscription_id),
+    ]);
+
+    const dataToDownload = {
+      profile: {
+        userId: userData._id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        accountCreatedAt: userData._id.getTimestamp(),
+      },
+      generationHistory: {
+        totalGenerations: userRequests.length,
+        generations: userRequests.map((req) => ({
+          requestId: req._id,
+          companyUrl: req.companyUrl,
+          status: req.status,
+          requestedAt: req.openedAt,
+        })),
+      },
+      usageStats: {
+        apiCalls: subscription?.usage_count || 0,
+        apiCallsLimit: subscription?.usage_limit || 0,
+      },
+      security: {
+        totalApiKeys: apiKeys.length,
+        apiKeys: apiKeys.map((key) => ({
+          usageCount: key.usageCount,
+          keyId: key._id,
+          description: key.key_description,
+          createdAt: key._id.getTimestamp(),
+        })),
+      },
+    };
+
+    return dataToDownload;
   }
 
   /**
@@ -194,6 +251,25 @@ class UserService {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Updates the user's resend email count.
+   * @param {Object} user - The user.
+   * @param {Boolean} reset - Boolean value to reset the count.
+   * @returns - Returns updated user.
+   */
+  async updateUserEmailCount(user, reset = false) {
+    const updatedFields = {
+      last_verification_email_sent_at: new Date(),
+      resend_email_count: reset ? 1 : (user.resend_email_count || 0) + 1,
+    };
+
+    const updatedUser = await this.userRepository.update(
+      user._id,
+      updatedFields
+    );
+    return updatedUser;
   }
 }
 
