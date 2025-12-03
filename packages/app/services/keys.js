@@ -30,8 +30,8 @@ class KeyService {
    * @param {string} keyDescription - The Key Description of the user.
    * @returns {Object} - Newly created Key.
    */
-  async createNewKey(keyDescription) {
-    return await this.keyRepository.create(keyDescription);
+  async createNewKey(keyData) {
+    return await this.keyRepository.create(keyData);
   }
 
   /**
