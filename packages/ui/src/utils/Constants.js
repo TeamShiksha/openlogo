@@ -168,6 +168,11 @@ export const FOOTER_ITEMS = [
     title: "Terms",
     url: "/privacy#terms",
   },
+  {
+    name:"release",
+    title: "Release",
+    url: "/release",
+  }
 ];
 
 export const COMPANIES = [
@@ -799,3 +804,107 @@ export const IMAGE_UPLOAD_MODEL = {
   dragAndDropImage: "Drag and drop image",
   or: "OR",
 };
+
+export const RELEASE_PAGE = {
+  "introduction": {
+    "heading": "About",
+    "description": "Openlogo is an open-source platform offering fast, reliable access to an extensive library of company logos—from global enterprises to emerging startups. With seamless API integration and a constantly updated database, Openlogo makes retrieving logos effortless and scalable.",
+    "features": [
+      {
+        "heading": "Comprehensive Brand Database",
+        "desc": "Instant access to a vast, constantly updated library of high-quality company logos, ranging from Fortune 500 enterprises to emerging startups."
+      },
+      {
+        "heading": "High-Performance API Integration",
+        "desc": "A developer-first API optimized for speed and reliability, featuring intelligent caching to ensure millisecond response times for effortless logo retrieval."
+      },
+      {
+        "heading": "Smart Search & Insights",
+        "desc": "Advanced search algorithms that not only locate logos with precision but also analyze search patterns to identify trending brands and detect missing assets."
+      },
+      {
+        "heading": "Community-Driven Requests",
+        "desc": "A streamlined workflow allowing users to request missing logos directly from the dashboard, ensuring the database evolves based on real-world user needs."
+      },
+      {
+        "heading": "Transparent Release Timeline",
+        "desc": "A detailed, visual changelog that keeps users informed of every update, performance improvement, and contributor credit in real-time."
+      }
+    ]
+  },
+
+  "versions": [
+    "0.6.0",
+    "0.5.0",
+    "0.4.0",
+    "0.3.0",
+    "0.2.0",
+    "0.1.0"
+  ],
+
+  "changelog": {
+    "title": "Changelog",
+    "description": "Changelog with often recorded's versions",
+  }, 
+    "0.6.0": {
+      "date": "Nov 2025",
+      "imgSrc": "/mnt/data/01be42ea-c6f3-4020-9d49-576a3bdffc3f.png",
+      "releaseNotes": [
+        {
+          "note": "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
+          "githubUsername": "",
+          "link": ""
+        },
+        {
+          "note": "Added support for SVG logo format downloads with customizable color schemes.",
+          "githubUsername": "",
+          "link": ""
+        },
+        {
+          "note": "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
+          "githubUsername": "",
+          "link": ""
+        },
+        {
+          "note": "Introduced collaborative workspace features for team-based logo management.",
+          "githubUsername": "",
+          "link": ""
+        },
+        {
+          "note": "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
+          "githubUsername": "",
+          "link": ""
+        }
+      ]
+    },
+
+    "0.5.0": {
+      "date": "",
+      "imgSrc": "",
+      "releaseNotes": []
+    },
+
+    "0.4.0": {
+      "date": "",
+      "imgSrc": "",
+      "releaseNotes": []
+    },
+
+    "0.3.0": {
+      "date": "",
+      "imgSrc": "",
+      "releaseNotes": []
+    },
+
+    "0.2.0": {
+      "date": "",
+      "imgSrc": "",
+      "releaseNotes": []
+    },
+
+    "0.1.0": {
+      "date": "",
+      "imgSrc": "",
+      "releaseNotes": []
+    }
+  }
