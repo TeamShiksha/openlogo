@@ -9,7 +9,6 @@ const mongoose = require("mongoose");
 const app = require("../../../server");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
-jest.mock("jsonwebtoken");
 jwt.verify = jest.fn(() => ({ userId: new mongoose.Types.ObjectId() }));
 
 describe("RESET PASSWORD API", () => {
@@ -50,7 +49,10 @@ describe("RESET PASSWORD API", () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
-      .send({ newPassword: dummyPassword.repeat(3) });
+      .send({
+        newPassword: dummyPassword.repeat(3),
+        confirmPassword: "dummyPassword".repeat(3),
+      });
 
     expect(response.status).toBe(422);
     expect(response.body).toEqual({

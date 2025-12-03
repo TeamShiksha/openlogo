@@ -113,12 +113,6 @@ export const LOGGEDIN_ITEMS = [
     type: "section",
   },
   {
-    name: "dashboard",
-    title: "Dashboard",
-    url: "/dashboard",
-    type: "route",
-  },
-  {
     name: "docs",
     title: "Docs",
     url: "/docs",
@@ -142,6 +136,20 @@ export const LOGGEDIN_ITEMS = [
     url: "/#about",
     type: "section",
   },
+];
+
+export const LOGGEDIN_MOBILE_ITEMS = [
+  LOGGEDIN_ITEMS.find((i) => i.name === "home"),
+  {
+    name: "dashboard",
+    title: "Dashboard",
+    url: "/dashboard",
+    type: "route",
+  },
+  LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "features"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "pricing"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "about"),
 ];
 
 export const FOOTER_ITEMS = [
@@ -606,7 +614,7 @@ export const DOCUMENTATION = {
   ],
   localUrl: "Base URL: http://localhost:5000/api",
   baseStageUrl: "Base URL: https://api-stage.openlogo.fyi/api",
-  baseProdUrl: "Base URL: https://api-openlogo.fyi/api",
+  baseProdUrl: "Base URL: https://api.openlogo.fyi/api",
 };
 
 export const API_KEY_TABLE = {

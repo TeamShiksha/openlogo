@@ -164,6 +164,19 @@ class ImageServices {
   async getImageByCompanyName(companyName) {
     return await this.imageRepository.fetchImage(companyName);
   }
+
+  /**
+   * Invalidates the CloudFront cache for a specific image based on the provided image data.
+   *
+   * @param {Object} imageData - The image metadata.
+   * @param {string} imageData.extension - File type (png, jpg, etc.) of the image.
+   * @param {string} imageData.company_name - Company identifier used in the image name.
+   * @returns {Promise<Object>} The CloudFront invalidation response.
+   */
+  async invalidateCloudFrontCache(imageData) {
+    const imageUrl = `${imageData.extension}/${imageData.company_name}.${imageData.extension}`;
+    return await this.imageRepository.invalidateCloudFrontCache(imageUrl);
+  }
 }
 
 module.exports = ImageServices;

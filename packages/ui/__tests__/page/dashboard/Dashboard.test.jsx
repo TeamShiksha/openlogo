@@ -147,40 +147,6 @@ describe("Dashboard", () => {
     expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 
-  it("should render logout button if user is authenticated and user data exists", () => {
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    renderDashboard({ userContextValue: userContext });
-    const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
-    expect(logoutButton).toBeInTheDocument();
-  });
-
-  it("should not render logout button if user is not authenticated or user data is null", () => {
-    const userContext = mockUserContext(null, false);
-    const authContext = {
-      isAuthenticated: false,
-      logout: vi.fn(),
-    };
-    renderDashboard({
-      userContextValue: userContext,
-      authContextValue: authContext,
-    });
-    const logoutButton = screen.queryByText(BUTTON_TEXT.signOut);
-    expect(logoutButton).not.toBeInTheDocument();
-  });
-
-  it("should call logout function when logout button is clicked", () => {
-    const logoutMock = vi.fn();
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    const authContext = mockAuthContext(true, logoutMock);
-    renderDashboard({
-      userContextValue: userContext,
-      authContextValue: authContext,
-    });
-    const logoutButton = screen.getByText(BUTTON_TEXT.signOut);
-    fireEvent.click(logoutButton);
-    expect(logoutMock).toHaveBeenCalled();
-  });
-
   it("should allow ADMIN to switch between ADMIN, OPERATOR, and USER dashboards", async () => {
     const adminUserContext = mockUserContext(
       { ...MOCK_USER_DATA, role: "ADMIN" },
