@@ -157,4 +157,4 @@ class LogoRequestLogsRepository extends BaseRepository {
   }
 }
 
-module.exports = { LogoRequestLogsRepository };
+module.exports = LogoRequestLogsRepository;
