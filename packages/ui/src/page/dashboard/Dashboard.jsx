@@ -19,7 +19,7 @@ import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinne
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
-
+import Graph from "../../components/graph/Graph.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
@@ -149,6 +149,11 @@ function Dashboard() {
         </div>
       ) : (
         <>
+          <div className={styles["dashboard-content-container"]}>
+            <CardWrapper>
+              <Graph />
+            </CardWrapper>
+          </div>
           <div className={styles["dashboard-content-container"]}>
             <section className={styles["dashboard-content-section"]}>
               <CardWrapper title="Usage">
