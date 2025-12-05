@@ -218,7 +218,7 @@ async function getCatalogController(req, res, next) {
         });
       }
     }
-    if (imageData.data.length === 0) {
+    if (!imageData || imageData.data.length === 0) {
       try {
         const webSearchResult = await grabPngLogos(search);
         if (webSearchResult.success && webSearchResult.logos.length > 0) {

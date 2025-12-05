@@ -202,4 +202,38 @@ describe("GET /api/catalog/logos", () => {
       ],
     });
   });
+  it("200 - OPERATOR - Web search returns logos when DB empty", async () => {
+    const mockAdmin = new Users(MOCK_USERS[3]);
+    const token = mockAdmin.generateJWT();
+
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
+    jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
+      data: [],
+      total: 0,
+      currentPage: 1,
+      totalPages: 0,
+    });
+
+    grabPngLogos.mockResolvedValue({
+      success: true,
+      logos: [
+        { url: "http://logo.png", variant: "primary", format: "png" },
+        { url: "http://logo2.png", variant: "secondary", format: "png" },
+      ],
+    });
+
+    const res = await request(app)
+      .get("/api/catalog/logos?search=TestCompany")
+      .set("Cookie", `jwt=${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      statusCode: 200,
+      source: "web-search",
+      data: [
+        { companyName: "TestCompany", url: "http://logo.png" },
+        { companyName: "TestCompany", url: "http://logo2.png" },
+      ],
+    });
+  });
 });

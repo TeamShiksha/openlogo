@@ -32,7 +32,6 @@ async function grabPngLogos(query, limit = 5) {
     `https://logo.clearbit.com/${nameNoSpace}.org`,
     `https://logo.clearbit.com/${nameNoSpace}.co`,
     `https://github.com/${nameNoSpace}.png`,
-    `https://avatars.githubusercontent.com/${nameNoSpace}?size=512`,
     `https://api.brandfetch.io/v2/logo/${nameNoSpace}.png`,
     `https://www.google.com/s2/favicons?domain=${nameNoSpace}.com&sz=256`,
     `https://api.faviconkit.com/${nameNoSpace}.com/512`,
@@ -40,25 +39,20 @@ async function grabPngLogos(query, limit = 5) {
     `https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/${nameNoSpace}.png`,
   ];
   async function prepareLogoData(url) {
-    try {
-      const res = await axios.get(url, {
-        responseType: "arraybuffer",
-        timeout: 5000,
-        maxContentLength: 5 * 1024 * 1024,
-      });
-      const buffer = Buffer.from(res.data);
-      const info = imageSize(buffer);
-      const type = info.type;
-      return {
-        url,
-        companyUri: null,
-        type,
-        imageSize: buffer.length,
-      };
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
+    const res = await axios.get(url, {
+      responseType: "arraybuffer",
+      timeout: 5000,
+      maxContentLength: 5 * 1024 * 1024,
+    });
+    const buffer = Buffer.from(res.data);
+    const info = imageSize(buffer);
+    const type = info.type;
+    return {
+      url,
+      companyUri: null,
+      type,
+      imageSize: buffer.length,
+    };
   }
   async function collectFromList(list, logosSoFar) {
     const CONCURRENCY = 6;
@@ -82,7 +76,6 @@ async function grabPngLogos(query, limit = 5) {
     logos = await collectFromList(domainCandidates, logos);
   }
 
-  // Fetch company domain once using Clearbit and attach to all logo entries
   if (logos.length > 0) {
     try {
       const searchTerm = encodeURIComponent(nameNoSpace);
@@ -105,7 +98,7 @@ async function grabPngLogos(query, limit = 5) {
         }));
       }
     } catch (error) {
-      console.log("Clearbit lookup failed:", error.message);
+      console.log(" Company URI Failed:", error.message);
     }
   }
 
