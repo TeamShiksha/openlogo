@@ -4,7 +4,7 @@ function Release() {
   return (
     <section
       className="container"
-      style={{ marginTop: "1rem", marginBottom: "3rem" }}
+      style={{ marginTop: "2rem", marginBottom: "3rem" }}
     >
       {/* About section  */}
       <About />
