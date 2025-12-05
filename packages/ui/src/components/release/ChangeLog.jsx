@@ -3,14 +3,16 @@ import { RELEASE_PAGE } from "../../utils/Constants";
 import styles from "./Release.module.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import VersionCard from "./VersionCard";
+
 function ChangeLog() {
   const { changelog, versions } = RELEASE_PAGE;
   const [selectedVersion, setSelectedVersion] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const selectedVersionData = selectedVersion
     ? changelog.versionsData.filter((v) => v.versionName === selectedVersion)
     : changelog.versionsData;
-  console.log("Selected Version Data:", selectedVersionData);
+
   return (
     <section className={styles["changelog-container"]}>
       <div className={styles["changelog-header"]}>
