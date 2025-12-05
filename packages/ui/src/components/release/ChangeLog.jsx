@@ -55,7 +55,7 @@ function ChangeLog() {
 
       <div className={styles["versions-section"]}>
         {selectedVersionData.map((versionData) => (
-          <VersionCard key={versionData.version} {...versionData} />
+          <VersionCard key={versionData.versionName} {...versionData} />
         ))}
       </div>
     </section>
