@@ -4,9 +4,9 @@ const dayjs = require("dayjs");
 const mongoose = require("mongoose");
 
 /**
- * The LogoRequestLogsRepository extends BaseRepository to manage LogoRequestLogs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
+ * The LogoRequestLogsRepository extends BaseRepository to manage LogoRequestLogs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete.
  * It passes the LogoRequestLogs model to the base repository for database interactions.
- *  Custom methods specific to LogoRequestLogs can also be added as needed.
+ * Custom methods specific to LogoRequestLogs can also be added as needed.
  */
 
 class LogoRequestLogsRepository extends BaseRepository {
@@ -28,14 +28,9 @@ class LogoRequestLogsRepository extends BaseRepository {
 
     const result = await this.model.aggregate([
       {
-        $addFields: {
-          createdDate: { $toDate: "$createdAt" },
-        },
-      },
-      {
         $match: {
           user_id: new mongoose.Types.ObjectId(userId),
-          createdDate: {
+          createdAt: {
             $gte: weekStartDate,
             $lte: weekEndDate,
           },
@@ -46,7 +41,7 @@ class LogoRequestLogsRepository extends BaseRepository {
           dateOnly: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$createdDate",
+              date: "$createdAt",
             },
           },
         },
@@ -99,14 +94,9 @@ class LogoRequestLogsRepository extends BaseRepository {
 
     const result = await this.model.aggregate([
       {
-        $addFields: {
-          createdDate: { $toDate: "$createdAt" },
-        },
-      },
-      {
         $match: {
           user_id: new mongoose.Types.ObjectId(userId),
-          createdDate: {
+          createdAt: {
             $gte: monthStartDate,
             $lte: monthEndDate,
           },
@@ -117,7 +107,7 @@ class LogoRequestLogsRepository extends BaseRepository {
           dateOnly: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$createdDate",
+              date: "$createdAt",
             },
           },
         },
@@ -149,8 +139,8 @@ class LogoRequestLogsRepository extends BaseRepository {
 
     return {
       period: "month",
-      startDate: dayjs(monthStart).format("YYYY-MM-DD"),
-      endDate: dayjs(monthEnd).format("YYYY-MM-DD"),
+      startDate: monthStart.format("YYYY-MM-DD"),
+      endDate: monthEnd.format("YYYY-MM-DD"),
       summary: summary,
       data: result,
     };
