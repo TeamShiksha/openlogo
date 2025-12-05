@@ -210,7 +210,7 @@ async function getCatalogController(req, res, next) {
     const imageData = await imageService.getImages(skip, limit, search);
 
     if (user.role === UserType.OPERATOR) {
-      if (imageData.length > 0 || imageData.data.length > 0) {
+      if (imageData.data.length > 0) {
         return res.status(200).json({
           statusCode: 200,
           data: "Image Exists in DB",
@@ -218,7 +218,7 @@ async function getCatalogController(req, res, next) {
         });
       }
     }
-    if (!imageData || !imageData.data || imageData.data.length === 0) {
+    if (imageData.data.length === 0) {
       try {
         const webSearchResult = await grabPngLogos(search);
         if (webSearchResult.success && webSearchResult.logos.length > 0) {

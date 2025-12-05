@@ -1,10 +1,18 @@
+/**
+ * Utility function for discovering logo images from common CDN and domain-based sources.
+ * Given a company or product name, it attempts multiple heuristic URLs, fetches image bytes,
+ * identifies valid PNG/SVG logos, and returns structured metadata for each match.
+ * A single Clearbit lookup is used to attach the canonical company domain when available.
+ */
 const axios = require("axios");
 const { imageSize } = require("image-size");
 async function grabPngLogos(query, limit = 5) {
   const result = { success: false, count: 0, logos: [] };
-  if (!query || typeof query !== "string") return result;
+  if (!query || typeof query !== "string") {
+    throw new TypeError("grabPngLogos: `query` must be a non-empty string");
+  }
   const raw = query.trim().toLowerCase();
-  const nameNoSpace = raw.replace(/\s+/g, "");
+  const nameNoSpace = raw.split(" ").join("");
   const pngCandidates = [
     `https://img.icons8.com/color/512/${nameNoSpace}.png`,
     `https://img.icons8.com/ios-filled/512/${nameNoSpace}.png`,
@@ -33,24 +41,22 @@ async function grabPngLogos(query, limit = 5) {
   ];
   async function prepareLogoData(url) {
     try {
-      const res = await axios.get(url, { responseType: "arraybuffer" });
+      const res = await axios.get(url, {
+        responseType: "arraybuffer",
+        timeout: 5000,
+        maxContentLength: 5 * 1024 * 1024,
+      });
       const buffer = Buffer.from(res.data);
-
       const info = imageSize(buffer);
       const type = info.type;
-
-      const query = encodeURIComponent(nameNoSpace);
-      const searchCompanyUrl = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${query}`;
-      const companyUri = await axios.get(searchCompanyUrl);
-      const results = companyUri.data;
       return {
         url,
-        companyUri: results[0].domain ? `https://${results[0].domain}/` : null,
+        companyUri: null,
         type,
         imageSize: buffer.length,
       };
     } catch (err) {
-      console.log(err.message);
+      console.error(err);
       return null;
     }
   }
@@ -75,6 +81,34 @@ async function grabPngLogos(query, limit = 5) {
   if (logos.length < limit) {
     logos = await collectFromList(domainCandidates, logos);
   }
+
+  // Fetch company domain once using Clearbit and attach to all logo entries
+  if (logos.length > 0) {
+    try {
+      const searchTerm = encodeURIComponent(nameNoSpace);
+      const clearbitResponse = await axios.get(
+        `https://autocomplete.clearbit.com/v1/companies/suggest?query=${searchTerm}`,
+        { timeout: 3000 }
+      );
+      const suggestions = Array.isArray(clearbitResponse.data)
+        ? clearbitResponse.data
+        : [];
+      const suggestedDomain =
+        suggestions.length > 0 && suggestions[0].domain
+          ? suggestions[0].domain
+          : null;
+      if (suggestedDomain) {
+        const canonicalCompanyUrl = `https://${suggestedDomain.replace(/\/+$/, "")}/`;
+        logos = logos.map((logo) => ({
+          ...logo,
+          companyUri: canonicalCompanyUrl,
+        }));
+      }
+    } catch (error) {
+      console.log("Clearbit lookup failed:", error.message);
+    }
+  }
+
   result.success = logos.length > 0;
   result.count = logos.length;
   result.logos = logos;
