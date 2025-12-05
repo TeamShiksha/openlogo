@@ -3,7 +3,6 @@ jest.mock("../../../utils/webLogoSearch.js", () => ({
 }));
 
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
 const { UserService, ImageService } = require("../../../services");
 const mongoose = require("mongoose");
 const { Users } = require("../../../models");
@@ -41,7 +40,6 @@ describe("GET /api/catalog/logos", () => {
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
       statusCode: 404,
-      error: STATUS_CODES[404],
       message: Messages.USER_NOT_FOUND,
     });
   });
@@ -66,7 +64,6 @@ describe("GET /api/catalog/logos", () => {
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
       statusCode: 404,
-      error: STATUS_CODES[404],
       message: Messages.LOGO_NOT_FOUND,
     });
   });
@@ -183,8 +180,8 @@ describe("GET /api/catalog/logos", () => {
     grabPngLogos.mockResolvedValue({
       success: true,
       logos: [
-        { url: "http://logo.png", variant: "primary", format: "png" },
-        { url: "http://logo2.png", variant: "secondary", format: "png" },
+        { url: "https://logo.png", variant: "primary", format: "png" },
+        { url: "https://logo2.png", variant: "secondary", format: "png" },
       ],
     });
 
@@ -197,8 +194,8 @@ describe("GET /api/catalog/logos", () => {
       statusCode: 200,
       source: "web-search",
       data: [
-        { companyName: "TestCompany", url: "http://logo.png" },
-        { companyName: "TestCompany", url: "http://logo2.png" },
+        { companyName: "TestCompany", url: "https://logo.png" },
+        { companyName: "TestCompany", url: "https://logo2.png" },
       ],
     });
   });
@@ -217,8 +214,8 @@ describe("GET /api/catalog/logos", () => {
     grabPngLogos.mockResolvedValue({
       success: true,
       logos: [
-        { url: "http://logo.png", variant: "primary", format: "png" },
-        { url: "http://logo2.png", variant: "secondary", format: "png" },
+        { url: "https://logo.png", variant: "primary", format: "png" },
+        { url: "https://logo2.png", variant: "secondary", format: "png" },
       ],
     });
 
@@ -231,8 +228,8 @@ describe("GET /api/catalog/logos", () => {
       statusCode: 200,
       source: "web-search",
       data: [
-        { companyName: "TestCompany", url: "http://logo.png" },
-        { companyName: "TestCompany", url: "http://logo2.png" },
+        { companyName: "TestCompany", url: "https://logo.png" },
+        { companyName: "TestCompany", url: "https://logo2.png" },
       ],
     });
   });
