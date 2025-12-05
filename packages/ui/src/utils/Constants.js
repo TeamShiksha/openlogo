@@ -836,7 +836,7 @@ export const RELEASE_PAGE = {
   },
 
   versions: ["0.6.0", "0.5.0", "0.4.0", "0.3.0", "0.2.0", "0.1.0"],
-
+  latestVersion: "0.6.0",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",

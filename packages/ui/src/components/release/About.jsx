@@ -3,7 +3,7 @@ import styles from "./Release.module.css";
 function About() {
   const { introduction } = RELEASE_PAGE;
   return (
-    <div>
+    <div className={styles["about-section"]}>
       <h2>{introduction.heading}</h2>
       <p className={styles["description"]}>{introduction.description}</p>
       <ul>

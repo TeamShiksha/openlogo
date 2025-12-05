@@ -45,34 +45,28 @@ function VersionCard(versionData) {
         {/* Release Notes */}
         {releaseNotes && releaseNotes.length > 0 && (
           <div className={styles["release-notes"]}>
-            <h3
-              style={{
-                marginBottom: "0.75rem",
-                color: "#1A1A1A",
-                fontWeight: 600,
-              }}
-            >
-              Release Notes
-            </h3>
+            <h3>Release Notes</h3>
             <ul className={styles["notes-list"]}>
               {releaseNotes?.map((r, index) => (
                 <li key={index} className={styles["note-item"]}>
-                  <span className={styles["note-dot"]}></span>
-                  <span className={styles["note-text"]}>{r.releaesNote}</span>
-                  <span className={styles["note-link"]}>
-                    {r.link ? (
-                      <a
-                        href={r.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {r.githubUserName
-                          ? `(${r.githubUserName})`
-                          : r.githubUserName}
-                      </a>
-                    ) : r.githubUserName ? (
-                      `(${r.githubUserName})`
-                    ) : null}
+                  <span className={styles["dot"]}></span>
+                  <span className={styles["list-description"]}>
+                    {r.releaesNote}{" "}
+                    <span className={styles["note-link"]}>
+                      {r.link ? (
+                        <a
+                          href={r.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {r.githubUserName
+                            ? `(${r.githubUserName})`
+                            : r.githubUserName}
+                        </a>
+                      ) : r.githubUserName ? (
+                        `(${r.githubUserName})`
+                      ) : null}
+                    </span>
                   </span>
                 </li>
               ))}

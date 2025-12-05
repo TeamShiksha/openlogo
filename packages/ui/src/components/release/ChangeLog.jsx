@@ -5,13 +5,13 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import VersionCard from "./VersionCard";
 
 function ChangeLog() {
-  const { changelog, versions } = RELEASE_PAGE;
-  const [selectedVersion, setSelectedVersion] = useState(null);
+  const { changelog, versions, latestVersion } = RELEASE_PAGE;
+  const [selectedVersion, setSelectedVersion] = useState(latestVersion);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const selectedVersionData = selectedVersion
-    ? changelog.versionsData.filter((v) => v.versionName === selectedVersion)
-    : changelog.versionsData;
+  const selectedVersionData = changelog.versionsData.filter(
+    (v) => v.versionName === selectedVersion
+  );
 
   return (
     <section className={styles["changelog-container"]}>
@@ -34,14 +34,6 @@ function ChangeLog() {
 
           {isDropdownOpen && (
             <div className={styles["dropdown-menu"]}>
-              <button
-                onClick={() => {
-                  setSelectedVersion(null);
-                  setIsDropdownOpen(false);
-                }}
-              >
-                All Versions
-              </button>
               {versions.map((v) => (
                 <button
                   key={v}
@@ -49,7 +41,6 @@ function ChangeLog() {
                     setSelectedVersion(v);
                     setIsDropdownOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-[#1A1A1A] hover:bg-[#F5F5F7] transition-colors"
                 >
                   Version {v}
                 </button>
@@ -60,7 +51,7 @@ function ChangeLog() {
       </div>
 
       {/* Vertical timeline line - Desktop only */}
-      <div className="hidden md:block absolute left-[107px] top-[180px] bottom-0 w-[1px] bg-gray-200 dotted-line"></div>
+      {/* <div className={styles["timeline-connector"]}></div> */}
 
       <div className={styles["versions-section"]}>
         {selectedVersionData.map((versionData) => (
