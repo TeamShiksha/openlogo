@@ -847,62 +847,168 @@ export const RELEASE_PAGE = {
         imgSrc: version06,
         releaseNotes: [
           {
-            releaesNote: "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
-            githubUsername: "abhishek-2k23",
+            releaesNote:
+              "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
+            githubUserName: "abhishek-2k23",
             link: "https://github.com/abhishek-2k23",
           },
           {
-            releaesNote: "Added support for SVG logo format downloads with customizable color schemes.",
-            githubUsername: "abhishek-2k23",
+            releaesNote:
+              "Added support for SVG logo format downloads with customizable color schemes.",
+            githubUserName: "abhishek-2k23",
             link: "https://github.com/abhishek-2k23",
           },
           {
-            releaesNote: "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
-            githubUsername: "abhishek-2k23",
+            releaesNote:
+              "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
+            githubUserName: "abhishek-2k23",
             link: "https://github.com/abhishek-2k23",
           },
           {
-            releaesNote: "Introduced collaborative workspace features for team-based logo management.",
-            githubUsername: "abhishek-2k23",
+            releaesNote:
+              "Introduced collaborative workspace features for team-based logo management.",
+            githubUserName: "abhishek-2k23",
             link: "https://github.com/abhishek-2k23",
           },
           {
-            releaesNote: "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
-            githubUsername: "abhishek-2k23",
+            releaesNote:
+              "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
+            githubUserName: "abhishek-2k23",
             link: "https://github.com/abhishek-2k23",
           },
         ],
       },
 
+      // --------------------- Version 0.5.0 ---------------------
       {
         versionName: "0.5.0",
-        date: "",
+        date: "Oct 2025",
         imgSrc: version06,
-        releaseNotes: [],
+        releaseNotes: [
+          {
+            releaesNote:
+              "Improved logo search performance by optimizing database queries.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Added ability to bulk-upload logos with metadata auto-detection.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Refined UI for the logo preview section with improved zoom & color tools.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
       },
+
+      // --------------------- Version 0.4.0 ---------------------
       {
         versionName: "0.4.0",
-        date: "",
+        date: "Sep 2025",
         imgSrc: version06,
-        releaseNotes: [],
+        releaseNotes: [
+          {
+            releaesNote:
+              "Added user authentication improvements including OAuth fixes.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Introduced notifications for logo updates and API key usage alerts.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Improved brand categorization and tagging algorithm.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
       },
+
+      // --------------------- Version 0.3.0 ---------------------
       {
         versionName: "0.3.0",
-        date: "",
+        date: "Aug 2025",
         imgSrc: version06,
-        releaseNotes: [],
+        releaseNotes: [
+          {
+            releaesNote:
+              "Added dark mode and theme customization across the platform.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Enhanced search bar with autocorrect and synonym suggestions.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Introduced logo download history for users.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
       },
+
+      // --------------------- Version 0.2.0 ---------------------
       {
         versionName: "0.2.0",
-        date: "",
+        date: "Jul 2025",
         imgSrc: version06,
-        releaseNotes: [],
+        releaseNotes: [
+          {
+            releaesNote: "Added support for PNG and WebP logo formats.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Redesigned logo details page with improved metadata visibility.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Improved API documentation and added sample code snippets.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
       },
+
+      // --------------------- Version 0.1.0 ---------------------
       {
         versionName: "0.1.0",
-        date: "",
+        date: "Jun 2025",
         imgSrc: version06,
-        releaseNotes: [],
+        releaseNotes: [
+          {
+            releaesNote:
+              "Initial release of the platform with core logo browsing functionality.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Implemented basic search and category filters for brands.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote:
+              "Added user profile management and API key generation.",
+            githubUserName: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
       },
     ],
   },

@@ -189,7 +189,7 @@ ul li {
 .screenshot-wrap {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background-color: var(--white);
+  background-color: #e8e4ff;
   border-radius: 1rem;
   box-shadow: 0 4px 6px var(--shadow);
 }
@@ -237,7 +237,6 @@ ul li {
 .note-text {
   color: var(--description);
   line-height: 1.6;
-  
 }
 
 .note-link a {
@@ -245,7 +244,7 @@ ul li {
   text-decoration: underline;
 }
 .note-link a:hover {
-  color: var(--primary)
+  color: var(--primary);
 }
 
 .timeline-connector {
