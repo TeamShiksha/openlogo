@@ -25,6 +25,7 @@ import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
 import tick from "../assets/tick.png";
 import copycodeicon from "../assets/copy-code-icon.png";
+import version06 from "../assets/version06.png";
 
 export const SVGS = {
   searchIcon,
@@ -169,10 +170,10 @@ export const FOOTER_ITEMS = [
     url: "/privacy#terms",
   },
   {
-    name:"release",
+    name: "release",
     title: "Release",
     url: "/release",
-  }
+  },
 ];
 
 export const COMPANIES = [
@@ -806,105 +807,103 @@ export const IMAGE_UPLOAD_MODEL = {
 };
 
 export const RELEASE_PAGE = {
-  "introduction": {
-    "heading": "About",
-    "description": "Openlogo is an open-source platform offering fast, reliable access to an extensive library of company logos—from global enterprises to emerging startups. With seamless API integration and a constantly updated database, Openlogo makes retrieving logos effortless and scalable.",
-    "features": [
+  introduction: {
+    heading: "About",
+    description:
+      "Openlogo is an open-source platform offering fast, reliable access to an extensive library of company logos—from global enterprises to emerging startups. With seamless API integration and a constantly updated database, Openlogo makes retrieving logos effortless and scalable.",
+    features: [
       {
-        "heading": "Comprehensive Brand Database",
-        "desc": "Instant access to a vast, constantly updated library of high-quality company logos, ranging from Fortune 500 enterprises to emerging startups."
+        heading: "Comprehensive Brand Database",
+        desc: "Instant access to a vast, constantly updated library of high-quality company logos, ranging from Fortune 500 enterprises to emerging startups.",
       },
       {
-        "heading": "High-Performance API Integration",
-        "desc": "A developer-first API optimized for speed and reliability, featuring intelligent caching to ensure millisecond response times for effortless logo retrieval."
+        heading: "High-Performance API Integration",
+        desc: "A developer-first API optimized for speed and reliability, featuring intelligent caching to ensure millisecond response times for effortless logo retrieval.",
       },
       {
-        "heading": "Smart Search & Insights",
-        "desc": "Advanced search algorithms that not only locate logos with precision but also analyze search patterns to identify trending brands and detect missing assets."
+        heading: "Smart Search & Insights",
+        desc: "Advanced search algorithms that not only locate logos with precision but also analyze search patterns to identify trending brands and detect missing assets.",
       },
       {
-        "heading": "Community-Driven Requests",
-        "desc": "A streamlined workflow allowing users to request missing logos directly from the dashboard, ensuring the database evolves based on real-world user needs."
+        heading: "Community-Driven Requests",
+        desc: "A streamlined workflow allowing users to request missing logos directly from the dashboard, ensuring the database evolves based on real-world user needs.",
       },
       {
-        "heading": "Transparent Release Timeline",
-        "desc": "A detailed, visual changelog that keeps users informed of every update, performance improvement, and contributor credit in real-time."
-      }
-    ]
+        heading: "Transparent Release Timeline",
+        desc: "A detailed, visual changelog that keeps users informed of every update, performance improvement, and contributor credit in real-time.",
+      },
+    ],
   },
 
-  "versions": [
-    "0.6.0",
-    "0.5.0",
-    "0.4.0",
-    "0.3.0",
-    "0.2.0",
-    "0.1.0"
-  ],
+  versions: ["0.6.0", "0.5.0", "0.4.0", "0.3.0", "0.2.0", "0.1.0"],
 
-  "changelog": {
-    "title": "Changelog",
-    "description": "Changelog with often recorded's versions",
-  }, 
-    "0.6.0": {
-      "date": "Nov 2025",
-      "imgSrc": "/mnt/data/01be42ea-c6f3-4020-9d49-576a3bdffc3f.png",
-      "releaseNotes": [
-        {
-          "note": "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
-          "githubUsername": "",
-          "link": ""
-        },
-        {
-          "note": "Added support for SVG logo format downloads with customizable color schemes.",
-          "githubUsername": "",
-          "link": ""
-        },
-        {
-          "note": "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
-          "githubUsername": "",
-          "link": ""
-        },
-        {
-          "note": "Introduced collaborative workspace features for team-based logo management.",
-          "githubUsername": "",
-          "link": ""
-        },
-        {
-          "note": "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
-          "githubUsername": "",
-          "link": ""
-        }
-      ]
-    },
+  changelog: {
+    title: "Changelog",
+    description: "Changelog with often recorded's versions",
+    versionsData: [
+      {
+        versionName: "0.6.0",
+        date: "Nov 2025",
+        imgSrc: version06,
+        releaseNotes: [
+          {
+            releaesNote: "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
+            githubUsername: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Added support for SVG logo format downloads with customizable color schemes.",
+            githubUsername: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
+            githubUsername: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Introduced collaborative workspace features for team-based logo management.",
+            githubUsername: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+          {
+            releaesNote: "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
+            githubUsername: "abhishek-2k23",
+            link: "https://github.com/abhishek-2k23",
+          },
+        ],
+      },
 
-    "0.5.0": {
-      "date": "",
-      "imgSrc": "",
-      "releaseNotes": []
-    },
-
-    "0.4.0": {
-      "date": "",
-      "imgSrc": "",
-      "releaseNotes": []
-    },
-
-    "0.3.0": {
-      "date": "",
-      "imgSrc": "",
-      "releaseNotes": []
-    },
-
-    "0.2.0": {
-      "date": "",
-      "imgSrc": "",
-      "releaseNotes": []
-    },
-
-    "0.1.0": {
-      "date": "",
-      "imgSrc": "",
-      "releaseNotes": []
-    }
-  }
+      {
+        versionName: "0.5.0",
+        date: "",
+        imgSrc: version06,
+        releaseNotes: [],
+      },
+      {
+        versionName: "0.4.0",
+        date: "",
+        imgSrc: version06,
+        releaseNotes: [],
+      },
+      {
+        versionName: "0.3.0",
+        date: "",
+        imgSrc: version06,
+        releaseNotes: [],
+      },
+      {
+        versionName: "0.2.0",
+        date: "",
+        imgSrc: version06,
+        releaseNotes: [],
+      },
+      {
+        versionName: "0.1.0",
+        date: "",
+        imgSrc: version06,
+        releaseNotes: [],
+      },
+    ],
+  },
+};
