@@ -12,7 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+docker-compose.yml
 .env
 
 # Editor directories and files
