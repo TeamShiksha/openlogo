@@ -29,6 +29,8 @@ function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
@@ -37,6 +39,11 @@ function Dashboard() {
   const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
     method: "delete",
     url: `/user/api-key/${selectedKey?._id}`,
+  });
+  const { fetchRequest: updateOldKeysRequest } = useApi({
+    method: "GET",
+    url: "/user/update-oldKeys",
+    withCredentials: true,
   });
 
   const apiKeyTableData = useMemo(() => {
@@ -74,6 +81,35 @@ function Dashboard() {
     setConfirmKeyName("");
     setShowModal(true);
   };
+
+  useEffect(() => {
+    async function checkOldKeys() {
+      setShowLoader(true);
+
+      const result = await updateOldKeysRequest();
+
+      console.log("API Result:", result);
+      console.log("Success:", result.success);
+      console.log("Keys Updated:", result.data?.keysUpdated);
+
+      if (result.success && result.data?.keysUpdated === true) {
+        setTimeout(() => {
+          console.log("Setting modal to true");
+          setShowLoader(false);
+          setShowUpdateModal(true);
+        }, 1000);
+      } else {
+        console.log("Condition not met, hiding loader");
+        setShowLoader(false);
+      }
+
+      if (!result.success && result.error) {
+        toast.error(result.error);
+      }
+    }
+
+    checkOldKeys();
+  }, []);
 
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
@@ -129,6 +165,40 @@ function Dashboard() {
       className={`container ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
+      {showLoader && (
+        <div className={styles["overlay-loader"]}>
+          <LoadingSpinner size={60} border={6} color="blue" />
+          <p className={styles["loader-text"]}>Updating your old API keys...</p>
+        </div>
+      )}
+
+      {showUpdateModal && (
+        <div
+          className={styles["modal-overlay"]}
+          onClick={() => setShowUpdateModal(false)}
+        >
+          <div
+            className={styles["modal-box"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className={styles["modal-heading"]}>API Keys Updated</h2>
+            <div className={styles["modal-content"]}>
+              <p>Our application has undergone some improvements.</p>
+              <p style={{ marginTop: "10px" }}>
+                You had older API keys we have updated their expiry dates for
+                you.
+              </p>
+            </div>
+            <button
+              className={styles["modal-button"]}
+              onClick={() => setShowUpdateModal(false)}
+            >
+              I Understand
+            </button>
+          </div>
+        </div>
+      )}
+
       <div>
         {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
           <Dropdown

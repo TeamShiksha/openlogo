@@ -29,7 +29,7 @@ const generateKeyPayloadSchema = Joi.object().keys({
       "string.pattern.base":
         "Description must contain only alphabets and spaces",
     }),
-  expires_in_days: Joi.number()
+  expires_at: Joi.number()
     .integer()
     .min(1)
     .max(3650)

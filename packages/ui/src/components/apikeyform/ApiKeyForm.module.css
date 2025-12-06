@@ -87,78 +87,63 @@
 }
 
 .expiry-dropdown {
-  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dropdown-div {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.75rem 0;
   width: 100%;
 }
 
-.expiry-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--text-primary);
-  font-size: var(--medium-text);
-}
-
-.expiry-select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: var(--bg-primary);
+.dropdown {
+  border: var(--border);
+  background: var(--white);
   color: var(--description);
-  font-weight: 500;
-  font-family: inherit;
-  line-height: 20px;
+  border-radius: var(--bradius);
+  padding: 0.8rem 1rem;
+  min-width: 80px;
   cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-
-.expiry-select:focus {
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  width: 100%;
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--primary-color-light);
+  padding-right: 4rem;
+
+  /* Arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("/drop-down-arrow.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
 }
 
-.expiry-select:disabled {
-  background-color: var(--bg-disabled);
-  cursor: not-allowed;
-  opacity: 0.6;
+.dropdown:focus {
+  outline: none;
 }
 
-.expiry-description {
-  font-size: var(--medium-text);
-  font-weight: 400;
-  line-height: 20px;
+.option {
   color: var(--description);
-  margin: 0.5rem 0;
-}
-
-.expiry-select option {
-  color: var(--description);
-  background-color: var(--bg-primary);
   font-weight: 500;
 }
 
-@media (max-width: 600px) {
-  .expiry-select {
-    padding: 10px 14px;
-  }
+.option:hover {
+  background-color: var(--primary);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 5px);
+@media screen and (max-width: 768px) {
+  .dropdown-div {
+    width: 100%;
   }
 
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
+  .dropdown {
+    width: 100%;
   }
-}
-
-.error-message {
-  color: var(--error);
-  font-size: 0.8rem;
-  text-align: center;
 }

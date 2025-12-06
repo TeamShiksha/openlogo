@@ -55,6 +55,60 @@
   color: var(--primary);
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: var(--white, white);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-heading {
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--black, #333);
+}
+
+.modal-content {
+  margin-bottom: 24px;
+  color: var(--text-secondary, #666);
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.modal-button {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: var(--white, white);
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-button:hover {
+  background: var(--primary-dark, var(--primary));
+  opacity: 0.9;
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
@@ -87,5 +141,26 @@
   .logout-btn {
     width: 100%;
     margin: 1rem 0 0 0;
+  }
+
+  .modal-box {
+    width: 95%;
+    padding: 20px;
+    margin: 16px;
+  }
+
+  .modal-heading {
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+  }
+
+  .modal-content {
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+  }
+
+  .modal-button {
+    padding: 14px;
+    font-size: 0.9375rem;
   }
 }

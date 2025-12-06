@@ -9,7 +9,7 @@
   background: var(--white);
   color: var(--description);
   border-radius: var(--bradius);
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   min-width: 80px;
   cursor: pointer;
   font-size: 14px;

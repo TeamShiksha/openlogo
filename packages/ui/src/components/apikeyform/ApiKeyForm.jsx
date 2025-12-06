@@ -21,7 +21,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
-  const [expiresInDays, setExpiresInDays] = useState(0);
+  const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
 
   const { makeRequest, data, loading, errorMsg } = useApi({
@@ -29,7 +29,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     url: "/user/api-key",
     data: {
       key_description: description,
-      expires_at: expiresInDays,
+      expires_at: expiresInDays > 0 ? expiresInDays : null,
     },
   });
 
@@ -118,19 +118,25 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           <label htmlFor="expiry" className={styles["expiry-label"]}>
             Expiry Period
           </label>
-          <select
-            id="expiry"
-            value={expiresInDays}
-            onChange={(e) => setExpiresInDays(parseInt(e.target.value))}
-            className={styles["expiry-select"]}
-            disabled={loading}
+
+          <div
+            className={`${styles["dropdown-div"]} ${styles["expiry-select"]}`}
           >
-            <option value={7}>1 week</option>
-            <option value={30}>1 month</option>
-            <option value={90}>3 months</option>
-            <option value={180}>6 months</option>
-            <option value={365}>1 year</option>
-          </select>
+            <select
+              name="expiry"
+              id="expiry"
+              className={styles["dropdown"]}
+              value={expiresInDays}
+              onChange={(e) => setExpiresInDays(Number(e.target.value))}
+              disabled={loading}
+            >
+              <option value={7}>1 Week</option>
+              <option value={30}>1 Month</option>
+              <option value={90}>3 Months</option>
+              <option value={180}>6 Months</option>
+              <option value={365}>1 Year</option>
+            </select>
+          </div>
         </div>
         <Modal
           isOpen={showApiKeyModal}

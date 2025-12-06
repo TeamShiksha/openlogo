@@ -147,6 +147,7 @@ const MOCK_KEYS = [
     key_description: "API-KEY-1",
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
   },
   {
     user: new mongoose.Types.ObjectId(),
@@ -154,6 +155,7 @@ const MOCK_KEYS = [
     key_description: "API-KEY-1",
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
   },
 ];
 
