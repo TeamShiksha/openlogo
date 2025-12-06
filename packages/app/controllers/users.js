@@ -62,32 +62,6 @@ async function getUserDataController(req, res, next) {
   }
 }
 
-async function updateOldKeysController(req, res, next) {
-  try {
-    const userService = new UserService();
-    const keyService = new KeyService();
-
-    const { userId } = req.userData;
-    const user = await userService.getUser(userId);
-    if (!user) {
-      return res.status(404).json({
-        statusCode: 404,
-        error: STATUS_CODES[404],
-        message: Messages.USER_NOT_FOUND,
-      });
-    }
-
-    const KeysGotUpdate = await keyService.findUpdateKeyWithoutExpiry(
-      user.keys
-    );
-    return res.status(200).json({
-      statusCode: 200,
-      keysUpdated: KeysGotUpdate,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
 /**
  * This controller validates the request payload, verifies the existence of the user,
  * and updates the user's profile with the provided name.
@@ -258,6 +232,33 @@ async function destroyKeyController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateOldKeysController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const keyService = new KeyService();
+
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
+    const KeysGotUpdate = await keyService.findUpdateKeyWithoutExpiry(
+      user.keys
+    );
+    return res.status(200).json({
+      statusCode: 200,
+      keysUpdated: KeysGotUpdate,
     });
   } catch (err) {
     next(err);

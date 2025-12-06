@@ -150,6 +150,7 @@ describe("Generate User Key", () => {
       data: {
         key_description: "description three",
         subscription_id: "mockSubscriptionID@123",
+        expires_at: "2025-07-23T14:32:18.456Z",
       },
     });
 
@@ -165,6 +166,7 @@ describe("Generate User Key", () => {
         data: {
           key_description: "description three",
           subscription_id: "mockSubscriptionID@123",
+          expires_at: "2025-07-23T14:32:18.456Z",
         },
       },
     });

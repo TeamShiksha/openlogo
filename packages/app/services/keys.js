@@ -67,8 +67,8 @@ class KeyService {
   /**
    * Find and update keys without expiry field by Id.
    * @param {string} keyId
-   * @returns {boolean} updated.
-   */
+   * @returns {Promise<boolean>}
+   **/
 
   async findUpdateKeyWithoutExpiry(keyId) {
     const allKeys = await this.keyRepository.getMultipleKeys(keyId);
