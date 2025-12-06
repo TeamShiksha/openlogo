@@ -55,58 +55,37 @@
   color: var(--primary);
 }
 
-.modal-overlay {
+.overlay-loader {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  gap: 16px;
+  z-index: 9999;
 }
 
-.modal-box {
-  background: var(--white, white);
-  border-radius: 8px;
-  padding: 24px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
-.modal-heading {
-  margin: 0 0 16px 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--black, #333);
-}
-
-.modal-content {
-  margin-bottom: 24px;
-  color: var(--text-secondary, #666);
-  line-height: 1.5;
-  font-size: 1rem;
-}
-
-.modal-button {
-  width: 100%;
-  padding: 12px;
-  background: var(--primary);
+.loader-text {
   color: var(--white, white);
-  border: none;
-  border-radius: 6px;
   font-size: 1rem;
   font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-button:hover {
-  background: var(--primary-dark, var(--primary));
-  opacity: 0.9;
+  margin: 0;
+  text-align: center;
 }
 
 @media screen and (max-width: 768px) {

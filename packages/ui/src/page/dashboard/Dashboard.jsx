@@ -19,6 +19,7 @@ import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinne
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
+import NotificationModal from "../../components/Notification/NotificationModal.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -84,27 +85,19 @@ function Dashboard() {
 
   useEffect(() => {
     async function checkOldKeys() {
-      setShowLoader(true);
-
       const result = await updateOldKeysRequest();
-
-      console.log("API Result:", result);
-      console.log("Success:", result.success);
-      console.log("Keys Updated:", result.data?.keysUpdated);
-
-      if (result.success && result.data?.keysUpdated === true) {
-        setTimeout(() => {
-          console.log("Setting modal to true");
-          setShowLoader(false);
-          setShowUpdateModal(true);
-        }, 1000);
-      } else {
-        console.log("Condition not met, hiding loader");
-        setShowLoader(false);
-      }
 
       if (!result.success && result.error) {
         toast.error(result.error);
+        return;
+      }
+
+      if (result.success && result.data?.keysUpdated === true) {
+        setShowLoader(true);
+        setTimeout(() => {
+          setShowLoader(false);
+          setShowUpdateModal(true);
+        }, 1000);
       }
     }
 
@@ -167,36 +160,32 @@ function Dashboard() {
     >
       {showLoader && (
         <div className={styles["overlay-loader"]}>
-          <LoadingSpinner size={60} border={6} color="blue" />
-          <p className={styles["loader-text"]}>Updating your old API keys...</p>
+          <div className={styles["loader-content"]}>
+            <LoadingSpinner size={60} border={6} />
+            <p className={styles["loader-text"]}>
+              Updating your old API keys...
+            </p>
+          </div>
         </div>
       )}
 
       {showUpdateModal && (
-        <div
-          className={styles["modal-overlay"]}
-          onClick={() => setShowUpdateModal(false)}
-        >
-          <div
-            className={styles["modal-box"]}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className={styles["modal-heading"]}>API Keys Updated</h2>
-            <div className={styles["modal-content"]}>
+        <NotificationModal
+          isOpen={showUpdateModal}
+          onClose={() => setShowUpdateModal(false)}
+          heading="Notification"
+          buttonText="I Understand"
+          closeOnOverlayClick={false}
+          message={
+            <>
               <p>Our application has undergone some improvements.</p>
               <p style={{ marginTop: "10px" }}>
                 You had older API keys we have updated their expiry dates for
                 you.
               </p>
-            </div>
-            <button
-              className={styles["modal-button"]}
-              onClick={() => setShowUpdateModal(false)}
-            >
-              I Understand
-            </button>
-          </div>
-        </div>
+            </>
+          }
+        />
       )}
 
       <div>
