@@ -45,14 +45,15 @@ describe("User Service", () => {
   });
 
   it("Should create a new valid key and add it to user", async () => {
-    const mockKey = new Keys(MOCK_KEYS[0]);
+    const mockKey = new Keys(MOCK_KEYS[2]);
     const user = new User(MOCK_USERS[0]);
 
     jest.spyOn(KeyService.prototype, "createNewKey").mockResolvedValue(mockKey);
     jest.spyOn(user, "save").mockResolvedValue(user);
 
+    const { key_description, subscription_id, expires_at } = mockKey;
     const result = await userService.createNewUserKey(
-      mockKey.key_description,
+      { key_description, subscription_id, expires_at },
       user
     );
     expect(result).toBe(mockKey);
