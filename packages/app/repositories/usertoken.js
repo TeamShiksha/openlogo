@@ -1,6 +1,7 @@
 const BaseRepository = require("./base");
 const UserToken = require("../models/usertoken");
 const dayjs = require("dayjs");
+const { TokenExpiry } = require("../utils/constants");
 
 /**
  * The UserTokenRepository extends BaseRepository to manage UerToken model operations,
@@ -22,18 +23,24 @@ class UserTokenRepository extends BaseRepository {
     return await UserToken.findOne({ token: token, is_deleted: true });
   }
 
-  async fetchUserTokenByUserId(userId) {
-    return await UserToken.findOne({ user_id: userId, is_deleted: false });
+  async fetchUserTokenByUserId(userId, type) {
+    return await UserToken.findOne({
+      user_id: userId,
+      is_deleted: false,
+      type,
+    });
   }
 
-  async updateUserToken(token) {
+  async updateUserToken(tokenDoc) {
+    const config = TokenExpiry[tokenDoc.type];
+
+    const newExpiry = config
+      ? dayjs().add(config.value, config.unit).toDate()
+      : tokenDoc.expire_at;
+
     const updatedToken = await UserToken.findOneAndUpdate(
-      { token, is_deleted: false },
-      {
-        $set: {
-          expire_at: dayjs().add(1, "day").toDate(),
-        },
-      },
+      { token: tokenDoc.token, is_deleted: false },
+      { $set: { expire_at: newExpiry } },
       { new: true }
     );
 

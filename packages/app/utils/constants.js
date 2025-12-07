@@ -10,6 +10,11 @@ const UserTokenTypes = {
   VERIFY: "VERIFY",
 };
 
+const TokenExpiry = {
+  [UserTokenTypes.VERIFY]: { unit: "day", value: 1 },
+  [UserTokenTypes.FORGOT]: { unit: "minute", value: 10 },
+};
+
 const UserType = {
   ADMIN: "ADMIN",
   CUSTOMER: "CUSTOMER",
@@ -108,6 +113,7 @@ module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
   UserTokenTypes,
+  TokenExpiry,
   UserType,
   SubscriptionTypes,
   StatusTypes,

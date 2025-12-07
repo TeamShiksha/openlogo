@@ -1,8 +1,6 @@
 const { v4 } = require("uuid");
 const { UserTokenRepository } = require("../repositories");
 const { UserTokenTypes } = require("../utils/constants");
-const { Messages } = require("../utils/constants");
-const sendEmail = require("../utils/sendEmail");
 const dayjs = require("dayjs");
 
 class UserTokenService {
@@ -27,8 +25,8 @@ class UserTokenService {
     return await this.userTokenRepository.fetchDeletedUserToken(token);
   }
 
-  async fetchUserTokenByUserId(userId) {
-    return await this.userTokenRepository.fetchUserTokenByUserId(userId);
+  async fetchUserTokenByUserId(userId, type) {
+    return await this.userTokenRepository.fetchUserTokenByUserId(userId, type);
   }
 
   async updateUserToken(token) {
@@ -50,61 +48,8 @@ class UserTokenService {
       user_id: userId,
       token: v4().replaceAll("-", ""),
       type: UserTokenTypes.FORGOT,
+      expire_at: dayjs().add(10, "minute").toDate(),
     });
-  }
-
-  /**
-   * Resends verification email to the user with rate limiting.
-   * @param {Object} user - The user object.
-   * @param {Object} userService - The UserService instance for updating user email count.
-   * @returns {Promise<Object>} - Returns result object with success status and error type if failed.
-   * @throws {Error} - Throws error with type property for different failure scenarios.
-   */
-
-  async resendVerificationEmail(user, userService) {
-    const userToken = await this.fetchUserTokenByUserId(user._id);
-
-    if (!userToken) {
-      const error = new Error(Messages.INVALID_TOKEN);
-      error.statusCode = 404;
-      throw error;
-    }
-
-    const now = dayjs();
-    const lastSent = dayjs(user.last_verification_email_sent_at);
-    const hoursSinceLastEmail = now.diff(lastSent, "hour");
-
-    let shouldResetCount = false;
-    if (hoursSinceLastEmail >= 24) {
-      shouldResetCount = true;
-    } else if (user.resend_email_count >= 3) {
-      const error = new Error(Messages.TRY_AGAIN);
-      error.statusCode = 429;
-      throw error;
-    }
-
-    const updatedToken = await this.updateUserToken(userToken.token);
-    if (!updatedToken) {
-      const error = new Error(Messages.FAILED_UPDATE_TOKEN);
-      error.statusCode = 400;
-      throw error;
-    }
-
-    await sendEmail({
-      id: 2,
-      subject: "Openlogo: Email Verification",
-      recipient: user.email,
-      body: {
-        url: updatedToken.tokenURL(),
-      },
-    });
-
-    await userService.updateUserEmailCount(user, shouldResetCount);
-
-    return {
-      success: true,
-      message: Messages.RESEND_EMAIL,
-    };
   }
 }
 

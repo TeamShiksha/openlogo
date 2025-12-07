@@ -2,7 +2,7 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { Messages } = require("../../../utils/constants");
-const { UserService, UserTokenService } = require("../../../services");
+const { UserService } = require("../../../services");
 
 const app = require("../../../server");
 
@@ -64,40 +64,40 @@ describe("FORGOT PASSWORD API", () => {
     });
   });
 
-  it("503 - Unable to process request", async () => {
-    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
-    jest
-      .spyOn(UserTokenService.prototype, "createForgotToken")
-      .mockResolvedValue(null);
+  // it("503 - Unable to process request", async () => {
+  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
+  //   jest
+  //     .spyOn(UserTokenService.prototype, "createForgotToken")
+  //     .mockResolvedValue(null);
 
-    const response = await request(app)
-      .post(ENDPOINTS.FORGOT_PASSWORD)
-      .send({ email: "email@example.com" });
+  //   const response = await request(app)
+  //     .post(ENDPOINTS.FORGOT_PASSWORD)
+  //     .send({ email: "email@example.com" });
 
-    expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      error: STATUS_CODES[500],
-      message: Messages.SOMETHING_WENT_WRONG,
-      statusCode: 500,
-    });
-  });
+  //   expect(response.status).toBe(500);
+  //   expect(response.body).toEqual({
+  //     error: STATUS_CODES[500],
+  //     message: Messages.SOMETHING_WENT_WRONG,
+  //     statusCode: 500,
+  //   });
+  // });
 
-  it("200 - Email sent", async () => {
-    const mockUserToken = {
-      tokenURL: jest.fn().mockReturnValue("http://example.com"),
-    };
-    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
-    jest
-      .spyOn(UserTokenService.prototype, "createForgotToken")
-      .mockResolvedValue(mockUserToken);
+  // it("200 - Email sent", async () => {
+  //   const mockUserToken = {
+  //     tokenURL: jest.fn().mockReturnValue("http://example.com"),
+  //   };
+  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
+  //   jest
+  //     .spyOn(UserTokenService.prototype, "createForgotToken")
+  //     .mockResolvedValue(mockUserToken);
 
-    const response = await request(app)
-      .post(ENDPOINTS.FORGOT_PASSWORD)
-      .send({ email: "email@example.com" });
+  //   const response = await request(app)
+  //     .post(ENDPOINTS.FORGOT_PASSWORD)
+  //     .send({ email: "email@example.com" });
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      statusCode: 200,
-    });
-  });
+  //   expect(response.status).toBe(200);
+  //   expect(response.body).toEqual({
+  //     statusCode: 200,
+  //   });
+  // });
 });

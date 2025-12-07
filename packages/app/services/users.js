@@ -248,18 +248,11 @@ class UserService {
     return true;
   }
 
-  /**
-   * Updates the user's resend email count.
-   * @param {Object} user - The user.
-   * @param {Boolean} reset - Boolean value to reset the count.
-   * @returns - Returns updated user.
-   */
-  async updateUserEmailCount(user, reset = false) {
+  async updateUserFortgotpasswordAttempts(user) {
     const updatedFields = {
-      last_verification_email_sent_at: new Date(),
-      resend_email_count: reset ? 1 : (user.resend_email_count || 0) + 1,
+      forgot_password_last_reset_at: new Date(),
+      forgot_password_attempts: (user.forgot_password_attempts || 0) + 1,
     };
-
     const updatedUser = await this.userRepository.update(
       user._id,
       updatedFields
