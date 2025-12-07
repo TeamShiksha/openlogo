@@ -45,6 +45,7 @@ describe("KeyService", () => {
       user: MOCK_KEYS[0].user,
       key: "new-key-123",
       key_description: "Test Key",
+      expires_at: "2025-07-23T14:32:18.456Z",
     };
 
     jest
@@ -64,6 +65,30 @@ describe("KeyService", () => {
 
     const result = await keyService.destroyKey(keyId);
     expect(result).toEqual({ deleted: true });
+  });
+
+  it("should update oldKeys without a expiry", async () => {
+    const keyId = MOCK_KEYS[3]._id;
+    jest
+      .spyOn(KeysRepository.prototype, "getMultipleKeys")
+      .mockResolvedValue([MOCK_KEYS[3]]);
+    jest
+      .spyOn(KeysRepository.prototype, "updateOldKeys")
+      .mockResolvedValue(true);
+    const result = await keyService.findUpdateKeyWithoutExpiry(keyId);
+    expect(result).toEqual(true);
+  });
+
+  it("should not update any oldKey with a expiry", async () => {
+    const keyId = MOCK_KEYS[2]._id;
+    jest
+      .spyOn(KeysRepository.prototype, "getMultipleKeys")
+      .mockResolvedValue([MOCK_KEYS[2]]);
+    jest
+      .spyOn(KeysRepository.prototype, "updateOldKeys")
+      .mockResolvedValue(false);
+    const result = await keyService.findUpdateKeyWithoutExpiry(keyId);
+    expect(result).toEqual(false);
   });
 
   it("should fetch user with subscription using api key", async () => {
