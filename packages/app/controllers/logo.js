@@ -63,7 +63,6 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-    //Create an API request entry for analytics/usage tracking.
     try {
       const [imageDoc, userRef] = await Promise.all([
         imageService.getImageByCompanyName(company),
@@ -77,7 +76,7 @@ async function getLogoController(req, res, next) {
       };
       await logoRequestLogsService.createEntry(requestPayload);
     } catch (err) {
-      // non-fatal: log and continue
+
       console.error("Failed to create API request entry:", err.message);
     }
 
