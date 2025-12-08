@@ -8,10 +8,75 @@ const mongoose = require("mongoose");
  * It passes the LogoRequestLogs model to the base repository for database interactions.
  * Custom methods specific to LogoRequestLogs can also be added as needed.
  */
-
 class LogoRequestLogsRepository extends BaseRepository {
   constructor() {
     super(LogoRequestLogs);
+  }
+
+  /**
+   * Generic method to get aggregated data for a date range
+   * @param {string} userId - The user ID to filter by
+   * @param {number} days - Number of days to look back
+   * @param {string} period - Period label (e.g., 'week', 'month')
+   * @returns {Promise<Object>} - An object containing the count of requests for each day
+   */
+  async getDataForPeriod(userId, days, period) {
+    const today = dayjs();
+    const startDate = today.subtract(days, "day").startOf("day");
+    const endDate = today.endOf("day");
+
+    const result = await this.model.aggregate([
+      {
+        $match: {
+          user_id: new mongoose.Types.ObjectId(userId),
+          createdAt: {
+            $gte: startDate.toDate(),
+            $lte: endDate.toDate(),
+          },
+        },
+      },
+      {
+        $addFields: {
+          dateOnly: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$dateOnly",
+          count: { $sum: 1 },
+          totalBytes: { $sum: "$response_size_bytes" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id",
+          count: 1,
+          totalKB: { $round: [{ $divide: ["$totalBytes", 1024] }, 2] },
+        },
+      },
+    ]);
+
+    const summary = {
+      totalCount: result.reduce((sum, day) => sum + day.count, 0),
+      totalKB: result.reduce((sum, day) => sum + day.totalKB, 0).toFixed(2),
+    };
+
+    return {
+      period,
+      startDate: startDate.format("YYYY-MM-DD"),
+      endDate: endDate.format("YYYY-MM-DD"),
+      summary,
+      data: result,
+    };
   }
 
   /**
@@ -19,65 +84,8 @@ class LogoRequestLogsRepository extends BaseRepository {
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
-  async getCurrentWeekData(userId) {
-    const today = dayjs();
-    const weekStart = today.subtract(7, "day").startOf("day");
-    const weekEnd = today.endOf("day");
-    const weekStartDate = weekStart.toDate();
-    const weekEndDate = weekEnd.toDate();
-
-    const result = await this.model.aggregate([
-      {
-        $match: {
-          user_id: new mongoose.Types.ObjectId(userId),
-          createdAt: {
-            $gte: weekStartDate,
-            $lte: weekEndDate,
-          },
-        },
-      },
-      {
-        $addFields: {
-          dateOnly: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: "$dateOnly",
-          count: { $sum: 1 },
-          totalBytes: { $sum: "$response_size_bytes" },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-      {
-        $project: {
-          _id: 0,
-          date: "$_id",
-          count: 1,
-          totalKB: { $round: [{ $divide: ["$totalBytes", 1024] }, 2] },
-        },
-      },
-    ]);
-
-    const summary = {
-      totalCount: result.reduce((sum, day) => sum + day.count, 0),
-      totalKB: result.reduce((sum, day) => sum + day.totalKB, 0).toFixed(2),
-    };
-
-    return {
-      period: "week",
-      startDate: weekStart.format("YYYY-MM-DD"),
-      endDate: weekEnd.format("YYYY-MM-DD"),
-      summary: summary,
-      data: result,
-    };
+  getCurrentWeekData(userId) {
+    return this.getDataForPeriod(userId, 7, "week");
   }
 
   /**
@@ -85,65 +93,8 @@ class LogoRequestLogsRepository extends BaseRepository {
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
-  async getCurrentMonthData(userId) {
-    const today = dayjs();
-    const monthStart = today.subtract(30, "day").startOf("day");
-    const monthEnd = today.endOf("day");
-    const monthStartDate = monthStart.toDate();
-    const monthEndDate = monthEnd.toDate();
-
-    const result = await this.model.aggregate([
-      {
-        $match: {
-          user_id: new mongoose.Types.ObjectId(userId),
-          createdAt: {
-            $gte: monthStartDate,
-            $lte: monthEndDate,
-          },
-        },
-      },
-      {
-        $addFields: {
-          dateOnly: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: "$dateOnly",
-          count: { $sum: 1 },
-          totalBytes: { $sum: "$response_size_bytes" },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-      {
-        $project: {
-          _id: 0,
-          date: "$_id",
-          count: 1,
-          totalKB: { $round: [{ $divide: ["$totalBytes", 1024] }, 2] },
-        },
-      },
-    ]);
-
-    const summary = {
-      totalCount: result.reduce((sum, day) => sum + day.count, 0),
-      totalKB: result.reduce((sum, day) => sum + day.totalKB, 0).toFixed(2),
-    };
-
-    return {
-      period: "month",
-      startDate: monthStart.format("YYYY-MM-DD"),
-      endDate: monthEnd.format("YYYY-MM-DD"),
-      summary: summary,
-      data: result,
-    };
+  getCurrentMonthData(userId) {
+    return this.getDataForPeriod(userId, 30, "month");
   }
 }
 
