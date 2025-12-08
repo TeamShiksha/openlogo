@@ -54,15 +54,31 @@ class SendEmailService {
   async sendForgotPasswordEmail(user) {
     const MAX_ATTEMPTS_PER_DAY = 2;
     const RESET_WINDOW_HOURS = 24;
+    const COOLDOWN_MS = 2 * 60 * 1000;
 
     const now = dayjs();
     const lastSent = dayjs(user.forgot_password_last_reset_at);
     const timeSinceLast = now.diff(lastSent, "hour");
 
-    if (timeSinceLast >= RESET_WINDOW_HOURS) {
+    if (
+      user.forgot_password_last_reset_at &&
+      timeSinceLast >= RESET_WINDOW_HOURS
+    ) {
       user.forgot_password_attempts = 0;
-      user.forgot_password_last_reset_at = now.toDate();
       await user.save();
+    }
+
+    if (
+      user.forgot_password_last_reset_at &&
+      now.diff(lastSent) < COOLDOWN_MS
+    ) {
+      const nextAllowedAt = lastSent.add(2, "minute").toISOString();
+      const error = new Error(
+        `Too many requests. Please try again after ${nextAllowedAt}.`
+      );
+      error.statusCode = 429;
+      error.nextAllowedAt = nextAllowedAt;
+      throw error;
     }
 
     if (user.forgot_password_attempts >= MAX_ATTEMPTS_PER_DAY) {
@@ -103,6 +119,7 @@ class SendEmailService {
     return {
       success: true,
       message: "Email sent successfully",
+      nextAllowedAt: lastSent.add(2, "minute").toISOString(),
     };
   }
 }
