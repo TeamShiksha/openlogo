@@ -3,7 +3,6 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
-  LogoRequestLogsService,
   UserService,
 } = require("../services");
 const {
@@ -22,7 +21,6 @@ async function getLogoController(req, res, next) {
     const imageService = new ImageService();
     const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
-    const logoRequestLogsService = new LogoRequestLogsService();
     const userService = new UserService();
 
     const { error, value } = getLogoQuerySchema.validate(req.query);
@@ -63,22 +61,8 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-    try {
-      const [imageDoc, userRef] = await Promise.all([
-        imageService.getImageByCompanyName(company),
-        userService.getUserBySubscriptionId(userSubscription._id),
-      ]);
-      const requestPayload = {
-        user_id: userRef._id,
-        key_id: keyRef._id,
-        image_id: imageDoc && imageDoc._id,
-        response_size_bytes: (imageDoc && imageDoc.image_size) || 0,
-      };
-      await logoRequestLogsService.createEntry(requestPayload);
-    } catch (err) {
 
-      console.error("Failed to create API request entry:", err.message);
-    }
+    await userService.logLogoRequestEntry(company, userSubscription, keyRef);
 
     subscriptionService.incrementUsageCount(userSubscription).catch((err) => {
       console.error("Failed to increment usage count:", err.message);
