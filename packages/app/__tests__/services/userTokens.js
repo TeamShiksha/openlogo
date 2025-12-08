@@ -5,8 +5,6 @@ const { UserTokenTypes } = require("../../utils/constants");
 const { MOCK_USERTOKENS } = require("../../utils/mocks");
 const dayjs = require("dayjs");
 
-jest.mock("../../utils/sendEmail");
-
 describe("User Token Service", () => {
   let userTokenService;
 
@@ -116,11 +114,42 @@ describe("User Token Service", () => {
       .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
       .mockResolvedValue(userToken);
 
-    const result = await userTokenService.fetchUserTokenByUserId(
-      userToken.user_id
+    const result = await userTokenService.fetchUserTokenByUserIdTokenType(
+      userToken.user_id,
+      UserTokenTypes.VERIFY
     );
     expect(result).toBeDefined();
     expect(result.type).toBe(UserTokenTypes.VERIFY);
+  });
+
+  it("should return null if no user token found with invalid user id", async () => {
+    const userId = "invalid-user-id";
+    const type = UserTokenTypes.FORGOT;
+
+    jest
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .mockResolvedValue(null);
+
+    const result = await userTokenService.fetchUserTokenByUserIdTokenType(
+      userId,
+      type
+    );
+    expect(result).toBe(null);
+  });
+
+  it("should return null if no user token found with invalid token type", async () => {
+    const userToken = new UserToken(MOCK_USERTOKENS[0]);
+    const type = "invalid-type";
+
+    jest
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .mockResolvedValue(null);
+
+    const result = await userTokenService.fetchUserTokenByUserIdTokenType(
+      userToken.user_id,
+      type
+    );
+    expect(result).toBe(null);
   });
 
   it("should update user token successfully", async () => {

@@ -12,28 +12,29 @@ class SendEmailService {
   }
 
   async sendVerificationEmail(user) {
-    const userToken = await this.userTokenService.fetchUserTokenByUserId(
-      user._id,
-      UserTokenTypes.VERIFY
-    );
+    const userToken =
+      await this.userTokenService.fetchUserTokenByUserIdTokenType(
+        user._id,
+        UserTokenTypes.VERIFY
+      );
 
     if (!userToken) {
       const error = new Error(Messages.INVALID_TOKEN);
       error.statusCode = 404;
-      throw error;
+      return error;
     }
 
     if (!userToken.isExpired()) {
       const error = new Error(Messages.EMAIL_NOT_VERIFIED);
       error.statusCode = 429;
-      throw error;
+      return error;
     }
 
     const updatedToken = await this.userTokenService.updateUserToken(userToken);
     if (!updatedToken) {
       const error = new Error(Messages.FAILED_UPDATE_TOKEN);
       error.statusCode = 400;
-      throw error;
+      return error;
     }
 
     await sendEmail({
@@ -78,7 +79,7 @@ class SendEmailService {
       );
       error.statusCode = 429;
       error.nextAllowedAt = nextAllowedAt;
-      throw error;
+      return error;
     }
 
     if (user.forgot_password_attempts >= MAX_ATTEMPTS_PER_DAY) {
@@ -86,10 +87,10 @@ class SendEmailService {
         "Limit exceeded. You can request a forgot-password email only twice in 24 hours."
       );
       error.statusCode = 429;
-      throw error;
+      return error;
     }
 
-    let tokenDoc = await this.userTokenService.fetchUserTokenByUserId(
+    let tokenDoc = await this.userTokenService.fetchUserTokenByUserIdTokenType(
       user._id,
       UserTokenTypes.FORGOT
     );

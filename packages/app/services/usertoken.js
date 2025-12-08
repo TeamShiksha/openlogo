@@ -25,7 +25,7 @@ class UserTokenService {
     return await this.userTokenRepository.fetchDeletedUserToken(token);
   }
 
-  async fetchUserTokenByUserId(userId, type) {
+  async fetchUserTokenByUserIdTokenType(userId, type) {
     return await this.userTokenRepository.fetchUserTokenByUserId(userId, type);
   }
 

@@ -355,7 +355,6 @@ async function verifyEmailController(req, res, next) {
 async function forgotPasswordController(req, res, next) {
   try {
     const userService = new UserService();
-    //const userTokenService = new UserTokenService();
     const sendEmailService = new SendEmailService();
     const { error, value } = forgotPasswordSchema.validate(req.body);
     if (error)
@@ -373,23 +372,6 @@ async function forgotPasswordController(req, res, next) {
         message: Messages.EMAIL_DOESNT_EXISTS,
         statusCode: 404,
       });
-
-    // const userToken = await userTokenService.createForgotToken(user._id);
-    // if (!userToken)
-    //   return res.status(500).json({
-    //     error: STATUS_CODES[500],
-    //     message: Messages.SOMETHING_WENT_WRONG,
-    //     statusCode: 500,
-    //   });
-
-    // await sendEmail({
-    //   id: 1,
-    //   subject: "Reset Your Password",
-    //   recipient: email,
-    //   body: {
-    //     url: userToken.tokenURL(),
-    //   },
-    // });
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
 
