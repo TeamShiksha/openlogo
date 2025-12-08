@@ -30,7 +30,6 @@ const logoRequestLogsSchema = new Schema(
   }
 );
 
-// Index to make descending sort faster.
 logoRequestLogsSchema.index({ createdAt: -1 });
 logoRequestLogsSchema.index({ user_id: 1 });
 
