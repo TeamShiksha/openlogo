@@ -11,8 +11,7 @@ const { Messages } = require("../utils/constants");
 async function getLogoRequestStatsController(req, res, next) {
   try {
     const logoRequestLogsService = new LogoRequestLogsService();
-
-    // Validate query parameters
+    
     const { error } = getStatsQuerySchema.validate(req.query);
     if (error) {
       return res.status(422).json({
@@ -27,7 +26,6 @@ async function getLogoRequestStatsController(req, res, next) {
 
     let stats;
 
-    // Get stats based on period
     if (period === "week") {
       stats = await logoRequestLogsService.getWeeklyStats(userId);
     } else if (period === "month") {
