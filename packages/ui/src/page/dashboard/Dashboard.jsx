@@ -19,8 +19,7 @@ import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinne
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
-import NotificationModal from "../../components/Notification/NotificationModal.jsx";
-
+import InformationModal from "../../components/Information/Information.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
@@ -97,7 +96,7 @@ function Dashboard() {
         setTimeout(() => {
           setShowLoader(false);
           setShowUpdateModal(true);
-        }, 1000);
+        }, 2000);
       }
     }
 
@@ -170,7 +169,7 @@ function Dashboard() {
       )}
 
       {showUpdateModal && (
-        <NotificationModal
+        <InformationModal
           isOpen={showUpdateModal}
           onClose={() => setShowUpdateModal(false)}
           heading="Notification"

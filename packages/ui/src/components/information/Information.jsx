@@ -1,9 +1,9 @@
 import Modal from "../common/modal/Modal.jsx";
 import Button from "../common/button/Button.jsx";
-import styles from "./NotificationModal.module.css";
+import styles from "./Information.module.css";
 import PropTypes from "prop-types";
 
-function NotificationModal({
+function InformationModal({
   isOpen,
   onClose,
   heading,
@@ -18,18 +18,20 @@ function NotificationModal({
       closeOnOverlayClick={false}
       showCloseButton={true}
     >
-      <div className={styles["notification-content"]}>
-        <h2 className={styles["notification-heading"]}>{heading}</h2>
-        <div className={styles["notification-message"]}>{message}</div>
-        <Button variant="primary" onClick={onClose} style={{ width: "100%" }}>
-          {buttonText}
-        </Button>
+      <div className={styles["information-content"]}>
+        <h2 className={styles["information-heading"]}>{heading}</h2>
+        <div className={styles["information-message"]}>{message}</div>
+        <div className={styles["button-wrapper"]}>
+          <Button variant="primary" onClick={onClose}>
+            {buttonText}
+          </Button>
+        </div>
       </div>
     </Modal>
   );
 }
 
-NotificationModal.propTypes = {
+InformationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   heading: PropTypes.string.isRequired,
@@ -37,4 +39,4 @@ NotificationModal.propTypes = {
   buttonText: PropTypes.string,
 };
 
-export default NotificationModal;
+export default InformationModal;
