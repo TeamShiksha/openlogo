@@ -161,9 +161,7 @@ function Dashboard() {
         <div className={styles["overlay-loader"]}>
           <div className={styles["loader-content"]}>
             <LoadingSpinner size={60} border={6} />
-            <p className={styles["loader-text"]}>
-              Updating your old API keys...
-            </p>
+            <p className={styles["loader-text"]}>Please wait...</p>
           </div>
         </div>
       )}
