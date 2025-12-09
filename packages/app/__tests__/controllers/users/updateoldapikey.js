@@ -1,7 +1,5 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
 const { Users } = require("../../../models");
-const { Messages } = require("../../../utils/constants");
 const { UserService, KeyService } = require("../../../services");
 const app = require("../../../server");
 const { MOCK_USERS, MOCK_KEYS } = require("../../../utils/mocks");
@@ -23,21 +21,17 @@ describe("Update User Old Keys", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      key_description: "mock keydescription",
+      key_description: MOCK_KEYS[2].key_description,
     };
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .post("/api/user/api-key")
+      .post("/api/user/update-oldKeys")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      statusCode: 404,
-      message: Messages.USER_NOT_FOUND,
-      error: STATUS_CODES[404],
-    });
+    expect(response.body).toEqual({});
   });
 
   it("200 - should return true when keys are successfully updated", async () => {

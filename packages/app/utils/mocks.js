@@ -144,21 +144,21 @@ const MOCK_KEYS = [
   {
     user: new mongoose.Types.ObjectId(),
     key: "28482DNDO483ND3",
-    key_description: "API-KEY-0",
+    key_description: "ZEROAPIKEY",
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
   {
     user: new mongoose.Types.ObjectId(),
     key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    key_description: "API-KEY-1",
+    key_description: "FIRSTAPIKEY",
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
   {
     _id: new mongoose.Types.ObjectId(),
     api_key: "G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8",
-    key_description: "API-KEY-2",
+    key_description: "SECONDAPIKEY",
     updated_at: new Date("2024-12-01T08:15:00Z"),
     subscription_id: new mongoose.Types.ObjectId("507f1f77bcf86cd799439013"),
     expires_at: new Date("2025-03-31T23:59:59Z"),
@@ -169,6 +169,16 @@ const MOCK_KEYS = [
     key_description: "API-KEY-3",
     updated_at: new Date("2024-11-28T16:20:00Z"),
     subscription_id: new mongoose.Types.ObjectId("507f1f77bcf86cd799439014"),
+  },
+];
+
+const MOCK_KEYS_VALIDITY_PERIOD = [
+  {
+    one_Week: 7,
+    one_Month: 30,
+    three_Months: 90,
+    six_Months: 180,
+    one_Year: 365,
   },
 ];
 
@@ -383,6 +393,7 @@ module.exports = {
   MOCK_USERS,
   MOCK_USERTOKENS,
   MOCK_KEYS,
+  MOCK_KEYS_VALIDITY_PERIOD,
   MOCK_ANALYTICS_DATA_INPUT,
   MOCK_ANALYTICS_DATA_OUTPUT,
   MOCK_IMAGES,
