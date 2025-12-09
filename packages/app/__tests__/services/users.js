@@ -208,4 +208,70 @@ describe("User Service", () => {
     const result = await userService.updateUserToAdmin(user.email);
     expect(result).toBe(false);
   });
+
+  it("should return user's forgot password attempts as 0 if reset is true", async () => {
+    const user = new User(MOCK_USERS[0]);
+    user.forgot_password_attempts = 1;
+
+    const updatedUser = {
+      ...user,
+      forgot_password_attempts: 0,
+      forgot_password_last_reset_at: new Date(),
+    };
+
+    jest
+      .spyOn(UsersRepository.prototype, "update")
+      .mockResolvedValue(updatedUser);
+
+    const result = await userService.updateUserFortgotpasswordAttempts(
+      user,
+      true
+    );
+    expect(result).toBeDefined();
+    expect(result.forgot_password_attempts).toBe(0);
+  });
+
+  it("should incriment user's forgot password attempts if reset is false", async () => {
+    const user = new User(MOCK_USERS[0]);
+    user.forgot_password_attempts = 1;
+
+    const updatedUser = {
+      ...user,
+      forgot_password_attempts: 2,
+      forgot_password_last_reset_at: new Date(),
+    };
+
+    jest
+      .spyOn(UsersRepository.prototype, "update")
+      .mockResolvedValue(updatedUser);
+
+    const result = await userService.updateUserFortgotpasswordAttempts(
+      user,
+      false
+    );
+    expect(result).toBeDefined();
+    expect(result.forgot_password_attempts).toBe(2);
+  });
+
+  it("should update user's forgot password last reset at time to current time", async () => {
+    const user = new User(MOCK_USERS[0]);
+    user.forgot_password_attempts = 1;
+
+    const updatedUser = {
+      ...user,
+      forgot_password_attempts: 2,
+      forgot_password_last_reset_at: new Date(),
+    };
+
+    jest
+      .spyOn(UsersRepository.prototype, "update")
+      .mockResolvedValue(updatedUser);
+
+    const result = await userService.updateUserFortgotpasswordAttempts(
+      user,
+      false
+    );
+    expect(result).toBeDefined();
+    expect(result.forgot_password_last_reset_at).toBeInstanceOf(Date);
+  });
 });

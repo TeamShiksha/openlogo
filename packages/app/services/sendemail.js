@@ -11,6 +11,13 @@ class SendEmailService {
     this.userService = new UserService();
   }
 
+  /**
+   * Sends a verification email to the user.
+   * Fetches the user's verification token, validates it, refreshes it if expired,
+   * and sends a new verification email. Returns an error object on failure.
+   * @param {Object} user - The user to send the verification email to.
+   * @returns {Promise<Object|Error>} - Success response or an Error with statusCode.
+   */
   async sendVerificationEmail(user) {
     const userToken =
       await this.userTokenService.fetchUserTokenByUserIdTokenType(
@@ -52,6 +59,16 @@ class SendEmailService {
     };
   }
 
+  /**
+   * Sends a forgot password email to the user.
+   *
+   * Enforces cooldown limits, daily attempt limits, resets counters when needed,
+   * refreshes or creates a token, updates attempt tracking, and sends the email.
+   * Returns an error object when rate-limited or invalid.
+   *
+   * @param {Object} user - The user requesting a password reset.
+   * @returns {Promise<Object|Error>} - Success response or an Error with statusCode.
+   */
   async sendForgotPasswordEmail(user) {
     const MAX_ATTEMPTS_PER_DAY = 2;
     const RESET_WINDOW_HOURS = 24;
@@ -60,13 +77,13 @@ class SendEmailService {
     const now = dayjs();
     const lastSent = dayjs(user.forgot_password_last_reset_at);
     const timeSinceLast = now.diff(lastSent, "hour");
+    let reset = false;
 
     if (
       user.forgot_password_last_reset_at &&
       timeSinceLast >= RESET_WINDOW_HOURS
     ) {
-      user.forgot_password_attempts = 0;
-      await user.save();
+      reset = true;
     }
 
     if (
@@ -74,18 +91,14 @@ class SendEmailService {
       now.diff(lastSent) < COOLDOWN_MS
     ) {
       const nextAllowedAt = lastSent.add(2, "minute").toISOString();
-      const error = new Error(
-        `Too many requests. Please try again after ${nextAllowedAt}.`
-      );
+      const error = new Error(Messages.TOO_MANY_REQUESTS);
       error.statusCode = 429;
       error.nextAllowedAt = nextAllowedAt;
       return error;
     }
 
-    if (user.forgot_password_attempts >= MAX_ATTEMPTS_PER_DAY) {
-      const error = new Error(
-        "Limit exceeded. You can request a forgot-password email only twice in 24 hours."
-      );
+    if (!reset && user.forgot_password_attempts >= MAX_ATTEMPTS_PER_DAY) {
+      const error = new Error(Messages.TRY_AGAIN);
       error.statusCode = 429;
       return error;
     }
@@ -96,17 +109,12 @@ class SendEmailService {
     );
 
     if (tokenDoc) {
-      // Update expiry to 10 minutes
-      tokenDoc.expire_at = dayjs().add(10, "minute").toDate();
-      await tokenDoc.save();
+      tokenDoc = await this.userTokenService.updateUserToken(tokenDoc);
     } else {
-      // Create new token with 10-minute expiry
       tokenDoc = await this.userTokenService.createForgotToken(user._id);
     }
 
-    user.forgot_password_attempts += 1;
-    user.forgot_password_last_reset_at = now.toDate();
-    await user.save();
+    await this.userService.updateUserFortgotpasswordAttempts(user, reset);
 
     await sendEmail({
       id: 1,
@@ -119,8 +127,8 @@ class SendEmailService {
 
     return {
       success: true,
-      message: "Email sent successfully",
-      nextAllowedAt: lastSent.add(2, "minute").toISOString(),
+      statusCode: 200,
+      nextAllowedAt: now.add(2, "minute").toISOString(),
     };
   }
 }

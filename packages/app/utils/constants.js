@@ -100,6 +100,7 @@ const Messages = {
   FAILED_UPDATE_TOKEN: "Failed to update token.",
   RESEND_EMAIL: "Resent a new Verification Email.",
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
+  TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;

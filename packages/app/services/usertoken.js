@@ -26,7 +26,10 @@ class UserTokenService {
   }
 
   async fetchUserTokenByUserIdTokenType(userId, type) {
-    return await this.userTokenRepository.fetchUserTokenByUserId(userId, type);
+    return await this.userTokenRepository.fetchUserTokenByUserIdTokenType(
+      userId,
+      type
+    );
   }
 
   async updateUserToken(token) {

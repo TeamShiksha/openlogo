@@ -111,7 +111,7 @@ describe("User Token Service", () => {
     const userToken = new UserToken(MOCK_USERTOKENS[0]);
 
     jest
-      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserIdTokenType")
       .mockResolvedValue(userToken);
 
     const result = await userTokenService.fetchUserTokenByUserIdTokenType(
@@ -127,7 +127,7 @@ describe("User Token Service", () => {
     const type = UserTokenTypes.FORGOT;
 
     jest
-      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserIdTokenType")
       .mockResolvedValue(null);
 
     const result = await userTokenService.fetchUserTokenByUserIdTokenType(
@@ -142,7 +142,7 @@ describe("User Token Service", () => {
     const type = "invalid-type";
 
     jest
-      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserId")
+      .spyOn(UserTokenRepository.prototype, "fetchUserTokenByUserIdTokenType")
       .mockResolvedValue(null);
 
     const result = await userTokenService.fetchUserTokenByUserIdTokenType(
@@ -152,8 +152,8 @@ describe("User Token Service", () => {
     expect(result).toBe(null);
   });
 
-  it("should update user token successfully", async () => {
-    const userToken = new UserToken(MOCK_USERTOKENS[1]);
+  it("should udate user token expiry by 24 hours if token is VERIFY type ", async () => {
+    const userToken = new UserToken(MOCK_USERTOKENS[0]);
     const updatedExpireAt = dayjs().add(1, "day").toDate();
 
     jest
@@ -163,7 +163,23 @@ describe("User Token Service", () => {
         expire_at: updatedExpireAt,
       });
 
-    const result = await userTokenService.updateUserToken(userToken.token);
+    const result = await userTokenService.updateUserToken(userToken);
+    expect(result).toBeDefined();
+    expect(result.expire_at).toEqual(updatedExpireAt);
+  });
+
+  it("should udate user token expiry by 10 minutes if token is FORGOT type ", async () => {
+    const userToken = new UserToken(MOCK_USERTOKENS[5]);
+    const updatedExpireAt = dayjs().add(10, "minute").toDate();
+
+    jest
+      .spyOn(UserTokenRepository.prototype, "updateUserToken")
+      .mockResolvedValue({
+        ...userToken.toObject(),
+        expire_at: updatedExpireAt,
+      });
+
+    const result = await userTokenService.updateUserToken(userToken);
     expect(result).toBeDefined();
     expect(result.expire_at).toEqual(updatedExpireAt);
   });

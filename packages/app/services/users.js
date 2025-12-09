@@ -248,16 +248,22 @@ class UserService {
     return true;
   }
 
-  async updateUserFortgotpasswordAttempts(user) {
+  /**
+   * Updates the user's forgot-password attempt data.
+   * Resets or increments the attempt count and updates the last reset timestamp.
+   * @param {Object} user - The user to update.
+   * @param {boolean} [reset=false] - Whether to reset the attempts.
+   * @returns {Promise<Object>} - The updated user record.
+   */
+  async updateUserFortgotpasswordAttempts(user, reset = false) {
     const updatedFields = {
       forgot_password_last_reset_at: new Date(),
-      forgot_password_attempts: (user.forgot_password_attempts || 0) + 1,
+      forgot_password_attempts: reset
+        ? 0
+        : (user.forgot_password_attempts || 0) + 1,
     };
-    const updatedUser = await this.userRepository.update(
-      user._id,
-      updatedFields
-    );
-    return updatedUser;
+
+    return await this.userRepository.update(user._id, updatedFields);
   }
 }
 

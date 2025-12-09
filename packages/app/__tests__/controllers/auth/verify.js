@@ -1,10 +1,17 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
-const { UserService, UserTokenService } = require("../../../services");
+const {
+  UserService,
+  UserTokenService,
+  SendEmailService,
+} = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
+const { MOCK_USERS } = require("../../../utils/mocks");
 const sendEmail = require("../../../utils/sendEmail");
+const dayjs = require("dayjs");
+
 jest.mock("../../../utils/sendEmail");
 
 describe("VERIFY EMAIL API", () => {
@@ -43,7 +50,78 @@ describe("VERIFY EMAIL API", () => {
     });
   }, 10000);
 
-  // add test here
+  it("429 - when sendVerificationEmail fails", async () => {
+    const user = {
+      ...MOCK_USERS[0],
+      _id: MOCK_USERS[0]._id,
+      is_verified: false,
+      last_verification_email_sent_at: dayjs().subtract(1, "hour").toDate(),
+    };
+    const mockToken = {
+      user_id: user._id,
+      token: "expiredToken",
+      isExpired: jest.fn().mockReturnValue(true),
+    };
+    const error = new Error(Messages.EMAIL_NOT_VERIFIED);
+    error.statusCode = 429;
+
+    jest
+      .spyOn(UserTokenService.prototype, "fetchUserToken")
+      .mockResolvedValue(mockToken);
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(user);
+    jest
+      .spyOn(SendEmailService.prototype, "sendVerificationEmail")
+      .mockResolvedValue(error);
+
+    const response = await request(app)
+      .get(`${ENDPOINTS.VERIFY}/expiredToken`)
+      .send();
+
+    expect(response.status).toBe(429);
+    expect(response.body).toEqual({
+      source: "resendEmail",
+      error: "Too Many Requests",
+      message: Messages.EMAIL_NOT_VERIFIED,
+      statusCode: 429,
+    });
+  });
+
+  it("201 - Token is expired and successfully sends a verification email", async () => {
+    const user = {
+      ...MOCK_USERS[0],
+      _id: MOCK_USERS[0]._id,
+      is_verified: false,
+      resend_email_count: 0,
+      last_verification_email_sent_at: dayjs().subtract(25, "hour").toDate(),
+    };
+    const mockToken = {
+      user_id: user._id,
+      token: "expiredToken",
+      isExpired: jest.fn().mockReturnValue(true),
+    };
+    jest
+      .spyOn(UserTokenService.prototype, "fetchUserToken")
+      .mockResolvedValue(mockToken);
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(SendEmailService.prototype, "sendVerificationEmail")
+      .mockResolvedValue({
+        message: Messages.RESEND_EMAIL,
+        statusCode: 201,
+        source: "resendEmail",
+      });
+
+    const response = await request(app)
+      .get(`${ENDPOINTS.VERIFY}/expiredToken`)
+      .send();
+
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual({
+      message: Messages.RESEND_EMAIL,
+      statusCode: 201,
+      source: "resendEmail",
+    });
+  });
   it("404 - Invalid Token", async () => {
     const mockToken = {
       user_id: "invalid-user-id",

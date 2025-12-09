@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserService } = require("../../../services");
+const { UserService, SendEmailService } = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { MOCK_USERS } = require("../../../utils/mocks");
@@ -62,7 +62,64 @@ describe("SIGNIN API", () => {
     });
   });
 
-  // add test here
+  it("should return error when sendVerificationEmail fails", async () => {
+    const user = {
+      ...MOCK_USERS[1],
+      is_verified: false,
+      is_deleted: false,
+      matchPassword: jest.fn().mockResolvedValue(true),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+
+    const error = new Error(Messages.EMAIL_NOT_VERIFIED);
+    error.statusCode = 429;
+
+    jest
+      .spyOn(SendEmailService.prototype, "sendVerificationEmail")
+      .mockResolvedValue(error);
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNIN)
+      .send({ email: user.email, password: dummyPassword });
+
+    expect(response.status).toBe(429);
+    expect(response.body).toEqual({
+      source: "resendEmail",
+      error: "Too Many Requests",
+      message: Messages.EMAIL_NOT_VERIFIED,
+      statusCode: 429,
+    });
+  });
+
+  it("201 - Sent verification email successfully", async () => {
+    const user = {
+      ...MOCK_USERS[1],
+      is_verified: false,
+      is_deleted: false,
+      matchPassword: jest.fn().mockResolvedValue(true),
+      generateJWT: jest.fn().mockReturnValue("jwt-token"),
+    };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(SendEmailService.prototype, "sendVerificationEmail")
+      .mockResolvedValue({
+        message: Messages.RESEND_EMAIL,
+        statusCode: 201,
+        source: "resendEmail",
+      });
+
+    const response = await request(app)
+      .post(ENDPOINTS.SIGNIN)
+      .send({ email: user.email, password: dummyPassword });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual({
+      message: Messages.RESEND_EMAIL,
+      statusCode: 201,
+      source: "resendEmail",
+    });
+  });
 
   it("404 - Incorrect password", async () => {
     const user = {

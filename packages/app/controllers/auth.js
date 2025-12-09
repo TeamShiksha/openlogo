@@ -159,24 +159,19 @@ async function signinController(req, res, next) {
       }
 
       if (!user.is_verified) {
-        try {
-          const result = await sendEmailService.sendVerificationEmail(user);
+        const result = await sendEmailService.sendVerificationEmail(user);
+        if (result instanceof Error) {
+          return res.status(result.statusCode || 500).json({
+            source: "resendEmail",
+            error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
+            message: result.message,
+            statusCode: result.statusCode,
+          });
+        } else {
           return res.status(201).json({
+            source: "resendEmail",
             message: result.message,
             statusCode: 201,
-            source: "resendEmail",
-          });
-        } catch (err) {
-          let statusCode = 500;
-          let message = Messages.RESEND_EMAIL_FAILED;
-          if (err.statusCode) {
-            statusCode = err.statusCode;
-            message = err.message;
-          }
-          return res.status(statusCode).json({
-            message: message,
-            statusCode: statusCode,
-            source: "resendEmail",
           });
         }
       }
@@ -286,24 +281,19 @@ async function verifyEmailController(req, res, next) {
     }
 
     if (userToken.isExpired()) {
-      try {
-        const result = await sendEmailService.sendVerificationEmail(user);
+      const result = await sendEmailService.sendVerificationEmail(user);
+      if (result instanceof Error) {
+        return res.status(result.statusCode || 500).json({
+          source: "resendEmail",
+          error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
+          message: result.message,
+          statusCode: result.statusCode,
+        });
+      } else {
         return res.status(201).json({
+          source: "resendEmail",
           message: result.message,
           statusCode: 201,
-          source: "resendEmail",
-        });
-      } catch (err) {
-        let statusCode = 500;
-        let message = Messages.RESEND_EMAIL_FAILED;
-        if (err.statusCode) {
-          statusCode = err.statusCode;
-          message = err.message;
-        }
-        return res.status(statusCode).json({
-          message: message,
-          statusCode: statusCode,
-          source: "resendEmail",
         });
       }
     }
@@ -374,15 +364,22 @@ async function forgotPasswordController(req, res, next) {
       });
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
-
-    if (!result.success) {
-      return res.status(500).json({
-        error: STATUS_CODES[500],
+    if (result instanceof Error) {
+      return res.status(result.statusCode || 500).json({
+        source: "sendEmail",
+        error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
         message: result.message,
-        statusCode: 500,
+        statusCode: result.statusCode,
+        nextAllowedAt: result.nextAllowedAt,
       });
     }
-    return res.status(200).json({ statusCode: 200 });
+
+    return res.status(200).json({
+      source: "sendEmail",
+      statusCode: 200,
+      success: true,
+      nextAllowedAt: result.nextAllowedAt,
+    });
   } catch (err) {
     next(err);
   }

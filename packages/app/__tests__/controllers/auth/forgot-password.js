@@ -2,8 +2,8 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { Messages } = require("../../../utils/constants");
-const { UserService } = require("../../../services");
-
+const { UserService, SendEmailService } = require("../../../services");
+const { MOCK_USERS } = require("../../../utils/mocks");
 const app = require("../../../server");
 
 describe("FORGOT PASSWORD API", () => {
@@ -64,40 +64,57 @@ describe("FORGOT PASSWORD API", () => {
     });
   });
 
-  // it("503 - Unable to process request", async () => {
-  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
-  //   jest
-  //     .spyOn(UserTokenService.prototype, "createForgotToken")
-  //     .mockResolvedValue(null);
+  it("429 - Too many requests", async () => {
+    const user = {
+      ...MOCK_USERS[0],
+      forgot_password_attempts: 2,
+      forgot_password_last_reset_at: new Date(),
+    };
+    const error = new Error(Messages.TOO_MANY_REQUESTS);
+    error.statusCode = 429;
 
-  //   const response = await request(app)
-  //     .post(ENDPOINTS.FORGOT_PASSWORD)
-  //     .send({ email: "email@example.com" });
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(SendEmailService.prototype, "sendForgotPasswordEmail")
+      .mockResolvedValue(error);
 
-  //   expect(response.status).toBe(500);
-  //   expect(response.body).toEqual({
-  //     error: STATUS_CODES[500],
-  //     message: Messages.SOMETHING_WENT_WRONG,
-  //     statusCode: 500,
-  //   });
-  // });
+    const response = await request(app)
+      .post(ENDPOINTS.FORGOT_PASSWORD)
+      .send({ email: "email@example.com" });
 
-  // it("200 - Email sent", async () => {
-  //   const mockUserToken = {
-  //     tokenURL: jest.fn().mockReturnValue("http://example.com"),
-  //   };
-  //   jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue({});
-  //   jest
-  //     .spyOn(UserTokenService.prototype, "createForgotToken")
-  //     .mockResolvedValue(mockUserToken);
+    expect(response.status).toBe(429);
+    expect(response.body).toEqual({
+      source: "sendEmail",
+      error: STATUS_CODES[429],
+      message: Messages.TOO_MANY_REQUESTS,
+      statusCode: 429,
+    });
+  });
 
-  //   const response = await request(app)
-  //     .post(ENDPOINTS.FORGOT_PASSWORD)
-  //     .send({ email: "email@example.com" });
+  it("200 - Successfuly sent email", async () => {
+    const user = {
+      ...MOCK_USERS[0],
+      forgot_password_attempts: 0,
+      forgot_password_last_reset_at: new Date(),
+    };
+    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(SendEmailService.prototype, "sendForgotPasswordEmail")
+      .mockResolvedValue({
+        success: true,
+        statusCode: 200,
+        nextAllowedAt: new Date().toISOString(),
+      });
+    const response = await request(app)
+      .post(ENDPOINTS.FORGOT_PASSWORD)
+      .send({ email: "email@example.com" });
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toEqual({
-  //     statusCode: 200,
-  //   });
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      source: "sendEmail",
+      statusCode: 200,
+      success: true,
+    });
+    expect(response.body.nextAllowedAt).toBeDefined();
+  });
 });
