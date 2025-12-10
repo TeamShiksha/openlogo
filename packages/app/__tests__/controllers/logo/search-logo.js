@@ -69,7 +69,7 @@ describe("searchLogoController", () => {
   it("if API_KEY is expired it should return 403", async () => {
     const expiredKeyMock = {
       ...MOCK_KEYS[0],
-      expires_at: new Date(Date.now() - 86400000), // Yesterday
+      expires_at: new Date(Date.now() - 86400000)
     };
 
     jest
