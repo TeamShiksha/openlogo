@@ -238,6 +238,12 @@ async function destroyKeyController(req, res, next) {
   }
 }
 
+/**
+ * Updates old API keys without expiry dates for a user.
+ * This controller retrieves the authenticated user, finds all their API keys
+ * that don't have an expiry date set, and updates them accordingly.
+ **/
+
 async function updateOldKeysController(req, res, next) {
   try {
     const userService = new UserService();

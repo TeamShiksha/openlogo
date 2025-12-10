@@ -26,12 +26,16 @@ describe("Update User Old Keys", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .post("/api/user/update-oldKeys")
+      .get("/api/user/update-oldKeys")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({});
+    expect(response.body).toEqual({
+      statusCode: 404,
+      error: "Not Found",
+      message: "User not found.",
+    });
   });
 
   it("200 - should return true when keys are successfully updated", async () => {

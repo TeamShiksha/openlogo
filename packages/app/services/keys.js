@@ -65,9 +65,12 @@ class KeyService {
   }
 
   /**
-   * Find and update keys without expiry field by Id.
-   * @param {string} keyId
-   * @returns {Promise<boolean>}
+   * Finds and updates keys associated with `keyId` that lack an `expires_at` property.
+   * . Retrieves all keys for `keyId`.
+   * . Filters for keys without an expiry time.
+   * . If found, updates these keys via the repository.
+   * @param {string} keyId - The ID used to retrieve keys.
+   * @returns {Promise<Array<Object> | false>} Updated key objects if keys without expiry exist, otherwise `false`.
    **/
 
   async findUpdateKeyWithoutExpiry(keyId) {
