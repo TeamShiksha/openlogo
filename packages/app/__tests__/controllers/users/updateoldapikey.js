@@ -26,7 +26,7 @@ describe("Update User Old Keys", () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
-      .get("/api/user/update-oldKeys")
+      .get("/api/user/update-old-keys")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockInput);
 
@@ -52,7 +52,7 @@ describe("Update User Old Keys", () => {
       .mockResolvedValue(true);
 
     const response = await request(app)
-      .get("/api/user/update-oldKeys")
+      .get("/api/user/update-old-keys")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockUser.keys);
 
@@ -77,7 +77,7 @@ describe("Update User Old Keys", () => {
       .mockResolvedValue(false);
 
     const response = await request(app)
-      .get("/api/user/update-oldKeys")
+      .get("/api/user/update-old-keys")
       .set("Cookie", `jwt=${mockToken}`)
       .send(mockUser.keys);
 

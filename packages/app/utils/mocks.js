@@ -173,11 +173,11 @@ const MOCK_KEYS = [
 
 const MOCK_KEYS_VALIDITY_PERIOD = [
   {
-    one_Week: 7,
-    one_Month: 30,
-    three_Months: 90,
-    six_Months: 180,
-    one_Year: 365,
+    oneWeek: 7,
+    oneMonth: 30,
+    threeMonths: 90,
+    sixMonths: 180,
+    oneYear: 365,
   },
 ];
 

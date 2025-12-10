@@ -112,7 +112,7 @@ class UserService {
     const { key_description, subscription_id, expires_at } = newKey;
     const keyValidity = expires_at;
     const today = new Date();
-    const keyExpiry = today.setDate(today.getDate() + keyValidity + 1);
+    const keyExpiry = today.setDate(today.getDate() + keyValidity);
     const newUserKey = await this.keyService.createNewKey({
       key_description: key_description,
       subscription_id: subscription_id,

@@ -242,6 +242,8 @@ async function destroyKeyController(req, res, next) {
  * Updates old API keys without expiry dates for a user.
  * This controller retrieves the authenticated user, finds all their API keys
  * that don't have an expiry date set, and updates them accordingly.
+ * @returns {Object} 200 JSON response with the number of keys updated, or 404 if user not found.
+ * @throws {Error} If an unexpected error occurs, it is passed to the next middleware.
  **/
 
 async function updateOldKeysController(req, res, next) {
@@ -259,12 +261,12 @@ async function updateOldKeysController(req, res, next) {
       });
     }
 
-    const KeysGotUpdate = await keyService.findUpdateKeyWithoutExpiry(
+    const updatedKeysStatus = await keyService.findUpdateKeyWithoutExpiry(
       user.keys
     );
     return res.status(200).json({
       statusCode: 200,
-      keysUpdated: KeysGotUpdate,
+      keysUpdated: updatedKeysStatus,
     });
   } catch (err) {
     next(err);

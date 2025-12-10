@@ -32,7 +32,7 @@ describe("Generate User Key", () => {
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       key_description: "Description@1234",
-      expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].one_Week,
+      expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
     };
 
     const response = await request(app)
@@ -53,7 +53,7 @@ describe("Generate User Key", () => {
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       key_description: MOCK_KEYS[1].key_description,
-      expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].one_Month,
+      expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneMonth,
     };
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
@@ -90,7 +90,7 @@ describe("Generate User Key", () => {
       .set("Cookie", `jwt=${mockToken}`)
       .send({
         key_description: MOCK_KEYS[1].key_description,
-        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].one_Week,
+        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
       });
 
     expect(response.status).toBe(403);
@@ -132,7 +132,7 @@ describe("Generate User Key", () => {
       .set("Cookie", `jwt=${mockToken}`)
       .send({
         key_description: MOCK_KEYS[1].key_description,
-        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].three_Months,
+        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].threeMonths,
       });
 
     expect(response.status).toBe(500);
@@ -171,7 +171,7 @@ describe("Generate User Key", () => {
       .set("Cookie", `jwt=${mockToken}`)
       .send({
         key_description: MOCK_KEYS[1].key_description,
-        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].one_Week,
+        expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
       });
 
     expect(response.status).toBe(200);

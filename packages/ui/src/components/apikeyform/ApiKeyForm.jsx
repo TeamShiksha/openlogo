@@ -21,7 +21,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
-  const [expiresInDays, setExpiresInDays] = useState(0);
+  const [expiresInDays, setExpiresInDays] = useState(7);
   const toast = useToast();
 
   const { makeRequest, data, loading, errorMsg } = useApi({

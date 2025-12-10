@@ -66,6 +66,25 @@ describe("searchLogoController", () => {
     });
   });
 
+  it("if API_KEY is expired it should return 403", async () => {
+    const expiredKeyMock = {
+      ...MOCK_KEYS[0],
+      expires_at: new Date(Date.now() - 86400000), // Yesterday
+    };
+
+    jest
+      .spyOn(KeyService.prototype, "getApiKey")
+      .mockResolvedValue(expiredKeyMock);
+
+    const response = await request(app).get(apiUrl).query(baseQuery);
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({
+      message: Messages.API_KEY_EXPIRED,
+      statusCode: 403,
+      error: STATUS_CODES[403],
+    });
+  });
+
   it("if usage limit is reached it should return 403", async () => {
     mockRepetedService(mockSubscription[1]);
     const response = await request(app).get(apiUrl).query(baseQuery);

@@ -72,8 +72,7 @@ class KeysRepository extends BaseRepository {
       );
       return keysUpdated.modifiedCount > 0;
     } catch (error) {
-      console.error("Error updating old keys:", error);
-      return false;
+      throw error;
     }
   }
 }
