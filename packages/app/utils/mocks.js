@@ -160,7 +160,6 @@ const MOCK_KEYS = [
     api_key: "G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8",
     key_description: "SECONDAPIKEY",
     updated_at: new Date("2024-12-01T08:15:00Z"),
-    subscription_id: new mongoose.Types.ObjectId("507f1f77bcf86cd799439013"),
     expires_at: new Date("2025-03-31T23:59:59Z"),
   },
   {
