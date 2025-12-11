@@ -10,7 +10,7 @@ function ChangeLog() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const selectedVersionData = changelog.versionsData.filter(
-    (v) => v.versionName === selectedVersion
+    ({versionName}) => versionName === selectedVersion
   );
 
   return (
@@ -34,24 +34,21 @@ function ChangeLog() {
 
           {isDropdownOpen && (
             <div className={styles["dropdown-menu"]}>
-              {versions.map((v) => (
+              {versions.map((versionName) => (
                 <button
-                  key={v}
+                  key={versionName}
                   onClick={() => {
-                    setSelectedVersion(v);
+                    setSelectedVersion(versionName);
                     setIsDropdownOpen(false);
                   }}
                 >
-                  Version {v}
+                  Version {versionName}
                 </button>
               ))}
             </div>
           )}
         </div>
       </div>
-
-      {/* Vertical timeline line - Desktop only */}
-      {/* <div className={styles["timeline-connector"]}></div> */}
 
       <div className={styles["versions-section"]}>
         {selectedVersionData.map((versionData) => (

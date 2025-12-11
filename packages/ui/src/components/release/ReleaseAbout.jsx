@@ -8,7 +8,7 @@ function About() {
       <p className={styles["description"]}>{introduction.description}</p>
       <ul>
         {introduction.features.map((feature, index) => (
-          <li key={index}>
+          <li key={feature.desc + index}>
             <span className={styles["dot"]}></span>
             <div>
               <span className={styles["list-heading"]}>

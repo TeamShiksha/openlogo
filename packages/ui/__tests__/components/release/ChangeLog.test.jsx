@@ -7,12 +7,10 @@ describe("ChangeLog component", () => {
   it("renders header and selected version", () => {
     render(<ChangeLog />);
 
-    // Check heading
     expect(
       screen.getByRole("heading", { name: /changelog/i })
     ).toBeInTheDocument();
 
-    // Check selected version button
     const latestVersion = RELEASE_PAGE.latestVersion;
 
     const versionButton = screen.getByRole("button", {
@@ -27,14 +25,12 @@ describe("ChangeLog component", () => {
 
     const latestVersion = RELEASE_PAGE.latestVersion;
 
-    // Toggle dropdown
     const toggleBtn = screen.getByRole("button", {
       name: `Version ${latestVersion}`,
     });
 
     fireEvent.click(toggleBtn);
 
-    // Select a different version (2nd item from versions array)
     const anotherVersion = RELEASE_PAGE.versions[1];
 
     const optionBtn = screen.getByRole("button", {
@@ -43,7 +39,6 @@ describe("ChangeLog component", () => {
 
     fireEvent.click(optionBtn);
 
-    // Expect UI to update
     expect(
       screen.getByRole("button", { name: `Version ${anotherVersion}` })
     ).toBeInTheDocument();

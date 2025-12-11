@@ -107,7 +107,6 @@ ul li {
   right: 0;
   margin-top: 0.5rem;
   width: 100%;
-  overflow-y: auto;
   background-color: var(--white);
   border: var(--border);
   border-radius: 0.5rem;
@@ -133,7 +132,6 @@ ul li {
   margin-bottom: 4rem;
 }
 
-/* Version Card styles */
 .version-card-container {
   position: relative;
   padding-bottom: 0;
@@ -149,6 +147,11 @@ ul li {
   padding-right: 1.5rem;
   font-size: 0.875rem;
   color: var(--description);
+}
+.release-date {
+  margin: 0;
+  font-size: "0.875rem";
+  color: "#6F6F6F";
 }
 
 .timeline-dot {

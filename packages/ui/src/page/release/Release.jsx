@@ -1,4 +1,4 @@
-import About from "../../components/release/About";
+import About from "../../components/release/ReleaseAbout";
 import ChangeLog from "../../components/release/ChangeLog";
 function Release() {
   return (
@@ -6,10 +6,7 @@ function Release() {
       className="container"
       style={{ marginTop: "2rem", marginBottom: "3rem" }}
     >
-      {/* About section  */}
       <About />
-
-      {/* changelog */}
       <ChangeLog />
     </section>
   );

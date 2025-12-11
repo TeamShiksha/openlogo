@@ -8,13 +8,13 @@ describe("Release page", () => {
 
     const aboutHeading = screen.getByRole("heading", {
       level: 2,
-      name: /about/i,
+      name: "About",
     });
     expect(aboutHeading).toBeInTheDocument();
 
     const changelogHeading = screen.getByRole("heading", {
       level: 2,
-      name: /changelog/i,
+      name: "Changelog",
     });
     expect(changelogHeading).toBeInTheDocument();
   });
