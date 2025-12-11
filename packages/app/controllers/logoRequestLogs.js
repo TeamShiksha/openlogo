@@ -11,7 +11,7 @@ const { Messages } = require("../utils/constants");
 async function getLogoRequestStatsController(req, res, next) {
   try {
     const logoRequestLogsService = new LogoRequestLogsService();
-    
+
     const { error } = getStatsQuerySchema.validate(req.query);
     if (error) {
       return res.status(422).json({
