@@ -52,7 +52,7 @@ describe("Generate User Key", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
-      key_description: MOCK_KEYS[1].key_description,
+      key_description: MOCK_KEYS[1].keyDescription,
       expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneMonth,
     };
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
@@ -89,7 +89,7 @@ describe("Generate User Key", () => {
       .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({
-        key_description: MOCK_KEYS[1].key_description,
+        key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
       });
 
@@ -107,8 +107,8 @@ describe("Generate User Key", () => {
     const mockuser = {
       ...MOCK_USERS[1],
       keys: [
-        { key_description: MOCK_KEYS[1].key_description },
-        { key_description: MOCK_KEYS[2].key_description },
+        { key_description: MOCK_KEYS[1].keyDescription },
+        { key_description: MOCK_KEYS[2].keyDescription },
       ],
     };
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockuser);
@@ -118,8 +118,8 @@ describe("Generate User Key", () => {
     jest
       .spyOn(KeyService.prototype, "getAllUserKeys")
       .mockResolvedValue([
-        { key_description: MOCK_KEYS[1].key_description },
-        { key_description: MOCK_KEYS[2].key_description },
+        { key_description: MOCK_KEYS[1].keyDescription },
+        { key_description: MOCK_KEYS[2].keyDescription },
       ]);
     jest
       .spyOn(UserService.prototype, "createNewUserKey")
@@ -131,7 +131,7 @@ describe("Generate User Key", () => {
       .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({
-        key_description: MOCK_KEYS[1].key_description,
+        key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].threeMonths,
       });
 
@@ -144,8 +144,8 @@ describe("Generate User Key", () => {
     const mockuser = {
       ...MOCK_USERS[1],
       keys: [
-        { key_description: MOCK_KEYS[1].key_description },
-        { key_description: MOCK_KEYS[2].key_description },
+        { key_description: MOCK_KEYS[1].keyDescription },
+        { key_description: MOCK_KEYS[2].keyDescription },
       ],
     };
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockuser);
@@ -155,12 +155,12 @@ describe("Generate User Key", () => {
     jest
       .spyOn(KeyService.prototype, "getAllUserKeys")
       .mockResolvedValue([
-        { key_description: MOCK_KEYS[1].key_description },
-        { key_description: MOCK_KEYS[2].key_description },
+        { key_description: MOCK_KEYS[1].keyDescription },
+        { key_description: MOCK_KEYS[2].keyDescription },
       ]);
     jest.spyOn(UserService.prototype, "createNewUserKey").mockResolvedValue({
       data: {
-        key_description: MOCK_KEYS[1].key_description,
+        key_description: MOCK_KEYS[1].keyDescription,
         subscription_id: "07f1f77bcf86cd799439014",
         expires_at: "2025-12-16T20:20:00.000Z",
       },
@@ -170,7 +170,7 @@ describe("Generate User Key", () => {
       .post("/api/user/api-key")
       .set("Cookie", `jwt=${mockToken}`)
       .send({
-        key_description: MOCK_KEYS[1].key_description,
+        key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
       });
 
@@ -179,7 +179,7 @@ describe("Generate User Key", () => {
       statusCode: 200,
       data: {
         data: {
-          key_description: MOCK_KEYS[1].key_description,
+          key_description: MOCK_KEYS[1].keyDescription,
           subscription_id: "07f1f77bcf86cd799439014",
           expires_at: "2025-12-16T20:20:00.000Z",
         },
