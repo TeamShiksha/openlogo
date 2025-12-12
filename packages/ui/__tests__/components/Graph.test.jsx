@@ -1,14 +1,14 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import Graph from "../../src/components/graph/Graph";
-// Mock react-chartjs-2
+
 vi.mock("react-chartjs-2", () => ({
   Line: vi.fn(() => (
     <canvas role="img" aria-label="chart" data-testid="chart-canvas" />
   )),
 }));
 
-// Mock the useApi hook so Graph sees ready data for week & month
+
 vi.mock("../../src/hooks/useApi", () => {
   const weekPayload = {
     data: {
@@ -26,7 +26,7 @@ vi.mock("../../src/hooks/useApi", () => {
   const monthPayload = {
     data: {
       data: new Array(30).fill(0).map((_, i) => ({
-        date: new Date(2025, 10, i + 1).toISOString(), // Nov 2025
+        date: new Date(2025, 10, i + 1).toISOString(), 
         count: Math.floor(Math.random() * 8),
       })),
     },
@@ -87,16 +87,14 @@ describe("Graph component", () => {
     const weekButton = screen.getByRole("button", { name: /week/i });
     const monthButton = screen.getByRole("button", { name: /month/i });
 
-    // Week should be active by default
+
     expect(weekButton).toHaveAttribute("aria-pressed", "true");
     expect(monthButton).toHaveAttribute("aria-pressed", "false");
 
-    // Click month button
     fireEvent.click(monthButton);
     expect(monthButton).toHaveAttribute("aria-pressed", "true");
     expect(weekButton).toHaveAttribute("aria-pressed", "false");
 
-    // Click week button
     fireEvent.click(weekButton);
     expect(weekButton).toHaveAttribute("aria-pressed", "true");
     expect(monthButton).toHaveAttribute("aria-pressed", "false");
