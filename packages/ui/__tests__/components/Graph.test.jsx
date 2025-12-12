@@ -22,14 +22,15 @@ vi.mock("../../src/hooks/useApi", () => {
       ],
     },
   };
-  const mockMonthApiResponse = {
-    data: {
-      data: new Array(30).fill(0).map((_, i) => ({
-        date: new Date(2025, 10, i + 1).toISOString(),
-        count: Math.floor(Math.random() * 8),
-      })),
-    },
-  };
+const mockMonthApiResponse = {
+  data: {
+    data: Array.from({ length: 30 }, (_, dayIndex) => ({
+      date: new Date(2025, 10, dayIndex + 1).toISOString(),
+      count: Math.floor(Math.random() * 8),
+    })),
+  },
+};
+
 
   return {
     useApi: (opts) => {

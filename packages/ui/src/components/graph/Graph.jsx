@@ -50,11 +50,11 @@ export default function Graph() {
     today.setHours(0, 0, 0, 0);
 
     const dateRangeArray = [];
-    for (let i = daysToDisplay - 1; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      dateRangeArray.push(date);
-    }
+    for (let dayOffset = daysToDisplay - 1; dayOffset >= 0; dayOffset--) {
+  const date = new Date(today);
+  date.setDate(date.getDate() - dayOffset);
+  dateRangeArray.push(date);
+}
 
     const dateToCountMap = new Map();
     data.forEach((item) => {
