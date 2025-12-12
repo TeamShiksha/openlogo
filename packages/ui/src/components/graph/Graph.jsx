@@ -36,63 +36,62 @@ const baseOptions = {
 };
 
 export default function Graph() {
-  const [viewState, setViewState] = useState("week");
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState("week");
   const [chartData, setChartData] = useState({ labels: [], dataPoints: [] });
-  const [weekData, setWeekData] = useState(null);
-  const [monthData, setMonthData] = useState(null);
+  const [cachedWeekData, setCachedWeekData] = useState(null);
+  const [cachedMonthData, setCachedMonthData] = useState(null);
 
-  function parseMonthWeekJson(data, period) {
+  function parseStatsDataForPeriod(data, period) {
     if (!data || !Array.isArray(data)) return [[], []];
 
-    const numDays = period === "week" ? 7 : 30;
+    const daysToDisplay = period === "week" ? 7 : 30;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const dateRange = [];
-    for (let i = numDays - 1; i >= 0; i--) {
+    const dateRangeArray = [];
+    for (let i = daysToDisplay - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      dateRange.push(date);
+      dateRangeArray.push(date);
     }
 
-    const dataMap = new Map();
+    const dateToCountMap = new Map();
     data.forEach((item) => {
       if (item.date && item.count !== undefined) {
-        const dateStr = item.date.split("T")[0];
+        const dateKey = item.date.split("T")[0];
 
-        dataMap.set(dateStr, Number(item.count) || 0);
+        dateToCountMap.set(dateKey, Number(item.count) || 0);
       }
     });
 
-    const labels = [];
-    const dataPoints = [];
-    
-    dateRange.forEach((date) => {
-      
+    const chartLabels = [];
+    const requestCounts = [];
+
+    dateRangeArray.forEach((date) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       const dateKey = `${year}-${month}-${day}`;
 
-      const count = dataMap.get(dateKey) || 0;
+      const count = dateToCountMap.get(dateKey) || 0;
 
       const label = new Intl.DateTimeFormat("en-GB", {
         day: "2-digit",
         month: "short",
       }).format(date);
 
-      labels.push(label);
-      dataPoints.push(count);
+      chartLabels.push(label);
+      requestCounts.push(count);
     });
 
-    return [labels, dataPoints];
+    return [chartLabels, requestCounts];
   }
   const {
     fetchRequest: fetchWeekData,
     errorMsg: weekError,
-    isSuccess: weekArrived,
-    data: dataOfWeek,
+    isSuccess: isWeekDataLoaded,
+    data: weekApiResponse,
   } = useApi({
     method: "get",
     url: "/logo-requests/stats?period=week",
@@ -101,8 +100,8 @@ export default function Graph() {
   const {
     fetchRequest: fetchMonthData,
     errorMsg: monthError,
-    isSuccess: monthArrived,
-    data: dataOfMonth,
+    isSuccess: isMonthDataLoaded,
+    data: monthApiResponse,
   } = useApi({
     method: "get",
     url: "/logo-requests/stats?period=month",
@@ -114,61 +113,71 @@ export default function Graph() {
   }, []);
 
   useEffect(() => {
-
-    if (weekArrived && dataOfWeek) {
-      setWeekData(dataOfWeek);
+    if (isWeekDataLoaded && weekApiResponse) {
+      setCachedWeekData(weekApiResponse);
     }
 
-
-    if (monthArrived && dataOfMonth) {
-      setMonthData(dataOfMonth);
+    if (isMonthDataLoaded && monthApiResponse) {
+      setCachedMonthData(monthApiResponse);
     }
 
-    
-    if (viewState === "week" && weekData?.data?.data) {
-      const [labels, points] = parseMonthWeekJson(weekData.data.data, "week");
-      setChartData({ labels, dataPoints: points });
-    } else if (viewState === "month" && monthData?.data?.data) {
-      const [labels, points] = parseMonthWeekJson(monthData.data.data, "month");
-      setChartData({ labels, dataPoints: points });
+    if (selectedTimePeriod === "week" && cachedWeekData?.data?.data) {
+      const [chartLabels, requestCounts] = parseStatsDataForPeriod(
+        cachedWeekData.data.data,
+        "week"
+      );
+      setChartData({ labels: chartLabels, dataPoints: requestCounts });
+    } else if (selectedTimePeriod === "month" && cachedMonthData?.data?.data) {
+      const [chartLabels, requestCounts] = parseStatsDataForPeriod(
+        cachedMonthData.data.data,
+        "month"
+      );
+      setChartData({ labels: chartLabels, dataPoints: requestCounts });
     }
   }, [
-    weekArrived,
-    dataOfWeek,
-    monthArrived,
-    dataOfMonth,
-    viewState,
-    weekData,
-    monthData,
+    isWeekDataLoaded,
+    weekApiResponse,
+    isMonthDataLoaded,
+    monthApiResponse,
+    selectedTimePeriod,
+    cachedWeekData,
+    cachedMonthData,
   ]);
 
   function niceStep(maxValue, targetTicks = 10) {
-
     if (maxValue <= 0) return 1;
-    const rough = Math.ceil(maxValue / targetTicks);
-    const pow = Math.pow(10, Math.floor(Math.log10(rough)));
-    const norm = Math.ceil(rough / pow);
-    const niceNorm = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
-    return niceNorm * pow;
+    const roughStepSize = Math.ceil(maxValue / targetTicks);
+    const powerOfTen = Math.pow(10, Math.floor(Math.log10(roughStepSize)));
+    const normalizedValue = Math.ceil(roughStepSize / powerOfTen);
+    const roundedNormalizedValue =
+      normalizedValue <= 1
+        ? 1
+        : normalizedValue <= 2
+          ? 2
+          : normalizedValue <= 5
+            ? 5
+            : 10;
+    return roundedNormalizedValue * powerOfTen;
   }
 
   const { yMax, step } = useMemo(() => {
+    const requestCounts = chartData.dataPoints || [];
+    const maxRequestCount = requestCounts.length
+      ? Math.max(...requestCounts)
+      : 0;
 
-    const points = chartData.dataPoints || [];
-    const maxValue = points.length ? Math.max(...points) : 0;
-
-    if (maxValue <= 10) {
+    if (maxRequestCount <= 10) {
       return { yMax: 15, step: 3 };
     }
 
-    const stepCandidate = niceStep(maxValue, 10);
-    const yMaxAdjusted =
-      Math.ceil(maxValue / stepCandidate) * stepCandidate + 10;
-    return { yMax: yMaxAdjusted, step: stepCandidate };
+    const calculatedStepSize = niceStep(maxRequestCount, 10);
+    const adjustedYAxisMax =
+      Math.ceil(maxRequestCount / calculatedStepSize) * calculatedStepSize + 10;
+    return { yMax: adjustedYAxisMax, step: calculatedStepSize };
   }, [chartData]);
 
   const options = useMemo(() => {
-    const maxTicks = Math.min(100, Math.ceil(yMax / step) + 1);
+    const maxYAxisTicks = Math.min(100, Math.ceil(yMax / step) + 1);
 
     return {
       ...baseOptions,
@@ -182,14 +191,14 @@ export default function Graph() {
           ticks: {
             stepSize: step,
             autoSkip: false,
-            maxTicksLimit: maxTicks,
+            maxTicksLimit: maxYAxisTicks,
           },
         },
       },
     };
   }, [yMax, step]);
 
-  const graphData = {
+  const chartDataConfig = {
     labels: chartData.labels,
     datasets: [
       {
@@ -211,31 +220,31 @@ export default function Graph() {
     fetchMonthData();
   };
 
-  const currentError = viewState === "week" ? weekError : monthError;
+  const currentError = selectedTimePeriod === "week" ? weekError : monthError;
   if (currentError) return <div>Error: {currentError}</div>;
 
   return (
     <div className={styles.graph} id="graph-container">
       {chartData.labels.length > 0 && (
         <Line
-          key={`${viewState}-${yMax}-${step}`}
+          key={`${selectedTimePeriod}-${yMax}-${step}`}
           options={options}
-          data={graphData}
+          data={chartDataConfig}
         />
       )}
 
       <div className={styles.buttonParent}>
         <button
           className={styles.button}
-          onClick={() => setViewState("month")}
-          aria-pressed={viewState === "month"}
+          onClick={() => setSelectedTimePeriod("month")}
+          aria-pressed={selectedTimePeriod === "month"}
         >
           Month
         </button>
         <button
           className={styles.button}
-          onClick={() => setViewState("week")}
-          aria-pressed={viewState === "week"}
+          onClick={() => setSelectedTimePeriod("week")}
+          aria-pressed={selectedTimePeriod === "week"}
         >
           Week
         </button>

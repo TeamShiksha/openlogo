@@ -8,9 +8,8 @@ vi.mock("react-chartjs-2", () => ({
   )),
 }));
 
-
 vi.mock("../../src/hooks/useApi", () => {
-  const weekPayload = {
+  const mockWeekApiResponse = {
     data: {
       data: [
         { date: "2025-11-01T00:00:00Z", count: 2 },
@@ -23,10 +22,10 @@ vi.mock("../../src/hooks/useApi", () => {
       ],
     },
   };
-  const monthPayload = {
+  const mockMonthApiResponse = {
     data: {
       data: new Array(30).fill(0).map((_, i) => ({
-        date: new Date(2025, 10, i + 1).toISOString(), 
+        date: new Date(2025, 10, i + 1).toISOString(),
         count: Math.floor(Math.random() * 8),
       })),
     },
@@ -40,7 +39,7 @@ vi.mock("../../src/hooks/useApi", () => {
           loading: false,
           errorMsg: null,
           isSuccess: true,
-          data: weekPayload,
+          data: mockWeekApiResponse,
         };
       }
       if (opts?.url?.includes("period=month")) {
@@ -49,7 +48,7 @@ vi.mock("../../src/hooks/useApi", () => {
           loading: false,
           errorMsg: null,
           isSuccess: true,
-          data: monthPayload,
+          data: mockMonthApiResponse,
         };
       }
       return {
@@ -86,7 +85,6 @@ describe("Graph component", () => {
 
     const weekButton = screen.getByRole("button", { name: /week/i });
     const monthButton = screen.getByRole("button", { name: /month/i });
-
 
     expect(weekButton).toHaveAttribute("aria-pressed", "true");
     expect(monthButton).toHaveAttribute("aria-pressed", "false");
