@@ -1,5 +1,5 @@
 jest.mock("../../../utils/webLogoSearch.js", () => ({
-  grabPngLogos: jest.fn(),
+  grabCompanyLogos: jest.fn(),
 }));
 
 const request = require("supertest");
@@ -9,7 +9,7 @@ const { Users } = require("../../../models");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
-const { grabPngLogos } = require("../../../utils/webLogoSearch.js");
+const { grabCompanyLogos } = require("../../../utils/webLogoSearch.js");
 
 describe("GET /api/catalog/logos", () => {
   beforeAll(() => {
@@ -19,7 +19,7 @@ describe("GET /api/catalog/logos", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    grabPngLogos.mockResolvedValue({ success: false, logos: [] });
+    grabCompanyLogos.mockResolvedValue({ success: false, logos: [] });
   });
 
   afterAll(() => {
@@ -56,7 +56,7 @@ describe("GET /api/catalog/logos", () => {
       currentPage: 1,
       totalPages: 0,
     });
-    grabPngLogos.mockResolvedValue({ success: false, logos: [] });
+    grabCompanyLogos.mockResolvedValue({ success: false, logos: [] });
 
     const res = await request(app)
       .get("/api/catalog/logos?search=NonExistent")
@@ -162,7 +162,10 @@ describe("GET /api/catalog/logos", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       statusCode: 200,
-      data: "Image Exists in DB",
+      data: {
+        imagesExist: true,
+        images: [],
+      },
       source: "db-search",
     });
   });
@@ -179,7 +182,7 @@ describe("GET /api/catalog/logos", () => {
       totalPages: 0,
     });
 
-    grabPngLogos.mockResolvedValue({
+    grabCompanyLogos.mockResolvedValue({
       success: true,
       logos: [
         {
@@ -237,7 +240,7 @@ describe("GET /api/catalog/logos", () => {
       totalPages: 0,
     });
 
-    grabPngLogos.mockResolvedValue({
+    grabCompanyLogos.mockResolvedValue({
       success: true,
       logos: [
         {

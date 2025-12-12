@@ -15,7 +15,7 @@ const {
   UserType,
 } = require("../utils/constants");
 const { default: mongoose } = require("mongoose");
-const { grabPngLogos } = require("../utils/webLogoSearch.js");
+const { grabCompanyLogos } = require("../utils/webLogoSearch.js");
 
 async function getAnalyticsController(req, res, next) {
   try {
@@ -214,14 +214,17 @@ async function getCatalogController(req, res, next) {
       if (imageData.data.length > 0) {
         return res.status(200).json({
           statusCode: 200,
-          data: "Image Exists in DB",
+          data: {
+            imagesExist: true,
+            images: [],
+          },
           source: "db-search",
         });
       }
     }
     if (imageData.data.length === 0) {
       try {
-        const webSearchResult = await grabPngLogos(search);
+        const webSearchResult = await grabCompanyLogos(search);
         if (webSearchResult.logos.length > 0) {
           const logoOptions = webSearchResult.logos.map((logo) => ({
             companyName: logo.companyName,
@@ -245,13 +248,11 @@ async function getCatalogController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
-    if (imageData) {
-      return res.status(200).json({
-        statusCode: 200,
-        data: imageData,
-        source: "db-search",
-      });
-    }
+    return res.status(200).json({
+      statusCode: 200,
+      data: imageData,
+      source: "db-search",
+    });
   } catch (err) {
     next(err);
   }

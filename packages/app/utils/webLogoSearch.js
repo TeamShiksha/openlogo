@@ -10,7 +10,7 @@ const axios = require("axios");
 const { imageSize } = require("image-size");
 const { URL } = require("url");
 
-async function grabPngLogos(companyName, limit = 5) {
+async function grabCompanyLogos(companyName, limit = 5) {
   if (!companyName || typeof companyName !== "string")
     return { success: false, count: 0, logos: [] };
 
@@ -40,7 +40,7 @@ async function grabPngLogos(companyName, limit = 5) {
 
     return { success: logos.length > 0, count: logos.length, logos };
   } catch (err) {
-    console.warn("grabPngLogos error:", err && err.message);
+    console.warn("grabCompanyLogos error:", err && err.message);
     return { success: false, count: 0, logos: [] };
   }
 }
@@ -117,7 +117,7 @@ async function scrapeHeaderImageUrls(pageOrigin) {
       try {
         await browser.close();
       } catch {
-        // Ignore CSS parsing errors
+        // Ignore browser cleanup errors
       }
   }
 }
@@ -134,7 +134,7 @@ async function fetchImageMeta(url) {
     try {
       info = imageSize(buf);
     } catch {
-      // Ignore CSS parsing errors
+      // Unable to determine image dimensions
     }
     const ext =
       info?.type ||
@@ -150,4 +150,4 @@ async function fetchImageMeta(url) {
     return null;
   }
 }
-module.exports = { grabPngLogos };
+module.exports = { grabCompanyLogos };
