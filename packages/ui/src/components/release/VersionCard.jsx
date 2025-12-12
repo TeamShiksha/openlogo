@@ -16,17 +16,13 @@ function VersionCard(versionData) {
         <div className={styles["mobile-header"]}>
           <div className={styles["mobile-dot"]}></div>
           <div className={styles["mobile-meta"]}>
-            <h3>
-              Version {versionName}
-            </h3>
-            <p className={styles["release-date"]}>
-              {releaseDate}
-            </p>
+            <h3>{versionName}</h3>
+            <p className={styles["release-date"]}>{releaseDate}</p>
           </div>
         </div>
 
         <div className={styles["desktop-header"]}>
-          <h3>Version {versionName}</h3>
+          <h3>{versionName}</h3>
         </div>
 
         <div className={styles["screenshot-wrap"]}>
@@ -39,25 +35,36 @@ function VersionCard(versionData) {
           <div className={styles["release-notes"]}>
             <h3>Release Notes</h3>
             <ul className={styles["notes-list"]}>
-              {releaseNotes?.map(({releaseNote,contributorGithubUserName,contributorGithublink}, index) => (
-                <li key={releaseNote + index} className={styles["note-item"]}>
-                  <span className={styles["dot"]}></span>
-                  <span className={styles["list-description"]}>
-                    {releaseNote}{" "}
-                    <span className={styles["note-link"]}>
-                      {contributorGithublink && (
-                        <a
-                          href={contributorGithublink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {contributorGithubUserName}
-                        </a>
-                      )}
+              {releaseNotes?.map(
+                (
+                  {
+                    releaseNote,
+                    contributorGithubUserName,
+                    contributorGithublink,
+                  },
+                  index
+                ) => (
+                  <li key={releaseNote + index} className={styles["note-item"]}>
+                    <span className={styles["dot"]}></span>
+                    <span className={styles["list-description"]}>
+                      {releaseNote}{" "}
+                      <span className={styles["note-link"]}>
+                        (By{" "}
+                        {contributorGithublink && (
+                          <a
+                            href={contributorGithublink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {contributorGithubUserName}
+                          </a>
+                        )}
+                        )
+                      </span>
                     </span>
-                  </span>
-                </li>
-              ))}
+                  </li>
+                )
+              )}
             </ul>
           </div>
         )}

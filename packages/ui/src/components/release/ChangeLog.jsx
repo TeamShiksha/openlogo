@@ -10,7 +10,7 @@ function ChangeLog() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const selectedVersionData = changelog.versionsData.filter(
-    ({versionName}) => versionName === selectedVersion
+    ({ versionName }) => versionName === selectedVersion
   );
 
   return (
@@ -23,7 +23,7 @@ function ChangeLog() {
         <div className={styles["dropdown"]}>
           <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <span>
-              {selectedVersion ? `Version ${selectedVersion}` : "All Versions"}
+              {selectedVersion ? `${selectedVersion}` : "All Versions"}
             </span>
             {isDropdownOpen ? (
               <ChevronUp className={styles["icon"]} />
@@ -42,7 +42,7 @@ function ChangeLog() {
                     setIsDropdownOpen(false);
                   }}
                 >
-                  Version {versionName}
+                  {versionName}
                 </button>
               ))}
             </div>

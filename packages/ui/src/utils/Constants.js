@@ -821,8 +821,8 @@ export const RELEASE_PAGE = {
         desc: "A developer-first API optimized for speed and reliability, featuring intelligent caching to ensure millisecond response times for effortless logo retrieval.",
       },
       {
-        heading: "Smart Search & Insights",
-        desc: "Advanced search algorithms that not only locate logos with precision but also analyze search patterns to identify trending brands and detect missing assets.",
+        heading: "Quick Search & Insights",
+        desc: "Advanced search algorithms that not only locate logos with precision.",
       },
       {
         heading: "Community-Driven Requests",
@@ -835,146 +835,207 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["0.6.0", "0.5.0", "0.4.0", "0.3.0", "0.2.0", "0.1.0"],
-  latestVersion: "0.6.0",
+  versions: ["current version", "previous version"],
+  latestVersion: "current version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
       {
-        versionName: "0.6.0",
-        releaseDate: "Nov 2025",
-        imgSrc: version06,
-        releaseNotes: [
-          {
-            releaseNote:
-              "Launched new analytics dashboard with real-time logo usage tracking and API metrics.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Added support for SVG logo format downloads with customizable color schemes.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Implemented advanced filtering system for searching logos by industry, size, and year founded.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Introduced collaborative workspace features for team-based logo management.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Enhanced API rate limiting with tiered pricing plans for enterprise users.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-        ],
-      },
-      {
-        versionName: "0.5.0",
+        versionName: "current version",
         releaseDate: "Oct 2025",
         imgSrc: version06,
         releaseNotes: [
           {
             releaseNote:
-              "Improved logo search performance by optimizing database queries.",
+              "Added feature allowing users to resend email verification with a limit of 3 attempts per day.",
+            contributorGithubUserName: "MukeshAbhi",
+            contributorGithublink: "https://github.com/MukeshAbhi",
+          },
+          {
+            releaseNote:
+              "Enabled users to download their personal data directly from the platform.",
+            contributorGithubUserName: "Sumitgitup",
+            contributorGithublink: "https://github.com/Sumitgitup",
+          },
+          {
+            releaseNote:
+              "Admin dashboard now displays the total number of stored images for improved monitoring.",
+            contributorGithubUserName: "printgourav",
+            contributorGithublink: "https://github.com/printgourav",
+          },
+          {
+            releaseNote:
+              "Improved header navigation by adding a profile dropdown containing Dashboard and Sign Out.",
             contributorGithubUserName: "abhishek-2k23",
             contributorGithublink: "https://github.com/abhishek-2k23",
           },
           {
             releaseNote:
-              "Added ability to bulk-upload logos with metadata auto-detection.",
+              "Updated mobile header UI to include Dashboard and Sign Out for consistent cross-device experience.",
+            contributorGithubUserName: "nazibul7",
+            contributorGithublink: "https://github.com/nazibul7",
+          },
+          {
+            releaseNote:
+              "Streamlined CI/CD pipeline by removing DockerHub steps and moving deployment fully to Vercel.",
+            contributorGithubUserName: "printgourav",
+            contributorGithublink: "https://github.com/printgourav",
+          },
+          {
+            releaseNote:
+              "Updated DEVELOPMENT.md with a new deployment diagram showing architecture and CI/CD workflow.",
+            contributorGithubUserName: "YashDevani-source",
+            contributorGithublink: "https://github.com/YashDevani-source",
+          },
+          {
+            releaseNote:
+              "Refactored image upload pipeline using pre-signed S3 URLs for faster and more efficient uploads.",
+            contributorGithubUserName: "printgourav",
+            contributorGithublink: "https://github.com/printgourav",
+          },
+          {
+            releaseNote:
+              "Implemented automated CDN cache invalidation for instant content refresh after admin updates.",
+            contributorGithubUserName: "MukeshAbhi",
+            contributorGithublink: "https://github.com/MukeshAbhi",
+          },
+          {
+            releaseNote:
+              "Fix: Ensured consistent date formatting across the platform.",
+            contributorGithubUserName: "Sumitgitup",
+            contributorGithublink: "https://github.com/Sumitgitup",
+          },
+          {
+            releaseNote:
+              "Feature: Added a download button allowing users to retrieve their stored data.",
+            contributorGithubUserName: "Sumitgitup",
+            contributorGithublink: "https://github.com/Sumitgitup",
+          },
+          {
+            releaseNote:
+              "Feature: Combined Dashboard & Sign Out into a single profile dropdown.",
             contributorGithubUserName: "abhishek-2k23",
             contributorGithublink: "https://github.com/abhishek-2k23",
           },
           {
+            releaseNote: "Enhancement: Added CDN cache invalidation support.",
+            contributorGithubUserName: "MukeshAbhi",
+            contributorGithublink: "https://github.com/MukeshAbhi",
+          },
+          {
             releaseNote:
-              "Refined UI for the logo preview section with improved zoom & color tools.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+              "Refactor: Updated the S3 upload flow to improve reliability.",
+            contributorGithubUserName: "printgourav",
+            contributorGithublink: "https://github.com/printgourav",
+          },
+          {
+            releaseNote:
+              "Feature: Added resend email verification functionality.",
+            contributorGithubUserName: "MukeshAbhi",
+            contributorGithublink: "https://github.com/MukeshAbhi",
+          },
+          {
+            releaseNote:
+              "Enhancement: Added total image count display for admin users.",
+            contributorGithubUserName: "printgourav",
+            contributorGithublink: "https://github.com/printgourav",
           },
         ],
       },
+
       {
-        versionName: "0.4.0",
-        releaseDate: "Sep 2025",
+        versionName: "previous version",
+        releaseDate: "Oct 2024",
         imgSrc: version06,
         releaseNotes: [
           {
             releaseNote:
-              "Added user authentication improvements including OAuth fixes.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+              "Migrated entire database from Firebase to MongoDB for better scalability and performance.",
+            contributorGithubUserName: "amankumarsingh77",
+            contributorGithublink: "https://github.com/amankumarsingh77",
           },
           {
             releaseNote:
-              "Introduced notifications for logo updates and API key usage alerts.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+              "Updated the testing framework by migrating from Jest to Vitest for faster and more efficient test execution.",
+            contributorGithubUserName: "Ayushsanjdev",
+            contributorGithublink: "https://github.com/Ayushsanjdev",
           },
           {
-            releaseNote: "Improved brand categorization and tagging algorithm.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+            releaseNote:
+              "Introduced an Operator dashboard to manage and respond to customer queries more effectively.",
+            contributorGithubUserName: "asharma991",
+            contributorGithublink: "https://github.com/asharma991",
+          },
+          {
+            releaseNote:
+              "Added support for re-uploading images from the admin dashboard, including validation for name and extension.",
+            contributorGithubUserName: "Soumava-221B",
+            contributorGithublink: "https://github.com/Soumava-221B",
+          },
+          {
+            releaseNote:
+              "Implemented an automated script that resets subscription usage counts every 30 days.",
+            contributorGithubUserName: "DeltaDynamo",
+            contributorGithublink: "https://github.com/DeltaDynamo",
+          },
+          {
+            releaseNote:
+              "Improved UI/UX across the platform, including footer, About page, and sign-in form enhancements.",
+            contributorGithubUserName: "AryaDharkar",
+            contributorGithublink: "https://github.com/AryaDharkar",
+          },
+          {
+            releaseNote:
+              "Introduced a Logo Search API that returns signed image URLs based on query parameters.",
+            contributorGithubUserName: "DeltaDynamo",
+            contributorGithublink: "https://github.com/DeltaDynamo",
+          },
+          {
+            releaseNote:
+              "Fixed navigation link behavior so pages scroll to the top when clicked.",
+            contributorGithubUserName: "Asin-Junior-Honore",
+            contributorGithublink: "https://github.com/Asin-Junior-Honore",
+          },
+          {
+            releaseNote:
+              "Added a confirmation modal when deleting API keys to prevent accidental deletions.",
+            contributorGithubUserName: "anandbaraik",
+            contributorGithublink: "https://github.com/anandbaraik",
+          },
+          {
+            releaseNote:
+              "Made usage count functionality accurate and reliable across different user plans.",
+            contributorGithubUserName: "amankumarsingh77",
+            contributorGithublink: "https://github.com/amankumarsingh77",
+          },
+          {
+            releaseNote:
+              "Implemented one-time API key view and copy functionality for improved account security.",
+            contributorGithubUserName: "Sharathxct",
+            contributorGithublink: "https://github.com/Sharathxct",
+          },
+          {
+            releaseNote:
+              "Fixed incorrect usage count values and removed duplicate userId fields in API responses.",
+            contributorGithubUserName: "amankumarsingh77",
+            contributorGithublink: "https://github.com/amankumarsingh77",
+          },
+          {
+            releaseNote:
+              "Fixed reset and forgot password API to ensure correct handling of authentication flows.",
+            contributorGithubUserName: "amankumarsingh77",
+            contributorGithublink: "https://github.com/amankumarsingh77",
+          },
+          {
+            releaseNote:
+              "Updated client-side test cases to be compatible with Vitest after migration.",
+            contributorGithubUserName: "Ayushsanjdev",
+            contributorGithublink: "https://github.com/Ayushsanjdev",
           },
         ],
       },
-      {
-        versionName: "0.3.0",
-        releaseDate: "Aug 2025",
-        imgSrc: version06,
-        releaseNotes: [
-          {
-            releaseNote:
-              "Added dark mode and theme customization across the platform.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Enhanced search bar with autocorrect and synonym suggestions.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote: "Introduced logo download history for users.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-        ],
-      },
-      {
-        versionName: "0.2.0",
-        releaseDate: "Jul 2025",
-        imgSrc: version06,
-        releaseNotes: [
-          {
-            releaseNote: "Added support for PNG and WebP logo formats.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Redesigned logo details page with improved metadata visibility.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Improved API documentation and added sample code snippets.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-        ],
-      },
+
       {
         versionName: "0.1.0",
         releaseDate: "Jun 2025",
