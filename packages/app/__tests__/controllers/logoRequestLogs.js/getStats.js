@@ -27,7 +27,6 @@ describe("GET LOGO REQUEST STATS", () => {
   });
 
   describe("Weekly Stats", () => {
-    LogoRequestLogsService;
     it("200 - should return last 7 days stats for authenticated user", async () => {
       const mockUserModel = new Users(MOCK_USERS[1]);
       const mockToken = mockUserModel.generateJWT();
