@@ -67,18 +67,16 @@ export default function Graph() {
 
     const labels = [];
     const dataPoints = [];
-    // For each date in the range, build a label and fetch the corresponding count
+    
     dateRange.forEach((date) => {
-      // Format date as YYYY-MM-DD to match the keys in dataMap
+      
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       const dateKey = `${year}-${month}-${day}`;
 
-      // Get the request count for this date, default to 0 if no data exists
       const count = dataMap.get(dateKey) || 0;
 
-      // Create a human-readable label (e.g., "09 Dec") for the chart x-axis
       const label = new Intl.DateTimeFormat("en-GB", {
         day: "2-digit",
         month: "short",
@@ -116,17 +114,17 @@ export default function Graph() {
   }, []);
 
   useEffect(() => {
-    // Store week data when it arrives
+
     if (weekArrived && dataOfWeek) {
       setWeekData(dataOfWeek);
     }
 
-    // Store month data when it arrives
+
     if (monthArrived && dataOfMonth) {
       setMonthData(dataOfMonth);
     }
 
-    // Parse and set chart data for current view
+    
     if (viewState === "week" && weekData?.data?.data) {
       const [labels, points] = parseMonthWeekJson(weekData.data.data, "week");
       setChartData({ labels, dataPoints: points });
@@ -145,9 +143,7 @@ export default function Graph() {
   ]);
 
   function niceStep(maxValue, targetTicks = 10) {
-    // Compute a "nice" step size for y-axis ticks:
-    // - scales the raw rough step to a rounded, human-friendly value
-    // - ensures ticks like 1,2,5,10,20,... which look cleaner on charts
+
     if (maxValue <= 0) return 1;
     const rough = Math.ceil(maxValue / targetTicks);
     const pow = Math.pow(10, Math.floor(Math.log10(rough)));
@@ -157,8 +153,7 @@ export default function Graph() {
   }
 
   const { yMax, step } = useMemo(() => {
-    // useMemo prevents recalculating yMax/step on every render unless
-    // chartData changes
+
     const points = chartData.dataPoints || [];
     const maxValue = points.length ? Math.max(...points) : 0;
 
