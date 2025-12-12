@@ -406,7 +406,7 @@ const MOCK_WEEKLY_STATS = {
   data: [
     { date: "2025-11-24", count: 2, totalKB: 5.25 },
     { date: "2025-11-25", count: 3, totalKB: 8.75 },
-    { date: "2025-11-26", count: 4, totalKB: 12.0 },
+    { date: "2025-11-26", count: 4, totalKB: 12 },
   ],
 };
 
@@ -421,7 +421,7 @@ const MOCK_MONTHLY_STATS = {
   data: [
     { date: "2025-11-01", count: 5, totalKB: 15.25 },
     { date: "2025-11-05", count: 8, totalKB: 24.5 },
-    { date: "2025-11-10", count: 12, totalKB: 36.0 },
+    { date: "2025-11-10", count: 12, totalKB: 36 },
   ],
 };
 
