@@ -61,6 +61,7 @@ class KeyService {
    **/
   async getApiKey(apiKey) {
     const keyRef = await this.keyRepository.getApiKey(apiKey);
+    console.log(keyRef);
     return keyRef;
   }
 
