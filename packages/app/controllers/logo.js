@@ -3,6 +3,7 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
+  UserService,
 } = require("../services");
 const {
   getLogoQuerySchema,
@@ -20,6 +21,7 @@ async function getLogoController(req, res, next) {
     const imageService = new ImageService();
     const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
+    const userService = new UserService();
 
     const { error, value } = getLogoQuerySchema.validate(req.query);
     if (error) {
@@ -78,6 +80,8 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
+
+    await userService.logLogoRequestEntry(company, userSubscription, keyRef);
 
     subscriptionService.incrementUsageCount(userSubscription).catch((err) => {
       console.error("Failed to increment usage count:", err.message);
