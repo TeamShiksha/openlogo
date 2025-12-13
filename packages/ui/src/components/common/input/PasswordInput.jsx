@@ -42,6 +42,12 @@ function PasswordInput({
         aria-label={showPassword ? "Hide password" : "Show password"}
         className={styles.eyeButton}
         onClick={handleToggle}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleToggle();
+          }
+        }}
       >
         {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
       </span>
