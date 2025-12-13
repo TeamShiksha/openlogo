@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "./CustomInput";
 import styles from "./PasswordInput.module.css";
 
@@ -43,7 +43,7 @@ function PasswordInput({
         className={styles.eyeButton}
         onClick={handleToggle}
       >
-        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
       </span>
     </div>
   );
