@@ -62,7 +62,7 @@ describe("SIGNIN API", () => {
     });
   });
 
-  it("should return error when sendVerificationEmail fails", async () => {
+  it("429 - If token is not expired and user is not verified", async () => {
     const user = {
       ...MOCK_USERS[1],
       is_verified: false,
