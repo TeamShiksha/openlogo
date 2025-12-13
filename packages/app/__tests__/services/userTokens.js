@@ -152,7 +152,7 @@ describe("User Token Service", () => {
     expect(result).toBe(null);
   });
 
-  it("should udate user token expiry by 24 hours if token is VERIFY type ", async () => {
+  it("should update user token expiry by 24 hours if token is VERIFY type ", async () => {
     const userToken = new UserToken(MOCK_USERTOKENS[0]);
     const updatedExpireAt = dayjs().add(1, "day").toDate();
 
@@ -168,7 +168,7 @@ describe("User Token Service", () => {
     expect(result.expire_at).toEqual(updatedExpireAt);
   });
 
-  it("should udate user token expiry by 10 minutes if token is FORGOT type ", async () => {
+  it("should update user token expiry by 10 minutes if token is FORGOT type ", async () => {
     const userToken = new UserToken(MOCK_USERTOKENS[5]);
     const updatedExpireAt = dayjs().add(10, "minute").toDate();
 

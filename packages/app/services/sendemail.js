@@ -61,7 +61,6 @@ class SendEmailService {
 
   /**
    * Sends a forgot password email to the user.
-   *
    * Enforces cooldown limits, daily attempt limits, resets counters when needed,
    * refreshes or creates a token, updates attempt tracking, and sends the email.
    * Returns an error object when rate-limited or invalid.
@@ -70,37 +69,17 @@ class SendEmailService {
    * @returns {Promise<Object|Error>} - Success response or an Error with statusCode.
    */
   async sendForgotPasswordEmail(user) {
-    const MAX_ATTEMPTS_PER_DAY = 2;
     const RESET_WINDOW_HOURS = 24;
     const COOLDOWN_MS = 2 * 60 * 1000;
-
     const now = dayjs();
-    const lastSent = dayjs(user.forgot_password_last_reset_at);
-    const timeSinceLast = now.diff(lastSent, "hour");
+
     let reset = false;
-
-    if (
-      user.forgot_password_last_reset_at &&
-      timeSinceLast >= RESET_WINDOW_HOURS
-    ) {
-      reset = true;
-    }
-
-    if (
-      user.forgot_password_last_reset_at &&
-      now.diff(lastSent) < COOLDOWN_MS
-    ) {
-      const nextAllowedAt = lastSent.add(2, "minute").toISOString();
-      const error = new Error(Messages.TOO_MANY_REQUESTS);
-      error.statusCode = 429;
-      error.nextAllowedAt = nextAllowedAt;
-      return error;
-    }
-
-    if (!reset && user.forgot_password_attempts >= MAX_ATTEMPTS_PER_DAY) {
-      const error = new Error(Messages.TRY_AGAIN);
-      error.statusCode = 429;
-      return error;
+    if (user.forgot_password_last_reset_at) {
+      const lastSent = dayjs(user.forgot_password_last_reset_at);
+      const timeSinceLast = now.diff(lastSent, "hour");
+      if (timeSinceLast >= RESET_WINDOW_HOURS) {
+        reset = true;
+      }
     }
 
     let tokenDoc = await this.userTokenService.fetchUserTokenByUserIdTokenType(
@@ -114,7 +93,28 @@ class SendEmailService {
       tokenDoc = await this.userTokenService.createForgotToken(user._id);
     }
 
-    await this.userService.updateUserFortgotpasswordAttempts(user, reset);
+    const updatedUser =
+      await this.userService.updateUserFortgotPasswordAttempts(user, reset);
+    if (!updatedUser) {
+      const lastAttempt = user.forgot_password_last_reset_at
+        ? dayjs(user.forgot_password_last_reset_at)
+        : null;
+
+      const timeSinceLastAttempt = lastAttempt
+        ? now.diff(lastAttempt, "millisecond")
+        : COOLDOWN_MS + 1;
+
+      if (timeSinceLastAttempt < COOLDOWN_MS) {
+        const error = new Error(Messages.TOO_MANY_REQUESTS);
+        error.statusCode = 429;
+        error.nextAllowedAt = lastAttempt.add(2, "minute").toISOString();
+        return error;
+      }
+
+      const error = new Error(Messages.TRY_AGAIN);
+      error.statusCode = 429;
+      return error;
+    }
 
     await sendEmail({
       id: 1,
@@ -126,7 +126,7 @@ class SendEmailService {
     });
 
     return {
-      success: true,
+      message: Messages.SENT_FORGOT_PASSWORD_EMAIL,
       statusCode: 200,
       nextAllowedAt: now.add(2, "minute").toISOString(),
     };

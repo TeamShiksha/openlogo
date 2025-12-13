@@ -125,7 +125,7 @@ describe("Send Email Service", () => {
         tokenURL: () => "dummy-url",
       });
     const updateSpy = jest
-      .spyOn(UserService.prototype, "updateUserFortgotpasswordAttempts")
+      .spyOn(UserService.prototype, "updateUserFortgotPasswordAttempts")
       .mockResolvedValue(user);
 
     await sendEmailService.sendForgotPasswordEmail(user);
@@ -137,22 +137,25 @@ describe("Send Email Service", () => {
     const user = new User(MOCK_USERS[0]);
     user.forgot_password_last_reset_at = dayjs().subtract(1, "second").toDate();
     user.forgot_password_attempts = 1;
-    const nextAllowedAt = dayjs(user.forgot_password_last_reset_at)
-      .add(2, "minute")
-      .toISOString();
     jest
       .spyOn(UserTokenService.prototype, "fetchUserTokenByUserIdTokenType")
       .mockResolvedValue(null);
     jest
-      .spyOn(UserService.prototype, "updateUserFortgotpasswordAttempts")
-      .mockResolvedValue(user);
+      .spyOn(UserTokenService.prototype, "createForgotToken")
+      .mockResolvedValue({
+        token: "dummy",
+        tokenURL: () => "dummy-url",
+      });
+    jest
+      .spyOn(UserService.prototype, "updateUserFortgotPasswordAttempts")
+      .mockResolvedValue(null);
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
 
     expect(result).toBeInstanceOf(Error);
     expect(result.message).toBe(Messages.TOO_MANY_REQUESTS);
     expect(result.statusCode).toBe(429);
-    expect(result.nextAllowedAt).toBe(nextAllowedAt);
+    expect(result.nextAllowedAt).toBeDefined();
   });
 
   it("Should block forgot password email if max attempts reached", async () => {
@@ -161,6 +164,15 @@ describe("Send Email Service", () => {
     user.forgot_password_attempts = 2;
     jest
       .spyOn(UserTokenService.prototype, "fetchUserTokenByUserIdTokenType")
+      .mockResolvedValue(null);
+    jest
+      .spyOn(UserTokenService.prototype, "createForgotToken")
+      .mockResolvedValue({
+        token: "dummy",
+        tokenURL: () => "dummy-url",
+      });
+    jest
+      .spyOn(UserService.prototype, "updateUserFortgotPasswordAttempts")
       .mockResolvedValue(null);
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
@@ -184,7 +196,7 @@ describe("Send Email Service", () => {
         tokenURL: () => "dummy-url",
       });
     jest
-      .spyOn(UserService.prototype, "updateUserFortgotpasswordAttempts")
+      .spyOn(UserService.prototype, "updateUserFortgotPasswordAttempts")
       .mockResolvedValue(user);
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
@@ -200,7 +212,7 @@ describe("Send Email Service", () => {
       },
     });
     expect(result).toMatchObject({
-      success: true,
+      message: Messages.SENT_FORGOT_PASSWORD_EMAIL,
       statusCode: 200,
     });
     expect(result.nextAllowedAt).toBeDefined();
@@ -227,7 +239,7 @@ describe("Send Email Service", () => {
       .spyOn(UserTokenService.prototype, "updateUserToken")
       .mockResolvedValue(updatedToken);
     jest
-      .spyOn(UserService.prototype, "updateUserFortgotpasswordAttempts")
+      .spyOn(UserService.prototype, "updateUserFortgotPasswordAttempts")
       .mockResolvedValue(user);
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
@@ -243,7 +255,7 @@ describe("Send Email Service", () => {
       },
     });
     expect(result).toMatchObject({
-      success: true,
+      message: Messages.SENT_FORGOT_PASSWORD_EMAIL,
       statusCode: 200,
     });
     expect(result.nextAllowedAt).toBeDefined();

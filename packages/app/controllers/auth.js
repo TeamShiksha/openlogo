@@ -364,20 +364,27 @@ async function forgotPasswordController(req, res, next) {
       });
 
     const result = await sendEmailService.sendForgotPasswordEmail(user);
-    if (result instanceof Error) {
+    if (result instanceof Error && result.nextAllowedAt !== undefined) {
+      return res.status(result.statusCode).json({
+        source: "sendEmail",
+        error: STATUS_CODES[result.statusCode],
+        message: result.message,
+        statusCode: result.statusCode,
+        nextAllowedAt: result.nextAllowedAt,
+      });
+    } else if (result instanceof Error) {
       return res.status(result.statusCode || 500).json({
         source: "sendEmail",
         error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
         message: result.message,
         statusCode: result.statusCode,
-        nextAllowedAt: result.nextAllowedAt,
       });
     }
 
     return res.status(200).json({
       source: "sendEmail",
       statusCode: 200,
-      success: true,
+      message: result.message,
       nextAllowedAt: result.nextAllowedAt,
     });
   } catch (err) {

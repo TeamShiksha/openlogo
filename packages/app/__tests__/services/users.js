@@ -209,31 +209,35 @@ describe("User Service", () => {
     expect(result).toBe(false);
   });
 
-  it("should return user's forgot password attempts as 0 if reset is true", async () => {
+  it("should reset forgot password attempts to 1 if reset is true", async () => {
     const user = new User(MOCK_USERS[0]);
-    user.forgot_password_attempts = 1;
+    user.forgot_password_attempts = 2;
+    user.forgot_password_last_reset_at = new Date(
+      Date.now() - 25 * 60 * 60 * 1000
+    );
 
     const updatedUser = {
       ...user,
-      forgot_password_attempts: 0,
+      forgot_password_attempts: 1,
       forgot_password_last_reset_at: new Date(),
     };
 
     jest
-      .spyOn(UsersRepository.prototype, "update")
+      .spyOn(UsersRepository.prototype, "findOneAndUpdate")
       .mockResolvedValue(updatedUser);
 
-    const result = await userService.updateUserFortgotpasswordAttempts(
+    const result = await userService.updateUserFortgotPasswordAttempts(
       user,
       true
     );
     expect(result).toBeDefined();
-    expect(result.forgot_password_attempts).toBe(0);
+    expect(result.forgot_password_attempts).toBe(1);
   });
 
-  it("should incriment user's forgot password attempts if reset is false", async () => {
+  it("should increment user's forgot password attempts if reset is false", async () => {
     const user = new User(MOCK_USERS[0]);
     user.forgot_password_attempts = 1;
+    user.forgot_password_last_reset_at = new Date(Date.now() - 5 * 60 * 1000);
 
     const updatedUser = {
       ...user,
@@ -242,10 +246,10 @@ describe("User Service", () => {
     };
 
     jest
-      .spyOn(UsersRepository.prototype, "update")
+      .spyOn(UsersRepository.prototype, "findOneAndUpdate")
       .mockResolvedValue(updatedUser);
 
-    const result = await userService.updateUserFortgotpasswordAttempts(
+    const result = await userService.updateUserFortgotPasswordAttempts(
       user,
       false
     );
@@ -253,25 +257,34 @@ describe("User Service", () => {
     expect(result.forgot_password_attempts).toBe(2);
   });
 
-  it("should update user's forgot password last reset at time to current time", async () => {
+  it("should return null if rate limited (cooldown not passed)", async () => {
     const user = new User(MOCK_USERS[0]);
     user.forgot_password_attempts = 1;
-
-    const updatedUser = {
-      ...user,
-      forgot_password_attempts: 2,
-      forgot_password_last_reset_at: new Date(),
-    };
-
+    user.forgot_password_last_reset_at = new Date(Date.now() - 30 * 1000);
     jest
-      .spyOn(UsersRepository.prototype, "update")
-      .mockResolvedValue(updatedUser);
+      .spyOn(UsersRepository.prototype, "findOneAndUpdate")
+      .mockResolvedValue(null);
 
-    const result = await userService.updateUserFortgotpasswordAttempts(
+    const result = await userService.updateUserFortgotPasswordAttempts(
       user,
       false
     );
-    expect(result).toBeDefined();
-    expect(result.forgot_password_last_reset_at).toBeInstanceOf(Date);
+    expect(result).toBeNull();
+  });
+
+  it("should return null if max attempts reached", async () => {
+    const user = new User(MOCK_USERS[0]);
+    user.forgot_password_attempts = 2;
+    user.forgot_password_last_reset_at = new Date(Date.now() - 5 * 60 * 1000);
+
+    jest
+      .spyOn(UsersRepository.prototype, "findOneAndUpdate")
+      .mockResolvedValue(null);
+
+    const result = await userService.updateUserFortgotPasswordAttempts(
+      user,
+      false
+    );
+    expect(result).toBeNull();
   });
 });

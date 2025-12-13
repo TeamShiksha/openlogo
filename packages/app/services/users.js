@@ -249,21 +249,72 @@ class UserService {
   }
 
   /**
-   * Updates the user's forgot-password attempt data.
-   * Resets or increments the attempt count and updates the last reset timestamp.
-   * @param {Object} user - The user to update.
-   * @param {boolean} [reset=false] - Whether to reset the attempts.
-   * @returns {Promise<Object>} - The updated user record.
+   * Atomically updates forgot password attempts with race condition protection.
+   * Returns null if the update fails due to rate limiting or cooldown.
+   *
+   * @param {Object} user - The user object
+   * @param {boolean} reset - Whether to reset the counter (after 24 hours)
+   * @returns {Promise<Object|null>} - Updated user or null if rate limited
    */
-  async updateUserFortgotpasswordAttempts(user, reset = false) {
-    const updatedFields = {
-      forgot_password_last_reset_at: new Date(),
-      forgot_password_attempts: reset
-        ? 0
-        : (user.forgot_password_attempts || 0) + 1,
-    };
+  async updateUserFortgotPasswordAttempts(user, reset = false) {
+    const MAX_ATTEMPTS_PER_DAY = 2;
+    const RESET_WINDOW_HOURS = 24;
+    const COOLDOWN_MS = 0.3 * 60 * 1000;
 
-    return await this.userRepository.update(user._id, updatedFields);
+    const now = new Date();
+    const resetWindowDate = new Date(
+      now.getTime() - RESET_WINDOW_HOURS * 60 * 60 * 1000
+    );
+    const cooldownDate = new Date(now.getTime() - COOLDOWN_MS);
+
+    if (reset) {
+      return await this.userRepository.findOneAndUpdate(
+        {
+          _id: user._id,
+          $or: [
+            { forgot_password_last_reset_at: { $lt: resetWindowDate } },
+            { forgot_password_last_reset_at: { $exists: false } },
+            { forgot_password_last_reset_at: null },
+          ],
+        },
+        {
+          $set: {
+            forgot_password_attempts: 1,
+            forgot_password_last_reset_at: now,
+          },
+        },
+        { new: true }
+      );
+    }
+
+    return await this.userRepository.findOneAndUpdate(
+      {
+        _id: user._id,
+        $and: [
+          {
+            $or: [
+              { forgot_password_attempts: { $lt: MAX_ATTEMPTS_PER_DAY } },
+              { forgot_password_attempts: { $exists: false } },
+              { forgot_password_attempts: null },
+            ],
+          },
+          {
+            $or: [
+              { forgot_password_last_reset_at: { $lt: cooldownDate } },
+              { forgot_password_last_reset_at: { $exists: false } },
+              { forgot_password_last_reset_at: null },
+            ],
+          },
+        ],
+      },
+      {
+        $set: {
+          forgot_password_last_reset_at: now,
+        },
+        $inc: { forgot_password_attempts: 1 },
+      },
+      { new: true }
+    );
   }
 }
 

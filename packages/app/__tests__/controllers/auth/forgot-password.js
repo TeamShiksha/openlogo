@@ -64,7 +64,7 @@ describe("FORGOT PASSWORD API", () => {
     });
   });
 
-  it("429 - Too many requests", async () => {
+  it("429 - Too many requests / Cooldown", async () => {
     const user = {
       ...MOCK_USERS[0],
       forgot_password_attempts: 2,
@@ -72,6 +72,7 @@ describe("FORGOT PASSWORD API", () => {
     };
     const error = new Error(Messages.TOO_MANY_REQUESTS);
     error.statusCode = 429;
+    error.nextAllowedAt = new Date().toISOString();
 
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
     jest
@@ -88,10 +89,11 @@ describe("FORGOT PASSWORD API", () => {
       error: STATUS_CODES[429],
       message: Messages.TOO_MANY_REQUESTS,
       statusCode: 429,
+      nextAllowedAt: expect.any(String),
     });
   });
 
-  it("200 - Successfuly sent email", async () => {
+  it("200 - Successfully sent email", async () => {
     const user = {
       ...MOCK_USERS[0],
       forgot_password_attempts: 0,
@@ -101,7 +103,7 @@ describe("FORGOT PASSWORD API", () => {
     jest
       .spyOn(SendEmailService.prototype, "sendForgotPasswordEmail")
       .mockResolvedValue({
-        success: true,
+        message: Messages.SENT_FORGOT_PASSWORD_EMAIL,
         statusCode: 200,
         nextAllowedAt: new Date().toISOString(),
       });
@@ -113,7 +115,7 @@ describe("FORGOT PASSWORD API", () => {
     expect(response.body).toMatchObject({
       source: "sendEmail",
       statusCode: 200,
-      success: true,
+      message: Messages.SENT_FORGOT_PASSWORD_EMAIL,
     });
     expect(response.body.nextAllowedAt).toBeDefined();
   });
