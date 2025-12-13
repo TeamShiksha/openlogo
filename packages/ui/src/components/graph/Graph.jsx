@@ -35,63 +35,88 @@ const baseOptions = {
   },
 };
 
+function parseStatsDataForPeriod(data, period) {
+  if (!Array.isArray(data)) {
+    return [[], []];
+  }
+
+  const daysToDisplay = period === "week" ? 7 : 30;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dateRange = [];
+  for (let offset = daysToDisplay - 1; offset >= 0; offset--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - offset);
+    dateRange.push(date);
+  }
+
+  const dateToCount = new Map();
+  data.forEach((item) => {
+    if (item?.date && item.count !== undefined) {
+      const key = item.date.split("T")[0];
+      dateToCount.set(key, Number(item.count) || 0);
+    }
+  });
+
+  const labels = [];
+  const counts = [];
+
+  dateRange.forEach((date) => {
+    const key = date.toISOString().split("T")[0];
+    const count = dateToCount.get(key) || 0;
+
+    const label = new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+    }).format(date);
+
+    labels.push(label);
+    counts.push(count);
+  });
+
+  return [labels, counts];
+}
+
+function niceStep(maxValue, targetTicks = 10) {
+  if (maxValue <= 0) {
+    return 1;
+  }
+
+  const roughStep = Math.ceil(maxValue / targetTicks);
+  const powerOfTen = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const normalized = Math.ceil(roughStep / powerOfTen);
+
+  let rounded;
+
+  if (normalized <= 1) {
+    rounded = 1;
+  } else if (normalized <= 2) {
+    rounded = 2;
+  } else if (normalized <= 5) {
+    rounded = 5;
+  } else {
+    rounded = 10;
+  }
+
+  return rounded * powerOfTen;
+}
+
 export default function Graph() {
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState("week");
-  const [chartData, setChartData] = useState({ labels: [], dataPoints: [] });
+  const [selectedPeriod, setSelectedPeriod] = useState("week");
+  const [chartData, setChartData] = useState({
+    labels: [],
+    dataPoints: [],
+  });
   const [cachedWeekData, setCachedWeekData] = useState(null);
   const [cachedMonthData, setCachedMonthData] = useState(null);
 
-  function parseStatsDataForPeriod(data, period) {
-    if (!data || !Array.isArray(data)) return [[], []];
-
-    const daysToDisplay = period === "week" ? 7 : 30;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const dateRangeArray = [];
-    for (let dayOffset = daysToDisplay - 1; dayOffset >= 0; dayOffset--) {
-  const date = new Date(today);
-  date.setDate(date.getDate() - dayOffset);
-  dateRangeArray.push(date);
-}
-
-    const dateToCountMap = new Map();
-    data.forEach((item) => {
-      if (item.date && item.count !== undefined) {
-        const dateKey = item.date.split("T")[0];
-
-        dateToCountMap.set(dateKey, Number(item.count) || 0);
-      }
-    });
-
-    const chartLabels = [];
-    const requestCounts = [];
-
-    dateRangeArray.forEach((date) => {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const dateKey = `${year}-${month}-${day}`;
-
-      const count = dateToCountMap.get(dateKey) || 0;
-
-      const label = new Intl.DateTimeFormat("en-GB", {
-        day: "2-digit",
-        month: "short",
-      }).format(date);
-
-      chartLabels.push(label);
-      requestCounts.push(count);
-    });
-
-    return [chartLabels, requestCounts];
-  }
   const {
     fetchRequest: fetchWeekData,
+    data: weekResponse,
     errorMsg: weekError,
-    isSuccess: isWeekDataLoaded,
-    data: weekApiResponse,
+    isSuccess: weekLoaded,
   } = useApi({
     method: "get",
     url: "/logo-requests/stats?period=week",
@@ -99,9 +124,9 @@ export default function Graph() {
 
   const {
     fetchRequest: fetchMonthData,
+    data: monthResponse,
     errorMsg: monthError,
-    isSuccess: isMonthDataLoaded,
-    data: monthApiResponse,
+    isSuccess: monthLoaded,
   } = useApi({
     method: "get",
     url: "/logo-requests/stats?period=month",
@@ -113,103 +138,85 @@ export default function Graph() {
   }, []);
 
   useEffect(() => {
-    if (isWeekDataLoaded && weekApiResponse) {
-      setCachedWeekData(weekApiResponse);
+    if (weekLoaded && weekResponse) {
+      setCachedWeekData(weekResponse);
     }
 
-    if (isMonthDataLoaded && monthApiResponse) {
-      setCachedMonthData(monthApiResponse);
+    if (monthLoaded && monthResponse) {
+      setCachedMonthData(monthResponse);
     }
 
-    if (selectedTimePeriod === "week" && cachedWeekData?.data?.data) {
-      const [chartLabels, requestCounts] = parseStatsDataForPeriod(
+    if (selectedPeriod === "week" && cachedWeekData?.data?.data) {
+      const [labels, counts] = parseStatsDataForPeriod(
         cachedWeekData.data.data,
         "week"
       );
-      setChartData({ labels: chartLabels, dataPoints: requestCounts });
-    } else if (selectedTimePeriod === "month" && cachedMonthData?.data?.data) {
-      const [chartLabels, requestCounts] = parseStatsDataForPeriod(
+      setChartData({ labels, dataPoints: counts });
+    }
+
+    if (selectedPeriod === "month" && cachedMonthData?.data?.data) {
+      const [labels, counts] = parseStatsDataForPeriod(
         cachedMonthData.data.data,
         "month"
       );
-      setChartData({ labels: chartLabels, dataPoints: requestCounts });
+      setChartData({ labels, dataPoints: counts });
     }
   }, [
-    isWeekDataLoaded,
-    weekApiResponse,
-    isMonthDataLoaded,
-    monthApiResponse,
-    selectedTimePeriod,
+    selectedPeriod,
+    weekLoaded,
+    monthLoaded,
+    weekResponse,
+    monthResponse,
     cachedWeekData,
     cachedMonthData,
   ]);
 
-  function niceStep(maxValue, targetTicks = 10) {
-    if (maxValue <= 0) return 1;
-    const roughStepSize = Math.ceil(maxValue / targetTicks);
-    const powerOfTen = Math.pow(10, Math.floor(Math.log10(roughStepSize)));
-    const normalizedValue = Math.ceil(roughStepSize / powerOfTen);
-    const roundedNormalizedValue =
-      normalizedValue <= 1
-        ? 1
-        : normalizedValue <= 2
-          ? 2
-          : normalizedValue <= 5
-            ? 5
-            : 10;
-    return roundedNormalizedValue * powerOfTen;
-  }
-
   const { yMax, step } = useMemo(() => {
-    const requestCounts = chartData.dataPoints || [];
-    const maxRequestCount = requestCounts.length
-      ? Math.max(...requestCounts)
-      : 0;
+    const values = chartData.dataPoints;
+    const max = values.length ? Math.max(...values) : 0;
 
-    if (maxRequestCount <= 10) {
+    if (max <= 10) {
       return { yMax: 15, step: 3 };
     }
 
-    const calculatedStepSize = niceStep(maxRequestCount, 10);
-    const adjustedYAxisMax =
-      Math.ceil(maxRequestCount / calculatedStepSize) * calculatedStepSize + 10;
-    return { yMax: adjustedYAxisMax, step: calculatedStepSize };
+    const stepSize = niceStep(max, 10);
+    const adjustedMax = Math.ceil(max / stepSize) * stepSize + 10;
+
+    return { yMax: adjustedMax, step: stepSize };
   }, [chartData]);
 
   const options = useMemo(() => {
-    const maxYAxisTicks = Math.min(100, Math.ceil(yMax / step) + 1);
+    const maxTicks = Math.min(100, Math.ceil(yMax / step) + 1);
 
     return {
       ...baseOptions,
       scales: {
         ...baseOptions.scales,
         y: {
-          type: "linear",
           beginAtZero: true,
           min: 0,
           max: yMax,
           ticks: {
             stepSize: step,
             autoSkip: false,
-            maxTicksLimit: maxYAxisTicks,
+            maxTicksLimit: maxTicks,
           },
         },
       },
     };
   }, [yMax, step]);
 
-  const chartDataConfig = {
+  const dataConfig = {
     labels: chartData.labels,
     datasets: [
       {
         label: "Requests",
         data: chartData.dataPoints,
-        borderColor: "rgb(79, 71, 228)",
-        backgroundColor: "rgba(79, 71, 228, 0.25)",
         borderWidth: 2,
         pointRadius: 3,
-        spanGaps: true,
         tension: 0.2,
+        borderColor: "rgb(79, 71, 228)",
+        spanGaps: true,
         fill: false,
       },
     ],
@@ -220,31 +227,33 @@ export default function Graph() {
     fetchMonthData();
   };
 
-  const currentError = selectedTimePeriod === "week" ? weekError : monthError;
-  if (currentError) return <div>Error: {currentError}</div>;
+  const error = selectedPeriod === "week" ? weekError : monthError;
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div className={styles.graph} id="graph-container">
+    <div className={styles.graph}>
       {chartData.labels.length > 0 && (
         <Line
-          key={`${selectedTimePeriod}-${yMax}-${step}`}
+          key={`${selectedPeriod}-${yMax}-${step}`}
+          data={dataConfig}
           options={options}
-          data={chartDataConfig}
         />
       )}
 
       <div className={styles.buttonParent}>
         <button
           className={styles.button}
-          onClick={() => setSelectedTimePeriod("month")}
-          aria-pressed={selectedTimePeriod === "month"}
+          onClick={() => setSelectedPeriod("month")}
+          aria-pressed={selectedPeriod === "month"}
         >
           Month
         </button>
         <button
           className={styles.button}
-          onClick={() => setSelectedTimePeriod("week")}
-          aria-pressed={selectedTimePeriod === "week"}
+          onClick={() => setSelectedPeriod("week")}
+          aria-pressed={selectedPeriod === "week"}
         >
           Week
         </button>
