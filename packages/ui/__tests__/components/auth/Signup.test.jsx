@@ -197,7 +197,6 @@ describe("SignUpForm UI and Functionality Tests", () => {
     // your component currently uses tabIndex={-1} — assert that explicitly.
     expect(eyeButton.getAttribute("tabindex")).toBe("-1");
   });
-  // --------------------------------------------------------
 
   it("does not reset form after failed submission", async () => {
     mockedMakeRequest.mockResolvedValue(false);

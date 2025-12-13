@@ -122,7 +122,6 @@ describe("SignInForm UI and Functionality Tests", () => {
     // Your component currently uses tabIndex={-1}; assert that explicitly.
     expect(eyeButton.getAttribute("tabindex")).toBe("-1");
   });
-  // -----------------------------------------------
 
   it("Change form when clicked on text in footer", () => {
     const authContext = mockAuthContext(false);
