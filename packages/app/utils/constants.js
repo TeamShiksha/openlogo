@@ -101,7 +101,7 @@ const Messages = {
   RESEND_EMAIL: "Resent a new Verification Email.",
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
   TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
-  SENT_FORGOT_PASSWORD_EMAIL: "Sent forgot password email.",
+  SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
