@@ -21,6 +21,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -69,25 +70,60 @@ const SignIn = ({ toggleForm, onClose }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  useEffect(() => {
+    const nextAllowed = localStorage.getItem("fp_nextAllowedAt");
+    if (nextAllowed) {
+      const diff = Math.floor((new Date(nextAllowed) - new Date()) / 1000);
+      if (diff > 0) {
+        setTimer(diff);
+      } else {
+        localStorage.removeItem("fp_nextAllowedAt");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (timer <= 0) return;
+    const interval = setInterval(() => {
+      setTimer((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsLoading(true);
-    const { data, success } = await fetchRequest();
-    if (success) {
-      if (isForgotPassword) {
-        toast.success("Password reset link sent to your email");
-        setIsForgotPassword(false);
-      } else if (data.source && data.statusCode == 201) {
-        toast.success("Verification email sent. Please verify your account.");
-      } else {
-        setFormData(SIGNIN.initialValues);
-        setIsAuthenticated(true);
-        onClose();
-        navigate("/dashboard");
-        toast.success(MESSAGES.SIGN_IN_SUCCESS);
-      }
+    if (isForgotPassword) {
+      const { data, success } = await fetchRequest({
+        data: { email: formData.email },
+      });
 
-      setFocusedField(null);
+      const nextAllowed = data?.nextAllowedAt;
+      if (nextAllowed) {
+        localStorage.setItem("fp_nextAllowedAt", nextAllowed);
+        const diff = Math.floor((new Date(nextAllowed) - new Date()) / 1000);
+        setTimer(diff > 0 ? diff : 0);
+        if (success) {
+          toast.success(MESSAGES.REST_EMAIL_SENT);
+        }
+      }
+    } else {
+      const { data, success } = await fetchRequest({
+        data: formData,
+      });
+
+      if (success) {
+        if (data.source && data.statusCode === 201) {
+          toast.success(MESSAGES.VERIFICATION_EMAIL_SENT);
+        } else {
+          setFormData(SIGNIN.initialValues);
+          setIsAuthenticated(true);
+          onClose();
+          navigate("/dashboard");
+          toast.success(MESSAGES.SIGN_IN_SUCCESS);
+        }
+        setFocusedField(null);
+      }
     }
     setIsLoading(false);
   };
@@ -161,10 +197,20 @@ const SignIn = ({ toggleForm, onClose }) => {
           type="submit"
           variant="primary"
           isLoading={isLoading}
-          disabled={!isFormValid || isSubmit || isLoading}
+          disabled={
+            !isFormValid ||
+            isSubmit ||
+            isLoading ||
+            (isForgotPassword && timer > 0)
+          }
         >
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>
+        {isForgotPassword && timer > 0 && (
+          <p className={styles["timer"]}>
+            Please wait {timer} seconds before retrying.
+          </p>
+        )}
       </form>
 
       <hr className={styles.separator} />
