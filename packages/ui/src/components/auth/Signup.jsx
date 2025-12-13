@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
@@ -17,6 +18,7 @@ function SignUp({ toggleForm, onClose }) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
@@ -81,21 +83,54 @@ function SignUp({ toggleForm, onClose }) {
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
         <div className={styles["form-width"]}>
-          {SIGNUP["fields"].map((field) => (
-            <CustomInput
-              error={formErrors[field.name]}
-              key={field.name}
-              type={field.type}
-              name={field.name}
-              label={field.label}
-              value={formValues[field.name]}
-              onChange={handleChange}
-              onFocus={() => setFocusedField(field.name)}
-              onBlur={() => setFocusedField(null)}
-              disabled={isLoading}
-              autoComplete={field.autoComplete}
-            />
-          ))}
+          {SIGNUP["fields"].map((field) => {
+            // Special handling for password field with eye icon
+            if (field.name === "password") {
+              return (
+                <div key={field.name} className={styles["password-wrapper"]}>
+                  <CustomInput
+                    error={formErrors[field.name]}
+                    type={showPassword ? "text" : "password"}
+                    name={field.name}
+                    label={field.label}
+                    value={formValues[field.name]}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField(field.name)}
+                    onBlur={() => setFocusedField(null)}
+                    disabled={isLoading}
+                    autoComplete={field.autoComplete}
+                  />
+                  <button
+                    type="button"
+                    className={styles["eye-button"]}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              );
+            }
+            // Regular fields
+            return (
+              <CustomInput
+                error={formErrors[field.name]}
+                key={field.name}
+                type={field.type}
+                name={field.name}
+                label={field.label}
+                value={formValues[field.name]}
+                onChange={handleChange}
+                onFocus={() => setFocusedField(field.name)}
+                onBlur={() => setFocusedField(null)}
+                disabled={isLoading}
+                autoComplete={field.autoComplete}
+              />
+            );
+          })}
         </div>
         <div className={styles["disclaimer-container"]}>
           <label htmlFor="agree-terms" className={styles["disclaimer-label"]}>
