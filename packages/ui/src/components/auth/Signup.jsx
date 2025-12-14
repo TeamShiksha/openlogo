@@ -83,7 +83,6 @@ function SignUp({ toggleForm, onClose }) {
         <h2 className={styles.title}>{SIGNUP.title}</h2>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => {
-            // Special handling for password field with eye icon
             if (field.name === "password") {
               return (
                 <PasswordInput
@@ -101,7 +100,6 @@ function SignUp({ toggleForm, onClose }) {
               );
             }
 
-            // Regular fields
             return (
               <CustomInput
                 error={formErrors[field.name]}

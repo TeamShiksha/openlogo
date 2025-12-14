@@ -24,7 +24,7 @@ function PasswordInput({
   return (
     <div className={styles.wrapper}>
       <CustomInput
-        type={showPassword ? "text" : "password"}
+        type={showPassword ? "password" : "text"}
         name={name}
         label={label}
         value={value}
@@ -39,12 +39,12 @@ function PasswordInput({
       <span
         role="button"
         tabIndex={-1}
-        aria-label={showPassword ? "Hide password" : "Show password"}
+        aria-label={showPassword ? "Show password" : "Hide password"}
         className={styles.eyeButton}
         onClick={handleToggle}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
             handleToggle();
           }
         }}

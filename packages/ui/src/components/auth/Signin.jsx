@@ -124,7 +124,6 @@ const SignIn = ({ toggleForm, onClose }) => {
           {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))
             .map((field) => {
-              // Special handling for password field with eye icon
               if (field.name === "password" && !isForgotPassword) {
                 return (
                   <PasswordInput
@@ -142,7 +141,6 @@ const SignIn = ({ toggleForm, onClose }) => {
                 );
               }
 
-              // Regular fields
               return (
                 <CustomInput
                   error={formErrors[field.name]}

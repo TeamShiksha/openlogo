@@ -127,7 +127,6 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
   });
 
-  // ---------- Tests for the eye button you added ----------
   it("renders an eye icon button for the password field", () => {
     const authContext = mockAuthContext(false);
     render(
@@ -143,7 +142,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const passwordInput = screen.getByLabelText("Password");
     expect(passwordInput).toBeInTheDocument();
 
-    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    const eyeButton = screen.getByRole("button", { name: /hide password/i });
     expect(eyeButton).toBeInTheDocument();
   });
 
@@ -160,24 +159,21 @@ describe("SignUpForm UI and Functionality Tests", () => {
     );
 
     const passwordInput = screen.getByLabelText("Password");
-    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    const eyeButton = screen.getByRole("button", { name: /hide password/i });
 
-    // initially hidden
-    expect(passwordInput).toHaveAttribute("type", "password");
-    expect(eyeButton).toHaveAttribute("aria-label", "Show password");
-
-    // click to show
-    fireEvent.click(eyeButton);
     expect(passwordInput).toHaveAttribute("type", "text");
-    expect(
-      screen.getByRole("button", { name: /hide password/i })
-    ).toBeInTheDocument();
+    expect(eyeButton).toHaveAttribute("aria-label", "Hide password");
 
-    // click to hide again
-    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    fireEvent.click(eyeButton);
     expect(passwordInput).toHaveAttribute("type", "password");
     expect(
       screen.getByRole("button", { name: /show password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
+    expect(passwordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide password/i })
     ).toBeInTheDocument();
   });
 
@@ -193,8 +189,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       </BrowserRouter>
     );
 
-    const eyeButton = screen.getByRole("button", { name: /show password/i });
-    // your component currently uses tabIndex={-1} — assert that explicitly.
+    const eyeButton = screen.getByRole("button", { name: /hide password/i });
     expect(eyeButton.getAttribute("tabindex")).toBe("-1");
   });
 
