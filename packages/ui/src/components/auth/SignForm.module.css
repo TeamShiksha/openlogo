@@ -112,3 +112,34 @@
 .disclaimer-label a:hover {
   color: var(--black);
 }
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 40px !important;
+}
+
+.eye-button {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--label-color, #666);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: color 0.2s ease;
+  height: 28px;
+  width: 28px;
+}
+
+.eye-button:hover {
+  color: var(--primary);
+}
