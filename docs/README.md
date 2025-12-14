@@ -1,5 +1,4 @@
 ## Openlogo
-
 Openlogo is your partner in logo exploration. Our platform boasts a collection of APIs designed to simplify the process of obtaining company logos.
 
 1. [Stage](https://stage.openlogo.fyi/)
@@ -22,6 +21,5 @@ Read [DEVELOPMENT](./DEVELOPMENT.md) for instructions to develop features locall
 
 - [CODE OF CONDUCT](./CODE_OF_CONDUCT.md)
 
----
-
+-----------------------------------------------------------------------------------------------------------------
 <p align="center" style="text"><strong>If you liked something about this repository, do give it a 🌟.</strong></p>
