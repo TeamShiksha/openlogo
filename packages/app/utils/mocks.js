@@ -142,6 +142,7 @@ const MOCK_USERTOKENS = [
 
 const MOCK_KEYS = [
   {
+    _id: new mongoose.Types.ObjectId(),
     user: new mongoose.Types.ObjectId(),
     key: "28482DNDO483ND3",
     key_description: "API-KEY-0",
@@ -150,6 +151,7 @@ const MOCK_KEYS = [
     expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     user: new mongoose.Types.ObjectId(),
     key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     key_description: "API-KEY-1",
@@ -380,6 +382,66 @@ const MOCK_CONTACTUS_FORM_DATA = [
   },
 ];
 
+const MOCK_LOGO_REQUESTS = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    key_id: MOCK_KEYS[0]._id,
+    image_id: MOCK_IMAGES[0]._id,
+    response_size_bytes: 1024,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[1]._id,
+    key_id: MOCK_KEYS[1]._id,
+    image_id: MOCK_IMAGES[1]._id,
+    response_size_bytes: 2048,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    key_id: MOCK_KEYS[0]._id,
+    image_id: MOCK_IMAGES[2]._id,
+    response_size_bytes: 3072,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+const MOCK_WEEKLY_STATS = {
+  period: "week",
+  startDate: "2025-11-24",
+  endDate: "2025-12-01",
+  summary: {
+    totalCount: 15,
+    totalKB: "45.50",
+  },
+  data: [
+    { date: "2025-11-24", count: 2, totalKB: 5.25 },
+    { date: "2025-11-25", count: 3, totalKB: 8.75 },
+    { date: "2025-11-26", count: 4, totalKB: 12 },
+  ],
+};
+
+const MOCK_MONTHLY_STATS = {
+  period: "month",
+  startDate: "2025-11-01",
+  endDate: "2025-12-01",
+  summary: {
+    totalCount: 50,
+    totalKB: "150.75",
+  },
+  data: [
+    { date: "2025-11-01", count: 5, totalKB: 15.25 },
+    { date: "2025-11-05", count: 8, totalKB: 24.5 },
+    { date: "2025-11-10", count: 12, totalKB: 36 },
+  ],
+};
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -393,4 +455,7 @@ module.exports = {
   MOCK_PRESIGNED_REQUEST_UPDATE,
   MOCK_REQUESTS_LIST,
   MOCK_CONTACTUS_FORM_DATA,
+  MOCK_LOGO_REQUESTS,
+  MOCK_WEEKLY_STATS,
+  MOCK_MONTHLY_STATS,
 };

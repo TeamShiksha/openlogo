@@ -8,6 +8,7 @@ const {
   ImageService,
   KeyService,
   SubscriptionService,
+  UserService,
 } = require("../../../services");
 
 describe("getLogoController", () => {
@@ -109,11 +110,12 @@ describe("getLogoController", () => {
     jest
       .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
       .mockResolvedValue(imageUrl);
-
     jest
       .spyOn(SubscriptionService.prototype, "incrementUsageCount")
       .mockResolvedValue([]);
-
+    jest
+      .spyOn(UserService.prototype, "logLogoRequestEntry")
+      .mockResolvedValue({});
     const response = await request(app).get(apiUrl).query(baseQuery);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -169,7 +171,9 @@ describe("getLogoController - Operations Order Test", () => {
         operationsOrder.push("image_fetched");
         return imageUrl;
       });
-
+    jest
+      .spyOn(UserService.prototype, "logLogoRequestEntry")
+      .mockResolvedValue({});
     jest
       .spyOn(SubscriptionService.prototype, "incrementUsageCount")
       .mockImplementation(() => {
