@@ -71,24 +71,37 @@ const SignIn = ({ toggleForm, onClose }) => {
   };
 
   useEffect(() => {
-    const nextAllowed = localStorage.getItem("fp_nextAllowedAt");
-    if (nextAllowed) {
-      const diff = Math.floor((new Date(nextAllowed) - new Date()) / 1000);
-      if (diff > 0) {
-        setTimer(diff);
-      } else {
-        localStorage.removeItem("fp_nextAllowedAt");
-      }
+    const stored = localStorage.getItem("fp_nextAllowedAt");
+    if (!stored) return;
+    const timestamp = new Date(stored).getTime();
+    if (Number.isNaN(timestamp)) {
+      localStorage.removeItem("fp_nextAllowedAt");
+      return;
     }
-  }, []);
+    const diff = Math.floor((timestamp - Date.now()) / 1000);
+    if (diff <= 0) {
+      localStorage.removeItem("fp_nextAllowedAt");
+      return;
+    }
+    setTimer(diff);
+  }, [timer]);
 
   useEffect(() => {
     if (timer <= 0) return;
+
     const interval = setInterval(() => {
-      setTimer((t) => t - 1);
+      setTimer((prev) => {
+        if (prev <= 1) {
+          localStorage.removeItem("fp_nextAllowedAt");
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [timer]);
+  }, []);
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
@@ -100,9 +113,12 @@ const SignIn = ({ toggleForm, onClose }) => {
 
       const nextAllowed = data?.nextAllowedAt;
       if (nextAllowed) {
-        localStorage.setItem("fp_nextAllowedAt", nextAllowed);
-        const diff = Math.floor((new Date(nextAllowed) - new Date()) / 1000);
-        setTimer(diff > 0 ? diff : 0);
+        const nextAllowedDate = new Date(nextAllowed);
+        if (!isNaN(nextAllowedDate.getTime())) {
+          localStorage.setItem("fp_nextAllowedAt", nextAllowed);
+          const diff = Math.floor((nextAllowedDate - new Date()) / 1000);
+          setTimer(diff > 0 ? diff : 0);
+        }
         if (success) {
           toast.success(MESSAGES.REST_EMAIL_SENT);
         }
