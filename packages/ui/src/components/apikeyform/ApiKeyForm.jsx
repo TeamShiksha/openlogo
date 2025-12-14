@@ -14,6 +14,7 @@ import {
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
 import { validate } from "../../utils/Helpers.js";
+import Dropdown from "../common/dropdown/Dropdown.jsx";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
@@ -23,6 +24,14 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [copyMessage, setCopyMessage] = useState("");
   const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
+
+  const expiryOptions = [
+    { value: 7, label: "1 Week" },
+    { value: 30, label: "1 Month" },
+    { value: 90, label: "3 Months" },
+    { value: 180, label: "6 Months" },
+    { value: 365, label: "1 Year" },
+  ];
 
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
@@ -114,29 +123,18 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           onFocus={() => setFocusedField("apikey")}
           onBlur={() => setFocusedField(null)}
         />
+
         <div className={styles["expiry-dropdown"]}>
           <label htmlFor="expiry" className={styles["expiry-label"]}>
             Expiry Period
           </label>
-
-          <div
-            className={`${styles["dropdown-div"]} ${styles["expiry-select"]}`}
-          >
-            <select
-              name="expiry"
-              id="expiry"
-              className={styles["dropdown"]}
-              value={expiresInDays}
-              onChange={(e) => setExpiresInDays(Number(e.target.value))}
-              disabled={loading}
-            >
-              <option value={7}>1 Week</option>
-              <option value={30}>1 Month</option>
-              <option value={90}>3 Months</option>
-              <option value={180}>6 Months</option>
-              <option value={365}>1 Year</option>
-            </select>
-          </div>
+          <Dropdown
+            options={expiryOptions}
+            selectedOption={String(expiresInDays)}
+            setSelectedOption={(value) => setExpiresInDays(Number(value))}
+            testId="testid-expiry-dropdown"
+            className={styles["expiry-select"]}
+          />
         </div>
         <Modal
           isOpen={showApiKeyModal}
