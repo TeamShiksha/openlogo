@@ -20,6 +20,7 @@ import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 import Graph from "../../components/graph/Graph.jsx";
+import InformationModal from "../../components/information/InformationModal.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
@@ -29,6 +30,8 @@ function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
@@ -38,7 +41,11 @@ function Dashboard() {
     method: "delete",
     url: `/user/api-key/${selectedKey?._id}`,
   });
-
+  const { fetchRequest: updateOldKeysRequest } = useApi({
+    method: "GET",
+    url: "/user/update-old-keys",
+    withCredentials: true,
+  });
   const apiKeyTableData = useMemo(() => {
     return apiKeys.map(({ key_description, updated_at }) => [
       key_description,
@@ -74,7 +81,24 @@ function Dashboard() {
     setConfirmKeyName("");
     setShowModal(true);
   };
-
+  useEffect(() => {
+    async function checkOldKeys() {
+      setShowLoader(true);
+      const result = await updateOldKeysRequest();
+      if (result.success && result.data?.keysUpdated === true) {
+        setTimeout(() => {
+          setShowLoader(false);
+          setShowUpdateModal(true);
+        }, 2000);
+      } else {
+        setShowLoader(false);
+      }
+      if (!result.success && result.error) {
+        toast.error(result.error);
+      }
+    }
+    checkOldKeys();
+  }, []);
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
   };
@@ -93,12 +117,10 @@ function Dashboard() {
     }
     setIsDeleting(false);
   };
-
   const handleModalClose = () => {
     setShowModal(false);
     setConfirmKeyName("");
   };
-
   if (loading) {
     return (
       <div
@@ -109,26 +131,49 @@ function Dashboard() {
       </div>
     );
   }
-
   const handleKeyGenerated = async () => {
     const success = await fetchUserKeys();
     if (!success) {
       toast.error("Failed to fetch updated API keys");
     }
   };
-
   const dashboardDropdownOptions = [];
   if (userData?.role === "ADMIN") {
     dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
   } else if (userData?.role === "OPERATOR") {
     dashboardDropdownOptions.push("OPERATOR", "USER");
   }
-
   return (
     <div
       className={`container ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
+      {showLoader && (
+        <div className={styles["overlay-loader"]}>
+          <div className={styles["loader-content"]}>
+            <LoadingSpinner size={60} border={6} />
+            <p className={styles["loader-text"]}>Please wait...</p>
+          </div>
+        </div>
+      )}
+      {showUpdateModal && (
+        <InformationModal
+          isOpen={showUpdateModal}
+          onClose={() => setShowUpdateModal(false)}
+          heading="Notification"
+          buttonText="I Understand"
+          closeOnOverlayClick={false}
+          message={
+            <>
+              <p>Our application has undergone some improvements.</p>
+              <p style={{ marginTop: "10px" }}>
+                You had older API keys we have updated their expiry dates for
+                you.
+              </p>
+            </>
+          }
+        />
+      )}
       <div>
         {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
           <Dropdown
@@ -138,7 +183,6 @@ function Dashboard() {
           />
         )}
       </div>
-
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
           <AdminDashboard />
