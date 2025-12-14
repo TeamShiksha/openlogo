@@ -843,107 +843,89 @@ export const RELEASE_PAGE = {
     versionsData: [
       {
         versionName: "Current version",
-        releaseDate: "DEC 2025",
+        releaseDate: "Dec 2025",
         imgSrc: version06,
         releaseNotes: [
           {
             releaseNote:
-              "Added feature allowing users to resend email verification with a limit of 3 attempts per day.",
-            contributorGithubUserName: "MukeshAbhi",
-            contributorGithublink: "https://github.com/MukeshAbhi",
+              "Date formatting across the platform has been improved to ensure consistent display everywhere.",
+            contributors: [
+              {
+                contributorName: "Sumitgitup",
+                contributorGithubLink: "https://github.com/Sumitgitup",
+              },
+            ],
           },
           {
             releaseNote:
-              "Enabled users to download their personal data directly from the platform.",
-            contributorGithubUserName: "Sumitgitup",
-            contributorGithublink: "https://github.com/Sumitgitup",
+              "Users can now download a copy of their data directly from the platform.",
+            contributors: [
+              {
+                contributorName: "Sumitgitup",
+                contributorGithubLink: "https://github.com/Sumitgitup",
+              },
+            ],
           },
           {
             releaseNote:
-              "Admin dashboard now displays the total number of stored images for improved monitoring.",
-            contributorGithubUserName: "printgourav",
-            contributorGithublink: "https://github.com/printgourav",
+              "Dashboard and Sign Out options have been combined into a single profile dropdown for easier navigation.",
+            contributors: [
+              {
+                contributorName: "abhishek-2k23",
+                contributorGithubLink: "https://github.com/abhishek-2k23",
+              },
+              {
+                contributorName: "nazibul7",
+                contributorGithubLink: "https://github.com/nazibul7",
+              },
+            ],
           },
           {
             releaseNote:
-              "Improved header navigation by adding a profile dropdown containing Dashboard and Sign Out.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+              "Content updates now appear instantly across the platform due to improved cache invalidation.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
           },
           {
             releaseNote:
-              "Updated mobile header UI to include Dashboard and Sign Out for consistent cross-device experience.",
-            contributorGithubUserName: "nazibul7",
-            contributorGithublink: "https://github.com/nazibul7",
+              "The image upload system has been made more reliable and efficient, especially for larger files.",
+            contributors: [
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+              {
+                contributorName: "YashDevani-source",
+                contributorGithubLink: "https://github.com/YashDevani-source",
+              },
+            ],
           },
           {
             releaseNote:
-              "Streamlined CI/CD pipeline by removing DockerHub steps and moving deployment fully to Vercel.",
-            contributorGithubUserName: "printgourav",
-            contributorGithublink: "https://github.com/printgourav",
+              "Users can now resend their email verification if the original email was missed or expired.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
           },
           {
             releaseNote:
-              "Updated DEVELOPMENT.md with a new deployment diagram showing architecture and CI/CD workflow.",
-            contributorGithubUserName: "YashDevani-source",
-            contributorGithublink: "https://github.com/YashDevani-source",
-          },
-          {
-            releaseNote:
-              "Refactored image upload pipeline using pre-signed S3 URLs for faster and more efficient uploads.",
-            contributorGithubUserName: "printgourav",
-            contributorGithublink: "https://github.com/printgourav",
-          },
-          {
-            releaseNote:
-              "Implemented automated CDN cache invalidation for instant content refresh after admin updates.",
-            contributorGithubUserName: "MukeshAbhi",
-            contributorGithublink: "https://github.com/MukeshAbhi",
-          },
-          {
-            releaseNote:
-              "Fix: Ensured consistent date formatting across the platform.",
-            contributorGithubUserName: "Sumitgitup",
-            contributorGithublink: "https://github.com/Sumitgitup",
-          },
-          {
-            releaseNote:
-              "Feature: Added a download button allowing users to retrieve their stored data.",
-            contributorGithubUserName: "Sumitgitup",
-            contributorGithublink: "https://github.com/Sumitgitup",
-          },
-          {
-            releaseNote:
-              "Feature: Combined Dashboard & Sign Out into a single profile dropdown.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote: "Enhancement: Added CDN cache invalidation support.",
-            contributorGithubUserName: "MukeshAbhi",
-            contributorGithublink: "https://github.com/MukeshAbhi",
-          },
-          {
-            releaseNote:
-              "Refactor: Updated the S3 upload flow to improve reliability.",
-            contributorGithubUserName: "printgourav",
-            contributorGithublink: "https://github.com/printgourav",
-          },
-          {
-            releaseNote:
-              "Feature: Added resend email verification functionality.",
-            contributorGithubUserName: "MukeshAbhi",
-            contributorGithublink: "https://github.com/MukeshAbhi",
-          },
-          {
-            releaseNote:
-              "Enhancement: Added total image count display for admin users.",
-            contributorGithubUserName: "printgourav",
-            contributorGithublink: "https://github.com/printgourav",
+              "Admins can now view the total number of images stored in the system at a glance.",
+            contributors: [
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+            ],
           },
         ],
       },
-
       {
         versionName: "Previous version",
         releaseDate: "Oct 2024",
@@ -951,113 +933,103 @@ export const RELEASE_PAGE = {
         releaseNotes: [
           {
             releaseNote:
-              "Migrated entire database from Firebase to MongoDB for better scalability and performance.",
-            contributorGithubUserName: "amankumarsingh77",
-            contributorGithublink: "https://github.com/amankumarsingh77",
+              "The platform was migrated from Firebase to MongoDB to improve scalability and performance.",
+            contributors: [
+              {
+                contributorName: "amankumarsingh77",
+                contributorGithubLink: "https://github.com/amankumarsingh77",
+              },
+            ],
           },
           {
             releaseNote:
-              "Updated the testing framework by migrating from Jest to Vitest for faster and more efficient test execution.",
-            contributorGithubUserName: "Ayushsanjdev",
-            contributorGithublink: "https://github.com/Ayushsanjdev",
+              "The testing framework was upgraded to Vitest for faster and more reliable test execution.",
+            contributors: [
+              {
+                contributorName: "Ayushsanjdev",
+                contributorGithubLink: "https://github.com/Ayushsanjdev",
+              },
+            ],
           },
           {
             releaseNote:
-              "Introduced an Operator dashboard to manage and respond to customer queries more effectively.",
-            contributorGithubUserName: "asharma991",
-            contributorGithublink: "https://github.com/asharma991",
+              "An Operator dashboard was introduced to help manage and respond to customer queries efficiently.",
+            contributors: [
+              {
+                contributorName: "asharma991",
+                contributorGithubLink: "https://github.com/asharma991",
+              },
+            ],
           },
           {
             releaseNote:
-              "Added support for re-uploading images from the admin dashboard, including validation for name and extension.",
-            contributorGithubUserName: "Soumava-221B",
-            contributorGithublink: "https://github.com/Soumava-221B",
+              "Admins can now re-upload images with proper validation for file name and extension.",
+            contributors: [
+              {
+                contributorName: "Soumava-221B",
+                contributorGithubLink: "https://github.com/Soumava-221B",
+              },
+            ],
           },
           {
             releaseNote:
-              "Implemented an automated script that resets subscription usage counts every 30 days.",
-            contributorGithubUserName: "DeltaDynamo",
-            contributorGithublink: "https://github.com/DeltaDynamo",
+              "Subscription usage limits are now automatically reset every month.",
+            contributors: [
+              {
+                contributorName: "DeltaDynamo",
+                contributorGithubLink: "https://github.com/DeltaDynamo",
+              },
+            ],
           },
           {
             releaseNote:
-              "Improved UI/UX across the platform, including footer, About page, and sign-in form enhancements.",
-            contributorGithubUserName: "AryaDharkar",
-            contributorGithublink: "https://github.com/AryaDharkar",
+              "Several UI improvements were made across the footer, About page, and sign-in flow.",
+            contributors: [
+              {
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
           },
           {
             releaseNote:
-              "Introduced a Logo Search API that returns signed image URLs based on query parameters.",
-            contributorGithubUserName: "DeltaDynamo",
-            contributorGithublink: "https://github.com/DeltaDynamo",
+              "A Logo Search API was introduced, allowing secure retrieval of logos using signed URLs.",
+            contributors: [
+              {
+                contributorName: "DeltaDynamo",
+                contributorGithubLink: "https://github.com/DeltaDynamo",
+              },
+            ],
           },
           {
             releaseNote:
-              "Fixed navigation link behavior so pages scroll to the top when clicked.",
-            contributorGithubUserName: "Asin-Junior-Honore",
-            contributorGithublink: "https://github.com/Asin-Junior-Honore",
+              "Navigation behavior was improved so pages consistently scroll to the top when links are clicked.",
+            contributors: [
+              {
+                contributorName: "Asin-Junior-Honore",
+                contributorGithubLink: "https://github.com/Asin-Junior-Honore",
+              },
+            ],
           },
           {
             releaseNote:
-              "Added a confirmation modal when deleting API keys to prevent accidental deletions.",
-            contributorGithubUserName: "anandbaraik",
-            contributorGithublink: "https://github.com/anandbaraik",
+              "A confirmation step was added before deleting API keys to prevent accidental actions.",
+            contributors: [
+              {
+                contributorName: "anandbaraik",
+                contributorGithubLink: "https://github.com/anandbaraik",
+              },
+            ],
           },
           {
             releaseNote:
-              "Made usage count functionality accurate and reliable across different user plans.",
-            contributorGithubUserName: "amankumarsingh77",
-            contributorGithublink: "https://github.com/amankumarsingh77",
-          },
-          {
-            releaseNote:
-              "Implemented one-time API key view and copy functionality for improved account security.",
-            contributorGithubUserName: "Sharathxct",
-            contributorGithublink: "https://github.com/Sharathxct",
-          },
-          {
-            releaseNote:
-              "Fixed incorrect usage count values and removed duplicate userId fields in API responses.",
-            contributorGithubUserName: "amankumarsingh77",
-            contributorGithublink: "https://github.com/amankumarsingh77",
-          },
-          {
-            releaseNote:
-              "Fixed reset and forgot password API to ensure correct handling of authentication flows.",
-            contributorGithubUserName: "amankumarsingh77",
-            contributorGithublink: "https://github.com/amankumarsingh77",
-          },
-          {
-            releaseNote:
-              "Updated client-side test cases to be compatible with Vitest after migration.",
-            contributorGithubUserName: "Ayushsanjdev",
-            contributorGithublink: "https://github.com/Ayushsanjdev",
-          },
-        ],
-      },
-
-      {
-        versionName: "0.1.0",
-        releaseDate: "Jun 2025",
-        imgSrc: version06,
-        releaseNotes: [
-          {
-            releaseNote:
-              "Initial release of the platform with core logo browsing functionality.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Implemented basic search and category filters for brands.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
-          },
-          {
-            releaseNote:
-              "Added user profile management and API key generation.",
-            contributorGithubUserName: "abhishek-2k23",
-            contributorGithublink: "https://github.com/abhishek-2k23",
+              "API key security was improved by allowing keys to be viewed or copied only once.",
+            contributors: [
+              {
+                contributorName: "Sharathxct",
+                contributorGithubLink: "https://github.com/Sharathxct",
+              },
+            ],
           },
         ],
       },

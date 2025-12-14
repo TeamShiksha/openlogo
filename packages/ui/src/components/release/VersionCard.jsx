@@ -35,36 +35,33 @@ function VersionCard(versionData) {
           <div className={styles["release-notes"]}>
             <h3>Release Notes</h3>
             <ul className={styles["notes-list"]}>
-              {releaseNotes?.map(
-                (
-                  {
-                    releaseNote,
-                    contributorGithubUserName,
-                    contributorGithublink,
-                  },
-                  index
-                ) => (
-                  <li key={releaseNote + index} className={styles["note-item"]}>
-                    <span className={styles["dot"]}></span>
-                    <span className={styles["list-description"]}>
-                      {releaseNote}{" "}
-                      <span className={styles["note-link"]}>
-                        (By{" "}
-                        {contributorGithublink && (
-                          <a
-                            href={contributorGithublink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {contributorGithubUserName}
-                          </a>
-                        )}
+              {releaseNotes?.map(({ releaseNote, contributors }, index) => (
+                <li key={releaseNote + index} className={styles["note-item"]}>
+                  <span className={styles["dot"]}></span>
+                  <span className={styles["list-description"]}>
+                    {releaseNote}{" "}
+                    <span className={styles["note-link"]}>
+                      (By{" "}
+                      {contributors.map(
+                        ({ contributorName, contributorGithubLink }, idx) => (
+                          <span key={contributorName + idx}>
+                            <a
+                              href={contributorGithubLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {contributorName}
+                            </a>
+                            {idx > 0 ||
+                              (idx !== contributors.length - 1 && ", ")}
+                          </span>
                         )
-                      </span>
+                      )}
+                      )
                     </span>
-                  </li>
-                )
-              )}
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         )}
