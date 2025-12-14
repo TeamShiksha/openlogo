@@ -8,6 +8,7 @@ const {
   destroyKeyController,
   updatePasswordController,
   logoRequestController,
+  updateOldKeysController,
   downloadUserData,
 } = require("../controllers/users");
 
@@ -18,6 +19,7 @@ router.post("/api-key", authMiddleware(), generateKeyController);
 router.delete("/api-key/:keyId", authMiddleware(), destroyKeyController);
 router.put("/password", authMiddleware(), updatePasswordController);
 router.post("/request", authMiddleware(), logoRequestController);
+router.get("/update-old-keys", authMiddleware(), updateOldKeysController);
 router.get("/download", authMiddleware(), downloadUserData);
 
 module.exports = router;

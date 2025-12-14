@@ -41,6 +41,25 @@ async function getLogoController(req, res, next) {
         error: STATUS_CODES[403],
       });
     }
+    const keysNeedUpdate =
+      !keyRef.expires_at ||
+      keyRef.expires_at === null ||
+      keyRef.expires_at === undefined;
+
+    if (keysNeedUpdate) {
+      return res.status(403).json({
+        message: Messages.UPDATE_API_KEY,
+        error: STATUS_CODES[403],
+        statusCode: 403,
+      });
+    }
+    if (keyRef.expires_at && new Date() > new Date(keyRef.expires_at)) {
+      return res.status(403).json({
+        message: Messages.API_KEY_EXPIRED,
+        statusCode: 403,
+        error: STATUS_CODES[403],
+      });
+    }
 
     const userSubscription = await subscriptionService.getSubscription(
       keyRef.subscription_id
@@ -97,11 +116,33 @@ async function searchLogoController(req, res, next) {
     }
     const { API_KEY, companyNameBeginsWith } = value;
     const key = await keyService.getApiKey(API_KEY);
+
     if (!key) {
       return res.status(403).json({
         message: Messages.INVALID_KEY,
         error: STATUS_CODES[403],
         statusCode: 403,
+      });
+    }
+
+    const keysNeedUpdate =
+      !key.expires_at ||
+      key.expires_at === null ||
+      key.expires_at === undefined;
+
+    if (keysNeedUpdate) {
+      return res.status(403).json({
+        message: Messages.UPDATE_API_KEY,
+        error: STATUS_CODES[403],
+        statusCode: 403,
+      });
+    }
+
+    if (key.expires_at && new Date() > new Date(key.expires_at)) {
+      return res.status(403).json({
+        message: Messages.API_KEY_EXPIRED,
+        statusCode: 403,
+        error: STATUS_CODES[403],
       });
     }
 
