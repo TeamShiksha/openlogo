@@ -835,15 +835,15 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["current version", "previous version"],
-  latestVersion: "current version",
+  versions: ["Current version", "Previous version"],
+  latestVersion: "Current version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
       {
-        versionName: "current version",
-        releaseDate: "Oct 2025",
+        versionName: "Current version",
+        releaseDate: "DEC 2025",
         imgSrc: version06,
         releaseNotes: [
           {
@@ -945,7 +945,7 @@ export const RELEASE_PAGE = {
       },
 
       {
-        versionName: "previous version",
+        versionName: "Previous version",
         releaseDate: "Oct 2024",
         imgSrc: version06,
         releaseNotes: [
