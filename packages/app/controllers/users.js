@@ -149,8 +149,12 @@ async function generateKeyController(req, res, next) {
     const userService = new UserService();
     const subscriptionService = new SubscriptionService();
 
-    const { key_description } = req.body;
-    const { error } = generateKeyPayloadSchema.validate({ key_description });
+    const { key_description, expires_at } = req.body;
+    const { error } = generateKeyPayloadSchema.validate({
+      key_description,
+      expires_at,
+    });
+
     if (error) {
       return res.status(422).json({
         message: error.message,
@@ -184,6 +188,7 @@ async function generateKeyController(req, res, next) {
     const newKey = {
       key_description: req.body.key_description,
       subscription_id: subscription._id,
+      expires_at: expires_at,
     };
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({
@@ -227,6 +232,41 @@ async function destroyKeyController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Updates old API keys without expiry dates for a user.
+ * This controller retrieves the authenticated user, finds all their API keys
+ * that don't have an expiry date set, and updates them accordingly.
+ * @returns {Object} 200 JSON response with the number of keys updated, or 404 if user not found.
+ * @throws {Error} If an unexpected error occurs, it is passed to the next middleware.
+ **/
+
+async function updateOldKeysController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const keyService = new KeyService();
+
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
+    const updatedKeysStatus = await keyService.findUpdateKeyWithoutExpiry(
+      user.keys
+    );
+    return res.status(200).json({
+      statusCode: 200,
+      keysUpdated: updatedKeysStatus,
     });
   } catch (err) {
     next(err);
@@ -361,5 +401,6 @@ module.exports = {
   destroyKeyController,
   updatePasswordController,
   logoRequestController,
+  updateOldKeysController,
   downloadUserData,
 };

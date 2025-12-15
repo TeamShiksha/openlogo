@@ -142,18 +142,44 @@ const MOCK_USERTOKENS = [
 
 const MOCK_KEYS = [
   {
+    _id: new mongoose.Types.ObjectId(),
     user: new mongoose.Types.ObjectId(),
     key: "28482DNDO483ND3",
-    key_description: "API-KEY-1",
+    keyDescription: "ZEROAPIKEY",
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     user: new mongoose.Types.ObjectId(),
     key: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    key_description: "API-KEY-1",
+    keyDescription: "FIRSTAPIKEY",
     createdAt: Date.now(),
     updatedAt: Date.now(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    key: "G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8",
+    keyDescription: "SECONDAPIKEY",
+    updated_at: new Date("2024-12-01T08:15:00Z"),
+    expires_at: new Date("2025-03-31T23:59:59Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    key: "3fa85f64-5717-4562-a2fd-2c963f66afa6",
+    keyDescription: "API-KEY-3",
+    updated_at: new Date("2024-11-28T16:20:00Z"),
+    subscription_id: new mongoose.Types.ObjectId("507f1f77bcf86cd799439014"),
+  },
+];
+
+const MOCK_KEYS_VALIDITY_PERIOD = [
+  {
+    oneWeek: 7,
+    oneMonth: 30,
+    threeMonths: 90,
+    sixMonths: 180,
+    oneYear: 365,
   },
 ];
 
@@ -363,11 +389,72 @@ const MOCK_CONTACTUS_FORM_DATA = [
   },
 ];
 
+const MOCK_LOGO_REQUESTS = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    key_id: MOCK_KEYS[0]._id,
+    image_id: MOCK_IMAGES[0]._id,
+    response_size_bytes: 1024,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[1]._id,
+    key_id: MOCK_KEYS[1]._id,
+    image_id: MOCK_IMAGES[1]._id,
+    response_size_bytes: 2048,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    key_id: MOCK_KEYS[0]._id,
+    image_id: MOCK_IMAGES[2]._id,
+    response_size_bytes: 3072,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+const MOCK_WEEKLY_STATS = {
+  period: "week",
+  startDate: "2025-11-24",
+  endDate: "2025-12-01",
+  summary: {
+    totalCount: 15,
+    totalKB: "45.50",
+  },
+  data: [
+    { date: "2025-11-24", count: 2, totalKB: 5.25 },
+    { date: "2025-11-25", count: 3, totalKB: 8.75 },
+    { date: "2025-11-26", count: 4, totalKB: 12 },
+  ],
+};
+
+const MOCK_MONTHLY_STATS = {
+  period: "month",
+  startDate: "2025-11-01",
+  endDate: "2025-12-01",
+  summary: {
+    totalCount: 50,
+    totalKB: "150.75",
+  },
+  data: [
+    { date: "2025-11-01", count: 5, totalKB: 15.25 },
+    { date: "2025-11-05", count: 8, totalKB: 24.5 },
+    { date: "2025-11-10", count: 12, totalKB: 36 },
+  ],
+};
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
   MOCK_USERTOKENS,
   MOCK_KEYS,
+  MOCK_KEYS_VALIDITY_PERIOD,
   MOCK_ANALYTICS_DATA_INPUT,
   MOCK_ANALYTICS_DATA_OUTPUT,
   MOCK_IMAGES,
@@ -376,4 +463,7 @@ module.exports = {
   MOCK_PRESIGNED_REQUEST_UPDATE,
   MOCK_REQUESTS_LIST,
   MOCK_CONTACTUS_FORM_DATA,
+  MOCK_LOGO_REQUESTS,
+  MOCK_WEEKLY_STATS,
+  MOCK_MONTHLY_STATS,
 };

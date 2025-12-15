@@ -85,7 +85,7 @@ describe("GETUSERDATA", () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockSubscriptionModel = new Subscriptions(MOCK_SUBSCRIPTION[0]);
-    const mockKeyModel = new Keys(MOCK_KEYS[0]);
+    const mockKeyModel = new Keys(MOCK_KEYS[2]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(mockUserModel);
@@ -126,6 +126,7 @@ describe("GETUSERDATA", () => {
           api_key: mockKeyModel.api_key,
           key_description: mockKeyModel.key_description,
           updated_at: mockKeyModel.updated_at.toISOString(),
+          expires_at: mockKeyModel.expires_at.toISOString(),
         },
       ],
     });
