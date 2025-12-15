@@ -1,14 +1,18 @@
 const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
+
 const SubscriptionService = require("../services/subscriptions");
 const { UsersRepository, RequestRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
+const ImageService = require("../services/images");
+const LogoRequestLogsService = require("../services/logoRequestlogs");
 
 class UserService {
   constructor() {
     this.userRepository = new UsersRepository();
     this.keyService = new KeyService();
-
+    this.imageService = new ImageService();
+    this.logoRequestLogsService = new LogoRequestLogsService();
     this.subscriptionService = new SubscriptionService();
     this.requestRepository = new RequestRepository();
   }
@@ -109,7 +113,15 @@ class UserService {
    * @throws {Error} - Throws an error if the key creation or user update fails.
    */
   async createNewUserKey(newKey, user) {
-    const newUserKey = await this.keyService.createNewKey(newKey);
+    const { key_description, subscription_id, expires_at } = newKey;
+    const keyValidity = expires_at;
+    const today = new Date();
+    const keyExpiry = today.setDate(today.getDate() + keyValidity);
+    const newUserKey = await this.keyService.createNewKey({
+      key_description: key_description,
+      subscription_id: subscription_id,
+      expires_at: keyExpiry,
+    });
     user.keys.push(newUserKey._id);
     await user.save();
     return newUserKey;
@@ -315,6 +327,41 @@ class UserService {
       },
       { new: true }
     );
+  }
+
+  /**
+   * Gets userId from subscriptionId.
+   * @param {String} subscriptionId - The subscriptionId of the user.
+   * @returns {Object} - User Object.
+   */
+  async getUserBySubscriptionId(subscriptionId) {
+    return await this.userRepository.findUserBySubscriptionId(subscriptionId);
+  }
+
+  /**
+   * Logs an API request entry for a logo fetch operation.
+   * This is a non-fatal operation - failures are logged but do not interrupt the flow.
+   * @param {string} company - The company name.
+   * @param {Object} userSubscription - The user's subscription object.
+   * @param {Object} keyRef - The API key reference object.
+   * @returns {Promise<void>} - No return value, failures are silently logged.
+   */
+  async logLogoRequestEntry(company, userSubscription, keyRef) {
+    try {
+      const [imageDoc, userRef] = await Promise.all([
+        this.imageService.getImageByCompanyName(company),
+        this.getUserBySubscriptionId(userSubscription._id),
+      ]);
+      const requestPayload = {
+        user_id: userRef._id,
+        key_id: keyRef._id,
+        image_id: imageDoc && imageDoc._id,
+        response_size_bytes: (imageDoc && imageDoc.image_size) || 0,
+      };
+      await this.logoRequestLogsService.createEntry(requestPayload);
+    } catch (err) {
+      console.error("Failed to create API request entry:", err.message);
+    }
   }
 }
 

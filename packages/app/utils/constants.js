@@ -102,6 +102,8 @@ const Messages = {
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
   TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
   SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
+  API_KEY_EXPIRED: "Your Key has been expired",
+  UPDATE_API_KEY: "Your API Key needs an update",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
