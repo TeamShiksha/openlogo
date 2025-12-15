@@ -104,6 +104,10 @@ ul li {
 }
 .dropdown-menu {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
   right: 0;
   margin-top: 0.5rem;
   width: 100%;
@@ -115,8 +119,7 @@ ul li {
   overflow-y: hidden;
 }
 .dropdown-menu button {
-  width: 100%;
-  text-align: left;
+  box-sizing: border-box;
   padding: 0.5rem;
   font-size: 1.1rem;
   color: var(--black);
@@ -125,9 +128,12 @@ ul li {
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .dropdown-menu button:hover {
-  text-decoration: underline;
+  background-color: #f3f3f3;
+  border-radius: 0px;
 }
+
 .version-card {
   margin-bottom: 4rem;
 }
