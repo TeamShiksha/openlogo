@@ -1,6 +1,6 @@
 import Modal from "../common/modal/Modal.jsx";
 import Button from "../common/button/Button.jsx";
-import styles from "./Information.module.css";
+import styles from "./InformationModal.module.css";
 import PropTypes from "prop-types";
 
 function InformationModal({
