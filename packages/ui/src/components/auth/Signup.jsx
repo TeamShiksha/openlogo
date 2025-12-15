@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
@@ -17,6 +18,7 @@ function SignUp({ toggleForm, onClose }) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
@@ -81,21 +83,58 @@ function SignUp({ toggleForm, onClose }) {
       >
         <h2 className={styles.title}>{SIGNUP.title}</h2>
         <div className={styles["form-width"]}>
-          {SIGNUP["fields"].map((field) => (
-            <CustomInput
-              error={formErrors[field.name]}
-              key={field.name}
-              type={field.type}
-              name={field.name}
-              label={field.label}
-              value={formValues[field.name]}
-              onChange={handleChange}
-              onFocus={() => setFocusedField(field.name)}
-              onBlur={() => setFocusedField(null)}
-              disabled={isLoading}
-              autoComplete={field.autoComplete}
-            />
-          ))}
+          {SIGNUP["fields"].map((field) => {
+            if (field.name === "password") {
+              return (
+                <div key={field.name} className={styles["password-wrapper"]}>
+                  <CustomInput
+                    error={formErrors[field.name]}
+                    type={showPassword ? "password" : "text"}
+                    name={field.name}
+                    label={field.label}
+                    value={formValues[field.name]}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField(field.name)}
+                    onBlur={() => setFocusedField(null)}
+                    disabled={isLoading}
+                    autoComplete={field.autoComplete}
+                  />
+                  <button
+                    type="button"
+                    className={styles["eye-button"]}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Show password" : "Hide password"
+                    }
+                    tabIndex={-1}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        setShowPassword(!showPassword);
+                      }
+                    }}
+                  >
+                    {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              );
+            }
+            return (
+              <CustomInput
+                error={formErrors[field.name]}
+                key={field.name}
+                type={field.type}
+                name={field.name}
+                label={field.label}
+                value={formValues[field.name]}
+                onChange={handleChange}
+                onFocus={() => setFocusedField(field.name)}
+                onBlur={() => setFocusedField(null)}
+                disabled={isLoading}
+                autoComplete={field.autoComplete}
+              />
+            );
+          })}
         </div>
         <div className={styles["disclaimer-container"]}>
           <label htmlFor="agree-terms" className={styles["disclaimer-label"]}>
