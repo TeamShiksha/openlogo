@@ -793,6 +793,8 @@ export const CHANGE_PASSWORD_FIELDS = [
 
 export const API_KEY_FORM = {
   tagLine: "Generate a new API key to use in your projects.",
+  expiryLabel: "Expiry Period",
+  expiryDescription: "Choose how long your API key will remain valid.",
 };
 
 export const IMAGE_UPLOAD_MODEL = {

@@ -23,9 +23,7 @@
   font-weight: 400;
   line-height: 20px;
   color: var(--description);
-  display: flex;
-  justify-content: center;
-  margin: 0.5rem 0;
+  margin-bottom: 20px;
 }
 
 .api-key-modal {
@@ -84,17 +82,27 @@
   border: none;
   cursor: pointer;
 }
+
 .expiry-dropdown {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .expiry-label {
+  color: rgb(17 24 39);
+  font-size: var(--large-text);
+  line-height: 28px;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.expiry-description {
+  color: var(--description);
   font-size: var(--medium-text);
-  font-weight: 500;
-  color: var(--text-primary);
+  line-height: 20px;
+  font-weight: 400;
+  margin-top: 12px;
 }
 
 .expiry-select {

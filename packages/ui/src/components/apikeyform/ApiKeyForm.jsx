@@ -22,7 +22,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
-  const [expiresInDays, setExpiresInDays] = useState(7);
+  const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
 
   const expiryOptions = [
@@ -38,7 +38,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     url: "/user/api-key",
     data: {
       key_description: description,
-      expires_at: expiresInDays,
+      expires_at: expiresInDays > 0 ? expiresInDays : null,
     },
   });
 
@@ -126,8 +126,11 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
 
         <div className={styles["expiry-dropdown"]}>
           <label htmlFor="expiry" className={styles["expiry-label"]}>
-            Expiry Period
+            {API_KEY_FORM.expiryLabel}
           </label>
+          <p className={styles["expiry-description"]}>
+            {API_KEY_FORM.expiryDescription}
+          </p>
           <Dropdown
             options={expiryOptions}
             selectedOption={String(expiresInDays)}
@@ -161,6 +164,15 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
                 </button>
               </div>
             </div>
+
+            {data?.data?.expires_at && (
+              <div className={styles["expiry-info"]}>
+                <p>
+                  This key will expire on:{" "}
+                  {new Date(data.data.expires_at).toLocaleDateString()}
+                </p>
+              </div>
+            )}
           </div>
         </Modal>
         <Button
