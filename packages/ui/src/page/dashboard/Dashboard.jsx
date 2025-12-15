@@ -19,8 +19,8 @@ import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinne
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
+import InformationModal from "../../components/Information/Information.jsx";
 import Graph from "../../components/graph/Graph.jsx";
-import InformationModal from "../../components/information/InformationModal.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
@@ -43,9 +43,10 @@ function Dashboard() {
   });
   const { fetchRequest: updateOldKeysRequest } = useApi({
     method: "GET",
-    url: "/user/update-old-keys",
+    url: "/user/update-old-Keys",
     withCredentials: true,
   });
+
   const apiKeyTableData = useMemo(() => {
     return apiKeys.map(({ key_description, updated_at }) => [
       key_description,
@@ -81,24 +82,28 @@ function Dashboard() {
     setConfirmKeyName("");
     setShowModal(true);
   };
+
   useEffect(() => {
     async function checkOldKeys() {
-      setShowLoader(true);
       const result = await updateOldKeysRequest();
+
+      if (!result.success && result.error) {
+        toast.error(result.error);
+        return;
+      }
+
       if (result.success && result.data?.keysUpdated === true) {
+        setShowLoader(true);
         setTimeout(() => {
           setShowLoader(false);
           setShowUpdateModal(true);
         }, 2000);
-      } else {
-        setShowLoader(false);
-      }
-      if (!result.success && result.error) {
-        toast.error(result.error);
       }
     }
+
     checkOldKeys();
   }, []);
+
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
   };
@@ -117,10 +122,12 @@ function Dashboard() {
     }
     setIsDeleting(false);
   };
+
   const handleModalClose = () => {
     setShowModal(false);
     setConfirmKeyName("");
   };
+
   if (loading) {
     return (
       <div
@@ -131,18 +138,21 @@ function Dashboard() {
       </div>
     );
   }
+
   const handleKeyGenerated = async () => {
     const success = await fetchUserKeys();
     if (!success) {
       toast.error("Failed to fetch updated API keys");
     }
   };
+
   const dashboardDropdownOptions = [];
   if (userData?.role === "ADMIN") {
     dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
   } else if (userData?.role === "OPERATOR") {
     dashboardDropdownOptions.push("OPERATOR", "USER");
   }
+
   return (
     <div
       className={`container ${styles["dashboard-container"]}`}
@@ -156,6 +166,7 @@ function Dashboard() {
           </div>
         </div>
       )}
+
       {showUpdateModal && (
         <InformationModal
           isOpen={showUpdateModal}
@@ -174,6 +185,7 @@ function Dashboard() {
           }
         />
       )}
+
       <div>
         {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
           <Dropdown
@@ -183,6 +195,7 @@ function Dashboard() {
           />
         )}
       </div>
+
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
           <AdminDashboard />

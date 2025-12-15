@@ -38,7 +38,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     url: "/user/api-key",
     data: {
       key_description: description,
-      expires_at: expiresInDays > 0 ? expiresInDays : null,
+      expires_at: expiresInDays,
     },
   });
 
