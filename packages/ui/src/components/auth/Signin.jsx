@@ -84,7 +84,7 @@ const SignIn = ({ toggleForm, onClose }) => {
       return;
     }
     setTimer(diff);
-  }, [timer]);
+  }, []);
 
   useEffect(() => {
     if (timer <= 0) return;
@@ -101,7 +101,7 @@ const SignIn = ({ toggleForm, onClose }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [timer]);
 
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
