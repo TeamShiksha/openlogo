@@ -848,7 +848,7 @@ export const RELEASE_PAGE = {
         releaseNotes: [
           {
             releaseNote:
-              "Date formatting across the platform has been improved to ensure consistent display everywhere.",
+              "Dates are now displayed in a consistent and clear format across the entire platform.",
             contributors: [
               {
                 contributorName: "Sumitgitup",
@@ -858,7 +858,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Users can now download a copy of their data directly from the platform.",
+              "You can now easily download a copy of your data from the platform whenever you need it.",
             contributors: [
               {
                 contributorName: "Sumitgitup",
@@ -868,7 +868,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Dashboard and Sign Out options have been combined into a single profile dropdown for easier navigation.",
+              "Navigation has been simplified by grouping Dashboard and Sign Out options under a single profile menu.",
             contributors: [
               {
                 contributorName: "abhishek-2k23",
@@ -882,7 +882,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Content updates now appear instantly across the platform due to improved cache invalidation.",
+              "Updates made by admins now show up instantly, so users always see the latest content without delays.",
             contributors: [
               {
                 contributorName: "MukeshAbhi",
@@ -892,7 +892,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "The image upload system has been made more reliable and efficient, especially for larger files.",
+              "Image uploads are now faster and more stable, especially when uploading large files.",
             contributors: [
               {
                 contributorName: "printgourav",
@@ -906,7 +906,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Users can now resend their email verification if the original email was missed or expired.",
+              "If you miss the verification email, you can now resend it directly without any hassle.",
             contributors: [
               {
                 contributorName: "MukeshAbhi",
@@ -916,7 +916,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Admins can now view the total number of images stored in the system at a glance.",
+              "Admins can now quickly see how many images are stored in the system from the dashboard.",
             contributors: [
               {
                 contributorName: "printgourav",
@@ -933,7 +933,7 @@ export const RELEASE_PAGE = {
         releaseNotes: [
           {
             releaseNote:
-              "The platform was migrated from Firebase to MongoDB to improve scalability and performance.",
+              "The platform moved from Firebase to MongoDB to better support growth and handle data more efficiently.",
             contributors: [
               {
                 contributorName: "amankumarsingh77",
@@ -943,7 +943,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "The testing framework was upgraded to Vitest for faster and more reliable test execution.",
+              "Testing was improved by switching to a faster and more reliable testing setup.",
             contributors: [
               {
                 contributorName: "Ayushsanjdev",
@@ -953,7 +953,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "An Operator dashboard was introduced to help manage and respond to customer queries efficiently.",
+              "A new Operator dashboard was added to make it easier to manage and respond to customer queries.",
             contributors: [
               {
                 contributorName: "asharma991",
@@ -963,7 +963,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Admins can now re-upload images with proper validation for file name and extension.",
+              "Admins gained the ability to re-upload images with checks to ensure correct file names and formats.",
             contributors: [
               {
                 contributorName: "Soumava-221B",
@@ -973,7 +973,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Subscription usage limits are now automatically reset every month.",
+              "Subscription usage limits are now reset automatically every month, removing the need for manual updates.",
             contributors: [
               {
                 contributorName: "DeltaDynamo",
@@ -983,7 +983,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Several UI improvements were made across the footer, About page, and sign-in flow.",
+              "Several visual and usability improvements were made across the footer, About page, and sign-in experience.",
             contributors: [
               {
                 contributorName: "AryaDharkar",
@@ -993,7 +993,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "A Logo Search API was introduced, allowing secure retrieval of logos using signed URLs.",
+              "A new logo search feature was added, making it easier to find and retrieve logos securely.",
             contributors: [
               {
                 contributorName: "DeltaDynamo",
@@ -1003,7 +1003,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Navigation behavior was improved so pages consistently scroll to the top when links are clicked.",
+              "Navigation behavior was improved so pages smoothly return to the top when links are clicked.",
             contributors: [
               {
                 contributorName: "Asin-Junior-Honore",
@@ -1013,7 +1013,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "A confirmation step was added before deleting API keys to prevent accidental actions.",
+              "An extra confirmation step was added before deleting API keys to help prevent accidental deletions.",
             contributors: [
               {
                 contributorName: "anandbaraik",
@@ -1023,7 +1023,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "API key security was improved by allowing keys to be viewed or copied only once.",
+              "API keys can now be viewed or copied only once, improving overall account security.",
             contributors: [
               {
                 contributorName: "Sharathxct",
