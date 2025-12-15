@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
@@ -22,6 +23,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -174,21 +176,62 @@ const SignIn = ({ toggleForm, onClose }) => {
         <div className={styles["form-width"]}>
           {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))
-            .map((field) => (
-              <CustomInput
-                error={formErrors[field.name]}
-                key={field.name}
-                type={field.type}
-                name={field.name}
-                label={field.label}
-                value={formData[field.name]}
-                onChange={handleChange}
-                onFocus={() => setFocusedField(field.name)}
-                onBlur={() => setFocusedField(null)}
-                disabled={isLoading}
-                autoComplete={field.autoComplete}
-              />
-            ))}
+            .map((field) => {
+              if (field.name === "password" && !isForgotPassword) {
+                return (
+                  <div key={field.name} className={styles["password-wrapper"]}>
+                    <CustomInput
+                      error={formErrors[field.name]}
+                      type={showPassword ? "password" : "text"}
+                      name={field.name}
+                      label={field.label}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField(field.name)}
+                      onBlur={() => setFocusedField(null)}
+                      disabled={isLoading}
+                      autoComplete={field.autoComplete}
+                    />
+                    <button
+                      type="button"
+                      className={styles["eye-button"]}
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? "Show password" : "Hide password"
+                      }
+                      tabIndex={-1}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setShowPassword(!showPassword);
+                        }
+                      }}
+                    >
+                      {showPassword ? (
+                        <EyeClosed size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
+                );
+              }
+              return (
+                <CustomInput
+                  error={formErrors[field.name]}
+                  key={field.name}
+                  type={field.type}
+                  name={field.name}
+                  label={field.label}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField(field.name)}
+                  onBlur={() => setFocusedField(null)}
+                  disabled={isLoading}
+                  autoComplete={field.autoComplete}
+                />
+              );
+            })}
         </div>
 
         {isForgotPassword && (
