@@ -25,6 +25,7 @@ import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
 import tick from "../assets/tick.png";
 import copycodeicon from "../assets/copy-code-icon.png";
+import version06 from "../assets/version06.png";
 
 export const SVGS = {
   searchIcon,
@@ -167,6 +168,11 @@ export const FOOTER_ITEMS = [
     name: "terms&conditions",
     title: "Terms",
     url: "/privacy#terms",
+  },
+  {
+    name: "release",
+    title: "Release",
+    url: "/release",
   },
 ];
 
@@ -798,4 +804,235 @@ export const API_KEY_FORM = {
 export const IMAGE_UPLOAD_MODEL = {
   dragAndDropImage: "Drag and drop image",
   or: "OR",
+};
+
+export const RELEASE_PAGE = {
+  introduction: {
+    heading: "About",
+    description:
+      "Openlogo is an open-source platform offering fast, reliable access to an extensive library of company logos—from global enterprises to emerging startups. With seamless API integration and a constantly updated database, Openlogo makes retrieving logos effortless and scalable.",
+    features: [
+      {
+        heading: "Comprehensive Brand Database",
+        desc: "Instant access to a vast, constantly updated library of high-quality company logos, ranging from Fortune 500 enterprises to emerging startups.",
+      },
+      {
+        heading: "High-Performance API Integration",
+        desc: "A developer-first API optimized for speed and reliability, featuring intelligent caching to ensure millisecond response times for effortless logo retrieval.",
+      },
+      {
+        heading: "Quick Search & Insights",
+        desc: "Advanced search algorithms that not only locate logos with precision.",
+      },
+      {
+        heading: "Community-Driven Requests",
+        desc: "A streamlined workflow allowing users to request missing logos directly from the dashboard, ensuring the database evolves based on real-world user needs.",
+      },
+      {
+        heading: "Transparent Release Timeline",
+        desc: "A detailed, visual changelog that keeps users informed of every update, performance improvement, and contributor credit in real-time.",
+      },
+    ],
+  },
+
+  versions: ["Current version", "Previous version"],
+  latestVersion: "Current version",
+  changelog: {
+    title: "Changelog",
+    description: "Changelog with often recorded's versions",
+    versionsData: [
+      {
+        versionName: "Current version",
+        releaseDate: "Dec 2025",
+        imgSrc: version06,
+        releaseNotes: [
+          {
+            releaseNote:
+              "Dates are now displayed in a consistent and clear format across the entire platform.",
+            contributors: [
+              {
+                contributorName: "Sumitgitup",
+                contributorGithubLink: "https://github.com/Sumitgitup",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "You can now easily download a copy of your data from the platform whenever you need it.",
+            contributors: [
+              {
+                contributorName: "Sumitgitup",
+                contributorGithubLink: "https://github.com/Sumitgitup",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Navigation has been simplified by grouping Dashboard and Sign Out options under a single profile menu.",
+            contributors: [
+              {
+                contributorName: "abhishek-2k23",
+                contributorGithubLink: "https://github.com/abhishek-2k23",
+              },
+              {
+                contributorName: "nazibul7",
+                contributorGithubLink: "https://github.com/nazibul7",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Updates made by admins now show up instantly, so users always see the latest content without delays.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Image uploads are now faster and more stable, especially when uploading large files.",
+            contributors: [
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+              {
+                contributorName: "YashDevani-source",
+                contributorGithubLink: "https://github.com/YashDevani-source",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "If you miss the verification email, you can now resend it directly without any hassle.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Admins can now quickly see how many images are stored in the system from the dashboard.",
+            contributors: [
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        versionName: "Previous version",
+        releaseDate: "Oct 2024",
+        imgSrc: version06,
+        releaseNotes: [
+          {
+            releaseNote:
+              "The platform moved from Firebase to MongoDB to better support growth and handle data more efficiently.",
+            contributors: [
+              {
+                contributorName: "amankumarsingh77",
+                contributorGithubLink: "https://github.com/amankumarsingh77",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Testing was improved by switching to a faster and more reliable testing setup.",
+            contributors: [
+              {
+                contributorName: "Ayushsanjdev",
+                contributorGithubLink: "https://github.com/Ayushsanjdev",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "A new Operator dashboard was added to make it easier to manage and respond to customer queries.",
+            contributors: [
+              {
+                contributorName: "asharma991",
+                contributorGithubLink: "https://github.com/asharma991",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Admins gained the ability to re-upload images with checks to ensure correct file names and formats.",
+            contributors: [
+              {
+                contributorName: "Soumava-221B",
+                contributorGithubLink: "https://github.com/Soumava-221B",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Subscription usage limits are now reset automatically every month, removing the need for manual updates.",
+            contributors: [
+              {
+                contributorName: "DeltaDynamo",
+                contributorGithubLink: "https://github.com/DeltaDynamo",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Several visual and usability improvements were made across the footer, About page, and sign-in experience.",
+            contributors: [
+              {
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "A new logo search feature was added, making it easier to find and retrieve logos securely.",
+            contributors: [
+              {
+                contributorName: "DeltaDynamo",
+                contributorGithubLink: "https://github.com/DeltaDynamo",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Navigation behavior was improved so pages smoothly return to the top when links are clicked.",
+            contributors: [
+              {
+                contributorName: "Asin-Junior-Honore",
+                contributorGithubLink: "https://github.com/Asin-Junior-Honore",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "An extra confirmation step was added before deleting API keys to help prevent accidental deletions.",
+            contributors: [
+              {
+                contributorName: "anandbaraik",
+                contributorGithubLink: "https://github.com/anandbaraik",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "API keys can now be viewed or copied only once, improving overall account security.",
+            contributors: [
+              {
+                contributorName: "Sharathxct",
+                contributorGithubLink: "https://github.com/Sharathxct",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 };
