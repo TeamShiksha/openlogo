@@ -175,12 +175,10 @@ function Dashboard() {
           buttonText="I Understand"
           closeOnOverlayClick={false}
           message={
-            <>
-              <p>
-                Our application has undergone some improvements. Now your old
-                API keys feature a <b>1 year</b> expiry.
-              </p>
-            </>
+            <p>
+              Our application has undergone some improvements. Now your old API
+              keys feature a <b>1 year</b> expiry.
+            </p>
           }
         />
       )}
