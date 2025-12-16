@@ -169,7 +169,11 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
               <div className={styles["expiry-info"]}>
                 <p>
                   This key will expire on:{" "}
-                  {new Date(data.data.expires_at).toLocaleDateString()}
+                  {new Date(data.data.expires_at).toLocaleDateString("en-us", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </p>
               </div>
             )}
