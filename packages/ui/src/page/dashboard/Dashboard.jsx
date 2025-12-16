@@ -176,10 +176,9 @@ function Dashboard() {
           closeOnOverlayClick={false}
           message={
             <>
-              <p>Our application has undergone some improvements.</p>
-              <p style={{ marginTop: "10px" }}>
-                You had older API keys we have updated their expiry dates for
-                you.
+              <p>
+                Our application has undergone some improvements. Now your old
+                API keys feature a <b>1 year</b> expiry.
               </p>
             </>
           }
