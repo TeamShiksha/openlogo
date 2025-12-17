@@ -168,7 +168,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
             {data?.data?.expires_at && (
               <div className={styles["expiry-info"]}>
                 <p>
-                  This key will expire on:{" "}
+                  {API_KEY.generation.modal.expiryLabel}{" "}
                   {new Date(data.data.expires_at).toLocaleDateString("en-us", {
                     month: "short",
                     day: "numeric",

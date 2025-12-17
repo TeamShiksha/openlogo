@@ -697,6 +697,7 @@ export const API_KEY = {
       title: "Your API Key",
       warning:
         "Please copy your API key now. You won't be able to see it again!",
+      expiryLabel: "This key will expire on:",
     },
   },
   copy: {
