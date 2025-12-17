@@ -13,7 +13,7 @@ import {
   API_KEY_FORM,
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
-import { validate } from "../../utils/Helpers.js";
+import { formatDate, validate } from "../../utils/Helpers.js";
 import Dropdown from "../common/dropdown/Dropdown.jsx";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
@@ -169,11 +169,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
               <div className={styles["expiry-info"]}>
                 <p>
                   {API_KEY.generation.modal.expiryLabel}{" "}
-                  {new Date(data.data.expires_at).toLocaleDateString("en-us", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatDate(data.data.expires_at)}
                 </p>
               </div>
             )}
