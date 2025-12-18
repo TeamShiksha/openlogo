@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
+import LogoRequestForm from "../demo/LogoRequestForm";
 import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
@@ -15,6 +16,9 @@ import axios from "axios";
 function Catalog() {
   const toast = useToast();
   const [pageNum, setPageNum] = useState(0);
+  const [showLogoRequestModal, setShowLogoRequestModal] = useState(false);
+  const [showWebCatalog, setShowWebCatalog] = useState(false);
+  const [showWebResults, setShowWebResults] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
@@ -22,6 +26,9 @@ function Catalog() {
   const [updatedImageCompanyUri, setUpdatedImageCompanyUri] = useState(null);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [preSelectedFile, setPreSelectedFile] = useState(null);
+  const [preFilledUri, setPreFilledUri] = useState("");
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -49,13 +56,17 @@ function Catalog() {
     method: "POST",
     url: `/catalog/signed-url`,
   });
-
   useEffect(() => {
     if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
       makeRequest();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum, debouncedSearchTerm]);
+  useEffect(() => {
+    if (data?.source === "web-search") {
+      setShowWebCatalog(true);
+      setShowWebResults(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (fetchErrMsg) {
@@ -114,6 +125,8 @@ function Catalog() {
       if (metadataSaved) {
         setIsModalOpen(false);
         setUpdateImageId(null);
+        setPreSelectedFile(null);
+        setPreFilledUri("");
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         makeRequest();
         setUploadLoading(false);
@@ -181,6 +194,23 @@ function Catalog() {
       setUploadLoading(false);
     }
   };
+  const handleWebResultUpload = async (img) => {
+    try {
+      const name = img.companyName ? img.companyName.toLowerCase() : "image";
+      const response = await fetch(img.url);
+      const blob = await response.blob();
+      const file = new File([blob], `${name}.png`, { type: "image/png" });
+
+      setPreSelectedFile(file);
+      setPreFilledUri(img.companyUri || "");
+
+      setUpdateImageId(null);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Failed to fetch image:", error);
+      toast.error("Failed to load image from web result.");
+    }
+  };
 
   const handleSearchTermChange = (inputChangeEvent) => {
     const newSearchTerm = inputChangeEvent.target.value;
@@ -197,6 +227,10 @@ function Catalog() {
       setPageNum(pageBeforeSearchRef.current);
     }
   };
+  const handleSearchOnWeb = () => {
+    setShowWebCatalog(false);
+    setShowWebResults(true);
+  };
 
   const handlePreviousBtnClick = () => {
     if (pageNum > 0) {
@@ -209,7 +243,6 @@ function Catalog() {
       setPageNum((prev) => prev + 1);
     }
   };
-
   const handleReuploadBtnClick = (id, companyuri) => {
     setIsModalOpen(true);
     setUpdateImageId(id);
@@ -229,6 +262,8 @@ function Catalog() {
         <Button
           onClick={() => {
             setUpdateImageId(null);
+            setPreSelectedFile(null);
+            setPreFilledUri("");
             setIsModalOpen(true);
           }}
           variant="primary"
@@ -241,12 +276,108 @@ function Catalog() {
           onClose={() => {
             setUpdateImageId(null);
             setIsModalOpen(false);
+            setPreSelectedFile(null);
+            setPreFilledUri("");
           }}
           onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
           isUpdate={!!updateImageId}
           isLoading={uploadLoading}
+          initialFile={preSelectedFile}
+          initialCompanyUri={preFilledUri}
         />
       </div>
+      {showWebCatalog && data?.source === "web-search" && (
+        <div className={styles["catalog-search-modal"]}>
+          <div className={styles["catalog-search-modal-header"]}>
+            <div className={styles["catalog-search-modal-title"]}>
+              Image Not Found
+            </div>
+            <div
+              className={styles["catalog-search-modal-cross"]}
+              onClick={() => setShowWebCatalog(false)}
+            >
+              ✕
+            </div>
+          </div>
+          <div className={styles["web-search-catalog-body"]}>
+            <p>We couldn’t find this image in our catalog.</p>
+
+            <div className={styles["web-search-actions"]}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setPreSelectedFile(null);
+                  setPreFilledUri("");
+                  setIsModalOpen(true);
+                  setUpdateImageId(null);
+                }}
+              >
+                ADD IMAGE
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  handleSearchOnWeb();
+                }}
+              >
+                Search on Web
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showWebResults &&
+        data?.source === "web-search" &&
+        data?.data?.length > 0 && (
+          <div className={styles["catalog-search-modal"]}>
+            <div className={styles["catalog-search-modal-header"]}>
+              <div className={styles["catalog-search-modal-title"]}>
+                Suggested Images
+              </div>
+              <div
+                className={styles["catalog-search-modal-cross"]}
+                onClick={() => setShowWebResults(false)}
+              >
+                X
+              </div>
+            </div>
+
+            {data?.data?.map((img, index) => (
+              <div key={index} className={styles["search-modal-row"]}>
+                <img
+                  src={img.url}
+                  alt={img.companyName}
+                  width={40}
+                  height={40}
+                  className={styles["search-modal-img"]}
+                />
+                <div className={styles["search-modal-company-name"]}>
+                  {img.companyName || "Unknown"}
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={() => handleWebResultUpload(img)}
+                >
+                  Upload
+                </Button>
+              </div>
+            ))}
+            <div className={styles["catalog-search-modal-request"]}>
+              <p>Can’t find what you are looking for?</p>
+              <Button
+                variant="primary"
+                className={styles["search-modal-button"]}
+                onClick={() => setShowLogoRequestModal(true)}
+              >
+                Request Logo
+              </Button>
+            </div>
+          </div>
+        )}
+      {showLogoRequestModal && (
+        <LogoRequestForm closeModal={() => setShowLogoRequestModal(false)} />
+      )}
       <div className={styles["catalog-table-wrapper"]}>
         <div className={styles["catalog-table-header"]}>
           <div className={styles["catalog-table-column-first"]}>Images</div>

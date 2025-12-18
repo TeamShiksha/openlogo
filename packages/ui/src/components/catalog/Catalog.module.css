@@ -19,6 +19,82 @@
   width: 160px;
   max-height: 45px;
 }
+.web-search-catalog-body {
+  text-align: center;
+  padding: 20px;
+}
+
+.web-search-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.catalog-search-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.catalog-search-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.catalog-search-modal-cross {
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+  color: #666;
+  transition: 0.2s;
+}
+
+.catalog-search-modal-cross:hover {
+  color: #000;
+}
+
+.catalog-search-modal {
+  margin-top: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+}
+.search-modal-img {
+  border-radius: 6px;
+  margin-right: 15px;
+}
+.search-modal-company-name {
+  flex: 1;
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+.catalog-search-modal-request {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.search-modal-button {
+  margin-top: 10px;
+  width: 180px;
+}
 
 .catalog-table-wrapper {
   padding-top: 1rem;
