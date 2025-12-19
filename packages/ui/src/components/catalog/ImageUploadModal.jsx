@@ -18,6 +18,8 @@ const ImageUploadModal = ({
   onUpload,
   isUpdate,
   isLoading,
+  initialFile,
+  initialCompanyUri,
 }) => {
   const toast = useToast();
   const [dragActive, setDragActive] = useState(false);
@@ -29,8 +31,22 @@ const ImageUploadModal = ({
     if (!isOpen) {
       setSelectedImage(null);
       setCompanyUri("");
+    } else {
+      if (initialFile) {
+        const reader = new FileReader();
+        reader.onload = (fileRead) => {
+          setSelectedImage({
+            preview: fileRead.target.result,
+            file: initialFile,
+          });
+        };
+        reader.readAsDataURL(initialFile);
+      }
+      if (initialCompanyUri) {
+        setCompanyUri(initialCompanyUri);
+      }
     }
-  }, [isOpen, setSelectedImage, setCompanyUri]);
+  }, [isOpen, initialFile, initialCompanyUri]);
 
   if (!isOpen) return null;
 
@@ -158,6 +174,8 @@ ImageUploadModal.propTypes = {
   onUpload: PropTypes.func,
   isUpdate: PropTypes.bool,
   isLoading: PropTypes.bool,
+  initialFile: PropTypes.object,
+  initialCompanyUri: PropTypes.string,
 };
 
 export default ImageUploadModal;

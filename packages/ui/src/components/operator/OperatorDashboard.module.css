@@ -1,6 +1,98 @@
 .operator-container {
   min-height: calc(100vh - 11rem);
   margin-bottom: 3rem;
+  position: relative;
+}
+.catalog-search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+.catalog-search > div:first-child {
+  flex: 1;
+  width: 100%;
+}
+.catalog-search-modal {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  width: 100%;
+  max-width: 800px;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--bradius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 1.5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.catalog-search-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.catalog-search-modal-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--black);
+}
+.catalog-search-modal-cross {
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--description);
+  transition: color 0.2s;
+}
+.catalog-search-modal-cross:hover {
+  color: var(--black);
+}
+.search-modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.search-modal-row:hover {
+  background-color: var(--bg-color);
+}
+
+.search-modal-row:last-child {
+  border-bottom: none;
+}
+
+.search-modal-img {
+  object-fit: contain;
+  border-radius: 4px;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  padding: 2px;
+}
+.search-modal-company-name {
+  flex: 1;
+  margin: 0 1rem;
+  font-weight: 500;
+  color: var(--black);
+  text-transform: capitalize;
+}
+.web-search-catalog-body {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--description);
+}
+
+.web-search-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .header {
@@ -190,25 +282,56 @@
 
 .catalog-add-image-btn {
   width: 160px;
-  max-height: 45px;
+  max-height: 48px;
 }
 
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.5rem;
     align-items: flex-start;
   }
 
   .type-selector {
-    margin: 2rem 0rem 0.5rem 0rem;
+    margin: 1rem 0;
+    width: 100%;
   }
 
   .tab-button {
     padding: 0.75rem 1.25rem;
+    font-size: 1rem;
   }
 
   .tabs-container {
     margin-bottom: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+  .catalog-search {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .catalog-add-image-btn {
+    width: 100%;
+  }
+  .catalog-search-modal {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-height: 70vh;
+  }
+  .web-search-actions {
+    flex-direction: column;
+  }
+  .search-modal-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .search-modal-company-name {
+    width: 100%;
+    margin: 0.5rem 0;
   }
 }

@@ -465,4 +465,448 @@ describe("Operator Page", () => {
       { timeout: 2000 }
     );
   });
+  it("should show pagination when there are multiple pages", async () => {
+    const multiPageMessages = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i}`,
+            message: `Message ${i}`,
+            name: `User ${i}`,
+            email: `user${i}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-01T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+    apiInstance.get.mockResolvedValueOnce(multiPageMessages);
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Page 1 of 3/i)).toBeInTheDocument();
+    });
+  });
+
+  it("should go to next page when next button is clicked", async () => {
+    const page1 = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i}`,
+            message: `Message ${i}`,
+            name: `User ${i}`,
+            email: `user${i}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-01T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+
+    const page2 = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i + 6}`,
+            message: `Message ${i + 6}`,
+            name: `User ${i + 6}`,
+            email: `user${i + 6}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-02T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+
+    apiInstance.get.mockResolvedValueOnce(page1);
+    apiInstance.get.mockResolvedValueOnce(page2);
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Page 1 of 3/i)).toBeInTheDocument();
+    });
+
+    const nextBtn = screen.getByRole("button", { name: "»" });
+    fireEvent.click(nextBtn);
+
+    await waitFor(() => {
+      expect(apiInstance.get).toHaveBeenCalledWith("/messages", {
+        params: expect.objectContaining({ page: 2 }),
+      });
+    });
+  });
+  it("should go to previous page when prev button is clicked", async () => {
+    const page1 = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i}`,
+            message: `Message ${i}`,
+            name: `User ${i}`,
+            email: `user${i}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-01T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+    const page2 = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i + 6}`,
+            message: `Message ${i + 6}`,
+            name: `User ${i + 6}`,
+            email: `user${i + 6}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-02T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+    apiInstance.get.mockResolvedValueOnce(page1);
+    apiInstance.get.mockResolvedValueOnce(page2);
+    apiInstance.get.mockResolvedValueOnce(page1);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/Page 1 of 3/i)).toBeInTheDocument();
+    });
+    const nextBtn = screen.getByRole("button", { name: "»" });
+    fireEvent.click(nextBtn);
+    await waitFor(() => {
+      expect(screen.getByText(/Page 2 of 3/i)).toBeInTheDocument();
+    });
+    const prevBtn = screen.getByRole("button", { name: "«" });
+    fireEvent.click(prevBtn);
+    await waitFor(() => {
+      expect(apiInstance.get).toHaveBeenCalledWith("/messages", {
+        params: expect.objectContaining({ page: 1 }),
+      });
+    });
+  });
+  it("should show pagination with multiple pages", async () => {
+    const multiPageMessages = {
+      data: {
+        results: Array(6)
+          .fill(null)
+          .map((_, i) => ({
+            _id: `${i}`,
+            message: `Message ${i}`,
+            name: `User ${i}`,
+            email: `user${i}@example.com`,
+            status: "PENDING",
+            openedAt: "2025-06-01T00:00:00Z",
+          })),
+        totalPages: 3,
+      },
+    };
+    apiInstance.get.mockResolvedValueOnce(multiPageMessages);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/Page 1 of 3/i)).toBeInTheDocument();
+    });
+  });
+  it("should trigger web search when search input is changed", async () => {
+    const searchMakeRequest = vi.fn().mockResolvedValue({
+      source: "web-search",
+      data: [
+        {
+          companyName: "Example Inc",
+          url: "https://example.com/logo.png",
+          companyUri: "https://example.com",
+        },
+      ],
+    });
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+    useApi.mockImplementation(({ url }) => {
+      if (url && url.includes("catalog/logos")) {
+        return {
+          loading: false,
+          makeRequest: searchMakeRequest,
+          fetchRequest: vi.fn(),
+          errorMsg: null,
+        };
+      }
+      return {
+        loading: false,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+        errorMsg: null,
+      };
+    });
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    const searchInput = screen.getByRole("searchbox");
+    fireEvent.change(searchInput, { target: { value: "example" } });
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(500);
+    vi.useRealTimers();
+    await waitFor(() => {
+      expect(searchMakeRequest).toHaveBeenCalled();
+    });
+  });
+  it("should disable respond button when response text is empty", async () => {
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      const respond = screen.getByText("Respond");
+      expect(respond).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByText(BUTTON_TEXT.respond));
+    await waitFor(() => {
+      const sendBtn = screen.getByRole("button", {
+        name: BUTTON_TEXT.sendResponse,
+      });
+      expect(sendBtn).toBeDisabled();
+    });
+  });
+  it("should enable respond button when valid response is entered", async () => {
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      const respond = screen.getByText("Respond");
+      expect(respond).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByText(BUTTON_TEXT.respond));
+    const textarea = await screen.findByPlaceholderText(MODAL_MESSAGES.RESPOND);
+    fireEvent.change(textarea, {
+      target: { value: "This is a valid response message that is long enough" },
+    });
+    await waitFor(() => {
+      const sendBtn = screen.getByRole("button", {
+        name: BUTTON_TEXT.sendResponse,
+      });
+      expect(sendBtn).not.toBeDisabled();
+    });
+  });
+  it("should show character count in response modal", async () => {
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      const respond = screen.getByText("Respond");
+      fireEvent.click(respond);
+    });
+    const textarea = await screen.findByPlaceholderText(MODAL_MESSAGES.RESPOND);
+    fireEvent.change(textarea, { target: { value: "Test text" } });
+    await waitFor(() => {
+      expect(screen.getByText(/\[9\//)).toBeInTheDocument();
+    });
+  });
+  it("should disable reject button when rejection text is empty", async () => {
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      const reject = screen.getByText("Reject");
+      expect(reject).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("Reject"));
+
+    await waitFor(() => {
+      const confirmBtn = screen.getByRole("button", {
+        name: BUTTON_TEXT.confirmRejection,
+      });
+      expect(confirmBtn).toBeDisabled();
+    });
+  });
+  it("should maintain active tab state when switching search types", async () => {
+    const archivedMessages = {
+      data: {
+        results: [
+          {
+            _id: "2",
+            message: "Archived message",
+            name: "User 2",
+            email: "user2@example.com",
+            status: "RESOLVED",
+            openedAt: "2025-06-01T00:00:00Z",
+            closedAt: "2025-06-02T00:00:00Z",
+          },
+        ],
+        totalPages: 1,
+      },
+    };
+
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    apiInstance.get.mockResolvedValueOnce(archivedMessages);
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    fireEvent.click(screen.getByText("Archived"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Archived message")).toBeInTheDocument();
+    });
+
+    expect(apiInstance.get).toHaveBeenCalledWith("/messages", {
+      params: expect.objectContaining({ tab: "archived" }),
+    });
+  });
+  it("should show loading spinner when submitting response", async () => {
+    apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
+    apiInstance.put.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          setTimeout(() => resolve({ data: {} }), 100);
+        })
+    );
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      const respond = screen.getByText("Respond");
+      fireEvent.click(respond);
+    });
+    const textarea = await screen.findByPlaceholderText(MODAL_MESSAGES.RESPOND);
+    fireEvent.change(textarea, { target: { value: "Response" } });
+
+    const sendBtn = screen.getByRole("button", {
+      name: BUTTON_TEXT.sendResponse,
+    });
+    fireEvent.click(sendBtn);
+
+    await waitFor(() => {
+      expect(sendBtn).toBeDisabled();
+    });
+  });
+  it("should clear search results when search input is cleared", async () => {
+    const searchMakeRequest = vi.fn();
+    searchMakeRequest.mockResolvedValueOnce({
+      source: "web-search",
+      data: [
+        {
+          companyName: "Example",
+          url: "https://example.com/logo.png",
+          companyUri: "https://example.com",
+        },
+      ],
+    });
+
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+
+    useApi.mockImplementation(({ url }) => {
+      if (url && url.includes("catalog/logos")) {
+        return {
+          loading: false,
+          makeRequest: searchMakeRequest,
+          fetchRequest: vi.fn(),
+          errorMsg: null,
+        };
+      }
+      return {
+        loading: false,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+        errorMsg: null,
+      };
+    });
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+
+    const searchInput = screen.getByRole("searchbox");
+    fireEvent.change(searchInput, { target: { value: "example" } });
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(500);
+    fireEvent.change(searchInput, { target: { value: "" } });
+    vi.advanceTimersByTime(500);
+    vi.useRealTimers();
+    expect(searchInput).toHaveValue("");
+  });
+  it("should render multiple messages in the list", async () => {
+    const multipleMessages = {
+      data: {
+        results: [
+          {
+            _id: "1",
+            message: "First message",
+            name: "User 1",
+            email: "user1@example.com",
+            status: "PENDING",
+            openedAt: "2025-06-01T00:00:00Z",
+          },
+          {
+            _id: "2",
+            message: "Second message",
+            name: "User 2",
+            email: "user2@example.com",
+            status: "PENDING",
+            openedAt: "2025-06-02T00:00:00Z",
+          },
+          {
+            _id: "3",
+            message: "Third message",
+            name: "User 3",
+            email: "user3@example.com",
+            status: "PENDING",
+            openedAt: "2025-06-03T00:00:00Z",
+          },
+        ],
+        totalPages: 1,
+      },
+    };
+    apiInstance.get.mockResolvedValueOnce(multipleMessages);
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await waitFor(() => {
+      expect(screen.getByText("First message")).toBeInTheDocument();
+      expect(screen.getByText("Second message")).toBeInTheDocument();
+      expect(screen.getByText("Third message")).toBeInTheDocument();
+    });
+  });
 });

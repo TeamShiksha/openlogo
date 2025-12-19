@@ -14,7 +14,7 @@ describe("ChangeLog component", () => {
     const latestVersion = RELEASE_PAGE.latestVersion;
 
     const versionButton = screen.getByRole("button", {
-      name: `Version ${latestVersion}`,
+      name: `${latestVersion}`,
     });
 
     expect(versionButton).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe("ChangeLog component", () => {
     const latestVersion = RELEASE_PAGE.latestVersion;
 
     const toggleBtn = screen.getByRole("button", {
-      name: `Version ${latestVersion}`,
+      name: `${latestVersion}`,
     });
 
     fireEvent.click(toggleBtn);
@@ -34,13 +34,13 @@ describe("ChangeLog component", () => {
     const anotherVersion = RELEASE_PAGE.versions[1];
 
     const optionBtn = screen.getByRole("button", {
-      name: `Version ${anotherVersion}`,
+      name: `${anotherVersion}`,
     });
 
     fireEvent.click(optionBtn);
 
     expect(
-      screen.getByRole("button", { name: `Version ${anotherVersion}` })
+      screen.getByRole("button", { name: `${anotherVersion}` })
     ).toBeInTheDocument();
   });
 });

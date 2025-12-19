@@ -10,6 +10,7 @@ import { useToast } from "../../hooks/useToast";
 import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
 import Dropdown from "../common/dropdown/Dropdown";
 import ImageUploadModal from "../catalog/ImageUploadModal";
+import CustomInput from "../common/input/CustomInput";
 import { useApi } from "../../hooks/useApi";
 import axios from "axios";
 
@@ -58,9 +59,40 @@ const Operator = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [uploadLoading, setUploadLoading] = useState(false);
 
-  const ITEMS_PER_PAGE = 6;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [showWebCatalog, setShowWebCatalog] = useState(false);
+  const [showWebResults, setShowWebResults] = useState(false);
+  const [preSelectedFile, setPreSelectedFile] = useState(null);
+  const [preFilledUri, setPreFilledUri] = useState("");
 
-  // Fetch messages from API
+  const ITEMS_PER_PAGE = 6;
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+  const { data: searchData, makeRequest: searchMakeRequest } = useApi({
+    method: "GET",
+    url: `/catalog/logos?skip=0&limit=10&search=${debouncedSearchTerm}`,
+  });
+  useEffect(() => {
+    if (debouncedSearchTerm.length >= 2) {
+      searchMakeRequest();
+    }
+  }, [debouncedSearchTerm]);
+  useEffect(() => {
+    if (searchData?.source === "web-search") {
+      setShowWebCatalog(true);
+      setShowWebResults(false);
+    } else {
+      setShowWebCatalog(false);
+      setShowWebResults(false);
+    }
+  }, [searchData]);
   const fetchMessages = async (page = 1) => {
     setLoading(true);
     try {
@@ -235,6 +267,31 @@ const Operator = () => {
       toast.error(fetchErrMsg);
     }
   }, [fetchErrMsg, toast]);
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchOnWeb = () => {
+    setShowWebCatalog(false);
+    setShowWebResults(true);
+  };
+
+  const handleWebResultUpload = async (img) => {
+    try {
+      const name = img.companyName ? img.companyName.toLowerCase() : "image";
+      const response = await fetch(img.url);
+      const blob = await response.blob();
+      const file = new File([blob], `${name}.png`, { type: "image/png" });
+
+      setPreSelectedFile(file);
+      setPreFilledUri(img.companyUri || "");
+
+      setIsUploadModalOpen(true);
+    } catch (error) {
+      console.error("Failed to fetch image:", error);
+      toast.error("Failed to load image from web result.");
+    }
+  };
 
   const handleImageUpload = async ({ file, companyUri }) => {
     setUploadLoading(true);
@@ -268,6 +325,8 @@ const Operator = () => {
       });
       if (metadataSaved) {
         setIsUploadModalOpen(false);
+        setPreSelectedFile(null);
+        setPreFilledUri("");
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
       }
     } catch (err) {
@@ -328,23 +387,110 @@ const Operator = () => {
 
   return (
     <div className={styles["operator-container"]}>
-      <Button
-        onClick={() => {
-          setIsUploadModalOpen(true);
-        }}
-        variant="primary"
-        className={styles["catalog-add-image-btn"]}
-      >
-        Add image
-      </Button>
-      <ImageUploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => {
-          setIsUploadModalOpen(false);
-        }}
-        onUpload={handleImageUpload}
-        isLoading={uploadLoading}
-      />
+      <div className={styles["catalog-search"]}>
+        <CustomInput
+          name="search"
+          type="search"
+          label="Search Logo to Upload"
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+        />
+        <Button
+          onClick={() => {
+            setPreSelectedFile(null);
+            setPreFilledUri("");
+            setIsUploadModalOpen(true);
+          }}
+          variant="primary"
+          className={styles["catalog-add-image-btn"]}
+        >
+          Add image
+        </Button>
+        <ImageUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => {
+            setIsUploadModalOpen(false);
+            setPreSelectedFile(null);
+            setPreFilledUri("");
+          }}
+          onUpload={handleImageUpload}
+          isLoading={uploadLoading}
+          initialFile={preSelectedFile}
+          initialCompanyUri={preFilledUri}
+        />
+      </div>
+      {showWebCatalog && searchData?.source === "web-search" && (
+        <div className={styles["catalog-search-modal"]}>
+          <div className={styles["catalog-search-modal-header"]}>
+            <div className={styles["catalog-search-modal-title"]}>
+              Image Not Found in DB
+            </div>
+            <div
+              className={styles["catalog-search-modal-cross"]}
+              onClick={() => setShowWebCatalog(false)}
+            >
+              ✕
+            </div>
+          </div>
+          <div className={styles["web-search-catalog-body"]}>
+            <p>We couldn’t find this image in our catalog database.</p>
+            <div className={styles["web-search-actions"]}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setPreSelectedFile(null);
+                  setPreFilledUri("");
+                  setIsUploadModalOpen(true);
+                }}
+              >
+                ADD IMAGE MANUALLY
+              </Button>
+              <Button variant="secondary" onClick={handleSearchOnWeb}>
+                Search on Web
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showWebResults &&
+        searchData?.source === "web-search" &&
+        searchData?.data?.length > 0 && (
+          <div className={styles["catalog-search-modal"]}>
+            <div className={styles["catalog-search-modal-header"]}>
+              <div className={styles["catalog-search-modal-title"]}>
+                Suggested Images from Web
+              </div>
+              <div
+                className={styles["catalog-search-modal-cross"]}
+                onClick={() => setShowWebResults(false)}
+              >
+                X
+              </div>
+            </div>
+
+            {searchData?.data?.map((img, index) => (
+              <div key={index} className={styles["search-modal-row"]}>
+                <img
+                  src={img.url}
+                  alt={img.companyName}
+                  width={40}
+                  height={40}
+                  className={styles["search-modal-img"]}
+                />
+                <div className={styles["search-modal-company-name"]}>
+                  {img.companyName || "Unknown"}
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={() => handleWebResultUpload(img)}
+                >
+                  Upload
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+
       <div className={styles.header}>
         <div className={styles["tabs-container"]}>
           <button

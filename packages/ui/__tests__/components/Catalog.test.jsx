@@ -1,5 +1,11 @@
 import { expect, describe, it, vi, afterEach, beforeEach } from "vitest";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import Catalog from "../../src/components/catalog/Catalog";
 import { COMPANIES, BUTTON_TEXT } from "../../src/utils/Constants";
 import { ToastContext } from "../../src/contexts/Contexts";
@@ -10,6 +16,16 @@ const mockData = {
     data: COMPANIES,
     totalPages: 1,
   },
+};
+const mockWebData = {
+  source: "web-search",
+  data: [
+    {
+      companyName: "WebResultCo",
+      url: "https://example.com/logo.png",
+      companyUri: "https://webresultco.com",
+    },
+  ],
 };
 
 const mockToastContext = {
@@ -25,8 +41,28 @@ vi.mock("../../src/hooks/useApi", () => ({
     loading: false,
     errorMsg: null,
     makeRequest: vi.fn(),
+    fetchRequest: vi.fn(),
   })),
 }));
+class MockFileReader {
+  readAsDataURL() {
+    setTimeout(() => {
+      if (this.onload) {
+        this.onload({
+          target: { result: "data:image/png;base64,fake-preview" },
+        });
+      }
+    }, 10);
+  }
+}
+global.FileReader = MockFileReader;
+global.fetch = vi.fn(() =>
+  Promise.resolve({
+    ok: true,
+    blob: () =>
+      Promise.resolve(new Blob(["fake-image"], { type: "image/png" })),
+  })
+);
 
 describe("Catalog Component", () => {
   beforeEach(() => {
@@ -168,12 +204,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should filter companies when search term is entered", () => {
-    // Override mock to return only Amazon
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -190,12 +226,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should show 'No results found' message when search has no matches", () => {
-    // Override mock to return empty results
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -213,12 +249,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should reset search when navigating to another page", () => {
-    // Override mock to return only Amazon
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -342,6 +378,7 @@ describe("Catalog Component", () => {
       loading: false,
       errorMsg: null,
       makeRequest: makeRequestMock,
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -372,6 +409,7 @@ describe("Catalog Component", () => {
       loading: false,
       errorMsg: null,
       makeRequest: makeRequestMock,
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -387,5 +425,94 @@ describe("Catalog Component", () => {
     vi.advanceTimersByTime(500);
 
     expect(makeRequestMock).not.toHaveBeenCalled();
+  });
+  describe("Web Search Integration", () => {
+    it("Should display web-search flow: Image Not Found then Suggested Images after 'Search on Web'", async () => {
+      vi.mocked(useApi).mockReturnValue({
+        data: mockWebData,
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+      });
+      render(
+        <ToastContext.Provider value={mockToastContext}>
+          <Catalog />
+        </ToastContext.Provider>
+      );
+      expect(screen.getByText("Image Not Found")).toBeInTheDocument();
+      const searchOnWebBtn = screen.getByText(/Search on Web/i);
+      vi.useRealTimers();
+      await act(async () => {
+        fireEvent.click(searchOnWebBtn);
+      });
+      await screen.findByText(/Suggested Images/);
+      expect(screen.getByText("WebResultCo")).toBeInTheDocument();
+      vi.useFakeTimers();
+    }, 20000);
+    it("Should pre-fill Modal when clicking Upload on a web result (via 'Search on Web')", async () => {
+      vi.mocked(useApi).mockReturnValue({
+        data: mockWebData,
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+      });
+      render(
+        <ToastContext.Provider value={mockToastContext}>
+          <Catalog />
+        </ToastContext.Provider>
+      );
+      const searchOnWebBtn = screen.getByText(/Search on Web/i);
+      vi.useRealTimers();
+      await act(async () => {
+        fireEvent.click(searchOnWebBtn);
+      });
+      const uploadButtons = await screen.findAllByText("Upload");
+      const webResultUploadBtn = uploadButtons[0];
+
+      await act(async () => {
+        fireEvent.click(webResultUploadBtn);
+      });
+      expect(global.fetch).toHaveBeenCalledWith("https://example.com/logo.png");
+      expect(screen.getByTestId("dialog")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText("webresultco.png")).toBeInTheDocument();
+      });
+      const uriInput = screen.getByLabelText("Company URI");
+      expect(uriInput).toHaveValue("https://webresultco.com");
+    }, 20000);
+    it("Should handle missing companyName gracefully (via 'Search on Web')", async () => {
+      const incompleteData = {
+        source: "web-search",
+        data: [{ url: "https://test.com/img.png", companyUri: "" }],
+      };
+      vi.mocked(useApi).mockReturnValue({
+        data: incompleteData,
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+      });
+      render(
+        <ToastContext.Provider value={mockToastContext}>
+          <Catalog />
+        </ToastContext.Provider>
+      );
+      const searchOnWebBtn = screen.getByText(/Search on Web/i);
+      await act(async () => {
+        fireEvent.click(searchOnWebBtn);
+      });
+      await screen.findByText("Unknown");
+      const uploadBtn = screen.getByText("Upload");
+      vi.useRealTimers();
+      await act(async () => {
+        fireEvent.click(uploadBtn);
+      });
+      await waitFor(() => {
+        expect(screen.getByText("image.png")).toBeInTheDocument();
+      });
+      vi.useFakeTimers();
+    }, 20000);
   });
 });
