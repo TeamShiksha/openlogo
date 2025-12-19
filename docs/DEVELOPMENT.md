@@ -205,6 +205,23 @@ To use the Postman collection:
   </table>
 </details>
 
+<details>
+  <summary><strong>LOGO_REQUESTS_LOGS</strong> – Lightweight records for tracking logo requests over time</summary>
+  <table>
+    <thead>
+      <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>user_id</td><td>ObjectId (ref: users)</td><td>User who made the Logo request (required)</td></tr>
+      <tr><td>key_id</td><td>ObjectId (ref: keys)</td><td>API key used for the request (optional)</td></tr>
+      <tr><td>image_id</td><td>ObjectId (ref: images)</td><td>Logo/image accessed via the API request (required)</td></tr>
+      <tr><td>response_size_bytes</td><td>number</td><td>Size of the response in bytes (default: 0)</td></tr>
+      <tr><td>createdAt</td><td>date</td><td>Timestamp when request was made (auto-generated)</td></tr>
+      <tr><td>updatedAt</td><td>date</td><td>Last updated timestamp (auto-generated)</td></tr>
+    </tbody>
+  </table>
+</details>
+
 ## API Endpoints Documentation
 
 <details>
@@ -1989,3 +2006,95 @@ class Success200 success
 
 
 </details>
+
+<details>
+<summary>LOGO_REQUEST_LOGS</summary>
+
+| URL | Method | Auth Required | Description |
+|-----|--------|---------------|-------------|
+| `/logo-request/stats` | GET | True | Fetch Logo request statistics for the authenticated user |
+
+> <details>
+> <summary>Query parameters</summary>
+>
+> - `period`: Time period for statistics - `week` or `month` (required)
+> </details>
+>
+> <details>
+> <summary>Response body</summary>
+>
+> ```json
+> {
+>        "period": "month",
+>        "startDate": "2025-11-01",
+>        "endDate": "2025-11-30",
+>        "summary": {
+>           "totalCount": 5,
+>            "totalKB": "25.56"
+>        },
+>        "data": [
+>            {
+>                "count": 5,
+>                "date": "2025-11-24",
+>                "totalKB": 25.56
+>            }
+>        ]
+>    }
+> ```
+>
+> **Response:** `200 OK` - Statistics retrieved successfully</br>
+> **Response:** `422 Unprocessable Entity` - Invalid query parameter (period must be 'week' or 'month')</br>
+> **Response:** `404 Not Found` - No statistics found for the user</br>
+> **Response:** `401 Unauthorized` - Not authenticated
+> </details>
+
+<details>
+<summary>Api Flow diagram</summary>
+
+```mermaid
+flowchart TD
+%% API Flow: GET /api-request/stats
+Start[GET /api-request/stats<br/>Query: period] --> Auth{Authorized?}
+
+Auth -->|No| Auth401[Return 401 Unauthorized]
+Auth -->|Yes| ExtractUserId[Extract userId from token]
+
+ExtractUserId --> ValidateParams[Validate Query Parameters]
+ValidateParams --> PeriodValid{Period Valid<br/>week or month?}
+
+PeriodValid -->|No| Invalid422[Return 422 Invalid Query Parameter]
+PeriodValid -->|Yes| FetchStats{Period is?}
+
+FetchStats -->|week| GetWeeklyStats[Fetch Weekly Statistics]
+FetchStats -->|month| GetMonthlyStats[Fetch Monthly Statistics]
+
+GetWeeklyStats --> BuildWeeklyResponse[Build Response with Daily Breakdown]
+GetMonthlyStats --> BuildMonthlyResponse[Build Response with Weekly Breakdown]
+
+BuildWeeklyResponse --> StatsFound{Stats Found?}
+BuildMonthlyResponse --> StatsFound
+
+StatsFound -->|No| NotFound404[Return 404 Data Not Found]
+StatsFound -->|Yes| Success200[Return 200 OK with Statistics]
+
+classDef startEnd fill:#81C8FF,stroke:#4682B4,stroke-width:2px,color:#000;
+classDef decision fill:#FFD54F,stroke:#FFB300,stroke-width:2px,color:#000;
+classDef success fill:#A5D6A7,stroke:#388E3C,stroke-width:2px,color:#000;
+classDef error fill:#EF9A9A,stroke:#D32F2F,stroke-width:2px,color:#000;
+
+class Start,Success200 startEnd
+class Auth,PeriodValid,FetchStats,StatsFound decision
+class Success200 success
+class Auth401,Invalid422,NotFound404 error
+class GetWeeklyStats,GetMonthlyStats,BuildWeeklyResponse,BuildMonthlyResponse process
+
+classDef process fill:#B3E5FC,stroke:#0288D1,stroke-width:2px,color:#000;
+class GetWeeklyStats,GetMonthlyStats,BuildWeeklyResponse,BuildMonthlyResponse process
+```
+</details>
+
+---
+
+</details>
+
+
