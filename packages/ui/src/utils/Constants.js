@@ -729,6 +729,9 @@ export const MESSAGES = {
   NO_RESULT_FOUND: "No results found matching your query!",
   UPLOAD_VALID_IMAGE: "Please upload a valid PNG image file",
   UPDATE_PASSWORD_SUCCESS: "Password updated successfully",
+  VERIFICATION_EMAIL_SENT:
+    "Verification email sent. Please verify your account.",
+  REST_EMAIL_SENT: "Reset email sent. Check your inbox.",
 };
 
 export const MODAL_MESSAGES = {

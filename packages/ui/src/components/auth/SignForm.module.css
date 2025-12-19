@@ -113,6 +113,12 @@
   color: var(--black);
 }
 
+.timer {
+  color: var(--error);
+  font-size: 0.8rem;
+  margin-top: 9px;
+  margin-bottom: -5px;
+  margin-left: 3px;
 .password-wrapper {
   position: relative;
   width: 100%;
