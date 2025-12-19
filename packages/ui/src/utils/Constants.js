@@ -697,6 +697,7 @@ export const API_KEY = {
       title: "Your API Key",
       warning:
         "Please copy your API key now. You won't be able to see it again!",
+      expiryLabel: "This key will expire on:",
     },
   },
   copy: {
@@ -799,6 +800,8 @@ export const CHANGE_PASSWORD_FIELDS = [
 
 export const API_KEY_FORM = {
   tagLine: "Generate a new API key to use in your projects.",
+  expiryLabel: "Expiry Period",
+  expiryDescription: "Choose how long your API key will remain valid.",
 };
 
 export const IMAGE_UPLOAD_MODEL = {

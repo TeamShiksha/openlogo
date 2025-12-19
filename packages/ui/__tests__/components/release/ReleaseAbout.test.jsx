@@ -13,9 +13,9 @@ describe("About component", () => {
     const description = screen.getByText(RELEASE_PAGE.introduction.description);
     expect(description).toBeVisible();
 
-    RELEASE_PAGE.introduction.features.forEach(({heading, desc}) => {
-      const featureHeading = screen.getByText(heading, {exact: false});
-      const featureDesc = screen.getByText(desc, {exact: false});
+    RELEASE_PAGE.introduction.features.forEach(({ heading, desc }) => {
+      const featureHeading = screen.getByText(heading, { exact: false });
+      const featureDesc = screen.getByText(desc, { exact: false });
       expect(featureHeading).toBeVisible();
       expect(featureDesc).toBeVisible();
     });

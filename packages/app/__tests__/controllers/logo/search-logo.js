@@ -72,7 +72,7 @@ describe("searchLogoController", () => {
   it("if API_KEY does not have `expires_at` it should return 403", async () => {
     jest
       .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue(MOCK_KEYS[0]); 
+      .mockResolvedValue(MOCK_KEYS[0]);
 
     const response = await request(app).get(apiUrl).query(baseQuery);
 

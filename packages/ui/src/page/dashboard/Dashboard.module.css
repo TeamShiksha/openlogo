@@ -55,6 +55,39 @@
   color: var(--primary);
 }
 
+.overlay-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 9999;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.loader-text {
+  color: var(--white, white);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
@@ -87,5 +120,26 @@
   .logout-btn {
     width: 100%;
     margin: 1rem 0 0 0;
+  }
+
+  .modal-box {
+    width: 95%;
+    padding: 20px;
+    margin: 16px;
+  }
+
+  .modal-heading {
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+  }
+
+  .modal-content {
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+  }
+
+  .modal-button {
+    padding: 14px;
+    font-size: 0.9375rem;
   }
 }
