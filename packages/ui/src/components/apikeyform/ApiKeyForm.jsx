@@ -13,7 +13,8 @@ import {
   API_KEY_FORM,
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
-import { validate } from "../../utils/Helpers.js";
+import { formatDate, validate } from "../../utils/Helpers.js";
+import Dropdown from "../common/dropdown/Dropdown.jsx";
 
 function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [description, setDescription] = useState("");
@@ -21,8 +22,16 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [formErrors, setFormErrors] = useState({});
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
-  const [expiresInDays, setExpiresInDays] = useState(7);
+  const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
+
+  const expiryOptions = [
+    { value: 7, label: "1 Week" },
+    { value: 30, label: "1 Month" },
+    { value: 90, label: "3 Months" },
+    { value: 180, label: "6 Months" },
+    { value: 365, label: "1 Year" },
+  ];
 
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
@@ -114,23 +123,21 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
           onFocus={() => setFocusedField("apikey")}
           onBlur={() => setFocusedField(null)}
         />
+
         <div className={styles["expiry-dropdown"]}>
           <label htmlFor="expiry" className={styles["expiry-label"]}>
-            Expiry Period
+            {API_KEY_FORM.expiryLabel}
           </label>
-          <select
-            id="expiry"
-            value={expiresInDays}
-            onChange={(e) => setExpiresInDays(parseInt(e.target.value))}
+          <p className={styles["expiry-description"]}>
+            {API_KEY_FORM.expiryDescription}
+          </p>
+          <Dropdown
+            options={expiryOptions}
+            selectedOption={String(expiresInDays)}
+            setSelectedOption={(value) => setExpiresInDays(Number(value))}
+            testId="testid-expiry-dropdown"
             className={styles["expiry-select"]}
-            disabled={loading}
-          >
-            <option value={7}>1 week</option>
-            <option value={30}>1 month</option>
-            <option value={90}>3 months</option>
-            <option value={180}>6 months</option>
-            <option value={365}>1 year</option>
-          </select>
+          />
         </div>
         <Modal
           isOpen={showApiKeyModal}
@@ -157,6 +164,15 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
                 </button>
               </div>
             </div>
+
+            {data?.data?.expires_at && (
+              <div className={styles["expiry-info"]}>
+                <p>
+                  {API_KEY.generation.modal.expiryLabel}{" "}
+                  {formatDate(data.data.expires_at)}
+                </p>
+              </div>
+            )}
           </div>
         </Modal>
         <Button

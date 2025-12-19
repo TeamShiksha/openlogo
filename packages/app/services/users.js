@@ -271,8 +271,7 @@ class UserService {
   async updateUserFortgotPasswordAttempts(user, reset = false) {
     const MAX_ATTEMPTS_PER_DAY = 2;
     const RESET_WINDOW_HOURS = 24;
-    const COOLDOWN_MS = 0.3 * 60 * 1000;
-
+    const COOLDOWN_MS = 2 * 60 * 1000;
     const now = new Date();
     const resetWindowDate = new Date(
       now.getTime() - RESET_WINDOW_HOURS * 60 * 60 * 1000

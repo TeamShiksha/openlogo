@@ -19,6 +19,7 @@ import LoadingSpinner from "../../components/common/loadingspinner/LoadingSpinne
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
 import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
+import InformationModal from "../../components/information/InformationModal.jsx";
 import Graph from "../../components/graph/Graph.jsx";
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -29,6 +30,8 @@ function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [apiKeys, setApiKeys] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const toast = useToast();
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
@@ -37,6 +40,11 @@ function Dashboard() {
   const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
     method: "delete",
     url: `/user/api-key/${selectedKey?._id}`,
+  });
+  const { fetchRequest: updateOldKeysRequest } = useApi({
+    method: "get",
+    url: "/user/update-old-keys",
+    withCredentials: true,
   });
 
   const apiKeyTableData = useMemo(() => {
@@ -74,6 +82,27 @@ function Dashboard() {
     setConfirmKeyName("");
     setShowModal(true);
   };
+
+  useEffect(() => {
+    async function checkOldKeys() {
+      const result = await updateOldKeysRequest();
+
+      if (!result.success && result.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      if (result.success && result.data?.keysUpdated === true) {
+        setShowLoader(true);
+        setTimeout(() => {
+          setShowLoader(false);
+          setShowUpdateModal(true);
+        }, 2000);
+      }
+    }
+
+    checkOldKeys();
+  }, []);
 
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
@@ -129,6 +158,31 @@ function Dashboard() {
       className={`container ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
+      {showLoader && (
+        <div className={styles["overlay-loader"]}>
+          <div className={styles["loader-content"]}>
+            <LoadingSpinner size={60} border={6} />
+            <p className={styles["loader-text"]}>Please wait...</p>
+          </div>
+        </div>
+      )}
+
+      {showUpdateModal && (
+        <InformationModal
+          isOpen={showUpdateModal}
+          onClose={() => setShowUpdateModal(false)}
+          heading="Notification"
+          buttonText="I Understand"
+          closeOnOverlayClick={false}
+          message={
+            <p>
+              Our application has undergone some improvements. Now your old API
+              keys feature a <b>1 year</b> expiry.
+            </p>
+          }
+        />
+      )}
+
       <div>
         {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
           <Dropdown
