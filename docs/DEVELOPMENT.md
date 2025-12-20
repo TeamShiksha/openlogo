@@ -2053,8 +2053,8 @@ class Success200 success
 
 ```mermaid
 flowchart TD
-%% API Flow: GET /api-request/stats
-Start[GET /api-request/stats<br/>Query: period] --> Auth{Authorized?}
+%% API Flow: GET /logo-request/stats
+Start[GET /logo-request/stats<br/>Query: period] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
