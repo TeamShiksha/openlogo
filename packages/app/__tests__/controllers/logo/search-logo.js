@@ -21,7 +21,10 @@ describe("searchLogoController", () => {
   const mockSubscription = [MOCK_SUBSCRIPTION[0], MOCK_SUBSCRIPTION[1]];
 
   function mockRepetedService(mockSubscription) {
-    const keyServiceMockResolve = MOCK_KEYS[0];
+    const keyServiceMockResolve = {
+      ...MOCK_KEYS[2],
+      expires_at: new Date("2026-12-31T23:59:59Z"),
+    };
 
     jest
       .spyOn(KeyService.prototype, "getApiKey")
@@ -61,6 +64,40 @@ describe("searchLogoController", () => {
     expect(response.status).toBe(403);
     expect(response.body).toEqual({
       message: Messages.INVALID_KEY,
+      statusCode: 403,
+      error: STATUS_CODES[403],
+    });
+  });
+
+  it("if API_KEY does not have `expires_at` it should return 403", async () => {
+    jest
+      .spyOn(KeyService.prototype, "getApiKey")
+      .mockResolvedValue(MOCK_KEYS[0]);
+
+    const response = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({
+      message: Messages.UPDATE_API_KEY,
+      statusCode: 403,
+      error: STATUS_CODES[403],
+    });
+  });
+
+  it("if API_KEY is expired it should return 403", async () => {
+    const expiredKeyMock = {
+      ...MOCK_KEYS[0],
+      expires_at: new Date(Date.now() - 86400000),
+    };
+
+    jest
+      .spyOn(KeyService.prototype, "getApiKey")
+      .mockResolvedValue(expiredKeyMock);
+
+    const response = await request(app).get(apiUrl).query(baseQuery);
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({
+      message: Messages.API_KEY_EXPIRED,
       statusCode: 403,
       error: STATUS_CODES[403],
     });
