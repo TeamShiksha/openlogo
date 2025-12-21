@@ -93,8 +93,11 @@ function Catalog() {
   }, [data]);
 
   const handleImageUpload = async ({ file, companyUri }) => {
+    if (!file || !companyUri) {
+      toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
+      return;
+    }
     setUploadLoading(true);
-    if (!file || !companyUri) return;
     const extension = file.name.split(".").pop().toLowerCase();
     const size = file.size;
 
@@ -129,22 +132,25 @@ function Catalog() {
         setPreFilledUri("");
         toast.success(MESSAGES.IMAGE_UPLOAD_SUCCESS);
         makeRequest();
-        setUploadLoading(false);
       }
     } catch (err) {
-      setUploadLoading(false);
       console.error("Upload error:", err);
       if (err?.response?.data?.message) {
         toast.error(err?.response?.data?.message);
       } else {
         toast.error(MESSAGES.IMAGE_UPLOAD_ERROR);
       }
+    } finally {
+      setUploadLoading(false);
     }
   };
 
   const handleUpdateImage = async ({ file }) => {
+    if (!file || !updateImageId) {
+      toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
+      return;
+    }
     setUploadLoading(true);
-    if (!file || !updateImageId) return;
 
     const extension = file.name.split(".").pop().toLowerCase();
     const size = file.size;
@@ -185,7 +191,6 @@ function Catalog() {
         setUpdateImageId(null);
         toast.success(MESSAGES.IMAGE_UPDATE_SUCCESS);
         makeRequest();
-        setUploadLoading(false);
       }
     } catch (err) {
       console.error("Upload error:", err);
@@ -197,18 +202,60 @@ function Catalog() {
   const handleWebResultUpload = async (img) => {
     try {
       const name = img.companyName ? img.companyName.toLowerCase() : "image";
-      const response = await fetch(img.url);
+      const logoUrl = img.url;
+      const response = await fetch(logoUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch logo: ${response.status}`);
+      }
+
       const blob = await response.blob();
-      const file = new File([blob], `${name}.png`, { type: "image/png" });
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img_element = new Image();
+      img_element.crossOrigin = "anonymous";
 
-      setPreSelectedFile(file);
-      setPreFilledUri(img.companyUri || "");
+      img_element.onload = () => {
+        canvas.width = img_element.width;
+        canvas.height = img_element.height;
+        ctx.drawImage(img_element, 0, 0);
 
-      setUpdateImageId(null);
-      setIsModalOpen(true);
+        canvas.toBlob((pngBlob) => {
+          const pngFile = new File([pngBlob], `${name}.png`, {
+            type: "image/png",
+          });
+
+          console.debug("Image converted to PNG:", {
+            companyUri: img.companyUri,
+            logoUrl: logoUrl,
+            companyName: img.companyName,
+            fileName: pngFile.name,
+            fileType: pngFile.type,
+          });
+          setUpdateImageId(null);
+          setUpdatedImageCompanyUri(null);
+          setPreSelectedFile(pngFile);
+          setPreFilledUri(img.companyUri || "");
+          setIsModalOpen(true);
+        }, "image/png");
+      };
+
+      img_element.onerror = () => {
+        const pngFile = new File([blob], `${name}.png`, {
+          type: "image/png",
+        });
+
+        setUpdateImageId(null);
+        setUpdatedImageCompanyUri(null);
+        setPreSelectedFile(pngFile);
+        setPreFilledUri(img.companyUri || "");
+        setIsModalOpen(true);
+      };
+
+      // Set the image source to start loading
+      img_element.src = URL.createObjectURL(blob);
     } catch (error) {
-      console.error("Failed to fetch image:", error);
-      toast.error("Failed to load image from web result.");
+      console.error("Failed to fetch logo from web search:", error);
+      toast.error("Failed to load logo. Please try again.");
     }
   };
 
@@ -223,7 +270,6 @@ function Catalog() {
     } else if (newSearchTerm.length >= 2 && previousSearchTerm.length >= 2) {
       setPageNum(0);
     } else if (newSearchTerm.length < 2 && previousSearchTerm.length >= 2) {
-      // Reset to previous page before search
       setPageNum(pageBeforeSearchRef.current);
     }
   };
@@ -292,12 +338,14 @@ function Catalog() {
             <div className={styles["catalog-search-modal-title"]}>
               Image Not Found
             </div>
-            <div
+            <button
+              type="button"
               className={styles["catalog-search-modal-cross"]}
               onClick={() => setShowWebCatalog(false)}
+              aria-label="Close"
             >
               ✕
-            </div>
+            </button>
           </div>
           <div className={styles["web-search-catalog-body"]}>
             <p>We couldn’t find this image in our catalog.</p>
@@ -334,16 +382,21 @@ function Catalog() {
               <div className={styles["catalog-search-modal-title"]}>
                 Suggested Images
               </div>
-              <div
+              <button
+                type="button"
                 className={styles["catalog-search-modal-cross"]}
                 onClick={() => setShowWebResults(false)}
+                aria-label="Close"
               >
                 X
-              </div>
+              </button>
             </div>
 
-            {data?.data?.map((img, index) => (
-              <div key={index} className={styles["search-modal-row"]}>
+            {data?.data?.map((img) => (
+              <div
+                key={img.url || img.companyUri}
+                className={styles["search-modal-row"]}
+              >
                 <img
                   src={img.url}
                   alt={img.companyName}

@@ -19,6 +19,7 @@
   width: 160px;
   max-height: 45px;
 }
+
 .web-search-catalog-body {
   text-align: center;
   padding: 20px;
@@ -50,7 +51,10 @@
   font-size: 22px;
   font-weight: bold;
   color: #666;
+  background: none;
+  border: none;
   transition: 0.2s;
+  padding: 0;
 }
 
 .catalog-search-modal-cross:hover {
@@ -75,10 +79,15 @@
   padding: 12px 10px;
   border-bottom: 1px solid #eee;
 }
+
 .search-modal-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
   border-radius: 6px;
   margin-right: 15px;
 }
+
 .search-modal-company-name {
   flex: 1;
   margin-left: 15px;
@@ -86,6 +95,7 @@
   font-weight: 500;
   color: #333;
 }
+
 .catalog-search-modal-request {
   margin-top: 20px;
   text-align: center;

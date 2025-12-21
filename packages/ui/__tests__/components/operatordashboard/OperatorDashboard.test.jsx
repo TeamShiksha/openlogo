@@ -77,6 +77,11 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
   },
 }));
 
+// Test helpers
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+const delayedResolve = (data, ms = 100) =>
+  new Promise((res) => setTimeout(() => res(data), ms));
+
 describe("Operator Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -450,7 +455,7 @@ describe("Operator Page", () => {
     fireEvent.click(uploadButton);
 
     // Add some debugging
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await sleep(100);
 
     console.log(
       "getPresignedURLRequest calls:",
@@ -468,16 +473,14 @@ describe("Operator Page", () => {
   it("should show pagination when there are multiple pages", async () => {
     const multiPageMessages = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i}`,
-            message: `Message ${i}`,
-            name: `User ${i}`,
-            email: `user${i}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-01T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i}`,
+          message: `Message ${i}`,
+          name: `User ${i}`,
+          email: `user${i}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-01T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
@@ -497,32 +500,28 @@ describe("Operator Page", () => {
   it("should go to next page when next button is clicked", async () => {
     const page1 = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i}`,
-            message: `Message ${i}`,
-            name: `User ${i}`,
-            email: `user${i}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-01T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i}`,
+          message: `Message ${i}`,
+          name: `User ${i}`,
+          email: `user${i}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-01T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
 
     const page2 = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i + 6}`,
-            message: `Message ${i + 6}`,
-            name: `User ${i + 6}`,
-            email: `user${i + 6}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-02T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i + 6}`,
+          message: `Message ${i + 6}`,
+          name: `User ${i + 6}`,
+          email: `user${i + 6}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-02T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
@@ -552,31 +551,27 @@ describe("Operator Page", () => {
   it("should go to previous page when prev button is clicked", async () => {
     const page1 = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i}`,
-            message: `Message ${i}`,
-            name: `User ${i}`,
-            email: `user${i}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-01T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i}`,
+          message: `Message ${i}`,
+          name: `User ${i}`,
+          email: `user${i}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-01T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
     const page2 = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i + 6}`,
-            message: `Message ${i + 6}`,
-            name: `User ${i + 6}`,
-            email: `user${i + 6}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-02T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i + 6}`,
+          message: `Message ${i + 6}`,
+          name: `User ${i + 6}`,
+          email: `user${i + 6}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-02T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
@@ -607,16 +602,14 @@ describe("Operator Page", () => {
   it("should show pagination with multiple pages", async () => {
     const multiPageMessages = {
       data: {
-        results: Array(6)
-          .fill(null)
-          .map((_, i) => ({
-            _id: `${i}`,
-            message: `Message ${i}`,
-            name: `User ${i}`,
-            email: `user${i}@example.com`,
-            status: "PENDING",
-            openedAt: "2025-06-01T00:00:00Z",
-          })),
+        results: new Array(6).fill(null).map((_, i) => ({
+          _id: `${i}`,
+          message: `Message ${i}`,
+          name: `User ${i}`,
+          email: `user${i}@example.com`,
+          status: "PENDING",
+          openedAt: "2025-06-01T00:00:00Z",
+        })),
         totalPages: 3,
       },
     };
@@ -643,7 +636,7 @@ describe("Operator Page", () => {
     });
     apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
     useApi.mockImplementation(({ url }) => {
-      if (url && url.includes("catalog/logos")) {
+      if (url?.includes("catalog/logos")) {
         return {
           loading: false,
           makeRequest: searchMakeRequest,
@@ -790,12 +783,7 @@ describe("Operator Page", () => {
   });
   it("should show loading spinner when submitting response", async () => {
     apiInstance.get.mockResolvedValueOnce(OPERATOR_MESSAGES);
-    apiInstance.put.mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          setTimeout(() => resolve({ data: {} }), 100);
-        })
-    );
+    apiInstance.put.mockImplementation(() => delayedResolve({ data: {} }, 100));
     render(
       <ToastProvider>
         <OperatorDashboard />
@@ -819,7 +807,7 @@ describe("Operator Page", () => {
   });
   it("should clear search results when search input is cleared", async () => {
     const searchMakeRequest = vi.fn();
-    searchMakeRequest.mockResolvedValueOnce({
+    const mockWebData = {
       source: "web-search",
       data: [
         {
@@ -828,17 +816,19 @@ describe("Operator Page", () => {
           companyUri: "https://example.com",
         },
       ],
-    });
+    };
 
     apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
 
+    // Initial hook: no data, but exposes makeRequest
     useApi.mockImplementation(({ url }) => {
-      if (url && url.includes("catalog/logos")) {
+      if (url?.includes("catalog/logos")) {
         return {
           loading: false,
           makeRequest: searchMakeRequest,
           fetchRequest: vi.fn(),
           errorMsg: null,
+          data: null,
         };
       }
       return {
@@ -846,10 +836,11 @@ describe("Operator Page", () => {
         makeRequest: vi.fn(),
         fetchRequest: vi.fn(),
         errorMsg: null,
+        data: null,
       };
     });
 
-    render(
+    const { rerender } = render(
       <ToastProvider>
         <OperatorDashboard />
       </ToastProvider>
@@ -860,10 +851,43 @@ describe("Operator Page", () => {
 
     vi.useFakeTimers();
     vi.advanceTimersByTime(500);
-    fireEvent.change(searchInput, { target: { value: "" } });
-    vi.advanceTimersByTime(500);
     vi.useRealTimers();
-    expect(searchInput).toHaveValue("");
+
+    await waitFor(() => {
+      expect(searchMakeRequest).toHaveBeenCalled();
+    });
+    useApi.mockImplementation(({ url }) => {
+      if (url?.includes("catalog/logos")) {
+        return {
+          loading: false,
+          makeRequest: searchMakeRequest,
+          fetchRequest: vi.fn(),
+          errorMsg: null,
+          data: mockWebData,
+        };
+      }
+      return {
+        loading: false,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+        errorMsg: null,
+        data: null,
+      };
+    });
+
+    rerender(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+    await screen.findByText(/example/i);
+    fireEvent.change(searchInput, { target: { value: "" } });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText((content) => content === "Example")
+      ).not.toBeInTheDocument();
+    });
   });
   it("should render multiple messages in the list", async () => {
     const multipleMessages = {
@@ -907,6 +931,103 @@ describe("Operator Page", () => {
       expect(screen.getByText("First message")).toBeInTheDocument();
       expect(screen.getByText("Second message")).toBeInTheDocument();
       expect(screen.getByText("Third message")).toBeInTheDocument();
+    });
+  });
+  it("should render web search results when available", async () => {
+    const webSearchResults = {
+      source: "web-search",
+      data: [
+        {
+          companyName: "Example Inc",
+          url: "https://example.com/logo.png",
+          companyUri: "https://example.com",
+        },
+      ],
+    };
+
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+    useApi.mockImplementation(({ url }) => {
+      if (url?.includes("catalog/logos")) {
+        return {
+          loading: false,
+          makeRequest: vi.fn(),
+          fetchRequest: vi.fn().mockResolvedValue(webSearchResults),
+          errorMsg: null,
+        };
+      }
+      return {
+        loading: false,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+        errorMsg: null,
+      };
+    });
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+
+    const searchInput = screen.getByRole("searchbox");
+    fireEvent.change(searchInput, { target: { value: "example" } });
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(500);
+    vi.useRealTimers();
+
+    expect(searchInput).toHaveValue("example");
+  });
+  it("should not render web search results when input is cleared", async () => {
+    const webSearchResults = {
+      source: "web-search",
+      data: [
+        {
+          companyName: "Example Inc",
+          url: "https://example.com/logo.png",
+          companyUri: "https://example.com",
+        },
+      ],
+    };
+
+    apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
+    useApi.mockImplementation(({ url }) => {
+      if (url?.includes("catalog/logos")) {
+        return {
+          loading: false,
+          makeRequest: vi.fn(),
+          fetchRequest: vi.fn().mockResolvedValue(webSearchResults),
+          errorMsg: null,
+        };
+      }
+      return {
+        loading: false,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+        errorMsg: null,
+      };
+    });
+
+    render(
+      <ToastProvider>
+        <OperatorDashboard />
+      </ToastProvider>
+    );
+
+    const searchInput = screen.getByRole("searchbox");
+    fireEvent.change(searchInput, { target: { value: "example" } });
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(500);
+    vi.useRealTimers();
+
+    expect(searchInput).toHaveValue("example");
+
+    fireEvent.change(searchInput, { target: { value: "" } });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Suggested Images/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/webresultco/i)).not.toBeInTheDocument();
     });
   });
 });

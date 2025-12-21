@@ -1,34 +1,107 @@
 .operator-container {
   min-height: calc(100vh - 11rem);
   margin-bottom: 3rem;
-  position: relative;
 }
+
 .catalog-search {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   width: 100%;
 }
+
 .catalog-search > div:first-child {
   flex: 1;
   width: 100%;
 }
 .catalog-search-modal {
-  position: absolute;
-  top: 90px;
-  left: 0;
+  position: relative;
   width: 100%;
-  max-width: 800px;
   background-color: var(--white);
   border: 1px solid var(--border-color);
   border-radius: var(--bradius);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  z-index: 100;
   padding: 1.5rem;
-  max-height: 50vh;
-  overflow-y: auto;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
+.catalog-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.catalog-item-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  overflow: hidden;
+}
+
+.catalog-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.catalog-item-initials {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+.operator-catalog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.operator-catalog-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.operator-catalog-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.operator-catalog-name {
+  font-weight: 600;
+  color: var(--black);
+  text-transform: capitalize;
+}
+
+.operator-catalog-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 780px) {
+  .operator-catalog-row {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  .operator-catalog-actions {
+    gap: 0.25rem;
+  }
+}
+
 .catalog-search-modal-header {
   display: flex;
   justify-content: space-between;
@@ -37,20 +110,24 @@
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border-color);
 }
+
 .catalog-search-modal-title {
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--black);
 }
+
 .catalog-search-modal-cross {
   cursor: pointer;
   padding: 0.5rem;
   color: var(--description);
   transition: color 0.2s;
 }
+
 .catalog-search-modal-cross:hover {
   color: var(--black);
 }
+
 .search-modal-row {
   display: flex;
   align-items: center;
@@ -75,6 +152,7 @@
   border: 1px solid var(--border-color);
   padding: 2px;
 }
+
 .search-modal-company-name {
   flex: 1;
   margin: 0 1rem;
@@ -82,6 +160,7 @@
   color: var(--black);
   text-transform: capitalize;
 }
+
 .web-search-catalog-body {
   text-align: center;
   padding: 2rem 1rem;
@@ -147,6 +226,30 @@
   flex-direction: column;
   gap: 1.5rem;
   margin: 1.5rem 0;
+}
+.catalog-table-wrapper {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--bradius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.catalog-table-header {
+  display: flex;
+  padding: 1rem;
+  background-color: var(--bg-color);
+  font-weight: 600;
+  color: var(--black);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.catalog-table-column-first {
+  flex: 1;
+}
+
+.catalog-table-column-last {
+  width: 100px;
 }
 
 .pagination {
@@ -284,6 +387,12 @@
   width: 160px;
   max-height: 48px;
 }
+.reupload-btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 140px;
+}
 
 @media (max-width: 768px) {
   .header {
@@ -315,14 +424,16 @@
   .catalog-add-image-btn {
     width: 100%;
   }
+
   .catalog-search-modal {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%;
-    max-height: 70vh;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-height: none;
   }
+
   .web-search-actions {
     flex-direction: column;
   }
