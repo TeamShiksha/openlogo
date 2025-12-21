@@ -130,7 +130,7 @@ const SignIn = ({ toggleForm, onClose }) => {
                   <div key={field.name} className={styles["password-wrapper"]}>
                     <CustomInput
                       error={formErrors[field.name]}
-                      type={showPassword ? "password" : "text"}
+                      type={showPassword ? "text" : "password"}
                       name={field.name}
                       label={field.label}
                       value={formData[field.name]}
@@ -145,7 +145,7 @@ const SignIn = ({ toggleForm, onClose }) => {
                       className={styles["eye-button"]}
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={
-                        showPassword ? "Show password" : "Hide password"
+                        showPassword ? "Hide password" : "Show password"
                       }
                       tabIndex={-1}
                       onKeyDown={(event) => {
@@ -156,9 +156,9 @@ const SignIn = ({ toggleForm, onClose }) => {
                       }}
                     >
                       {showPassword ? (
-                        <EyeClosed size={20} />
-                      ) : (
                         <Eye size={20} />
+                      ) : (
+                        <EyeClosed size={20} />
                       )}
                     </button>
                   </div>
