@@ -349,7 +349,7 @@ function Catalog() {
                 onClick={() => setShowWebResults(false)}
                 aria-label="Close"
               >
-                X
+                ✕
               </button>
             </div>
 
