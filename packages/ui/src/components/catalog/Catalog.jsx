@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import leftArrow from "../../assets/left-arrow.svg";
-import LogoRequestForm from "../demo/LogoRequestForm";
 import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
@@ -12,11 +11,11 @@ import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import { MESSAGES } from "../../utils/Constants.js";
 import axios from "axios";
+import { processWebImage } from "../../utils/Helpers";
 
 function Catalog() {
   const toast = useToast();
   const [pageNum, setPageNum] = useState(0);
-  const [showLogoRequestModal, setShowLogoRequestModal] = useState(false);
   const [showWebCatalog, setShowWebCatalog] = useState(false);
   const [showWebResults, setShowWebResults] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -201,58 +200,20 @@ function Catalog() {
   };
   const handleWebResultUpload = async (img) => {
     try {
-      const name = img.companyName ? img.companyName.toLowerCase() : "image";
-      const logoUrl = img.url;
-      const response = await fetch(logoUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch logo: ${response.status}`);
-      }
+      const pngFile = await processWebImage(img.url, img.companyName);
 
-      const blob = await response.blob();
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img_element = new Image();
-      img_element.crossOrigin = "anonymous";
-
-      img_element.onload = () => {
-        canvas.width = img_element.width;
-        canvas.height = img_element.height;
-        ctx.drawImage(img_element, 0, 0);
-
-        canvas.toBlob((pngBlob) => {
-          const pngFile = new File([pngBlob], `${name}.png`, {
-            type: "image/png",
-          });
-
-          console.debug("Image converted to PNG:", {
-            companyUri: img.companyUri,
-            logoUrl: logoUrl,
-            companyName: img.companyName,
-            fileName: pngFile.name,
-            fileType: pngFile.type,
-          });
-          setUpdateImageId(null);
-          setUpdatedImageCompanyUri(null);
-          setPreSelectedFile(pngFile);
-          setPreFilledUri(img.companyUri || "");
-          setIsModalOpen(true);
-        }, "image/png");
-      };
-
-      img_element.onerror = () => {
-        const pngFile = new File([blob], `${name}.png`, {
-          type: "image/png",
-        });
-
-        setUpdateImageId(null);
-        setUpdatedImageCompanyUri(null);
-        setPreSelectedFile(pngFile);
-        setPreFilledUri(img.companyUri || "");
-        setIsModalOpen(true);
-      };
-
-      // Set the image source to start loading
-      img_element.src = URL.createObjectURL(blob);
+      console.debug("Image converted to PNG:", {
+        companyUri: img.companyUri,
+        logoUrl: img.url,
+        companyName: img.companyName,
+        fileName: pngFile.name,
+        fileType: pngFile.type,
+      });
+      setUpdateImageId(null);
+      setUpdatedImageCompanyUri(null);
+      setPreSelectedFile(pngFile);
+      setPreFilledUri(img.companyUri || "");
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Failed to fetch logo from web search:", error);
       toast.error("Failed to load logo. Please try again.");
@@ -415,21 +376,8 @@ function Catalog() {
                 </Button>
               </div>
             ))}
-            <div className={styles["catalog-search-modal-request"]}>
-              <p>Can’t find what you are looking for?</p>
-              <Button
-                variant="primary"
-                className={styles["search-modal-button"]}
-                onClick={() => setShowLogoRequestModal(true)}
-              >
-                Request Logo
-              </Button>
-            </div>
           </div>
         )}
-      {showLogoRequestModal && (
-        <LogoRequestForm closeModal={() => setShowLogoRequestModal(false)} />
-      )}
       <div className={styles["catalog-table-wrapper"]}>
         <div className={styles["catalog-table-header"]}>
           <div className={styles["catalog-table-column-first"]}>Images</div>

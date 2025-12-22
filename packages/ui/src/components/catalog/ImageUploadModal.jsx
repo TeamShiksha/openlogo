@@ -96,7 +96,6 @@ const ImageUploadModal = ({
       toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
       return;
     }
-    // Reverting verbose check as requested by UI needs, though optional chaining is fine
     onUpload({ file: selectedImage.file, ...(!isUpdate && { companyUri }) });
   };
 
@@ -106,7 +105,6 @@ const ImageUploadModal = ({
     setCompanyUri("");
   };
 
-  // Re-adding this function for div accessibility
   const handleDropzoneKeyDown = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -148,7 +146,6 @@ const ImageUploadModal = ({
           </Button>
         </form>
       ) : (
-        // Reverted back to div to fix UI issue
         <div
           className={`${styles.dropzone} ${dragActive ? styles.dragActive : ""}`}
           onDragEnter={handleDrag}

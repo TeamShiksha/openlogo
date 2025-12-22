@@ -96,16 +96,6 @@
   color: #333;
 }
 
-.catalog-search-modal-request {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.search-modal-button {
-  margin-top: 10px;
-  width: 180px;
-}
-
 .catalog-table-wrapper {
   padding-top: 1rem;
   display: flex;
