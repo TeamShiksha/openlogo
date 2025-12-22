@@ -2,13 +2,10 @@ import { describe, test, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ImageUploadModal from "../../src/components/catalog/ImageUploadModal";
 
-// Mock Setup
 const mockToast = { error: vi.fn(), success: vi.fn() };
 vi.mock("../../src/hooks/useToast", () => ({
   useToast: () => mockToast,
 }));
-
-// Ensure FileReader behaves predictably in tests
 class MockFileReader {
   onload = null;
 
@@ -34,7 +31,6 @@ describe("ImageUploadModal", () => {
 
   test("shows file input when open and no initial file", () => {
     render(<ImageUploadModal isOpen={true} onClose={() => {}} />);
-    // Query input[type=file] from container
     const inputFile = document.querySelector('input[type="file"]');
     expect(inputFile).toBeTruthy();
     expect(inputFile).toHaveAttribute("accept", ".jpg,.jpeg,.png");

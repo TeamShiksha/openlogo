@@ -53,7 +53,6 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
             const file = new File(["test content"], "test.jpg", {
               type: "image/jpeg",
             });
-            // Simulate file selection
             Object.defineProperty(e.target, "files", {
               value: [file],
               writable: false,
@@ -77,7 +76,6 @@ vi.mock("../../../src/components/catalog/ImageUploadModal", () => ({
   },
 }));
 
-// Test helpers
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const delayedResolve = (data, ms = 100) =>
   new Promise((res) => setTimeout(() => res(data), ms));
@@ -85,11 +83,7 @@ const delayedResolve = (data, ms = 100) =>
 describe("Operator Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
-
-    // Default mock for initial data fetching
     apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
-
-    // Default useApi mock - will be overridden in specific tests
     useApi.mockReturnValue({
       loading: false,
       makeRequest: vi.fn(),
@@ -401,23 +395,17 @@ describe("Operator Page", () => {
 
     // Clear all mocks
     vi.clearAllMocks();
-
-    // Mock initial data fetch
     apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
-
-    // Mock useApi to return the functions we need
     let callCount = 0;
     useApi.mockImplementation(() => {
       callCount++;
       if (callCount === 1) {
-        // First call - upload hook
         return {
           loading: false,
           makeRequest: uploadMakeRequest,
           errorMsg: null,
         };
       } else {
-        // Second call - presigned URL hook
         return {
           loading: false,
           fetchRequest: getPresignedURLRequest,
@@ -436,8 +424,6 @@ describe("Operator Page", () => {
         <OperatorDashboard />
       </ToastProvider>
     );
-
-    // Wait for component to load
     await waitFor(() => {
       expect(
         screen.getByRole("button", { name: "Add image" })
@@ -453,8 +439,6 @@ describe("Operator Page", () => {
 
     const uploadButton = screen.getByTestId("upload-button");
     fireEvent.click(uploadButton);
-
-    // Add some debugging
     await sleep(100);
 
     console.log(
@@ -819,8 +803,6 @@ describe("Operator Page", () => {
     };
 
     apiInstance.get.mockResolvedValue(OPERATOR_MESSAGES);
-
-    // Initial hook: no data, but exposes makeRequest
     useApi.mockImplementation(({ url }) => {
       if (url?.includes("catalog/logos")) {
         return {
