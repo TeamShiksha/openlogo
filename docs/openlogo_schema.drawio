@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Page-1" id="XIgFemEZyohv3yr66Iux">
-        <mxGraphModel dx="846" dy="647" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" background="none" math="0" shadow="0">
+        <mxGraphModel dx="846" dy="285" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1700" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -229,7 +229,7 @@
                 <mxCell id="dZldowXfxZ-pDmt1H8r0-18" value="- is_deleted: boolean&lt;div style=&quot;font-size: 13px;&quot;&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;/div&gt;" style="text;strokeColor=#030303;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=13;fontColor=#FF8000;" parent="2mEMyc_sA7kXAxt8dqWD-4" vertex="1">
                     <mxGeometry y="166" width="160" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="-A4is2Gtrii8zZRXDnXi-1" value="&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 153, 255));&quot;&gt;api_requests&lt;/span&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="-A4is2Gtrii8zZRXDnXi-1" value="logo_request_logs" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="270" y="665" width="203" height="222" as="geometry"/>
                 </mxCell>
                 <mxCell id="-A4is2Gtrii8zZRXDnXi-2" value="&lt;div&gt;&lt;b&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 153, 255));&quot;&gt;- _id: ObjectId&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="-A4is2Gtrii8zZRXDnXi-1" vertex="1">

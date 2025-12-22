@@ -2012,7 +2012,7 @@ class Success200 success
 
 | URL | Method | Auth Required | Description |
 |-----|--------|---------------|-------------|
-| `/logo-request/stats` | GET | True | Fetch Logo request statistics for the authenticated user |
+| `/logo-requests` | GET | True | Fetch Logo request statistics for the authenticated user |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -2053,8 +2053,8 @@ class Success200 success
 
 ```mermaid
 flowchart TD
-%% API Flow: GET /logo-request/stats
-Start[GET /logo-request/stats<br/>Query: period] --> Auth{Authorized?}
+%% API Flow: GET /logo-requests
+Start[GET /logo-requests<br/>Query: period] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
