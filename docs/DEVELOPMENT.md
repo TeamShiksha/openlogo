@@ -8,72 +8,80 @@
 - [API Endpoints Documentation](#api-endpoints-documentation)
 
 ## Prerequisites
+
 - Node.js (version 18 or higher recommended, 20+ supported)
 - pnpm (package manager). Install globally with `npm install -g pnpm`
 - MongoDB
 - AWS Account
 
 ### Clone and run the project locally
-   ```
-   git clone https://github.com/TeamShiksha/openlogo.git
-   cd openlogo
-   pnpm install
-   pnpm start
-   ```
+
+```
+git clone https://github.com/TeamShiksha/openlogo.git
+cd openlogo
+pnpm install
+pnpm start
+```
 
 ## Environment variables
 
 Most of the environment variables can be used by copying them from the `.env.example` file. However, if you are trying to run the business APIs locally, you will need some additional environment variables associated with AWS.
 
 - Create a stack using `cloudformation_dev_test.yml` file given inside `app/aws` directory.
-- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/       private-content-trusted-signers.html).
+- You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ private-content-trusted-signers.html).
 - While creating or updating a stack make sure for `AllowedOriginInS3` parameter select is `http://localhost:8080` to avoid CORS error for S3 in your local development environment.
 
   **NOTE**: Remember to revert it back to the stage URL before committing or deploying.
 
 - After the stack creation is successful you can find most environmental variables under the `Output` section which are mentioned below:
-   - `BUCKET_NAME`
-   - `BUCKET_REGION`
-   - `BUCKET_KEY`
-   - `DISTRIBUTION_DOMAIN`
-   - `CLOUD_FRONT_KEYPAIR_ID`
-   - `ACCESS_KEY`
-   - `SECRET_ACCESS_KEY`
+
+  - `BUCKET_NAME`
+  - `BUCKET_REGION`
+  - `BUCKET_KEY`
+  - `DISTRIBUTION_DOMAIN`
+  - `CLOUD_FRONT_KEYPAIR_ID`
+  - `ACCESS_KEY`
+  - `SECRET_ACCESS_KEY`
 
     **NOTE**: These values will be comma seperated.
     **NOTE**: Some changes in this file are manually updated in the prod. As the incremental changes trigger delete and replace, however if you are creating resources for the first time using this template then everthing should work fine.
 
 ## Hostname mapping
+
 To ensure parity with production and staging environment it is better to have hostname mapping.
 
 For POSIX systems, append this in your `/etc/hosts`. Make sure you have sudo priveleges while modifying the file
+
 ```sh
 127.0.0.1  local.openlogo.fyi
 ```
 
 For windows, modify `\etc\hosts` file located inside `System32\drivers` folder and append
+
 ```sh
 127.0.0.1  local.openlogo.fyi
 ```
 
-## Deployment flow 
+## Deployment flow
+
 ![Deployment flow](./images/deployment_flow.png)
+
 - [deploy-frontend.yaml](../../.github/workflows/deploy-frontend.yaml)
 - [deploy-backend.yaml](../../.github/workflows/deploy-backend.yaml)
 
 ## Postman API Collection
 
-The Postman API collection and environment files are located in the ```/docs/Postman Collection``` directory. These files can be used to test the API endpoints:
+The Postman API collection and environment files are located in the `/docs/Postman Collection` directory. These files can be used to test the API endpoints:
 
-```postman_collection.json```: Contains the collection of API requests for testing the Openlogo application.
+`postman_collection.json`: Contains the collection of API requests for testing the Openlogo application.
 
-```postman_environment.json```: Contains environment variables for configuring the API requests, such as base URLs and authentication tokens.
+`postman_environment.json`: Contains environment variables for configuring the API requests, such as base URLs and authentication tokens.
 
 To use the Postman collection:
 
-- Import ```postman_collection.json``` into Postman.
-- Import ```postman_environment.json``` into Postman.
-- Configure the environment variables in Postman from the ```.env``` file.
+- Import `postman_collection.json` into Postman.
+- Import `postman_environment.json` into Postman.
+- Configure the environment variables in Postman from the `.env` file.
 - Use the collection to test the API endpoints.
 
 ## Collections Uses
@@ -124,10 +132,13 @@ To use the Postman collection:
       <tr><th>Field</th><th>Type</th><th>Description</th></tr>
     </thead>
     <tbody>
-      <tr><td>api_key</td><td>string (hashed)</td><td>API key string (auto-generated and hashed)</td></tr>
+      <tr><td>_id</td><td>ObjectId</td><td>Unique identifier for the API key</td></tr>
+      <tr><td>api_key</td><td>string (hashed)</td><td>API key string (auto-generated)</td></tr>
       <tr><td>key_description</td><td>string</td><td>Description or label for the API key (required)</td></tr>
-      <tr><td>updated_at</td><td>date</td><td>Last updated timestamp</td></tr>
       <tr><td>subscription_id</td><td>ObjectId (ref: subscriptions)</td><td>Subscription associated with the key</td></tr>
+      <tr><td>expires_at</td><td>date</td><td>Expiration timestamp for the API key</td></tr>
+      <tr><td>updated_at</td><td>date</td><td>Last updated timestamp</td></tr>
+      <tr><td>__v</td><td>number</td><td>Mongoose version key (internal)</td></tr>
     </tbody>
   </table>
 </details>
@@ -185,6 +196,8 @@ To use the Postman collection:
       <tr><td>keys</td><td>Array of ObjectId (ref: keys)</td><td>API keys linked to user</td></tr>
       <tr><td>is_deleted</td><td>boolean</td><td>Soft delete flag</td></tr>
       <tr><td>updated_at</td><td>date</td><td>Last update timestamp</td></tr>
+      <tr><td>forgot_password_attempts</td><td>number</td><td>Number of password reset attempts made by the user</td></tr>
+      <tr><td>forgot_password_last_reset_at</td><td>date</td><td>Timestamp of the last successful password reset (null if never reset)</td></tr>
     </tbody>
   </table>
 </details>
@@ -210,9 +223,9 @@ To use the Postman collection:
 <details>
 <summary>AUTH</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/signup` | POST | False | Register a new user |
+| URL            | Method | Auth Required | Description         |
+| -------------- | ------ | ------------- | ------------------- |
+| `/auth/signup` | POST   | False         | Register a new user |
 
 > <details>
 > <summary>Request body</summary>
@@ -225,6 +238,7 @@ To use the Postman collection:
 >   "confirmPassword": "securePassword@123"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -236,9 +250,8 @@ To use the Postman collection:
 > }
 > ```
 >
-> **Response:** `200 OK` - User registered successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `409 Conflict` - Email already exists
+> **Response:** `200 OK` - User registered successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `409 Conflict` - Email already exists
+>
 > </details>
 
 <details>
@@ -284,12 +297,14 @@ class Input422,Email400,Server500 error
 class Success201 warning
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/signin` | POST | False | Log in and start a session |
+
+| URL            | Method | Auth Required | Description                |
+| -------------- | ------ | ------------- | -------------------------- |
+| `/auth/signin` | POST   | False         | Log in and start a session |
 
 > <details>
 > <summary>Request body</summary>
@@ -300,6 +315,7 @@ class Success201 warning
 >   "password": "securePassword@123"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -311,11 +327,9 @@ class Success201 warning
 > }
 > ```
 >
-> **Response:** `200 OK` - Login successful</br>
-> **Response:** `401 Unauthorized` - Invalid credentials</br>
-> **Response:** `400 Bad Request` - Invalid input data
+> **Response:** `200 OK` - Login successful</br> > **Response:** `401 Unauthorized` - Invalid credentials</br> > **Response:** `400 Bad Request` - Invalid input data
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -358,12 +372,14 @@ class Success200 success
 class Input422,User404,Verify403 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/signout` | POST | True | Terminate the session |
+
+| URL             | Method | Auth Required | Description           |
+| --------------- | ------ | ------------- | --------------------- |
+| `/auth/signout` | POST   | True          | Terminate the session |
 
 > <details>
 > <summary>Response body</summary>
@@ -375,10 +391,9 @@ class Input422,User404,Verify403 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Logout successful</br>
-> **Response:** `401 Unauthorized` - Not authenticated
+> **Response:** `200 OK` - Logout successful</br> > **Response:** `401 Unauthorized` - Not authenticated
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -404,27 +419,27 @@ class CheckCookie decision
 class Success205 success
 class Cookie400 error
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/verify/:token?` | GET | False | Validate the user session token or verify email |
+
+| URL                    | Method | Auth Required | Description                                     |
+| ---------------------- | ------ | ------------- | ----------------------------------------------- |
+| `/auth/verify/:token?` | GET    | False         | Validate the user session token or verify email |
 
 > <details>
 > <summary>Response body</summary>
 >
 > ```json
 > {
->   "statusCode" : 200
+>   "statusCode": 200
 > }
 > ```
 >
-> **Response:** `200 OK` - Token valid or email verified</br>
-> **Response:** `400 Bad Request` - Invalid token</br>
-> **Response:** `401 Unauthorized` - Invalid session
+> **Response:** `200 OK` - Token valid or email verified</br> > **Response:** `400 Bad Request` - Invalid token</br> > **Response:** `401 Unauthorized` - Invalid session
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -476,12 +491,14 @@ class Success200,Already200 success
 class Token422,Token400,Expired403,User404,Verify500,Server500 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/password/forgot` | POST | False | Initiate password recovery |
+
+| URL                     | Method | Auth Required | Description                |
+| ----------------------- | ------ | ------------- | -------------------------- |
+| `/auth/password/forgot` | POST   | False         | Initiate password recovery |
 
 > <details>
 > <summary>Request body</summary>
@@ -491,6 +508,7 @@ class Token422,Token400,Expired403,User404,Verify500,Server500 error
 >   "email": "user@example.com"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -502,11 +520,9 @@ class Token422,Token400,Expired403,User404,Verify500,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Password reset email sent</br>
-> **Response:** `400 Bad Request` - Invalid email</br>
-> **Response:** `404 Not Found` - Email not found
+> **Response:** `200 OK` - Password reset email sent</br> > **Response:** `400 Bad Request` - Invalid email</br> > **Response:** `404 Not Found` - Email not found
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -543,12 +559,14 @@ class Success200 success
 class Input422,User404,Server500 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/password/forgot/:token?` | GET | False | Get password reset session |
+
+| URL                             | Method | Auth Required | Description                |
+| ------------------------------- | ------ | ------------- | -------------------------- |
+| `/auth/password/forgot/:token?` | GET    | False         | Get password reset session |
 
 > <details>
 > <summary>Response body</summary>
@@ -559,11 +577,9 @@ class Input422,User404,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Token valid</br>
-> **Response:** `400 Bad Request` - Invalid token</br>
-> **Response:** `401 Unauthorized` - Token expired
+> **Response:** `200 OK` - Token valid</br> > **Response:** `400 Bad Request` - Invalid token</br> > **Response:** `401 Unauthorized` - Token expired
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -598,12 +614,14 @@ class Success200 success
 class Token422,User404,Expired403 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/password/reset` | PATCH | False | Reset user password |
+
+| URL                    | Method | Auth Required | Description         |
+| ---------------------- | ------ | ------------- | ------------------- |
+| `/auth/password/reset` | PATCH  | False         | Reset user password |
 
 > <details>
 > <summary>Request body</summary>
@@ -612,9 +630,10 @@ class Token422,User404,Expired403 error
 > {
 >   "token": "resetToken123",
 >   "newPassword": "newSecurePassword@123",
->   "confirmPassword" : "newSecurePassword@123"
+>   "confirmPassword": "newSecurePassword@123"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -626,11 +645,9 @@ class Token422,User404,Expired403 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Password reset successful</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Invalid or expired token
+> **Response:** `200 OK` - Password reset successful</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Invalid or expired token
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -671,12 +688,14 @@ class Success200 success
 class Session401,Input422,Password400,Token403 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/auth/password/validate-session` | GET | False | Validate user session cookie |
+
+| URL                               | Method | Auth Required | Description                  |
+| --------------------------------- | ------ | ------------- | ---------------------------- |
+| `/auth/password/validate-session` | GET    | False         | Validate user session cookie |
 
 > <details>
 > <summary>Response body</summary>
@@ -684,7 +703,7 @@ class Session401,Input422,Password400,Token403 error
 > ```json
 > {
 >   "statusCode": 200,
->   "userData" : {
+>   "userData": {
 >     "name": "john",
 >     "email": "johndoe@example.com",
 >     "role": "ADMIN",
@@ -697,11 +716,10 @@ class Session401,Input422,Password400,Token403 error
 >   }
 > }
 > ```
-> **Response:** `200 OK` - successfully Validated</br>
-> **Response:** `401 Unauthorized` - Invalid Credentials
+>
+> **Response:** `200 OK` - successfully Validated</br> > **Response:** `401 Unauthorized` - Invalid Credentials
+>
 > </details>
-
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -727,49 +745,49 @@ class Success200 success
 class Auth401 error
 
 ```
+
 </details>
 </details>
 
 <details>
 <summary>USER</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me` | GET | True | Retrieve authenticated user profile |
+| URL        | Method | Auth Required | Description                         |
+| ---------- | ------ | ------------- | ----------------------------------- |
+| `/user/me` | GET    | True          | Retrieve authenticated user profile |
 
 > <details>
 > <summary>Response body</summary>
 >
 > ```json
 > {
->    "statusCode": 200,
->    "data": {
->        "name": "ahrak nivah",
->        "email": "enyyvish@gmail.com",
->        "role": "CUSTOMER",
->        "is_verified": true,
->        "subscription_id": "6826d68a0fbea0d79998ef43",
->        "userId": "6826d68a0fbea0d79998ef45",
->        "created_at": "2025-05-16T06:09:14.000Z",
->        "is_deleted": false,
->        "updated_at": "2025-05-16T06:09:14.513Z",
->        "subscription": {
->            "_id": "6826d68a0fbea0d79998ef43",
->            "type": "HOBBY",
->            "key_limit": 2,
->            "usage_limit": 500,
->            "usage_count": 0,
->            "is_active": true,
->            "updated_at": "2025-05-16T06:09:14.288Z"
->        },
->        "keys": []
->    }
->}
+>   "statusCode": 200,
+>   "data": {
+>     "name": "ahrak nivah",
+>     "email": "enyyvish@gmail.com",
+>     "role": "CUSTOMER",
+>     "is_verified": true,
+>     "subscription_id": "6826d68a0fbea0d79998ef43",
+>     "userId": "6826d68a0fbea0d79998ef45",
+>     "created_at": "2025-05-16T06:09:14.000Z",
+>     "is_deleted": false,
+>     "updated_at": "2025-05-16T06:09:14.513Z",
+>     "subscription": {
+>       "_id": "6826d68a0fbea0d79998ef43",
+>       "type": "HOBBY",
+>       "key_limit": 2,
+>       "usage_limit": 500,
+>       "usage_count": 0,
+>       "is_active": true,
+>       "updated_at": "2025-05-16T06:09:14.288Z"
+>     },
+>     "keys": []
+>   }
+> }
 > ```
 >
-> **Response:** `200 OK` - User profile retrieved successfully</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `404 Not Found` - User not found
+> **Response:** `200 OK` - User profile retrieved successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `404 Not Found` - User not found
+>
 > </details>
 
 <details>
@@ -814,22 +832,24 @@ class Auth401,User404,FormatError500 error
 class Partial206 warning
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me` | PATCH | True | Update user profile details |
+
+| URL        | Method | Auth Required | Description                 |
+| ---------- | ------ | ------------- | --------------------------- |
+| `/user/me` | PATCH  | True          | Update user profile details |
 
 > <details>
 > <summary>Request body</summary>
 >
 > ```json
->  {
->    "name": "local lamma"
->  }
->
+> {
+>   "name": "local lamma"
+> }
 > ```
+>
 > </details>
 >
 > <details>
@@ -837,13 +857,12 @@ class Partial206 warning
 >
 > ```json
 > {
->   "statusCode" : 200
+>   "statusCode": 200
 > }
 > ```
 >
-> **Response:** `200 OK` - Profile updated successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated
+> **Response:** `200 OK` - Profile updated successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated
+>
 > </details>
 
 <details>
@@ -884,12 +903,14 @@ class Success200 success
 class Auth401,Input422,User404,Server500 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me` | DELETE | True | Permanently delete the user account |
+
+| URL        | Method | Auth Required | Description                         |
+| ---------- | ------ | ------------- | ----------------------------------- |
+| `/user/me` | DELETE | True          | Permanently delete the user account |
 
 > <details>
 > <summary>Response body</summary>
@@ -900,11 +921,9 @@ class Auth401,Input422,User404,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Account deleted successfully</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `404 Not Found` - User not found
+> **Response:** `200 OK` - Account deleted successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `404 Not Found` - User not found
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -944,21 +963,22 @@ class Auth401,User404,Server500 error
 class SoftDelete,UpdateUser,ClearCookies process
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me/api-key` | POST | True | Generate a new API key |
+
+| URL             | Method | Auth Required | Description            |
+| --------------- | ------ | ------------- | ---------------------- |
+| `/user/api-key` | POST   | True          | Generate a new API key |
 
 > <details>
 > <summary>Request body</summary>
 >
 > ```json
-> {
->   "key_description": "sample key"
-> }
+> { "expires_at": 30, "key_description": "sample key" }
 > ```
+>
 > </details>
 >
 > <details>
@@ -966,22 +986,20 @@ class SoftDelete,UpdateUser,ClearCookies process
 >
 > ```json
 > {
->    "statusCode": 200,
->    "data": {
->        "key_description": "sample key",
->        "subscription_id": "6826d68a0fbea0d79998ef43",
->        "_id": "684d52e03469f433197aa44a",
->        "api_key": "10E38C50555040A2A0220B6DB0AFDAE4",
->        "updated_at": "2025-06-14T10:45:52.395Z",
->        "__v": 0
->    }
+>   "statusCode": 200,
+>   "data": {
+>     "key_description": "sample key",
+>     "subscription_id": "6826d68a0fbea0d79998ef43",
+>     "_id": "684d52e03469f433197aa44a",
+>     "api_key": "10E38C50555040A2A0220B6DB0AFDAE4",
+>     "updated_at": "2025-06-14T10:45:52.395Z",
+>     "__v": 0
+>   }
 > }
 > ```
 >
-> **Response:** `200 OK` - API key generated successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Key limit reached
+> **Response:** `200 OK` - API key generated successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Key limit reached
+>
 > </details>
 
 <details>
@@ -989,8 +1007,8 @@ class SoftDelete,UpdateUser,ClearCookies process
 
 ```mermaid
 flowchart TD
-%% API Flow: POST /user/me/api-key
-Start[POST /user/me/api-key<br/>Request Body: key_description] --> Auth{Authorized?}
+%% API Flow: POST /user/api-key
+Start[POST /user/api-key<br/>Request Body: key_description] --> Auth{Authorized?}
 
 Auth -->|No| Auth401[Return 401 Unauthorized]
 Auth -->|Yes| ExtractUserId[Extract userId from token]
@@ -1028,31 +1046,32 @@ class Auth401,Input422,User404,Server500 error
 class Limit403 warning
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me/api-key/:keyId` | DELETE | True | Revoke an API key |
+
+| URL                       | Method | Auth Required | Description       |
+| ------------------------- | ------ | ------------- | ----------------- |
+| `/user/me/api-key/:keyId` | DELETE | True          | Revoke an API key |
 
 > <details>
 > <summary>Response body</summary>
 >
 > ```json
 > {
->   "statusCode":200
+>   "statusCode": 200
 > }
 > ```
 >
-> **Response:** `200 OK` - API key revoked successfully</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `404 Not Found` - API key not found
+> **Response:** `200 OK` - API key revoked successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `404 Not Found` - API key not found
+>
 > </details>
 
 <details>
 <summary>Api Flow diagram</summary>
 
- ```mermaid
+```mermaid
 flowchart TD
 %% API Flow: DELETE /user/me/api-key/:keyId
 Start[DELETE /user/me/api-key/:keyId<br/>Param: keyId] --> Auth{Authorized?}
@@ -1088,12 +1107,14 @@ class Success200 success
 class Auth401,Key404,Server500 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me/password` | PUT | True | Update user password |
+
+| URL                 | Method | Auth Required | Description          |
+| ------------------- | ------ | ------------- | -------------------- |
+| `/user/me/password` | PUT    | True          | Update user password |
 
 > <details>
 > <summary>Request body</summary>
@@ -1104,6 +1125,7 @@ class Auth401,Key404,Server500 error
 >   "newPassword": "newPassword123"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -1115,15 +1137,14 @@ class Auth401,Key404,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Password updated successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated or invalid current password
+> **Response:** `200 OK` - Password updated successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated or invalid current password
+>
 > </details>
 
  <details>
 <summary>Api Flow diagram</summary>
 
- ```mermaid
+```mermaid
 flowchart TD
 %% API Flow: PUT /user/me/password
 Start[PUT /user/me/password<br/>Request Body: currPassword + newPassword] --> Auth{Authorized?}
@@ -1163,12 +1184,14 @@ class Success200 success
 class Auth401,Input422,User404,Password400,Server500 error
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/user/me/request` | POST | True | Raise logo Request |
+
+| URL                | Method | Auth Required | Description        |
+| ------------------ | ------ | ------------- | ------------------ |
+| `/user/me/request` | POST   | True          | Raise logo Request |
 
 > <details>
 > <summary>Request body</summary>
@@ -1179,6 +1202,7 @@ class Auth401,Input422,User404,Password400,Server500 error
 >   "companyUrl": "https://company.com"
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -1190,9 +1214,8 @@ class Auth401,Input422,User404,Password400,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Logo request submitted successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated
+> **Response:** `200 OK` - Logo request submitted successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated
+>
 > </details>
 
 <details>
@@ -1232,15 +1255,65 @@ class Success200 success
 class Auth401,Input400,User403,Server500 error
 
 ```
+
 </details>
+
+---
+
+| URL              | Method | Auth Required | Description        |
+| ---------------- | ------ | ------------- | ------------------ |
+| `/user/download` | GET    | True          | Download User Data |
+
+> <details>
+> <summary>Response body</summary>
+>
+> ```json
+> {
+>   "profile": {
+>     "userId": "69466f57a26c47c633efaa35",
+>     "name": "John Doe I",
+>     "email": "john.doe1@example.com",
+>     "role": "CUSTOMER",
+>     "accountCreatedAt": "2025-12-20T09:41:43.000Z"
+>   },
+>   "generationHistory": {
+>     "totalGenerations": 0,
+>     "generations": []
+>   },
+>   "usageStats": {
+>     "apiCalls": 0,
+>     "apiCallsLimit": 500
+>   },
+>   "security": {
+>     "totalApiKeys": 2,
+>     "apiKeys": [
+>       {
+>         "keyId": "6946731da26c47c633efaa6b",
+>         "description": "hie",
+>         "createdAt": "2025-12-20T09:57:49.000Z"
+>       },
+>       {
+>         "keyId": "6946738da26c47c633efaa73",
+>         "description": "sample description",
+>         "createdAt": "2025-12-20T09:59:41.000Z"
+>       }
+>     ]
+>   }
+> }
+> ```
+>
+> **Response:** `200 OK` - User data retrieved </br> > **Response:** `404 User not found` - User not found in database </br> > **Response:** `401 Unauthorized` - Not authenticated
+>
+> </details>
+
 </details>
 
 <details>
 <summary>ADMIN</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/catalog/stats` | GET | True | Get the user statistics |
+| URL              | Method | Auth Required | Description             |
+| ---------------- | ------ | ------------- | ----------------------- |
+| `/catalog/stats` | GET    | True          | Get the user statistics |
 
 > <details>
 > <summary>Response body</summary>
@@ -1257,10 +1330,10 @@ class Auth401,Input400,User403,Server500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Statistics retrieved successfully</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized
+> **Response:** `200 OK` - Statistics retrieved successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized
+>
 > </details>
+
 <details>
 <summary>Api flow diagram</summary>
 
@@ -1293,36 +1366,40 @@ class Auth401,Forbidden403,FormatError500 error
 class GetUsers,GetKeys,GetRequests,GetHits,BuildStats process
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/catalog/permission/:userId/roles/:role` | PUT | True | Assign or modify user roles |
+
+| URL                                       | Method | Auth Required | Description                 |
+| ----------------------------------------- | ------ | ------------- | --------------------------- |
+| `/catalog/permission/:userId/roles/:role` | PUT    | True          | Assign or modify user roles |
+
  <details>
  <summary>Request body</summary>
 
- ```json
- {
-   "email": "email@user.com"
- }
- ```
+```json
+{
+  "email": "email@user.com"
+}
+```
 
  </details>
  <details>
  <summary>Response body</summary>
 
- ```json
- {
-   "statusCode": 200
- }
- ```
+```json
+{
+  "statusCode": 200
+}
+```
 
- **Response:** `200 OK` - Role updated successfully</br>
- **Response:** `400 Bad Request` - Invalid role</br>
- **Response:** `401 Unauthorized` - Not authenticated</br>
- **Response:** `403 Forbidden` - Not authorized</br>
- **Response:** `404 Not Found` - User not found
+**Response:** `200 OK` - Role updated successfully</br>
+**Response:** `400 Bad Request` - Invalid role</br>
+**Response:** `401 Unauthorized` - Not authenticated</br>
+**Response:** `403 Forbidden` - Not authorized</br>
+**Response:** `404 Not Found` - User not found
+
  </details>
 <details>
 <summary>Api flow diagram </summary>
@@ -1361,12 +1438,14 @@ class Success200 success
 class Auth401,Forbidden403,BadRequest400,NotFound404,UpdateError500 error
 class ExtractUserId,FindUser,UpdateRole process
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/catalog/logo` | POST | True | Upload a new company logo |
+
+| URL             | Method | Auth Required | Description               |
+| --------------- | ------ | ------------- | ------------------------- |
+| `/catalog/logo` | POST   | True          | Upload a new company logo |
 
 > <details>
 > <summary>Request body</summary>
@@ -1376,6 +1455,7 @@ class ExtractUserId,FindUser,UpdateRole process
 >   logo: File - The logo file to upload
 >   companyUri: string - The company URL
 > ```
+>
 > </details>
 >
 > <details>
@@ -1392,11 +1472,10 @@ class ExtractUserId,FindUser,UpdateRole process
 > }
 > ```
 >
-> **Response:** `200 OK` - Logo uploaded successfully </br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized
+> **Response:** `200 OK` - Logo uploaded successfully </br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized
+>
 > </details>
+
 <details>
 <summary>Api flow diagram </summary>
 
@@ -1438,12 +1517,14 @@ class Success200 success
 class Auth401,Forbidden403,BadRequest400,UploadError500,MetadataError500 error
 class ProcessUpload,SaveMetadata,BuildResponse process
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/catalog/logo` | PUT | True | Update an existing logo |
+
+| URL             | Method | Auth Required | Description             |
+| --------------- | ------ | ------------- | ----------------------- |
+| `/catalog/logo` | PUT    | True          | Update an existing logo |
 
 > <details>
 > <summary>Request body</summary>
@@ -1453,6 +1534,7 @@ class ProcessUpload,SaveMetadata,BuildResponse process
 >   logo: File  - The logo file to upload
 >   id: string  - The ID of the logo to update
 > ```
+>
 > </details>
 >
 > <details>
@@ -1469,12 +1551,10 @@ class ProcessUpload,SaveMetadata,BuildResponse process
 > }
 > ```
 >
-> **Response:** `200 OK` - Logo updated successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized</br>
-> **Response:** `404 Not Found` - Logo not found
+> **Response:** `200 OK` - Logo updated successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized</br> > **Response:** `404 Not Found` - Logo not found
+>
 > </details>
+
 <details>
 <summary>Api flow diagram </summary>
 
@@ -1520,12 +1600,14 @@ class Auth401,Forbidden403,BadRequest400,NotFound404,UpdateError500,MetadataErro
 class FindLogo,ProcessUpdate,UpdateMetadata,BuildResponse process
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/catalog/logos` | GET | True | Retrieve a list of all uploaded logos |
+
+| URL              | Method | Auth Required | Description                           |
+| ---------------- | ------ | ------------- | ------------------------------------- |
+| `/catalog/logos` | GET    | True          | Retrieve a list of all uploaded logos |
 
 > <details>
 > <summary>Response body</summary>
@@ -1547,10 +1629,10 @@ class FindLogo,ProcessUpdate,UpdateMetadata,BuildResponse process
 > }
 > ```
 >
-> **Response:** `200 OK` - Logos retrieved successfully</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized
+> **Response:** `200 OK` - Logos retrieved successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized
+>
 > </details>
+
 <details>
 <summary> Api flow diagram</summary>
 
@@ -1583,16 +1665,16 @@ class Success200 success
 class Auth401,Forbidden403,QueryError500,FormatError500 error
 class QueryLogos,FilterDeleted,FormatData,BuildResponse process
 ```
-</details>
-</details>
 
+</details>
+</details>
 
 <details>
 <summary>OPERATOR</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/messages/:messageId` | PUT | True | Respond to a contact form message |
+| URL                    | Method | Auth Required | Description                       |
+| ---------------------- | ------ | ------------- | --------------------------------- |
+| `/messages/:messageId` | PUT    | True          | Respond to a contact form message |
 
 > <details>
 > <summary>Request body</summary>
@@ -1602,6 +1684,7 @@ class QueryLogos,FilterDeleted,FormatData,BuildResponse process
 >   "reply": "This is a detailed response to the customer's inquiry."
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -1620,13 +1703,9 @@ class QueryLogos,FilterDeleted,FormatData,BuildResponse process
 > }
 > ```
 >
-> **Response:** `200 OK` - Message updated successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized</br>
-> **Response:** `404 Not Found` - Message not found
+> **Response:** `200 OK` - Message updated successfully</br> > **Response:** `400 Bad Request` - Invalid input data</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized</br> > **Response:** `404 Not Found` - Message not found
+>
 > </details>
-
 
 <details>
 <summary>Api Flow diagram</summary>
@@ -1661,12 +1740,14 @@ class Auth,InputValid,MessageExists,Authorized,UpdateSuccess decision
 class Success200 success
 class Auth401,Input400,Message404,Auth403,Update500 error
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/messages` | GET | True | Get messages received from contact form |
+
+| URL         | Method | Auth Required | Description                             |
+| ----------- | ------ | ------------- | --------------------------------------- |
+| `/messages` | GET    | True          | Get messages received from contact form |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -1701,10 +1782,8 @@ class Auth401,Input400,Message404,Auth403,Update500 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Messages retrieved successfully</br>
-> **Response:** `400 Bad Request` - Invalid pagination parameters</br>
-> **Response:** `401 Unauthorized` - Not authenticated</br>
-> **Response:** `403 Forbidden` - Not authorized
+> **Response:** `200 OK` - Messages retrieved successfully</br> > **Response:** `400 Bad Request` - Invalid pagination parameters</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized
+>
 > </details>
 
 <details>
@@ -1737,12 +1816,14 @@ class Auth,Authorized,ParamsValid decision
 class Success200 success
 class Auth401,Auth403,Params400 error
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/messages/contact-us` | POST | False | Submit a new contact form message |
+
+| URL                    | Method | Auth Required | Description                       |
+| ---------------------- | ------ | ------------- | --------------------------------- |
+| `/messages/contact-us` | POST   | False         | Submit a new contact form message |
 
 > <details>
 > <summary>Request body</summary>
@@ -1754,6 +1835,7 @@ class Auth401,Auth403,Params400 error
 >   "message": "This is a detailed message from the customer."
 > }
 > ```
+>
 > </details>
 >
 > <details>
@@ -1766,8 +1848,8 @@ class Auth401,Auth403,Params400 error
 > }
 > ```
 >
-> **Response:** `200 OK` - Message submitted successfully</br>
-> **Response:** `400 Bad Request` - Invalid input data
+> **Response:** `200 OK` - Message submitted successfully</br> > **Response:** `400 Bad Request` - Invalid input data
+>
 > </details>
 
 <details>
@@ -1803,9 +1885,9 @@ class Input400,Save500 error
 <details>
 <summary>BUSINESS API</summary>
 
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/logo` | GET | False | Get single image |
+| URL     | Method | Auth Required | Description      |
+| ------- | ------ | ------------- | ---------------- |
+| `/logo` | GET    | False         | Get single image |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -1819,16 +1901,15 @@ class Input400,Save500 error
 >
 > ```json
 > {
->   "statusCode" : 200,
+>   "statusCode": 200,
 >   "data": "https://api.example.com/logos/company-logo.png"
 > }
 > ```
 >
-> **Response:** `200 OK` - Logo retrieved successfully</br>
-> **Response:** `400 Bad Request` - Invalid input parameters</br>
-> **Response:** `401 Unauthorized` - Invalid API key</br>
-> **Response:** `404 Not Found` - Logo not found
+> **Response:** `200 OK` - Logo retrieved successfully</br> > **Response:** `400 Bad Request` - Invalid input parameters</br> > **Response:** `401 Unauthorized` - Invalid API key</br> > **Response:** `404 Not Found` - Logo not found
+>
 > </details>
+
 <details>
 <summary>Api Flow diagram</summary>
 
@@ -1861,12 +1942,14 @@ class Params400,Key401,Logo404 error
 
 
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/logo/search` | GET | False | Get multiple images |
+
+| URL            | Method | Auth Required | Description         |
+| -------------- | ------ | ------------- | ------------------- |
+| `/logo/search` | GET    | False         | Get multiple images |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -1880,20 +1963,20 @@ class Params400,Key401,Logo404 error
 >
 > ```json
 > {
->   "statusCode" : 200,
+>   "statusCode": 200,
 >   "data": [
->       {
->        "companyName" : "companyName",
->        "image" : "https://api.example.com/logos/company-logo.png"
->       }
->    ]
+>     {
+>       "companyName": "companyName",
+>       "image": "https://api.example.com/logos/company-logo.png"
+>     }
+>   ]
 > }
 > ```
 >
-> **Response:** `200 OK` - Logos retrieved successfully</br>
-> **Response:** `400 Bad Request` - Invalid input parameters</br>
-> **Response:** `401 Unauthorized` - Invalid API key
+> **Response:** `200 OK` - Logos retrieved successfully</br> > **Response:** `400 Bad Request` - Invalid input parameters</br> > **Response:** `401 Unauthorized` - Invalid API key
+>
 > </details>
+
 <details>
 <summary>Api Flow diagram</summary>
 
@@ -1925,12 +2008,14 @@ class ParamsValid,APIKeyValid decision
 class Auth401,BadRequest400 error
 class Success200 success
 ```
+
 </details>
 
 ---
-| URL | Method | Auth Required | Description |
-|-----|--------|---------------|-------------|
-| `/logo/demo-search` | GET | False | Demo search endpoint (no auth required) |
+
+| URL                 | Method | Auth Required | Description                             |
+| ------------------- | ------ | ------------- | --------------------------------------- |
+| `/logo/demo-search` | GET    | False         | Demo search endpoint (no auth required) |
 
 > <details>
 > <summary>Query parameters</summary>
@@ -1943,19 +2028,20 @@ class Success200 success
 >
 > ```json
 > {
->   "statusCode" : 200,
+>   "statusCode": 200,
 >   "data": [
->       {
->        "companyName" : "companyName",
->        "image" : "https://api.example.com/logos/company-logo.png"
->       }
->    ]
+>     {
+>       "companyName": "companyName",
+>       "image": "https://api.example.com/logos/company-logo.png"
+>     }
+>   ]
 > }
 > ```
 >
-> **Response:** `200 OK` - Logos retrieved successfully</br>
-> **Response:** `400 Bad Request` - Invalid input parameters
+> **Response:** `200 OK` - Logos retrieved successfully</br> > **Response:** `400 Bad Request` - Invalid input parameters
+>
 > </details>
+
 <details>
 <summary>Api Flow diagram</summary>
 
@@ -1985,7 +2071,7 @@ class Success200 success
 
 
 ```
-</details>
 
+</details>
 
 </details>
