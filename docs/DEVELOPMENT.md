@@ -1,8 +1,11 @@
 ## Index
 
+- [Index](#index)
 - [Prerequisites](#prerequisites)
-- [Clone and run the project locally](#clone-and-run-the-project-locally)
+  - [Clone and run the project locally](#clone-and-run-the-project-locally)
 - [Environment variables](#environment-variables)
+- [Hostname mapping](#hostname-mapping)
+- [Deployment flow](#deployment-flow)
 - [Postman API Collection](#postman-api-collection)
 - [Collections Uses](#collections-uses)
 - [API Endpoints Documentation](#api-endpoints-documentation)
@@ -42,6 +45,7 @@ Most of the environment variables can be used by copying them from the `.env.exa
   - `CLOUD_FRONT_KEYPAIR_ID`
   - `ACCESS_KEY`
   - `SECRET_ACCESS_KEY`
+  - `DISTRIBUTION_ID`
 
     **NOTE**: These values will be comma seperated.
     **NOTE**: Some changes in this file are manually updated in the prod. As the incremental changes trigger delete and replace, however if you are creating resources for the first time using this template then everthing should work fine.
