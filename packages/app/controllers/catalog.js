@@ -232,6 +232,8 @@ async function getCatalogController(req, res, next) {
             companyUri: logo.companyUri,
             extension: logo.extension,
             size: logo.size,
+            bufferBase64: logo.bufferBase64,
+            mimeType: logo.mimeType,
           }));
           return res.status(200).json({
             statusCode: 200,

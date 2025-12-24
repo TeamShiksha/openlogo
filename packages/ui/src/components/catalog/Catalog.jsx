@@ -200,15 +200,13 @@ function Catalog() {
   };
   const handleWebResultUpload = async (img) => {
     try {
-      const pngFile = await processWebImage(img.url, img.companyName);
-
-      console.debug("Image converted to PNG:", {
-        companyUri: img.companyUri,
-        logoUrl: img.url,
-        companyName: img.companyName,
-        fileName: pngFile.name,
-        fileType: pngFile.type,
-      });
+      setUploadLoading(true);
+      const pngFile = await processWebImage(
+        img.url,
+        img.companyName,
+        img.bufferBase64,
+        img.extension || img.mimeType
+      );
       setUpdateImageId(null);
       setUpdatedImageCompanyUri(null);
       setPreSelectedFile(pngFile);
@@ -216,7 +214,9 @@ function Catalog() {
       setIsModalOpen(true);
     } catch (error) {
       console.error("Failed to fetch logo from web search:", error);
-      toast.error("Failed to load logo. Please try again.");
+      toast.error("Failed to convert or load logo. Please try again.");
+    } finally {
+      setUploadLoading(false);
     }
   };
 

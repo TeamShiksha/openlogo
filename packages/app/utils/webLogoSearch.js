@@ -36,6 +36,8 @@ async function grabCompanyLogos(companyName, limit = 5) {
         companyUri: companyDomain,
         extension: imageMeta.extension,
         size: imageMeta.size,
+        bufferBase64: imageMeta.bufferBase64,
+        mimeType: imageMeta.mimeType,
       });
     }
     return {
@@ -168,6 +170,8 @@ async function fetchImageMeta(imageUrl) {
       url: imageUrl,
       extension,
       size: imageBuffer.length,
+      bufferBase64: imageBuffer.toString("base64"),
+      mimeType: response.headers["content-type"],
     };
   } catch {
     return null;
