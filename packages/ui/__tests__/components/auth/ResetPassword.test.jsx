@@ -447,4 +447,172 @@ describe("ResetPassword Component Tests", async () => {
       expect(errorMessages.length).toBeGreaterThan(0);
     });
   });
+
+  it("renders eye icon buttons for password fields", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
+    });
+
+    const newPasswordEyeButton = screen.getByRole("button", {
+      name: /show new password/i,
+    });
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+
+    expect(newPasswordEyeButton).toBeInTheDocument();
+    expect(confirmPasswordEyeButton).toBeInTheDocument();
+  });
+
+  it("toggles new password visibility when clicking the eye icon", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const newPasswordEyeButton = screen.getByRole("button", {
+      name: /show new password/i,
+    });
+
+    expect(newPasswordInput).toHaveAttribute("type", "password");
+    expect(newPasswordEyeButton).toHaveAttribute(
+      "aria-label",
+      "Show new password"
+    );
+
+    fireEvent.click(newPasswordEyeButton);
+    expect(newPasswordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide new password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /hide new password/i }));
+    expect(newPasswordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show new password/i })
+    ).toBeInTheDocument();
+  });
+
+  it("toggles confirm password visibility when clicking the eye icon", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+      expect(confirmPasswordInput).toBeInTheDocument();
+    });
+
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+
+    expect(confirmPasswordInput).toHaveAttribute("type", "password");
+    expect(confirmPasswordEyeButton).toHaveAttribute(
+      "aria-label",
+      "Show confirm password"
+    );
+
+    fireEvent.click(confirmPasswordEyeButton);
+    expect(confirmPasswordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide confirm password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /hide confirm password/i })
+    );
+    expect(confirmPasswordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show confirm password/i })
+    ).toBeInTheDocument();
+  });
+
+  it("documents keyboard focus behavior of eye buttons (tabIndex)", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      const newPasswordEyeButton = screen.getByRole("button", {
+        name: /show new password/i,
+      });
+      expect(newPasswordEyeButton).toBeInTheDocument();
+    });
+
+    const newPasswordEyeButton = screen.getByRole("button", {
+      name: /show new password/i,
+    });
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+
+    expect(newPasswordEyeButton.getAttribute("tabindex")).toBe("-1");
+    expect(confirmPasswordEyeButton.getAttribute("tabindex")).toBe("-1");
+  });
+
+  it("toggles password fields independently", async () => {
+    mockedValidateTokenRequest.mockResolvedValue(true);
+
+    render(
+      <BrowserRouter>
+        <ToastProvider>
+          <ResetPassword />
+        </ToastProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      const newPasswordInput = screen.getByLabelText("New Password");
+      expect(newPasswordInput).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText("New Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const newPasswordEyeButton = screen.getByRole("button", {
+      name: /show new password/i,
+    });
+
+    // Toggle new password to visible
+    fireEvent.click(newPasswordEyeButton);
+    expect(newPasswordInput).toHaveAttribute("type", "text");
+
+    // Confirm password should still be hidden
+    expect(confirmPasswordInput).toHaveAttribute("type", "password");
+  });
 });
