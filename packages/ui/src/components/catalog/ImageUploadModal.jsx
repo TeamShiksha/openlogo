@@ -18,6 +18,8 @@ const ImageUploadModal = ({
   onUpload,
   isUpdate,
   isLoading,
+  initialFile,
+  initialCompanyUri,
 }) => {
   const toast = useToast();
   const [dragActive, setDragActive] = useState(false);
@@ -26,11 +28,25 @@ const ImageUploadModal = ({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      if (initialFile) {
+        const reader = new FileReader();
+        reader.onload = (fileRead) => {
+          setSelectedImage({
+            preview: fileRead.target.result,
+            file: initialFile,
+          });
+        };
+        reader.readAsDataURL(initialFile);
+      }
+      if (initialCompanyUri) {
+        setCompanyUri(initialCompanyUri);
+      }
+    } else {
       setSelectedImage(null);
       setCompanyUri("");
     }
-  }, [isOpen, setSelectedImage, setCompanyUri]);
+  }, [isOpen, initialFile, initialCompanyUri]);
 
   if (!isOpen) return null;
 
@@ -75,14 +91,25 @@ const ImageUploadModal = ({
 
   const handleUpload = (e) => {
     e.preventDefault();
-    if (selectedImage) {
-      onUpload({ file: selectedImage.file, ...(!isUpdate && { companyUri }) });
+    if (!selectedImage) return;
+    if (!isUpdate && !companyUri) {
+      toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
+      return;
     }
+    onUpload({ file: selectedImage.file, ...(!isUpdate && { companyUri }) });
   };
+
   const onCloseModal = () => {
     onClose();
     setSelectedImage(null);
     setCompanyUri("");
+  };
+
+  const handleDropzoneKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      inputRef.current?.click();
+    }
   };
 
   return (
@@ -92,36 +119,7 @@ const ImageUploadModal = ({
       size="custom"
       customWidth="500px"
     >
-      {!selectedImage ? (
-        <div
-          className={`${styles.dropzone} ${dragActive ? styles.dragActive : ""}`}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-        >
-          <div className={styles.dropzoneContent}>
-            <div className={styles.imageIcon}>
-              <img src={SVGS.dragAndDropBg} alt="Upload icon" />
-            </div>
-            <p>{IMAGE_UPLOAD_MODEL.dragAndDropImage}</p>
-            <p>{IMAGE_UPLOAD_MODEL.or}</p>
-            <input
-              ref={inputRef}
-              type="file"
-              accept=".jpg,.jpeg,.png"
-              onChange={handleChange}
-              style={{ display: "none" }}
-            />
-            <Button
-              className={styles.selectButton}
-              onClick={() => inputRef.current.click()}
-            >
-              {BUTTON_TEXT.selectAnImage}
-            </Button>
-          </div>
-        </div>
-      ) : (
+      {selectedImage ? (
         <form className={styles.previewContainer} onSubmit={handleUpload}>
           <img
             src={selectedImage.preview}
@@ -147,6 +145,43 @@ const ImageUploadModal = ({
             {BUTTON_TEXT.upload}
           </Button>
         </form>
+      ) : (
+        <div
+          className={`${styles.dropzone} ${dragActive ? styles.dragActive : ""}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          role="button"
+          tabIndex={0}
+          onKeyDown={handleDropzoneKeyDown}
+          onClick={() => inputRef.current?.click()}
+          aria-label="Image upload dropzone"
+        >
+          <div className={styles.dropzoneContent}>
+            <div className={styles.imageIcon}>
+              <img src={SVGS.dragAndDropBg} alt="Upload icon" />
+            </div>
+            <p>{IMAGE_UPLOAD_MODEL.dragAndDropImage}</p>
+            <p>{IMAGE_UPLOAD_MODEL.or}</p>
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".jpg,.jpeg,.png"
+              onChange={handleChange}
+              style={{ display: "none" }}
+            />
+            <Button
+              className={styles.selectButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                inputRef.current?.click();
+              }}
+            >
+              {BUTTON_TEXT.selectAnImage}
+            </Button>
+          </div>
+        </div>
       )}
     </Modal>
   );
@@ -158,6 +193,8 @@ ImageUploadModal.propTypes = {
   onUpload: PropTypes.func,
   isUpdate: PropTypes.bool,
   isLoading: PropTypes.bool,
+  initialFile: PropTypes.object,
+  initialCompanyUri: PropTypes.string,
 };
 
 export default ImageUploadModal;

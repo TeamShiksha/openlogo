@@ -301,3 +301,41 @@ export const firstLetterCapitalString = (string) => {
   string = string.toLowerCase();
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
+export const processWebImage = async (imgUrl, companyName) => {
+  const name = companyName ? companyName.toLowerCase() : "image";
+  const response = await fetch(imgUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch logo: ${response.status}`);
+  }
+
+  const blob = await response.blob();
+
+  return new Promise((resolve) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img_element = new Image();
+    img_element.crossOrigin = "anonymous";
+
+    img_element.onload = () => {
+      canvas.width = img_element.width;
+      canvas.height = img_element.height;
+      ctx.drawImage(img_element, 0, 0);
+
+      canvas.toBlob((pngBlob) => {
+        const pngFile = new File([pngBlob], `${name}.png`, {
+          type: "image/png",
+        });
+        resolve(pngFile);
+      }, "image/png");
+    };
+
+    img_element.onerror = () => {
+      const pngFile = new File([blob], `${name}.png`, {
+        type: "image/png",
+      });
+      resolve(pngFile);
+    };
+
+    img_element.src = URL.createObjectURL(blob);
+  });
+};
