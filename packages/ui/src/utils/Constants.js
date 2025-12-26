@@ -854,7 +854,7 @@ export const RELEASE_PAGE = {
         releaseNotes: [
           {
             releaseNote:
-              "A new dashboard graph helps you easily understand your API usage, showing both the number of API calls made and the bandwidth used.",
+              "You can now view a simple graph on your dashboard that helps you understand how much you’re using the API, including how many requests you’ve made and how much data you’ve used.",
             contributors: [
               {
                 contributorName: "L-Tarun-Aditya",
@@ -872,7 +872,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "API keys now automatically expire after one year, making it easier to manage access and keep accounts secure over time.",
+              "API keys now expire automatically to keep accounts more secure. Users can set a custom expiry date, and existing API keys will expire after one year by default.",
             contributors: [
               {
                 contributorName: "biplab-sutradhar",
@@ -886,7 +886,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Catalogs are now created automatically, saving time and reducing the need for manual setup.",
+              "Catalogs are now created automatically, so you don’t need to set them up manually anymore.",
             contributors: [
               {
                 contributorName: "BansalAbhinav",
@@ -900,7 +900,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "We’ve added a new Release Page where you can easily see what’s new in each version and who contributed to it.",
+              "A new Release Page is now available, where you can easily see what’s new in each version and who helped build it.",
             contributors: [
               {
                 contributorName: "abhishek-2k23",
@@ -910,7 +910,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "If you miss your verification email, you can now resend it easily and continue setting up your account without any hassle.",
+              "If you don’t receive your verification email, you can now resend it easily and continue without getting stuck.",
             contributors: [
               {
                 contributorName: "MukeshAbhi",
