@@ -841,15 +841,88 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["Current version", "Previous version"],
-  latestVersion: "Current version",
+  versions: ["0.6.0 version", "Previous version"],
+  latestVersion: "0.6.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
       {
-        versionName: "Current version",
+        versionName: "0.6.0 version",
         releaseDate: "Dec 2025",
+        imgSrc: version06,
+        releaseNotes: [
+          {
+            releaseNote:
+              "Users can now see a visual graph on the dashboard showing API usage, including the number of API calls made and the bandwidth consumed.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+              {
+                contributorName: "sachinkmrsin",
+                contributorGithubLink: "https://github.com/sachinkmrsin",
+              },
+              {
+                contributorName: "YashDevani-source",
+                contributorGithubLink: "https://github.com/YashDevani-source",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "API keys can now have an expiry date, making it easier to manage access and improve security.",
+            contributors: [
+              {
+                contributorName: "biplab-sutradhar",
+                contributorGithubLink: "https://github.com/biplab-sutradhar",
+              },
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Catalogs are now created automatically, reducing manual effort and improving overall workflow.",
+            contributors: [
+              {
+                contributorName: "BansalAbhinav",
+                contributorGithubLink: "https://github.com/BansalAbhinav",
+              },
+              {
+                contributorName: "Saurabhupadhyay8170",
+                contributorGithubLink: "https://github.com/Saurabhupadhyay8170",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "A new Release Page has been added to clearly showcase version updates, features, and contributors.",
+            contributors: [
+              {
+                contributorName: "abhishek-2k23",
+                contributorGithubLink: "https://github.com/abhishek-2k23",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Users can now easily resend verification and password reset emails if a link expires, making account recovery smoother and more reliable.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        versionName: "Previous version",
+        releaseDate: "Oct 2024",
         imgSrc: version06,
         releaseNotes: [
           {
@@ -930,13 +1003,6 @@ export const RELEASE_PAGE = {
               },
             ],
           },
-        ],
-      },
-      {
-        versionName: "Previous version",
-        releaseDate: "Oct 2024",
-        imgSrc: version06,
-        releaseNotes: [
           {
             releaseNote:
               "The platform moved from Firebase to MongoDB to better support growth and handle data more efficiently.",

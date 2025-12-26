@@ -52,8 +52,7 @@ function VersionCard(versionData) {
                             >
                               {contributorName}
                             </a>
-                            {idx > 0 ||
-                              (idx !== contributors.length - 1 && ", ")}
+                            {idx !== contributors.length - 1 ? ", " : ""}
                           </span>
                         )
                       )}
