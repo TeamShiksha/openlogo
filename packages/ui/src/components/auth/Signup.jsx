@@ -19,6 +19,7 @@ function SignUp({ toggleForm, onClose }) {
   const [focusedField, setFocusedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
@@ -89,7 +90,7 @@ function SignUp({ toggleForm, onClose }) {
                 <div key={field.name} className={styles["password-wrapper"]}>
                   <CustomInput
                     error={formErrors[field.name]}
-                    type={showPassword ? "password" : "text"}
+                    type={showPassword ? "text" : "password"}
                     name={field.name}
                     label={field.label}
                     value={formValues[field.name]}
@@ -104,7 +105,7 @@ function SignUp({ toggleForm, onClose }) {
                     className={styles["eye-button"]}
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={
-                      showPassword ? "Show password" : "Hide password"
+                      showPassword ? "Hide password" : "Show password"
                     }
                     tabIndex={-1}
                     onKeyDown={(event) => {
@@ -114,7 +115,48 @@ function SignUp({ toggleForm, onClose }) {
                       }
                     }}
                   >
-                    {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+                    {showPassword ? <Eye size={20} /> : <EyeClosed size={20} />}
+                  </button>
+                </div>
+              );
+            }
+            if (field.name === "confirmPassword") {
+              return (
+                <div key={field.name} className={styles["password-wrapper"]}>
+                  <CustomInput
+                    error={formErrors[field.name]}
+                    type={showConfirmPassword ? "text" : "password"}
+                    name={field.name}
+                    label={field.label}
+                    value={formValues[field.name]}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField(field.name)}
+                    onBlur={() => setFocusedField(null)}
+                    disabled={isLoading}
+                    autoComplete={field.autoComplete}
+                  />
+                  <button
+                    type="button"
+                    className={styles["eye-button"]}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
+                    tabIndex={-1}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        setShowConfirmPassword(!showConfirmPassword);
+                      }
+                    }}
+                  >
+                    {showConfirmPassword ? (
+                      <Eye size={20} />
+                    ) : (
+                      <EyeClosed size={20} />
+                    )}
                   </button>
                 </div>
               );

@@ -67,7 +67,7 @@ describe("SignInForm UI and Functionality Tests", () => {
     const passwordInput = screen.getByLabelText("Password");
     expect(passwordInput).toBeInTheDocument();
 
-    const eyeButton = screen.getByRole("button", { name: /hide password/i });
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
     expect(eyeButton).toBeInTheDocument();
   });
 
@@ -84,21 +84,21 @@ describe("SignInForm UI and Functionality Tests", () => {
     );
 
     const passwordInput = screen.getByLabelText("Password");
-    const eyeButton = screen.getByRole("button", { name: /hide password/i });
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
 
-    expect(passwordInput).toHaveAttribute("type", "text");
-    expect(eyeButton).toHaveAttribute("aria-label", "Hide password");
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(eyeButton).toHaveAttribute("aria-label", "Show password");
 
     fireEvent.click(eyeButton);
-    expect(passwordInput).toHaveAttribute("type", "password");
-    expect(
-      screen.getByRole("button", { name: /show password/i })
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
     expect(passwordInput).toHaveAttribute("type", "text");
     expect(
       screen.getByRole("button", { name: /hide password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show password/i })
     ).toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe("SignInForm UI and Functionality Tests", () => {
       </BrowserRouter>
     );
 
-    const eyeButton = screen.getByRole("button", { name: /hide password/i });
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
     expect(eyeButton.getAttribute("tabindex")).toBe("-1");
   });
 
