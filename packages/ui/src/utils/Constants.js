@@ -854,7 +854,7 @@ export const RELEASE_PAGE = {
         releaseNotes: [
           {
             releaseNote:
-              "Users can now see a visual graph on the dashboard showing API usage, including the number of API calls made and the bandwidth consumed.",
+              "A new dashboard graph helps you easily understand your API usage, showing both the number of API calls made and the bandwidth used.",
             contributors: [
               {
                 contributorName: "L-Tarun-Aditya",
@@ -872,7 +872,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "API keys can now have an expiry date, making it easier to manage access and improve security.",
+              "API keys now automatically expire after one year, making it easier to manage access and keep accounts secure over time.",
             contributors: [
               {
                 contributorName: "biplab-sutradhar",
@@ -886,7 +886,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Catalogs are now created automatically, reducing manual effort and improving overall workflow.",
+              "Catalogs are now created automatically, saving time and reducing the need for manual setup.",
             contributors: [
               {
                 contributorName: "BansalAbhinav",
@@ -900,7 +900,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "A new Release Page has been added to clearly showcase version updates, features, and contributors.",
+              "We’ve added a new Release Page where you can easily see what’s new in each version and who contributed to it.",
             contributors: [
               {
                 contributorName: "abhishek-2k23",
@@ -910,7 +910,7 @@ export const RELEASE_PAGE = {
           },
           {
             releaseNote:
-              "Users can now easily resend verification and password reset emails if a link expires, making account recovery smoother and more reliable.",
+              "If you miss your verification email, you can now resend it easily and continue setting up your account without any hassle.",
             contributors: [
               {
                 contributorName: "MukeshAbhi",
