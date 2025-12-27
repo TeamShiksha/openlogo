@@ -222,18 +222,18 @@ async function getCatalogController(req, res, next) {
         });
       }
     }
-    if (imageData.data.length === 0) {
+    if (search && imageData?.data?.length === 0) {
       try {
         const webSearchResult = await grabCompanyLogos(search);
-        if (webSearchResult.logos.length > 0) {
-          const logoOptions = webSearchResult.logos.map((logo) => ({
+        if (webSearchResult?.logos?.length > 0) {
+          const logoOptions = webSearchResult?.logos?.map((logo) => ({
             companyName: logo.companyName,
             url: logo.url,
             companyUri: logo.companyUri,
             extension: logo.extension,
             size: logo.size,
-            bufferBase64: logo.bufferBase64,
-            mimeType: logo.mimeType,
+            bufferBase64: logo.bufferBase64 || "",
+            mimeType: logo.mimeType || "",
           }));
           return res.status(200).json({
             statusCode: 200,
@@ -241,14 +241,19 @@ async function getCatalogController(req, res, next) {
             source: "web-search",
           });
         }
-      } catch (webSearchError) {
-        console.error("Web search failed:", webSearchError.message);
+        return res.status(404).json({
+          message: Messages.LOGO_NOT_FOUND,
+          statusCode: 404,
+          error: STATUS_CODES[404],
+        });
+      } catch (error) {
+        console.error("Failed to fetch logos from external source", error);
+        return res.status(502).json({
+          statusCode: 502,
+          message: "Failed to fetch logos from external source",
+          error: STATUS_CODES[502],
+        });
       }
-      return res.status(404).json({
-        message: Messages.LOGO_NOT_FOUND,
-        statusCode: 404,
-        error: STATUS_CODES[404],
-      });
     }
     return res.status(200).json({
       statusCode: 200,
