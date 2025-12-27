@@ -28,7 +28,13 @@ const baseOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    title: { display: true, text: "Requests" },
+    title: {
+      display: true,
+      text: "Requests",
+      font: {
+        size: 20,
+      },
+    },
   },
   scales: {
     x: {},
@@ -43,15 +49,15 @@ function parseStatsDataForPeriod(data, period) {
   const daysToDisplay = period === "week" ? 7 : 30;
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   const dateRange = [];
   for (let offset = daysToDisplay - 1; offset >= 0; offset--) {
     const date = new Date(today);
+    const dayPadding = 3;
+    date.setDate(date.getDate() + dayPadding);
     date.setDate(date.getDate() - offset);
     dateRange.push(date);
   }
-
   const dateToCount = new Map();
   data.forEach((item) => {
     if (item?.date && item.count !== undefined) {
