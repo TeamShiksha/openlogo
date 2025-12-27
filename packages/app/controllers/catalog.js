@@ -247,9 +247,10 @@ async function getCatalogController(req, res, next) {
           error: STATUS_CODES[404],
         });
       } catch (error) {
+        console.error("Failed to fetch logos from external source", error);
         return res.status(502).json({
           statusCode: 502,
-          message: "Failed to fetch logos from external source" + error,
+          message: "Failed to fetch logos from external source",
           error: STATUS_CODES[502],
         });
       }
