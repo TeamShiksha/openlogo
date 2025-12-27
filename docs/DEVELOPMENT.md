@@ -9,6 +9,9 @@
 - [Postman API Collection](#postman-api-collection)
 - [Collections Uses](#collections-uses)
 - [API Endpoints Documentation](#api-endpoints-documentation)
+    - [Query Parameters](#query-parameters)
+    - [Request Example](#request-example)
+    - [Endpoint Behavior](#endpoint-behavior)
 
 ## Prerequisites
 
@@ -1625,54 +1628,108 @@ class FindLogo,ProcessUpdate,UpdateMetadata,BuildResponse process
 </details>
 
 ---
+| URL | Method | Auth Required | Description |
+|-----|--------|---------------|-------------|
+| `/catalog/logos` | GET | True | Retrieve company logos from the database or fetch from the web if not found |
 
-| URL              | Method | Auth Required | Description                           |
-| ---------------- | ------ | ------------- | ------------------------------------- |
-| `/catalog/logos` | GET    | True          | Retrieve a list of all uploaded logos |
+#### Query Parameters
+
+- `companyName` (string, **required**) — Name of the company whose logo is being requested
+
+#### Request Example
+
+```
+GET /catalog/logos?companyName=company-name
+```
+
+#### Endpoint Behavior
+
+- If the logo **exists in the database**, the API returns the stored catalog record
+- If the logo **does not exist in the database**, the API performs a web search and returns logo results fetched from external sources
+
+The response includes a `source` field to indicate where the data was retrieved from (`db` or `web`)
 
 > <details>
-> <summary>Response body</summary>
+> <summary>Response body — Logo found in database (`source: db`)</summary>
 >
 > ```json
 > {
 >   "statusCode": 200,
+>   "source": "db",
+>   "data": {
+>     "_id": "694a4c763ce421392f7cf6fa",
+>     "user_id": "690cf07126a7cd2c795f9fd4",
+>     "company_name": "Company Name",
+>     "company_uri": "https://company.com/",
+>     "image_size": 1984,
+>     "extension": "png",
+>     "is_deleted": false,
+>     "created_at": "2025-12-23T08:01:58.000Z",
+>     "updated_at": "2025-12-23T08:01:58.931Z"
+>   }
+> }
+> ```
+>
+> </details>
+
+> <details>
+> <summary>Response body — Logo not found, fetched from web (`source: web`)</summary>
+>
+> ```json
+> {
+>   "statusCode": 200,
+>   "source": "web",
 >   "data": [
 >     {
->       "_id": "image_id",
->       "user_id": "user_id",
->       "company_name": "COMPANY.png",
->       "company_uri": "https://company.com",
->       "image_size": 1024,
->       "is_deleted": false,
->       "updated_at": "timestamp"
+>       "companyName": "Company Name",
+>       "url": "https://example.com/assets/logo-horizontal.svg",
+>       "companyUri": "https://company.com/",
+>       "extension": "svg",
+>       "size": 11428,
+>       "bufferBase64": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4uLi48L3N2Zz4=",
+>       "mimeType": "image/svg+xml"
+>     },
+>     {
+>       "companyName": "Company Name",
+>       "url": "https://example.com/assets/logo-icon.svg",
+>       "companyUri": "https://company.com/",
+>       "extension": "svg",
+>       "size": 711,
+>       "bufferBase64": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+Li4uPC9zdmc+",
+>       "mimeType": "image/svg+xml"
 >     }
 >   ]
 > }
 > ```
 >
-> **Response:** `200 OK` - Logos retrieved successfully</br> > **Response:** `401 Unauthorized` - Not authenticated</br> > **Response:** `403 Forbidden` - Not authorized
->
 > </details>
 
+> <details>
+> <summary>Error Responses</summary>
+>
+> **Response:** `400 Bad Request` - Missing or invalid query parameters</br>
+> **Response:** `401 Unauthorized` - Authentication required or invalid credentials</br>
+> **Response:** `403 Forbidden` - Insufficient permissions
+> </details>
 <details>
 <summary> Api flow diagram</summary>
 
 ```mermaid
 flowchart TD
 %% API Flow: GET /catalog/logos
-Start[GET /catalog/logos] --> Auth{Authorized?}
+Start[GET /catalog/logos?companyName=X] --> Auth{Authorized?}
 Auth -->|No| Auth401[Return 401 Unauthorized]
-Auth -->|Yes| CheckPerms{Has Read Permission?}
-CheckPerms -->|No| Forbidden403[Return 403 Forbidden]
-CheckPerms -->|Yes| QueryLogos[Query All Logos from Database]
-QueryLogos --> QuerySuccess{Query Successful?}
-QuerySuccess -->|No| QueryError500[Return 500 Internal Server Error]
-QuerySuccess -->|Yes| FilterDeleted[Filter Out Deleted Logos]
-FilterDeleted --> FormatData[Format Logo Data Array]
-FormatData --> FormatSuccess{Format Successful?}
-FormatSuccess -->|No| FormatError500[Return 500 Internal Server Error]
-FormatSuccess -->|Yes| BuildResponse[Build Response with Logo List]
-BuildResponse --> Success200[Return 200 OK with Logos Data]
+Auth -->|Yes| ValidateParams{companyName provided?}
+ValidateParams -->|No| BadRequest400[Return 400 Bad Request]
+ValidateParams -->|Yes| QueryDB[Search Database for Company Logo]
+QueryDB --> DBFound{Logo Found in DB?}
+DBFound -->|Yes| FormatDB[Format DB Response with source: db]
+FormatDB --> Success200DB[Return 200 OK with DB Data]
+DBFound -->|No| WebSearch[Perform Web Search for Logo]
+WebSearch --> WebSuccess{Web Search Successful?}
+WebSuccess -->|No| WebError500[Return 500 Internal Server Error]
+WebSuccess -->|Yes| FormatWeb[Format Web Response with source: web]
+FormatWeb --> Success200Web[Return 200 OK with Web Results]
 
 classDef startEnd fill:#81C8FF,stroke:#4682B4,stroke-width:2px,color:#000;
 classDef decision fill:#FFD54F,stroke:#FFB300,stroke-width:2px,color:#000;
@@ -1680,15 +1737,15 @@ classDef success fill:#A5D6A7,stroke:#388E3C,stroke-width:2px,color:#000;
 classDef error fill:#EF9A9A,stroke:#D32F2F,stroke-width:2px,color:#000;
 classDef process fill:#E1BEE7,stroke:#7B1FA2,stroke-width:2px,color:#000;
 
-class Start,Success200 startEnd
-class Auth,CheckPerms,QuerySuccess,FormatSuccess decision
-class Success200 success
-class Auth401,Forbidden403,QueryError500,FormatError500 error
-class QueryLogos,FilterDeleted,FormatData,BuildResponse process
+class Start,Success200DB,Success200Web startEnd
+class Auth,ValidateParams,DBFound,WebSuccess decision
+class Success200DB,Success200Web success
+class Auth401,BadRequest400,WebError500 error
+class QueryDB,FormatDB,WebSearch,FormatWeb process
 ```
+</details>
+</details>
 
-</details>
-</details>
 
 <details>
 <summary>OPERATOR</summary>
