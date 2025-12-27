@@ -81,7 +81,7 @@ const Operator = () => {
       return;
     }
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setDebouncedSearchTerm(searchTerm.trim());
     }, 500);
 
     return () => {

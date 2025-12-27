@@ -15,6 +15,7 @@ import { processWebImage } from "../../utils/Helpers";
 
 function Catalog() {
   const toast = useToast();
+  const prevDataStringRef = useRef("");
   const [pageNum, setPageNum] = useState(0);
   const [showWebCatalog, setShowWebCatalog] = useState(false);
   const [showWebResults, setShowWebResults] = useState(false);
@@ -30,12 +31,13 @@ function Catalog() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
+      setDebouncedSearchTerm(searchTerm.trim());
+    }, 700);
     return () => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
+
   const pageBeforeSearchRef = useRef(0);
   const limit = 10;
   const skip = pageNum * limit;
@@ -55,14 +57,23 @@ function Catalog() {
     method: "POST",
     url: `/catalog/signed-url`,
   });
+
   useEffect(() => {
     if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
       makeRequest();
     }
   }, [pageNum, debouncedSearchTerm]);
+
   useEffect(() => {
+    const currentDataString = JSON.stringify(data);
     if (data?.source === "web-search") {
-      setShowWebCatalog(true);
+      if (currentDataString !== prevDataStringRef.current) {
+        setShowWebCatalog(true);
+        setShowWebResults(false);
+        prevDataStringRef.current = currentDataString;
+      }
+    } else {
+      setShowWebCatalog(false);
       setShowWebResults(false);
     }
   }, [data]);
