@@ -550,9 +550,9 @@ const Operator = () => {
             </div>
 
             <div className={styles["operator-catalog-list"]}>
-              {searchData.data.map((img) => (
+              {searchData.data.map((img, index) => (
                 <div
-                  key={img.companyUri || img.url}
+                  key={img.companyUri || img.url || index}
                   className={styles["operator-catalog-row"]}
                 >
                   <div className={styles["operator-catalog-left"]}>
