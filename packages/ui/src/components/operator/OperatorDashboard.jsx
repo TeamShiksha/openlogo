@@ -4,7 +4,7 @@ import Modal from "../common/modal/Modal";
 import OperatorCard from "../operatorcard/OperatorCard";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
 import { instance } from "../../api/api_instance";
-import { validate } from "../../utils/Helpers";
+import { validate, processWebImage } from "../../utils/Helpers";
 import Button from "../common/button/Button";
 import { useToast } from "../../hooks/useToast";
 import { BUTTON_TEXT, MESSAGES, MODAL_MESSAGES } from "../../utils/Constants";
@@ -81,7 +81,7 @@ const Operator = () => {
       return;
     }
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setDebouncedSearchTerm(searchTerm.trim());
     }, 500);
 
     return () => {
@@ -182,7 +182,6 @@ const Operator = () => {
     }
   };
 
-  // Effect to fetch initial data based on tab/type
   useEffect(() => {
     if (searchType === "messages") {
       fetchMessages(currentPage);
@@ -292,63 +291,25 @@ const Operator = () => {
 
   const handleWebResultUpload = async (img) => {
     try {
-      const name = img.companyName ? img.companyName.toLowerCase() : "image";
-      const logoUrl = img.url;
-
-      const response = await fetch(logoUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch logo: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img_element = new Image();
-      img_element.crossOrigin = "anonymous";
-
-      img_element.onload = () => {
-        canvas.width = img_element.width;
-        canvas.height = img_element.height;
-        ctx.drawImage(img_element, 0, 0);
-
-        canvas.toBlob((pngBlob) => {
-          const pngFile = new File([pngBlob], `${name}.png`, {
-            type: "image/png",
-          });
-
-          console.debug("Image converted to PNG:", {
-            companyUri: img.companyUri,
-            logoUrl: logoUrl,
-            companyName: img.companyName,
-            fileName: pngFile.name,
-            fileType: pngFile.type,
-          });
-          setUpdateImageId(null);
-          setUpdatedImageCompanyUri(null);
-          setPreSelectedFile(pngFile);
-          setPreFilledUri(img.companyUri || "");
-          setIsUploadModalOpen(true);
-        }, "image/png");
-      };
-
-      img_element.onerror = () => {
-        const pngFile = new File([blob], `${name}.png`, {
-          type: "image/png",
-        });
-
-        setUpdateImageId(null);
-        setUpdatedImageCompanyUri(null);
-        setPreSelectedFile(pngFile);
-        setPreFilledUri(img.companyUri || "");
-        setIsUploadModalOpen(true);
-      };
-      img_element.src = URL.createObjectURL(blob);
+      setLoading(true);
+      const pngFile = await processWebImage(
+        img.url,
+        img.companyName,
+        img.bufferBase64,
+        img.extension || img.mimeType
+      );
+      setUpdateImageId(null);
+      setUpdatedImageCompanyUri(null);
+      setPreSelectedFile(pngFile);
+      setPreFilledUri(img.companyUri || "");
+      setIsUploadModalOpen(true);
     } catch (error) {
       console.error("Failed to fetch logo from web search:", error);
       toast.error("Failed to load logo. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-
   const handleImageUpload = async ({ file, companyUri }) => {
     if (!file || !companyUri) {
       toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
@@ -590,12 +551,14 @@ const Operator = () => {
 
             <div className={styles["operator-catalog-list"]}>
               {searchData.data.map((img, index) => (
-                <div key={index} className={styles["operator-catalog-row"]}>
+                <div
+                  key={img.companyUri || img.url || index}
+                  className={styles["operator-catalog-row"]}
+                >
                   <div className={styles["operator-catalog-left"]}>
                     <div className={styles["catalog-item-img"]}>
                       <img src={img.url} alt={img.companyName || "image"} />
                     </div>
-                    {/* Only show company name, no extension here */}
                     <div className={styles["operator-catalog-name"]}>
                       {(img.companyName || "unknown").toLowerCase()}
                     </div>

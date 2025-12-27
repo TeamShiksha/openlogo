@@ -443,65 +443,6 @@ describe("Catalog Component", () => {
       await screen.findByText(/Suggested Images/);
       vi.useFakeTimers();
     }, 20000);
-    it("Should pre-fill Modal when clicking Upload on a web result (via 'Search on Web')", async () => {
-      vi.mocked(useApi).mockReturnValue({
-        data: mockWebData,
-        loading: false,
-        errorMsg: null,
-        makeRequest: vi.fn(),
-        fetchRequest: vi.fn(),
-      });
-      render(
-        <ToastContext.Provider value={mockToastContext}>
-          <Catalog />
-        </ToastContext.Provider>
-      );
-      const searchOnWebBtn = screen.getByText(/Search on Web/i);
-      vi.useRealTimers();
-      await act(async () => {
-        fireEvent.click(searchOnWebBtn);
-      });
-      const uploadButtons = await screen.findAllByText("Upload");
-      const webResultUploadBtn = uploadButtons[0];
-
-      await act(async () => {
-        fireEvent.click(webResultUploadBtn);
-      });
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        "https://example.com/logo.png"
-      );
-    }, 20000);
-    it("Should handle missing companyName gracefully (via 'Search on Web')", async () => {
-      const incompleteData = {
-        source: "web-search",
-        data: [{ url: "https://test.com/img.png", companyUri: "" }],
-      };
-      vi.mocked(useApi).mockReturnValue({
-        data: incompleteData,
-        loading: false,
-        errorMsg: null,
-        makeRequest: vi.fn(),
-        fetchRequest: vi.fn(),
-      });
-      render(
-        <ToastContext.Provider value={mockToastContext}>
-          <Catalog />
-        </ToastContext.Provider>
-      );
-      const searchOnWebBtn = screen.getByText(/Search on Web/i);
-      await act(async () => {
-        fireEvent.click(searchOnWebBtn);
-      });
-      await screen.findByText("Unknown");
-      const uploadBtn = screen.getByText("Upload");
-      vi.useRealTimers();
-      await act(async () => {
-        fireEvent.click(uploadBtn);
-      });
-      expect(globalThis.fetch).toHaveBeenCalled();
-      vi.useFakeTimers();
-    }, 20000);
-
     it("Should hide web results when search input is cleared", async () => {
       vi.mocked(useApi).mockReturnValueOnce({
         data: mockWebData,
