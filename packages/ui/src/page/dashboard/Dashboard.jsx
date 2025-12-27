@@ -48,9 +48,10 @@ function Dashboard() {
   });
 
   const apiKeyTableData = useMemo(() => {
-    return apiKeys.map(({ key_description, updated_at }) => [
+    return apiKeys.map(({ key_description, updated_at, expires_at }) => [
       key_description,
       formatDate(updated_at),
+      formatDate(expires_at),
     ]);
   }, [apiKeys]);
 

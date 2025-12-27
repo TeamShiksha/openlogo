@@ -18,9 +18,11 @@ class KeysRepository extends BaseRepository {
    * @returns {Array<Object>} - Keys Object Array.
    */
   async getMultipleKeys(keyIds) {
-    return await this.model.find({
-      _id: { $in: keyIds },
-    });
+    return await this.model
+      .find({
+        _id: { $in: keyIds },
+      })
+      .select("key_description subscription_id updated_at expires_at _id");
   }
 
   /**
