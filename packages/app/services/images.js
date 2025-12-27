@@ -1,6 +1,7 @@
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { ImagesRepository } = require("../repositories");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { grabCompanyLogos } = require("../utils/webLogoSearch");
 
 class ImageServices {
   constructor() {
@@ -31,7 +32,13 @@ class ImageServices {
     let domainName = companyName;
     if (checkDb) {
       const image = await this.imageRepository.fetchImage(domainName);
-      if (!image) return null;
+      if (!image) {
+        const scrapedResults = await grabCompanyLogos(companyName, 1);
+        if (scrapedResults.success && scrapedResults.logos.length > 0) {
+          return scrapedResults.logos[0].url;
+        }
+        return null;
+      }
       domainName = image.company_name;
     }
 
