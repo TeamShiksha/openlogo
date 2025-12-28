@@ -841,15 +841,88 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["Current version", "Previous version"],
-  latestVersion: "Current version",
+  versions: ["0.6.0 version", "Previous version"],
+  latestVersion: "0.6.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
       {
-        versionName: "Current version",
+        versionName: "0.6.0 version",
         releaseDate: "Dec 2025",
+        imgSrc: version06,
+        releaseNotes: [
+          {
+            releaseNote:
+              "You can now view a simple graph on your dashboard that helps you understand how much you’re using the API, including how many requests you’ve made and how much data you’ve used.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+              {
+                contributorName: "sachinkmrsin",
+                contributorGithubLink: "https://github.com/sachinkmrsin",
+              },
+              {
+                contributorName: "YashDevani-source",
+                contributorGithubLink: "https://github.com/YashDevani-source",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "API keys now expire automatically to keep accounts more secure. Users can set a custom expiry date, and existing API keys will expire after one year by default.",
+            contributors: [
+              {
+                contributorName: "biplab-sutradhar",
+                contributorGithubLink: "https://github.com/biplab-sutradhar",
+              },
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Catalogs are now created automatically, so you don’t need to set them up manually anymore.",
+            contributors: [
+              {
+                contributorName: "BansalAbhinav",
+                contributorGithubLink: "https://github.com/BansalAbhinav",
+              },
+              {
+                contributorName: "Saurabhupadhyay8170",
+                contributorGithubLink: "https://github.com/Saurabhupadhyay8170",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "A new Release Page is now available, where you can easily see what’s new in each version and who helped build it.",
+            contributors: [
+              {
+                contributorName: "abhishek-2k23",
+                contributorGithubLink: "https://github.com/abhishek-2k23",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "If you don’t receive your verification email, you can now resend it easily and continue without getting stuck.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        versionName: "Previous version",
+        releaseDate: "Oct 2024",
         imgSrc: version06,
         releaseNotes: [
           {
@@ -930,13 +1003,6 @@ export const RELEASE_PAGE = {
               },
             ],
           },
-        ],
-      },
-      {
-        versionName: "Previous version",
-        releaseDate: "Oct 2024",
-        imgSrc: version06,
-        releaseNotes: [
           {
             releaseNote:
               "The platform moved from Firebase to MongoDB to better support growth and handle data more efficiently.",
