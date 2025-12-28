@@ -38,6 +38,18 @@ class UsersRepository extends BaseRepository {
   async getGuestUser() {
     return await this.model.findOne({ role: "GUEST" });
   }
+
+  /**
+   * This return userId by subscriptionId
+   * @param {string} subscriptionId - The subscription ID to search for.
+   * @returns {Promise<Object|null>} - Returns the user document with only _id field if found, otherwise null.
+   */
+  async findUserBySubscriptionId(subscriptionId) {
+    return await this.model
+      .findOne({ subscription_id: subscriptionId })
+      .select("_id")
+      .lean();
+  }
 }
 
 module.exports = UsersRepository;

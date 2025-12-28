@@ -5,6 +5,8 @@ const SubscriptionService = require("./subscriptions");
 const UserTokenService = require("./usertoken");
 const UserService = require("./users");
 const RequestService = require("./request");
+const SendEmailService = require("./sendemail");
+const LogoRequestLogsService = require("./logoRequestlogs");
 
 module.exports = {
   ContactUsService,
@@ -14,4 +16,6 @@ module.exports = {
   UserTokenService,
   UserService,
   RequestService,
+  SendEmailService,
+  LogoRequestLogsService,
 };

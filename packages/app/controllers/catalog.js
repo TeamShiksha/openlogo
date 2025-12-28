@@ -15,6 +15,7 @@ const {
   UserType,
 } = require("../utils/constants");
 const { default: mongoose } = require("mongoose");
+const { grabCompanyLogos } = require("../utils/webLogoSearch.js");
 
 async function getAnalyticsController(req, res, next) {
   try {
@@ -208,15 +209,56 @@ async function getCatalogController(req, res, next) {
 
     const search = req.query.search || "";
     const imageData = await imageService.getImages(skip, limit, search);
-    if (!imageData)
-      return res.status(200).json({
-        statusCode: 200,
-        data: [],
-      });
 
+    if (user.role === UserType.OPERATOR) {
+      if (imageData.data.length > 0) {
+        return res.status(200).json({
+          statusCode: 200,
+          data: {
+            imagesExist: true,
+            images: [],
+          },
+          source: "db-search",
+        });
+      }
+    }
+    if (search && imageData?.data?.length === 0) {
+      try {
+        const webSearchResult = await grabCompanyLogos(search);
+        if (webSearchResult?.logos?.length > 0) {
+          const logoOptions = webSearchResult?.logos?.map((logo) => ({
+            companyName: logo.companyName,
+            url: logo.url,
+            companyUri: logo.companyUri,
+            extension: logo.extension,
+            size: logo.size,
+            bufferBase64: logo.bufferBase64 || "",
+            mimeType: logo.mimeType || "",
+          }));
+          return res.status(200).json({
+            statusCode: 200,
+            data: logoOptions,
+            source: "web-search",
+          });
+        }
+        return res.status(404).json({
+          message: Messages.LOGO_NOT_FOUND,
+          statusCode: 404,
+          error: STATUS_CODES[404],
+        });
+      } catch (error) {
+        console.error("Failed to fetch logos from external source", error);
+        return res.status(502).json({
+          statusCode: 502,
+          message: "Failed to fetch logos from external source",
+          error: STATUS_CODES[502],
+        });
+      }
+    }
     return res.status(200).json({
       statusCode: 200,
       data: imageData,
+      source: "db-search",
     });
   } catch (err) {
     next(err);

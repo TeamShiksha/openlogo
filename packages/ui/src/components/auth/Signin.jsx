@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
@@ -21,6 +22,8 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -69,25 +72,76 @@ const SignIn = ({ toggleForm, onClose }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  useEffect(() => {
+    const stored = localStorage.getItem("fp_nextAllowedAt");
+    if (!stored) return;
+    const timestamp = new Date(stored).getTime();
+    if (Number.isNaN(timestamp)) {
+      localStorage.removeItem("fp_nextAllowedAt");
+      return;
+    }
+    const diff = Math.floor((timestamp - Date.now()) / 1000);
+    if (diff <= 0) {
+      localStorage.removeItem("fp_nextAllowedAt");
+      return;
+    }
+    setTimer(diff);
+  }, []);
+
+  useEffect(() => {
+    if (timer <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          localStorage.removeItem("fp_nextAllowedAt");
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setIsLoading(true);
-    const { data, success } = await fetchRequest();
-    if (success) {
-      if (isForgotPassword) {
-        toast.success("Password reset link sent to your email");
-        setIsForgotPassword(false);
-      } else if (data.source && data.statusCode == 201) {
-        toast.success("Verification email sent. Please verify your account.");
-      } else {
-        setFormData(SIGNIN.initialValues);
-        setIsAuthenticated(true);
-        onClose();
-        navigate("/dashboard");
-        toast.success(MESSAGES.SIGN_IN_SUCCESS);
-      }
+    if (isForgotPassword) {
+      const { data, success } = await fetchRequest({
+        data: { email: formData.email },
+      });
 
-      setFocusedField(null);
+      const nextAllowed = data?.nextAllowedAt;
+      if (nextAllowed) {
+        const nextAllowedDate = new Date(nextAllowed);
+        if (!isNaN(nextAllowedDate.getTime())) {
+          localStorage.setItem("fp_nextAllowedAt", nextAllowed);
+          const diff = Math.floor((nextAllowedDate - new Date()) / 1000);
+          setTimer(diff > 0 ? diff : 0);
+        }
+        if (success) {
+          toast.success(MESSAGES.REST_EMAIL_SENT);
+        }
+      }
+    } else {
+      const { data, success } = await fetchRequest({
+        data: formData,
+      });
+
+      if (success) {
+        if (data.source && data.statusCode === 201) {
+          toast.success(MESSAGES.VERIFICATION_EMAIL_SENT);
+        } else {
+          setFormData(SIGNIN.initialValues);
+          setIsAuthenticated(true);
+          onClose();
+          navigate("/dashboard");
+          toast.success(MESSAGES.SIGN_IN_SUCCESS);
+        }
+        setFocusedField(null);
+      }
     }
     setIsLoading(false);
   };
@@ -122,21 +176,62 @@ const SignIn = ({ toggleForm, onClose }) => {
         <div className={styles["form-width"]}>
           {SIGNIN["fields"]
             .filter((field) => !(isForgotPassword && field.name === "password"))
-            .map((field) => (
-              <CustomInput
-                error={formErrors[field.name]}
-                key={field.name}
-                type={field.type}
-                name={field.name}
-                label={field.label}
-                value={formData[field.name]}
-                onChange={handleChange}
-                onFocus={() => setFocusedField(field.name)}
-                onBlur={() => setFocusedField(null)}
-                disabled={isLoading}
-                autoComplete={field.autoComplete}
-              />
-            ))}
+            .map((field) => {
+              if (field.name === "password" && !isForgotPassword) {
+                return (
+                  <div key={field.name} className={styles["password-wrapper"]}>
+                    <CustomInput
+                      error={formErrors[field.name]}
+                      type={showPassword ? "text" : "password"}
+                      name={field.name}
+                      label={field.label}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField(field.name)}
+                      onBlur={() => setFocusedField(null)}
+                      disabled={isLoading}
+                      autoComplete={field.autoComplete}
+                    />
+                    <button
+                      type="button"
+                      className={styles["eye-button"]}
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      tabIndex={-1}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setShowPassword(!showPassword);
+                        }
+                      }}
+                    >
+                      {showPassword ? (
+                        <Eye size={20} />
+                      ) : (
+                        <EyeClosed size={20} />
+                      )}
+                    </button>
+                  </div>
+                );
+              }
+              return (
+                <CustomInput
+                  error={formErrors[field.name]}
+                  key={field.name}
+                  type={field.type}
+                  name={field.name}
+                  label={field.label}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField(field.name)}
+                  onBlur={() => setFocusedField(null)}
+                  disabled={isLoading}
+                  autoComplete={field.autoComplete}
+                />
+              );
+            })}
         </div>
 
         {isForgotPassword && (
@@ -161,10 +256,20 @@ const SignIn = ({ toggleForm, onClose }) => {
           type="submit"
           variant="primary"
           isLoading={isLoading}
-          disabled={!isFormValid || isSubmit || isLoading}
+          disabled={
+            !isFormValid ||
+            isSubmit ||
+            isLoading ||
+            (isForgotPassword && timer > 0)
+          }
         >
           {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
         </Button>
+        {isForgotPassword && timer > 0 && (
+          <p className={styles["timer"]}>
+            Please wait {timer} seconds before retrying.
+          </p>
+        )}
       </form>
 
       <hr className={styles.separator} />

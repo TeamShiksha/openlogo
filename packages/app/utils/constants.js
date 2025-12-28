@@ -10,6 +10,11 @@ const UserTokenTypes = {
   VERIFY: "VERIFY",
 };
 
+const TokenExpiry = {
+  [UserTokenTypes.VERIFY]: { unit: "day", value: 1 },
+  [UserTokenTypes.FORGOT]: { unit: "minute", value: 10 },
+};
+
 const UserType = {
   ADMIN: "ADMIN",
   CUSTOMER: "CUSTOMER",
@@ -95,6 +100,10 @@ const Messages = {
   FAILED_UPDATE_TOKEN: "Failed to update token.",
   RESEND_EMAIL: "Resent a new Verification Email.",
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
+  TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
+  SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
+  API_KEY_EXPIRED: "Your Key has been expired",
+  UPDATE_API_KEY: "Your API Key needs an update",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
@@ -108,6 +117,7 @@ module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
   UserTokenTypes,
+  TokenExpiry,
   UserType,
   SubscriptionTypes,
   StatusTypes,

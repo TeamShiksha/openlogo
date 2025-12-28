@@ -301,3 +301,63 @@ export const firstLetterCapitalString = (string) => {
   string = string.toLowerCase();
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
+export const processWebImage = async (
+  url,
+  companyName,
+  bufferBase64,
+  extension
+) => {
+  const name = companyName ? companyName.toLowerCase() : "image";
+  return new Promise((resolve, reject) => {
+    let mimeType = "image/png";
+    if (extension === "svg" || extension === "image/svg+xml") {
+      mimeType = "image/svg+xml";
+    } else if (extension === "jpg" || extension === "jpeg") {
+      mimeType = "image/jpeg";
+    }
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img_element = new Image();
+    img_element.crossOrigin = "Anonymous";
+    img_element.onload = () => {
+      let renderWidth = img_element.naturalWidth || img_element.width;
+      let renderHeight = img_element.naturalHeight || img_element.height;
+      if (!renderWidth || !renderHeight) {
+        try {
+          const svgStr = atob(bufferBase64);
+          const viewBoxMatch = svgStr.match(
+            /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
+          );
+          if (viewBoxMatch) {
+            renderWidth = Number.parseInt(viewBoxMatch[1], 10);
+            renderHeight = Number.parseInt(viewBoxMatch[2], 10);
+          } else {
+            renderWidth = 500;
+            renderHeight = 500;
+          }
+        } catch (e) {
+          console.error("SVG parsing failed", e);
+        }
+      }
+      canvas.width = renderWidth;
+      canvas.height = renderHeight;
+      ctx.clearRect(0, 0, renderWidth, renderHeight);
+      ctx.drawImage(img_element, 0, 0, renderWidth, renderHeight);
+
+      canvas.toBlob((pngBlob) => {
+        if (!pngBlob) return reject(new Error("PNG conversion failed"));
+
+        const pngFile = new File([pngBlob], `${name}.png`, {
+          type: "image/png",
+        });
+        resolve(pngFile);
+      }, "image/png");
+    };
+
+    img_element.onerror = (e) => {
+      console.error("Image load error:", e);
+      reject(new Error("Image load failed"));
+    };
+    img_element.src = `data:${mimeType};base64,${bufferBase64}`;
+  });
+};

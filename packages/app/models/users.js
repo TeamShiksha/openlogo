@@ -34,14 +34,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
-  last_verification_email_sent_at: {
-    type: Date,
-    default: Date.now,
-  },
-  resend_email_count: {
-    type: Number,
-    default: 0,
-  },
   subscription_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "subscriptions",
@@ -62,6 +54,14 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true,
     default: Date.now,
+  },
+  forgot_password_attempts: {
+    type: Number,
+    default: 0,
+  },
+  forgot_password_last_reset_at: {
+    type: Date,
+    default: null,
   },
 });
 

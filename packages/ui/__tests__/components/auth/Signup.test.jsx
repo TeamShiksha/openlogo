@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
 import {
@@ -121,6 +127,149 @@ describe("SignUpForm UI and Functionality Tests", () => {
     });
   });
 
+  it("renders an eye icon button for the password field", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    expect(passwordInput).toBeInTheDocument();
+
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    expect(eyeButton).toBeInTheDocument();
+  });
+
+  it("toggles password visibility when clicking the eye icon", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(eyeButton).toHaveAttribute("aria-label", "Show password");
+
+    fireEvent.click(eyeButton);
+    expect(passwordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show password/i })
+    ).toBeInTheDocument();
+  });
+
+  it("documents current keyboard focus behavior of the eye button (tabIndex)", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    expect(eyeButton.getAttribute("tabindex")).toBe("-1");
+  });
+
+  it("renders an eye icon button for the confirm password field", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    expect(confirmPasswordInput).toBeInTheDocument();
+
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+    expect(confirmPasswordEyeButton).toBeInTheDocument();
+  });
+
+  it("toggles confirm password visibility when clicking the eye icon", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+
+    expect(confirmPasswordInput).toHaveAttribute("type", "password");
+    expect(confirmPasswordEyeButton).toHaveAttribute(
+      "aria-label",
+      "Show confirm password"
+    );
+
+    fireEvent.click(confirmPasswordEyeButton);
+    expect(confirmPasswordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide confirm password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /hide confirm password/i })
+    );
+    expect(confirmPasswordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show confirm password/i })
+    ).toBeInTheDocument();
+  });
+
+  it("documents current keyboard focus behavior of the confirm password eye button (tabIndex)", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const confirmPasswordEyeButton = screen.getByRole("button", {
+      name: /show confirm password/i,
+    });
+    expect(confirmPasswordEyeButton.getAttribute("tabindex")).toBe("-1");
+  });
+
   it("does not reset form after failed submission", async () => {
     mockedMakeRequest.mockResolvedValue(false);
     const authContext = mockAuthContext(false);
@@ -138,9 +287,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signUpButton = screen.getByRole("button", {
-      name: SIGNUP.submitButton,
-    });
+
+    const form = screen.getByTestId("signup-form");
+    const signUpButton = within(form).getByRole("button", { name: /sign up/i });
 
     fireEvent.change(nameInput, { target: { value: "Test User" } });
     fireEvent.change(emailInput, { target: { value: "testuser@example.com" } });
@@ -183,9 +332,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signUpButton = screen.getByRole("button", {
-      name: SIGNUP.submitButton,
-    });
+
+    const form = screen.getByTestId("signup-form");
+    const signUpButton = within(form).getByRole("button", { name: /sign up/i });
 
     expect(signUpButton).toBeDisabled();
 
@@ -219,9 +368,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const signUpButton = screen.getByRole("button", {
-      name: SIGNUP.submitButton,
-    });
+
+    const form = screen.getByTestId("signup-form");
+    const signUpButton = within(form).getByRole("button", { name: /sign up/i });
 
     expect(signUpButton).toBeDisabled();
 
@@ -269,9 +418,9 @@ describe("SignUpForm UI and Functionality Tests", () => {
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
     const confirmPasswordInput = screen.getByLabelText("Confirm Password");
-    const submitButton = screen.getByRole("button", {
-      name: SIGNUP.submitButton,
-    });
+
+    const form = screen.getByTestId("signup-form");
+    const submitButton = within(form).getByRole("button", { name: /sign up/i });
 
     fireEvent.change(nameInput, { target: { value: "Test" } });
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });

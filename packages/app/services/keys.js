@@ -30,8 +30,8 @@ class KeyService {
    * @param {string} keyDescription - The Key Description of the user.
    * @returns {Object} - Newly created Key.
    */
-  async createNewKey(keyDescription) {
-    return await this.keyRepository.create(keyDescription);
+  async createNewKey(keyData) {
+    return await this.keyRepository.create(keyData);
   }
 
   /**
@@ -62,6 +62,26 @@ class KeyService {
   async getApiKey(apiKey) {
     const keyRef = await this.keyRepository.getApiKey(apiKey);
     return keyRef;
+  }
+
+  /**
+   * Finds and updates keys associated with `keyId` that lack an `expires_at` property.
+   * . Retrieves all keys for `keyId`.
+   * . Filters for keys without an expiry time.
+   * . If found, updates these keys via the repository.
+   * @param {string} keyId - The ID used to retrieve keys.
+   * @returns {Promise<Array<Object> | false>} Updated key objects if keys without expiry exist, otherwise `false`.
+   **/
+
+  async findUpdateKeyWithoutExpiry(keyId) {
+    const allKeys = await this.keyRepository.getMultipleKeys(keyId);
+    const keysWithoutExpiry = allKeys.filter((key) => !key.expires_at);
+    if (keysWithoutExpiry.length > 0) {
+      const keyIds = keysWithoutExpiry.map((key) => key._id);
+      const keysUpdated = await this.keyRepository.updateOldKeys(keyIds);
+      return keysUpdated;
+    }
+    return false;
   }
 }
 
