@@ -4,6 +4,7 @@ const {
   UserService,
   SubscriptionService,
   UserTokenService,
+  SendEmailService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -119,7 +120,7 @@ async function signupController(req, res, next) {
 async function signinController(req, res, next) {
   try {
     const userService = new UserService();
-    const userTokenService = new UserTokenService();
+    const sendEmailService = new SendEmailService();
     let user = {};
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
@@ -158,27 +159,19 @@ async function signinController(req, res, next) {
       }
 
       if (!user.is_verified) {
-        try {
-          const result = await userTokenService.resendVerificationEmail(
-            user,
-            userService
-          );
+        const result = await sendEmailService.sendVerificationEmail(user);
+        if (result instanceof Error) {
+          return res.status(result.statusCode || 500).json({
+            source: "resendEmail",
+            error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
+            message: result.message,
+            statusCode: result.statusCode,
+          });
+        } else {
           return res.status(201).json({
+            source: "resendEmail",
             message: result.message,
             statusCode: 201,
-            source: "resendEmail",
-          });
-        } catch (err) {
-          let statusCode = 500;
-          let message = Messages.RESEND_EMAIL_FAILED;
-          if (err.statusCode) {
-            statusCode = err.statusCode;
-            message = err.message;
-          }
-          return res.status(statusCode).json({
-            message: message,
-            statusCode: statusCode,
-            source: "resendEmail",
           });
         }
       }
@@ -246,6 +239,7 @@ async function verifyEmailController(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
     const userService = new UserService();
+    const sendEmailService = new SendEmailService();
     const { token } = req.params;
 
     if (!token) {
@@ -287,27 +281,19 @@ async function verifyEmailController(req, res, next) {
     }
 
     if (userToken.isExpired()) {
-      try {
-        const result = await userTokenService.resendVerificationEmail(
-          user,
-          userService
-        );
+      const result = await sendEmailService.sendVerificationEmail(user);
+      if (result instanceof Error) {
+        return res.status(result.statusCode || 500).json({
+          source: "resendEmail",
+          error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
+          message: result.message,
+          statusCode: result.statusCode,
+        });
+      } else {
         return res.status(201).json({
+          source: "resendEmail",
           message: result.message,
           statusCode: 201,
-          source: "resendEmail",
-        });
-      } catch (err) {
-        let statusCode = 500;
-        let message = Messages.RESEND_EMAIL_FAILED;
-        if (err.statusCode) {
-          statusCode = err.statusCode;
-          message = err.message;
-        }
-        return res.status(statusCode).json({
-          message: message,
-          statusCode: statusCode,
-          source: "resendEmail",
         });
       }
     }
@@ -359,7 +345,7 @@ async function verifyEmailController(req, res, next) {
 async function forgotPasswordController(req, res, next) {
   try {
     const userService = new UserService();
-    const userTokenService = new UserTokenService();
+    const sendEmailService = new SendEmailService();
     const { error, value } = forgotPasswordSchema.validate(req.body);
     if (error)
       return res.status(422).json({
@@ -377,24 +363,30 @@ async function forgotPasswordController(req, res, next) {
         statusCode: 404,
       });
 
-    const userToken = await userTokenService.createForgotToken(user._id);
-    if (!userToken)
-      return res.status(500).json({
-        error: STATUS_CODES[500],
-        message: Messages.SOMETHING_WENT_WRONG,
-        statusCode: 500,
+    const result = await sendEmailService.sendForgotPasswordEmail(user);
+    if (result instanceof Error && result.nextAllowedAt !== undefined) {
+      return res.status(result.statusCode).json({
+        source: "sendEmail",
+        error: STATUS_CODES[result.statusCode],
+        message: result.message,
+        statusCode: result.statusCode,
+        nextAllowedAt: result.nextAllowedAt,
       });
+    } else if (result instanceof Error) {
+      return res.status(result.statusCode || 500).json({
+        source: "sendEmail",
+        error: STATUS_CODES[result.statusCode] || STATUS_CODES[500],
+        message: result.message,
+        statusCode: result.statusCode,
+      });
+    }
 
-    await sendEmail({
-      id: 1,
-      subject: "Reset Your Password",
-      recipient: email,
-      body: {
-        url: userToken.tokenURL(),
-      },
+    return res.status(200).json({
+      source: "sendEmail",
+      statusCode: 200,
+      message: result.message,
+      nextAllowedAt: result.nextAllowedAt,
     });
-
-    return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
   }

@@ -52,6 +52,72 @@ describe("SignInForm UI and Functionality Tests", () => {
     expect(footerText).toBeInTheDocument();
   });
 
+  it("renders an eye icon button for the password field", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    expect(passwordInput).toBeInTheDocument();
+
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    expect(eyeButton).toBeInTheDocument();
+  });
+
+  it("toggles password visibility when clicking the eye icon", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(eyeButton).toHaveAttribute("aria-label", "Show password");
+
+    fireEvent.click(eyeButton);
+    expect(passwordInput).toHaveAttribute("type", "text");
+    expect(
+      screen.getByRole("button", { name: /hide password/i })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(
+      screen.getByRole("button", { name: /show password/i })
+    ).toBeInTheDocument();
+  });
+
+  it("documents current keyboard focus behavior of the eye button (tabIndex)", () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastProvider>
+            <SignIn toggleForm={vi.fn()} />
+          </ToastProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const eyeButton = screen.getByRole("button", { name: /show password/i });
+    expect(eyeButton.getAttribute("tabindex")).toBe("-1");
+  });
+
   it("Change form when clicked on text in footer", () => {
     const authContext = mockAuthContext(false);
     const toggleForm = vi.fn();

@@ -11,6 +11,16 @@ const mockData = {
     totalPages: 1,
   },
 };
+const mockWebData = {
+  source: "web-search",
+  data: [
+    {
+      companyName: "WebResultCo",
+      url: "https://example.com/logo.png",
+      companyUri: "https://webresultco.com",
+    },
+  ],
+};
 
 const mockToastContext = {
   success: vi.fn(),
@@ -25,8 +35,28 @@ vi.mock("../../src/hooks/useApi", () => ({
     loading: false,
     errorMsg: null,
     makeRequest: vi.fn(),
+    fetchRequest: vi.fn(),
   })),
 }));
+class MockFileReader {
+  readAsDataURL() {
+    setTimeout(() => {
+      if (this.onload) {
+        this.onload({
+          target: { result: "data:image/png;base64,fake-preview" },
+        });
+      }
+    }, 10);
+  }
+}
+globalThis.FileReader = MockFileReader;
+globalThis.fetch = vi.fn(() =>
+  Promise.resolve({
+    ok: true,
+    blob: () =>
+      Promise.resolve(new Blob(["fake-image"], { type: "image/png" })),
+  })
+);
 
 describe("Catalog Component", () => {
   beforeEach(() => {
@@ -168,12 +198,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should filter companies when search term is entered", () => {
-    // Override mock to return only Amazon
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -190,12 +220,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should show 'No results found' message when search has no matches", () => {
-    // Override mock to return empty results
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -213,12 +243,12 @@ describe("Catalog Component", () => {
   });
 
   it("Should reset search when navigating to another page", () => {
-    // Override mock to return only Amazon
     vi.mocked(useApi).mockReturnValue({
       data: { data: { data: [COMPANIES[0]], totalPages: 1 } },
       loading: false,
       errorMsg: null,
       makeRequest: vi.fn(),
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -342,6 +372,7 @@ describe("Catalog Component", () => {
       loading: false,
       errorMsg: null,
       makeRequest: makeRequestMock,
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -372,6 +403,7 @@ describe("Catalog Component", () => {
       loading: false,
       errorMsg: null,
       makeRequest: makeRequestMock,
+      fetchRequest: vi.fn(),
     });
 
     render(
@@ -387,5 +419,52 @@ describe("Catalog Component", () => {
     vi.advanceTimersByTime(500);
 
     expect(makeRequestMock).not.toHaveBeenCalled();
+  });
+  describe("Web Search Integration", () => {
+    it("Should display web-search flow: Image Not Found then Suggested Images after 'Search on Web'", async () => {
+      vi.mocked(useApi).mockReturnValue({
+        data: mockWebData,
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+      });
+      render(
+        <ToastContext.Provider value={mockToastContext}>
+          <Catalog />
+        </ToastContext.Provider>
+      );
+      expect(screen.getByText("Image Not Found")).toBeInTheDocument();
+      const searchOnWebBtn = screen.getByText(/Search on Web/i);
+      vi.useRealTimers();
+      await act(async () => {
+        fireEvent.click(searchOnWebBtn);
+      });
+      await screen.findByText(/Suggested Images/);
+      vi.useFakeTimers();
+    }, 20000);
+    it("Should hide web results when search input is cleared", async () => {
+      vi.mocked(useApi).mockReturnValueOnce({
+        data: mockWebData,
+        loading: false,
+        errorMsg: null,
+        makeRequest: vi.fn(),
+        fetchRequest: vi.fn(),
+      });
+
+      render(
+        <ToastContext.Provider value={mockToastContext}>
+          <Catalog />
+        </ToastContext.Provider>
+      );
+
+      expect(screen.getByText("Image Not Found")).toBeInTheDocument();
+      const searchInput = screen.getByLabelText("search");
+      fireEvent.change(searchInput, { target: { value: "" } });
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+      expect(searchInput).toHaveValue("");
+    });
   });
 });

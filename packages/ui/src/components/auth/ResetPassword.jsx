@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT } from "../../utils/Constants";
@@ -26,6 +27,8 @@ const ResetPassword = () => {
   const [tokenValid, setTokenValid] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const token = searchParams.get("token");
   const {
@@ -137,6 +140,9 @@ const ResetPassword = () => {
     const success = await resetPasswordRequest();
     if (success) {
       toast.success("Password reset successful! Please sign in.");
+      setFormData(initialValues);
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
       navigate("/");
     } else {
       setLocalErrorMsg(resetErrorMsg || "Failed to reset password.");
@@ -161,29 +167,79 @@ const ResetPassword = () => {
 
             {tokenValid ? (
               <div className={styles["form-width"]}>
-                <CustomInput
-                  type="password"
-                  name="newPassword"
-                  label="New Password"
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  disabled={resetLoading || tokenLoading}
-                  required
-                />
-                <CustomInput
-                  error={formErrors.confirmPassword}
-                  type="password"
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  disabled={resetLoading || tokenLoading}
-                  required
-                />
+                <div className={styles["reset-password-wrapper"]}>
+                  <CustomInput
+                    type={showNewPassword ? "text" : "password"}
+                    name="newPassword"
+                    label="New Password"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    disabled={resetLoading || tokenLoading}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles["reset-password-eye-button"]}
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    aria-label={
+                      showNewPassword
+                        ? "Hide new password"
+                        : "Show new password"
+                    }
+                    tabIndex={-1}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        setShowNewPassword(!showNewPassword);
+                      }
+                    }}
+                  >
+                    {showNewPassword ? (
+                      <Eye size={20} />
+                    ) : (
+                      <EyeClosed size={20} />
+                    )}
+                  </button>
+                </div>
+                <div className={styles["reset-password-wrapper"]}>
+                  <CustomInput
+                    error={formErrors.confirmPassword}
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    disabled={resetLoading || tokenLoading}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles["reset-password-eye-button"]}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
+                    tabIndex={-1}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        setShowConfirmPassword(!showConfirmPassword);
+                      }
+                    }}
+                  >
+                    {showConfirmPassword ? (
+                      <Eye size={20} />
+                    ) : (
+                      <EyeClosed size={20} />
+                    )}
+                  </button>
+                </div>
                 <div className={styles["button-row"]}>
                   <Button
                     type="submit"

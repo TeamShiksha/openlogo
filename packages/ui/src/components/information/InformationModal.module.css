@@ -1,0 +1,49 @@
+.information-content {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.information-heading {
+  margin: 0 0 16px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.information-message {
+  font-size: var(--medium-text);
+  margin-bottom: 24px;
+  color: var(--description);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.button-wrapper button {
+  min-width: 150px;
+  padding: 0.8rem 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .information-content {
+    padding: 6px;
+  }
+
+  .information-heading {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+
+  .information-message {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
