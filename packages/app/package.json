@@ -14,11 +14,12 @@
     "check": "prettier --check ."
   },
   "dependencies": {
-    "axios": "^1.7.9",
     "@aws-sdk/client-cloudfront": "^3.693.0",
     "@aws-sdk/client-s3": "^3.472.0",
-    "@aws-sdk/s3-request-presigner": "^3.894.0",
     "@aws-sdk/cloudfront-signer": "^3.451.0",
+    "@aws-sdk/s3-request-presigner": "^3.894.0",
+    "@sparticuz/chromium": "^143.0.0",
+    "axios": "^1.7.9",
     "bcryptjs": "^3.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -32,7 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "multer": "^1.4.5-lts.1",
-    "puppeteer": "^24.33.0",
+    "puppeteer-core": "^24.34.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.1",
