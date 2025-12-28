@@ -48,11 +48,27 @@ function Dashboard() {
   });
 
   const apiKeyTableData = useMemo(() => {
-    return apiKeys.map(({ key_description, updated_at, expires_at }) => [
-      key_description,
-      formatDate(updated_at),
-      formatDate(expires_at),
-    ]);
+    const result = apiKeys.map(
+      ({ key_description, updated_at, expires_at }) => {
+        const expiryDate = new Date(expires_at);
+        const today = new Date();
+        const daysUntilExpiry = Math.floor(
+          (expiryDate - today) / (1000 * 60 * 60 * 24)
+        );
+        const isExpiringSoon = daysUntilExpiry <= 7;
+
+        return {
+          cells: [
+            key_description,
+            formatDate(updated_at),
+            formatDate(expires_at),
+          ],
+          rowClassName: isExpiringSoon ? styles["expiry-warning-row"] : "",
+        };
+      }
+    );
+
+    return result;
   }, [apiKeys]);
 
   useEffect(() => {

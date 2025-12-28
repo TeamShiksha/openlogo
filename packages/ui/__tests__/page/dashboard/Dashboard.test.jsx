@@ -207,6 +207,29 @@ describe("Dashboard", () => {
     expect(dashboard).toBeInTheDocument();
   });
 
+  it("should apply warning className to expiring API keys", async () => {
+    const expiringKey = {
+      ...MOCK_USER_DATA.keys[0],
+      expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    const userContext = mockUserContext(
+      {
+        ...MOCK_USER_DATA,
+        keys: [expiringKey],
+      },
+      false
+    );
+
+    renderDashboard({ userContextValue: userContext });
+
+    const table = screen.getByRole("table");
+    const rows = within(table).getAllByRole("row");
+    const dataRow = rows[1];
+
+    expect(dataRow.className).toContain("expiry-warning-row");
+  });
+
   it("should render nothing if options array is empty", () => {
     render(
       <Dropdown options={[]} selectedOption="" setSelectedOption={vi.fn()} />
