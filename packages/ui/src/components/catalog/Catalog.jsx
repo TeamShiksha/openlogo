@@ -15,6 +15,7 @@ import { processWebImage } from "../../utils/Helpers";
 
 function Catalog() {
   const toast = useToast();
+  const prevDataStringRef = useRef("");
   const [pageNum, setPageNum] = useState(0);
   const [showWebCatalog, setShowWebCatalog] = useState(false);
   const [showWebResults, setShowWebResults] = useState(false);
@@ -30,12 +31,13 @@ function Catalog() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
+      setDebouncedSearchTerm(searchTerm.trim());
+    }, 700);
     return () => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
+
   const pageBeforeSearchRef = useRef(0);
   const limit = 10;
   const skip = pageNum * limit;
@@ -55,14 +57,23 @@ function Catalog() {
     method: "POST",
     url: `/catalog/signed-url`,
   });
+
   useEffect(() => {
     if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
       makeRequest();
     }
   }, [pageNum, debouncedSearchTerm]);
+
   useEffect(() => {
+    const currentDataString = JSON.stringify(data);
     if (data?.source === "web-search") {
-      setShowWebCatalog(true);
+      if (currentDataString !== prevDataStringRef.current) {
+        setShowWebCatalog(true);
+        setShowWebResults(false);
+        prevDataStringRef.current = currentDataString;
+      }
+    } else {
+      setShowWebCatalog(false);
       setShowWebResults(false);
     }
   }, [data]);
@@ -200,15 +211,13 @@ function Catalog() {
   };
   const handleWebResultUpload = async (img) => {
     try {
-      const pngFile = await processWebImage(img.url, img.companyName);
-
-      console.debug("Image converted to PNG:", {
-        companyUri: img.companyUri,
-        logoUrl: img.url,
-        companyName: img.companyName,
-        fileName: pngFile.name,
-        fileType: pngFile.type,
-      });
+      setUploadLoading(true);
+      const pngFile = await processWebImage(
+        img.url,
+        img.companyName,
+        img.bufferBase64,
+        img.extension || img.mimeType
+      );
       setUpdateImageId(null);
       setUpdatedImageCompanyUri(null);
       setPreSelectedFile(pngFile);
@@ -216,7 +225,9 @@ function Catalog() {
       setIsModalOpen(true);
     } catch (error) {
       console.error("Failed to fetch logo from web search:", error);
-      toast.error("Failed to load logo. Please try again.");
+      toast.error("Failed to convert or load logo. Please try again.");
+    } finally {
+      setUploadLoading(false);
     }
   };
 

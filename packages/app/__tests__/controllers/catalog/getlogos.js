@@ -212,17 +212,21 @@ describe("GET /api/catalog/logos", () => {
       source: "web-search",
       data: [
         {
+          bufferBase64: "",
           companyName: "TestCompany",
           url: "https://logo.png",
           companyUri: "https://testcompany.com/",
           extension: "png",
+          mimeType: "",
           size: 1024,
         },
         {
+          bufferBase64: "",
           companyName: "TestCompany",
           url: "https://logo2.png",
           companyUri: "https://testcompany.com/",
           extension: "png",
+          mimeType: "",
           size: 2048,
         },
       ],
@@ -270,17 +274,21 @@ describe("GET /api/catalog/logos", () => {
       source: "web-search",
       data: [
         {
+          bufferBase64: "",
           companyName: "TestCompany",
           url: "https://logo.png",
           companyUri: "https://testcompany.com/",
           extension: "png",
+          mimeType: "",
           size: 1024,
         },
         {
+          bufferBase64: "",
           companyName: "TestCompany",
           url: "https://logo2.png",
           companyUri: "https://testcompany.com/",
           extension: "png",
+          mimeType: "",
           size: 2048,
         },
       ],

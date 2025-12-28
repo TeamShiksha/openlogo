@@ -4,11 +4,12 @@
  * 2. Extract image URLs from header/nav sections
  * 3. Detect discovered images its format & size,
  */
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const https = require("https");
 const axios = require("axios");
 const { imageSize } = require("image-size");
 const { URL } = require("url");
+const chromium = require("@sparticuz/chromium");
 
 async function grabCompanyLogos(companyName, limit = 5) {
   if (!companyName || typeof companyName !== "string") {
@@ -36,6 +37,8 @@ async function grabCompanyLogos(companyName, limit = 5) {
         companyUri: companyDomain,
         extension: imageMeta.extension,
         size: imageMeta.size,
+        bufferBase64: imageMeta.bufferBase64,
+        mimeType: imageMeta.mimeType,
       });
     }
     return {
@@ -89,8 +92,10 @@ async function scrapeHeaderImageUrls(siteUrl) {
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox"],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(45000);
@@ -128,11 +133,12 @@ async function scrapeHeaderImageUrls(siteUrl) {
     });
 
     return imageUrls;
+  } catch (error) {
+    console.error("Scraper Error:", error.message);
+    return [];
   } finally {
     if (browser) {
-      await browser.close().catch(() => {
-        console.warn("Failed to close Puppeteer browser");
-      });
+      await browser.close();
     }
   }
 }
@@ -168,6 +174,8 @@ async function fetchImageMeta(imageUrl) {
       url: imageUrl,
       extension,
       size: imageBuffer.length,
+      bufferBase64: imageBuffer.toString("base64"),
+      mimeType: response.headers["content-type"],
     };
   } catch {
     return null;

@@ -28,7 +28,13 @@ const baseOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    title: { display: true, text: "Requests" },
+    title: {
+      display: true,
+      text: "Requests",
+      font: {
+        size: 20,
+      },
+    },
   },
   scales: {
     x: {},
@@ -43,15 +49,15 @@ function parseStatsDataForPeriod(data, period) {
   const daysToDisplay = period === "week" ? 7 : 30;
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   const dateRange = [];
   for (let offset = daysToDisplay - 1; offset >= 0; offset--) {
     const date = new Date(today);
+    const dayPadding = 3;
+    date.setDate(date.getDate() + dayPadding);
     date.setDate(date.getDate() - offset);
     dateRange.push(date);
   }
-
   const dateToCount = new Map();
   data.forEach((item) => {
     if (item?.date && item.count !== undefined) {
@@ -111,6 +117,7 @@ export default function Graph() {
   });
   const [cachedWeekData, setCachedWeekData] = useState(null);
   const [cachedMonthData, setCachedMonthData] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {
     fetchRequest: fetchWeekData,
@@ -222,9 +229,10 @@ export default function Graph() {
     ],
   };
 
-  const handleRefresh = () => {
-    fetchWeekData();
-    fetchMonthData();
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([fetchWeekData(), fetchMonthData()]);
+    setIsRefreshing(false);
   };
 
   const error = selectedPeriod === "week" ? weekError : monthError;
@@ -232,14 +240,20 @@ export default function Graph() {
     return <div>Error: {error}</div>;
   }
 
+  const isLoading = !cachedWeekData && !cachedMonthData;
+
   return (
     <div className={styles.graph}>
-      {chartData.labels.length > 0 && (
-        <Line
-          key={`${selectedPeriod}-${yMax}-${step}`}
-          data={dataConfig}
-          options={options}
-        />
+      {isLoading ? (
+        <div className={styles.mainSpinner}></div>
+      ) : (
+        chartData.labels.length > 0 && (
+          <Line
+            key={`${selectedPeriod}-${yMax}-${step}`}
+            data={dataConfig}
+            options={options}
+          />
+        )
       )}
 
       <div className={styles.buttonParent}>
@@ -257,9 +271,18 @@ export default function Graph() {
         >
           Week
         </button>
-        <button className={styles.button} onClick={handleRefresh}>
-          Refresh
-        </button>
+        <div className={styles.refreshContainer}>
+          <button
+            className={styles.button}
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+          >
+            Refresh
+          </button>
+          <div className={styles.spinnerSlot}>
+            {isRefreshing && <div className={styles.smallSpinner}></div>}
+          </div>
+        </div>
       </div>
     </div>
   );
