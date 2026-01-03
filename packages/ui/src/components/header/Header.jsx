@@ -19,6 +19,7 @@ import {
   extractSectionIds,
 } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
+import { DarkModeToggle } from "../darkModeToggle/DarkModeToggle.jsx";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const Header = ({ openAuthModal }) => {
               </Link>
             );
           })}
-
+          <DarkModeToggle />
           {isAuthenticated ? (
             <UserDropDown />
           ) : (
