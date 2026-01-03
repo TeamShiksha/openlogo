@@ -1,6 +1,7 @@
 .card {
   border-radius: 16px;
-  background: #f8f8f9;
+  background: var(--white);
+  border: var(--border);
   padding: 2rem 1rem;
   flex: 300px 1;
   font-family: Inter, sans-serif;
@@ -35,7 +36,7 @@
 }
 
 .card-value {
-  color: var(--Primary-blue, #4f46e5);
+  color: var(--primary, #4f46e5);
   font-size: 2rem;
   font-weight: 600;
 }
