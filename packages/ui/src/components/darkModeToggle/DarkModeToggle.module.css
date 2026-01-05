@@ -10,14 +10,14 @@
 .darkModeToggle {
   padding: 10px;
   border: 0;
-  border-radius: var(--bradius);
+  border-radius: 50%;
   background-color: var(--white);
   color: var(--black);
   cursor: pointer;
   display: flex;
   align-items: center;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow);
+  /*box-shadow: var(--shadow);*/
   :hover {
     color: var(--primary);
     transition: all 0.3s ease-in-out;

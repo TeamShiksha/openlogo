@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import styles from "./PieGraph.module.css";
 
 const cleanPercentage = (percentage) => {
   const tooLow = !Number.isFinite(+percentage) || percentage < 0;
@@ -12,7 +13,7 @@ const Circle = ({
   colour = "#000",
   pct = 0,
   strokeWidth = 5,
-  fill = "none",
+  fillClass = "",
 }) => {
   const r = 70 - strokeWidth / 2;
   const circ = 2 * Math.PI * r;
@@ -22,7 +23,7 @@ const Circle = ({
       r={r}
       cx={100}
       cy={100}
-      fill={fill}
+      className={fillClass}
       stroke={strokePct !== circ ? colour : ""}
       strokeWidth="30"
       strokeDasharray={circ}
@@ -35,7 +36,7 @@ Circle.propTypes = {
   colour: PropTypes.string,
   pct: PropTypes.number,
   strokeWidth: PropTypes.number,
-  fill: PropTypes.string,
+  fillClass: PropTypes.string,
 };
 
 const Text = ({ percentage, fontSize }) => {
@@ -46,6 +47,7 @@ const Text = ({ percentage, fontSize }) => {
       dominantBaseline="central"
       textAnchor="middle"
       fontSize={fontSize}
+      className={styles.pieText}
     >
       {percentage.toFixed(0)}%
     </text>
@@ -65,19 +67,23 @@ function PieGraph({
 }) {
   const pct = cleanPercentage(percentage);
   return (
-    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-      <g transform={`rotate(-90 100 100)`}>
+    <svg
+      viewBox="0 0 200 200"
+      preserveAspectRatio="xMidYMid meet"
+      className={styles.pieChart}
+    >
+      <g transform="rotate(-90 100 100)">
         <Circle
           colour="#e5e7eb"
           strokeWidth={strokeWidth}
           pct={100}
-          fill="white"
+          fillClass={styles.pieBackground}
         />
         <Circle
           colour={colour}
           pct={pct}
           strokeWidth={strokeWidth}
-          fill="transparent"
+          fillClass={styles.pieFill}
         />
       </g>
       <Text percentage={pct} fontSize={fontSize} />
