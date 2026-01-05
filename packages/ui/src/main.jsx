@@ -8,6 +8,12 @@ import { UserProvider } from "./contexts/UserContext.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
