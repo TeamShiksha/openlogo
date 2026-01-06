@@ -6,7 +6,7 @@ export function DarkModeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
   return (
     <button className={styles.darkModeToggle} onClick={toggleTheme}>
-      {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+      {isDarkMode ? <Sun size={22} /> : <Moon size={22} />}
     </button>
   );
 }

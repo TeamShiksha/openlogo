@@ -43,7 +43,7 @@
 }
 
 .button[aria-pressed="true"] {
-  background-color: rgb(6, 1, 97);
+  background-color: rgb(47, 43, 165);
   transform: translateY(0);
   outline: none;
 }

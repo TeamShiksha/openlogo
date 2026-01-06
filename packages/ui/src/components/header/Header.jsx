@@ -104,13 +104,16 @@ const Header = ({ openAuthModal }) => {
           )}
         </div>
         {isMobile && (
-          <button className={styles.hamburger} onClick={toggleMenu}>
-            <img
-              className={styles["hamburger-img"]}
-              src={menuIcon.src}
-              alt={menuIcon.alt}
-            />
-          </button>
+          <div className={styles["mobile-header"]}>
+            <DarkModeToggle />
+            <button className={styles.hamburger} onClick={toggleMenu}>
+              <img
+                className={styles["hamburger-img"]}
+                src={menuIcon.src}
+                alt={menuIcon.alt}
+              />
+            </button>
+          </div>
         )}
         <MobileHeaderMenu isOpen={showMenu} closeMenu={setShowMenu} />
       </header>
