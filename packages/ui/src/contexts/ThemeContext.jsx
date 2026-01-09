@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ThemeContext } from "./Contexts.jsx";
 import PropTypes from "prop-types";
 
@@ -11,17 +11,25 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
     if (isDarkMode) {
-      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.dataset.theme = "dark";
+      document.documentElement.style.colorScheme = "dark";
     } else {
-      document.documentElement.removeAttribute("data-theme");
+      delete document.documentElement.dataset.theme;
+      document.documentElement.style.colorScheme = "light";
     }
   }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
   };
+
+  const contextValue = useMemo(
+    () => ({ isDarkMode, toggleTheme }),
+    [isDarkMode]
+  );
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

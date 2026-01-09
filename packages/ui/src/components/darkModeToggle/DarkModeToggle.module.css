@@ -17,7 +17,6 @@
   display: flex;
   align-items: center;
   transition: all 0.2s ease;
-  /*box-shadow: var(--shadow);*/
   :hover {
     color: var(--primary);
     transition: all 0.3s ease-in-out;
