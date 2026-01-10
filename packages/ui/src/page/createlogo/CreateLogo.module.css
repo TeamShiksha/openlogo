@@ -1,193 +1,225 @@
+/* ====================== BASE ====================== */
 .container {
   display: flex;
   flex-direction: column;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
   min-height: 100vh;
+  font-family: -apple-system, BlinkMacOSystemFont, "Segoe UI", Roboto,
+    sans-serif;
 }
 
+/* ====================== TOP TOOLBAR ====================== */
 .topToolbar {
   display: flex;
-  justify-content: center;
-  gap: 32px;
+  justify-content: space-between;
   align-items: center;
-  background: #ffffff;
-  padding: 12px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  z-index: 10;
 }
 
 .toolbarSection {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .sectionLabel {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
-  margin-right: 8px;
+  color: #64748b;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.topToolbar button {
-  padding: 6px 14px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  cursor: pointer;
-  border-radius: 6px;
+.topToolbar button,
+.topToolbar .exportSelect {
+  padding: 8px 14px;
+  border: none;
+  background: #f1f5f9;
+  color: #334155;
   font-weight: 600;
-  color: #374151;
   font-size: 13px;
-  transition: all 0.2s;
-}
-
-.topToolbar button:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-}
-
-.editorLayout {
-  display: flex;
-  flex: 1;
-  gap: 0;
-}
-
-.sidebar {
-  width: 280px;
-  background: #ffffff;
-  padding: 20px;
-  overflow-y: auto;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-}
-
-.sidebarSection {
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.sidebarSection:last-child {
-  border-bottom: none;
-}
-
-.sidebarHeading {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
-  margin: 12px 0 6px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.sidebar button {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 6px;
-  font-weight: 600;
-  color: #374151;
-  font-size: 14px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.sidebar button:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+.topToolbar button:hover,
+.topToolbar .exportSelect:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
 }
 
-.primaryBtn {
-  background: #8b5cf6 !important;
-  color: #ffffff !important;
-  border-color: #8b5cf6 !important;
+.topToolbar button:active {
+  transform: translateY(0);
 }
 
-.primaryBtn:hover {
-  background: #7c3aed !important;
-  border-color: #7c3aed !important;
+.colorPicker {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.btnGroup {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
+.colorPicker:hover {
+  border-color: #cbd5e1;
+  transform: scale(1.05);
+}
+/* ====================== SIDEBAR ====================== */
+.sidebar {
+  width: 88px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  padding: 10px 6px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+}
+
+/* ====================== DETAILS ====================== */
+.sidebarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebarSection .select {
   margin-top: 6px;
 }
 
 .btnGroup button {
-  width: auto;
-  min-height: 38px;
-  font-size: 16px;
-}
-
-.shapeGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.shapeGrid button {
-  width: auto;
-  font-size: 24px;
-  padding: 12px;
-  min-height: 50px;
-}
-
-.select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #374151;
-  font-size: 14px;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.2s;
   margin-top: 6px;
 }
 
-.select:hover {
-  border-color: #d1d5db;
-  background: #f9fafb;
-}
-
-.select:focus {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-}
-
-.colorPicker {
-  width: 100%;
-  height: 50px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+/* ====================== SUMMARY ====================== */
+.sidebarHeading {
+  list-style: none; /* remove default arrow */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px;
   cursor: pointer;
-  padding: 4px;
-  background: #ffffff;
-  margin-top: 8px;
+  border-radius: 8px;
+
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+
+  transition: background 0.2s ease;
 }
 
-.colorPicker::-webkit-color-swatch-wrapper {
-  padding: 4px;
+.sidebarHeading:hover {
+  background: #f1f5f9;
 }
 
-.colorPicker::-webkit-color-swatch {
+/* hide default marker (important) */
+.sidebarHeading::-webkit-details-marker {
+  display: none;
+}
+
+/* ====================== CHEVRON ====================== */
+.chevronIcon {
+  width: 12px;
+  height: 12px;
+  color: #94a3b8;
+  transition: transform 0.25s ease;
+}
+
+.sidebarSection[open] .chevronIcon {
+  transform: rotate(180deg);
+}
+
+/* ====================== BUTTONS ====================== */
+.sidebar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 36px;
+  width: 100%;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  color: #475569;
+  font-size: 16px;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar button:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Active toggle buttons */
+button.active {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+/* ====================== PRIMARY BUTTON ====================== */
+.primaryBtn {
+  height: 40px;
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
   border: none;
-  border-radius: 6px;
+  font-size: 16px;
+}
+
+.primaryBtn:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+/* ====================== SHAPES ====================== */
+.shapeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.shapeGrid button {
+  font-size: 18px;
+}
+
+/* ====================== SELECT ====================== */
+.select {
+  width: 100%;
+  padding: 6px 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+
+  font-size: 11px;
+  color: #334155;
+}
+
+/* ====================== CANVAS AREA ====================== */
+.editorLayout {
+  display: flex;
+  flex: 1;
 }
 
 .canvasWrapper {
@@ -195,46 +227,46 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background: #e5e7eb; */
+  background: #f1f5f9;
   padding: 40px;
 }
 
 .canvasWrapper canvas {
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); */
-  /* background: #ffffff; */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  /* background: white; */
 }
 
+/* ====================== RESPONSIVE ====================== */
 @media (max-width: 1024px) {
   .editorLayout {
     flex-direction: column;
   }
-
   .sidebar {
     width: 100%;
-    max-height: 300px;
+    height: auto;
+    flex-direction: row;
+    justify-content: center;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
-
   .canvasWrapper {
     padding: 20px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .topToolbar {
     flex-direction: column;
     gap: 12px;
     padding: 16px;
   }
-
   .toolbarSection {
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .sidebar {
-    max-height: none;
   }
 }

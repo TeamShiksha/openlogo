@@ -11,24 +11,53 @@ import {
 } from "fabric";
 import styles from "./CreateLogo.module.css";
 import Button from "../../components/common/button/Button";
+import {
+  AArrowUp,
+  ArrowUpFromLine,
+  ChevronDown,
+  CircleChevronLeft,
+  Copy,
+  Trash,
+  Type,
+} from "lucide-react";
 
 export default function CreateLogo() {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [selectedFont, setSelectedFont] = useState("Arial");
+  const [currentFontSize, setCurrentFontSize] = useState(32);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [currentColor, setCurrentColor] = useState("#000000");
+  const [exportType, setExportType] = useState("png");
 
   useEffect(() => {
     if (!canvasRef.current) return;
-
     const canvas = new Canvas(canvasRef.current, {
       width: 900,
       height: 650,
       backgroundColor: "#ffffff",
     });
-
     canvas.renderAll();
     fabricCanvasRef.current = canvas;
+
+    const updateControls = () => {
+      const obj = canvas.getActiveObject();
+      if (!obj) return;
+      setCurrentColor(obj.fill || obj.stroke || "#000000");
+      if (obj.type === "textbox") {
+        setSelectedFont(obj.fontFamily || "Arial");
+        setCurrentFontSize(obj.fontSize || 32);
+        setIsBold(obj.fontWeight === "bold");
+        setIsItalic(obj.fontStyle === "italic");
+        setIsUnderline(!!obj.underline);
+      }
+    };
+
+    canvas.on("selection:created", updateControls);
+    canvas.on("selection:updated", updateControls);
 
     const handleKeyDown = (e) => {
       if (e.key === "Delete" && canvas.getActiveObject()) {
@@ -51,11 +80,11 @@ export default function CreateLogo() {
         }
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      canvas.off("selection:created", updateControls);
+      canvas.off("selection:updated", updateControls);
       canvas.dispose();
       fabricCanvasRef.current = null;
     };
@@ -74,58 +103,61 @@ export default function CreateLogo() {
   const addText = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const text = new Textbox("OpenLogo", {
       left: 450,
       top: 325,
-      fontSize: 32,
-      fill: "#000000",
+      fontSize: currentFontSize,
+      fill: currentColor,
       fontFamily: selectedFont,
     });
-
     canvas.add(text);
     canvas.setActiveObject(text);
     canvas.renderAll();
   };
 
-  const changeFontSize = (delta) => {
+  const changeFontSize = (e) => {
+    const size = parseInt(e.target.value);
+    setCurrentFontSize(size);
     const text = getActiveText();
     if (!text) return;
-    text.set("fontSize", Math.max(8, text.fontSize + delta));
+    text.set("fontSize", size);
     fabricCanvasRef.current.renderAll();
   };
 
   const toggleStyle = (style) => {
     const text = getActiveText();
     if (!text) return;
-
     if (style === "bold") {
-      text.set("fontWeight", text.fontWeight === "bold" ? "normal" : "bold");
+      const newVal = text.fontWeight === "bold" ? "normal" : "bold";
+      text.set("fontWeight", newVal);
+      setIsBold(newVal === "bold");
+    } else if (style === "italic") {
+      const newVal = text.fontStyle === "italic" ? "normal" : "italic";
+      text.set("fontStyle", newVal);
+      setIsItalic(newVal === "italic");
+    } else if (style === "underline") {
+      const newVal = !text.underline;
+      text.set("underline", newVal);
+      setIsUnderline(newVal);
     }
-    if (style === "italic") {
-      text.set("fontStyle", text.fontStyle === "italic" ? "normal" : "italic");
-    }
-    if (style === "underline") {
-      text.set("underline", !text.underline);
-    }
-
     fabricCanvasRef.current.renderAll();
   };
 
-  const changeColor = (e) => {
+  const handleChangeColor = (e) => {
+    const color = e.target.value;
+    setCurrentColor(color);
     const obj = getActiveObject();
     if (!obj) return;
-    obj.set("fill", e.target.value);
+    if (obj.fill !== undefined) obj.set("fill", color);
+    if (obj.stroke !== undefined) obj.set("stroke", color);
     fabricCanvasRef.current.renderAll();
   };
 
   const changeFontFamily = (e) => {
     const font = e.target.value;
     setSelectedFont(font);
-
     const text = getActiveText();
     if (!text) return;
-
     text.set("fontFamily", font);
     fabricCanvasRef.current.renderAll();
   };
@@ -133,17 +165,15 @@ export default function CreateLogo() {
   const addRectangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const rect = new Rect({
       left: 400,
       top: 275,
       width: 100,
       height: 100,
-      fill: "#8b5cf6",
+      fill: currentColor,
       stroke: "#000000",
       strokeWidth: 2,
     });
-
     canvas.add(rect);
     canvas.setActiveObject(rect);
     canvas.renderAll();
@@ -152,16 +182,14 @@ export default function CreateLogo() {
   const addCircle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const circle = new Circle({
       left: 400,
       top: 275,
       radius: 50,
-      fill: "#8b5cf6",
+      fill: currentColor,
       stroke: "#000000",
       strokeWidth: 2,
     });
-
     canvas.add(circle);
     canvas.setActiveObject(circle);
     canvas.renderAll();
@@ -170,17 +198,15 @@ export default function CreateLogo() {
   const addTriangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const triangle = new Triangle({
       left: 400,
       top: 275,
       width: 100,
       height: 100,
-      fill: "#8b5cf6",
+      fill: currentColor,
       stroke: "#000000",
       strokeWidth: 2,
     });
-
     canvas.add(triangle);
     canvas.setActiveObject(triangle);
     canvas.renderAll();
@@ -189,14 +215,12 @@ export default function CreateLogo() {
   const addLine = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const line = new Line([0, 0, 150, 0], {
       left: 400,
       top: 325,
-      stroke: "#000000",
+      stroke: currentColor,
       strokeWidth: 3,
     });
-
     canvas.add(line);
     canvas.setActiveObject(line);
     canvas.renderAll();
@@ -205,26 +229,22 @@ export default function CreateLogo() {
   const addArrow = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const line = new Line([0, 0, 150, 0], {
-      stroke: "#000000",
+      stroke: currentColor,
       strokeWidth: 3,
     });
-
     const triangle = new Triangle({
       left: 150,
       top: -7.5,
       width: 15,
       height: 15,
-      fill: "#000000",
+      fill: currentColor,
       angle: 90,
     });
-
     const arrow = new Group([line, triangle], {
       left: 400,
       top: 325,
     });
-
     canvas.add(arrow);
     canvas.setActiveObject(arrow);
     canvas.renderAll();
@@ -233,12 +253,9 @@ export default function CreateLogo() {
   const handleImageUpload = (e) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
-
     reader.onload = (event) => {
       FabricImage.fromURL(event.target.result).then((img) => {
         img.scale(0.5);
@@ -248,13 +265,11 @@ export default function CreateLogo() {
           originX: "center",
           originY: "center",
         });
-
         canvas.add(img);
         canvas.setActiveObject(img);
         canvas.renderAll();
       });
     };
-
     reader.readAsDataURL(file);
     e.target.value = null;
   };
@@ -266,7 +281,6 @@ export default function CreateLogo() {
   const deleteSelected = () => {
     const canvas = fabricCanvasRef.current;
     const activeObject = canvas?.getActiveObject();
-
     if (activeObject) {
       canvas.remove(activeObject);
       canvas.renderAll();
@@ -276,7 +290,6 @@ export default function CreateLogo() {
   const duplicateSelected = () => {
     const canvas = fabricCanvasRef.current;
     const activeObject = canvas?.getActiveObject();
-
     if (activeObject) {
       activeObject.clone().then((cloned) => {
         cloned.set({
@@ -313,12 +326,10 @@ export default function CreateLogo() {
   const downloadPNG = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const dataURL = canvas.toDataURL({
       format: "png",
       quality: 1,
     });
-
     const link = document.createElement("a");
     link.download = "openlogo.png";
     link.href = dataURL;
@@ -328,32 +339,26 @@ export default function CreateLogo() {
   const downloadSVG = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const svg = canvas.toSVG();
     const blob = new Blob([svg], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
-
     const link = document.createElement("a");
     link.download = "openlogo.svg";
     link.href = url;
     link.click();
-
     URL.revokeObjectURL(url);
   };
 
   const downloadJSON = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
     const json = JSON.stringify(canvas.toJSON());
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-
     const link = document.createElement("a");
     link.download = "openlogo.json";
     link.href = url;
     link.click();
-
     URL.revokeObjectURL(url);
   };
 
@@ -363,31 +368,67 @@ export default function CreateLogo() {
       <div className={styles.topToolbar}>
         <div className={styles.toolbarSection}>
           <span className={styles.sectionLabel}>MANAGE</span>
-          <Button onClick={duplicateSelected}>Duplicate</Button>
-          <Button onClick={deleteSelected}>Delete</Button>
-          <Button onClick={bringToFront}>Bring Front</Button>
-          <Button onClick={sendToBack}>Send Back</Button>
+          <Button onClick={duplicateSelected}>
+            <Copy />
+          </Button>
+          <Button onClick={deleteSelected}>
+            <Trash />
+          </Button>
+          <Button onClick={bringToFront}>
+            <AArrowUp />
+          </Button>
+          <Button onClick={sendToBack}>
+            <CircleChevronLeft />
+          </Button>
+          <div className={styles.toolbarSection}>
+            {/* <span className={styles.sectionLabel}>COLOR</span> */}
+            <input
+              type="color"
+              value={currentColor}
+              onChange={handleChangeColor}
+              className={styles.colorPicker}
+            />
+          </div>
         </div>
 
         <div className={styles.toolbarSection}>
-          <span className={styles.sectionLabel}>EXPORT</span>
-          <Button onClick={downloadPNG}>PNG</Button>
-          <Button onClick={downloadSVG}>SVG</Button>
-          <Button onClick={downloadJSON}>JSON</Button>
+          <div>
+            <Button>Upload</Button>
+          </div>
+          <Button
+            className={styles.sectionLabel}
+            onClick={() => {
+              if (exportType === "png") downloadPNG();
+              if (exportType === "svg") downloadSVG();
+              if (exportType === "json") downloadJSON();
+            }}
+          >
+            EXPORT
+          </Button>
+
+          <select
+            className={styles.exportSelect}
+            value={exportType}
+            onChange={(e) => setExportType(e.target.value)}
+          >
+            <option value="png">PNG</option>
+            <option value="svg">SVG</option>
+            <option value="json">JSON</option>
+          </select>
         </div>
       </div>
-
       <div className={styles.editorLayout}>
         {/* Left Sidebar */}
         <div className={styles.sidebar}>
           {/* Text Controls */}
-          <div className={styles.sidebarSection}>
-            <h3 className={styles.sidebarHeading}>Text</h3>
-            <button className={styles.primaryBtn} onClick={addText}>
-              Add Text
-            </button>
-
-            <label className={styles.label}>Font Family</label>
+          <details open className={styles.sidebarSection}>
+            <summary className={styles.sidebarHeading}>
+              <span>Text</span>
+              <ChevronDown className={styles.chevronIcon} size={16} />
+            </summary>
+            <Button onClick={addText}>
+              <Type />
+            </Button>
             <select
               className={styles.select}
               value={selectedFont}
@@ -400,33 +441,50 @@ export default function CreateLogo() {
               <option value="Georgia">Georgia</option>
               <option value="Verdana">Verdana</option>
             </select>
-
-            <label className={styles.label}>Font Size</label>
+            <select
+              className={styles.select}
+              value={currentFontSize}
+              onChange={changeFontSize}
+            >
+              <option value={8}>8</option>
+              <option value={12}>12</option>
+              <option value={16}>16</option>
+              <option value={24}>24</option>
+              <option value={32}>32</option>
+              <option value={40}>40</option>
+              <option value={48}>48</option>
+              <option value={64}>64</option>
+            </select>
             <div className={styles.btnGroup}>
-              <button onClick={() => changeFontSize(-2)}>-</button>
-              <button onClick={() => changeFontSize(2)}>+</button>
-            </div>
-
-            <label className={styles.label}>Style</label>
-            <div className={styles.btnGroup}>
-              <button onClick={() => toggleStyle("bold")} title="Bold">
+              <button
+                className={isBold ? styles.active : ""}
+                onClick={() => toggleStyle("bold")}
+                title="Bold"
+              >
                 <strong>B</strong>
               </button>
-              <button onClick={() => toggleStyle("italic")} title="Italic">
+              <button
+                className={isItalic ? styles.active : ""}
+                onClick={() => toggleStyle("italic")}
+                title="Italic"
+              >
                 <em>I</em>
               </button>
               <button
+                className={isUnderline ? styles.active : ""}
                 onClick={() => toggleStyle("underline")}
                 title="Underline"
               >
                 <u>U</u>
               </button>
             </div>
-          </div>
-
+          </details>
           {/* Shapes */}
-          <div className={styles.sidebarSection}>
-            <h3 className={styles.sidebarHeading}>Shapes</h3>
+          <details open className={styles.sidebarSection}>
+            <summary className={styles.sidebarHeading}>
+              <span>Shapes</span>
+              <ChevronDown className={styles.chevronIcon} size={16} />
+            </summary>
             <div className={styles.shapeGrid}>
               <button onClick={addRectangle} title="Rectangle">
                 □
@@ -444,21 +502,9 @@ export default function CreateLogo() {
                 →
               </button>
             </div>
-          </div>
-
-          {/* Color */}
-          <div className={styles.sidebarSection}>
-            <h3 className={styles.sidebarHeading}>Color</h3>
-            <input
-              type="color"
-              onChange={changeColor}
-              className={styles.colorPicker}
-            />
-          </div>
-
+          </details>
           {/* Upload */}
           <div className={styles.sidebarSection}>
-            <h3 className={styles.sidebarHeading}>Upload</h3>
             <input
               ref={fileInputRef}
               type="file"
@@ -467,11 +513,10 @@ export default function CreateLogo() {
               style={{ display: "none" }}
             />
             <button className={styles.primaryBtn} onClick={triggerImageUpload}>
-              📁 Upload Image
+              <ArrowUpFromLine />
             </button>
           </div>
         </div>
-
         {/* Canvas Area */}
         <div className={styles.canvasWrapper}>
           <canvas ref={canvasRef} />
