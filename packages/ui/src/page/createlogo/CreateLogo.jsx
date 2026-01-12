@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import {
   Canvas,
   Textbox,
@@ -12,19 +12,28 @@ import {
 import styles from "./CreateLogo.module.css";
 import Button from "../../components/common/button/Button";
 import {
+  AArrowDown,
   AArrowUp,
   ArrowUpFromLine,
   ChevronDown,
-  CircleChevronLeft,
+  // CircleChevronLeft,
+  // CircleChevronRight,
   Copy,
+  Redo,
   Trash,
   Type,
+  Undo,
 } from "lucide-react";
+import { UserContext } from "../../contexts/Contexts.jsx";
+import { useToast } from "../../hooks/useToast.js";
 
 export default function CreateLogo() {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
+  const { userData } = useContext(UserContext);
+  const toast = useToast();
+
   const [selectedFont, setSelectedFont] = useState("Arial");
   const [currentFontSize, setCurrentFontSize] = useState(32);
   const [isBold, setIsBold] = useState(false);
@@ -32,25 +41,84 @@ export default function CreateLogo() {
   const [isUnderline, setIsUnderline] = useState(false);
   const [currentColor, setCurrentColor] = useState("#000000");
   const [exportType, setExportType] = useState("png");
+  const [history, setHistory] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+  const isProcessingRef = useRef(false);
+  const isGuest = userData?.role === "GUEST";
 
   useEffect(() => {
     if (!canvasRef.current) return;
+
+    // Initialize Fabric Canvas
     const canvas = new Canvas(canvasRef.current, {
       width: 900,
       height: 650,
       backgroundColor: "#ffffff",
+      preserveObjectStacking: true, // better z-index behavior
     });
-    canvas.renderAll();
+
     fabricCanvasRef.current = canvas;
 
+    // Flag to prevent history from being saved during undo/redo
+    const saveHistory = () => {
+      if (isProcessingRef.current) return;
+
+      const json = JSON.stringify(
+        canvas.toJSON([
+          "fontFamily",
+          "fontSize",
+          "fontWeight",
+          "fontStyle",
+          "underline",
+          "stroke",
+          "strokeWidth",
+          "fill",
+          "opacity",
+        ])
+      );
+
+      setHistory((prev) => {
+        const newHistory = [...prev, json];
+        // Optional: limit history size to prevent memory issues
+        if (newHistory.length > 40) newHistory.shift();
+        return newHistory;
+      });
+
+      setRedoStack([]); // New action → clear redo stack
+    };
+
+    // Save initial empty state
+    const initialJson = JSON.stringify(canvas.toJSON());
+    setHistory([initialJson]);
+
+    // ─── Event listeners ───────────────────────────────────────
+    canvas.on("object:added", saveHistory);
+    canvas.on("object:modified", saveHistory);
+    canvas.on("object:removed", saveHistory);
+    // These are very useful for a smooth experience:
+    canvas.on("object:scaling", saveHistory);
+    canvas.on("object:rotating", saveHistory);
+    canvas.on("object:moving", saveHistory);
+
+    // ─── Selection sync with controls ──────────────────────────
     const updateControls = () => {
       const obj = canvas.getActiveObject();
-      if (!obj) return;
-      setCurrentColor(obj.fill || obj.stroke || "#000000");
+      if (!obj) {
+        setCurrentColor("#000000");
+        setSelectedFont("Arial");
+        setCurrentFontSize(32);
+        setIsBold(false);
+        setIsItalic(false);
+        setIsUnderline(false);
+        return;
+      }
+
+      setCurrentColor((obj.fill || obj.stroke || "#000000").toString());
+
       if (obj.type === "textbox") {
         setSelectedFont(obj.fontFamily || "Arial");
         setCurrentFontSize(obj.fontSize || 32);
-        setIsBold(obj.fontWeight === "bold");
+        setIsBold(obj.fontWeight === "bold" || obj.fontWeight === 700);
         setIsItalic(obj.fontStyle === "italic");
         setIsUnderline(!!obj.underline);
       }
@@ -58,75 +126,113 @@ export default function CreateLogo() {
 
     canvas.on("selection:created", updateControls);
     canvas.on("selection:updated", updateControls);
+    canvas.on("selection:cleared", updateControls);
 
+    // ─── Keyboard shortcuts ────────────────────────────────────
     const handleKeyDown = (e) => {
-      if (e.key === "Delete" && canvas.getActiveObject()) {
-        const activeObject = canvas.getActiveObject();
-        if (activeObject) {
-          canvas.remove(activeObject);
-          canvas.renderAll();
+      if (e.key === "Delete" || e.key === "Backspace") {
+        const activeObj = canvas.getActiveObject();
+        if (activeObj && !activeObj.isEditing) {
+          e.preventDefault();
+          deleteSelected();
         }
       }
-      if (e.ctrlKey && e.key === "b") {
-        e.preventDefault();
-        const obj = canvas.getActiveObject();
-        const text = obj && obj.type === "textbox" ? obj : null;
-        if (text) {
-          text.set(
-            "fontWeight",
-            text.fontWeight === "bold" ? "normal" : "bold"
-          );
-          canvas.renderAll();
+
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case "z":
+            e.preventDefault();
+            undo();
+            break;
+          case "y":
+            e.preventDefault();
+            redo();
+            break;
+          case "d":
+            e.preventDefault();
+            duplicateSelected();
+            break;
+          case "b":
+            e.preventDefault();
+            toggleStyle("bold");
+            break;
+          default:
+            break;
         }
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
+
+    // ─── Cleanup ───────────────────────────────────────────────
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+
+      canvas.off("object:added", saveHistory);
+      canvas.off("object:modified", saveHistory);
+      canvas.off("object:removed", saveHistory);
+      canvas.off("object:scaling", saveHistory);
+      canvas.off("object:rotating", saveHistory);
+      canvas.off("object:moving", saveHistory);
+
       canvas.off("selection:created", updateControls);
       canvas.off("selection:updated", updateControls);
+      canvas.off("selection:cleared", updateControls);
+
       canvas.dispose();
       fabricCanvasRef.current = null;
     };
   }, []);
 
+  const getActiveObject = () => fabricCanvasRef.current?.getActiveObject();
   const getActiveText = () => {
-    const canvas = fabricCanvasRef.current;
-    const obj = canvas?.getActiveObject();
+    const obj = getActiveObject();
     return obj && obj.type === "textbox" ? obj : null;
   };
 
-  const getActiveObject = () => {
-    return fabricCanvasRef.current?.getActiveObject();
-  };
-
+  // === Text Controls ===
   const addText = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
     const text = new Textbox("OpenLogo", {
-      left: 450,
-      top: 325,
+      left: 300,
+      top: 200,
       fontSize: currentFontSize,
       fill: currentColor,
       fontFamily: selectedFont,
+      fontWeight: isBold ? "bold" : "normal",
+      fontStyle: isItalic ? "italic" : "normal",
+      underline: isUnderline,
     });
     canvas.add(text);
     canvas.setActiveObject(text);
     canvas.renderAll();
   };
 
+  const changeFontFamily = (e) => {
+    const font = e.target.value;
+    setSelectedFont(font);
+    const text = getActiveText();
+    if (text) {
+      text.set("fontFamily", font);
+      fabricCanvasRef.current.renderAll();
+    }
+  };
+
   const changeFontSize = (e) => {
-    const size = parseInt(e.target.value);
+    const size = parseInt(e.target.value, 10);
     setCurrentFontSize(size);
     const text = getActiveText();
-    if (!text) return;
-    text.set("fontSize", size);
-    fabricCanvasRef.current.renderAll();
+    if (text) {
+      text.set("fontSize", size);
+      fabricCanvasRef.current.renderAll();
+    }
   };
 
   const toggleStyle = (style) => {
     const text = getActiveText();
     if (!text) return;
+
     if (style === "bold") {
       const newVal = text.fontWeight === "bold" ? "normal" : "bold";
       text.set("fontWeight", newVal);
@@ -143,6 +249,7 @@ export default function CreateLogo() {
     fabricCanvasRef.current.renderAll();
   };
 
+  // === Color ===
   const handleChangeColor = (e) => {
     const color = e.target.value;
     setCurrentColor(color);
@@ -153,22 +260,14 @@ export default function CreateLogo() {
     fabricCanvasRef.current.renderAll();
   };
 
-  const changeFontFamily = (e) => {
-    const font = e.target.value;
-    setSelectedFont(font);
-    const text = getActiveText();
-    if (!text) return;
-    text.set("fontFamily", font);
-    fabricCanvasRef.current.renderAll();
-  };
-
+  // === Shapes ===
   const addRectangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
     const rect = new Rect({
-      left: 400,
-      top: 275,
-      width: 100,
+      left: 300,
+      top: 200,
+      width: 150,
       height: 100,
       fill: currentColor,
       stroke: "#000000",
@@ -183,9 +282,9 @@ export default function CreateLogo() {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
     const circle = new Circle({
-      left: 400,
-      top: 275,
-      radius: 50,
+      left: 300,
+      top: 200,
+      radius: 75,
       fill: currentColor,
       stroke: "#000000",
       strokeWidth: 2,
@@ -199,10 +298,10 @@ export default function CreateLogo() {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
     const triangle = new Triangle({
-      left: 400,
-      top: 275,
-      width: 100,
-      height: 100,
+      left: 300,
+      top: 200,
+      width: 150,
+      height: 150,
       fill: currentColor,
       stroke: "#000000",
       strokeWidth: 2,
@@ -215,11 +314,11 @@ export default function CreateLogo() {
   const addLine = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-    const line = new Line([0, 0, 150, 0], {
-      left: 400,
-      top: 325,
+    const line = new Line([0, 0, 200, 0], {
+      left: 300,
+      top: 250,
       stroke: currentColor,
-      strokeWidth: 3,
+      strokeWidth: 5,
     });
     canvas.add(line);
     canvas.setActiveObject(line);
@@ -229,48 +328,67 @@ export default function CreateLogo() {
   const addArrow = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-    const line = new Line([0, 0, 150, 0], {
+
+    const line = new Line([0, 0, 180, 0], {
       stroke: currentColor,
-      strokeWidth: 3,
+      strokeWidth: 5,
     });
-    const triangle = new Triangle({
-      left: 150,
-      top: -7.5,
-      width: 15,
-      height: 15,
+
+    const head = new Triangle({
+      width: 25,
+      height: 35,
       fill: currentColor,
+      left: 180,
+      top: -17.5,
       angle: 90,
     });
-    const arrow = new Group([line, triangle], {
-      left: 400,
-      top: 325,
+
+    const arrow = new Group([line, head], {
+      left: 300,
+      top: 250,
     });
+
     canvas.add(arrow);
     canvas.setActiveObject(arrow);
     canvas.renderAll();
   };
 
-  const handleImageUpload = (e) => {
+  // === Image Upload ===
+  const handleImageUpload = async (e) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onload = (event) => {
-      FabricImage.fromURL(event.target.result).then((img) => {
-        img.scale(0.5);
+    reader.onload = async (event) => {
+      const dataURL = event.target.result;
+
+      try {
+        // In Fabric 6.x, fromURL returns a Promise
+        const img = await FabricImage.fromURL(dataURL);
+
+        // Scale and position
+        img.scaleToWidth(200); // Helper to scale by width
         img.set({
           left: canvas.width / 2,
           top: canvas.height / 2,
           originX: "center",
           originY: "center",
         });
+
         canvas.add(img);
         canvas.setActiveObject(img);
         canvas.renderAll();
-      });
+      } catch (error) {
+        console.error("Error loading image:", error);
+        toast?.error("Failed to load image");
+      }
     };
     reader.readAsDataURL(file);
+
+    // Reset input so the same file can be uploaded again if deleted
     e.target.value = null;
   };
 
@@ -278,28 +396,29 @@ export default function CreateLogo() {
     fileInputRef.current?.click();
   };
 
-  const deleteSelected = () => {
-    const canvas = fabricCanvasRef.current;
-    const activeObject = canvas?.getActiveObject();
-    if (activeObject) {
-      canvas.remove(activeObject);
-      canvas.renderAll();
-    }
-  };
-
+  // === Object Management ===
   const duplicateSelected = () => {
     const canvas = fabricCanvasRef.current;
-    const activeObject = canvas?.getActiveObject();
-    if (activeObject) {
-      activeObject.clone().then((cloned) => {
-        cloned.set({
-          left: cloned.left + 20,
-          top: cloned.top + 20,
-        });
-        canvas.add(cloned);
-        canvas.setActiveObject(cloned);
-        canvas.renderAll();
+    const obj = getActiveObject();
+    if (!obj) return;
+
+    obj.clone((cloned) => {
+      cloned.set({
+        left: cloned.left + 30,
+        top: cloned.top + 30,
       });
+      canvas.add(cloned);
+      canvas.setActiveObject(cloned);
+      canvas.renderAll();
+    });
+  };
+
+  const deleteSelected = () => {
+    const canvas = fabricCanvasRef.current;
+    const obj = getActiveObject();
+    if (obj) {
+      canvas.remove(obj);
+      canvas.renderAll();
     }
   };
 
@@ -323,12 +442,55 @@ export default function CreateLogo() {
     }
   };
 
+  // Save state to history
+  // const saveHistory = () => {
+  //   const canvas = fabricCanvasRef.current;
+  //   if (!canvas) return;
+
+  //   const json = JSON.stringify(canvas.toJSON());
+  //   setHistory((prev) => [...prev, json]);
+  //   setRedoStack([]); // Clear redo stack on new action
+  // };
+
+  const undo = () => {
+    if (history.length <= 1) return; // keep initial state
+
+    const current = JSON.stringify(fabricCanvasRef.current.toJSON());
+    const previous = history[history.length - 2];
+
+    setRedoStack((prev) => [...prev, current]);
+    setHistory((prev) => prev.slice(0, -1));
+
+    isProcessingRef.current = true;
+    fabricCanvasRef.current.loadFromJSON(previous, () => {
+      fabricCanvasRef.current.renderAll();
+      isProcessingRef.current = false;
+    });
+  };
+
+  const redo = () => {
+    if (redoStack.length === 0) return;
+
+    const nextState = redoStack[redoStack.length - 1];
+
+    const current = JSON.stringify(fabricCanvasRef.current.toJSON());
+    setHistory((prev) => [...prev, current]);
+    setRedoStack((prev) => prev.slice(0, -1));
+
+    isProcessingRef.current = true;
+    fabricCanvasRef.current.loadFromJSON(nextState, () => {
+      fabricCanvasRef.current.renderAll();
+      isProcessingRef.current = false;
+    });
+  };
+
+  // === Export ===
   const downloadPNG = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
     const dataURL = canvas.toDataURL({
       format: "png",
-      quality: 1,
+      multiplier: 2,
     });
     const link = document.createElement("a");
     link.download = "openlogo.png";
@@ -362,50 +524,64 @@ export default function CreateLogo() {
     URL.revokeObjectURL(url);
   };
 
+  const handleExport = () => {
+    if (isGuest) {
+      toast?.error("Guests cannot export logos");
+      return;
+    }
+    if (exportType === "png") downloadPNG();
+    if (exportType === "svg") downloadSVG();
+    if (exportType === "json") downloadJSON();
+  };
+
   return (
     <div className={styles.container}>
-      {/* Top Toolbar - Quick Actions Only */}
+      {/* Top Toolbar */}
       <div className={styles.topToolbar}>
         <div className={styles.toolbarSection}>
           <span className={styles.sectionLabel}>MANAGE</span>
-          <Button onClick={duplicateSelected}>
-            <Copy />
+          <Button onClick={duplicateSelected} title="Duplicate (Ctrl+D)">
+            <Copy size={18} />
           </Button>
-          <Button onClick={deleteSelected}>
-            <Trash />
+          <Button onClick={deleteSelected} title="Delete (Del)">
+            <Trash size={18} />
           </Button>
-          <Button onClick={bringToFront}>
-            <AArrowUp />
+          <Button onClick={bringToFront} title="Bring to Front">
+            <AArrowUp size={18} />
           </Button>
-          <Button onClick={sendToBack}>
-            <CircleChevronLeft />
+          <Button onClick={sendToBack} title="Send to Back">
+            <AArrowDown size={18} />
           </Button>
-          <div className={styles.toolbarSection}>
-            {/* <span className={styles.sectionLabel}>COLOR</span> */}
-            <input
-              type="color"
-              value={currentColor}
-              onChange={handleChangeColor}
-              className={styles.colorPicker}
-            />
-          </div>
+          <Button onClick={undo} title="Undo">
+            <Undo size={18} />
+          </Button>
+          <Button onClick={redo} title="Redo">
+            <Redo size={18} />
+          </Button>
+          <input
+            type="color"
+            value={currentColor}
+            onChange={handleChangeColor}
+            className={styles.colorPicker}
+            title="Color"
+          />
         </div>
 
         <div className={styles.toolbarSection}>
-          <div>
-            <Button>Upload</Button>
-          </div>
           <Button
-            className={styles.sectionLabel}
-            onClick={() => {
-              if (exportType === "png") downloadPNG();
-              if (exportType === "svg") downloadSVG();
-              if (exportType === "json") downloadJSON();
-            }}
+            onClick={triggerImageUpload}
+            title="Upload Image"
+            className={styles.primaryBtn}
+          >
+            Upload Image
+          </Button>
+          <Button
+            onClick={handleExport}
+            title="Export"
+            className={styles.primaryBtn}
           >
             EXPORT
           </Button>
-
           <select
             className={styles.exportSelect}
             value={exportType}
@@ -417,93 +593,93 @@ export default function CreateLogo() {
           </select>
         </div>
       </div>
+
       <div className={styles.editorLayout}>
-        {/* Left Sidebar */}
-        <div className={styles.sidebar}>
-          {/* Text Controls */}
+        {/* Sidebar */}
+        <aside className={styles.sidebar}>
           <details open className={styles.sidebarSection}>
             <summary className={styles.sidebarHeading}>
               <span>Text</span>
-              <ChevronDown className={styles.chevronIcon} size={16} />
+              <ChevronDown className={styles.chevronIcon} />
             </summary>
-            <Button onClick={addText}>
-              <Type />
-            </Button>
-            <select
-              className={styles.select}
-              value={selectedFont}
-              onChange={changeFontFamily}
-            >
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Courier New">Courier New</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Verdana">Verdana</option>
-            </select>
-            <select
-              className={styles.select}
-              value={currentFontSize}
-              onChange={changeFontSize}
-            >
-              <option value={8}>8</option>
-              <option value={12}>12</option>
-              <option value={16}>16</option>
-              <option value={24}>24</option>
-              <option value={32}>32</option>
-              <option value={40}>40</option>
-              <option value={48}>48</option>
-              <option value={64}>64</option>
-            </select>
-            <div className={styles.btnGroup}>
-              <button
-                className={isBold ? styles.active : ""}
-                onClick={() => toggleStyle("bold")}
-                title="Bold"
+
+            <div className={styles.sectionContent}>
+              <Button onClick={addText} title="Add Text">
+                <Type size={20} />
+              </Button>
+
+              <select
+                className={styles.select}
+                value={selectedFont}
+                onChange={changeFontFamily}
               >
-                <strong>B</strong>
-              </button>
-              <button
-                className={isItalic ? styles.active : ""}
-                onClick={() => toggleStyle("italic")}
-                title="Italic"
+                <option value="Arial">Arial</option>
+                <option value="Helvetica">Helvetica</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Verdana">Verdana</option>
+              </select>
+
+              <select
+                className={styles.select}
+                value={currentFontSize}
+                onChange={changeFontSize}
               >
-                <em>I</em>
-              </button>
-              <button
-                className={isUnderline ? styles.active : ""}
-                onClick={() => toggleStyle("underline")}
-                title="Underline"
-              >
-                <u>U</u>
-              </button>
+                {[8, 12, 16, 24, 32, 40, 48, 64].map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+
+              <div className={styles.btnGroup}>
+                <Button
+                  className={isBold ? styles.active : ""}
+                  onClick={() => toggleStyle("bold")}
+                >
+                  B
+                </Button>
+                <Button
+                  className={isItalic ? styles.active : ""}
+                  onClick={() => toggleStyle("italic")}
+                >
+                  I
+                </Button>
+                <Button
+                  className={isUnderline ? styles.active : ""}
+                  onClick={() => toggleStyle("underline")}
+                >
+                  U
+                </Button>
+              </div>
             </div>
           </details>
-          {/* Shapes */}
+
           <details open className={styles.sidebarSection}>
             <summary className={styles.sidebarHeading}>
               <span>Shapes</span>
-              <ChevronDown className={styles.chevronIcon} size={16} />
+              <ChevronDown className={styles.chevronIcon} />
             </summary>
             <div className={styles.shapeGrid}>
-              <button onClick={addRectangle} title="Rectangle">
+              <Button onClick={addRectangle} title="Rectangle">
                 □
-              </button>
-              <button onClick={addCircle} title="Circle">
+              </Button>
+              <Button onClick={addCircle} title="Circle">
                 ○
-              </button>
-              <button onClick={addTriangle} title="Triangle">
+              </Button>
+              <Button onClick={addTriangle} title="Triangle">
                 △
-              </button>
-              <button onClick={addLine} title="Line">
+              </Button>
+              <Button onClick={addLine} title="Line">
                 —
-              </button>
-              <button onClick={addArrow} title="Arrow">
+              </Button>
+              <Button onClick={addArrow} title="Arrow">
                 →
-              </button>
+              </Button>
             </div>
           </details>
-          {/* Upload */}
+
           <div className={styles.sidebarSection}>
             <input
               ref={fileInputRef}
@@ -512,16 +688,29 @@ export default function CreateLogo() {
               onChange={handleImageUpload}
               style={{ display: "none" }}
             />
-            <button className={styles.primaryBtn} onClick={triggerImageUpload}>
+            <Button
+              className={styles.primaryBtn}
+              onClick={triggerImageUpload}
+              title="Upload Image"
+            >
               <ArrowUpFromLine />
-            </button>
+            </Button>
           </div>
-        </div>
-        {/* Canvas Area */}
+        </aside>
+
+        {/* Canvas */}
         <div className={styles.canvasWrapper}>
           <canvas ref={canvasRef} />
         </div>
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        style={{ display: "none" }}
+      />
     </div>
   );
 }

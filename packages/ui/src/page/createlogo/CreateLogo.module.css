@@ -26,6 +26,16 @@
   gap: 10px;
 }
 
+.toolbarSection .primaryBtn {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+}
+
+.toolbarSection .primaryBtn:hover {
+  background: #7e79ee;
+}
+
 .sectionLabel {
   font-size: 11px;
   font-weight: 700;
@@ -101,20 +111,18 @@
 
 /* ====================== SUMMARY ====================== */
 .sidebarHeading {
-  list-style: none; /* remove default arrow */
+  list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 6px;
   cursor: pointer;
   border-radius: 8px;
-
   font-size: 10px;
   font-weight: 700;
   color: #475569;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-
   transition: background 0.2s ease;
 }
 
@@ -122,7 +130,6 @@
   background: #f1f5f9;
 }
 
-/* hide default marker (important) */
 .sidebarHeading::-webkit-details-marker {
   display: none;
 }
@@ -180,17 +187,17 @@ button.active {
 }
 
 /* ====================== PRIMARY BUTTON ====================== */
-.primaryBtn {
+.sidebarSection .primaryBtn {
   height: 40px;
   width: 100%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--primary);
   color: #ffffff;
   border: none;
   font-size: 16px;
 }
 
-.primaryBtn:hover {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+.sidebarSection .primaryBtn:hover {
+  background: #7e79ee;
 }
 
 /* ====================== SHAPES ====================== */
@@ -207,11 +214,11 @@ button.active {
 /* ====================== SELECT ====================== */
 .select {
   width: 100%;
-  padding: 6px 6px;
+  padding: 10px 6px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   background: #f8fafc;
-
+  text-align: center;
   font-size: 11px;
   color: #334155;
 }
