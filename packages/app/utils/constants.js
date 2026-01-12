@@ -22,6 +22,12 @@ const UserType = {
   GUEST: "GUEST",
 };
 
+const DeviceTypes = {
+  DESKTOP: "DESKTOP",
+  MOBILE: "MOBILE",
+  TABLET: "TABLET",
+};
+
 const SubscriptionTypes = {
   HOBBY: "HOBBY",
   PRO: "PRO",
@@ -126,4 +132,5 @@ module.exports = {
   TAB_OPTIONS,
   CLOUD_FRONT_REGION,
   getIsProduction,
+  DeviceTypes,
 };

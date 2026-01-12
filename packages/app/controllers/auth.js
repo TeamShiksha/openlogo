@@ -1,10 +1,11 @@
-const jwt = require("jsonwebtoken");
 const { STATUS_CODES } = require("http");
+const jwt = require("jsonwebtoken");
 const {
   UserService,
   SubscriptionService,
   UserTokenService,
   SendEmailService,
+  UserSessionService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -13,7 +14,7 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const { Messages, getIsProduction } = require("../utils/constants");
 const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -121,7 +122,10 @@ async function signinController(req, res, next) {
   try {
     const userService = new UserService();
     const sendEmailService = new SendEmailService();
+    const userSessionService = new UserSessionService();
+
     let user = {};
+
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
     } else {
@@ -133,8 +137,10 @@ async function signinController(req, res, next) {
           statusCode: 422,
           error: STATUS_CODES[422],
         });
+
       const { email, password } = value;
       user = await userService.getUserByEmail(email);
+
       if (!user)
         return res.status(404).json({
           error: STATUS_CODES[404],
@@ -176,26 +182,63 @@ async function signinController(req, res, next) {
         }
       }
     }
+
+    // const existingDeviceId = req.cookies.deviceId;
+    // let device = {};
+    // device = await deviceInfoService.findDeviceById(existingDeviceId);
+
+    // if (!device) {
+    //   device = await deviceInfoService.createDevice({
+    //     userId: user._id,
+    //     deviceId: existingDeviceId,
+    //     userAgent: req.headers["user-agent"],
+    //     ipAddress: req.ip,
+    //   });
+    // }
+
+    let session = {};
+    session = await userSessionService.userActiveSession(user._id);
+    if (!session) {
+      session = await userSessionService.createSession({
+        userId: user._id,
+        // deviceId: device.deviceId,
+      });
+    }
+
     const currentDate = new Date();
     const oneDayValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
 
+    // const DeviceValidityTimestamp = new Date(
+    //   currentDate.getTime() + 365 * 24 * 60 * 60 * 1000
+    // );
+
     /** @type {import("express").CookieOptions}  */
-    const cookieOptions = {
+
+    const sessionCookieOptions = {
       expires: oneDayValidityTimestamp,
       sameSite: "strict",
       httpOnly: true,
-      domain: ".openlogo.fyi",
+      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
     };
 
-    res.cookie("jwt", user.generateJWT(), cookieOptions);
+    // const deviceCookieOptions = {
+    //   expires: DeviceValidityTimestamp,
+    //   sameSite: "strict",
+    //   httpOnly: true,
+    //   domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+    // };
+
+    res.cookie("sessionId", session.sessionId, sessionCookieOptions);
+    // res.cookie("deviceId", device.deviceId, deviceCookieOptions);
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
   }
 }
+
 /**
  * This controller clears the JWT cookie from the user's browser.
  * It checks if a JWT cookie is present; if not, it returns a 400 error.
@@ -204,10 +247,11 @@ async function signinController(req, res, next) {
  * @param {import("express").Response} res
  * @param {import("express").NextFunction} res
  */
-function signoutController(req, res, next) {
+async function signoutController(req, res, next) {
   try {
-    const { jwt } = req.cookies;
-    if (!jwt) {
+    const userSessionService = new UserSessionService();
+    const { sessionId } = req.cookies;
+    if (!sessionId) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         message: Messages.SESSION_FAIL,
@@ -215,14 +259,16 @@ function signoutController(req, res, next) {
       });
     }
 
+    await userSessionService.signout(sessionId);
+
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       sameSite: "strict",
       httpOnly: true,
-      domain: ".openlogo.fyi",
+      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
     };
 
-    res.clearCookie("jwt", cookieOptions);
+    res.clearCookie("sessionId", cookieOptions);
 
     return res.status(205).send();
   } catch (err) {

@@ -1,34 +1,57 @@
-const JWT = require("jsonwebtoken");
 const { STATUS_CODES } = require("http");
+const UserSessionService = require("../services/userSession");
 const { UserType } = require("../utils/constants");
+
 /**
  * @param {Object} options
  * @param {boolean} options.adminOnly
  **/
+
 module.exports = (options = {}) => {
-  return function (req, res, next) {
+  return async function (req, res, next) {
     try {
-      const { jwt } = req.cookies;
-      if (!jwt) {
+      const userSessionService = new UserSessionService();
+      const { sessionId } = req.cookies;
+      if (!sessionId) {
         return res.status(401).json({
           error: STATUS_CODES[401],
           message: "Invalid credentials",
           statusCode: 401,
         });
       }
-      const decodedData = JWT.verify(jwt, process.env.JWT_SECRET);
-      const { data } = decodedData;
-      if (!data || !data.email || !data.userId)
-        return res.status(403).json({
+
+      const validateSession = await userSessionService.validateSession(
+        sessionId,
+        true // true to populate user details
+      );
+
+      if (!validateSession) {
+        return res.status(401).json({
           error: STATUS_CODES[403],
           message: "Invalid credentials",
           statusCode: 403,
         });
+      }
+
+      const { userId } = validateSession;
+
+      const userData = {
+        name: userId.name,
+        email: userId.email,
+        role: userId.role,
+        userId: userId._id,
+        is_verified: userId.is_verified,
+        subscription_id: userId.subscription_id,
+        created_at: userId.createdAt,
+        is_deleted: userId.is_deleted,
+        updated_at: userId.updatedAt,
+      };
+
       if (
-        (options.adminOnly && data.role !== UserType.ADMIN) ||
-        (options.operatorOnly && data.role !== UserType.OPERATOR) ||
-        (options.customerOnly && data.role !== UserType.CUSTOMER) ||
-        (options.roles && !options.roles.includes(data.role))
+        (options.adminOnly && userId.role !== UserType.ADMIN) ||
+        (options.operatorOnly && userId.role !== UserType.OPERATOR) ||
+        (options.customerOnly && userId.role !== UserType.CUSTOMER) ||
+        (options.roles && !options.roles.includes(userId.role))
       )
         return res.status(401).json({
           error: STATUS_CODES[401],
@@ -36,7 +59,7 @@ module.exports = (options = {}) => {
           statusCode: 401,
         });
 
-      Object.assign(req, { userData: decodedData.data });
+      Object.assign(req, { userData });
       next();
     } catch (err) {
       next(err);
