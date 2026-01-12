@@ -14,6 +14,7 @@ import {
 import { BrowserRouter } from "react-router-dom";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
+import { ThemeProvider } from "../../../src/contexts/ThemeContext";
 
 const mockedMakeRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
@@ -27,15 +28,33 @@ const mockAuthContext = (isAuthenticated) => ({
   setIsAuthenticated: vi.fn(),
 });
 
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+global.localStorage = localStorageMock;
+
 describe("SignUpForm UI and Functionality Tests", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
+  });
   it("renders all form elements correctly", () => {
     const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -56,9 +75,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={toggleFormMock} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={toggleFormMock} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -73,9 +94,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -90,9 +113,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -132,9 +157,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -151,9 +178,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -182,9 +211,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -198,9 +229,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -219,9 +252,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -257,9 +292,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -276,9 +313,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -321,9 +360,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -357,9 +398,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -399,6 +442,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     new Promise((resolve) => setTimeout(() => resolve(true), 1000));
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
     mockedMakeRequest.mockImplementation(delayedResolve);
   });
 
@@ -407,9 +455,11 @@ describe("SignUpForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignUpForm toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -444,9 +494,11 @@ it("renders the disclaimer with Terms and Privacy links", () => {
   render(
     <BrowserRouter>
       <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignUpForm toggleForm={vi.fn()} onClose={vi.fn()} />
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} onClose={vi.fn()} />
+          </ToastProvider>
+        </ThemeProvider>
       </AuthContext.Provider>
     </BrowserRouter>
   );
@@ -473,9 +525,11 @@ it("navigates to Terms and Privacy sections on link click", () => {
   render(
     <BrowserRouter>
       <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignUpForm toggleForm={vi.fn()} onClose={onCloseMock} />
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <SignUpForm toggleForm={vi.fn()} onClose={onCloseMock} />
+          </ToastProvider>
+        </ThemeProvider>
       </AuthContext.Provider>
     </BrowserRouter>
   );

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
   ToastContext,
   UserContext,
 } from "../../src/contexts/Contexts";
+import { ThemeProvider } from "../../src/contexts/ThemeContext";
 import Header from "../../src/components/header/Header";
 import Home from "../../src/page/home/Home";
 import {
@@ -32,17 +33,35 @@ const mockUserData = {
   name: "Test User",
 };
 
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+global.localStorage = localStorageMock;
+
 describe("Header component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
+  });
   it("Render header branding and navigate to home on click", () => {
     const authContext = mockAuthContext(true);
     const userContext = mockUserContext(mockUserData);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -59,11 +78,13 @@ describe("Header component", () => {
     const userContext = mockUserContext(null);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -77,14 +98,16 @@ describe("Header component", () => {
     const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
-        <ToastContext.Provider value={mockAuthContext}>
-          <AuthContext.Provider value={authContext}>
-            <UserContext.Provider value={{ userData: null }}>
-              <Header openAuthModal={openCloseAuthModal} />
-              <Home openAuthModal={openCloseAuthModal} />
-            </UserContext.Provider>
-          </AuthContext.Provider>
-        </ToastContext.Provider>
+        <ThemeProvider>
+          <ToastContext.Provider value={mockAuthContext}>
+            <AuthContext.Provider value={authContext}>
+              <UserContext.Provider value={{ userData: null }}>
+                <Header openAuthModal={openCloseAuthModal} />
+                <Home openAuthModal={openCloseAuthModal} />
+              </UserContext.Provider>
+            </AuthContext.Provider>
+          </ToastContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -107,13 +130,15 @@ describe("Header component", () => {
     const userContext = mockUserContext(null);
     window.innerWidth = 1200;
     window.dispatchEvent(new Event("resize"));
-    render(
+    const { unmount } = render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -122,15 +147,19 @@ describe("Header component", () => {
     });
     expect(mobileMenuButton).not.toBeInTheDocument();
 
+    unmount();
+
     window.innerWidth = 1000;
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -147,11 +176,13 @@ describe("Header component", () => {
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -173,11 +204,13 @@ describe("Header component", () => {
     window.dispatchEvent(new Event("resize"));
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -198,11 +231,13 @@ describe("Header component", () => {
     const userContext = mockUserContext(null);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -216,11 +251,13 @@ describe("Header component", () => {
     const userContext = mockUserContext(mockUserData);
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={authContext}>
-          <UserContext.Provider value={userContext}>
-            <Header openAuthModal={openCloseAuthModal} />
-          </UserContext.Provider>
-        </AuthContext.Provider>
+        <ThemeProvider>
+          <AuthContext.Provider value={authContext}>
+            <UserContext.Provider value={userContext}>
+              <Header openAuthModal={openCloseAuthModal} />
+            </UserContext.Provider>
+          </AuthContext.Provider>
+        </ThemeProvider>
       </BrowserRouter>
     );
 
@@ -234,11 +271,13 @@ it("Renders UserDropDown when user is authenticated", () => {
   const userContext = mockUserContext(mockUserData);
   render(
     <BrowserRouter>
-      <AuthContext.Provider value={authContext}>
-        <UserContext.Provider value={userContext}>
-          <Header openAuthModal={openCloseAuthModal} />
-        </UserContext.Provider>
-      </AuthContext.Provider>
+      <ThemeProvider>
+        <AuthContext.Provider value={authContext}>
+          <UserContext.Provider value={userContext}>
+            <Header openAuthModal={openCloseAuthModal} />
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 
