@@ -33,6 +33,12 @@
   border: 1px solid rgba(200, 200, 200, 0.3);
 }
 
+[data-theme="dark"] .toast {
+  background-color: rgba(31, 41, 55, 0.95);
+  color: #f3f4f6;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
 .toast.exiting {
   animation: slideOut 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
@@ -55,16 +61,64 @@
   background-color: rgba(236, 253, 240, 0.95);
 }
 
+.success .message {
+  color: #047857;
+}
+
 .error {
   background-color: rgba(254, 242, 242, 0.95);
+}
+
+.error .message {
+  color: #dc2626;
 }
 
 .warning {
   background-color: rgba(255, 251, 235, 0.95);
 }
 
+.warning .message {
+  color: #b45309;
+}
+
 .info {
   background-color: rgba(239, 246, 255, 0.95);
+}
+
+.info .message {
+  color: #0369a1;
+}
+
+[data-theme="dark"] .success {
+  background-color: rgba(6, 78, 59, 0.95);
+}
+
+[data-theme="dark"] .success .message {
+  color: #86efac;
+}
+
+[data-theme="dark"] .error {
+  background-color: rgba(78, 22, 22, 0.95);
+}
+
+[data-theme="dark"] .error .message {
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .warning {
+  background-color: rgba(78, 70, 22, 0.95);
+}
+
+[data-theme="dark"] .warning .message {
+  color: #fde047;
+}
+
+[data-theme="dark"] .info {
+  background-color: rgba(15, 55, 80, 0.95);
+}
+
+[data-theme="dark"] .info .message {
+  color: #7dd3fc;
 }
 
 .icon {
@@ -107,6 +161,15 @@
 .close-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
   color: #334155;
+}
+
+[data-theme="dark"] .close-button {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
 }
 
 .progress-bar {
