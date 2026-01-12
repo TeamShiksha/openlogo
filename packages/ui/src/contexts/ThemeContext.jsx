@@ -4,8 +4,18 @@ import PropTypes from "prop-types";
 
 export function ThemeProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem("darkMode");
-    return saved ? JSON.parse(saved) : false;
+    try {
+      const saved = localStorage.getItem("darkMode");
+      if (saved !== null && saved !== undefined) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn("Failed to parse darkMode from localStorage:", error);
+    }
+    return (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
   });
 
   useEffect(() => {
