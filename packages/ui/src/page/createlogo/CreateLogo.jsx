@@ -8,6 +8,7 @@ import {
   Line,
   Group,
   Image as FabricImage,
+  PencilBrush,
 } from "fabric";
 import styles from "./CreateLogo.module.css";
 import Button from "../../components/common/button/Button";
@@ -19,6 +20,7 @@ import {
   // CircleChevronLeft,
   // CircleChevronRight,
   Copy,
+  Pencil,
   Redo,
   Trash,
   Type,
@@ -43,6 +45,7 @@ export default function CreateLogo() {
   const [exportType, setExportType] = useState("png");
   const [history, setHistory] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
+  const [isDrawing, setIsDrawing] = useState(false);
   const isProcessingRef = useRef(false);
   const isGuest = userData?.role === "GUEST";
 
@@ -54,8 +57,14 @@ export default function CreateLogo() {
       width: 900,
       height: 650,
       backgroundColor: "#ffffff",
-      preserveObjectStacking: true, // better z-index behavior
+      preserveObjectStacking: true,
+      selection: true,
     });
+
+    const brush = new PencilBrush(canvas);
+    brush.color = currentColor;
+    brush.width = 5;
+    canvas.freeDrawingBrush = brush;
 
     fabricCanvasRef.current = canvas;
 
@@ -219,6 +228,42 @@ export default function CreateLogo() {
     }
   };
 
+  const resetCanvas = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    if (window.confirm("Are you sure you want to clear the entire canvas?")) {
+      canvas.clear();
+      canvas.backgroundColor = "#ffffff";
+
+      // Reset History
+      const initialJson = JSON.stringify(canvas.toJSON());
+      setHistory([initialJson]);
+      setRedoStack([]);
+      canvas.renderAll();
+      toast?.success("Canvas cleared");
+    }
+  };
+
+  const toggleDrawingMode = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const newMode = !isDrawing;
+    setIsDrawing(newMode);
+
+    canvas.isDrawingMode = newMode;
+
+    if (newMode) {
+      // In Fabric 6.x, ensure the brush exists
+      if (!canvas.freeDrawingBrush) {
+        canvas.freeDrawingBrush = new PencilBrush(canvas);
+      }
+      canvas.freeDrawingBrush.color = currentColor;
+      canvas.freeDrawingBrush.width = 5;
+    }
+  };
+
   const changeFontSize = (e) => {
     const size = parseInt(e.target.value, 10);
     setCurrentFontSize(size);
@@ -253,11 +298,19 @@ export default function CreateLogo() {
   const handleChangeColor = (e) => {
     const color = e.target.value;
     setCurrentColor(color);
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    // Update pen color if currently drawing
+    if (canvas.isDrawingMode && canvas.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = color;
+    }
+
     const obj = getActiveObject();
     if (!obj) return;
     if (obj.fill !== undefined) obj.set("fill", color);
     if (obj.stroke !== undefined) obj.set("stroke", color);
-    fabricCanvasRef.current.renderAll();
+    canvas.renderAll();
   };
 
   // === Shapes ===
@@ -415,10 +468,17 @@ export default function CreateLogo() {
 
   const deleteSelected = () => {
     const canvas = fabricCanvasRef.current;
-    const obj = getActiveObject();
-    if (obj) {
-      canvas.remove(obj);
-      canvas.renderAll();
+    if (!canvas) return;
+
+    const activeObjects = canvas.getActiveObjects(); // Gets array of all selected items
+
+    if (activeObjects.length > 0) {
+      activeObjects.forEach((obj) => {
+        canvas.remove(obj);
+      });
+      canvas.discardActiveObject(); // Clear the selection box
+      canvas.requestRenderAll();
+      // saveHistory() will be triggered by the 'object:removed' event in your useEffect
     }
   };
 
@@ -558,6 +618,9 @@ export default function CreateLogo() {
           <Button onClick={redo} title="Redo">
             <Redo size={18} />
           </Button>
+          <Button onClick={resetCanvas} title="Reset Canvas">
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>RESET</span>
+          </Button>
           <input
             type="color"
             value={currentColor}
@@ -570,10 +633,10 @@ export default function CreateLogo() {
         <div className={styles.toolbarSection}>
           <Button
             onClick={triggerImageUpload}
-            title="Upload Image"
+            title="Upload"
             className={styles.primaryBtn}
           >
-            Upload Image
+            Upload
           </Button>
           <Button
             onClick={handleExport}
@@ -679,6 +742,21 @@ export default function CreateLogo() {
               </Button>
             </div>
           </details>
+          <details open className={styles.sidebarSection}>
+            <summary className={styles.sidebarHeading}>
+              <span>Draw</span>
+              <ChevronDown className={styles.chevronIcon} />
+            </summary>
+            <div className={styles.sectionContent}>
+              <Button
+                className={isDrawing ? styles.active : ""}
+                onClick={toggleDrawingMode}
+                title="Pen Tool"
+              >
+                <Pencil />
+              </Button>
+            </div>
+          </details>
 
           <div className={styles.sidebarSection}>
             <input
@@ -691,7 +769,7 @@ export default function CreateLogo() {
             <Button
               className={styles.primaryBtn}
               onClick={triggerImageUpload}
-              title="Upload Image"
+              title="Import Image"
             >
               <ArrowUpFromLine />
             </Button>
