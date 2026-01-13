@@ -6,6 +6,7 @@ const UserToken = require("./usertoken");
 const Users = require("./users");
 const Request = require("./request");
 const LogoRequestLogs = require("./logoRequestLogs");
+const CreateLogo = require("./createLogo");
 
 module.exports = {
   ContactUs,
@@ -16,4 +17,5 @@ module.exports = {
   Users,
   Request,
   LogoRequestLogs,
+  CreateLogo,
 };

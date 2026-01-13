@@ -8,6 +8,7 @@ const adminRouter = require("./catalog");
 const requestRouter = require("./request");
 const logoRequestLogsRouter = require("./logoRequestLogs");
 const { logoLimiter, baseLimiter } = require("../middlewares/rateLimiter");
+const createLogoRouter = require("./createLogo");
 
 const privateRouteCORS = {
   origin: (origin, callback) => {
@@ -37,6 +38,12 @@ router.use(
   baseLimiter,
   cors(privateRouteCORS),
   logoRequestLogsRouter
+);
+router.use(
+  "/create-logo",
+  baseLimiter,
+  cors(privateRouteCORS),
+  createLogoRouter
 );
 
 module.exports = router;

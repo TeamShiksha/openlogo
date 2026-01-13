@@ -7,6 +7,7 @@ const UserService = require("./users");
 const RequestService = require("./request");
 const SendEmailService = require("./sendemail");
 const LogoRequestLogsService = require("./logoRequestlogs");
+const CreateLogoService = require("./createLogo");
 
 module.exports = {
   ContactUsService,
@@ -18,4 +19,5 @@ module.exports = {
   RequestService,
   SendEmailService,
   LogoRequestLogsService,
+  CreateLogoService,
 };
