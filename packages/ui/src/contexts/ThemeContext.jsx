@@ -12,10 +12,9 @@ export function ThemeProvider({ children }) {
     } catch (error) {
       console.warn("Failed to parse darkMode from localStorage:", error);
     }
-    return (
-      globalThis.matchMedia &&
-      globalThis.matchMedia("(prefers-color-scheme: dark)").matches
-    );
+    return globalThis.matchMedia
+      ? globalThis.matchMedia("(prefers-color-scheme: dark)").matches
+      : false;
   });
 
   useEffect(() => {
