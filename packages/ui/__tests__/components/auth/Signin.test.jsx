@@ -19,7 +19,7 @@ const localStorageMock = {
   removeItem: vi.fn(),
   clear: vi.fn(),
 };
-global.localStorage = localStorageMock;
+globalThis.localStorage = localStorageMock;
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => ({

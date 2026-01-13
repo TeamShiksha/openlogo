@@ -13,8 +13,8 @@ export function ThemeProvider({ children }) {
       console.warn("Failed to parse darkMode from localStorage:", error);
     }
     return (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
+      globalThis.matchMedia &&
+      globalThis.matchMedia("(prefers-color-scheme: dark)").matches
     );
   });
 
