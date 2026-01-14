@@ -28,6 +28,7 @@ class ImagesRepository extends BaseRepository {
         $regex: `^${company}(\\.|$)`,
         $options: "i",
       },
+      $or: [{ is_published: true }, { is_published: { $exists: false } }],
     });
     return image;
   }
@@ -40,6 +41,7 @@ class ImagesRepository extends BaseRepository {
   async fetchCompanyList(regexPattern) {
     const companyList = await Image.find({
       company_name: { $regex: regexPattern },
+      $or: [{ is_published: true }, { is_published: { $exists: false } }],
     });
     return companyList;
   }

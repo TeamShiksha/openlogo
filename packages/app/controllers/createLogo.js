@@ -1,17 +1,28 @@
 const { STATUS_CODES } = require("http");
-const { ImageService } = require("../services");
-const CreateLogoService = require("../services/createLogo");
+const {
+  ImageService,
+  RequestService,
+  CreateLogoService,
+} = require("../services");
 const {
   Messages,
   ExtractCompanyNameFromUrlRegex,
 } = require("../utils/constants");
 const { companyUriSchema } = require("../schemas/catalog");
+const {
+  updateRequestSchema,
+  requestQuerySchema,
+} = require("../schemas/request");
 
+/**
+ * Validates input, checks for existing requests, creates image data, and adds a new logo request.
+ */
 async function addCreateLogoController(req, res, next) {
   try {
-    const createLogoServices = new CreateLogoService();
-    const imageServices = new ImageService();
-    const { userId } = req.userId;
+    const createLogoService = new CreateLogoService();
+    const imageService = new ImageService();
+    const requestService = new RequestService();
+    const { userId } = req.userData;
     const imageSize = req.body.size;
     const companyUri = req.body.companyUri;
     const Extension = req.body.extension;
@@ -31,7 +42,7 @@ async function addCreateLogoController(req, res, next) {
       .match(ExtractCompanyNameFromUrlRegex);
     const companyName = match[1];
 
-    const imageExist = await imageServices.getImageByCompanyName(companyName);
+    const imageExist = await imageService.getImageByCompanyName(companyName);
     if (imageExist) {
       return res.status(400).json({
         error: STATUS_CODES[400],
@@ -40,12 +51,33 @@ async function addCreateLogoController(req, res, next) {
       });
     }
 
-    const imageData = await imageServices.createImageData(
+    const logoAlreadyRequested =
+      await requestService.requestExistsForCompanyUrl(companyUri);
+    if (logoAlreadyRequested) {
+      return res.status(400).json({
+        message: Messages.COMPANY_URL_ALREADY_PENDING,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const logoAlreadyCreated =
+      await createLogoService.logoCreatedForCompanyUrl(companyUri);
+    if (logoAlreadyCreated) {
+      return res.status(400).json({
+        message: Messages.LOGO_ALREADY_CREATED_AND_PENDING,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const imageData = await imageService.createImageData(
       userId,
       imageSize,
       companyName,
       companyUri,
-      Extension
+      Extension,
+      false
     );
     if (!imageData) {
       return res.status(500).json({
@@ -55,7 +87,7 @@ async function addCreateLogoController(req, res, next) {
       });
     }
 
-    const createLogoData = await createLogoServices.addCreateLogoData(
+    const createLogoData = await createLogoService.addCreateLogoData(
       userId,
       companyUri,
       imageData._id
@@ -70,6 +102,133 @@ async function addCreateLogoController(req, res, next) {
   }
 }
 
+/**
+ * Validates input, updates logo request status, and manages image visibility based on approval or rejection.
+ */
+async function updateCreateLogoController(req, res, next) {
+  try {
+    const createLogoService = new CreateLogoService();
+    const createLogoId = req.params.createLogoId;
+
+    const { error, value } = updateRequestSchema.validate(req.body);
+    if (error) {
+      return res.status(422).json({
+        statusCode: 422,
+        error: STATUS_CODES[422],
+        message: error.message,
+      });
+    }
+    const { status, comment } = value;
+    const operatorId = req.userData.userId;
+
+    const createdLogo = await createLogoService.getLogoById(createLogoId);
+    if (!createdLogo) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.CREATED_LOGO_NOT_FOUND,
+      });
+    }
+
+    const updateCreatedLogo = await createLogoService.respondToCreateLogo(
+      createLogoId,
+      operatorId,
+      status,
+      comment
+    );
+
+    if (updateCreatedLogo?.alreadyProcessed) {
+      return res.status(409).json({
+        statusCode: 409,
+        error: STATUS_CODES[409],
+        message: Messages.LOGO_REQUEST_ALREADY_PROCESSED,
+      });
+    }
+
+    const updatedLogoData = {
+      companyUrl: createdLogo.companyUrl,
+      status: status,
+      comment: comment,
+      openedAt: createdLogo.openedAt,
+    };
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: Messages.UPDATE_SUCCESS,
+      data: updatedLogoData,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Validates input, fetches list of created logo, and returns paginated results.
+ */
+async function getCreateLogosController(req, res, next) {
+  try {
+    const createLogoService = new CreateLogoService();
+    const { error, value } = requestQuerySchema.validate(req.query);
+    if (error) {
+      return res.status(422).json({
+        statusCode: 422,
+        error: STATUS_CODES[422],
+        message: error.message,
+      });
+    }
+
+    const { page, limit, tab } = value;
+    const { data, total, currentPage, totalPages } =
+      await createLogoService.getPaginatedCreateLogos(
+        parseInt(page),
+        parseInt(limit),
+        tab
+      );
+
+    const fetchedData = !data || data.length === 0 ? [] : data;
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: Messages.FETCH_ALL_REQUESTS,
+      total,
+      currentPage,
+      totalPages,
+      results: fetchedData,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Validates input, fetches created logo by ID, and returns details.
+ */
+async function getCreateLogoByIdController(req, res, next) {
+  try {
+    const createLogoService = new CreateLogoService();
+    const createLogoId = req.params.createLogoId;
+
+    const details = await createLogoService.getCreateLogoDetails(createLogoId);
+    if (!details) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.CREATED_LOGO_NOT_FOUND,
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      message: Messages.UPDATE_SUCCESS,
+      data: details,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   addCreateLogoController,
+  updateCreateLogoController,
+  getCreateLogosController,
+  getCreateLogoByIdController,
 };

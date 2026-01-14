@@ -104,6 +104,9 @@ const Messages = {
   SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
   API_KEY_EXPIRED: "Your Key has been expired",
   UPDATE_API_KEY: "Your API Key needs an update",
+  LOGO_ALREADY_CREATED_AND_PENDING:
+    "Logo already created and is in a pending state",
+  CREATED_LOGO_NOT_FOUND: "Created logo not found",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;

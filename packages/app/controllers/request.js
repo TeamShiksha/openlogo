@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const { RequestService } = require("../services");
+const { RequestService, CreateLogoService } = require("../services");
 const {
   createRequestSchema,
   requestQuerySchema,
@@ -121,6 +121,7 @@ async function updateRequestController(req, res, next) {
 async function addRequestController(req, res, next) {
   try {
     const requestService = new RequestService();
+    const createLogoService = new CreateLogoService();
     const { error, value } = createRequestSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -149,6 +150,16 @@ async function addRequestController(req, res, next) {
     if (logoAlreadyRequested) {
       return res.status(400).json({
         message: Messages.COMPANY_URL_ALREADY_PENDING,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
+
+    const logoAlreadyCreated =
+      await createLogoService.logoCreatedForCompanyUrl(requestedCompanyUrl);
+    if (logoAlreadyCreated) {
+      return res.status(400).json({
+        message: Messages.LOGO_ALREADY_CREATED_AND_PENDING,
         statusCode: 400,
         error: STATUS_CODES[400],
       });
