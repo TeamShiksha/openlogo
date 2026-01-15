@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { StatusTypes } = require("../utils/constants");
+const { URL_REGEX, URL_ERROR_MESSAGE } = require("../utils/validator");
 
 const createLogoSchema = new mongoose.Schema({
   user_id: {
@@ -11,10 +12,7 @@ const createLogoSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    match: [
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d+)?(\/.*)?$/,
-      "Please enter a valid URL.",
-    ],
+    match: [URL_REGEX, URL_ERROR_MESSAGE],
   },
   images: {
     type: mongoose.Schema.Types.ObjectId,
