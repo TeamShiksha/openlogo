@@ -20,10 +20,8 @@ module.exports = (options = {}) => {
         });
       }
 
-      const validateSession = await userSessionService.validateSession(
-        sessionId,
-        true // true to populate user details
-      );
+      const validateSession =
+        await userSessionService.validateSession(sessionId);
 
       if (!validateSession) {
         return res.status(401).json({

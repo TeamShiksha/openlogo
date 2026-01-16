@@ -23,11 +23,8 @@ class UserSessionService {
     });
   }
 
-  async validateSession(sessionId, populateUser = false) {
-    return await this.userSessionRepository.findBySessionId(
-      sessionId,
-      populateUser
-    );
+  async validateSession(sessionId) {
+    return await this.userSessionRepository.findBySessionId(sessionId);
   }
 
   async userActiveSession(userId) {

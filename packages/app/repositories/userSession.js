@@ -24,16 +24,14 @@ class UserSessionRepository extends BaseRepository {
    * @param {boolean} options.populateUser - to populate userId
    */
 
-  async findBySessionId(sessionId, populateUser = false) {
+  async findBySessionId(sessionId) {
     const query = {
       sessionId,
       isActive: true,
       expiresAt: { $gt: new Date() },
     };
 
-    return populateUser
-      ? await this.model.findOne(query).populate("userId")
-      : await this.model.findOne(query);
+    return await this.model.findOne(query).populate("userId");
   }
 
   /**
