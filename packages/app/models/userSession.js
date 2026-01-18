@@ -13,11 +13,6 @@ const userSessionSchema = new mongoose.Schema({
     required: true,
   },
 
-  // deviceId: {
-  //   type: String,
-  //   required: true,
-  // },
-
   sessionId: {
     type: String,
     required: true,

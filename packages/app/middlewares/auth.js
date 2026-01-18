@@ -31,25 +31,25 @@ module.exports = (options = {}) => {
         });
       }
 
-      const { userId } = validateSession;
+      const { userId: user } = validateSession;
 
       const userData = {
-        name: userId.name,
-        email: userId.email,
-        role: userId.role,
-        userId: userId._id,
-        is_verified: userId.is_verified,
-        subscription_id: userId.subscription_id,
-        created_at: userId.createdAt,
-        is_deleted: userId.is_deleted,
-        updated_at: userId.updatedAt,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        userId: user._id,
+        is_verified: user.is_verified,
+        subscription_id: user.subscription_id,
+        created_at: user.createdAt,
+        is_deleted: user.is_deleted,
+        updated_at: user.updatedAt,
       };
 
       if (
-        (options.adminOnly && userId.role !== UserType.ADMIN) ||
-        (options.operatorOnly && userId.role !== UserType.OPERATOR) ||
-        (options.customerOnly && userId.role !== UserType.CUSTOMER) ||
-        (options.roles && !options.roles.includes(userId.role))
+        (options.adminOnly && user.role !== UserType.ADMIN) ||
+        (options.operatorOnly && user.role !== UserType.OPERATOR) ||
+        (options.customerOnly && user.role !== UserType.CUSTOMER) ||
+        (options.roles && !options.roles.includes(user.role))
       )
         return res.status(401).json({
           error: STATUS_CODES[401],

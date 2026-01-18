@@ -25,13 +25,13 @@ class UserSessionRepository extends BaseRepository {
    */
 
   async findBySessionId(sessionId) {
-    const query = {
-      sessionId,
-      isActive: true,
-      expiresAt: { $gt: new Date() },
-    };
-
-    return await this.model.findOne(query).populate("userId");
+    return await this.model
+      .findOne({
+        sessionId,
+        isActive: true,
+        expiresAt: { $gt: new Date() },
+      })
+      .populate("userId");
   }
 
   /**
