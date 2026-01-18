@@ -6,7 +6,7 @@ import {
   Circle,
   Triangle,
   Line,
-  Group,
+  // Group,
   Image as FabricImage,
   PencilBrush,
 } from "fabric";
@@ -17,8 +17,6 @@ import {
   AArrowUp,
   ArrowUpFromLine,
   ChevronDown,
-  // CircleChevronLeft,
-  // CircleChevronRight,
   Copy,
   Pencil,
   Redo,
@@ -46,19 +44,35 @@ export default function CreateLogo() {
   const [history, setHistory] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [brushSize, setBrushSize] = useState(5);
+  const [isFilled, setIsFilled] = useState(true);
   const isProcessingRef = useRef(false);
   const isGuest = userData?.role === "GUEST";
+
+  const saveHistory = () => {
+    if (isProcessingRef.current || !fabricCanvasRef.current) return;
+
+    const canvas = fabricCanvasRef.current;
+    const json = JSON.stringify(canvas.toJSON());
+
+    setHistory((prev) => {
+      if (prev[prev.length - 1] === json) return prev;
+      return [...prev, json].slice(-40);
+    });
+
+    if (!isProcessingRef.current) {
+      setRedoStack([]);
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Initialize Fabric Canvas
     const canvas = new Canvas(canvasRef.current, {
-      width: 900,
-      height: 650,
+      width: Math.min(window.innerWidth - 40, 900),
+      height: 500,
       backgroundColor: "#ffffff",
       preserveObjectStacking: true,
-      selection: true,
     });
 
     const brush = new PencilBrush(canvas);
@@ -68,35 +82,6 @@ export default function CreateLogo() {
 
     fabricCanvasRef.current = canvas;
 
-    // Flag to prevent history from being saved during undo/redo
-    const saveHistory = () => {
-      if (isProcessingRef.current) return;
-
-      const json = JSON.stringify(
-        canvas.toJSON([
-          "fontFamily",
-          "fontSize",
-          "fontWeight",
-          "fontStyle",
-          "underline",
-          "stroke",
-          "strokeWidth",
-          "fill",
-          "opacity",
-        ])
-      );
-
-      setHistory((prev) => {
-        const newHistory = [...prev, json];
-        // Optional: limit history size to prevent memory issues
-        if (newHistory.length > 40) newHistory.shift();
-        return newHistory;
-      });
-
-      setRedoStack([]); // New action → clear redo stack
-    };
-
-    // Save initial empty state
     const initialJson = JSON.stringify(canvas.toJSON());
     setHistory([initialJson]);
 
@@ -104,10 +89,7 @@ export default function CreateLogo() {
     canvas.on("object:added", saveHistory);
     canvas.on("object:modified", saveHistory);
     canvas.on("object:removed", saveHistory);
-    // These are very useful for a smooth experience:
-    canvas.on("object:scaling", saveHistory);
-    canvas.on("object:rotating", saveHistory);
-    canvas.on("object:moving", saveHistory);
+    canvas.on("text:changed", saveHistory);
 
     // ─── Selection sync with controls ──────────────────────────
     const updateControls = () => {
@@ -172,6 +154,21 @@ export default function CreateLogo() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
+    const handleResize = () => {
+      if (!fabricCanvasRef.current) return;
+      const wrapper = document.querySelector(`.${styles.canvasWrapper}`);
+      if (wrapper) {
+        const newWidth = Math.min(wrapper.clientWidth - 40, 900);
+        fabricCanvasRef.current.setDimensions({
+          width: newWidth,
+          height: window.innerWidth < 768 ? 400 : 650,
+        });
+        fabricCanvasRef.current.renderAll();
+        saveHistory();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
 
     // ─── Cleanup ───────────────────────────────────────────────
     return () => {
@@ -188,6 +185,7 @@ export default function CreateLogo() {
       canvas.off("selection:updated", updateControls);
       canvas.off("selection:cleared", updateControls);
 
+      window.removeEventListener("resize", handleResize);
       canvas.dispose();
       fabricCanvasRef.current = null;
     };
@@ -216,6 +214,7 @@ export default function CreateLogo() {
     canvas.add(text);
     canvas.setActiveObject(text);
     canvas.renderAll();
+    saveHistory();
   };
 
   const changeFontFamily = (e) => {
@@ -225,6 +224,7 @@ export default function CreateLogo() {
     if (text) {
       text.set("fontFamily", font);
       fabricCanvasRef.current.renderAll();
+      saveHistory();
     }
   };
 
@@ -245,24 +245,33 @@ export default function CreateLogo() {
     }
   };
 
+  // Function to update brush properties
+  const updateBrush = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas || !canvas.freeDrawingBrush) return;
+
+    canvas.freeDrawingBrush.color = currentColor;
+    canvas.freeDrawingBrush.width = brushSize;
+  };
+
+  // Toggle drawing mode
   const toggleDrawingMode = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
     const newMode = !isDrawing;
     setIsDrawing(newMode);
-
     canvas.isDrawingMode = newMode;
 
     if (newMode) {
-      // In Fabric 6.x, ensure the brush exists
-      if (!canvas.freeDrawingBrush) {
-        canvas.freeDrawingBrush = new PencilBrush(canvas);
-      }
-      canvas.freeDrawingBrush.color = currentColor;
-      canvas.freeDrawingBrush.width = 5;
+      updateBrush();
     }
   };
+  useEffect(() => {
+    if (isDrawing) {
+      updateBrush();
+    }
+  }, [currentColor, brushSize, isDrawing]);
 
   const changeFontSize = (e) => {
     const size = parseInt(e.target.value, 10);
@@ -271,6 +280,7 @@ export default function CreateLogo() {
     if (text) {
       text.set("fontSize", size);
       fabricCanvasRef.current.renderAll();
+      saveHistory();
     }
   };
 
@@ -292,25 +302,37 @@ export default function CreateLogo() {
       setIsUnderline(newVal);
     }
     fabricCanvasRef.current.renderAll();
+    saveHistory();
   };
 
   // === Color ===
   const handleChangeColor = (e) => {
     const color = e.target.value;
+    if (!color || color === "transparent") return;
+
     setCurrentColor(color);
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    // Update pen color if currently drawing
     if (canvas.isDrawingMode && canvas.freeDrawingBrush) {
       canvas.freeDrawingBrush.color = color;
     }
 
     const obj = getActiveObject();
     if (!obj) return;
-    if (obj.fill !== undefined) obj.set("fill", color);
-    if (obj.stroke !== undefined) obj.set("stroke", color);
+
+    if (obj.type === "path") {
+      obj.set("stroke", color);
+    } else {
+      if (isFilled) {
+        obj.set({ fill: color, stroke: color, strokeWidth: 1 });
+      } else {
+        obj.set({ fill: "transparent", stroke: color, strokeWidth: 4 });
+      }
+    }
+
     canvas.renderAll();
+    saveHistory();
   };
 
   // === Shapes ===
@@ -322,9 +344,9 @@ export default function CreateLogo() {
       top: 200,
       width: 150,
       height: 100,
-      fill: currentColor,
-      stroke: "#000000",
-      strokeWidth: 2,
+      fill: isFilled ? currentColor : "transparent",
+      stroke: currentColor,
+      strokeWidth: isFilled ? 1 : 4,
     });
     canvas.add(rect);
     canvas.setActiveObject(rect);
@@ -338,9 +360,9 @@ export default function CreateLogo() {
       left: 300,
       top: 200,
       radius: 75,
-      fill: currentColor,
-      stroke: "#000000",
-      strokeWidth: 2,
+      fill: isFilled ? currentColor : "transparent",
+      stroke: currentColor,
+      strokeWidth: isFilled ? 1 : 4,
     });
     canvas.add(circle);
     canvas.setActiveObject(circle);
@@ -355,9 +377,9 @@ export default function CreateLogo() {
       top: 200,
       width: 150,
       height: 150,
-      fill: currentColor,
-      stroke: "#000000",
-      strokeWidth: 2,
+      fill: isFilled ? currentColor : "transparent",
+      stroke: currentColor,
+      strokeWidth: isFilled ? 1 : 4,
     });
     canvas.add(triangle);
     canvas.setActiveObject(triangle);
@@ -378,33 +400,33 @@ export default function CreateLogo() {
     canvas.renderAll();
   };
 
-  const addArrow = () => {
-    const canvas = fabricCanvasRef.current;
-    if (!canvas) return;
+  // const addArrow = () => {
+  //   const canvas = fabricCanvasRef.current;
+  //   if (!canvas) return;
 
-    const line = new Line([0, 0, 180, 0], {
-      stroke: currentColor,
-      strokeWidth: 5,
-    });
+  //   const line = new Line([0, 0, 180, 0], {
+  //     stroke: currentColor,
+  //     strokeWidth: 5,
+  //   });
 
-    const head = new Triangle({
-      width: 25,
-      height: 35,
-      fill: currentColor,
-      left: 180,
-      top: -17.5,
-      angle: 90,
-    });
+  //   const head = new Triangle({
+  //     width: 25,
+  //     height: 35,
+  //     fill: currentColor,
+  //     left: 180,
+  //     top: -17.5,
+  //     angle: 90,
+  //   });
 
-    const arrow = new Group([line, head], {
-      left: 300,
-      top: 250,
-    });
+  //   const arrow = new Group([line, head], {
+  //     left: 300,
+  //     top: 250,
+  //   });
 
-    canvas.add(arrow);
-    canvas.setActiveObject(arrow);
-    canvas.renderAll();
-  };
+  //   canvas.add(arrow);
+  //   canvas.setActiveObject(arrow);
+  //   canvas.renderAll();
+  // };
 
   // === Image Upload ===
   const handleImageUpload = async (e) => {
@@ -419,11 +441,9 @@ export default function CreateLogo() {
       const dataURL = event.target.result;
 
       try {
-        // In Fabric 6.x, fromURL returns a Promise
         const img = await FabricImage.fromURL(dataURL);
 
-        // Scale and position
-        img.scaleToWidth(200); // Helper to scale by width
+        img.scaleToWidth(200);
         img.set({
           left: canvas.width / 2,
           top: canvas.height / 2,
@@ -441,7 +461,6 @@ export default function CreateLogo() {
     };
     reader.readAsDataURL(file);
 
-    // Reset input so the same file can be uploaded again if deleted
     e.target.value = null;
   };
 
@@ -476,9 +495,8 @@ export default function CreateLogo() {
       activeObjects.forEach((obj) => {
         canvas.remove(obj);
       });
-      canvas.discardActiveObject(); // Clear the selection box
+      canvas.discardActiveObject();
       canvas.requestRenderAll();
-      // saveHistory() will be triggered by the 'object:removed' event in your useEffect
     }
   };
 
@@ -502,46 +520,54 @@ export default function CreateLogo() {
     }
   };
 
-  // Save state to history
-  // const saveHistory = () => {
-  //   const canvas = fabricCanvasRef.current;
-  //   if (!canvas) return;
+  const undo = async () => {
+    if (isProcessingRef.current) return;
+    if (history.length <= 1) return;
 
-  //   const json = JSON.stringify(canvas.toJSON());
-  //   setHistory((prev) => [...prev, json]);
-  //   setRedoStack([]); // Clear redo stack on new action
-  // };
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
-  const undo = () => {
-    if (history.length <= 1) return; // keep initial state
+    isProcessingRef.current = true;
 
-    const current = JSON.stringify(fabricCanvasRef.current.toJSON());
+    const current = history[history.length - 1];
     const previous = history[history.length - 2];
 
+    // Add current state to redo stack
     setRedoStack((prev) => [...prev, current]);
+
+    // Remove last state from history
     setHistory((prev) => prev.slice(0, -1));
 
-    isProcessingRef.current = true;
-    fabricCanvasRef.current.loadFromJSON(previous, () => {
-      fabricCanvasRef.current.renderAll();
-      isProcessingRef.current = false;
-    });
+    // Load previous state
+    await canvas.loadFromJSON(previous);
+    canvas.renderAll();
+
+    isProcessingRef.current = false;
   };
 
-  const redo = () => {
+  const redo = async () => {
+    if (isProcessingRef.current) return;
     if (redoStack.length === 0) return;
 
-    const nextState = redoStack[redoStack.length - 1];
-
-    const current = JSON.stringify(fabricCanvasRef.current.toJSON());
-    setHistory((prev) => [...prev, current]);
-    setRedoStack((prev) => prev.slice(0, -1));
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
     isProcessingRef.current = true;
-    fabricCanvasRef.current.loadFromJSON(nextState, () => {
-      fabricCanvasRef.current.renderAll();
-      isProcessingRef.current = false;
-    });
+
+    // Get the next state from redo stack
+    const nextState = redoStack[redoStack.length - 1];
+
+    // Remove it from redo stack
+    setRedoStack((prev) => prev.slice(0, -1));
+
+    // Add current state to history
+    setHistory((prev) => [...prev, nextState]);
+
+    // Load the next state
+    await canvas.loadFromJSON(nextState);
+    canvas.renderAll();
+
+    isProcessingRef.current = false;
   };
 
   // === Export ===
@@ -599,7 +625,6 @@ export default function CreateLogo() {
       {/* Top Toolbar */}
       <div className={styles.topToolbar}>
         <div className={styles.toolbarSection}>
-          <span className={styles.sectionLabel}>MANAGE</span>
           <Button onClick={duplicateSelected} title="Duplicate (Ctrl+D)">
             <Copy size={18} />
           </Button>
@@ -724,22 +749,41 @@ export default function CreateLogo() {
               <span>Shapes</span>
               <ChevronDown className={styles.chevronIcon} />
             </summary>
-            <div className={styles.shapeGrid}>
-              <Button onClick={addRectangle} title="Rectangle">
-                □
-              </Button>
-              <Button onClick={addCircle} title="Circle">
-                ○
-              </Button>
-              <Button onClick={addTriangle} title="Triangle">
-                △
-              </Button>
-              <Button onClick={addLine} title="Line">
-                —
-              </Button>
-              <Button onClick={addArrow} title="Arrow">
-                →
-              </Button>
+
+            <div className={styles.sectionContent}>
+              {/* Fill/Outline Toggle */}
+              <div className={styles.btnGroup} style={{ marginBottom: "10px" }}>
+                <Button
+                  className={isFilled ? styles.active : ""}
+                  onClick={() => setIsFilled(true)}
+                >
+                  Fill
+                </Button>
+                <Button
+                  className={!isFilled ? styles.active : ""}
+                  onClick={() => setIsFilled(false)}
+                >
+                  Outline
+                </Button>
+              </div>
+
+              <div className={styles.shapeGrid}>
+                <Button onClick={addRectangle} title="Rectangle">
+                  □
+                </Button>
+                <Button onClick={addCircle} title="Circle">
+                  ○
+                </Button>
+                <Button onClick={addTriangle} title="Triangle">
+                  △
+                </Button>
+                <Button onClick={addLine} title="Line">
+                  —
+                </Button>
+                {/* <Button onClick={addArrow} title="Arrow">
+                  →
+                </Button> */}
+              </div>
             </div>
           </details>
           <details open className={styles.sidebarSection}>
@@ -748,13 +792,43 @@ export default function CreateLogo() {
               <ChevronDown className={styles.chevronIcon} />
             </summary>
             <div className={styles.sectionContent}>
-              <Button
-                className={isDrawing ? styles.active : ""}
-                onClick={toggleDrawingMode}
-                title="Pen Tool"
-              >
-                <Pencil />
-              </Button>
+              <div className={styles.drawControls}>
+                <Button
+                  className={isDrawing ? styles.active : ""}
+                  onClick={toggleDrawingMode}
+                  title="Pen Tool"
+                >
+                  <Pencil size={20} />
+                </Button>
+
+                <div
+                  className={styles.sliderWrapper}
+                  style={{ marginTop: "15px" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <label style={{ fontSize: "12px", color: "#666" }}>
+                      Brush Size
+                    </label>
+                    <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+                      {brushSize}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value={brushSize}
+                    onChange={(e) => setBrushSize(parseInt(e.target.value, 10))}
+                    style={{ width: "100%", cursor: "pointer" }}
+                  />
+                </div>
+              </div>
             </div>
           </details>
 

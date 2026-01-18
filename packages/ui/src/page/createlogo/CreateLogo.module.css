@@ -266,6 +266,33 @@ button.active {
   }
 }
 
+@media (max-width: 768px) {
+  .editorLayout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .sidebarSection {
+    flex: 1 1 150px;
+  }
+
+  .topToolbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+  }
+}
+
 @media (max-width: 640px) {
   .topToolbar {
     flex-direction: column;
