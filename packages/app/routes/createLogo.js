@@ -1,9 +1,9 @@
 const { getPreSignedController } = require("../controllers/catalog");
 const {
-  addCreateLogoController,
-  updateCreateLogoController,
-  getCreateLogosController,
-  getCreateLogoByIdController,
+  addLogoController,
+  updateLogoController,
+  getLogoController,
+  getLogoByIdController,
 } = require("../controllers/createLogo");
 const authMiddleware = require("../middlewares/auth");
 const router = require("express").Router();
@@ -22,25 +22,25 @@ router.post(
   authMiddleware({
     roles: [UserType.ADMIN, UserType.OPERATOR, UserType.CUSTOMER],
   }),
-  addCreateLogoController
+  addLogoController
 );
 
 router.put(
   "/:createLogoId",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  updateCreateLogoController
+  updateLogoController
 );
 
 router.get(
   "/",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  getCreateLogosController
+  getLogoController
 );
 
 router.get(
   "/:createLogoId",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  getCreateLogoByIdController
+  getLogoByIdController
 );
 
 module.exports = router;

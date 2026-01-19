@@ -91,7 +91,7 @@ describe("POST : /api/requests", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(false);
     jest
-      .spyOn(CreateLogoService.prototype, "logoCreatedForCompanyUrl")
+      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
       .mockResolvedValue(false);
     jest
       .spyOn(RequestService.prototype, "createRaiseRequest")

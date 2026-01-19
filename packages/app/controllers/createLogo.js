@@ -17,17 +17,17 @@ const {
 /**
  * Validates input, checks for existing requests, creates image data, and adds a new logo request.
  */
-async function addCreateLogoController(req, res, next) {
+async function addLogoController(req, res, next) {
   try {
     const createLogoService = new CreateLogoService();
     const imageService = new ImageService();
     const requestService = new RequestService();
     const { userId } = req.userData;
     const imageSize = req.body.size;
-    const companyUri = req.body.companyUri;
+    const companyUrl = req.body.companyUrl;
     const Extension = req.body.extension;
 
-    const { error } = companyUriSchema.validate(companyUri);
+    const { error } = companyUriSchema.validate(companyUrl);
 
     if (error) {
       return res.status(500).json({
@@ -37,7 +37,7 @@ async function addCreateLogoController(req, res, next) {
       });
     }
 
-    const match = companyUri
+    const match = companyUrl
       .toUpperCase()
       .match(ExtractCompanyNameFromUrlRegex);
     const companyName = match[1];
@@ -52,7 +52,7 @@ async function addCreateLogoController(req, res, next) {
     }
 
     const logoAlreadyRequested =
-      await requestService.requestExistsForCompanyUrl(companyUri);
+      await requestService.requestExistsForCompanyUrl(companyUrl);
     if (logoAlreadyRequested) {
       return res.status(400).json({
         message: Messages.COMPANY_URL_ALREADY_PENDING,
@@ -61,9 +61,9 @@ async function addCreateLogoController(req, res, next) {
       });
     }
 
-    const logoAlreadyCreated =
-      await createLogoService.logoCreatedForCompanyUrl(companyUri);
-    if (logoAlreadyCreated) {
+    const logoHasPendingRequest =
+      await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
+    if (logoHasPendingRequest) {
       return res.status(400).json({
         message: Messages.LOGO_ALREADY_CREATED_AND_PENDING,
         statusCode: 400,
@@ -75,7 +75,7 @@ async function addCreateLogoController(req, res, next) {
       userId,
       imageSize,
       companyName,
-      companyUri,
+      companyUrl,
       Extension,
       false
     );
@@ -87,9 +87,9 @@ async function addCreateLogoController(req, res, next) {
       });
     }
 
-    const createLogoData = await createLogoService.addCreateLogoData(
+    const createLogoData = await createLogoService.addLogoData(
       userId,
-      companyUri,
+      companyUrl,
       imageData._id
     );
     res.status(200).json({
@@ -105,7 +105,7 @@ async function addCreateLogoController(req, res, next) {
 /**
  * Validates input, updates logo request status, and manages image visibility based on approval or rejection.
  */
-async function updateCreateLogoController(req, res, next) {
+async function updateLogoController(req, res, next) {
   try {
     const createLogoService = new CreateLogoService();
     const createLogoId = req.params.createLogoId;
@@ -130,7 +130,7 @@ async function updateCreateLogoController(req, res, next) {
       });
     }
 
-    const updateCreatedLogo = await createLogoService.respondToCreateLogo(
+    const updateCreatedLogo = await createLogoService.respondToLogo(
       createLogoId,
       operatorId,
       status,
@@ -165,7 +165,7 @@ async function updateCreateLogoController(req, res, next) {
 /**
  * Validates input, fetches list of created logo, and returns paginated results.
  */
-async function getCreateLogosController(req, res, next) {
+async function getLogoController(req, res, next) {
   try {
     const createLogoService = new CreateLogoService();
     const { error, value } = requestQuerySchema.validate(req.query);
@@ -203,12 +203,12 @@ async function getCreateLogosController(req, res, next) {
 /**
  * Validates input, fetches created logo by ID, and returns details.
  */
-async function getCreateLogoByIdController(req, res, next) {
+async function getLogoByIdController(req, res, next) {
   try {
     const createLogoService = new CreateLogoService();
     const createLogoId = req.params.createLogoId;
 
-    const details = await createLogoService.getCreateLogoDetails(createLogoId);
+    const details = await createLogoService.getLogoDetails(createLogoId);
     if (!details) {
       return res.status(404).json({
         statusCode: 404,
@@ -227,8 +227,8 @@ async function getCreateLogoByIdController(req, res, next) {
 }
 
 module.exports = {
-  addCreateLogoController,
-  updateCreateLogoController,
-  getCreateLogosController,
-  getCreateLogoByIdController,
+  addLogoController,
+  updateLogoController,
+  getLogoController,
+  getLogoByIdController,
 };

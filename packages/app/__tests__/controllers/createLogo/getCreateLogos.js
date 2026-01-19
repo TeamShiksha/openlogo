@@ -142,7 +142,7 @@ describe("GET /api/create-logo/:createLogoId - Get Create Logo by ID", () => {
     const token = mockAdmin.generateJWT();
 
     jest
-      .spyOn(CreateLogoService.prototype, "getCreateLogoDetails")
+      .spyOn(CreateLogoService.prototype, "getLogoDetails")
       .mockResolvedValue(null);
 
     const res = await request(app)
@@ -172,7 +172,7 @@ describe("GET /api/create-logo/:createLogoId - Get Create Logo by ID", () => {
     };
 
     jest
-      .spyOn(CreateLogoService.prototype, "getCreateLogoDetails")
+      .spyOn(CreateLogoService.prototype, "getLogoDetails")
       .mockResolvedValue(mockDetails);
 
     const res = await request(app)

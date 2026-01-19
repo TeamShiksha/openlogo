@@ -13,7 +13,7 @@ describe("CreateLogoService", () => {
   let mockCreate;
   let mockFindByCompanyUrlAndStatus;
   let mockGetById;
-  let mockUpdateCreateLogoStatus;
+  let mockUpdateLogoStatus;
   let mockGetAll;
   let mockImagesGetById;
   let mockImagesUpdate;
@@ -29,9 +29,9 @@ describe("CreateLogoService", () => {
       "findByCompanyUrlAndStatus"
     );
     mockGetById = jest.spyOn(CreateLogoRepository.prototype, "getById");
-    mockUpdateCreateLogoStatus = jest.spyOn(
+    mockUpdateLogoStatus = jest.spyOn(
       CreateLogoRepository.prototype,
-      "updateCreateLogoStatus"
+      "updateLogoStatus"
     );
     mockGetAll = jest.spyOn(CreateLogoRepository.prototype, "getAll");
     mockImagesGetById = jest.spyOn(ImagesRepository.prototype, "getById");
@@ -47,12 +47,12 @@ describe("CreateLogoService", () => {
   const imageId = MOCK_IMAGES[0]._id;
   const createLogoId = new mongoose.Types.ObjectId();
 
-  describe("addCreateLogoData", () => {
+  describe("addLogoData", () => {
     it("should create a new logo request and return its ID", async () => {
       const mockResult = { _id: createLogoId };
       mockCreate.mockResolvedValue(mockResult);
 
-      const result = await createLogoService.addCreateLogoData(
+      const result = await createLogoService.addLogoData(
         userId,
         companyUrl,
         imageId
@@ -70,17 +70,17 @@ describe("CreateLogoService", () => {
       mockCreate.mockRejectedValue(new Error("Creation failed"));
 
       await expect(
-        createLogoService.addCreateLogoData(userId, companyUrl, imageId)
+        createLogoService.addLogoData(userId, companyUrl, imageId)
       ).rejects.toThrow("Creation failed");
     });
   });
 
-  describe("logoCreatedForCompanyUrl", () => {
+  describe("findPendingRequestByCompanyUrl", () => {
     it("should return null if no pending logo exists for company URL", async () => {
       mockFindByCompanyUrlAndStatus.mockResolvedValue(null);
 
       const result =
-        await createLogoService.logoCreatedForCompanyUrl(companyUrl);
+        await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
 
       expect(mockFindByCompanyUrlAndStatus).toHaveBeenCalledWith(
         companyUrl,
@@ -94,13 +94,13 @@ describe("CreateLogoService", () => {
       mockFindByCompanyUrlAndStatus.mockResolvedValue(mockRequest);
 
       const result =
-        await createLogoService.logoCreatedForCompanyUrl(companyUrl);
+        await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
 
       expect(result).toEqual(mockRequest);
     });
   });
 
-  describe("respondToCreateLogo", () => {
+  describe("respondToLogo", () => {
     it("should return alreadyProcessed: true if logo is already RESOLVED", async () => {
       mockGetById.mockResolvedValue({
         _id: createLogoId,
@@ -108,7 +108,7 @@ describe("CreateLogoService", () => {
         images: imageId,
       });
 
-      const result = await createLogoService.respondToCreateLogo(
+      const result = await createLogoService.respondToLogo(
         createLogoId,
         userId,
         "RESOLVED",
@@ -125,7 +125,7 @@ describe("CreateLogoService", () => {
         images: imageId,
       });
 
-      const result = await createLogoService.respondToCreateLogo(
+      const result = await createLogoService.respondToLogo(
         createLogoId,
         userId,
         "REJECTED",
@@ -141,17 +141,17 @@ describe("CreateLogoService", () => {
         status: "PENDING",
         images: imageId,
       });
-      mockUpdateCreateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
+      mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
       mockImagesUpdate.mockResolvedValue({});
 
-      const result = await createLogoService.respondToCreateLogo(
+      const result = await createLogoService.respondToLogo(
         createLogoId,
         userId,
         StatusTypes.RESOLVED,
         "Approved"
       );
 
-      expect(mockUpdateCreateLogoStatus).toHaveBeenCalledWith(
+      expect(mockUpdateLogoStatus).toHaveBeenCalledWith(
         createLogoId,
         expect.objectContaining({
           status: StatusTypes.RESOLVED,
@@ -172,10 +172,10 @@ describe("CreateLogoService", () => {
         status: "PENDING",
         images: imageId,
       });
-      mockUpdateCreateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
+      mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
       mockImagesUpdate.mockResolvedValue({});
 
-      const result = await createLogoService.respondToCreateLogo(
+      const result = await createLogoService.respondToLogo(
         createLogoId,
         userId,
         StatusTypes.REJECTED,
@@ -195,10 +195,10 @@ describe("CreateLogoService", () => {
         status: "PENDING",
         images: imageId,
       });
-      mockUpdateCreateLogoStatus.mockResolvedValue({ modifiedCount: 0 });
+      mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 0 });
 
       await expect(
-        createLogoService.respondToCreateLogo(
+        createLogoService.respondToLogo(
           createLogoId,
           userId,
           StatusTypes.RESOLVED,
@@ -208,11 +208,11 @@ describe("CreateLogoService", () => {
     });
   });
 
-  describe("getCreateLogoDetails", () => {
+  describe("getLogoDetails", () => {
     it("should return null if logo not found", async () => {
       mockGetById.mockResolvedValue(null);
 
-      const result = await createLogoService.getCreateLogoDetails(createLogoId);
+      const result = await createLogoService.getLogoDetails(createLogoId);
 
       expect(result).toBeNull();
     });
@@ -238,7 +238,7 @@ describe("CreateLogoService", () => {
         "https://cloudfront.example.com/png/TESTCOMPANY.png"
       );
 
-      const result = await createLogoService.getCreateLogoDetails(createLogoId);
+      const result = await createLogoService.getLogoDetails(createLogoId);
 
       expect(result).toMatchObject({
         _id: createLogoId,
@@ -261,7 +261,7 @@ describe("CreateLogoService", () => {
 
       mockGetById.mockResolvedValue(mockLogo);
 
-      const result = await createLogoService.getCreateLogoDetails(createLogoId);
+      const result = await createLogoService.getLogoDetails(createLogoId);
 
       expect(result.previewUrl).toBeNull();
     });

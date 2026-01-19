@@ -28,7 +28,7 @@ class CreateLogoRepository extends BaseRepository {
    * @param {Object} updatedData - updated Data of the logo
    * @returns {Promise<Object>} - returns the result
    */
-  async updateCreateLogoStatus(id, updatedData) {
+  async updateLogoStatus(id, updatedData) {
     return await this.model.updateOne({ _id: id }, updatedData);
   }
 }

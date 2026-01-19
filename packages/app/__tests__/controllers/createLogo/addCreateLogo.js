@@ -28,19 +28,19 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
   });
 
   const validRequestBody = {
-    companyUri: "https://testcompany.com/",
+    companyUrl: "https://testcompany.com/",
     size: 1024,
     extension: "png",
   };
 
-  it("should return 500 if companyUri validation fails", async () => {
+  it("should return 500 if companyUrl validation fails", async () => {
     const mockUser = new Users(MOCK_USERS[1]);
     const token = mockUser.generateJWT();
 
     const res = await request(app)
       .post("/api/create-logo/logo")
       .set("Cookie", `jwt=${token}`)
-      .send({ companyUri: "invalid-uri", size: 1024, extension: "png" });
+      .send({ companyUrl: "invalid-uri", size: 1024, extension: "png" });
 
     expect(res.statusCode).toEqual(500);
     expect(res.body.statusCode).toEqual(500);
@@ -102,7 +102,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "logoCreatedForCompanyUrl")
+      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
       .mockResolvedValue({ companyUrl: "https://testcompany.com/" });
 
     const res = await request(app)
@@ -129,7 +129,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "logoCreatedForCompanyUrl")
+      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
       .mockResolvedValue(null);
     jest
       .spyOn(ImageService.prototype, "createImageData")
@@ -162,13 +162,13 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "logoCreatedForCompanyUrl")
+      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
       .mockResolvedValue(null);
     jest
       .spyOn(ImageService.prototype, "createImageData")
       .mockResolvedValue(mockImageData);
     jest
-      .spyOn(CreateLogoService.prototype, "addCreateLogoData")
+      .spyOn(CreateLogoService.prototype, "addLogoData")
       .mockResolvedValue(mockCreateLogoData);
 
     const res = await request(app)

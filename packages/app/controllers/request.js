@@ -155,9 +155,11 @@ async function addRequestController(req, res, next) {
       });
     }
 
-    const logoAlreadyCreated =
-      await createLogoService.logoCreatedForCompanyUrl(requestedCompanyUrl);
-    if (logoAlreadyCreated) {
+    const logoHasPendingRequest =
+      await createLogoService.findPendingRequestByCompanyUrl(
+        requestedCompanyUrl
+      );
+    if (logoHasPendingRequest) {
       return res.status(400).json({
         message: Messages.LOGO_ALREADY_CREATED_AND_PENDING,
         statusCode: 400,

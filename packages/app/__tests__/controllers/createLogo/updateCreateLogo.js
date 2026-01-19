@@ -73,7 +73,7 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
       .spyOn(CreateLogoService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
     jest
-      .spyOn(CreateLogoService.prototype, "respondToCreateLogo")
+      .spyOn(CreateLogoService.prototype, "respondToLogo")
       .mockResolvedValue({ alreadyProcessed: true });
 
     const res = await request(app)
@@ -103,7 +103,7 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
       .spyOn(CreateLogoService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
     jest
-      .spyOn(CreateLogoService.prototype, "respondToCreateLogo")
+      .spyOn(CreateLogoService.prototype, "respondToLogo")
       .mockResolvedValue({ modifiedCount: 1 });
 
     const res = await request(app)
