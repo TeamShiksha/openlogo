@@ -17,7 +17,9 @@ import {
   AArrowUp,
   ArrowUpFromLine,
   ChevronDown,
+  ChevronLeft,
   Copy,
+  Menu,
   Pencil,
   Redo,
   Trash,
@@ -46,6 +48,7 @@ export default function CreateLogo() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushSize, setBrushSize] = useState(5);
   const [isFilled, setIsFilled] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const isProcessingRef = useRef(false);
   const isGuest = userData?.role === "GUEST";
 
@@ -191,6 +194,16 @@ export default function CreateLogo() {
     };
   }, []);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1025px)");
+    setSidebarOpen(mediaQuery.matches);
+
+    const handler = (e) => setSidebarOpen(e.matches);
+    mediaQuery.addEventListener("change", handler);
+
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
   const getActiveObject = () => fabricCanvasRef.current?.getActiveObject();
   const getActiveText = () => {
     const obj = getActiveObject();
@@ -201,9 +214,14 @@ export default function CreateLogo() {
   const addText = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
+    const { x, y } = getCanvasCenter();
+
     const text = new Textbox("OpenLogo", {
-      left: 300,
-      top: 200,
+      left: x - 80, // shift left a bit so text is roughly centered
+      top: y - 20, // adjust vertically
+      originX: "center", // ← very helpful!
+      originY: "center",
       fontSize: currentFontSize,
       fill: currentColor,
       fontFamily: selectedFont,
@@ -211,6 +229,7 @@ export default function CreateLogo() {
       fontStyle: isItalic ? "italic" : "normal",
       underline: isUnderline,
     });
+
     canvas.add(text);
     canvas.setActiveObject(text);
     canvas.renderAll();
@@ -336,65 +355,99 @@ export default function CreateLogo() {
   };
 
   // === Shapes ===
+  // Add these near your other helpers
+  const getCanvasCenter = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return { x: 150, y: 150 }; // fallback
+
+    return {
+      x: canvas.getWidth() / 2,
+      y: canvas.getHeight() / 2,
+    };
+  };
+
   const addRectangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
+    const { x, y } = getCanvasCenter();
+
     const rect = new Rect({
-      left: 300,
-      top: 200,
+      left: x - 75,
+      top: y - 50,
+      originX: "center",
+      originY: "center",
       width: 150,
       height: 100,
       fill: isFilled ? currentColor : "transparent",
       stroke: currentColor,
       strokeWidth: isFilled ? 1 : 4,
     });
+
     canvas.add(rect);
     canvas.setActiveObject(rect);
     canvas.renderAll();
   };
 
+  // Circle
   const addCircle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
+    const { x, y } = getCanvasCenter();
+
     const circle = new Circle({
-      left: 300,
-      top: 200,
-      radius: 75,
+      left: x,
+      top: y,
+      originX: "center",
+      originY: "center",
+      radius: 60, // smaller on mobile is better — or make dynamic
       fill: isFilled ? currentColor : "transparent",
       stroke: currentColor,
       strokeWidth: isFilled ? 1 : 4,
     });
+
     canvas.add(circle);
     canvas.setActiveObject(circle);
     canvas.renderAll();
   };
 
+  // Triangle (similar pattern)
   const addTriangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-    const triangle = new Triangle({
-      left: 300,
-      top: 200,
-      width: 150,
-      height: 150,
+
+    const { x, y } = getCanvasCenter();
+
+    const tri = new Triangle({
+      left: x,
+      top: y,
+      originX: "center",
+      originY: "center",
+      width: 120,
+      height: 100,
       fill: isFilled ? currentColor : "transparent",
       stroke: currentColor,
       strokeWidth: isFilled ? 1 : 4,
     });
-    canvas.add(triangle);
-    canvas.setActiveObject(triangle);
+
+    canvas.add(tri);
+    canvas.setActiveObject(tri);
     canvas.renderAll();
   };
 
+  // Line
   const addLine = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-    const line = new Line([0, 0, 200, 0], {
-      left: 300,
-      top: 250,
+
+    const { x, y } = getCanvasCenter();
+
+    const line = new Line([x - 100, y, x + 100, y], {
       stroke: currentColor,
-      strokeWidth: 5,
+      strokeWidth: 4,
     });
+
     canvas.add(line);
     canvas.setActiveObject(line);
     canvas.renderAll();
@@ -489,7 +542,7 @@ export default function CreateLogo() {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    const activeObjects = canvas.getActiveObjects(); // Gets array of all selected items
+    const activeObjects = canvas.getActiveObjects();
 
     if (activeObjects.length > 0) {
       activeObjects.forEach((obj) => {
@@ -625,6 +678,15 @@ export default function CreateLogo() {
       {/* Top Toolbar */}
       <div className={styles.topToolbar}>
         <div className={styles.toolbarSection}>
+          <Button
+            onClick={() => {
+              setSidebarOpen((prev) => !prev);
+              setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
+            }}
+            title="Toggle sidebar"
+          >
+            {sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
+          </Button>
           <Button onClick={duplicateSelected} title="Duplicate (Ctrl+D)">
             <Copy size={18} />
           </Button>
@@ -653,9 +715,7 @@ export default function CreateLogo() {
             className={styles.colorPicker}
             title="Color"
           />
-        </div>
 
-        <div className={styles.toolbarSection}>
           <Button
             onClick={triggerImageUpload}
             title="Upload"
@@ -684,7 +744,9 @@ export default function CreateLogo() {
 
       <div className={styles.editorLayout}>
         {/* Sidebar */}
-        <aside className={styles.sidebar}>
+        <aside
+          className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed}`}
+        >
           <details open className={styles.sidebarSection}>
             <summary className={styles.sidebarHeading}>
               <span>Text</span>
