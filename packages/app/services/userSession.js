@@ -22,13 +22,11 @@ class UserSessionService {
    * @param {string} [params.deviceId] - Device ID (optional).
    * @returns {Promise<Object>} - Created session object.
    */
-  async createSession({ userId, deviceId }) {
+  async createSession({ userId }) {
     const sessionId = this.generateSessionId();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     return await this.userSessionRepository.create({
       userId,
-      deviceId,
       sessionId,
       expiresAt,
     });
