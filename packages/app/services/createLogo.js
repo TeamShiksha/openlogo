@@ -109,11 +109,6 @@ class CreateLogoService {
 
     return {
       _id: createLogo._id,
-      companyUrl: createLogo.companyUrl,
-      status: createLogo.status,
-      comment: createLogo.comment,
-      openedAt: createLogo.openedAt,
-      closedAt: createLogo.closedAt,
       previewUrl,
     };
   }

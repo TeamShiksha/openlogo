@@ -8,7 +8,7 @@ const {
   Messages,
   ExtractCompanyNameFromUrlRegex,
 } = require("../utils/constants");
-const { companyUriSchema } = require("../schemas/catalog");
+const { companyUrlSchema } = require("../schemas/catalog");
 const {
   updateRequestSchema,
   requestQuerySchema,
@@ -27,7 +27,7 @@ async function addLogoController(req, res, next) {
     const companyUrl = req.body.companyUrl;
     const Extension = req.body.extension;
 
-    const { error } = companyUriSchema.validate(companyUrl);
+    const { error } = companyUrlSchema.validate(companyUrl);
 
     if (error) {
       return res.status(500).json({
@@ -187,39 +187,20 @@ async function getLogoController(req, res, next) {
 
     const fetchedData = !data || data.length === 0 ? [] : data;
 
+    const resultsWithPreview = await Promise.all(
+      fetchedData.map(async (item) => {
+        const detail = await createLogoService.getLogoDetails(item._id);
+        return { ...item._doc, previewUrl: detail?.previewUrl || null };
+      })
+    );
+
     return res.status(200).json({
       statusCode: 200,
       message: Messages.FETCH_ALL_REQUESTS,
       total,
       currentPage,
       totalPages,
-      results: fetchedData,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * Validates input, fetches created logo by ID, and returns details.
- */
-async function getLogoByIdController(req, res, next) {
-  try {
-    const createLogoService = new CreateLogoService();
-    const createLogoId = req.params.createLogoId;
-
-    const details = await createLogoService.getLogoDetails(createLogoId);
-    if (!details) {
-      return res.status(404).json({
-        statusCode: 404,
-        error: STATUS_CODES[404],
-        message: Messages.CREATED_LOGO_NOT_FOUND,
-      });
-    }
-    return res.status(200).json({
-      statusCode: 200,
-      message: Messages.UPDATE_SUCCESS,
-      data: details,
+      results: resultsWithPreview,
     });
   } catch (err) {
     next(err);
@@ -230,5 +211,4 @@ module.exports = {
   addLogoController,
   updateLogoController,
   getLogoController,
-  getLogoByIdController,
 };

@@ -242,8 +242,6 @@ describe("CreateLogoService", () => {
 
       expect(result).toMatchObject({
         _id: createLogoId,
-        companyUrl: companyUrl,
-        status: "PENDING",
         previewUrl: "https://cloudfront.example.com/png/TESTCOMPANY.png",
       });
     });

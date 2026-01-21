@@ -72,11 +72,21 @@ describe("GET /api/create-logo - Get Create Logos", () => {
         _id: "logo1",
         companyUrl: "https://company1.com",
         status: "PENDING",
+        _doc: {
+          _id: "logo1",
+          companyUrl: "https://company1.com",
+          status: "PENDING",
+        },
       },
       {
         _id: "logo2",
         companyUrl: "https://company2.com",
         status: "RESOLVED",
+        _doc: {
+          _id: "logo2",
+          companyUrl: "https://company2.com",
+          status: "RESOLVED",
+        },
       },
     ];
 
@@ -87,6 +97,15 @@ describe("GET /api/create-logo - Get Create Logos", () => {
         total: 2,
         currentPage: 1,
         totalPages: 1,
+      });
+
+    jest
+      .spyOn(CreateLogoService.prototype, "getLogoDetails")
+      .mockImplementation((id) => {
+        return Promise.resolve({
+          _id: id,
+          previewUrl: `https://cdn.example.com/${id}.png`,
+        });
       });
 
     const res = await request(app)
@@ -113,84 +132,6 @@ describe("GET /api/create-logo - Get Create Logos", () => {
     const res = await request(app)
       .get("/api/create-logo?page=1&limit=10")
       .set("Cookie", `jwt=${token}`);
-
-    expect(res.statusCode).toEqual(401);
-  });
-});
-
-describe("GET /api/create-logo/:createLogoId - Get Create Logo by ID", () => {
-  beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
-    process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
-    process.env.KEY = "logos";
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
-    delete process.env.CLIENT_PROXY_URL;
-    delete process.env.KEY;
-  });
-
-  const mockCreateLogoId = "507f1f77bcf86cd799439011";
-
-  it("should return 404 if created logo not found", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
-    jest
-      .spyOn(CreateLogoService.prototype, "getLogoDetails")
-      .mockResolvedValue(null);
-
-    const res = await request(app)
-      .get(`/api/create-logo/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`);
-
-    expect(res.statusCode).toEqual(404);
-    expect(res.body).toEqual({
-      statusCode: 404,
-      error: STATUS_CODES[404],
-      message: Messages.CREATED_LOGO_NOT_FOUND,
-    });
-  });
-
-  it("should return 200 with logo details", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
-    const mockDetails = {
-      _id: mockCreateLogoId,
-      companyUrl: "https://testcompany.com/",
-      status: "PENDING",
-      comment: null,
-      openedAt: new Date("2025-01-01"),
-      closedAt: null,
-      previewUrl: "https://cloudfront.example.com/image.png",
-    };
-
-    jest
-      .spyOn(CreateLogoService.prototype, "getLogoDetails")
-      .mockResolvedValue(mockDetails);
-
-    const res = await request(app)
-      .get(`/api/create-logo/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`);
-
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.statusCode).toEqual(200);
-    expect(res.body.message).toEqual(Messages.UPDATE_SUCCESS);
-    expect(res.body.data).toMatchObject({
-      _id: mockCreateLogoId,
-      companyUrl: "https://testcompany.com/",
-      status: "PENDING",
-    });
-  });
-
-  it("should return 401 for unauthenticated request", async () => {
-    const res = await request(app).get(`/api/create-logo/${mockCreateLogoId}`);
 
     expect(res.statusCode).toEqual(401);
   });

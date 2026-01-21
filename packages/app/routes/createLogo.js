@@ -3,7 +3,6 @@ const {
   addLogoController,
   updateLogoController,
   getLogoController,
-  getLogoByIdController,
 } = require("../controllers/createLogo");
 const authMiddleware = require("../middlewares/auth");
 const router = require("express").Router();
@@ -35,12 +34,6 @@ router.get(
   "/",
   authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
   getLogoController
-);
-
-router.get(
-  "/:createLogoId",
-  authMiddleware({ roles: [UserType.ADMIN, UserType.OPERATOR] }),
-  getLogoByIdController
 );
 
 module.exports = router;
