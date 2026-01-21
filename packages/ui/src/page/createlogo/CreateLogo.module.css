@@ -11,7 +11,6 @@
 /* ====================== TOP TOOLBAR ====================== */
 .topToolbar {
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   position: relative;
   background: white;
@@ -22,9 +21,20 @@
 }
 
 .toolbarSection {
+  width: 100%;
   display: flex;
   align-items: center;
+  /* gap: 10px; */
+}
+
+.toolbarMidSection {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .toolbarSection .primaryBtn {
@@ -84,15 +94,48 @@
 }
 /* ====================== SIDEBAR ====================== */
 .sidebar {
+  height: 93vh;
   width: 88px;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
   padding: 10px 6px;
+  position: absolute;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 14px;
   box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+  z-index: 5;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE / Edge legacy */
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Safari, Edge (Chromium) */
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.sidebarToggleButton {
+  position: absolute;
+  top: 12px;
+  right: -20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 /* ====================== DETAILS ====================== */
@@ -229,7 +272,16 @@ button.active {
   display: flex;
   flex: 1;
   flex-direction: row;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+.sidebarToggleButton {
+  height: 40px;
+  width: 100%;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  font-size: 16px;
 }
 
 .canvasWrapper {
@@ -239,7 +291,6 @@ button.active {
   align-items: center;
   background: #f1f5f9;
   padding: 16px;
-  overflow: hidden;
 }
 
 .canvasWrapper canvas {
@@ -258,7 +309,6 @@ button.active {
     padding 0.3s ease,
     border 0.3s ease;
   flex-shrink: 0;
-  overflow: hidden;
 }
 .sidebar.open {
   width: 88px;
@@ -277,6 +327,9 @@ button.active {
 }
 
 @media (max-width: 640px) {
+  .sidebar {
+    height: 82vh;
+  }
   .topToolbar {
     flex-direction: column;
     justify-content: start;

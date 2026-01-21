@@ -217,12 +217,13 @@ export default function CreateLogo() {
 
     const { x, y } = getCanvasCenter();
 
-    const text = new Textbox("OpenLogo", {
-      left: x - 80, // shift left a bit so text is roughly centered
-      top: y - 20, // adjust vertically
-      originX: "center", // ← very helpful!
+    const text = new Textbox("New text", {
+      left: x - 80,
+      top: y - 20,
+      originX: "center",
       originY: "center",
       fontSize: currentFontSize,
+      width: 130,
       fill: currentColor,
       fontFamily: selectedFont,
       fontWeight: isBold ? "bold" : "normal",
@@ -525,6 +526,7 @@ export default function CreateLogo() {
   const duplicateSelected = () => {
     const canvas = fabricCanvasRef.current;
     const obj = getActiveObject();
+
     if (!obj) return;
 
     obj.clone((cloned) => {
@@ -678,67 +680,74 @@ export default function CreateLogo() {
       {/* Top Toolbar */}
       <div className={styles.topToolbar}>
         <div className={styles.toolbarSection}>
-          <Button
-            onClick={() => {
-              setSidebarOpen((prev) => !prev);
-              setTimeout(() => window.dispatchEvent(new Event("resize")), 400);
-            }}
-            title="Toggle sidebar"
-          >
-            {sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
-          </Button>
-          <Button onClick={duplicateSelected} title="Duplicate (Ctrl+D)">
-            <Copy size={18} />
-          </Button>
-          <Button onClick={deleteSelected} title="Delete (Del)">
-            <Trash size={18} />
-          </Button>
-          <Button onClick={bringToFront} title="Bring to Front">
-            <AArrowUp size={18} />
-          </Button>
-          <Button onClick={sendToBack} title="Send to Back">
-            <AArrowDown size={18} />
-          </Button>
-          <Button onClick={undo} title="Undo">
-            <Undo size={18} />
-          </Button>
-          <Button onClick={redo} title="Redo">
-            <Redo size={18} />
-          </Button>
-          <Button onClick={resetCanvas} title="Reset Canvas">
-            <span style={{ fontSize: "12px", fontWeight: "bold" }}>RESET</span>
-          </Button>
-          <input
-            type="color"
-            value={currentColor}
-            onChange={handleChangeColor}
-            className={styles.colorPicker}
-            title="Color"
-          />
+          <div className={styles.toolbarMidSection}>
+            <Button
+              onClick={() => {
+                setSidebarOpen((prev) => !prev);
+                setTimeout(
+                  () => window.dispatchEvent(new Event("resize")),
+                  400
+                );
+              }}
+              title="Toggle sidebar"
+            >
+              {sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
+            </Button>
+            <Button onClick={duplicateSelected} title="Duplicate (Ctrl+D)">
+              <Copy size={18} />
+            </Button>
+            <Button onClick={deleteSelected} title="Delete (Del)">
+              <Trash size={18} />
+            </Button>
+            <Button onClick={bringToFront} title="Bring to Front">
+              <AArrowUp size={18} />
+            </Button>
+            <Button onClick={sendToBack} title="Send to Back">
+              <AArrowDown size={18} />
+            </Button>
+            <Button onClick={undo} title="Undo">
+              <Undo size={18} />
+            </Button>
+            <Button onClick={redo} title="Redo">
+              <Redo size={18} />
+            </Button>
+            <Button onClick={resetCanvas} title="Reset Canvas">
+              <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+                RESET
+              </span>
+            </Button>
+            <input
+              type="color"
+              value={currentColor}
+              onChange={handleChangeColor}
+              className={styles.colorPicker}
+              title="Color"
+            />
 
-          <Button
-            onClick={triggerImageUpload}
-            title="Upload"
-            className={styles.primaryBtn}
-          >
-            Upload
-          </Button>
-          <Button
-            onClick={handleExport}
-            title="Export"
-            className={styles.primaryBtn}
-          >
-            EXPORT
-          </Button>
-          <select
-            className={styles.exportSelect}
-            value={exportType}
-            onChange={(e) => setExportType(e.target.value)}
-          >
-            <option value="png">PNG</option>
-            <option value="svg">SVG</option>
-            <option value="json">JSON</option>
-          </select>
+            <Button
+              onClick={triggerImageUpload}
+              title="Upload"
+              className={styles.primaryBtn}
+            >
+              Upload
+            </Button>
+            <Button
+              onClick={handleExport}
+              title="Export"
+              className={styles.primaryBtn}
+            >
+              EXPORT
+            </Button>
+            <select
+              className={styles.exportSelect}
+              value={exportType}
+              onChange={(e) => setExportType(e.target.value)}
+            >
+              <option value="png">PNG</option>
+              <option value="svg">SVG</option>
+              <option value="json">JSON</option>
+            </select>
+          </div>
         </div>
       </div>
 
