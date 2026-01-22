@@ -23,7 +23,7 @@ module.exports = (options = {}) => {
       const validateSession =
         await userSessionService.validateSession(sessionId);
 
-      if (!validateSession) {
+      if (!validateSession || !validateSession?.userId) {
         return res.status(401).json({
           error: STATUS_CODES[403],
           message: "Invalid credentials",
@@ -31,25 +31,36 @@ module.exports = (options = {}) => {
         });
       }
 
-      const { userId: user } = validateSession;
+      const user = validateSession?.userId;
+
+      if (user.is_deleted) {
+        await userSessionService.signout(sessionId);
+        return res.status(401).json({
+          error: STATUS_CODES[401],
+          message: "Account inactive",
+          statusCode: 401,
+        });
+      }
 
       const userData = {
+        userId: user._id.toString(),
         name: user.name,
         email: user.email,
         role: user.role,
-        userId: user._id,
         is_verified: user.is_verified,
-        subscription_id: user.subscription_id,
-        created_at: user.createdAt,
+        subscription_id: user.subscription_id
+          ? user.subscription_id.toString()
+          : null,
         is_deleted: user.is_deleted,
-        updated_at: user.updatedAt,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
       };
 
       if (
-        (options.adminOnly && user.role !== UserType.ADMIN) ||
-        (options.operatorOnly && user.role !== UserType.OPERATOR) ||
-        (options.customerOnly && user.role !== UserType.CUSTOMER) ||
-        (options.roles && !options.roles.includes(user.role))
+        (options.adminOnly && userData.role !== UserType.ADMIN) ||
+        (options.operatorOnly && userData.role !== UserType.OPERATOR) ||
+        (options.customerOnly && userData.role !== UserType.CUSTOMER) ||
+        (options.roles && !options.roles.includes(userData.role))
       )
         return res.status(401).json({
           error: STATUS_CODES[401],

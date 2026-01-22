@@ -35,7 +35,18 @@ class PasswordResetRepository extends BaseRepository {
    */
   async deactivateSession(sessionId) {
     return await this.model.findOneAndUpdate(
-      { sessionId },
+      { sessionId, isActive: true },
+      { isActive: false }
+    );
+  }
+
+  /**
+   * Deactivate all active reset sessions for a user
+   * @param {string} userId
+   */
+  async deactivateAllActiveSessions(userId) {
+    return await this.model.updateMany(
+      { userId, isActive: true },
       { isActive: false }
     );
   }

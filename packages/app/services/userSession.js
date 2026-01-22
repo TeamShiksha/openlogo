@@ -19,7 +19,6 @@ class UserSessionService {
    * Creates a new user session.
    * @param {Object} params
    * @param {string} params.userId - User ID.
-   * @param {string} [params.deviceId] - Device ID (optional).
    * @returns {Promise<Object>} - Created session object.
    */
   async createSession({ userId }) {

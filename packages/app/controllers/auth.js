@@ -199,13 +199,13 @@ async function signinController(req, res, next) {
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
 
+    const isProduction = getIsProduction();
     /** @type {import("express").CookieOptions}  */
-
     const sessionCookieOptions = {
       expires: oneDayValidityTimestamp,
       sameSite: "strict",
       httpOnly: true,
-      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     };
 
     res.cookie("sessionId", session.sessionId, sessionCookieOptions);
@@ -239,12 +239,12 @@ async function signoutController(req, res, next) {
     }
 
     await userSessionService.signout(sessionId);
-
+    const isProduction = getIsProduction();
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       sameSite: "strict",
       httpOnly: true,
-      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     };
 
     res.clearCookie("sessionId", cookieOptions);
@@ -457,11 +457,13 @@ async function resetPasswordSessionController(req, res, next) {
       resetToken: userToken.token,
     });
 
+    const isProduction = getIsProduction();
+
     res.cookie("resetPasswordSessionId", resetSession.sessionId, {
       httpOnly: true,
       sameSite: "strict",
       expires: resetSession.expiresAt,
-      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     });
 
     return res.status(200).json({ statusCode: 200 });
@@ -541,10 +543,12 @@ async function resetPasswordController(req, res, next) {
 
     await passwordResetSessionService.deactivateSession(resetPasswordSessionId);
 
+    const isProduction = getIsProduction();
+
     res.clearCookie("resetPasswordSessionId", {
       httpOnly: true,
       sameSite: "strict",
-      domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     });
 
     return res.status(200).json({ statusCode: 200 });

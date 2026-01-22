@@ -19,9 +19,11 @@ class PasswordResetSessionService {
    * @returns {Promise<Object>} - Created session object.
    */
   async createSession({ userId, resetToken }) {
+    // deactivate previous sessions
+    await this.PasswordResetRepository.deactivateAllActiveSessions(userId);
+
     const sessionId = this.generateSessionId();
-    const now = new Date();
-    const expiresAt = now.setMinutes(now.getMinutes() + 10);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     return await this.PasswordResetRepository.create({
       userId,

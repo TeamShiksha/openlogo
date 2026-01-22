@@ -22,12 +22,6 @@ const UserType = {
   GUEST: "GUEST",
 };
 
-const DeviceTypes = {
-  DESKTOP: "DESKTOP",
-  MOBILE: "MOBILE",
-  TABLET: "TABLET",
-};
-
 const SubscriptionTypes = {
   HOBBY: "HOBBY",
   PRO: "PRO",
@@ -119,6 +113,9 @@ const CLOUD_FRONT_REGION = "us-east-1";
 const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
 
+const USER_SAFE_FIELDS =
+  "name email role userId is_verified subscription_id created_at is_deleted updated_at ";
+
 module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
@@ -132,5 +129,5 @@ module.exports = {
   TAB_OPTIONS,
   CLOUD_FRONT_REGION,
   getIsProduction,
-  DeviceTypes,
+  USER_SAFE_FIELDS,
 };

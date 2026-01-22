@@ -1,6 +1,7 @@
 // repositories/userSession.js
 const BaseRepository = require("./base");
 const UserSession = require("../models/userSession");
+const { USER_SAFE_FIELDS } = require("../utils/constants");
 
 /**
  * UserSessionRepository handles database operations for the UserSession model.
@@ -31,7 +32,7 @@ class UserSessionRepository extends BaseRepository {
         isActive: true,
         expiresAt: { $gt: new Date() },
       })
-      .populate("userId");
+      .populate("userId", USER_SAFE_FIELDS);
   }
 
   /**
