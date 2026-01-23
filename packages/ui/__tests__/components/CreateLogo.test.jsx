@@ -50,6 +50,14 @@ vi.mock("fabric", async (importOriginal) => {
   };
 });
 
+vi.mock("../../src/page/createlogo/LogoUploadForm", () => ({
+  default: ({ closeModal }) => (
+    <div data-testid="logo-upload-form">
+      <button onClick={closeModal}>Close Modal</button>
+    </div>
+  ),
+}));
+
 // --------------------
 // Mocks
 // --------------------
@@ -200,5 +208,20 @@ describe("CreateLogo", () => {
 
     fireEvent.click(screen.getByText("RESET"));
     expect(mockToast.success).toHaveBeenCalledWith("Canvas cleared");
+  });
+
+  it("opens and closes LogoUploadForm modal when Upload button is clicked", async () => {
+    renderCreateLogo();
+
+    const uploadBtn = screen.getByRole("button", { name: "Upload" });
+    fireEvent.click(uploadBtn);
+
+    const modal = screen.getByTestId("logo-upload-form");
+    expect(modal).toBeInTheDocument();
+
+    const closeBtn = screen.getByText("Close Modal");
+    fireEvent.click(closeBtn);
+
+    expect(screen.queryByTestId("logo-upload-form")).not.toBeInTheDocument();
   });
 });

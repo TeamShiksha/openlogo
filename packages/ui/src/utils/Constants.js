@@ -377,6 +377,7 @@ export const BUTTON_TEXT = {
   delete: "Delete",
   generateKey: "Generate Key",
   requestLogo: "Request Logo",
+  createLogo: "Create Logo",
   goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
@@ -389,6 +390,7 @@ export const BUTTON_TEXT = {
   sendRequest: "Send Request",
   upload: "Upload",
   selectAnImage: "Select an image",
+  uploadLogo: "Upload Logo",
 };
 
 export const BRANDING = {
@@ -511,6 +513,13 @@ export const CONTACT = {
 
 export const LOGOREQUEST = {
   title: "Request Logo",
+  initialValues: {
+    companyUrl: "",
+  },
+};
+
+export const LOGOUPLOAD = {
+  title: "Upload Logo",
   initialValues: {
     companyUrl: "",
   },

@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { UserContext } from "../../contexts/Contexts.jsx";
 import { useToast } from "../../hooks/useToast.js";
+import LogoUploadForm from "./LogoUploadForm.jsx";
 
 export default function CreateLogo() {
   const canvasRef = useRef(null);
@@ -49,6 +50,7 @@ export default function CreateLogo() {
   const [brushSize, setBrushSize] = useState(5);
   const [isFilled, setIsFilled] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const isProcessingRef = useRef(false);
   const isGuest = userData?.role === "GUEST";
 
@@ -694,6 +696,26 @@ export default function CreateLogo() {
     if (exportType === "json") downloadJSON();
   };
 
+  const openUploadModal = () => setIsUploadModalOpen(true);
+  const closeUploadModal = () => setIsUploadModalOpen(false);
+
+  const getCanvasDataUrl = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return null;
+    return canvas.toDataURL({
+      format: "png",
+      multiplier: 2,
+    });
+  };
+
+  const handleUploadClick = () => {
+    if (isGuest) {
+      toast?.error("Guests cannot upload logos");
+      return;
+    }
+    openUploadModal();
+  };
+
   return (
     <div className={styles.container}>
       {/* Top Toolbar */}
@@ -744,7 +766,7 @@ export default function CreateLogo() {
             />
 
             <Button
-              onClick={triggerImageUpload}
+              onClick={handleUploadClick}
               title="Upload"
               className={styles.primaryBtn}
             >
@@ -953,6 +975,12 @@ export default function CreateLogo() {
         onChange={handleImageUpload}
         style={{ display: "none" }}
       />
+      {isUploadModalOpen && (
+        <LogoUploadForm
+          closeModal={closeUploadModal}
+          getCanvasDataUrl={getCanvasDataUrl}
+        />
+      )}
     </div>
   );
 }
