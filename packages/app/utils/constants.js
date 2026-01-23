@@ -116,6 +116,8 @@ const getIsProduction = () =>
 const USER_SAFE_FIELDS =
   "name email role userId is_verified subscription_id created_at is_deleted updated_at ";
 
+const SESSION_ID_REGEX = /^[a-f0-9]{128}$/i;
+
 module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
@@ -130,4 +132,5 @@ module.exports = {
   CLOUD_FRONT_REGION,
   getIsProduction,
   USER_SAFE_FIELDS,
+  SESSION_ID_REGEX,
 };

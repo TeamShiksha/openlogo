@@ -15,7 +15,11 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages, getIsProduction } = require("../utils/constants");
+const {
+  Messages,
+  getIsProduction,
+  SESSION_ID_REGEX,
+} = require("../utils/constants");
 const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -200,7 +204,9 @@ async function signinController(req, res, next) {
     );
 
     const isProduction = getIsProduction();
+
     /** @type {import("express").CookieOptions}  */
+
     const sessionCookieOptions = {
       expires: oneDayValidityTimestamp,
       sameSite: "strict",
@@ -230,7 +236,12 @@ async function signoutController(req, res, next) {
   try {
     const userSessionService = new UserSessionService();
     const { sessionId } = req.cookies;
-    if (!sessionId) {
+
+    if (
+      !sessionId ||
+      typeof sessionId !== "string" ||
+      !SESSION_ID_REGEX.test(sessionId)
+    ) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         message: Messages.SESSION_FAIL,
@@ -239,7 +250,9 @@ async function signoutController(req, res, next) {
     }
 
     await userSessionService.signout(sessionId);
+
     const isProduction = getIsProduction();
+
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       sameSite: "strict",
@@ -486,7 +499,12 @@ async function resetPasswordController(req, res, next) {
     const passwordResetSessionService = new PasswordResetService();
 
     const { resetPasswordSessionId } = req.cookies;
-    if (!resetPasswordSessionId) {
+
+    if (
+      !resetPasswordSessionId ||
+      typeof resetPasswordSessionId !== "string" ||
+      !SESSION_ID_REGEX.test(resetPasswordSessionId)
+    ) {
       return res.status(401).json({
         error: STATUS_CODES[401],
         message: Messages.VERIFICATION_FAIL,

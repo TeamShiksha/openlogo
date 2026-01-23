@@ -1,6 +1,6 @@
 const { STATUS_CODES } = require("http");
 const UserSessionService = require("../services/userSession");
-const { UserType } = require("../utils/constants");
+const { UserType, SESSION_ID_REGEX } = require("../utils/constants");
 
 /**
  * @param {Object} options
@@ -11,8 +11,13 @@ module.exports = (options = {}) => {
   return async function (req, res, next) {
     try {
       const userSessionService = new UserSessionService();
-      const { sessionId } = req.cookies;
-      if (!sessionId) {
+      const sessionId = req.cookies?.sessionId;
+
+      if (
+        !sessionId ||
+        typeof sessionId !== "string" ||
+        !SESSION_ID_REGEX.test(sessionId)
+      ) {
         return res.status(401).json({
           error: STATUS_CODES[401],
           message: "Invalid credentials",
