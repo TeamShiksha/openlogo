@@ -2,11 +2,11 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
-const { CreateLogoService } = require("../../../services");
+const { CreateLogoRequestService } = require("../../../services");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("GET /api/create-logo - Get Create Logos", () => {
+describe("GET /api/create-logo-request - Get Create Logos", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -28,7 +28,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
     const token = mockAdmin.generateJWT();
 
     const res = await request(app)
-      .get("/api/create-logo?page=invalid&limit=abc")
+      .get("/api/create-logo-request?page=invalid&limit=abc")
       .set("Cookie", `jwt=${token}`);
 
     expect(res.statusCode).toEqual(422);
@@ -40,7 +40,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
     const token = mockAdmin.generateJWT();
 
     jest
-      .spyOn(CreateLogoService.prototype, "getPaginatedCreateLogos")
+      .spyOn(CreateLogoRequestService.prototype, "getPaginatedCreateLogos")
       .mockResolvedValue({
         data: [],
         total: 0,
@@ -49,7 +49,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
       });
 
     const res = await request(app)
-      .get("/api/create-logo?page=1&limit=10&tab=active")
+      .get("/api/create-logo-request?page=1&limit=10&tab=active")
       .set("Cookie", `jwt=${token}`);
 
     expect(res.statusCode).toEqual(200);
@@ -91,7 +91,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
     ];
 
     jest
-      .spyOn(CreateLogoService.prototype, "getPaginatedCreateLogos")
+      .spyOn(CreateLogoRequestService.prototype, "getPaginatedCreateLogos")
       .mockResolvedValue({
         data: mockData,
         total: 2,
@@ -100,7 +100,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
       });
 
     jest
-      .spyOn(CreateLogoService.prototype, "getLogoDetails")
+      .spyOn(CreateLogoRequestService.prototype, "getLogoDetails")
       .mockImplementation((id) => {
         return Promise.resolve({
           _id: id,
@@ -109,7 +109,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
       });
 
     const res = await request(app)
-      .get("/api/create-logo?page=1&limit=10&tab=active")
+      .get("/api/create-logo-request?page=1&limit=10&tab=active")
       .set("Cookie", `jwt=${token}`);
 
     expect(res.statusCode).toEqual(200);
@@ -120,7 +120,9 @@ describe("GET /api/create-logo - Get Create Logos", () => {
   });
 
   it("should return 401 for unauthenticated request", async () => {
-    const res = await request(app).get("/api/create-logo?page=1&limit=10");
+    const res = await request(app).get(
+      "/api/create-logo-request?page=1&limit=10"
+    );
 
     expect(res.statusCode).toEqual(401);
   });
@@ -130,7 +132,7 @@ describe("GET /api/create-logo - Get Create Logos", () => {
     const token = mockCustomer.generateJWT();
 
     const res = await request(app)
-      .get("/api/create-logo?page=1&limit=10")
+      .get("/api/create-logo-request?page=1&limit=10")
       .set("Cookie", `jwt=${token}`);
 
     expect(res.statusCode).toEqual(401);

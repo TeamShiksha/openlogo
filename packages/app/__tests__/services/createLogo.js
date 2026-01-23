@@ -1,5 +1,5 @@
-const CreateLogoService = require("../../services/createLogo");
-const CreateLogoRepository = require("../../repositories/createLogo");
+const CreateLogoRequestService = require("../../services/createLogo");
+const CreateLogoRequestRepository = require("../../repositories/createLogo");
 const { ImagesRepository } = require("../../repositories");
 const { StatusTypes } = require("../../utils/constants.js");
 const { MOCK_USERS, MOCK_IMAGES } = require("../../utils/mocks.js");
@@ -8,8 +8,8 @@ const mongoose = require("mongoose");
 jest.mock("../../repositories");
 jest.mock("../../repositories/createLogo");
 
-describe("CreateLogoService", () => {
-  let createLogoService;
+describe("CreateLogoRequestService", () => {
+  let createLogoRequestService;
   let mockCreate;
   let mockFindByCompanyUrlAndStatus;
   let mockGetById;
@@ -20,20 +20,20 @@ describe("CreateLogoService", () => {
   let mockFetchCloudFrontURL;
 
   beforeEach(() => {
-    createLogoService = new CreateLogoService();
+    createLogoRequestService = new CreateLogoRequestService();
     jest.clearAllMocks();
 
-    mockCreate = jest.spyOn(CreateLogoRepository.prototype, "create");
+    mockCreate = jest.spyOn(CreateLogoRequestRepository.prototype, "create");
     mockFindByCompanyUrlAndStatus = jest.spyOn(
-      CreateLogoRepository.prototype,
+      CreateLogoRequestRepository.prototype,
       "findByCompanyUrlAndStatus"
     );
-    mockGetById = jest.spyOn(CreateLogoRepository.prototype, "getById");
+    mockGetById = jest.spyOn(CreateLogoRequestRepository.prototype, "getById");
     mockUpdateLogoStatus = jest.spyOn(
-      CreateLogoRepository.prototype,
+      CreateLogoRequestRepository.prototype,
       "updateLogoStatus"
     );
-    mockGetAll = jest.spyOn(CreateLogoRepository.prototype, "getAll");
+    mockGetAll = jest.spyOn(CreateLogoRequestRepository.prototype, "getAll");
     mockImagesGetById = jest.spyOn(ImagesRepository.prototype, "getById");
     mockImagesUpdate = jest.spyOn(ImagesRepository.prototype, "update");
     mockFetchCloudFrontURL = jest.spyOn(
@@ -52,7 +52,7 @@ describe("CreateLogoService", () => {
       const mockResult = { _id: createLogoId };
       mockCreate.mockResolvedValue(mockResult);
 
-      const result = await createLogoService.addLogoData(
+      const result = await createLogoRequestService.addLogoData(
         userId,
         companyUrl,
         imageId
@@ -70,7 +70,7 @@ describe("CreateLogoService", () => {
       mockCreate.mockRejectedValue(new Error("Creation failed"));
 
       await expect(
-        createLogoService.addLogoData(userId, companyUrl, imageId)
+        createLogoRequestService.addLogoData(userId, companyUrl, imageId)
       ).rejects.toThrow("Creation failed");
     });
   });
@@ -80,7 +80,9 @@ describe("CreateLogoService", () => {
       mockFindByCompanyUrlAndStatus.mockResolvedValue(null);
 
       const result =
-        await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
+        await createLogoRequestService.findPendingRequestByCompanyUrl(
+          companyUrl
+        );
 
       expect(mockFindByCompanyUrlAndStatus).toHaveBeenCalledWith(
         companyUrl,
@@ -94,7 +96,9 @@ describe("CreateLogoService", () => {
       mockFindByCompanyUrlAndStatus.mockResolvedValue(mockRequest);
 
       const result =
-        await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
+        await createLogoRequestService.findPendingRequestByCompanyUrl(
+          companyUrl
+        );
 
       expect(result).toEqual(mockRequest);
     });
@@ -108,7 +112,7 @@ describe("CreateLogoService", () => {
         images: imageId,
       });
 
-      const result = await createLogoService.respondToLogo(
+      const result = await createLogoRequestService.respondToLogo(
         createLogoId,
         userId,
         "RESOLVED",
@@ -125,7 +129,7 @@ describe("CreateLogoService", () => {
         images: imageId,
       });
 
-      const result = await createLogoService.respondToLogo(
+      const result = await createLogoRequestService.respondToLogo(
         createLogoId,
         userId,
         "REJECTED",
@@ -144,7 +148,7 @@ describe("CreateLogoService", () => {
       mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
       mockImagesUpdate.mockResolvedValue({});
 
-      const result = await createLogoService.respondToLogo(
+      const result = await createLogoRequestService.respondToLogo(
         createLogoId,
         userId,
         StatusTypes.RESOLVED,
@@ -175,7 +179,7 @@ describe("CreateLogoService", () => {
       mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 1 });
       mockImagesUpdate.mockResolvedValue({});
 
-      const result = await createLogoService.respondToLogo(
+      const result = await createLogoRequestService.respondToLogo(
         createLogoId,
         userId,
         StatusTypes.REJECTED,
@@ -198,7 +202,7 @@ describe("CreateLogoService", () => {
       mockUpdateLogoStatus.mockResolvedValue({ modifiedCount: 0 });
 
       await expect(
-        createLogoService.respondToLogo(
+        createLogoRequestService.respondToLogo(
           createLogoId,
           userId,
           StatusTypes.RESOLVED,
@@ -212,7 +216,8 @@ describe("CreateLogoService", () => {
     it("should return null if logo not found", async () => {
       mockGetById.mockResolvedValue(null);
 
-      const result = await createLogoService.getLogoDetails(createLogoId);
+      const result =
+        await createLogoRequestService.getLogoDetails(createLogoId);
 
       expect(result).toBeNull();
     });
@@ -238,7 +243,8 @@ describe("CreateLogoService", () => {
         "https://cloudfront.example.com/png/TESTCOMPANY.png"
       );
 
-      const result = await createLogoService.getLogoDetails(createLogoId);
+      const result =
+        await createLogoRequestService.getLogoDetails(createLogoId);
 
       expect(result).toMatchObject({
         _id: createLogoId,
@@ -259,7 +265,8 @@ describe("CreateLogoService", () => {
 
       mockGetById.mockResolvedValue(mockLogo);
 
-      const result = await createLogoService.getLogoDetails(createLogoId);
+      const result =
+        await createLogoRequestService.getLogoDetails(createLogoId);
 
       expect(result.previewUrl).toBeNull();
     });
@@ -275,7 +282,7 @@ describe("CreateLogoService", () => {
       };
       mockGetAll.mockResolvedValue(mockResult);
 
-      const result = await createLogoService.getPaginatedCreateLogos(
+      const result = await createLogoRequestService.getPaginatedCreateLogos(
         1,
         10,
         "active"
@@ -288,7 +295,7 @@ describe("CreateLogoService", () => {
     it("should return null if no logos exist", async () => {
       mockGetAll.mockResolvedValue(null);
 
-      const result = await createLogoService.getPaginatedCreateLogos(
+      const result = await createLogoRequestService.getPaginatedCreateLogos(
         1,
         10,
         "active"
@@ -303,7 +310,7 @@ describe("CreateLogoService", () => {
       const mockLogo = { _id: createLogoId, companyUrl };
       mockGetById.mockResolvedValue(mockLogo);
 
-      const result = await createLogoService.getLogoById(createLogoId);
+      const result = await createLogoRequestService.getLogoById(createLogoId);
 
       expect(mockGetById).toHaveBeenCalledWith(createLogoId);
       expect(result).toEqual(mockLogo);
@@ -312,7 +319,7 @@ describe("CreateLogoService", () => {
     it("should return null if logo not found", async () => {
       mockGetById.mockResolvedValue(null);
 
-      const result = await createLogoService.getLogoById(createLogoId);
+      const result = await createLogoRequestService.getLogoById(createLogoId);
 
       expect(result).toBeNull();
     });

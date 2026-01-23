@@ -2,11 +2,11 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
-const { CreateLogoService } = require("../../../services");
+const { CreateLogoRequestService } = require("../../../services");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
+describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -30,7 +30,7 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
     const token = mockAdmin.generateJWT();
 
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .set("Cookie", `jwt=${token}`)
       .send({ status: "INVALID_STATUS", comment: "test" });
 
@@ -43,11 +43,11 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
     const token = mockAdmin.generateJWT();
 
     jest
-      .spyOn(CreateLogoService.prototype, "getLogoById")
+      .spyOn(CreateLogoRequestService.prototype, "getLogoById")
       .mockResolvedValue(null);
 
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .set("Cookie", `jwt=${token}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
@@ -70,14 +70,14 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
     };
 
     jest
-      .spyOn(CreateLogoService.prototype, "getLogoById")
+      .spyOn(CreateLogoRequestService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
     jest
-      .spyOn(CreateLogoService.prototype, "respondToLogo")
+      .spyOn(CreateLogoRequestService.prototype, "respondToLogo")
       .mockResolvedValue({ alreadyProcessed: true });
 
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .set("Cookie", `jwt=${token}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
@@ -100,14 +100,14 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
     };
 
     jest
-      .spyOn(CreateLogoService.prototype, "getLogoById")
+      .spyOn(CreateLogoRequestService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
     jest
-      .spyOn(CreateLogoService.prototype, "respondToLogo")
+      .spyOn(CreateLogoRequestService.prototype, "respondToLogo")
       .mockResolvedValue({ modifiedCount: 1 });
 
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .set("Cookie", `jwt=${token}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
@@ -123,7 +123,7 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
 
   it("should return 401 for unauthenticated request", async () => {
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
     expect(res.statusCode).toEqual(401);
@@ -134,7 +134,7 @@ describe("PUT /api/create-logo/:createLogoId - Update Create Logo", () => {
     const token = mockCustomer.generateJWT();
 
     const res = await request(app)
-      .put(`/api/create-logo/${mockCreateLogoId}`)
+      .put(`/api/create-logo-request/${mockCreateLogoId}`)
       .set("Cookie", `jwt=${token}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 

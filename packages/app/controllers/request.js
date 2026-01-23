@@ -1,5 +1,5 @@
 const { STATUS_CODES } = require("http");
-const { RequestService, CreateLogoService } = require("../services");
+const { RequestService, CreateLogoRequestService } = require("../services");
 const {
   createRequestSchema,
   requestQuerySchema,
@@ -121,7 +121,7 @@ async function updateRequestController(req, res, next) {
 async function addRequestController(req, res, next) {
   try {
     const requestService = new RequestService();
-    const createLogoService = new CreateLogoService();
+    const createLogoRequestService = new CreateLogoRequestService();
     const { error, value } = createRequestSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -156,7 +156,7 @@ async function addRequestController(req, res, next) {
     }
 
     const logoHasPendingRequest =
-      await createLogoService.findPendingRequestByCompanyUrl(
+      await createLogoRequestService.findPendingRequestByCompanyUrl(
         requestedCompanyUrl
       );
     if (logoHasPendingRequest) {

@@ -40,7 +40,7 @@ router.use(
   logoRequestLogsRouter
 );
 router.use(
-  "/create-logo",
+  "/create-logo-request",
   baseLimiter,
   cors(privateRouteCORS),
   createLogoRouter

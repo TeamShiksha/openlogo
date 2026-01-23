@@ -1,10 +1,10 @@
-const CreateLogoRepository = require("../repositories/createLogo");
+const CreateLogoRequestRepository = require("../repositories/createLogo");
 const { ImagesRepository } = require("../repositories");
 const { StatusTypes } = require("../utils/constants");
 
-class CreateLogoService {
+class CreateLogoRequestService {
   constructor() {
-    this.createLogoRepository = new CreateLogoRepository();
+    this.createLogoRequestRepository = new CreateLogoRequestRepository();
     this.imagesRepository = new ImagesRepository();
   }
 
@@ -16,7 +16,7 @@ class CreateLogoService {
    * @returns {Object} - An object containing the ID of the newly created logo request.
    */
   async addLogoData(uploadedBy, companyUrl, imageId) {
-    const result = await this.createLogoRepository.create({
+    const result = await this.createLogoRequestRepository.create({
       user_id: uploadedBy,
       companyUrl: companyUrl,
       images: imageId,
@@ -32,10 +32,11 @@ class CreateLogoService {
    * @returns {Object} - The matching request document or null if doesn't exist.
    */
   async findPendingRequestByCompanyUrl(companyUrl) {
-    const request = await this.createLogoRepository.findByCompanyUrlAndStatus(
-      companyUrl,
-      StatusTypes.PENDING
-    );
+    const request =
+      await this.createLogoRequestRepository.findByCompanyUrlAndStatus(
+        companyUrl,
+        StatusTypes.PENDING
+      );
     return request;
   }
 
@@ -47,7 +48,8 @@ class CreateLogoService {
    * @return {Object} - An object containing the updated logo Data or a flag if already replied
    */
   async respondToLogo(createLogoID, operatorId, status, comment) {
-    const currentLogo = await this.createLogoRepository.getById(createLogoID);
+    const currentLogo =
+      await this.createLogoRequestRepository.getById(createLogoID);
 
     if (!currentLogo) return null;
 
@@ -65,7 +67,7 @@ class CreateLogoService {
       closedAt: new Date(),
     };
 
-    const result = await this.createLogoRepository.updateLogoStatus(
+    const result = await this.createLogoRequestRepository.updateLogoStatus(
       createLogoID,
       updatedData
     );
@@ -95,7 +97,8 @@ class CreateLogoService {
    * @returns {Object|null} - The logo request details or null if not found.
    */
   async getLogoDetails(createLogoId) {
-    const createLogo = await this.createLogoRepository.getById(createLogoId);
+    const createLogo =
+      await this.createLogoRequestRepository.getById(createLogoId);
     if (!createLogo) return null;
 
     let previewUrl = null;
@@ -120,7 +123,7 @@ class CreateLogoService {
    * @returns {Promise<Object>} returns a list of created logo or null if no logo exists
    */
   async getPaginatedCreateLogos(page, limit, tab) {
-    return await this.createLogoRepository.getAll(page, limit, tab);
+    return await this.createLogoRequestRepository.getAll(page, limit, tab);
   }
 
   /** Retrieves created logo by ID
@@ -128,8 +131,8 @@ class CreateLogoService {
    * @returns {Object|null} - The logo request details or null if not found.
    */
   async getLogoById(createLogoId) {
-    return await this.createLogoRepository.getById(createLogoId);
+    return await this.createLogoRequestRepository.getById(createLogoId);
   }
 }
 
-module.exports = CreateLogoService;
+module.exports = CreateLogoRequestService;

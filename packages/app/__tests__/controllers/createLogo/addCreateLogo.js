@@ -5,12 +5,12 @@ const { Users } = require("../../../models");
 const {
   ImageService,
   RequestService,
-  CreateLogoService,
+  CreateLogoRequestService,
 } = require("../../../services");
 const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("POST /api/create-logo/logo - Add Create Logo", () => {
+describe("POST /api/create-logo-request/logo - Add Create Logo", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
@@ -38,7 +38,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
     const token = mockUser.generateJWT();
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send({ companyUrl: "invalid-uri", size: 1024, extension: "png" });
 
@@ -55,7 +55,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .mockResolvedValue(MOCK_IMAGES[0]);
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send(validRequestBody);
 
@@ -79,7 +79,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .mockResolvedValue({ companyUrl: "https://testcompany.com/" });
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send(validRequestBody);
 
@@ -102,11 +102,14 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
+      .spyOn(
+        CreateLogoRequestService.prototype,
+        "findPendingRequestByCompanyUrl"
+      )
       .mockResolvedValue({ companyUrl: "https://testcompany.com/" });
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send(validRequestBody);
 
@@ -129,14 +132,17 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
+      .spyOn(
+        CreateLogoRequestService.prototype,
+        "findPendingRequestByCompanyUrl"
+      )
       .mockResolvedValue(null);
     jest
       .spyOn(ImageService.prototype, "createImageData")
       .mockResolvedValue(null);
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send(validRequestBody);
 
@@ -162,17 +168,20 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
       .mockResolvedValue(null);
     jest
-      .spyOn(CreateLogoService.prototype, "findPendingRequestByCompanyUrl")
+      .spyOn(
+        CreateLogoRequestService.prototype,
+        "findPendingRequestByCompanyUrl"
+      )
       .mockResolvedValue(null);
     jest
       .spyOn(ImageService.prototype, "createImageData")
       .mockResolvedValue(mockImageData);
     jest
-      .spyOn(CreateLogoService.prototype, "addLogoData")
+      .spyOn(CreateLogoRequestService.prototype, "addLogoData")
       .mockResolvedValue(mockCreateLogoData);
 
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .set("Cookie", `jwt=${token}`)
       .send(validRequestBody);
 
@@ -186,7 +195,7 @@ describe("POST /api/create-logo/logo - Add Create Logo", () => {
 
   it("should return 401 if no auth token provided", async () => {
     const res = await request(app)
-      .post("/api/create-logo/logo")
+      .post("/api/create-logo-request/logo")
       .send(validRequestBody);
 
     expect(res.statusCode).toEqual(401);

@@ -2,7 +2,7 @@ const { STATUS_CODES } = require("http");
 const {
   ImageService,
   RequestService,
-  CreateLogoService,
+  CreateLogoRequestService,
 } = require("../services");
 const {
   Messages,
@@ -19,13 +19,13 @@ const {
  */
 async function addLogoController(req, res, next) {
   try {
-    const createLogoService = new CreateLogoService();
-    const imageService = new ImageService();
-    const requestService = new RequestService();
+    const { createLogoRequestService, imageService, requestService } = {
+      createLogoRequestService: new CreateLogoRequestService(),
+      imageService: new ImageService(),
+      requestService: new RequestService(),
+    };
     const { userId } = req.userData;
-    const imageSize = req.body.size;
-    const companyUrl = req.body.companyUrl;
-    const Extension = req.body.extension;
+    const { size: imageSize, companyUrl, extension } = req.body;
 
     const { error } = companyUrlSchema.validate(companyUrl);
 
@@ -62,7 +62,7 @@ async function addLogoController(req, res, next) {
     }
 
     const logoHasPendingRequest =
-      await createLogoService.findPendingRequestByCompanyUrl(companyUrl);
+      await createLogoRequestService.findPendingRequestByCompanyUrl(companyUrl);
     if (logoHasPendingRequest) {
       return res.status(400).json({
         message: Messages.LOGO_ALREADY_CREATED_AND_PENDING,
@@ -76,7 +76,7 @@ async function addLogoController(req, res, next) {
       imageSize,
       companyName,
       companyUrl,
-      Extension,
+      extension,
       false
     );
     if (!imageData) {
@@ -87,7 +87,7 @@ async function addLogoController(req, res, next) {
       });
     }
 
-    const createLogoData = await createLogoService.addLogoData(
+    const createLogoData = await createLogoRequestService.addLogoData(
       userId,
       companyUrl,
       imageData._id
@@ -107,8 +107,8 @@ async function addLogoController(req, res, next) {
  */
 async function updateLogoController(req, res, next) {
   try {
-    const createLogoService = new CreateLogoService();
-    const createLogoId = req.params.createLogoId;
+    const createLogoRequestService = new CreateLogoRequestService();
+    const { createLogoId } = req.params;
 
     const { error, value } = updateRequestSchema.validate(req.body);
     if (error) {
@@ -119,9 +119,10 @@ async function updateLogoController(req, res, next) {
       });
     }
     const { status, comment } = value;
-    const operatorId = req.userData.userId;
+    const { userId: operatorId } = req.userData;
 
-    const createdLogo = await createLogoService.getLogoById(createLogoId);
+    const createdLogo =
+      await createLogoRequestService.getLogoById(createLogoId);
     if (!createdLogo) {
       return res.status(404).json({
         statusCode: 404,
@@ -130,7 +131,7 @@ async function updateLogoController(req, res, next) {
       });
     }
 
-    const updateCreatedLogo = await createLogoService.respondToLogo(
+    const updateCreatedLogo = await createLogoRequestService.respondToLogo(
       createLogoId,
       operatorId,
       status,
@@ -167,7 +168,7 @@ async function updateLogoController(req, res, next) {
  */
 async function getLogoController(req, res, next) {
   try {
-    const createLogoService = new CreateLogoService();
+    const createLogoRequestService = new CreateLogoRequestService();
     const { error, value } = requestQuerySchema.validate(req.query);
     if (error) {
       return res.status(422).json({
@@ -179,7 +180,7 @@ async function getLogoController(req, res, next) {
 
     const { page, limit, tab } = value;
     const { data, total, currentPage, totalPages } =
-      await createLogoService.getPaginatedCreateLogos(
+      await createLogoRequestService.getPaginatedCreateLogos(
         parseInt(page),
         parseInt(limit),
         tab
@@ -189,7 +190,7 @@ async function getLogoController(req, res, next) {
 
     const resultsWithPreview = await Promise.all(
       fetchedData.map(async (item) => {
-        const detail = await createLogoService.getLogoDetails(item._id);
+        const detail = await createLogoRequestService.getLogoDetails(item._id);
         return { ...item._doc, previewUrl: detail?.previewUrl || null };
       })
     );
