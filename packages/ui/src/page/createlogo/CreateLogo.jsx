@@ -6,7 +6,7 @@ import {
   Circle,
   Triangle,
   Line,
-  // Group,
+  Group,
   Image as FabricImage,
   PencilBrush,
 } from "fabric";
@@ -106,8 +106,6 @@ export default function CreateLogo() {
         setIsUnderline(false);
         return;
       }
-
-      setCurrentColor((obj.fill || obj.stroke || "#000000").toString());
 
       if (obj.type === "textbox") {
         setSelectedFont(obj.fontFamily || "Arial");
@@ -356,10 +354,9 @@ export default function CreateLogo() {
   };
 
   // === Shapes ===
-  // Add these near your other helpers
   const getCanvasCenter = () => {
     const canvas = fabricCanvasRef.current;
-    if (!canvas) return { x: 150, y: 150 }; // fallback
+    if (!canvas) return { x: 150, y: 150 };
 
     return {
       x: canvas.getWidth() / 2,
@@ -370,7 +367,7 @@ export default function CreateLogo() {
   const addRectangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
+    canvas.discardActiveObject();
     const { x, y } = getCanvasCenter();
 
     const rect = new Rect({
@@ -383,18 +380,20 @@ export default function CreateLogo() {
       fill: isFilled ? currentColor : "transparent",
       stroke: currentColor,
       strokeWidth: isFilled ? 1 : 4,
+      strokeUniform: true,
     });
 
     canvas.add(rect);
     canvas.setActiveObject(rect);
     canvas.renderAll();
+    saveHistory();
   };
 
   // Circle
   const addCircle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
+    canvas.discardActiveObject();
     const { x, y } = getCanvasCenter();
 
     const circle = new Circle({
@@ -402,7 +401,7 @@ export default function CreateLogo() {
       top: y,
       originX: "center",
       originY: "center",
-      radius: 60, // smaller on mobile is better — or make dynamic
+      radius: 60,
       fill: isFilled ? currentColor : "transparent",
       stroke: currentColor,
       strokeWidth: isFilled ? 1 : 4,
@@ -413,11 +412,10 @@ export default function CreateLogo() {
     canvas.renderAll();
   };
 
-  // Triangle (similar pattern)
   const addTriangle = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
+    canvas.discardActiveObject();
     const { x, y } = getCanvasCenter();
 
     const tri = new Triangle({
@@ -437,11 +435,10 @@ export default function CreateLogo() {
     canvas.renderAll();
   };
 
-  // Line
   const addLine = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
+    canvas.discardActiveObject();
     const { x, y } = getCanvasCenter();
 
     const line = new Line([x - 100, y, x + 100, y], {
@@ -454,33 +451,45 @@ export default function CreateLogo() {
     canvas.renderAll();
   };
 
-  // const addArrow = () => {
-  //   const canvas = fabricCanvasRef.current;
-  //   if (!canvas) return;
+  const addArrow = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
-  //   const line = new Line([0, 0, 180, 0], {
-  //     stroke: currentColor,
-  //     strokeWidth: 5,
-  //   });
+    const { x, y } = getCanvasCenter();
+    const arrowLength = 100;
+    const strokeWidth = 4;
+    const line = new Line([x - arrowLength / 2, y, x + arrowLength / 2, y], {
+      stroke: currentColor,
+      strokeWidth,
+      originX: "center",
+      originY: "center",
+    });
 
-  //   const head = new Triangle({
-  //     width: 25,
-  //     height: 35,
-  //     fill: currentColor,
-  //     left: 180,
-  //     top: -17.5,
-  //     angle: 90,
-  //   });
+    // Arrow head
+    const head = new Triangle({
+      width: 20,
+      height: 30,
+      fill: currentColor,
+      left: x + arrowLength / 2,
+      top: y,
+      originX: "center",
+      originY: "center",
+      angle: 90,
+    });
 
-  //   const arrow = new Group([line, head], {
-  //     left: 300,
-  //     top: 250,
-  //   });
+    // Group together
+    const arrow = new Group([line, head], {
+      left: x,
+      top: y,
+      originX: "center",
+      originY: "center",
+    });
 
-  //   canvas.add(arrow);
-  //   canvas.setActiveObject(arrow);
-  //   canvas.renderAll();
-  // };
+    canvas.add(arrow);
+    canvas.setActiveObject(arrow);
+    canvas.renderAll();
+    saveHistory();
+  };
 
   // === Image Upload ===
   const handleImageUpload = async (e) => {
@@ -851,9 +860,9 @@ export default function CreateLogo() {
                 <Button onClick={addLine} title="Line">
                   —
                 </Button>
-                {/* <Button onClick={addArrow} title="Arrow">
+                <Button onClick={addArrow} title="Arrow">
                   →
-                </Button> */}
+                </Button>
               </div>
             </div>
           </details>
