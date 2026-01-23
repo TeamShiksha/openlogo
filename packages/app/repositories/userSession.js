@@ -21,14 +21,12 @@ class UserSessionRepository extends BaseRepository {
   /**
    * Find active session by sessionId
    * @param {string} sessionId
-   * @param {Object} options
-   * @param {boolean} options.populateUser - to populate userId
    */
 
   async findBySessionId(sessionId) {
     return await this.model
       .findOne({
-        sessionId,
+        sessionId: String(sessionId),
         isActive: true,
         expiresAt: { $gt: new Date() },
       })
@@ -41,7 +39,7 @@ class UserSessionRepository extends BaseRepository {
    */
   async deactivateSession(sessionId) {
     return await this.model.findOneAndUpdate(
-      { sessionId },
+      { sessionId: String(sessionId), isActive: true },
       { isActive: false },
       { new: true }
     );
