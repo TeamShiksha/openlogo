@@ -88,6 +88,16 @@ export default function CreateLogo() {
     const initialJson = JSON.stringify(canvas.toJSON());
     setHistory([initialJson]);
 
+    canvas.on("selection:created", () => {
+      canvas.isDrawingMode = false;
+      setIsDrawing(false);
+    });
+
+    canvas.on("selection:updated", () => {
+      canvas.isDrawingMode = false;
+      setIsDrawing(false);
+    });
+
     // ─── Event listeners ───────────────────────────────────────
     canvas.on("object:added", saveHistory);
     canvas.on("object:modified", saveHistory);
