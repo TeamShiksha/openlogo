@@ -91,7 +91,7 @@ describe("LogoUploadForm", () => {
   it("handles the upload process correctly", async () => {
     const fetchRequest = vi.fn().mockResolvedValue({
       success: true,
-      data: { data: { presignedUrl: "http://upload.com", key: "test-key" } },
+      data: { data: { presignedUrl: "https://upload.com", key: "test-key" } },
     });
     const makeRequest = vi.fn().mockResolvedValue(true);
     useApi.mockImplementation(({ url }) => {
@@ -139,7 +139,7 @@ describe("LogoUploadForm", () => {
     await waitFor(() => {
       expect(fetchRequest).toHaveBeenCalled();
       expect(mockedAxios.put).toHaveBeenCalledWith(
-        "http://upload.com",
+        "https://upload.com",
         expect.any(File),
         expect.anything()
       );
