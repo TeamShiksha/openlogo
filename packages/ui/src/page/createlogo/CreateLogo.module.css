@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   background-color: #f8fafc;
-  min-height: 100vh;
+  height: 100vh;
   font-family: -apple-system, BlinkMacOSystemFont, "Segoe UI", Roboto,
     sans-serif;
 }
@@ -94,7 +94,7 @@
 }
 /* ====================== SIDEBAR ====================== */
 .sidebar {
-  height: 93vh;
+  height: 92%;
   width: 88px;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
@@ -122,11 +122,6 @@
 }
 
 .sidebarToggleButton {
-  position: absolute;
-  top: 12px;
-  right: -20px;
-  width: 36px;
-  height: 36px;
   border-radius: 50%;
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -272,7 +267,7 @@ button.active {
   display: flex;
   flex: 1;
   flex-direction: row;
-  /* overflow: hidden; */
+  height: calc(100vh - 64px);
 }
 
 .sidebarToggleButton {
@@ -285,12 +280,13 @@ button.active {
 }
 
 .canvasWrapper {
-  flex: 1 1 auto;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #f1f5f9;
   padding: 16px;
+  overflow: hidden;
 }
 
 .canvasWrapper canvas {
@@ -300,6 +296,7 @@ button.active {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
   object-fit: contain;
+  overflow: hidden;
 }
 
 /* Sidebar collapse */
@@ -326,9 +323,14 @@ button.active {
   opacity: 0;
 }
 
+@media (max-width: 840px) {
+  .sidebar {
+    height: 86.5%;
+  }
+}
 @media (max-width: 640px) {
   .sidebar {
-    height: 82vh;
+    height: 86vh;
   }
   .topToolbar {
     flex-direction: column;
@@ -345,5 +347,20 @@ button.active {
   }
   .canvasWrapper {
     padding: 12px;
+  }
+  .editorLayout {
+    height: calc(100vh - 100px);
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar {
+    height: 80vh;
+  }
+}
+
+@media (max-width: 318px) {
+  .sidebar {
+    height: 74vh;
   }
 }
