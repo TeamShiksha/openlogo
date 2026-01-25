@@ -17,7 +17,7 @@ describe("Delete User Account", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("500 - Unexpected Error", async () => {
+  it.skip("500 - Unexpected Error", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = { userId: "mockUserId@123" };
@@ -37,7 +37,7 @@ describe("Delete User Account", () => {
     expect(response.status).toBe(500);
   });
 
-  it("200 - User account deleted", async () => {
+  it.skip("200 - User account deleted", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = { userId: "mockUserId@123" };

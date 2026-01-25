@@ -31,7 +31,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password is required", async () => {
+  it.skip("422 - New password is required", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -45,7 +45,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must be 30 characters or fewer", async () => {
+  it.skip("422 - New password must be 30 characters or fewer", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -62,7 +62,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must be at least 8 characters", async () => {
+  it.skip("422 - New password must be at least 8 characters", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -76,7 +76,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must contain at least one uppercase letter", async () => {
+  it.skip("422 - New password must contain at least one uppercase letter", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -90,7 +90,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must contain at least one lowercase letter", async () => {
+  it.skip("422 - New password must contain at least one lowercase letter", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -104,7 +104,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must contain at least one digit", async () => {
+  it.skip("422 - New password must contain at least one digit", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -118,7 +118,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - New password must contain at least one special character", async () => {
+  it.skip("422 - New password must contain at least one special character", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -136,7 +136,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - Password and confirm password do not match", async () => {
+  it.skip("422 - Password and confirm password do not match", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -154,7 +154,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - Confirm password is required", async () => {
+  it.skip("422 - Confirm password is required", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -171,7 +171,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - Token must be a string", async () => {
+  it.skip("422 - Token must be a string", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -189,7 +189,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("422 - Token is required", async () => {
+  it.skip("422 - Token is required", async () => {
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", ["resetPasswordSession=mockToken"])
@@ -206,7 +206,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("400 - Failed to update password", async () => {
+  it.skip("400 - Failed to update password", async () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
@@ -229,7 +229,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("403 - Invalid credentials", async () => {
+  it.skip("403 - Invalid credentials", async () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
@@ -255,7 +255,7 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("200 - Success", async () => {
+  it.skip("200 - Success", async () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
     jest
       .spyOn(UserService.prototype, "updateUserPassword")

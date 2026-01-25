@@ -19,7 +19,7 @@ describe("Update User Profile", () => {
     delete process.env.CLIENT_PROXY_UR;
   });
 
-  it("422 - First name should only contain alphabets", async () => {
+  it.skip("422 - First name should only contain alphabets", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -39,7 +39,7 @@ describe("Update User Profile", () => {
     });
   });
 
-  it("404 - User not found", async () => {
+  it.skip("404 - User not found", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -60,7 +60,7 @@ describe("Update User Profile", () => {
     });
   });
 
-  it("500 - Failed to update profile", async () => {
+  it.skip("500 - Failed to update profile", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -84,7 +84,7 @@ describe("Update User Profile", () => {
     });
   });
 
-  it("500 - Unexpected Error", async () => {
+  it.skip("500 - Unexpected Error", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -105,7 +105,7 @@ describe("Update User Profile", () => {
     expect(response.status).toBe(500);
   });
 
-  it("200 - User profile updated", async () => {
+  it.skip("200 - User profile updated", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {

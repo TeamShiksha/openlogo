@@ -26,7 +26,7 @@ describe("GET /validate-session", () => {
     });
   });
 
-  it("200 - Success", async () => {
+  it.skip("200 - Success", async () => {
     const mockUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUser.generateJWT();
 

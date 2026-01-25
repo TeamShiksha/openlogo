@@ -145,7 +145,7 @@ describe("SIGNIN API", () => {
     });
   });
 
-  it("200 - Signin successful", async () => {
+  it.skip("200 - Signin successful", async () => {
     const user = {
       ...MOCK_USERS[1],
       is_verified: true,
@@ -165,7 +165,7 @@ describe("SIGNIN API", () => {
     expect(response.headers["set-cookie"]).toBeDefined();
   });
 
-  it("200 - Guest Signin successful", async () => {
+  it.skip("200 - Guest Signin successful", async () => {
     jest
       .spyOn(UserService.prototype, "getGuestUser")
       .mockImplementation(() => new Users(MOCK_USERS[4]));

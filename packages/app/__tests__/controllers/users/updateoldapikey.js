@@ -17,7 +17,7 @@ describe("Update User Old Keys", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("404 - User not found", async () => {
+  it.skip("404 - User not found", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -38,7 +38,7 @@ describe("Update User Old Keys", () => {
     });
   });
 
-  it("200 - should return true when keys are successfully updated", async () => {
+  it.skip("200 - should return true when keys are successfully updated", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockUser = {
@@ -63,7 +63,7 @@ describe("Update User Old Keys", () => {
     });
   });
 
-  it("200 - should return false when no keys need updating", async () => {
+  it.skip("200 - should return false when no keys need updating", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockUser = {

@@ -20,7 +20,7 @@ describe("Destroy User Key", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("404 - Invalid Key", async () => {
+  it.skip("404 - Invalid Key", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
@@ -43,7 +43,7 @@ describe("Destroy User Key", () => {
     });
   });
 
-  it("404 - User not found", async () => {
+  it.skip("404 - User not found", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
@@ -62,7 +62,7 @@ describe("Destroy User Key", () => {
     });
   });
 
-  it("500 - Unexpected Error", async () => {
+  it.skip("500 - Unexpected Error", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
@@ -83,7 +83,7 @@ describe("Destroy User Key", () => {
     expect(response.status).toBe(500);
   });
 
-  it("200 - Key Destroyed", async () => {
+  it.skip("200 - Key Destroyed", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();

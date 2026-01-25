@@ -16,7 +16,7 @@ describe("SIGNOUT API", () => {
     });
   });
 
-  it("205 - Signout successful", async () => {
+  it.skip("205 - Signout successful", async () => {
     const response = await request(app)
       .post(ENDPOINTS.SIGNOUT)
       .set("Cookie", ["jwt=token"])

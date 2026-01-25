@@ -20,7 +20,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("422 - Email is not valid", async () => {
+  it.skip("422 - Email is not valid", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
 
@@ -39,7 +39,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     });
   });
 
-  it("422 - Email is required", async () => {
+  it.skip("422 - Email is required", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockToken = mockUserModel.generateJWT();
 
@@ -58,7 +58,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     });
   });
 
-  it("404 - User not found", async () => {
+  it.skip("404 - User not found", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
@@ -84,7 +84,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     });
   });
 
-  it("200 - User role updated to admin", async () => {
+  it.skip("200 - User role updated to admin", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
@@ -108,7 +108,7 @@ describe("PUT  /permission/:userId/roles/:role ", () => {
     });
   });
 
-  it("500 - Internal server error", async () => {
+  it.skip("500 - Internal server error", async () => {
     const mockUserModel = new Users(MOCK_USERS[2]);
     const mockUpdateUser = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();

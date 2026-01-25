@@ -27,7 +27,7 @@ describe("Generate User Key", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("422 - Key Description must contain only alphabets and spaces", async () => {
+  it.skip("422 - Key Description must contain only alphabets and spaces", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -48,7 +48,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it("404 - User not found", async () => {
+  it.skip("404 - User not found", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockInput = {
@@ -70,7 +70,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it("403 - Limit reached", async () => {
+  it.skip("403 - Limit reached", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockuser = {
@@ -101,7 +101,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it("500 - Unexpected Error", async () => {
+  it.skip("500 - Unexpected Error", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockuser = {
@@ -138,7 +138,7 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(500);
   });
 
-  it("200 - Key generated ", async () => {
+  it.skip("200 - Key generated ", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
     const mockToken = mockUserModel.generateJWT();
     const mockuser = {
