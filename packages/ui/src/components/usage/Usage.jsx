@@ -2,44 +2,57 @@ import PropTypes from "prop-types";
 import PieGraph from "./PieGraph";
 import styles from "./Usage.module.css";
 import { USAGE } from "../../utils/Constants";
-import { useEffect, useRef, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useToast } from "../../hooks/useToast.js";
+import { UserContext } from "../../contexts/Contexts.jsx";
+
+const THRESHOLDS = [
+  { p: 100, type: "error" },
+  { p: 95, type: "error" },
+  { p: 90, type: "warning" },
+  { p: 80, type: "warning" },
+];
 
 function Usage({ usageCount, usageLimit }) {
+  const { userData } = useContext(UserContext);
   const percentage = useMemo(
     () => (usageCount / usageLimit) * 100,
     [usageCount, usageLimit]
   );
   const toast = useToast();
-  const notifiedRef = useRef({ 80: false, 90: false, 95: false, 100: false });
+
+  const billingCycleStartDate = useMemo(() => {
+    if (!userData?.subscription?.updated_at) return null;
+    return userData.subscription.updated_at;
+  }, [userData?.subscription?.updated_at]);
 
   useEffect(() => {
-    if (!Number.isFinite(percentage) || usageLimit <= 0 || !toast) return;
+    if (
+      !Number.isFinite(percentage) ||
+      usageLimit <= 0 ||
+      !toast ||
+      !billingCycleStartDate
+    )
+      return;
 
-    const thresholds = [
-      { p: 100, type: "error" },
-      { p: 95, type: "error" },
-      { p: 90, type: "warning" },
-      { p: 80, type: "warning" },
-    ];
-
-    const crossedThreshold = thresholds.find(({ p }) => percentage >= p);
+    const crossedThreshold = THRESHOLDS.find(({ p }) => percentage >= p);
 
     if (crossedThreshold) {
       const { p, type } = crossedThreshold;
 
-      if (!notifiedRef.current[p]) {
+      const cycleStartDate = new Date(billingCycleStartDate);
+      const cycleId = cycleStartDate.toISOString().split("T")[0];
+      const storageKey = `usage_limit_notification_${p}_cycle_${cycleId}`;
+
+      const hasShownThisCycle = localStorage.getItem(storageKey);
+
+      if (!hasShownThisCycle) {
         const msg = `You have used ${Math.floor(percentage)}% of your monthly API limit (${usageCount}/${usageLimit}).`;
         toast[type](msg);
-
-        thresholds.forEach((t) => {
-          if (t.p <= p) {
-            notifiedRef.current[t.p] = true;
-          }
-        });
+        localStorage.setItem(storageKey, "true");
       }
     }
-  }, [percentage, usageCount, usageLimit, toast]);
+  }, [percentage, usageCount, usageLimit, toast, billingCycleStartDate]);
 
   return (
     <>

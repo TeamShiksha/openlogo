@@ -12,14 +12,30 @@ vi.mock("../../src/hooks/useToast.js", () => ({
     error: mockToastError,
   }),
 }));
+import { UserContext } from "../../src/contexts/Contexts";
+import { ToastProvider } from "../../src/contexts/ToastContext";
 
 describe("Usage Component", () => {
+  const mockUserData = {
+    userData: MOCK_USER_DATA,
+  };
+
+  const renderWithProviders = (component) => {
+    return render(
+      <UserContext.Provider value={mockUserData}>
+        <ToastProvider>
+          {component}
+        </ToastProvider>
+      </UserContext.Provider>
+    );
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("Should show correct usage count, usage limit", () => {
-    render(
+    renderWithProviders(
       <Usage
         usageCount={MOCK_USER_DATA.subscription.usage_count}
         usageLimit={MOCK_USER_DATA.subscription.usage_limit}
@@ -37,7 +53,7 @@ describe("Usage Component", () => {
   });
 
   it("Should render PieGraph with correct percentage", () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <Usage
         usageCount={MOCK_USER_DATA.subscription.usage_count}
         usageLimit={MOCK_USER_DATA.subscription.usage_limit}
