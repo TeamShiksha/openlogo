@@ -2,23 +2,14 @@ const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { Messages } = require("../../../utils/constants");
-const { UserTokenService } = require("../../../services");
+const { UserTokenService, PasswordResetService } = require("../../../services");
 
 const app = require("../../../server");
 
 describe("RESET PASSWORD SESSION API", () => {
-  beforeAll(() => {
-    process.env.JWT_SECRET = "secret";
-  });
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
-  });
-
   it("422 - Invalid or expired token", async () => {
     const response = await request(app)
       .get(ENDPOINTS.RESET_PASSWORD_SESSION)
@@ -69,7 +60,7 @@ describe("RESET PASSWORD SESSION API", () => {
     });
   });
 
-  it.skip("200 - Successful", async () => {
+  it("200 - Successful", async () => {
     const mockUserToken = {
       isExpired: jest.fn().mockReturnValue(false),
       user_id: 123,
@@ -78,13 +69,21 @@ describe("RESET PASSWORD SESSION API", () => {
       .spyOn(UserTokenService.prototype, "fetchUserToken")
       .mockResolvedValue(mockUserToken);
 
+    const mockResetSession = {
+      sessionId: "test-session-id",
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+    };
+    jest
+      .spyOn(PasswordResetService.prototype, "createSession")
+      .mockResolvedValue(mockResetSession);
+
     const response = await request(app)
       .get(`${ENDPOINTS.RESET_PASSWORD_SESSION}/validToken`)
       .send();
 
     expect(response.status).toBe(200);
     expect(response.headers["set-cookie"]).toBeDefined();
-    expect(response.header["set-cookie"][0]).toMatch(/resetPasswordSession=/);
+    expect(response.header["set-cookie"][0]).toMatch(/resetPasswordSessionId=/);
     expect(response.body).toEqual({
       statusCode: 200,
     });
