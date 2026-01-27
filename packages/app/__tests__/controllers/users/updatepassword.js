@@ -1,8 +1,12 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const {
+  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
 const { Users } = require("../../../models");
-const { UserService } = require("../../../services");
+const { UserService, UserSessionService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const dummyPassword =
@@ -11,28 +15,27 @@ const bcrypt = require("bcryptjs");
 
 describe("Update User Password", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it.skip("422 - Current password is required", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("422 - Current password is required", async () => {
     const mockInput = {
       currPassword: "",
       newPassword: dummyPassword,
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(422);
@@ -43,17 +46,18 @@ describe("Update User Password", () => {
     });
   });
 
-  it.skip("422 - New password is required", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("422 - New password is required", async () => {
     const mockInput = {
       currPassword: dummyPassword,
       newPassword: "",
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(422);
@@ -64,18 +68,19 @@ describe("Update User Password", () => {
     });
   });
 
-  it.skip("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("404 - User not found", async () => {
     const mockInput = {
       currPassword: dummyPassword,
       newPassword: dummyPassword,
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(null);
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(404);
@@ -86,20 +91,21 @@ describe("Update User Password", () => {
     });
   });
 
-  it.skip("400 - Current password is incorrect", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("400 - Current password is incorrect", async () => {
     const mockInput = {
       currPassword: dummyPassword.slice(2),
       newPassword: dummyPassword,
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
       .mockResolvedValue(new Users(MOCK_USERS[1]));
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(400);
@@ -110,12 +116,11 @@ describe("Update User Password", () => {
     });
   });
 
-  it.skip("500 - Something went wrong. Try again later", async () => {
+  it("500 - Something went wrong. Try again later", async () => {
     const mockUserModel = new Users({
       ...MOCK_USERS[1],
       password: bcrypt.hashSync(dummyPassword, 10),
     });
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       currPassword: dummyPassword,
       newPassword: dummyPassword,
@@ -129,7 +134,7 @@ describe("Update User Password", () => {
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(500);
@@ -140,12 +145,11 @@ describe("Update User Password", () => {
     });
   });
 
-  it.skip("500 - Unexpected Error", async () => {
+  it("500 - Unexpected Error", async () => {
     const mockUserModel = new Users({
       ...MOCK_USERS[1],
       password: bcrypt.hashSync(dummyPassword, 10),
     });
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       currPassword: dummyPassword,
       newPassword: dummyPassword,
@@ -161,18 +165,17 @@ describe("Update User Password", () => {
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(500);
   });
 
-  it.skip("200 - User password updated", async () => {
+  it("200 - User password updated", async () => {
     const mockUserModel = new Users({
       ...MOCK_USERS[1],
       password: bcrypt.hashSync(dummyPassword, 10),
     });
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       currPassword: dummyPassword,
       newPassword: dummyPassword,
@@ -186,7 +189,7 @@ describe("Update User Password", () => {
 
     const response = await request(app)
       .put("/api/user/password")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(200);

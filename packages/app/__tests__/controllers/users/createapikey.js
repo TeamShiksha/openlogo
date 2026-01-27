@@ -1,43 +1,44 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { Users } = require("../../../models");
 const {
   MOCK_USERS,
   MOCK_KEYS,
   MOCK_KEYS_VALIDITY_PERIOD,
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
 } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const {
   UserService,
   SubscriptionService,
   KeyService,
+  UserSessionService,
 } = require("../../../services");
 const app = require("../../../server");
 
 describe("Generate User Key", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it.skip("422 - Key Description must contain only alphabets and spaces", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("422 - Key Description must contain only alphabets and spaces", async () => {
     const mockInput = {
       key_description: "Description@1234",
       expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
     const response = await request(app)
       .post("/api/user/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(422);
@@ -48,9 +49,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it.skip("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("404 - User not found", async () => {
     const mockInput = {
       key_description: MOCK_KEYS[1].keyDescription,
       expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneMonth,
@@ -59,7 +58,7 @@ describe("Generate User Key", () => {
 
     const response = await request(app)
       .post("/api/user/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(404);
@@ -70,9 +69,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it.skip("403 - Limit reached", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("403 - Limit reached", async () => {
     const mockuser = {
       ...MOCK_USERS[1],
       keys: [
@@ -87,7 +84,7 @@ describe("Generate User Key", () => {
 
     const response = await request(app)
       .post("/api/user/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,
@@ -101,9 +98,7 @@ describe("Generate User Key", () => {
     });
   });
 
-  it.skip("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("500 - Unexpected Error", async () => {
     const mockuser = {
       ...MOCK_USERS[1],
       keys: [
@@ -129,7 +124,7 @@ describe("Generate User Key", () => {
 
     const response = await request(app)
       .post("/api/user/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].threeMonths,
@@ -138,9 +133,7 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(500);
   });
 
-  it.skip("200 - Key generated ", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+  it("200 - Key generated ", async () => {
     const mockuser = {
       ...MOCK_USERS[1],
       keys: [
@@ -168,7 +161,7 @@ describe("Generate User Key", () => {
 
     const response = await request(app)
       .post("/api/user/api-key")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         key_description: MOCK_KEYS[1].keyDescription,
         expires_at: MOCK_KEYS_VALIDITY_PERIOD[0].oneWeek,

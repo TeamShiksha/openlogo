@@ -449,6 +449,35 @@ const MOCK_MONTHLY_STATS = {
   ],
 };
 
+const MOCK_SESSION_ID = "a".repeat(128);
+
+const MOCK_USER_SESSIONS = [
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[0],
+    isActive: true,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  },
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[1],
+    isActive: true,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  },
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[2],
+    isActive: true,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  },
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[3],
+    isActive: true,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  },
+];
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -466,4 +495,6 @@ module.exports = {
   MOCK_LOGO_REQUESTS,
   MOCK_WEEKLY_STATS,
   MOCK_MONTHLY_STATS,
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
 };
