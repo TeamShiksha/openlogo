@@ -1,18 +1,17 @@
 const request = require("supertest");
-const { ImageService } = require("../../../services");
-const { Users } = require("../../../models");
+const { ImageService, UserSessionService } = require("../../../services");
 const { STATUS_CODES } = require("http");
 const {
   MOCK_PRESIGNED_REQUEST_UPLOAD,
   MOCK_PRESIGNED_REQUEST_UPDATE,
-  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
 } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("POST /api/catalog/signed-url", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
     process.env.KEY = "logos";
   });
@@ -22,21 +21,21 @@ describe("POST /api/catalog/signed-url", () => {
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
     delete process.env.KEY;
   });
 
-  it.skip("should return 400 if its upload type but image already exists", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+  it("should return 400 if its upload type but image already exists", async () => {
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockResolvedValue({ company_name: "GOOGLE" });
 
     const res = await request(app)
       .post("/api/catalog/signed-url")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
@@ -51,16 +50,17 @@ describe("POST /api/catalog/signed-url", () => {
     });
   });
 
-  it.skip("should return 400 if its update type but image does not exists", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+  it("should return 400 if its update type but image does not exists", async () => {
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockReturnValue(null);
 
     const res = await request(app)
       .post("/api/catalog/signed-url")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPDATE[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPDATE[0].body.extension,
@@ -74,9 +74,10 @@ describe("POST /api/catalog/signed-url", () => {
     });
   });
 
-  it.skip("should return 200 and presigned Url and Key", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+  it("should return 200 and presigned Url and Key", async () => {
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
 
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
@@ -90,7 +91,7 @@ describe("POST /api/catalog/signed-url", () => {
 
     const res = await request(app)
       .post("/api/catalog/signed-url")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
@@ -109,9 +110,10 @@ describe("POST /api/catalog/signed-url", () => {
     });
   });
 
-  it.skip("should return 500 if presigned url is missing (key exists but url is null)", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+  it("should return 500 if presigned url is missing (key exists but url is null)", async () => {
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
 
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
@@ -124,7 +126,7 @@ describe("POST /api/catalog/signed-url", () => {
 
     const res = await request(app)
       .post("/api/catalog/signed-url")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
@@ -139,10 +141,10 @@ describe("POST /api/catalog/signed-url", () => {
     });
   });
 
-  it.skip("should return 500 if key is missing (url exists but key is null)", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
+  it("should return 500 if key is missing (url exists but key is null)", async () => {
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockResolvedValue(null);
@@ -156,7 +158,7 @@ describe("POST /api/catalog/signed-url", () => {
 
     const res = await request(app)
       .post("/api/catalog/signed-url")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.companyUri,
         extension: MOCK_PRESIGNED_REQUEST_UPLOAD[0].body.extension,
