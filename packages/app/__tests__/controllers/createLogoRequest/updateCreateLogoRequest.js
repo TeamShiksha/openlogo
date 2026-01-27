@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
 const { CreateLogoRequestService } = require("../../../services");
