@@ -1,16 +1,33 @@
-import { ChevronDown, Type, Pencil, ArrowUpFromLine } from "lucide-react";
+import {
+  ChevronDown,
+  Type,
+  Pencil,
+  ArrowUpFromLine,
+  Minus,
+  ArrowRight,
+  Bold,
+  Italic,
+  Underline,
+  Square as SquareIcon,
+  Circle as CircleIcon,
+  Triangle as TriangleIcon,
+} from "lucide-react";
 import Button from "../../components/common/button/Button";
 import styles from "./ToolbarSection.module.css";
 import PropTypes from "prop-types";
 
-const TextSection = ({ config, handlers }) => (
+const TextSection = ({ config, handlers, activeTool }) => (
   <details open className={styles.sidebarSection}>
     <summary className={styles.sidebarHeading}>
       <span>Text</span>
       <ChevronDown className={styles.chevronIcon} />
     </summary>
     <div className={styles.sectionContent}>
-      <Button onClick={handlers.addText} title="Add Text">
+      <Button
+        onClick={handlers.addText}
+        title="Add Text"
+        className={activeTool === "text" ? styles.active : ""}
+      >
         <Type size={20} />
       </Button>
       <select
@@ -43,15 +60,27 @@ const TextSection = ({ config, handlers }) => (
         ))}
       </select>
       <div className={styles.btnGroup}>
-        {["bold", "italic", "underline"].map((style) => (
-          <Button
-            key={style}
-            className={config[style] ? styles.active : ""}
-            onClick={() => handlers.toggleStyle(style)}
-          >
-            {style.charAt(0).toUpperCase()}
-          </Button>
-        ))}
+        <Button
+          className={config.bold ? styles.active : ""}
+          onClick={() => handlers.toggleStyle("bold")}
+          title="Bold"
+        >
+          <Bold size={16} />
+        </Button>
+        <Button
+          className={config.italic ? styles.active : ""}
+          onClick={() => handlers.toggleStyle("italic")}
+          title="Italic"
+        >
+          <Italic size={16} />
+        </Button>
+        <Button
+          className={config.underline ? styles.active : ""}
+          onClick={() => handlers.toggleStyle("underline")}
+          title="Underline"
+        >
+          <Underline size={16} />
+        </Button>
       </div>
     </div>
   </details>
@@ -71,6 +100,7 @@ TextSection.propTypes = {
     changeSize: PropTypes.func.isRequired,
     toggleStyle: PropTypes.func.isRequired,
   }).isRequired,
+  activeTool: PropTypes.string,
 };
 
 const ShapeSection = ({ config, handlers }) => (
@@ -84,30 +114,40 @@ const ShapeSection = ({ config, handlers }) => (
         <Button
           className={config.isFilled ? styles.active : ""}
           onClick={() => handlers.setFilled(true)}
+          title="Fill"
         >
           Fill
         </Button>
         <Button
           className={!config.isFilled ? styles.active : ""}
           onClick={() => handlers.setFilled(false)}
+          title="Outline"
         >
           Outline
         </Button>
       </div>
       <div className={styles.shapeGrid}>
         {[
-          { type: "rectangle", label: "□", title: "Rectangle" },
-          { type: "circle", label: "○", title: "Circle" },
-          { type: "triangle", label: "△", title: "Triangle" },
-          { type: "line", label: "—", title: "Line" },
-          { type: "arrow", label: "→", title: "Arrow" },
+          {
+            type: "rectangle",
+            icon: <SquareIcon size={18} />,
+            title: "Rectangle",
+          },
+          { type: "circle", icon: <CircleIcon size={18} />, title: "Circle" },
+          {
+            type: "triangle",
+            icon: <TriangleIcon size={18} />,
+            title: "Triangle",
+          },
+          { type: "line", icon: <Minus size={18} />, title: "Line" },
+          { type: "arrow", icon: <ArrowRight size={18} />, title: "Arrow" },
         ].map((shape) => (
           <Button
             key={shape.type}
             onClick={() => handlers.addShape(shape.type)}
             title={shape.title}
           >
-            {shape.label}
+            {shape.icon}
           </Button>
         ))}
       </div>
@@ -174,23 +214,38 @@ DrawSection.propTypes = {
     toggleDrawing: PropTypes.func.isRequired,
     setBrushSize: PropTypes.func.isRequired,
   }).isRequired,
+  activeTool: PropTypes.string,
 };
 
-export default function ToolbarSection({ sidebarOpen, config, handlers }) {
+// Update main component to accept activeTool prop
+export default function ToolbarSection({
+  sidebarOpen,
+  config,
+  handlers,
+  activeTool,
+}) {
   return (
     <aside
       className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed}`}
     >
-      <TextSection config={config.text} handlers={handlers.text} />
+      <TextSection
+        config={config.text}
+        handlers={handlers.text}
+        activeTool={activeTool}
+      />
       <ShapeSection config={config.shapes} handlers={handlers.shapes} />
-      <DrawSection config={config.drawing} handlers={handlers.drawing} />
+      <DrawSection
+        config={config.drawing}
+        handlers={handlers.drawing}
+        activeTool={activeTool}
+      />
       <div className={styles.sidebarSection}>
         <Button
           className={styles.primaryBtn}
           onClick={handlers.triggerImageUpload}
           title="Import Image"
         >
-          <ArrowUpFromLine />
+          <ArrowUpFromLine size={20} />
         </Button>
       </div>
     </aside>
@@ -232,4 +287,5 @@ ToolbarSection.propTypes = {
     }).isRequired,
     triggerImageUpload: PropTypes.func.isRequired,
   }).isRequired,
+  activeTool: PropTypes.string,
 };

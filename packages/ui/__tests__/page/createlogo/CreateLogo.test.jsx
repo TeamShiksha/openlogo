@@ -168,9 +168,11 @@ describe("CreateLogo", () => {
 
     expect(screen.getByText("Text")).toBeInTheDocument();
     expect(screen.getByTitle("Add Text")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "B" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "I" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "U" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Bold" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Italic" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Underline" })
+    ).toBeInTheDocument();
   });
 
   it("changes font family", async () => {
@@ -198,9 +200,9 @@ describe("CreateLogo", () => {
   it("toggles bold, italic, underline buttons", () => {
     renderCreateLogo();
 
-    const bold = screen.getByRole("button", { name: "B" });
-    const italic = screen.getByRole("button", { name: "I" });
-    const underline = screen.getByRole("button", { name: "U" });
+    const bold = screen.getByRole("button", { name: "Bold" });
+    const italic = screen.getByRole("button", { name: "Italic" });
+    const underline = screen.getByRole("button", { name: "Underline" });
 
     fireEvent.click(bold);
     expect(bold.className).not.toBe("");

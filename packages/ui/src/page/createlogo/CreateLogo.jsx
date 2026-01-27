@@ -19,6 +19,7 @@ export default function CreateLogo() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [exportType, setExportType] = useState("png");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [activeTool, setActiveTool] = useState(null);
   const [textConfig, setTextConfig] = useState({
     font: "Arial",
     fontSize: 32,
@@ -35,6 +36,14 @@ export default function CreateLogo() {
 
   const canvasControls = useCanvasControls();
 
+  const deactivateOtherTools = (toolToKeepActive) => {
+    if (toolToKeepActive !== "draw" && drawingConfig.isDrawing) {
+      setDrawingConfig((prev) => ({ ...prev, isDrawing: false }));
+      canvasControls.fabricCanvasRef.current.isDrawingMode = false;
+    }
+    setActiveTool(toolToKeepActive);
+  };
+
   // Initialize canvas with cleanup
   useEffect(() => {
     const canvas = canvasControls.initializeCanvas();
@@ -47,15 +56,27 @@ export default function CreateLogo() {
     const handler = (e) => setSidebarOpen(e.matches);
     mediaQuery.addEventListener("change", handler);
 
+    const handleBeforeUnload = (e) => {
+      const canvas = canvasControls.fabricCanvasRef.current;
+      if (canvas && canvas.getObjects().length > 0) {
+        e.preventDefault();
+        e.returnValue =
+          "You have unsaved changes. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
       mediaQuery.removeEventListener("change", handler);
-      canvasControls.disposeCanvas(); // Clean up canvas on unmount
+      canvasControls.disposeCanvas();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
-  // Initialize file operations after canvas is ready
   const fileOperations = useFileOperations(
     canvasControls.fabricCanvasRef,
     isGuest,
@@ -63,11 +84,6 @@ export default function CreateLogo() {
   );
 
   const setupEventListeners = (canvas) => {
-    canvas.on("object:added", canvasControls.saveHistory);
-    canvas.on("object:modified", canvasControls.saveHistory);
-    canvas.on("object:removed", canvasControls.saveHistory);
-    canvas.on("text:changed", canvasControls.saveHistory);
-
     canvas.on("selection:created", updateControls);
     canvas.on("selection:updated", updateControls);
     canvas.on("selection:cleared", resetControls);
@@ -186,6 +202,7 @@ export default function CreateLogo() {
     if (window.confirm("Are you sure you want to clear the entire canvas?")) {
       canvasControls.resetCanvas();
       toast?.success("Canvas cleared");
+      setActiveTool(null);
     }
   };
 
@@ -212,17 +229,24 @@ export default function CreateLogo() {
     drawing: drawingConfig,
   };
 
+  // Update handlers to manage active tool state
   const handlers = {
     text: {
-      addText: () =>
-        canvasControls.addText({
-          fontSize: textConfig.fontSize,
-          color: currentColor,
-          fontFamily: textConfig.font,
-          bold: textConfig.bold,
-          italic: textConfig.italic,
-          underline: textConfig.underline,
-        }),
+      addText: () => {
+        if (activeTool === "text") {
+          setActiveTool(null);
+        } else {
+          canvasControls.addText({
+            fontSize: textConfig.fontSize,
+            color: currentColor,
+            fontFamily: textConfig.font,
+            bold: textConfig.bold,
+            italic: textConfig.italic,
+            underline: textConfig.underline,
+          });
+          deactivateOtherTools("text");
+        }
+      },
       changeFont: (e) => {
         const font = e.target.value;
         setTextConfig((prev) => ({ ...prev, font }));
@@ -248,8 +272,10 @@ export default function CreateLogo() {
     shapes: {
       setFilled: (value) =>
         setShapesConfig((prev) => ({ ...prev, isFilled: value })),
-      addShape: (type) =>
-        canvasControls.addShape(type, currentColor, shapesConfig.isFilled),
+      addShape: (type) => {
+        canvasControls.addShape(type, currentColor, shapesConfig.isFilled);
+        deactivateOtherTools(null); // Shapes don't stay active after adding
+      },
     },
     drawing: {
       toggleDrawing: () => {
@@ -258,6 +284,9 @@ export default function CreateLogo() {
         canvasControls.fabricCanvasRef.current.isDrawingMode = newMode;
         if (newMode) {
           canvasControls.setupDrawing(currentColor, drawingConfig.brushSize);
+          setActiveTool("draw"); // Activate draw tool
+        } else {
+          setActiveTool(null); // Deactivate draw tool
         }
       },
       setBrushSize: (size) => {
@@ -296,6 +325,7 @@ export default function CreateLogo() {
           sidebarOpen={sidebarOpen}
           config={config}
           handlers={handlers}
+          activeTool={activeTool}
         />
 
         <div className={styles.canvasWrapper}>
@@ -306,7 +336,7 @@ export default function CreateLogo() {
       <input
         ref={(el) => (fileInputRef.current = el)}
         type="file"
-        accept="image/*"
+        accept={fileOperations.getAllowedFileTypes?.() || "image/*"}
         onChange={fileOperations.handleImageUpload}
         style={{ display: "none" }}
       />

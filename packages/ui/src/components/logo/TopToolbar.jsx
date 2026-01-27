@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import styles from "./TopToolbar.module.css";
 import PropTypes from "prop-types";
+import { useMemo } from "react";
 
 const toolbarButtons = [
   {
@@ -91,15 +92,16 @@ export default function TopToolbar({
     actions[action]?.();
   };
 
-  // Update the toggle button icon based on sidebar state
-  const updatedToolbarButtons = toolbarButtons.map((btn) =>
-    btn.action === "toggle"
-      ? {
-          ...btn,
-          icon: sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />,
-        }
-      : btn
-  );
+  const updatedToolbarButtons = useMemo(() => {
+    return toolbarButtons.map((btn) =>
+      btn.action === "toggle"
+        ? {
+            ...btn,
+            icon: sidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />,
+          }
+        : btn
+    );
+  }, [sidebarOpen]);
 
   return (
     <div className={styles.topToolbar}>
