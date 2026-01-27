@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import LogoUploadForm from "../../../src/page/createlogo/LogoUploadForm";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
 import { useApi } from "../../../src/hooks/useApi";
 import axios from "axios";
+import LogoUploadForm from "../../../src/components/logo/LogoUploadForm";
 
 vi.mock("axios", () => ({
   default: {
