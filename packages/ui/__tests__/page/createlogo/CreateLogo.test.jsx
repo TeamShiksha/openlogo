@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import CreateLogo from "../../src/page/createlogo/CreateLogo";
-import { UserContext } from "../../src/contexts/Contexts";
-import { ToastContext } from "../../src/contexts/Contexts";
+import CreateLogo from "../../../src/page/createlogo/CreateLogo";
+import { UserContext } from "../../../src/contexts/Contexts";
 
 // Mock fabric
 vi.mock("fabric", async (importOriginal) => {
@@ -50,7 +49,8 @@ vi.mock("fabric", async (importOriginal) => {
   };
 });
 
-vi.mock("../../src/page/createlogo/LogoUploadForm", () => ({
+// Mock LogoUploadForm
+vi.mock("../../../src/components/logo/LogoUploadForm", () => ({
   default: ({ closeModal }) => (
     <div data-testid="logo-upload-form">
       <button onClick={closeModal}>Close Modal</button>
@@ -58,26 +58,97 @@ vi.mock("../../src/page/createlogo/LogoUploadForm", () => ({
   ),
 }));
 
-// --------------------
-// Mocks
-// --------------------
+// Mock useToast hook
 const mockToast = {
   success: vi.fn(),
   error: vi.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
 };
+
+vi.mock("../../../src/hooks/useToast", () => ({
+  useToast: () => mockToast,
+}));
+
+// Mock useCanvasControls
+vi.mock("../../../src/components/logo/useCanvasControls", () => ({
+  useCanvasControls: () => {
+    const mockFabricCanvas = {
+      isDrawingMode: false,
+      renderAll: vi.fn(),
+      getActiveObject: vi.fn().mockReturnValue(null),
+      getActiveObjects: vi.fn().mockReturnValue([]),
+      setActiveObject: vi.fn(),
+      discardActiveObject: vi.fn(),
+      requestRenderAll: vi.fn(),
+      bringObjectToFront: vi.fn(),
+      sendObjectToBack: vi.fn(),
+      add: vi.fn(),
+      remove: vi.fn(),
+      clear: vi.fn(),
+      toJSON: vi.fn().mockReturnValue({}),
+      loadFromJSON: vi.fn(),
+      setDimensions: vi.fn(),
+      on: vi.fn(),
+      off: vi.fn(),
+      dispose: vi.fn(),
+      getWidth: vi.fn().mockReturnValue(600),
+      getHeight: vi.fn().mockReturnValue(400),
+    };
+
+    return {
+      canvasRef: { current: null },
+      fabricCanvasRef: { current: mockFabricCanvas },
+      initializeCanvas: vi.fn().mockReturnValue(mockFabricCanvas),
+      disposeCanvas: vi.fn(),
+      saveHistory: vi.fn(),
+      getActiveObject: vi.fn().mockReturnValue(null),
+      getActiveText: vi.fn().mockReturnValue(null),
+      addText: vi.fn(),
+      addShape: vi.fn(),
+      setupDrawing: vi.fn(),
+      duplicateSelected: vi.fn(),
+      deleteSelected: vi.fn(),
+      bringToFront: vi.fn(),
+      sendToBack: vi.fn(),
+      undo: vi.fn(),
+      redo: vi.fn(),
+      resetCanvas: vi.fn(),
+    };
+  },
+}));
+
+// Mock useFileOperations
+vi.mock("../../../src/components/logo/useFileOperations", () => ({
+  useFileOperations: () => ({
+    handleImageUpload: vi.fn(),
+    handleExport: vi.fn(),
+    getCanvasDataUrl: vi.fn().mockReturnValue("data:image/png;base64,"),
+  }),
+}));
 
 const renderCreateLogo = (role = "USER") =>
   render(
-    <ToastContext.Provider value={mockToast}>
-      <UserContext.Provider value={{ userData: { role } }}>
-        <CreateLogo />
-      </UserContext.Provider>
-    </ToastContext.Provider>
+    <UserContext.Provider value={{ userData: { role } }}>
+      <CreateLogo />
+    </UserContext.Provider>
   );
 
 describe("CreateLogo", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock matchMedia
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: query === "(min-width: 1025px)",
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
   });
 
   it("renders main toolbar actions", () => {
@@ -189,8 +260,36 @@ describe("CreateLogo", () => {
   it("prevents export for guest users", () => {
     renderCreateLogo("GUEST");
 
-    fireEvent.click(screen.getByText("EXPORT"));
-    expect(mockToast.error).toHaveBeenCalledWith("Guests cannot export logos");
+    const exportButton = screen.getByText("EXPORT");
+
+    // The button should be disabled for guest users
+    expect(exportButton).toBeDisabled();
+  });
+
+  it("prevents upload for guest users", () => {
+    renderCreateLogo("GUEST");
+
+    const uploadButton = screen.getByText("Upload");
+
+    expect(uploadButton).toBeDisabled();
+  });
+
+  it("allows export for authenticated users", () => {
+    renderCreateLogo("USER");
+
+    const exportButton = screen.getByText("EXPORT");
+
+    // The button should NOT be disabled for authenticated users
+    expect(exportButton).not.toBeDisabled();
+  });
+
+  it("allows upload for authenticated users", () => {
+    renderCreateLogo("USER");
+
+    const uploadButton = screen.getByText("Upload");
+
+    // The button should NOT be disabled for authenticated users
+    expect(uploadButton).not.toBeDisabled();
   });
 
   it("changes export type", () => {
@@ -223,5 +322,13 @@ describe("CreateLogo", () => {
     fireEvent.click(closeBtn);
 
     expect(screen.queryByTestId("logo-upload-form")).not.toBeInTheDocument();
+  });
+
+  it("renders color picker", () => {
+    renderCreateLogo();
+
+    const colorPicker = screen.getByTitle("Color");
+    expect(colorPicker).toBeInTheDocument();
+    expect(colorPicker).toHaveAttribute("type", "color");
   });
 });

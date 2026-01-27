@@ -1,0 +1,230 @@
+/* ====================== SIDEBAR ====================== */
+.sidebar {
+  height: 92%;
+  width: 88px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  padding: 10px 6px;
+  position: absolute;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+  z-index: 5;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE / Edge legacy */
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Safari, Edge (Chromium) */
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* ====================== DETAILS ====================== */
+.sidebarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebarSection .select {
+  margin-top: 6px;
+}
+
+/* ====================== SUMMARY ====================== */
+.sidebarHeading {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  transition: background 0.2s ease;
+}
+
+.sidebarHeading:hover {
+  background: #f1f5f9;
+}
+
+.sidebarHeading::-webkit-details-marker {
+  display: none;
+}
+
+/* ====================== CHEVRON ====================== */
+.chevronIcon {
+  width: 12px;
+  height: 12px;
+  color: #94a3b8;
+  transition: transform 0.25s ease;
+}
+
+.sidebarSection[open] .chevronIcon {
+  transform: rotate(180deg);
+}
+
+/* ====================== BUTTONS ====================== */
+.sidebar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 36px;
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  color: #475569;
+  font-size: 16px;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar button:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Active toggle buttons */
+button.active {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+/* ====================== PRIMARY BUTTON ====================== */
+.sidebarSection .primaryBtn {
+  height: 40px;
+  width: 100%;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  font-size: 16px;
+}
+
+.sidebarSection .primaryBtn:hover {
+  background: #7e79ee;
+}
+
+/* ====================== SHAPES ====================== */
+.shapeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.shapeGrid button {
+  font-size: 18px;
+}
+
+/* ====================== SELECT ====================== */
+.select {
+  width: 100%;
+  padding: 10px 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  text-align: center;
+  font-size: 11px;
+  color: #334155;
+}
+
+.btnGroup {
+  display: flex;
+  gap: 6px;
+}
+
+.btnGroup button {
+  margin-top: 6px;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionContent .btnGroup {
+  flex-direction: column;
+}
+
+.drawControls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sliderWrapper {
+  width: 100%;
+}
+
+/* Sidebar collapse */
+.sidebar {
+  transition:
+    width 0.3s ease,
+    padding 0.3s ease,
+    border 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar.open {
+  width: 88px;
+  padding: 10px 6px;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+  opacity: 1;
+}
+
+.sidebar.closed {
+  width: 0;
+  padding: 0;
+  border-right: none;
+  box-shadow: none;
+  opacity: 0;
+}
+
+@media (max-width: 840px) {
+  .sidebar {
+    height: 86.5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    height: 86vh;
+  }
+}
+
+@media (max-width: 420px) {
+  .sidebar {
+    height: 80vh;
+  }
+}
+
+@media (max-width: 318px) {
+  .sidebar {
+    height: 74vh;
+  }
+}

@@ -1,6 +1,6 @@
-import Modal from "../../components/common/modal/Modal";
-import CustomInput from "../../components/common/input/CustomInput";
-import Button from "../../components/common/button/Button";
+import Modal from "../common/modal/Modal";
+import CustomInput from "../common/input/CustomInput";
+import Button from "../common/button/Button";
 import PropTypes from "prop-types";
 import { useApi } from "../../hooks/useApi";
 import { useEffect, useState } from "react";
