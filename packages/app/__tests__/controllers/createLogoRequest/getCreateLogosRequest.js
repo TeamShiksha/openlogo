@@ -6,7 +6,7 @@ const { CreateLogoRequestService } = require("../../../services");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("GET /api/create-logo-request - Get Create Logos", () => {
+describe("GET /api/create-logo-request - Get Create Logo Request", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";

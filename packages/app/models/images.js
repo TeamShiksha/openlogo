@@ -70,8 +70,7 @@ imageSchema.statics.newImage = function (imageData) {
     image_size,
     updated_at: new Date(),
     extension,
-    is_published:
-      imageData.is_published !== undefined ? imageData.is_published : true,
+    is_published: imageData.is_published ?? true,
   });
   return image;
 };

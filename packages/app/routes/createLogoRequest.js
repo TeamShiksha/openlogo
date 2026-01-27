@@ -3,7 +3,7 @@ const {
   addLogoController,
   updateLogoController,
   getLogoController,
-} = require("../controllers/createLogo");
+} = require("../controllers/createLogoRequest");
 const authMiddleware = require("../middlewares/auth");
 const router = require("express").Router();
 const { UserType } = require("../utils/constants");

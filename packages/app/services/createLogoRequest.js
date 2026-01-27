@@ -1,4 +1,4 @@
-const CreateLogoRequestRepository = require("../repositories/createLogo");
+const CreateLogoRequestRepository = require("../repositories/createLogoRequest");
 const { ImagesRepository } = require("../repositories");
 const { StatusTypes } = require("../utils/constants");
 
@@ -97,13 +97,15 @@ class CreateLogoRequestService {
    * @returns {Object|null} - The logo request details or null if not found.
    */
   async getLogoDetails(createLogoId) {
-    const createLogo =
+    const createLogoRequest =
       await this.createLogoRequestRepository.getById(createLogoId);
-    if (!createLogo) return null;
+    if (!createLogoRequest) return null;
 
     let previewUrl = null;
-    if (createLogo.images) {
-      const image = await this.imagesRepository.getById(createLogo.images);
+    if (createLogoRequest.images) {
+      const image = await this.imagesRepository.getById(
+        createLogoRequest.images
+      );
       if (image) {
         const imagePath = `${image.extension}/${image.company_name}.${image.extension}`;
         previewUrl = await this.imagesRepository.fetchCloudFrontURL(imagePath);
@@ -111,7 +113,7 @@ class CreateLogoRequestService {
     }
 
     return {
-      _id: createLogo._id,
+      _id: createLogoRequest._id,
       previewUrl,
     };
   }

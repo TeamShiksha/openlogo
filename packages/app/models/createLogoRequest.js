@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { StatusTypes } = require("../utils/constants");
 const { URL_REGEX, URL_ERROR_MESSAGE } = require("../utils/validator");
 
-const createLogoSchema = new mongoose.Schema({
+const createLogoRequestSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
@@ -46,6 +46,9 @@ const createLogoSchema = new mongoose.Schema({
   },
 });
 
-const CreateLogo = mongoose.model("createLogo", createLogoSchema);
+const CreateLogoRequest = mongoose.model(
+  "createLogoRequest",
+  createLogoRequestSchema
+);
 
-module.exports = CreateLogo;
+module.exports = CreateLogoRequest;

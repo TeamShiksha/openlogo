@@ -1,12 +1,12 @@
-const CreateLogoRequestService = require("../../services/createLogo");
-const CreateLogoRequestRepository = require("../../repositories/createLogo");
-const { ImagesRepository } = require("../../repositories");
+const CreateLogoRequestService = require("../../services/createLogoRequest");
+const CreateLogoRequestRepository = require("../../repositories/createLogoRequest");
+const { ImagesRepository } = require("../../repositories/index.js");
 const { StatusTypes } = require("../../utils/constants.js");
 const { MOCK_USERS, MOCK_IMAGES } = require("../../utils/mocks.js");
 const mongoose = require("mongoose");
 
 jest.mock("../../repositories");
-jest.mock("../../repositories/createLogo");
+jest.mock("../../repositories/createLogoRequest");
 
 describe("CreateLogoRequestService", () => {
   let createLogoRequestService;

@@ -1,15 +1,15 @@
-const { CreateLogo } = require("../models");
+const { CreateLogoRequest } = require("../models");
 const BaseRepository = require("./base");
 
 /**
- * The  createLogoRequestRepository extends BaseRepository to manage createLogo model operations, inheriting CRUD methods like getById, getAll, create, update, and delete.
- * It passes the createLogo model to the base repository for database interactions.
- * Custom methods specific to createLogo can also be added as needed.
+ * The  createLogoRequestRepository extends BaseRepository to manage createLogoRequest model operations, inheriting CRUD methods like getById, getAll, create, update, and delete.
+ * It passes the createLogoRequest model to the base repository for database interactions.
+ * Custom methods specific to createLogoRequest can also be added as needed.
  */
 
 class CreateLogoRequestRepository extends BaseRepository {
   constructor() {
-    super(CreateLogo);
+    super(CreateLogoRequest);
   }
 
   /**

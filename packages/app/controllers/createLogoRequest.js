@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const {
   ImageService,
   RequestService,
@@ -181,8 +181,8 @@ async function getLogoController(req, res, next) {
     const { page, limit, tab } = value;
     const { data, total, currentPage, totalPages } =
       await createLogoRequestService.getPaginatedCreateLogos(
-        parseInt(page),
-        parseInt(limit),
+        Number.parseInt(page),
+        Number.parseInt(limit),
         tab
       );
 

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
 const {
@@ -10,7 +10,7 @@ const {
 const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
-describe("POST /api/create-logo-request/logo - Add Create Logo", () => {
+describe("POST /api/create-logo-request/logo - Add Create Logo Request", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
