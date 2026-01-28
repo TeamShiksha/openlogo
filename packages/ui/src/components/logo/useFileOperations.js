@@ -61,7 +61,6 @@ export const useFileOperations = (fabricCanvasRef, isGuest, toast) => {
       // Additional validation for SVG
       if (file.type === "image/svg+xml") {
         img.scaleToWidth(200);
-        // Ensure SVG has proper dimensions
         if (img.width === 0 || img.height === 0) {
           img.scaleToWidth(200);
         }
@@ -88,7 +87,6 @@ export const useFileOperations = (fabricCanvasRef, isGuest, toast) => {
     } catch (error) {
       console.error("Error loading image:", error);
 
-      // More specific error messages
       let errorMessage = "Failed to load image";
       if (error.message?.includes("security")) {
         errorMessage = "Image contains security restrictions";
