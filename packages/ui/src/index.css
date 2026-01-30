@@ -30,6 +30,22 @@
   --warning: rgb(185, 171, 70);
 }
 
+[data-theme="dark"] {
+  --white: rgb(17, 24, 39);
+  --black: rgb(255, 255, 255);
+  --description: rgb(209, 213, 219);
+  --border-color: rgba(75, 85, 99, 0.3);
+  --label-color: rgb(156, 163, 175);
+  --input-color: rgb(209, 213, 219);
+  --shadow: rgba(0, 0, 0, 0.3) 0px 6px 24px 0px;
+  --shadow-bottom: 0px 16px 24px rgba(0, 0, 0, 0.4);
+  --table-heading-bg: rgb(31, 41, 55);
+  --table-background: rgba(31, 41, 55, 0.3);
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-focus: rgba(99, 102, 241, 0.2);
+}
+
 *,
 *::before,
 *::after {
@@ -41,6 +57,10 @@
   padding: 0;
   margin: 0;
   font-family: Inter, sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 body {

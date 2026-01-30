@@ -19,7 +19,7 @@
 }
 
 .button {
-  background: rgb(79, 71, 228);
+  background: var(--primary);
   color: white;
   font-size: 16px;
   font-weight: 500;
@@ -33,7 +33,7 @@
 }
 
 .button:active {
-  background-color: rgb(6, 1, 97);
+  background-color: var(--primary-hover);
   transform: translateY(1px);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .button[aria-pressed="true"] {
-  background-color: rgb(6, 1, 97);
+  background-color: rgb(47, 43, 165);
   transform: translateY(0);
   outline: none;
 }

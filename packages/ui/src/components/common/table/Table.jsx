@@ -19,30 +19,38 @@ const Table = ({ headers, rows, emptyMessage, onDelete, isGuest }) => {
         </thead>
         <tbody>
           {hasData ? (
-            rows.map((cells, index) => (
-              <tr key={`${cells[index]}-${index}`}>
-                {cells.map((cell, CIndex) => (
-                  <td
-                    key={`${cell}-${CIndex}`}
-                    className={styles["table-cell"]}
-                  >
-                    {cell}
-                  </td>
-                ))}
-                {onDelete && (
-                  <td className={styles["table-cell"]}>
-                    <Button
-                      variant="danger"
-                      className={styles["delete-btn"]}
-                      onClick={() => onDelete(index)}
-                      disabled={isGuest}
+            rows.map((cells, index) => {
+              const isArrayFormat = Array.isArray(cells);
+              const cellsData = isArrayFormat ? cells : cells.cells;
+              const rowClassName = isArrayFormat
+                ? ""
+                : cells.rowClassName || "";
+
+              return (
+                <tr key={`${cellsData[0]}-${index}`} className={rowClassName}>
+                  {cellsData.map((cell, CIndex) => (
+                    <td
+                      key={`${cell}-${CIndex}`}
+                      className={styles["table-cell"]}
                     >
-                      {BUTTON_TEXT.delete}
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            ))
+                      {cell}
+                    </td>
+                  ))}
+                  {onDelete && (
+                    <td className={styles["table-cell"]}>
+                      <Button
+                        variant="danger"
+                        className={styles["delete-btn"]}
+                        onClick={() => onDelete(index)}
+                        disabled={isGuest}
+                      >
+                        {BUTTON_TEXT.delete}
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td

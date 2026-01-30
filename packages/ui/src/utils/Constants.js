@@ -633,7 +633,7 @@ export const DOCUMENTATION = {
 };
 
 export const API_KEY_TABLE = {
-  headers: ["Description", "Created", "Action"],
+  headers: ["Description", "Created", "Expires", "Action"],
   emptyMessage:
     "Your api keys will be visible here, click on generate key to add new api key",
 };
@@ -815,7 +815,13 @@ export const API_KEY_FORM = {
   expiryLabel: "Expiry Period",
   expiryDescription: "Choose how long your API key will remain valid.",
 };
-
+export const EXPIRY_KEYS_OPTION = [
+  { value: 7, label: "1 Week" },
+  { value: 30, label: "1 Month" },
+  { value: 90, label: "3 Months" },
+  { value: 180, label: "6 Months" },
+  { value: 365, label: "1 Year" },
+];
 export const IMAGE_UPLOAD_MODEL = {
   dragAndDropImage: "Drag and drop image",
   or: "OR",

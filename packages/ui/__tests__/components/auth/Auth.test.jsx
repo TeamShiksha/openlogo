@@ -1,17 +1,35 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AuthModal from "../../../src/components/auth/Auth";
-import { expect, describe, vi, it } from "vitest";
+import { expect, describe, vi, it, beforeEach } from "vitest";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
 import { ToastProvider } from "../../../src/contexts/ToastContext.jsx";
+import { ThemeProvider } from "../../../src/contexts/ThemeContext";
 
 const closeModal = vi.fn();
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
 });
 
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+globalThis.localStorage = localStorageMock;
+
 describe("Auth Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
+  });
   it("Authmodal doesn't render if isOpen = false", () => {
     const { container } = render(
       <BrowserRouter>
@@ -27,9 +45,11 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <AuthModal isOpen={true} onClose={closeModal} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <AuthModal isOpen={true} onClose={closeModal} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -43,9 +63,11 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <AuthModal isOpen={true} onClose={closeModal} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <AuthModal isOpen={true} onClose={closeModal} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -68,9 +90,11 @@ describe("Auth Component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <AuthModal isOpen={true} onClose={Close} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <AuthModal isOpen={true} onClose={Close} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
