@@ -25,6 +25,7 @@
 .circular-chart {
   width: 160px;
   max-height: 250px;
+  background-color: var(--white);
 }
 
 .usage-statistics {

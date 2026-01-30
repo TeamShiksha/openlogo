@@ -130,7 +130,7 @@ ul li {
 }
 
 .dropdown-menu button:hover {
-  background-color: #f3f3f3;
+  background-color: var(--label-color);
   border-radius: 0px;
 }
 
