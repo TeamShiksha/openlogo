@@ -2,8 +2,8 @@
 .sidebar {
   height: 92%;
   width: 88px;
-  background: #ffffff;
-  border-right: 1px solid #e2e8f0;
+  background: var(--white);
+  border-right: 1px solid var(--border-color);
   padding: 10px 6px;
   position: absolute;
   overflow-y: auto;
@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow);
   z-index: 5;
 
   /* Firefox */
@@ -49,14 +49,14 @@
   border-radius: 8px;
   font-size: 10px;
   font-weight: 700;
-  color: #475569;
+  color: var(--description);
   text-transform: uppercase;
   letter-spacing: 0.6px;
   transition: background 0.2s ease;
 }
 
 .sidebarHeading:hover {
-  background: #f1f5f9;
+  background: var(--primary-focus);
 }
 
 .sidebarHeading::-webkit-details-marker {
@@ -67,7 +67,7 @@
 .chevronIcon {
   width: 12px;
   height: 12px;
-  color: #94a3b8;
+  color: var(--description);
   transition: transform 0.25s ease;
 }
 
@@ -80,14 +80,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   height: 36px;
   width: 100%;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--table-background);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
 
-  color: #475569;
+  color: var(--black);
   font-size: 16px;
   cursor: pointer;
 
@@ -96,10 +95,10 @@
 }
 
 .sidebar button:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: var(--primary-focus);
+  border-color: var(--primary);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow);
 }
 
 .sidebar button:active {
@@ -109,13 +108,13 @@
 
 button.active {
   background: var(--primary);
-  color: #ffffff;
+  color: var(--white);
   border-color: var(--primary);
 }
 
 button.active:hover {
-  background: #7e79ee;
-  border-color: #7e79ee;
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
 }
 
 /* ====================== PRIMARY BUTTON ====================== */
@@ -123,13 +122,14 @@ button.active:hover {
   height: 40px;
   width: 100%;
   background: var(--primary);
-  color: #ffffff;
+  color: var(--white);
+
   border: none;
   font-size: 16px;
 }
 
 .sidebarSection .primaryBtn:hover {
-  background: #7e79ee;
+  background: var(--primary-hover);
 }
 
 /* ====================== SHAPES ====================== */
@@ -141,18 +141,19 @@ button.active:hover {
 
 .shapeGrid button {
   font-size: 18px;
+  border: 1px solid var(--border-color);
 }
 
 /* ====================== SELECT ====================== */
 .select {
   width: 100%;
   padding: 10px 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: #f8fafc;
+  background: var(--table-background);
   text-align: center;
   font-size: 11px;
-  color: #334155;
+  color: var(--black);
 }
 
 .btnGroup {
@@ -162,6 +163,7 @@ button.active:hover {
 
 .btnGroup button {
   margin-top: 6px;
+  border: 1px solid var(--border-color);
 }
 
 .sectionContent {
@@ -196,8 +198,8 @@ button.active:hover {
 .sidebar.open {
   width: 88px;
   padding: 10px 6px;
-  border-right: 1px solid #e2e8f0;
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.03);
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
   opacity: 1;
 }
 
