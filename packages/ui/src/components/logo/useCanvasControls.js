@@ -25,7 +25,6 @@ export const useCanvasControls = () => {
     const canvas = new Canvas(canvasRef.current, {
       width: Math.min(window.innerWidth - 40, 900),
       height: 500,
-      backgroundColor: "#ffffff",
       preserveObjectStacking: true,
     });
 
