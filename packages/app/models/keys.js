@@ -48,8 +48,7 @@ keySchema.methods.data = function () {
     key_description: this.key_description,
     subscription_id: this.subscription_id,
     created_at: this._id.getTimestamp(),
-    updated_at: this.updated_at,
-    expires_at: this.expires_at,
+    updated_at: this.updated_at
   };
 };
 
