@@ -17,7 +17,7 @@ const {
 /**
  * Validates input, checks for existing requests, creates image data, and adds a new logo request.
  */
-async function addLogoController(req, res, next) {
+async function newLogoRequestController(req, res, next) {
   try {
     const { createLogoRequestService, imageService, requestService } = {
       createLogoRequestService: new CreateLogoRequestService(),
@@ -105,7 +105,7 @@ async function addLogoController(req, res, next) {
 /**
  * Validates input, updates logo request status, and manages image visibility based on approval or rejection.
  */
-async function updateLogoController(req, res, next) {
+async function updateLogoRequestController(req, res, next) {
   try {
     const createLogoRequestService = new CreateLogoRequestService();
     const { createLogoId } = req.params;
@@ -166,7 +166,7 @@ async function updateLogoController(req, res, next) {
 /**
  * Validates input, fetches list of created logo, and returns paginated results.
  */
-async function getLogoController(req, res, next) {
+async function getLogoRequestController(req, res, next) {
   try {
     const createLogoRequestService = new CreateLogoRequestService();
     const { error, value } = requestQuerySchema.validate(req.query);
@@ -209,7 +209,7 @@ async function getLogoController(req, res, next) {
 }
 
 module.exports = {
-  addLogoController,
-  updateLogoController,
-  getLogoController,
+  newLogoRequestController,
+  updateLogoRequestController,
+  getLogoRequestController,
 };
