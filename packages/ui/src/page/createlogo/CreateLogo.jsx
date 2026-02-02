@@ -233,19 +233,15 @@ export default function CreateLogo() {
   const handlers = {
     text: {
       addText: () => {
-        if (activeTool === "text") {
-          setActiveTool(null);
-        } else {
-          canvasControls.addText({
-            fontSize: textConfig.fontSize,
-            color: currentColor,
-            fontFamily: textConfig.font,
-            bold: textConfig.bold,
-            italic: textConfig.italic,
-            underline: textConfig.underline,
-          });
-          deactivateOtherTools("text");
-        }
+        canvasControls.addText({
+          fontSize: textConfig.fontSize,
+          color: currentColor,
+          fontFamily: textConfig.font,
+          bold: textConfig.bold,
+          italic: textConfig.italic,
+          underline: textConfig.underline,
+        });
+        deactivateOtherTools(null);
       },
       changeFont: (e) => {
         const font = e.target.value;

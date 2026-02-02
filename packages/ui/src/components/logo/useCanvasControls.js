@@ -86,8 +86,8 @@ export const useCanvasControls = () => {
 
     const { x, y } = getCanvasCenter();
     const text = new Textbox("New text", {
-      left: x - 80,
-      top: y - 20,
+      left: x,
+      top: y,
       originX: "center",
       originY: "center",
       fontSize: options.fontSize || 32,
@@ -121,8 +121,8 @@ export const useCanvasControls = () => {
     switch (type) {
       case "rectangle":
         shape = new Rect({
-          left: x - 75,
-          top: y - 50,
+          left: x,
+          top: y,
           originX: "center",
           originY: "center",
           width: 150,
