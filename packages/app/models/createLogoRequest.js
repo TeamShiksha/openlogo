@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { StatusTypes } = require("../utils/constants");
 const { URL_REGEX, URL_ERROR_MESSAGE } = require("../utils/validator");
 
-const raiseRequestSchema = new mongoose.Schema({
+const createLogoRequestSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
@@ -13,6 +13,10 @@ const raiseRequestSchema = new mongoose.Schema({
     required: true,
     trim: true,
     match: [URL_REGEX, URL_ERROR_MESSAGE],
+  },
+  images: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "images",
   },
   status: {
     type: String,
@@ -42,6 +46,9 @@ const raiseRequestSchema = new mongoose.Schema({
   },
 });
 
-const RaiseRequest = mongoose.model("RaiseRequest", raiseRequestSchema);
+const CreateLogoRequest = mongoose.model(
+  "createLogoRequest",
+  createLogoRequestSchema
+);
 
-module.exports = RaiseRequest;
+module.exports = CreateLogoRequest;
