@@ -1,0 +1,47 @@
+/* ====================== BASE ====================== */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  height: 100vh;
+  font-family: -apple-system, BlinkMacOSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+/* ====================== CANVAS AREA ====================== */
+.editorLayout {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  height: calc(100vh - 64px);
+}
+
+.canvasWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--shadow);
+  padding: 16px;
+  overflow: hidden;
+}
+
+.canvasWrapper canvas {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  object-fit: contain;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .canvasWrapper {
+    padding: 12px;
+  }
+
+  .editorLayout {
+    height: calc(100vh - 100px);
+  }
+}

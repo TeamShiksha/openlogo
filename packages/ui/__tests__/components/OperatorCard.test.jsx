@@ -230,4 +230,32 @@ describe("OperatorCard Component", () => {
     const summary = screen.queryByText("Summary");
     expect(summary).not.toBeInTheDocument();
   });
+  it("displays logo preview image when previewUrl is present", () => {
+    const itemWithPreview = {
+      ...MOCK_OPERATOR_CARD_DATA,
+      previewUrl: "https://example.com/preview.png",
+    };
+    render(
+      <OperatorCard
+        item={itemWithPreview}
+        onRespondClick={onRespondClick}
+        searchType="messages"
+      />
+    );
+    const previewImage = screen.getByAltText("Logo Preview");
+    expect(previewImage).toBeInTheDocument();
+    expect(previewImage).toHaveAttribute("src", itemWithPreview.previewUrl);
+  });
+
+  it("does not display logo preview image when previewUrl is absent", () => {
+    render(
+      <OperatorCard
+        item={MOCK_OPERATOR_CARD_DATA}
+        onRespondClick={onRespondClick}
+        searchType="messages"
+      />
+    );
+    const previewImage = screen.queryByAltText("Logo Preview");
+    expect(previewImage).not.toBeInTheDocument();
+  });
 });
