@@ -14,7 +14,8 @@ class KeyService {
     if (keyIds.length === 0) {
       return [];
     }
-    return await this.keyRepository.getMultipleKeys(keyIds);
+    const keys = await this.keyRepository.getMultipleKeys(keyIds);
+    return keys.map((key) => key.data());
   }
 
   /**
