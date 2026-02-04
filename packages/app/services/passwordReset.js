@@ -1,8 +1,10 @@
 const crypto = require("crypto");
-const PasswordResetRepository = require("../repositories/passwordReset");
+const VerificationSessionRepository = require("../repositories/verificationSession");
+const { TEMPORARY_SESSION_TYPES } = require("../utils/constants");
 class PasswordResetSessionService {
   constructor() {
-    this.PasswordResetRepository = new PasswordResetRepository();
+    this.PasswordResetRepository = new VerificationSessionRepository();
+    this.TEMPORARY_SESSION_TYPES = TEMPORARY_SESSION_TYPES;
   }
   /**
    * Generates a cryptographically secure session ID.
@@ -19,26 +21,23 @@ class PasswordResetSessionService {
    * @returns {Promise<Object>} - Created session object.
    */
   async createSession({ userId, resetToken }) {
-    // deactivate previous sessions
-    await this.PasswordResetRepository.deactivateAllActiveSessions(userId);
-
     const sessionId = this.generateSessionId();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     return await this.PasswordResetRepository.create({
       userId,
-      resetToken,
       sessionId,
+      sessionType: this.TEMPORARY_SESSION_TYPES.PASSWORD_RESET,
+      token: resetToken,
       expiresAt,
     });
   }
 
-  async findActiveSessionById(sessionId) {
-    return await this.PasswordResetRepository.findActiveBySessionId(sessionId);
-  }
-
-  async deactivateSession(sessionId) {
-    return await this.PasswordResetRepository.deactivateSession(sessionId);
+  async findAndUpdateActiveSession(sessionId) {
+    return await this.PasswordResetRepository.findAndUpdateActiveSession({
+      sessionType: this.TEMPORARY_SESSION_TYPES.PASSWORD_RESET,
+      sessionId,
+    });
   }
 }
 

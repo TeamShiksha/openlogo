@@ -469,7 +469,6 @@ async function resetPasswordSessionController(req, res, next) {
       userId: userToken.user_id,
       resetToken: userToken.token,
     });
-
     const isProduction = getIsProduction();
 
     res.cookie("resetPasswordSessionId", resetSession.sessionId, {
@@ -499,7 +498,6 @@ async function resetPasswordController(req, res, next) {
     const passwordResetSessionService = new PasswordResetService();
 
     const { resetPasswordSessionId } = req.cookies;
-
     if (
       !resetPasswordSessionId ||
       typeof resetPasswordSessionId !== "string" ||
@@ -512,8 +510,17 @@ async function resetPasswordController(req, res, next) {
       });
     }
 
+    const { error, value } = patchSchema.validate(req.body);
+    if (error) {
+      return res.status(422).json({
+        error: STATUS_CODES[422],
+        message: error.message,
+        statusCode: 422,
+      });
+    }
+
     const resetSession =
-      await passwordResetSessionService.findActiveSessionById(
+      await passwordResetSessionService.findAndUpdateActiveSession(
         resetPasswordSessionId
       );
 
@@ -526,14 +533,15 @@ async function resetPasswordController(req, res, next) {
     }
     const { userId: user } = resetSession;
 
-    const { error, value } = patchSchema.validate(req.body);
-    if (error) {
-      return res.status(422).json({
-        error: STATUS_CODES[422],
-        message: error.message,
-        statusCode: 422,
+    if (resetSession.token !== value.token) {
+      return res.status(403).json({
+        error: STATUS_CODES[403],
+        message: Messages.INVALID_TOKEN,
+        statusCode: 403,
       });
     }
+
+    const userToken = await userTokenService.fetchUserToken(value.token);
 
     const result = await userService.updateUserPassword(
       user,
@@ -547,19 +555,7 @@ async function resetPasswordController(req, res, next) {
         statusCode: 400,
       });
     }
-
-    let userToken = await userTokenService.fetchUserToken(value.token);
-    if (userToken === null || userToken.token !== value.token) {
-      return res.status(403).json({
-        error: STATUS_CODES[403],
-        message: Messages.PASS_FAILED,
-        statusCode: 403,
-      });
-    }
-
     await userTokenService.deleteUserToken(userToken);
-
-    await passwordResetSessionService.deactivateSession(resetPasswordSessionId);
 
     const isProduction = getIsProduction();
 

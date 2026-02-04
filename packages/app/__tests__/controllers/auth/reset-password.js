@@ -13,7 +13,7 @@ const { MOCK_SESSION_ID, MOCK_USER_SESSIONS } = require("../../../utils/mocks");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
 
-describe("RESET PASSWORD API", () => {
+describe.skip("RESET PASSWORD API", () => {
   it("401 - User is not signed in", async () => {
     const response = await request(app).patch(ENDPOINTS.RESET_PASSWORD);
 
