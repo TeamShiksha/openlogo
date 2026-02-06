@@ -6,12 +6,10 @@ import Usage from "../../components/usage/Usage";
 import ChangePassword from "../../components/changepassword/ChangePassword";
 import UserInfo from "../../components/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
-import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
-import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 import ConfirmationModal from "../../components/confirm/ConfirmationModal.jsx";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
@@ -21,6 +19,7 @@ import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 import InformationModal from "../../components/information/InformationModal.jsx";
 import Graph from "../../components/graph/Graph.jsx";
+
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [confirmKeyName, setConfirmKeyName] = useState("");
@@ -32,15 +31,20 @@ function Dashboard() {
   const [apiKeys, setApiKeys] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("api-keys");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toast = useToast();
+
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
     method: "get",
     url: "/user/me",
   });
+
   const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
     method: "delete",
     url: `/user/api-key/${selectedKey?._id}`,
   });
+
   const { fetchRequest: updateOldKeysRequest } = useApi({
     method: "get",
     url: "/user/update-old-keys",
@@ -170,9 +174,14 @@ function Dashboard() {
     dashboardDropdownOptions.push("OPERATOR", "USER");
   }
 
+  const handleRoleSelect = (role) => {
+    setSelectedDashboard(role);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div
-      className={`container ${styles["dashboard-container"]}`}
+      className={`${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
       {showLoader && (
@@ -200,16 +209,6 @@ function Dashboard() {
         />
       )}
 
-      <div>
-        {(userData?.role === "ADMIN" || userData?.role === "OPERATOR") && (
-          <Dropdown
-            options={dashboardDropdownOptions}
-            selectedOption={selectedDashboard}
-            setSelectedOption={setSelectedDashboard}
-          />
-        )}
-      </div>
-
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
           <AdminDashboard />
@@ -220,62 +219,190 @@ function Dashboard() {
         </div>
       ) : (
         <>
-          <div className={styles["dashboard-content-container"]}>
-            <CardWrapper>
-              <Graph />
-            </CardWrapper>
+          {/* Page Header */}
+          <div className={styles["page-header"]}>
+            <div className={styles["title-section"]}>
+              <h1 className={styles["dashboard-title"]}>Dashboard</h1>
+              <p className={styles["dashboard-subtitle"]}>
+                Manage your account, view analytics, and control your API
+                access.
+              </p>
+            </div>
+
+            <div className={styles["header-right"]}>
+              {/* Role Dropdown */}
+              {(userData?.role === "ADMIN" ||
+                userData?.role === "OPERATOR") && (
+                <div className={styles["dropdown-wrapper"]}>
+                  <button
+                    className={styles["dropdown"]}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    {selectedDashboard}
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+
+                  {isDropdownOpen && (
+                    <div className={styles["dropdown-menu"]}>
+                      {dashboardDropdownOptions.map((option) => (
+                        <div
+                          key={option}
+                          className={styles["dropdown-item"]}
+                          onClick={() => handleRoleSelect(option)}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tabs */}
+              <div className={styles["tabs"]}>
+                <button
+                  className={`${styles["tab"]} ${
+                    activeTab === "analytics" ? styles["active-tab"] : ""
+                  }`}
+                  onClick={() => setActiveTab("analytics")}
+                >
+                  Analytics
+                </button>
+                <button
+                  className={`${styles["tab"]} ${
+                    activeTab === "api-keys" ? styles["active-tab"] : ""
+                  }`}
+                  onClick={() => setActiveTab("api-keys")}
+                >
+                  API Keys
+                </button>
+                <button
+                  className={`${styles["tab"]} ${
+                    activeTab === "settings" ? styles["active-tab"] : ""
+                  }`}
+                  onClick={() => setActiveTab("settings")}
+                >
+                  Settings
+                </button>
+              </div>
+            </div>
           </div>
-          <div className={styles["dashboard-content-container"]}>
-            <section className={styles["dashboard-content-section"]}>
-              <CardWrapper title="Usage">
-                <Usage
-                  usageCount={userData?.subscription.usage_count || 0}
-                  usageLimit={userData?.subscription.usage_limit || 0}
-                />
-              </CardWrapper>
-              <CardWrapper title="Generate New API Key">
-                <ApiKeyForm
-                  isGuest={isGuest}
-                  onKeyGenerated={handleKeyGenerated}
-                />
-              </CardWrapper>
-              <CardWrapper
-                title="Plan"
-                status="Active"
-                statusClass={styles["active-status"]}
-              >
-                <CurrentPlan isGuest={isGuest} />
-              </CardWrapper>
-            </section>
-          </div>
-          <div className={styles["table-wrapper"]}>
-            <Table
-              headers={API_KEY_TABLE.headers}
-              rows={apiKeyTableData}
-              onDelete={handleDeleteClick}
-              isGuest={isGuest}
-              emptyMessage={API_KEY_TABLE.emptyMessage}
-            />
-          </div>
-          <div className={styles["dashboard-content-container"]}>
-            <section className={styles["dashboard-content-section"]}>
-              <CardWrapper title="User Info">
-                <UserInfo
-                  name={userData?.name || ""}
-                  email={userData?.email || ""}
-                  isGuest={isGuest}
-                />
-              </CardWrapper>
-              <CardWrapper title="Change Password">
-                <ChangePassword isGuest={isGuest} />
-              </CardWrapper>
-              <CardWrapper title="Setting">
-                <SettingCard isGuest={isGuest} />
-              </CardWrapper>
-            </section>
+
+          {/* Tab Content */}
+          <div className={styles["content"]}>
+            {activeTab === "analytics" && (
+              <div className={styles["analytics-content"]}>
+                <div className={styles["analytics-grid"]}>
+                  <div className={styles["analytics-card"]}>
+                    <Graph />
+                  </div>
+                  <div className={styles["analytics-card"]}>
+                    <Usage
+                      usageCount={userData?.subscription.usage_count || 0}
+                      usageLimit={userData?.subscription.usage_limit || 0}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "api-keys" && (
+              <div className={styles["api-keys-grid"]}>
+                <div className={styles["left-column"]}>
+                  <div className={styles["card"]}>
+                    <ApiKeyForm
+                      isGuest={isGuest}
+                      onKeyGenerated={handleKeyGenerated}
+                    />
+                  </div>
+                  <div className={styles["security-tip"]}>
+                    <div className={styles["tip-header"]}>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                      </svg>
+                      Security Tip
+                    </div>
+                    <p className={styles["tip-text"]}>
+                      Never share your secret keys. Use environment variables to
+                      store them securely in your production environment.
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles["card"]}>
+                  <div className={styles["keys-header"]}>
+                    <h2 className={styles["card-title"]}>Active API Keys</h2>
+                    <span className={styles["badge"]}>
+                      {apiKeys.length} {apiKeys.length === 1 ? "key" : "keys"}{" "}
+                      found
+                    </span>
+                  </div>
+                  <p className={styles["subtext"]}>
+                    Manage and monitor your existing access credentials
+                  </p>
+                  <div className={styles["table-wrapper"]}>
+                    <Table
+                      headers={API_KEY_TABLE.headers}
+                      rows={apiKeyTableData}
+                      onDelete={handleDeleteClick}
+                      isGuest={isGuest}
+                      emptyMessage={API_KEY_TABLE.emptyMessage}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "settings" && (
+              <div className={styles["settings-grid"]}>
+                <div className={styles["card"]}>
+                  <h3 className={styles["card-title"]}>User Info</h3>
+                  <UserInfo
+                    name={userData?.name || ""}
+                    email={userData?.email || ""}
+                    isGuest={isGuest}
+                  />
+                </div>
+                <div className={styles["card"]}>
+                  <h3 className={styles["card-title"]}>Change Password</h3>
+                  <ChangePassword isGuest={isGuest} />
+                </div>
+                <div className={styles["card"]}>
+                  <h3 className={styles["card-title"]}>Plan</h3>
+                  <CurrentPlan isGuest={isGuest} />
+                </div>
+                <div className={styles["card"]}>
+                  <h3 className={styles["card-title"]}>Settings</h3>
+                  <SettingCard isGuest={isGuest} />
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}
+
       {showModal && (
         <div data-testid="delete-api-key-modal">
           <ConfirmationModal
@@ -310,4 +437,5 @@ function Dashboard() {
     </div>
   );
 }
+
 export default Dashboard;

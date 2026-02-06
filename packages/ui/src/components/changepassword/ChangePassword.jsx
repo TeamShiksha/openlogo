@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeClosed } from "lucide-react";
-import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import styles from "./ChangePassword.module.css";
 import PropTypes from "prop-types";
@@ -96,95 +95,50 @@ function ChangePassword({ isGuest }) {
     <form
       noValidate
       onSubmit={handleSubmit}
-      className={styles["change-password-input-group"]}
+      className={styles["change-password-form"]}
     >
       {CHANGE_PASSWORD_FIELDS.map((field) => {
-        if (field.name === "currPassword") {
-          return (
-            <div key={field.name} className={styles["change-password-wrapper"]}>
-              <CustomInput
-                error={errors[field.name]}
-                type={showCurrentPassword ? "text" : "password"}
-                name={field.name}
-                label={field.label}
-                value={formValues[field.name]}
-                onChange={handleChange}
-                onFocus={() => setFocusedField(field.name)}
-                onBlur={() => setFocusedField(null)}
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className={styles["change-password-eye-button"]}
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                aria-label={
-                  showCurrentPassword
-                    ? "Hide current password"
-                    : "Show current password"
-                }
-                tabIndex={-1}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setShowCurrentPassword(!showCurrentPassword);
-                  }
-                }}
-              >
-                {showCurrentPassword ? (
-                  <Eye size={20} />
-                ) : (
-                  <EyeClosed size={20} />
-                )}
-              </button>
-            </div>
-          );
-        }
-        if (field.name === "newPassword") {
-          return (
-            <div key={field.name} className={styles["change-password-wrapper"]}>
-              <CustomInput
-                error={errors[field.name]}
-                type={showNewPassword ? "text" : "password"}
-                name={field.name}
-                label={field.label}
-                value={formValues[field.name]}
-                onChange={handleChange}
-                onFocus={() => setFocusedField(field.name)}
-                onBlur={() => setFocusedField(null)}
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className={styles["change-password-eye-button"]}
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                aria-label={
-                  showNewPassword ? "Hide new password" : "Show new password"
-                }
-                tabIndex={-1}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setShowNewPassword(!showNewPassword);
-                  }
-                }}
-              >
-                {showNewPassword ? <Eye size={20} /> : <EyeClosed size={20} />}
-              </button>
-            </div>
-          );
-        }
+        const isCurrentPassword = field.name === "currPassword";
+        const isNewPassword = field.name === "newPassword";
+        const showPassword = isCurrentPassword
+          ? showCurrentPassword
+          : showNewPassword;
+        const togglePassword = isCurrentPassword
+          ? setShowCurrentPassword
+          : setShowNewPassword;
+
         return (
-          <CustomInput
-            key={field.name}
-            type={field.type}
-            name={field.name}
-            label={field.label}
-            value={formValues[field.name]}
-            onChange={handleChange}
-            onFocus={() => setFocusedField(field.name)}
-            onBlur={() => setFocusedField(null)}
-            error={errors[field.name]}
-          />
+          <div key={field.name} className={styles["form-group"]}>
+            <div className={styles["password-wrapper"]}>
+              <input
+                type={showPassword ? "text" : "password"}
+                name={field.name}
+                placeholder={field.label}
+                value={formValues[field.name]}
+                onChange={handleChange}
+                onFocus={() => setFocusedField(field.name)}
+                onBlur={() => setFocusedField(null)}
+                disabled={loading}
+                className={styles["input"]}
+              />
+              <button
+                type="button"
+                className={styles["eye-button"]}
+                onClick={() => togglePassword(!showPassword)}
+                aria-label={
+                  showPassword ? `Hide ${field.label}` : `Show ${field.label}`
+                }
+                tabIndex={-1}
+              >
+                {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
+              </button>
+            </div>
+            {errors[field.name] && (
+              <span className={styles["error-message"]}>
+                {errors[field.name]}
+              </span>
+            )}
+          </div>
         );
       })}
       <Button
@@ -192,6 +146,7 @@ function ChangePassword({ isGuest }) {
         variant="primary"
         disabled={isFormInvalid}
         isLoading={loading}
+        className={styles["submit-btn"]}
       >
         {BUTTON_TEXT.changePasswordLabel}
       </Button>
