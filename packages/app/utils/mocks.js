@@ -455,25 +455,29 @@ const MOCK_USER_SESSIONS = [
   {
     sessionId: MOCK_SESSION_ID,
     userId: MOCK_USERS[0],
-    isActive: true,
+    token: "validToken",
+    usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   },
   {
     sessionId: MOCK_SESSION_ID,
     userId: MOCK_USERS[1],
-    isActive: true,
+    token: "validToken",
+    usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   },
   {
     sessionId: MOCK_SESSION_ID,
     userId: MOCK_USERS[2],
-    isActive: true,
+    token: "validToken",
+    usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   },
   {
     sessionId: MOCK_SESSION_ID,
     userId: MOCK_USERS[3],
-    isActive: true,
+    token: "validToken",
+    usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   },
 ];
