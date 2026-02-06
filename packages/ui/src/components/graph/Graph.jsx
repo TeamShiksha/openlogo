@@ -29,14 +29,7 @@ const getBaseOptions = (isDarkMode) => ({
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    title: {
-      display: true,
-      text: "Requests",
-      color: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
-      font: {
-        size: 20,
-      },
-    },
+    title: { display: false },
     tooltip: {
       backgroundColor: isDarkMode ? "rgb(31, 41, 55)" : "rgb(255, 255, 255)",
       titleColor: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
@@ -45,27 +38,43 @@ const getBaseOptions = (isDarkMode) => ({
         ? "rgba(75, 85, 99, 0.3)"
         : "rgb(177, 179, 183, 0.3)",
       borderWidth: 1,
+      padding: 12,
+      displayColors: false,
+      callbacks: {
+        title: function (context) {
+          return context[0].label;
+        },
+        label: function (context) {
+          return `Requests: ${context.parsed.y}`;
+        },
+      },
     },
   },
   scales: {
     x: {
       grid: {
         color: isDarkMode
-          ? "rgba(75, 85, 99, 0.2)"
-          : "rgba(177, 179, 183, 0.2)",
+          ? "rgba(75, 85, 99, 0.1)"
+          : "rgba(177, 179, 183, 0.1)",
+        drawBorder: false,
       },
       ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
+        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(107, 114, 128)",
+        font: {
+          size: 11,
+        },
       },
     },
     y: {
       grid: {
-        color: isDarkMode
-          ? "rgba(75, 85, 99, 0.2)"
-          : "rgba(177, 179, 183, 0.2)",
+        color: isDarkMode ? "rgba(75, 85, 99, 0.1)" : "rgba(243, 244, 246, 1)",
+        drawBorder: false,
       },
       ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
+        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(156, 163, 175)",
+        font: {
+          size: 11,
+        },
       },
     },
   },
@@ -254,9 +263,12 @@ export default function Graph() {
         label: "Requests",
         data: chartData.dataPoints,
         borderWidth: 2,
-        pointRadius: 3,
-        tension: 0.2,
-        borderColor: isDarkMode ? "rgb(99, 102, 241)" : "rgb(79, 71, 228)",
+        pointRadius: 4,
+        pointBackgroundColor: "#ffffff",
+        pointBorderColor: "#4f46e5",
+        pointBorderWidth: 2,
+        tension: 0.4,
+        borderColor: "#818cf8",
         spanGaps: true,
         fill: false,
       },
@@ -271,51 +283,70 @@ export default function Graph() {
 
   const error = selectedPeriod === "week" ? weekError : monthError;
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className={styles["error"]}>Error loading chart data</div>;
   }
 
   const isLoading = !cachedWeekData && !cachedMonthData;
 
   return (
-    <div className={styles.graph}>
-      {isLoading ? (
-        <div className={styles.mainSpinner}></div>
-      ) : (
-        chartData.labels.length > 0 && (
-          <Line
-            key={`${selectedPeriod}-${yMax}-${step}`}
-            data={dataConfig}
-            options={options}
-          />
-        )
-      )}
-
-      <div className={styles.buttonParent}>
+    <div className={styles["graph-container"]}>
+      <div className={styles["card-header"]}>
+        <h2 className={styles["card-title"]}>Requests</h2>
         <button
-          className={styles.button}
-          onClick={() => setSelectedPeriod("month")}
-          aria-pressed={selectedPeriod === "month"}
+          className={styles["refresh-btn"]}
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          aria-label="Refresh"
         >
-          Month
-        </button>
-        <button
-          className={styles.button}
-          onClick={() => setSelectedPeriod("week")}
-          aria-pressed={selectedPeriod === "week"}
-        >
-          Week
-        </button>
-        <div className={styles.refreshContainer}>
-          <button
-            className={styles.button}
-            onClick={handleRefresh}
-            disabled={isRefreshing}
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            Refresh
+            <path d="M23 4v6h-6"></path>
+            <path d="M1 20v-6h6"></path>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div className={styles["chart-wrapper"]}>
+        {isLoading ? (
+          <div className={styles["loading"]}>Loading...</div>
+        ) : (
+          chartData.labels.length > 0 && (
+            <Line
+              key={`${selectedPeriod}-${yMax}-${step}`}
+              data={dataConfig}
+              options={options}
+            />
+          )
+        )}
+      </div>
+
+      <div className={styles["chart-controls"]}>
+        <div className={styles["segment-control"]}>
+          <button
+            className={`${styles["segment-btn"]} ${
+              selectedPeriod === "month" ? styles["segment-btn-active"] : ""
+            }`}
+            onClick={() => setSelectedPeriod("month")}
+          >
+            Month
           </button>
-          <div className={styles.spinnerSlot}>
-            {isRefreshing && <div className={styles.smallSpinner}></div>}
-          </div>
+          <button
+            className={`${styles["segment-btn"]} ${
+              selectedPeriod === "week" ? styles["segment-btn-active"] : ""
+            }`}
+            onClick={() => setSelectedPeriod("week")}
+          >
+            Week
+          </button>
         </div>
       </div>
     </div>

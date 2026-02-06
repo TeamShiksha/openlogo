@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { MESSAGES, USER_INFO_FIELDS } from "../../utils/Constants";
 import styles from "./UserInfo.module.css";
-import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
@@ -84,26 +83,33 @@ function UserInfo({ name, email, isGuest }) {
   };
 
   return (
-    <form className={styles["user-info-input-group"]}>
+    <form className={styles["user-info-form"]}>
       {USER_INFO_FIELDS.map((field) => (
-        <CustomInput
-          key={field.name}
-          type={field.type}
-          name={field.name}
-          label={field.label}
-          value={formData[field.name]}
-          onChange={handleUserInfoChange}
-          {...(field.name === "email" ? { disabled: true } : {})}
-          {...(field.name === "name" && formErrors.type === "error"
-            ? { error: formErrors.message }
-            : {})}
-        />
+        <div key={field.name} className={styles["form-group"]}>
+          <div className={styles["input-wrapper"]}>
+            <span className={styles["floating-label"]}>{field.label}</span>
+            <input
+              type={field.type}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleUserInfoChange}
+              className={styles["input"]}
+              disabled={field.name === "email"}
+            />
+          </div>
+          {field.name === "name" && formErrors.type === "error" && (
+            <span className={styles["error-message"]}>
+              {formErrors.message}
+            </span>
+          )}
+        </div>
       ))}
       <Button
         onClick={handleUserInfoUpdate}
         disabled={formData.isBtnDisabled || isUpdating}
         variant={"primary"}
         isLoading={isUpdating}
+        className={styles["submit-btn"]}
       >
         Save
       </Button>
