@@ -3,7 +3,7 @@ const VerificationSessionRepository = require("../repositories/verificationSessi
 const { TEMPORARY_SESSION_TYPES } = require("../utils/constants");
 class PasswordResetSessionService {
   constructor() {
-    this.PasswordResetRepository = new VerificationSessionRepository();
+    this.verificationSessionRepository = new VerificationSessionRepository();
     this.TEMPORARY_SESSION_TYPES = TEMPORARY_SESSION_TYPES;
   }
   /**
@@ -24,7 +24,7 @@ class PasswordResetSessionService {
     const sessionId = this.generateSessionId();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    return await this.PasswordResetRepository.create({
+    return await this.verificationSessionRepository.create({
       userId,
       sessionId,
       sessionType: this.TEMPORARY_SESSION_TYPES.PASSWORD_RESET,
@@ -34,7 +34,7 @@ class PasswordResetSessionService {
   }
 
   async findAndUpdateActiveSession(sessionId) {
-    return await this.PasswordResetRepository.findAndUpdateActiveSession({
+    return await this.verificationSessionRepository.findAndUpdateActiveSession({
       sessionType: this.TEMPORARY_SESSION_TYPES.PASSWORD_RESET,
       sessionId,
     });
