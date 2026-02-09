@@ -114,9 +114,14 @@ const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
 
 const USER_SAFE_FIELDS =
-  "name email role userId is_verified subscription_id created_at is_deleted updated_at ";
+  "name email role is_verified subscription_id created_at is_deleted updated_at ";
 
 const SESSION_ID_REGEX = /^[a-f0-9]{128}$/i;
+
+const TEMPORARY_SESSION_TYPES = {
+  PASSWORD_RESET: "PASSWORD_RESET",
+  MFA: "MFA",
+};
 
 module.exports = {
   EmailValidationRegex,
@@ -133,4 +138,5 @@ module.exports = {
   getIsProduction,
   USER_SAFE_FIELDS,
   SESSION_ID_REGEX,
+  TEMPORARY_SESSION_TYPES,
 };

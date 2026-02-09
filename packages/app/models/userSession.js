@@ -34,6 +34,11 @@ const userSessionSchema = new mongoose.Schema({
     required: true,
     expires: 0, // TTL
   },
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("userSession", userSessionSchema);
