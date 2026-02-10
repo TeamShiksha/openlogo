@@ -52,11 +52,14 @@ const getBaseOptions = (isDarkMode) => ({
   },
   scales: {
     x: {
+      offset: true,
+      align: "center",
       grid: {
         color: isDarkMode
           ? "rgba(75, 85, 99, 0.1)"
           : "rgba(177, 179, 183, 0.1)",
-        drawBorder: false,
+        drawBorder: true,
+        lineWidth: 1,
       },
       ticks: {
         color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(107, 114, 128)",
@@ -76,6 +79,11 @@ const getBaseOptions = (isDarkMode) => ({
           size: 11,
         },
       },
+    },
+  },
+  elements: {
+    point: {
+      pointOffset: 0,
     },
   },
 });
@@ -240,6 +248,15 @@ export default function Graph() {
       ...baseOptions,
       scales: {
         ...baseOptions.scales,
+        x: {
+          ...baseOptions.scales.x,
+          type: "category",
+          offset: true,
+          align: "center", // ← FIX: Center points on ticks
+          ticks: {
+            ...baseOptions.scales.x.ticks,
+          },
+        },
         y: {
           ...baseOptions.scales.y,
           beginAtZero: true,
@@ -256,24 +273,33 @@ export default function Graph() {
     };
   }, [yMax, step, isDarkMode]);
 
-  const dataConfig = {
-    labels: chartData.labels,
-    datasets: [
-      {
-        label: "Requests",
-        data: chartData.dataPoints,
-        borderWidth: 2,
-        pointRadius: 4,
-        pointBackgroundColor: "#ffffff",
-        pointBorderColor: "#4f46e5",
-        pointBorderWidth: 2,
-        tension: 0.4,
-        borderColor: "#818cf8",
-        spanGaps: true,
-        fill: false,
-      },
-    ],
-  };
+  const dataConfig = useMemo(
+    () => ({
+      labels: chartData.labels,
+      datasets: [
+        {
+          label: "Requests",
+          data: chartData.dataPoints,
+          borderWidth: 2,
+          pointRadius: 4, // ← Increased
+          pointHoverRadius: 6,
+          pointBackgroundColor: "#ffffff",
+          pointBorderColor: "#4f46e5",
+          pointBorderWidth: 2,
+          pointHoverBackgroundColor: "#ffffff",
+          pointHoverBorderColor: "#4f46e5",
+          tension: 0.4,
+          borderColor: "#818cf8",
+          spanGaps: true,
+          fill: false,
+          clip: false, // ← CRITICAL: Prevents clipping
+          pointHitRadius: 10,
+          pointOffset: 0, // ← Forces exact tick alignment
+        },
+      ],
+    }),
+    [chartData]
+  );
 
   const handleRefresh = async () => {
     setIsRefreshing(true);

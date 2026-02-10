@@ -181,7 +181,7 @@ function Dashboard() {
 
   return (
     <div
-      className={`${styles["dashboard-container"]}`}
+      className={` ${styles["dashboard-container"]}`}
       data-testid="testid-dashboard"
     >
       {showLoader && (
@@ -211,11 +211,25 @@ function Dashboard() {
 
       {selectedDashboard === "ADMIN" ? (
         <div data-testid="testid-admin-dashboard">
-          <AdminDashboard />
+          <AdminDashboard
+            selectedDashboard={selectedDashboard}
+            dashboardDropdownOptions={dashboardDropdownOptions}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+            handleRoleSelect={handleRoleSelect}
+            styles={styles}
+          />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
         <div data-testid="testid-operator-dashboard">
-          <OperatorDashboard />
+          <OperatorDashboard
+            selectedDashboard={selectedDashboard}
+            dashboardDropdownOptions={dashboardDropdownOptions}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
+            handleRoleSelect={handleRoleSelect}
+            headerStyles={styles}
+          />
         </div>
       ) : (
         <>
@@ -325,29 +339,6 @@ function Dashboard() {
                       isGuest={isGuest}
                       onKeyGenerated={handleKeyGenerated}
                     />
-                  </div>
-                  <div className={styles["security-tip"]}>
-                    <div className={styles["tip-header"]}>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                      </svg>
-                      Security Tip
-                    </div>
-                    <p className={styles["tip-text"]}>
-                      Never share your secret keys. Use environment variables to
-                      store them securely in your production environment.
-                    </p>
                   </div>
                 </div>
 
