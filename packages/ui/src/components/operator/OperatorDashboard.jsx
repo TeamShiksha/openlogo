@@ -30,10 +30,18 @@ const showSuccessToast = (toast, searchType, responseAction) => {
     } else {
       toast.success("Message rejected successfully.");
     }
-  } else if (responseAction === "respond") {
-    toast.success("Request marked as resolved successfully.");
+  } else if (searchType === "requests") {
+    if (responseAction === "respond") {
+      toast.success("Request marked as resolved successfully.");
+    } else {
+      toast.success("Request rejected successfully.");
+    }
   } else {
-    toast.success("Request rejected successfully.");
+    if (responseAction === "respond") {
+      toast.success("Logo created successfully.");
+    } else {
+      toast.success("Logo rejected successfully.");
+    }
   }
 };
 
@@ -50,11 +58,12 @@ const Operator = () => {
   const [responseAction, setResponseAction] = useState("respond");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const toast = useToast();
-  const OperatorDashboardDropdownOptions = ["messages", "requests"];
+  const OperatorDashboardDropdownOptions = ["messages", "requests", "logos"];
 
   // Data states
   const [messages, setMessages] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [logos, setLogos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -152,17 +161,43 @@ const Operator = () => {
     }
   };
 
+  const fetchLogos = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await instance.get("/create-logo-request", {
+        params: {
+          page,
+          limit: ITEMS_PER_PAGE,
+          tab: activeTab,
+        },
+      });
+      setLogos(response.data.results);
+      setTotalPages(response.data.totalPages || 1);
+    } catch (error) {
+      console.error("Error fetching logos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleResponseSubmit = async () => {
     if (!currentItem) return;
     const payload = createPayload(searchType, responseText, responseAction);
 
     setLoading(true);
     try {
-      const isMessages = searchType === "messages";
-      const endpoint = isMessages
-        ? `/messages/${currentItem._id}`
-        : `/requests/${currentItem._id}`;
-      const refreshData = isMessages ? fetchMessages : fetchRequests;
+      let endpoint = null;
+      let refreshData = null;
+      if (searchType === "messages") {
+        endpoint = `/messages/${currentItem._id}`;
+        refreshData = fetchMessages;
+      } else if (searchType === "requests") {
+        endpoint = `/requests/${currentItem._id}`;
+        refreshData = fetchRequests;
+      } else {
+        endpoint = `/create-logo-request/${currentItem._id}`;
+        refreshData = fetchLogos;
+      }
 
       await instance.put(endpoint, payload);
       refreshData(currentPage);
@@ -185,8 +220,10 @@ const Operator = () => {
   useEffect(() => {
     if (searchType === "messages") {
       fetchMessages(currentPage);
-    } else {
+    } else if (searchType === "requests") {
       fetchRequests(currentPage);
+    } else {
+      fetchLogos(currentPage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchType, currentPage, activeTab]);
@@ -226,10 +263,17 @@ const Operator = () => {
     });
   };
 
-  const filteredData =
-    searchType === "requests"
-      ? filterItemsByStatus(requests)
-      : filterItemsByStatus(messages);
+  const getFilteredData = () => {
+    if (searchType === "messages") {
+      return filterItemsByStatus(messages);
+    } else if (searchType === "requests") {
+      return filterItemsByStatus(requests);
+    } else {
+      return filterItemsByStatus(logos);
+    }
+  };
+
+  const filteredData = getFilteredData();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);

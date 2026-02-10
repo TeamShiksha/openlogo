@@ -111,7 +111,8 @@ class ImageServices {
     imageSize,
     companyName,
     companyUri,
-    Extension
+    Extension,
+    isPublished = true
   ) {
     const result = await this.imageRepository.create({
       user_id: uploadedBy,
@@ -119,6 +120,7 @@ class ImageServices {
       company_uri: companyUri,
       image_size: Number(imageSize),
       extension: Extension,
+      is_published: isPublished,
     });
     return {
       _id: result._id,

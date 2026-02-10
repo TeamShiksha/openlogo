@@ -7,6 +7,7 @@ const UserService = require("./users");
 const RequestService = require("./request");
 const SendEmailService = require("./sendemail");
 const LogoRequestLogsService = require("./logoRequestlogs");
+const CreateLogoRequestService = require("./createLogoRequest");
 const PasswordResetService = require("./passwordReset");
 const UserSessionService = require("./userSession");
 
@@ -20,6 +21,7 @@ module.exports = {
   RequestService,
   SendEmailService,
   LogoRequestLogsService,
+  CreateLogoRequestService,
   PasswordResetService,
   UserSessionService,
 };

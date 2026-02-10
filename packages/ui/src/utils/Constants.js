@@ -377,6 +377,7 @@ export const BUTTON_TEXT = {
   delete: "Delete",
   generateKey: "Generate Key",
   requestLogo: "Request Logo",
+  createLogo: "Create Logo",
   goToHome: "Go to Home",
   submit: "Submit",
   backToSignIn: " Back to Sign In",
@@ -389,6 +390,7 @@ export const BUTTON_TEXT = {
   sendRequest: "Send Request",
   upload: "Upload",
   selectAnImage: "Select an image",
+  uploadLogo: "Upload Logo",
 };
 
 export const BRANDING = {
@@ -516,6 +518,13 @@ export const LOGOREQUEST = {
   },
 };
 
+export const LOGOUPLOAD = {
+  title: "Upload Logo",
+  initialValues: {
+    companyUrl: "",
+  },
+};
+
 const CODE_EXAMPLE_SEARCH = {
   javascript: `// use fetch to send GET request
 fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
@@ -624,7 +633,7 @@ export const DOCUMENTATION = {
 };
 
 export const API_KEY_TABLE = {
-  headers: ["Description", "Created", "Action"],
+  headers: ["Description", "Created", "Expires", "Action"],
   emptyMessage:
     "Your api keys will be visible here, click on generate key to add new api key",
 };
@@ -806,7 +815,13 @@ export const API_KEY_FORM = {
   expiryLabel: "Expiry Period",
   expiryDescription: "Choose how long your API key will remain valid.",
 };
-
+export const EXPIRY_KEYS_OPTION = [
+  { value: 7, label: "1 Week" },
+  { value: 30, label: "1 Month" },
+  { value: 90, label: "3 Months" },
+  { value: 180, label: "6 Months" },
+  { value: 365, label: "1 Year" },
+];
 export const IMAGE_UPLOAD_MODEL = {
   dragAndDropImage: "Drag and drop image",
   or: "OR",

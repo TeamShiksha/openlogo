@@ -7,7 +7,7 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
   const isArchived = item.status === "RESOLVED" || item.status === "REJECTED";
 
   const displayMessage =
-    searchType === "requests" ? item.companyUrl : item.message;
+    searchType === "messages" ? item.message : item.companyUrl;
 
   const statusClassName = () => {
     switch (item.status) {
@@ -60,54 +60,71 @@ const OperatorCard = ({ item, onRespondClick, searchType }) => {
           </div>
         </div>
         <div className={styles["operator-card-body"]}>
-          {searchType !== "requests" && (
-            <div className={styles.header}>
-              <div className={styles["user-info"]}>
-                <p className={styles["user-name"]}>{item.name}</p>
-                <p className={styles.divider}></p>
-                <p className={styles["user-email"]}>{item.email}</p>
+          <div className={styles["card-body-content"]}>
+            <div className={styles["card-body-left"]}>
+              {searchType == "messages" && (
+                <div className={styles.header}>
+                  <div className={styles["user-info"]}>
+                    <p className={styles["user-name"]}>{item.name}</p>
+                    <p className={styles.divider}></p>
+                    <p className={styles["user-email"]}>{item.email}</p>
+                  </div>
+                </div>
+              )}
+              <div className={styles["message-container"]}>
+                <p className={styles["message-title"]}>
+                  {searchType === "messages" ? "Message" : "Company URL"}
+                </p>
+                {searchType === "messages" ? (
+                  <p className={styles.message}>{displayMessage}</p>
+                ) : (
+                  <a
+                    href={`${displayMessage}`}
+                    target="_blank"
+                    className={styles["company-url"]}
+                  >
+                    {displayMessage}
+                  </a>
+                )}
+              </div>
+              {isArchived && (
+                <div className={styles["summary-container"]}>
+                  <p className={styles["summary-title"]}>Summary</p>
+                  <p className={styles.summary}>{item.comment}</p>
+                </div>
+              )}
+              <div className={styles["button-container"]}>
+                {!isArchived && (
+                  <div className={styles["button-container"]}>
+                    <Button
+                      onClick={() => onRespondClick(item, "respond")}
+                      variant="primary"
+                      className={styles["respond-button"]}
+                    >
+                      {BUTTON_TEXT.respond}
+                    </Button>
+                    <Button
+                      onClick={() => onRespondClick(item, "reject")}
+                      variant="danger"
+                      className={styles["reject-button"]}
+                    >
+                      {BUTTON_TEXT.reject}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
-          )}
-          <div className={styles["message-container"]}>
-            <p className={styles["message-title"]}>
-              {searchType === "messages" ? "Message" : "Company URL"}
-            </p>
-            {searchType === "messages" ? (
-              <p className={styles.message}>{displayMessage}</p>
-            ) : (
-              <a
-                href={`${displayMessage}`}
-                target="_blank"
-                className={styles["company-url"]}
-              >
-                {displayMessage}
-              </a>
-            )}
-          </div>
-          {isArchived && (
-            <div className={styles["summary-container"]}>
-              <p className={styles["summary-title"]}>Summary</p>
-              <p className={styles.summary}>{item.comment}</p>
-            </div>
-          )}
-          <div className={styles["button-container"]}>
-            {!isArchived && (
-              <div className={styles["button-container"]}>
-                <Button
-                  onClick={() => onRespondClick(item, "respond")}
-                  variant="primary"
-                  className={styles["respond-button"]}
-                >
-                  {BUTTON_TEXT.respond}
-                </Button>
-                <Button
-                  onClick={() => onRespondClick(item, "reject")}
-                  variant="danger"
-                  className={styles["reject-button"]}
-                >
-                  {BUTTON_TEXT.reject}
-                </Button>
+            {item.previewUrl && (
+              <div className={styles["card-body-right"]}>
+                <img
+                  src={item.previewUrl}
+                  alt="Logo Preview"
+                  className={styles["logo-preview"]}
+                  onError={(e) => {
+                    console.error("Image failed to load:", item.previewUrl);
+                    e.target.style.display = "none";
+                  }}
+                />
               </div>
             )}
           </div>

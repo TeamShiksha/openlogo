@@ -25,12 +25,26 @@ describe("KeyService", () => {
     const keyIds = [MOCK_KEYS[0]._id];
     const mockKeys = [MOCK_KEYS[0]];
 
+    const mockKeysWithData = mockKeys.map((key) => ({
+      ...key,
+      data: () => ({
+        _id: key._id,
+        key_description: key.keyDescription,
+        subscription_id: key.subscription_id,
+        created_at: key._id.getTimestamp(),
+        updated_at: key.updatedAt,
+        expires_at: key.expires_at,
+      }),
+    }));
+
     jest
       .spyOn(KeysRepository.prototype, "getMultipleKeys")
-      .mockResolvedValue(mockKeys);
+      .mockResolvedValue(mockKeysWithData);
 
     const result = await keyService.getAllUserKeys(keyIds);
-    expect(result).toEqual(mockKeys);
+
+    const expectedResult = mockKeysWithData.map((key) => key.data());
+    expect(result).toEqual(expectedResult);
   });
 
   it("should return total number of keys", async () => {

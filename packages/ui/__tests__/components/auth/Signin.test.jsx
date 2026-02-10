@@ -5,11 +5,21 @@ import SignIn from "../../../src/components/auth/Signin";
 import { BUTTON_TEXT, SIGNIN } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
 import { ToastProvider } from "../../../src/contexts/ToastContext.jsx";
+import { ThemeProvider } from "../../../src/contexts/ThemeContext";
 
 const mockAuthContext = (isAuthenticated) => ({
   isAuthenticated,
   setIsAuthenticated: vi.fn(),
 });
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+globalThis.localStorage = localStorageMock;
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => ({
@@ -28,14 +38,23 @@ vi.mock("../../../src/hooks/useApi", () => ({
 }));
 
 describe("SignInForm UI and Functionality Tests", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
+  });
   it("renders all form elements correctly", () => {
     const authContext = mockAuthContext(false);
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -57,9 +76,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -76,9 +97,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -107,9 +130,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -124,9 +149,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={toggleForm} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={toggleForm} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -141,9 +168,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -174,9 +203,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} onClose={oncloseMock} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -210,9 +241,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -249,6 +282,11 @@ describe("SignInForm UI and Functionality Tests", () => {
   let authContext;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    localStorageMock.removeItem.mockClear();
+    localStorageMock.clear.mockClear();
     authContext = mockAuthContext(false);
     mockedFetchRequest.mockImplementation(delayedResolve);
   });
@@ -257,9 +295,11 @@ describe("SignInForm UI and Functionality Tests", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={authContext}>
-          <ToastProvider>
-            <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} onClose={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     );
@@ -290,11 +330,15 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignIn toggleForm={vi.fn()} />
-        </ToastProvider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
@@ -314,11 +358,15 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignIn toggleForm={vi.fn()} />
-        </ToastProvider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
 
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
@@ -340,11 +388,15 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignIn toggleForm={vi.fn()} />
-        </ToastProvider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
     fireEvent.click(forgotPasswordLink);
@@ -364,11 +416,15 @@ describe("SignInForm UI and Functionality Tests", () => {
     const authContext = mockAuthContext(false);
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastProvider>
-          <SignIn toggleForm={vi.fn()} />
-        </ToastProvider>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignIn toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
     );
     const forgotPasswordLink = screen.getByText(BUTTON_TEXT.forgotPassword);
     fireEvent.click(forgotPasswordLink);
