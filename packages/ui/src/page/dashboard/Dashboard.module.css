@@ -233,6 +233,8 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
 }
 
 .card-title {
