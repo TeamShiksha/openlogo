@@ -4,9 +4,9 @@
 }
 
 .profile-button {
-  border: 0.0625rem solid #e5e7eb;
-  background-color: #ffffff;
-  color: #6b7280;
+  border: 0.0625rem solid var(--border-color);
+  background-color: var(--white);
+  color: var(--description);
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
@@ -22,26 +22,26 @@
 }
 
 .profile-button:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-  color: #111827;
+  background-color: var(--primary-focus);
+  border-color: var(--border-color);
+  color: var(--black);
 }
 
 .profile-button:active,
 .profile-button:focus {
-  background-color: #ffffff;
-  border-color: #e5e7eb;
-  color: #6b7280;
+  background-color: var(--white);
+  border-color: var(--border-color);
+  color: var(--description);
 }
 
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 0.3125rem);
   right: 0;
-  background-color: #ffffff;
-  border: 0.0625rem solid #e5e7eb;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.12);
+  background-color: var(--white);
+  border: 0.0625rem solid var(--border-color);
+  border-radius: var(--bradius);
+  box-shadow: var(--shadow);
   width: 10rem;
   padding: 0.5rem 0;
   z-index: 1000;
@@ -67,7 +67,7 @@
   padding: 0.625rem 1rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--description);
   text-decoration: none;
   background: none;
   border: none;
@@ -77,17 +77,17 @@
 }
 
 .items:hover {
-  color: #6366f1;
-  background-color: #f9fafb;
+  color: var(--primary);
+  background-color: var(--primary-focus);
 }
 
 .items.active {
-  color: #6366f1;
+  color: var(--primary);
   font-weight: 700;
 }
 
 .divider {
   height: 0.0625rem;
-  background-color: #e5e7eb;
+  background-color: var(--border-color);
   margin: 0.25rem 0;
 }

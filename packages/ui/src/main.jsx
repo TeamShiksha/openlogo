@@ -7,6 +7,13 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
+import { ThemeProvider } from "./contexts/ThemeContext.jsx";
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,7 +21,9 @@ createRoot(document.getElementById("root")).render(
       <ToastProvider>
         <AuthProvider>
           <UserProvider>
-            <App />
+            <ThemeProvider>
+              <App />
+            </ThemeProvider>
           </UserProvider>
         </AuthProvider>
       </ToastProvider>

@@ -14,6 +14,7 @@ import NotFound from "./page/notfound/NotFound";
 import "./index.css";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
 import Release from "./page/release/Release.jsx";
+import CreateLogo from "./page/createlogo/CreateLogo.jsx";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/verify" element={<Verification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/release" element={<Release />} />
+          <Route path="/createlogo" element={<CreateLogo />} />
           <Route
             path="/dashboard"
             element={

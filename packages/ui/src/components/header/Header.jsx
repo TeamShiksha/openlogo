@@ -19,6 +19,7 @@ import {
   extractSectionIds,
 } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
+import { DarkModeToggle } from "../darkModeToggle/DarkModeToggle.jsx";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const Header = ({ openAuthModal }) => {
               </Link>
             );
           })}
-
+          <DarkModeToggle />
           {isAuthenticated ? (
             <UserDropDown />
           ) : (
@@ -103,13 +104,16 @@ const Header = ({ openAuthModal }) => {
           )}
         </div>
         {isMobile && (
-          <button className={styles.hamburger} onClick={toggleMenu}>
-            <img
-              className={styles["hamburger-img"]}
-              src={menuIcon.src}
-              alt={menuIcon.alt}
-            />
-          </button>
+          <div className={styles["mobile-header"]}>
+            <DarkModeToggle />
+            <button className={styles.hamburger} onClick={toggleMenu}>
+              <img
+                className={styles["hamburger-img"]}
+                src={menuIcon.src}
+                alt={menuIcon.alt}
+              />
+            </button>
+          </div>
         )}
         <MobileHeaderMenu isOpen={showMenu} closeMenu={setShowMenu} />
       </header>

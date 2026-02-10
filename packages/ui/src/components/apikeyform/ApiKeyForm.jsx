@@ -11,6 +11,7 @@ import {
   API_KEY,
   BUTTON_TEXT,
   API_KEY_FORM,
+  EXPIRY_KEYS_OPTION,
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
 import { formatDate, validate } from "../../utils/Helpers.js";
@@ -24,14 +25,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
   const [copyMessage, setCopyMessage] = useState("");
   const [expiresInDays, setExpiresInDays] = useState(365);
   const toast = useToast();
-
-  const expiryOptions = [
-    { value: 7, label: "1 Week" },
-    { value: 30, label: "1 Month" },
-    { value: 90, label: "3 Months" },
-    { value: 180, label: "6 Months" },
-    { value: 365, label: "1 Year" },
-  ];
 
   const { makeRequest, data, loading, errorMsg } = useApi({
     method: "post",
@@ -132,7 +125,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
             {API_KEY_FORM.expiryDescription}
           </p>
           <Dropdown
-            options={expiryOptions}
+            options={EXPIRY_KEYS_OPTION}
             selectedOption={String(expiresInDays)}
             setSelectedOption={(value) => setExpiresInDays(Number(value))}
             testId="testid-expiry-dropdown"

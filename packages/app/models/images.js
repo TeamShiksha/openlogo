@@ -23,6 +23,10 @@ const imageSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  is_published: {
+    type: Boolean,
+    default: true,
+  },
   is_deleted: {
     type: Boolean,
     default: false,
@@ -47,6 +51,7 @@ imageSchema.methods.data = function () {
     image_size: this.image_size,
     created_at: this._id.getTimestamp(),
     is_deleted: this.is_deleted,
+    is_published: this.is_published,
     updated_at: this.updated_at,
     extension: this.extension,
   };
@@ -65,6 +70,7 @@ imageSchema.statics.newImage = function (imageData) {
     image_size,
     updated_at: new Date(),
     extension,
+    is_published: imageData.is_published ?? true,
   });
   return image;
 };
