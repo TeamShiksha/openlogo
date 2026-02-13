@@ -24,11 +24,6 @@ const userSessionSchema = new mongoose.Schema({
     default: true,
   },
 
-  lastActivityAt: {
-    type: Date,
-    default: Date.now,
-  },
-
   expiresAt: {
     type: Date,
     required: true,
