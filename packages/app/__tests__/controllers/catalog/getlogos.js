@@ -3,17 +3,24 @@ jest.mock("../../../utils/webLogoSearch.js", () => ({
 }));
 
 const request = require("supertest");
-const { UserService, ImageService } = require("../../../services");
+const {
+  UserService,
+  ImageService,
+  UserSessionService,
+} = require("../../../services");
 const mongoose = require("mongoose");
 const { Users } = require("../../../models");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const {
+  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const { grabCompanyLogos } = require("../../../utils/webLogoSearch.js");
 
 describe("GET /api/catalog/logos", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
 
@@ -23,19 +30,18 @@ describe("GET /api/catalog/logos", () => {
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
   it("404 - User not found", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const res = await request(app)
       .get("/api/catalog/logos")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
@@ -47,8 +53,9 @@ describe("GET /api/catalog/logos", () => {
 
   it("404 - ADMIN - No images found in DB and web search fails", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
       data: [],
@@ -60,7 +67,7 @@ describe("GET /api/catalog/logos", () => {
 
     const res = await request(app)
       .get("/api/catalog/logos?search=NonExistent")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
@@ -72,8 +79,6 @@ describe("GET /api/catalog/logos", () => {
 
   it("200 - ADMIN - Images returned from DB", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
     const mockImage = {
       _id: new mongoose.Types.ObjectId(),
       user_id: mockAdmin._id,
@@ -91,6 +96,9 @@ describe("GET /api/catalog/logos", () => {
       totalPages: 1,
     };
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest
       .spyOn(ImageService.prototype, "getImages")
@@ -98,7 +106,7 @@ describe("GET /api/catalog/logos", () => {
 
     const res = await request(app)
       .get("/api/catalog/logos")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -117,24 +125,22 @@ describe("GET /api/catalog/logos", () => {
   });
 
   it("500 - Unexpected error", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(UserService.prototype, "getUser").mockImplementation(() => {
       throw new Error("fail");
     });
 
     const res = await request(app)
       .get("/api/catalog/logos")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(500);
   });
 
   it("200 - OPERATOR - Image exists in DB", async () => {
     const mockOperator = new Users(MOCK_USERS[3]);
-    const token = mockOperator.generateJWT();
-
     const mockImage = {
       _id: new mongoose.Types.ObjectId(),
       user_id: mockOperator._id,
@@ -145,6 +151,9 @@ describe("GET /api/catalog/logos", () => {
       updated_at: new Date(),
     };
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[3]); // for operator
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(mockOperator);
@@ -157,7 +166,7 @@ describe("GET /api/catalog/logos", () => {
 
     const res = await request(app)
       .get("/api/catalog/logos?search=example")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -172,8 +181,9 @@ describe("GET /api/catalog/logos", () => {
 
   it("200 - ADMIN - Web search returns logos when DB empty", async () => {
     const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
       data: [],
@@ -204,7 +214,7 @@ describe("GET /api/catalog/logos", () => {
 
     const res = await request(app)
       .get("/api/catalog/logos?search=TestCompany")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
@@ -234,8 +244,10 @@ describe("GET /api/catalog/logos", () => {
   });
   it("200 - OPERATOR - Web search returns logos when DB empty", async () => {
     const mockAdmin = new Users(MOCK_USERS[3]);
-    const token = mockAdmin.generateJWT();
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[3]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockAdmin);
     jest.spyOn(ImageService.prototype, "getImages").mockResolvedValue({
       data: [],
@@ -266,7 +278,7 @@ describe("GET /api/catalog/logos", () => {
 
     const res = await request(app)
       .get("/api/catalog/logos?search=TestCompany")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({

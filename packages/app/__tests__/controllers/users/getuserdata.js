@@ -4,11 +4,14 @@ const {
   UserService,
   SubscriptionService,
   KeyService,
+  UserSessionService,
 } = require("../../../services");
 const {
   MOCK_USERS,
   MOCK_SUBSCRIPTION,
   MOCK_KEYS,
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
 } = require("../../../utils/mocks");
 const { Keys, Subscriptions, Users } = require("../../../models");
 const { Messages } = require("../../../utils/constants");
@@ -16,25 +19,24 @@ const app = require("../../../server");
 
 describe("GETUSERDATA", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
   it("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
       .get("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -45,8 +47,9 @@ describe("GETUSERDATA", () => {
   });
 
   it("206 - User data not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -57,7 +60,7 @@ describe("GETUSERDATA", () => {
 
     const response = await request(app)
       .get("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(206);
     expect(response.body).toEqual({
@@ -68,22 +71,22 @@ describe("GETUSERDATA", () => {
   });
 
   it("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "getUser").mockImplementation(() => {
       throw new Error();
     });
 
     const response = await request(app)
       .get("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(500);
   });
 
   it("200 - Success", async () => {
     const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockSubscriptionModel = new Subscriptions(MOCK_SUBSCRIPTION[0]);
     const mockKeyModel = new Keys(MOCK_KEYS[2]);
     jest
@@ -105,7 +108,7 @@ describe("GETUSERDATA", () => {
 
     const response = await request(app)
       .get("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(200);
     expect(response.body.data).toEqual({

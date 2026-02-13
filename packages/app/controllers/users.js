@@ -26,7 +26,7 @@ async function getUserDataController(req, res, next) {
     const keyService = new KeyService();
     const subscriptionService = new SubscriptionService();
 
-    const { userId } = req.userData;
+    const { userId } = req?.userData || {};
     const user = await userService.getUser(userId);
     if (!user) {
       return res.status(404).json({

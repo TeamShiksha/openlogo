@@ -17,8 +17,8 @@ const app = require("../../../server");
 const sendEmail = require("../../../utils/sendEmail");
 const dayjs = require("dayjs");
 jest.mock("../../../utils/sendEmail");
-const dummyPassword =
-  require("../../../utils/generatePassword").generatePassword();
+const { generatePassword } = require("../../../utils/generatePassword");
+const dummyPassword = generatePassword();
 
 describe("SIGNUP API", () => {
   beforeAll(() => {

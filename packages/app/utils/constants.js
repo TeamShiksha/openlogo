@@ -116,6 +116,16 @@ const CLOUD_FRONT_REGION = "us-east-1";
 const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
 
+const USER_SAFE_FIELDS =
+  "name email role is_verified subscription_id created_at is_deleted updated_at ";
+
+const SESSION_ID_REGEX = /^[a-f0-9]{128}$/i;
+
+const TEMPORARY_SESSION_TYPES = {
+  PASSWORD_RESET: "PASSWORD_RESET",
+  MFA: "MFA",
+};
+
 module.exports = {
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
@@ -129,4 +139,7 @@ module.exports = {
   TAB_OPTIONS,
   CLOUD_FRONT_REGION,
   getIsProduction,
+  USER_SAFE_FIELDS,
+  SESSION_ID_REGEX,
+  TEMPORARY_SESSION_TYPES,
 };
