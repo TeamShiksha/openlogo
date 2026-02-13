@@ -29,6 +29,7 @@ const EnvSchema = Joi.object()
     EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
     ADMINSEMAILS: Joi.string().required(),
     BUCKET_KEY: Joi.string().required(),
+    CRYPTO_KEY: Joi.string().required(),
   })
   .unknown(true);
 

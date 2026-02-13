@@ -571,6 +571,193 @@ async function resetPasswordController(req, res, next) {
   }
 }
 
+async function siginWithMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const { token } = req.body;
+    const mfaSessionToken = req.cookies.mfaToken;
+    if (!mfaSessionToken) {
+      return res.status(401).json({
+        error: STATUS_CODES[401],
+        message: "MFA token not found",
+        statusCode: 401,
+      });
+    }
+
+    // check if mfaSessionToken is valid
+
+    const user = await userService.getUserById(mfaSessionToken.userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const isVerified = await userService.mfaLogin(user, token);
+    if (!isVerified) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: "Invalid token",
+        statusCode: 400,
+      });
+    }
+
+    // set session
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function enableMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const { userId } = req.userData;
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const { qrCode } = await userService.enableMfa(user);
+    if (!qrCode) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: "Failed to enable MFA",
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: { qrCode },
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: STATUS_CODES[error.statusCode] || STATUS_CODES[500],
+      message: error.message,
+      statusCode: error.statusCode || 500,
+    });
+    next(error);
+  }
+}
+
+async function verifyMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const { token } = req.body;
+    const { userId } = req.userData;
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const isVerified = await userService.verifyMfa(user, token);
+    if (!isVerified) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: "Invalid token",
+        statusCode: 400,
+      });
+    }
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: STATUS_CODES[error.statusCode] || STATUS_CODES[500],
+      message: error.message,
+      statusCode: error.statusCode || 500,
+    });
+    next(error);
+  }
+}
+
+async function cancelMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const { userId } = req.userData;
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const isDisabled = await userService.disableMfa(user);
+    if (!isDisabled) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: "Failed to disable MFA",
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: STATUS_CODES[error.statusCode] || STATUS_CODES[500],
+      message: error.message,
+      statusCode: error.statusCode || 500,
+    });
+    next(error);
+  }
+}
+
+async function disableMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const { password } = req.body;
+    const { userId } = req.userData;
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const matchPassword = await user.matchPassword(password);
+    if (!matchPassword) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.INCORRECT_EMAIL_PASS,
+        statusCode: 404,
+      });
+    }
+
+    const isDisabled = await userService.disableMfa(user);
+    if (!isDisabled) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: "Failed to disable MFA",
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: STATUS_CODES[error.statusCode] || STATUS_CODES[500],
+      message: error.message,
+      statusCode: error.statusCode || 500,
+    });
+    next(error);
+  }
+}
+
 function validateSessionController(req, res) {
   return res.status(200).json({ statusCode: 200, userData: req.userData });
 }
@@ -584,4 +771,9 @@ module.exports = {
   resetPasswordSessionController,
   resetPasswordController,
   validateSessionController,
+  siginWithMFAController,
+  enableMFAController,
+  verifyMFAController,
+  cancelMFAController,
+  disableMFAController,
 };

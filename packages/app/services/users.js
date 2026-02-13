@@ -1,11 +1,13 @@
 const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
-
 const SubscriptionService = require("../services/subscriptions");
 const { UsersRepository, RequestRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
 const ImageService = require("../services/images");
 const LogoRequestLogsService = require("../services/logoRequestlogs");
+const { encrypt, decrypt } = require("../utils/crypto");
+const { OTP } = require("otplib");
+const QRCode = require("qrcode");
 
 class UserService {
   constructor() {
@@ -15,6 +17,11 @@ class UserService {
     this.logoRequestLogsService = new LogoRequestLogsService();
     this.subscriptionService = new SubscriptionService();
     this.requestRepository = new RequestRepository();
+    this.otp = new OTP();
+    this.otp.options = {
+      step: 30,
+      window: 1,
+    };
   }
 
   /**
@@ -360,6 +367,127 @@ class UserService {
       await this.logoRequestLogsService.createEntry(requestPayload);
     } catch (err) {
       console.error("Failed to create API request entry:", err.message);
+    }
+  }
+
+  async enableMfa(user) {
+    try {
+      const secret = this.otp.generateSecret();
+
+      const otpauthurl = this.otp.generateAuthURL({
+        secret,
+        issuer: "OpenLogo",
+        label: user.email,
+      });
+
+      const qrCode = await QRCode.toDataURL(otpauthurl);
+
+      const updatedUser = await this.userRepository.update(user._id, {
+        mfaSecret: secret,
+        mfaTempSecretExpiresAt: Date.now() + 2 * 60 * 1000, // 2 minutes
+      });
+
+      if (!updatedUser) {
+        const error = new Error("Failed to update user");
+        error.statusCode = 500;
+        throw error;
+      }
+
+      return { qrCode };
+    } catch (error) {
+      console.error("Error enabling MFA:", error);
+      return null;
+    }
+  }
+
+  async verifyMfa(user, token) {
+    try {
+      if (
+        !user.mfaTempSecretExpiresAt ||
+        user.mfaTempSecretExpiresAt < Date.now()
+      ) {
+        user.mfaTempSecret = null;
+        user.mfaTempSecretExpiresAt = null;
+        await user.save();
+        const error = new Error("Temp secret expired");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const isVerified = this.otp.verify({ token, secret: user.mfaSecret });
+
+      if (!isVerified) {
+        const error = new Error("Invalid token");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const encryptedSecret = encrypt(user.mfaSecret);
+
+      const updatedUser = await this.userRepository.update(user._id, {
+        mfaEnabled: true,
+        mfaSecret: encryptedSecret,
+        mfaTempSecret: null,
+        mfaTempSecretExpiresAt: null,
+      });
+
+      if (!updatedUser) {
+        const error = new Error("Failed to update user");
+        error.statusCode = 500;
+        throw error;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error verifying MFA:", error);
+      return false;
+    }
+  }
+
+  async disableMfa(user) {
+    try {
+      const updatedUser = await this.userRepository.update(user._id, {
+        mfaEnabled: false,
+        mfaSecret: null,
+        mfaTempSecret: null,
+        mfaTempSecretExpiresAt: null,
+      });
+
+      if (!updatedUser) {
+        const error = new Error("Failed to update user");
+        error.statusCode = 500;
+        throw error;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error disabling MFA:", error);
+      return false;
+    }
+  }
+
+  mfaLogin(user, token) {
+    try {
+      if (
+        !user.mfaSecret ||
+        !user.mfaSecret.encrypted ||
+        !user.mfaSecret.iv ||
+        !user.mfaSecret.tag
+      ) {
+        const error = new Error("MFA not enabled");
+        error.statusCode = 400;
+        throw error;
+      }
+      const decryptedSecret = decrypt(user.mfaSecret);
+      const isVerified = this.otp.verify({ token, secret: decryptedSecret });
+
+      if (!isVerified) {
+        const error = new Error("Invalid token");
+        error.statusCode = 400;
+        throw error;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error verifying MFA:", error);
+      return false;
     }
   }
 }
