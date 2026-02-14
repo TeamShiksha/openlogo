@@ -1,30 +1,32 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { Users } = require("../../../models");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const {
+  MOCK_USERS,
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
+} = require("../../../utils/mocks");
 const { mongoose } = require("mongoose");
-const { UserService } = require("../../../services");
+const { UserService, UserSessionService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("Destroy User Key", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
   it("404 - Invalid Key", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -34,7 +36,7 @@ describe("Destroy User Key", () => {
 
     const response = await request(app)
       .delete(`/api/user/api-key/${keyId}`)
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -44,15 +46,16 @@ describe("Destroy User Key", () => {
   });
 
   it("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
       .delete(`/api/user/api-key/${keyId}`)
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -63,10 +66,11 @@ describe("Destroy User Key", () => {
   });
 
   it("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -78,16 +82,17 @@ describe("Destroy User Key", () => {
 
     const response = await request(app)
       .delete(`/api/user/api-key/${keyId}`)
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(500);
   });
 
   it("200 - Key Destroyed", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const keyId = new mongoose.Types.ObjectId().toString();
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -95,7 +100,7 @@ describe("Destroy User Key", () => {
 
     const response = await request(app)
       .delete(`/api/user/api-key/${keyId}`)
-      .set("Cookie", `jwt=${mockToken}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({

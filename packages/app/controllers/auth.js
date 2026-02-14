@@ -1,10 +1,12 @@
-const jwt = require("jsonwebtoken");
 const { STATUS_CODES } = require("http");
+
 const {
   UserService,
   SubscriptionService,
   UserTokenService,
   SendEmailService,
+  UserSessionService,
+  PasswordResetService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -13,7 +15,11 @@ const {
   patchSchema,
 } = require("../schemas/auth");
 const sendEmail = require("../utils/sendEmail");
-const { Messages } = require("../utils/constants");
+const {
+  Messages,
+  getIsProduction,
+  SESSION_ID_REGEX,
+} = require("../utils/constants");
 const dayjs = require("dayjs");
 /**
  * This controller validates the signup payload, checks if the email already exists,
@@ -111,7 +117,9 @@ async function signupController(req, res, next) {
 /**
  * This controller validates the sign-in payload, checks if the email exists,
  * verifies the user's email status, and compares the provided password with
- * the stored one. Set sets a JWT cookie and returns a successful response.
+ * the stored one.
+ * On successful authentication, it creates or reuses an active user session
+ * and sets a sessionId cookie to maintain a session-based login.
  *
  * @param {import("express").Request} req
  * @param {import("express").Response} res
@@ -121,7 +129,10 @@ async function signinController(req, res, next) {
   try {
     const userService = new UserService();
     const sendEmailService = new SendEmailService();
+    const userSessionService = new UserSessionService();
+
     let user = {};
+
     if (req.query.type === "guest") {
       user = await userService.getGuestUser();
     } else {
@@ -133,8 +144,10 @@ async function signinController(req, res, next) {
           statusCode: 422,
           error: STATUS_CODES[422],
         });
+
       const { email, password } = value;
       user = await userService.getUserByEmail(email);
+
       if (!user)
         return res.status(404).json({
           error: STATUS_CODES[404],
@@ -176,38 +189,59 @@ async function signinController(req, res, next) {
         }
       }
     }
+
+    let session = {};
+    session = await userSessionService.userActiveSession(user._id);
+    if (!session) {
+      session = await userSessionService.createSession({
+        userId: user._id,
+      });
+    }
+
     const currentDate = new Date();
     const oneDayValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
 
+    const isProduction = getIsProduction();
+
     /** @type {import("express").CookieOptions}  */
-    const cookieOptions = {
+
+    const sessionCookieOptions = {
       expires: oneDayValidityTimestamp,
       sameSite: "strict",
       httpOnly: true,
-      domain: ".openlogo.fyi",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     };
 
-    res.cookie("jwt", user.generateJWT(), cookieOptions);
+    res.cookie("sessionId", session.sessionId, sessionCookieOptions);
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
     next(err);
   }
 }
+
 /**
- * This controller clears the JWT cookie from the user's browser.
- * It checks if a JWT cookie is present; if not, it returns a 400 error.
+ * This controller logs out the user by deactivating the active session
+ * associated with the sessionId stored in cookies.
+ *
+ * It clears the sessionId cookie and marks the session inactive in the database
  *
  * @param {import("express").Request} req
  * @param {import("express").Response} res
  * @param {import("express").NextFunction} res
  */
-function signoutController(req, res, next) {
+async function signoutController(req, res, next) {
   try {
-    const { jwt } = req.cookies;
-    if (!jwt) {
+    const userSessionService = new UserSessionService();
+    const { sessionId } = req.cookies;
+
+    if (
+      !sessionId ||
+      typeof sessionId !== "string" ||
+      !SESSION_ID_REGEX.test(sessionId)
+    ) {
       return res.status(400).json({
         error: STATUS_CODES[400],
         message: Messages.SESSION_FAIL,
@@ -215,14 +249,18 @@ function signoutController(req, res, next) {
       });
     }
 
+    await userSessionService.signout(sessionId);
+
+    const isProduction = getIsProduction();
+
     /** @type {import("express").CookieOptions}  */
     const cookieOptions = {
       sameSite: "strict",
       httpOnly: true,
-      domain: ".openlogo.fyi",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
     };
 
-    res.clearCookie("jwt", cookieOptions);
+    res.clearCookie("sessionId", cookieOptions);
 
     return res.status(205).send();
   } catch (err) {
@@ -393,13 +431,15 @@ async function forgotPasswordController(req, res, next) {
 }
 
 /**
- * This controller validates the query parameters, retrieves the user token,
- * checks its validity and creates a secure session cookie for resetting
- * the user's password.
+ * This controller validates the password reset token received from the email link.
+ *
+ * If the token is valid and not expired, it creates a short-lived
+ * password reset session and sets a resetPasswordSessionId cookie.
  */
 async function resetPasswordSessionController(req, res, next) {
   try {
     const userTokenService = new UserTokenService();
+    const passwordResetSessionService = new PasswordResetService();
     const { token } = req.params;
     if (!token)
       return res.status(422).json({
@@ -409,6 +449,7 @@ async function resetPasswordSessionController(req, res, next) {
       });
 
     const userToken = await userTokenService.fetchUserToken(token);
+
     if (!userToken)
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -424,13 +465,18 @@ async function resetPasswordSessionController(req, res, next) {
       });
     }
 
-    res.cookie(
-      "resetPasswordSession",
-      jwt.sign(
-        { userId: userToken.user_id.toString(), token: userToken.token },
-        process.env.JWT_SECRET
-      )
-    );
+    const resetSession = await passwordResetSessionService.createSession({
+      userId: userToken.user_id,
+      resetToken: userToken.token,
+    });
+    const isProduction = getIsProduction();
+
+    res.cookie("resetPasswordSessionId", resetSession.sessionId, {
+      httpOnly: true,
+      sameSite: "strict",
+      expires: resetSession.expiresAt,
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    });
 
     return res.status(200).json({ statusCode: 200 });
   } catch (err) {
@@ -439,16 +485,24 @@ async function resetPasswordSessionController(req, res, next) {
 }
 
 /**
- * This controller validates the user's password reset session from cookies,
- * verifies the provided token, updates the user's password with the new
- * hashed password, and soft deletes the used token.
+ * This controller completes the password reset process.
+ *
+ * It validates the password reset session using the sessionId stored in cookies,
+ * verifies the provided reset token, updates the user's password,
+ * deactivates the reset session, and deletes the used reset token.
  */
 async function resetPasswordController(req, res, next) {
   try {
     const userService = new UserService();
     const userTokenService = new UserTokenService();
-    const { resetPasswordSession } = req.cookies;
-    if (!resetPasswordSession) {
+    const passwordResetSessionService = new PasswordResetService();
+
+    const { resetPasswordSessionId } = req.cookies;
+    if (
+      !resetPasswordSessionId ||
+      typeof resetPasswordSessionId !== "string" ||
+      !SESSION_ID_REGEX.test(resetPasswordSessionId)
+    ) {
       return res.status(401).json({
         error: STATUS_CODES[401],
         message: Messages.VERIFICATION_FAIL,
@@ -456,11 +510,6 @@ async function resetPasswordController(req, res, next) {
       });
     }
 
-    const decodedData = jwt.verify(
-      resetPasswordSession,
-      process.env.JWT_SECRET
-    );
-    const { userId } = decodedData;
     const { error, value } = patchSchema.validate(req.body);
     if (error) {
       return res.status(422).json({
@@ -470,11 +519,35 @@ async function resetPasswordController(req, res, next) {
       });
     }
 
-    const user = await userService.getUser(userId);
+    const resetSession =
+      await passwordResetSessionService.findAndUpdateActiveSession(
+        resetPasswordSessionId
+      );
+
+    if (!resetSession) {
+      return res.status(401).json({
+        error: STATUS_CODES[401],
+        message: Messages.VERIFICATION_FAIL,
+        statusCode: 401,
+      });
+    }
+    const { userId: user } = resetSession;
+
+    if (resetSession.token !== value.token) {
+      return res.status(403).json({
+        error: STATUS_CODES[403],
+        message: Messages.INVALID_TOKEN,
+        statusCode: 403,
+      });
+    }
+
+    const userToken = await userTokenService.fetchUserToken(value.token);
+
     const result = await userService.updateUserPassword(
       user,
       value.newPassword
     );
+
     if (!result) {
       return res.status(400).json({
         error: STATUS_CODES[400],
@@ -482,16 +555,16 @@ async function resetPasswordController(req, res, next) {
         statusCode: 400,
       });
     }
-
-    let userToken = await userTokenService.fetchUserToken(value.token);
-    if (userToken === null || userToken.token !== value.token) {
-      return res.status(403).json({
-        error: STATUS_CODES[403],
-        message: Messages.PASS_FAILED,
-        statusCode: 403,
-      });
-    }
     await userTokenService.deleteUserToken(userToken);
+
+    const isProduction = getIsProduction();
+
+    res.clearCookie("resetPasswordSessionId", {
+      httpOnly: true,
+      sameSite: "strict",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    });
+
     return res.status(200).json({ statusCode: 200 });
   } catch (error) {
     next(error);
