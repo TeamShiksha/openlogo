@@ -20,7 +20,15 @@ class SubscriptionService {
    * @returns {Promise<Object>} - Subscription Object.
    */
   async createSubscription() {
-    return await this.subscriptionRepository.create(DefaultSubscriptionPlan);
+    const now = new Date();
+    const end = new Date();
+    end.setMonth(now.getMonth() + 1);
+    const subscription = {
+      start_date: now,
+      end_date: end,
+      ...DefaultSubscriptionPlan,
+    };
+    return await this.subscriptionRepository.create(subscription);
   }
 
   /**
