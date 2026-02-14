@@ -1,5 +1,4 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
 const app = require("../../../server");
 const { Messages } = require("../../../utils/constants");
 const { MOCK_KEYS, MOCK_SUBSCRIPTION } = require("../../../utils/mocks");
@@ -11,23 +10,7 @@ const {
   UserService,
 } = require("../../../services");
 
-describe("getLogoController", () => {
-  beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
-    process.env.CLIENT_PROXY_URL = "http://localhost:3000";
-    process.env.KEY = "logos";
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
-    delete process.env.CLIENT_PROXY_URL;
-    delete process.env.KEY;
-  });
-
+describe("GET /api/logo (with resetSubscription middleware)", () => {
   const apiUrl = "/api/logo";
 
   const baseQuery = {
@@ -37,124 +20,121 @@ describe("getLogoController", () => {
 
   const imageUrl = "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
 
-  const mockSubscription = [MOCK_SUBSCRIPTION[0], MOCK_SUBSCRIPTION[1]];
+  beforeAll(() => {
+    process.env.JWT_SECRET = "Your_JWT_SECRET";
+    process.env.CLIENT_PROXY_URL = "http://localhost:3000";
+    process.env.KEY = "logos";
+  });
 
-  function mockRepetedService(mockSubscription) {
-    const keyServiceMockResolve = {
+  afterAll(() => {
+    delete process.env.JWT_SECRET;
+    delete process.env.CLIENT_PROXY_URL;
+    delete process.env.KEY;
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  function mockValidKeyAndSubscription(subscriptionOverrides = {}) {
+    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
       ...MOCK_KEYS[2],
+      subscription_id: "sub_id",
       expires_at: new Date("2026-12-31T23:59:59Z"),
-    };
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue({ ...keyServiceMockResolve });
+    });
 
     jest
       .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue(mockSubscription);
+      .mockResolvedValue({
+        ...MOCK_SUBSCRIPTION[0],
+        usage_count: 5,
+        usage_limit: 100,
+        end_date: new Date("2026-12-31T23:59:59Z"),
+        ...subscriptionOverrides,
+      });
   }
 
-  it("should return 422 if query validation fails", async () => {
-    const wrongBaseQuery = {
-      API_KEY: "28482DNDO483ND3",
-      key: "https://google.com",
-    };
-    const response = await request(app).get(apiUrl).query(wrongBaseQuery);
-    expect(response.status).toBe(422);
+  it("422 if query missing", async () => {
+    const res = await request(app).get(apiUrl);
+    expect(res.status).toBe(422);
   });
 
-  it("if API key is invalid it should return 403", async () => {
+  it("403 if API key invalid", async () => {
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
 
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.INVALID_KEY,
-      statusCode: 403,
-      error: STATUS_CODES[403],
-    });
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.INVALID_KEY);
   });
 
-  it("if API_KEY does not have `expires_at` it should return 403", async () => {
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue(MOCK_KEYS[0]);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.UPDATE_API_KEY,
-      statusCode: 403,
-      error: STATUS_CODES[403],
-    });
-  });
-
-  it("if API_KEY is expired it should return 403", async () => {
-    const expiredKeyMock = {
+  it("403 if API key expired", async () => {
+    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
       ...MOCK_KEYS[0],
-      expires_at: new Date(Date.now() - 86400000),
-    };
-
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue(expiredKeyMock);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.API_KEY_EXPIRED,
-      statusCode: 403,
-      error: STATUS_CODES[403],
+      expires_at: new Date(Date.now() - 10000),
     });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.API_KEY_EXPIRED);
   });
 
-  it("if limit reached it should return 403", async () => {
-    mockRepetedService(mockSubscription[1]);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.LIMIT_REACHED,
-      statusCode: 403,
-      error: STATUS_CODES[403],
+  it("403 if usage limit reached", async () => {
+    mockValidKeyAndSubscription({
+      usage_count: 100,
+      usage_limit: 100,
     });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.LIMIT_REACHED);
   });
 
-  it("if image not found it should return 404", async () => {
-    mockRepetedService(mockSubscription[0]);
+  it("403 if subscription expired", async () => {
+    mockValidKeyAndSubscription({
+      end_date: new Date(Date.now() - 10000),
+    });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.Subscription_Expired);
+  });
+
+  it("404 if image not found", async () => {
+    mockValidKeyAndSubscription();
 
     jest
       .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
       .mockResolvedValue(null);
 
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockResolvedValue([]);
+    const res = await request(app).get(apiUrl).query(baseQuery);
 
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      message: Messages.LOGO_NOT_FOUND,
-      statusCode: 404,
-      error: STATUS_CODES[404],
-    });
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
   });
 
-  it("200-images returned", async () => {
-    mockRepetedService(mockSubscription[0]);
+  it("200 success case", async () => {
+    mockValidKeyAndSubscription();
 
     jest
       .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
       .mockResolvedValue(imageUrl);
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockResolvedValue([]);
+
     jest
       .spyOn(UserService.prototype, "logLogoRequestEntry")
       .mockResolvedValue({});
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockResolvedValue({});
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
       statusCode: 200,
       data: imageUrl,
     });

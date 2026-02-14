@@ -46,12 +46,6 @@ const resetSubscription = async (req, res, next) => {
     const subscriptionData = await subscriptionService.getSubscription(
       keyVal.subscription_id
     );
-    console.log(
-      "subs data ",
-      typeof subscriptionData.usage_count,
-      " ",
-      typeof subscriptionData.usage_limit
-    );
     if (subscriptionData.usage_count >= subscriptionData.usage_limit) {
       return res.status(403).json({
         message: Messages.LIMIT_REACHED,

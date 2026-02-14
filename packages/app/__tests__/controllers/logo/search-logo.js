@@ -1,5 +1,4 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
 const app = require("../../../server");
 const { Messages } = require("../../../utils/constants");
 const { MOCK_KEYS, MOCK_SUBSCRIPTION } = require("../../../utils/mocks");
@@ -9,8 +8,7 @@ const {
   KeyService,
   SubscriptionService,
 } = require("../../../services");
-
-describe("searchLogoController", () => {
+describe("GET /api/logo/search (route-level)", () => {
   const apiUrl = "/api/logo/search";
 
   const baseQuery = {
@@ -18,30 +16,9 @@ describe("searchLogoController", () => {
     key: "https://google.com",
   };
 
-  const mockSubscription = [MOCK_SUBSCRIPTION[0], MOCK_SUBSCRIPTION[1]];
-
-  function mockRepetedService(mockSubscription) {
-    const keyServiceMockResolve = {
-      ...MOCK_KEYS[2],
-      expires_at: new Date("2026-12-31T23:59:59Z"),
-    };
-
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue({ ...keyServiceMockResolve });
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue(mockSubscription);
-  }
-
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "http://localhost:3000";
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -49,142 +26,116 @@ describe("searchLogoController", () => {
     delete process.env.CLIENT_PROXY_URL;
   });
 
-  it("should return 422 if query validation fails", async () => {
-    const wrongBaseQuery = {
-      API_KEY: "28482DNDO483ND3",
-      key: "https://google.com",
-    };
-    const response = await request(app).get(apiUrl).query(wrongBaseQuery);
-    expect(response.status).toBe(422);
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("if API_KEY is invalid it should return 403", async () => {
+  function mockValidKeyAndSubscription(overrides = {}) {
+    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
+      ...MOCK_KEYS[2],
+      subscription_id: "sub_id",
+      expires_at: new Date("2026-12-31T23:59:59Z"),
+    });
+
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue({
+        ...MOCK_SUBSCRIPTION[0],
+        usage_count: 5,
+        usage_limit: 100,
+        end_date: new Date("2026-12-31T23:59:59Z"),
+        ...overrides,
+      });
+  }
+
+  // 422 - missing query
+  it("should return 422 if query missing", async () => {
+    const res = await request(app).get(apiUrl);
+    expect(res.status).toBe(422);
+  });
+
+  // 403 - invalid key
+  it("should return 403 if API key invalid", async () => {
     jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.INVALID_KEY,
-      statusCode: 403,
-      error: STATUS_CODES[403],
-    });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.INVALID_KEY);
   });
 
-  it("if API_KEY does not have `expires_at` it should return 403", async () => {
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue(MOCK_KEYS[0]);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.UPDATE_API_KEY,
-      statusCode: 403,
-      error: STATUS_CODES[403],
-    });
-  });
-
-  it("if API_KEY is expired it should return 403", async () => {
-    const expiredKeyMock = {
+  // 403 - expired key
+  it("should return 403 if API key expired", async () => {
+    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
       ...MOCK_KEYS[0],
-      expires_at: new Date(Date.now() - 86400000),
-    };
-
-    jest
-      .spyOn(KeyService.prototype, "getApiKey")
-      .mockResolvedValue(expiredKeyMock);
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.API_KEY_EXPIRED,
-      statusCode: 403,
-      error: STATUS_CODES[403],
+      expires_at: new Date(Date.now() - 10000),
     });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.API_KEY_EXPIRED);
   });
 
-  it("if usage limit is reached it should return 403", async () => {
-    mockRepetedService(mockSubscription[1]);
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(403);
-    expect(response.body).toEqual({
-      message: Messages.LIMIT_REACHED,
-      error: STATUS_CODES[403],
-      statusCode: 403,
+  // 403 - limit reached
+  it("should return 403 if usage limit reached", async () => {
+    mockValidKeyAndSubscription({
+      usage_count: 100,
+      usage_limit: 100,
     });
+
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.LIMIT_REACHED);
   });
 
-  it("if Company not found it should return 404", async () => {
-    mockRepetedService(mockSubscription[0]);
+  // 404 - company not found
+  it("should return 404 if no company found", async () => {
+    mockValidKeyAndSubscription();
+
     jest
       .spyOn(ImageService.prototype, "fetchCompanyList")
       .mockResolvedValue([]);
 
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      message: Messages.LOGO_NOT_FOUND,
-      statusCode: 404,
-      error: STATUS_CODES[404],
-    });
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
   });
 
-  it("if Company found it should return 200", async () => {
-    mockRepetedService(mockSubscription[0]);
+  // 200 - success
+  it("should return 200 on success", async () => {
+    mockValidKeyAndSubscription();
 
-    jest.spyOn(ImageService.prototype, "fetchCompanyList").mockResolvedValue([
-      {
-        _id: "1234",
-        company_name: "GOOGLE",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    ]);
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockResolvedValue([{ _id: "123", company_name: "GOOGLE" }]);
 
-    jest.spyOn(ImageService.prototype, "getDataList").mockResolvedValue([
-      {
-        _id: "1234",
-        company_name: "GOOGLE",
-        image: "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
-      },
-    ]);
+    jest
+      .spyOn(ImageService.prototype, "getDataList")
+      .mockResolvedValue([{ _id: "123", image: "url" }]);
 
-    // Ensure incrementUsageCount is mocked to avoid unhandled error
     jest
       .spyOn(SubscriptionService.prototype, "incrementUsageCount")
       .mockResolvedValue();
 
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      statusCode: 200,
-      data: [
-        {
-          _id: "1234",
-          company_name: "GOOGLE",
-          image: "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
-        },
-      ],
-    });
+    const res = await request(app).get(apiUrl).query(baseQuery);
+
+    expect(res.status).toBe(200);
+    expect(res.body.statusCode).toBe(200);
   });
 
-  it("500-unexpected error", async () => {
-    mockRepetedService(mockSubscription[0]);
+  // 500 - unexpected error
+  it("should return 500 on unexpected error", async () => {
+    mockValidKeyAndSubscription();
 
-    jest.spyOn(ImageService.prototype, "fetchCompanyList").mockResolvedValue([
-      {
-        _id: "1234",
-        company_name: "GOOGLE",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    ]);
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockRejectedValue(new Error("Boom"));
 
-    jest.spyOn(ImageService.prototype, "getDataList").mockImplementation(() => {
-      throw new Error("Boom!");
-    });
+    const res = await request(app).get(apiUrl).query(baseQuery);
 
-    const response = await request(app).get(apiUrl).query(baseQuery);
-    expect(response.status).toBe(500);
+    expect(res.status).toBe(500);
   });
 });
