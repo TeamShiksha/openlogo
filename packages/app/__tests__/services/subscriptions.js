@@ -24,6 +24,9 @@ describe("Subscription Service", () => {
 
   it("get a subscription", async () => {
     const subscription = new Subscriptions(MOCK_SUBSCRIPTION[0]);
+    const now = new Date();
+    const end = new Date();
+    end.setMonth(now.getMonth() + 1);
     const spy = jest
       .spyOn(SubscriptionsRepository.prototype, "getById")
       .mockResolvedValue(subscription);
@@ -32,6 +35,8 @@ describe("Subscription Service", () => {
     expect(result).toBeDefined();
     expect(result.key_limit).toBe(2);
     expect(result.usage_limit).toBe(5000);
+    expect(result.start_date.getMonth()).toEqual(now.getMonth());
+    expect(result.end_date.getMonth()).toEqual(end.getMonth());
     expect(spy).toHaveBeenCalledWith(subscription.id);
   });
 
