@@ -94,15 +94,20 @@ class MfaService {
    * @returns {Promise<boolean>} - True on success, otherwise false.
    */
   async updateMfaUser(user) {
-    const encryptedSecret = encrypt(user.mfaTempSecret);
-    const updatedUser = await this.userRepository.update(user._id, {
-      mfaEnabled: true,
-      mfaSecret: encryptedSecret,
-      mfaTempSecret: null,
-      mfaTempSecretExpiresAt: null,
-    });
-    if (!updatedUser) return false;
-    return true;
+    try {
+      const encryptedSecret = encrypt(user.mfaTempSecret);
+      const updatedUser = await this.userRepository.update(user._id, {
+        mfaEnabled: true,
+        mfaSecret: encryptedSecret,
+        mfaTempSecret: null,
+        mfaTempSecretExpiresAt: null,
+      });
+      if (!updatedUser) return false;
+      return true;
+    } catch (error) {
+      console.log("Error in updateMfaUser:", error);
+      return false;
+    }
   }
 
   /**
@@ -131,14 +136,19 @@ class MfaService {
    * @returns {Promise<boolean>} - True if verification succeeds, otherwise false.
    */
   async mfaLogin(user, token) {
-    const { encrypted, iv, tag } = user.mfaSecret;
-    const decryptedSecret = decrypt(encrypted, iv, tag);
-    const { valid: isVerified } = await otplib.verify({
-      token,
-      secret: decryptedSecret,
-    });
-    if (!isVerified) return false;
-    return true;
+    try {
+      const { encrypted, iv, tag } = user.mfaSecret;
+      const decryptedSecret = decrypt(encrypted, iv, tag);
+      const { valid: isVerified } = await otplib.verify({
+        token,
+        secret: decryptedSecret,
+      });
+      if (!isVerified) return false;
+      return true;
+    } catch (error) {
+      console.log("Error in mfaLogin:", error);
+      return false;
+    }
   }
 }
 

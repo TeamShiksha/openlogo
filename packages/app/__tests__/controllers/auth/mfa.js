@@ -199,6 +199,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("200 - Disable MFA", async () => {
     const user = new Users(MOCK_USERS[1]);
+    const newPassword = "dummyPassword";
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(true);
 
@@ -211,7 +212,7 @@ describe("MULTI FACTOR AUTH API", () => {
     const response = await request(app)
       .post(ENDPOINTS.DISABLE_MFA)
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
-      .send({ password: "dummyPassword" });
+      .send({ password: newPassword });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -220,6 +221,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("500 - Failed to disable MFA", async () => {
     const user = new Users(MOCK_USERS[1]);
+    const newPassword = "dummyPassword";
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(true);
 
@@ -232,7 +234,7 @@ describe("MULTI FACTOR AUTH API", () => {
     const response = await request(app)
       .post(ENDPOINTS.DISABLE_MFA)
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
-      .send({ password: "dummyPassword" });
+      .send({ password: newPassword });
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
@@ -243,6 +245,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("404 - Incorrect password", async () => {
     const user = new Users(MOCK_USERS[1]);
+    const newPassword = "dummyPassword";
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(false);
 
@@ -254,7 +257,7 @@ describe("MULTI FACTOR AUTH API", () => {
     const response = await request(app)
       .post(ENDPOINTS.DISABLE_MFA)
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
-      .send({ password: "dummyPassword" });
+      .send({ password: newPassword });
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
