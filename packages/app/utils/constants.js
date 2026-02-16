@@ -107,6 +107,7 @@ const Messages = {
   CREATED_LOGO_NOT_FOUND: "Created logo not found",
   API_KEY_EXPIRED: "This Key has got expired.",
   UPDATE_API_KEY: "This Key needs an update.",
+  MFA_FAILED: "Failed to enable/disable MFA",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;

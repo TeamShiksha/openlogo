@@ -1,0 +1,145 @@
+const crypto = require("crypto");
+const VerificationSessionRepository = require("../repositories/verificationSession");
+const { UsersRepository } = require("../repositories");
+const { TEMPORARY_SESSION_TYPES } = require("../utils/constants");
+const { encrypt, decrypt } = require("../utils/crypto");
+const QRCode = require("qrcode");
+const otplib = require("otplib");
+
+class MfaService {
+  constructor() {
+    this.verificationSessionRepository = new VerificationSessionRepository();
+    this.TEMPORARY_SESSION_TYPES = TEMPORARY_SESSION_TYPES;
+    this.userRepository = new UsersRepository();
+  }
+  /**
+   * Generates a cryptographically secure session ID.
+   * @returns {string} - Random session identifier.
+   */
+  generateSessionId() {
+    return crypto.randomBytes(64).toString("hex");
+  }
+  /**
+   * Creates a new user session.
+   * @param {Object} params
+   * @param {string} params.userId - User ID.
+   * @param {string} [params.verificationToken] - Verification Token
+   * @returns {Promise<Object>} - Created session object.
+   */
+  async createSession({ userId }) {
+    const sessionId = this.generateSessionId();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+    return await this.verificationSessionRepository.create({
+      userId,
+      sessionId,
+      sessionType: this.TEMPORARY_SESSION_TYPES.MFA,
+      expiresAt,
+    });
+  }
+
+  async findAndUpdateActiveSession(sessionId) {
+    return await this.verificationSessionRepository.findAndUpdateActiveSession({
+      sessionType: this.TEMPORARY_SESSION_TYPES.MFA,
+      sessionId,
+    });
+  }
+
+  /**
+   * Generates a temporary MFA secret and QR code for setup.
+   * Stores the temporary secret with an expiration timestamp
+   * and returns the QR code for authenticator configuration.
+   * @param {Object} user - The user entity.
+   * @returns {Promise<{ qrCode: string } | null>} - QR code data URL or null on failure.
+   */
+  async enableMfa(user) {
+    const secret = otplib.generateSecret();
+    const otpauthurl = otplib.generateURI({
+      label: user.email,
+      issuer: "OpenLogo",
+      secret,
+    });
+
+    const qrCode = await QRCode.toDataURL(otpauthurl);
+
+    const updatedUser = await this.userRepository.update(user._id, {
+      mfaTempSecret: secret,
+      mfaTempSecretExpiresAt: Date.now() + 10 * 60 * 1000, // 2 minutes
+    });
+    if (!updatedUser) return null;
+    return { qrCode };
+  }
+
+  /**
+   * Verifies a TOTP token against the user's temporary MFA secret.
+   * Used during MFA setup confirmation before activation.
+   * @param {Object} user - The user entity containing the temp secret.
+   * @param {string} token - The TOTP token provided by the user.
+   * @returns {Promise<boolean>} - True if valid, otherwise false.
+   */
+  async verifyMfa(user, token) {
+    const { valid: isVerified } = await otplib.verify({
+      secret: user.mfaTempSecret,
+      token,
+    });
+    if (!isVerified) return false;
+    return true;
+  }
+
+  /**
+   * Activates MFA for the user.
+   * Encrypts the temporary secret, persists it as the active secret,
+   * enables MFA, and clears temporary setup fields.
+   * @param {Object} user - The user entity.
+   * @returns {Promise<boolean>} - True on success, otherwise false.
+   */
+  async updateMfaUser(user) {
+    const encryptedSecret = encrypt(user.mfaTempSecret);
+    const updatedUser = await this.userRepository.update(user._id, {
+      mfaEnabled: true,
+      mfaSecret: encryptedSecret,
+      mfaTempSecret: null,
+      mfaTempSecretExpiresAt: null,
+    });
+    if (!updatedUser) return false;
+    return true;
+  }
+
+  /**
+   * Disables MFA for the user.
+   * Clears all MFA-related fields including active and temporary secrets.
+   * @param {Object} user - The user entity.
+   * @returns {Promise<boolean>} - True on success, otherwise false.
+   */
+  async disableMfa(user) {
+    const updatedUser = await this.userRepository.update(user._id, {
+      mfaEnabled: false,
+      mfaSecret: null,
+      mfaTempSecret: null,
+      mfaTempSecretExpiresAt: null,
+    });
+
+    if (!updatedUser) return false;
+    return true;
+  }
+
+  /**
+   * Verifies a TOTP token during MFA login.
+   * Decrypts the stored MFA secret and validates the provided token.
+   * @param {Object} user - The user entity containing the encrypted MFA secret.
+   * @param {string} token - The TOTP token provided by the user.
+   * @returns {Promise<boolean>} - True if verification succeeds, otherwise false.
+   */
+  async mfaLogin(user, token) {
+    const { encrypted, iv, tag } = user.mfaSecret;
+    const decryptedSecret = decrypt(encrypted, iv, tag);
+    const { valid: isVerified } = await otplib.verify({
+      token,
+      secret: decryptedSecret,
+    });
+    if (!isVerified) return false;
+    return true;
+  }
+}
+
+module.exports = MfaService;

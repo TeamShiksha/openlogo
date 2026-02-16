@@ -42,6 +42,10 @@ const MOCK_USERS = [
     is_verified: false,
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    mfa_enabled: true,
+    mfa_secret: "JBSWY3DPEHPK3PXP",
+    mfa_temp_secret: null,
+    mfa_temp_secret_expires_at: null,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -53,6 +57,10 @@ const MOCK_USERS = [
     subscription_id: new mongoose.Types.ObjectId(),
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    mfa_enabled: false,
+    mfa_secret: null,
+    mfa_temp_secret: null,
+    mfa_temp_secret_expires_at: null,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -482,6 +490,23 @@ const MOCK_USER_SESSIONS = [
   },
 ];
 
+const MOCK_MFA_SESSIONS = [
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[0],
+    sessionType: "MFA",
+    usedAt: null,
+    expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
+  },
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[1],
+    sessionType: "MFA",
+    usedAt: null,
+    expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
+  },
+];
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -501,4 +526,5 @@ module.exports = {
   MOCK_MONTHLY_STATS,
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
+  MOCK_MFA_SESSIONS,
 };

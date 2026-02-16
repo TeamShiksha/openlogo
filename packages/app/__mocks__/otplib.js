@@ -12,7 +12,7 @@ class OTP {
   }
 
   verify({ token, secret }) {
-    return true; // must return boolean
+    return true;
   }
 }
 
@@ -37,6 +37,15 @@ const TOTP = jest.fn().mockImplementation(() => ({
   verify: jest.fn(() => true),
 }));
 
+const otplib = {
+  OTP,
+  TOTP,
+  generateSecret,
+  generateURI,
+  generate,
+  verify,
+};
+
 module.exports = {
   OTP,
   TOTP,
@@ -44,4 +53,5 @@ module.exports = {
   generateURI,
   generate,
   verify,
+  otplib,
 };
