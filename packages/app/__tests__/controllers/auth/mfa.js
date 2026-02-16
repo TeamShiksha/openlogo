@@ -14,6 +14,8 @@ const {
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
 } = require("../../../utils/mocks");
+const generatePassword =
+  require("../../../utils/generatePassword").generatePassword;
 
 describe("MULTI FACTOR AUTH API", () => {
   it("200 - Enable MFA", async () => {
@@ -199,7 +201,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("200 - Disable MFA", async () => {
     const user = new Users(MOCK_USERS[1]);
-    const newPassword = "dummyPassword";
+    const newPassword = generatePassword();
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(true);
 
@@ -221,7 +223,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("500 - Failed to disable MFA", async () => {
     const user = new Users(MOCK_USERS[1]);
-    const newPassword = "dummyPassword";
+    const newPassword = generatePassword();
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(true);
 
@@ -245,7 +247,7 @@ describe("MULTI FACTOR AUTH API", () => {
   });
   it("404 - Incorrect password", async () => {
     const user = new Users(MOCK_USERS[1]);
-    const newPassword = "dummyPassword";
+    const newPassword = generatePassword();
     user.mfaEnabled = true;
     user.matchPassword = jest.fn().mockResolvedValue(false);
 
