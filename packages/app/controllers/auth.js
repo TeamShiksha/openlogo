@@ -7,6 +7,7 @@ const {
   SendEmailService,
   UserSessionService,
   PasswordResetService,
+  MfaVerificationSessionService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -130,6 +131,7 @@ async function signinController(req, res, next) {
     const userService = new UserService();
     const sendEmailService = new SendEmailService();
     const userSessionService = new UserSessionService();
+    const mfaSessionService = new MfaVerificationSessionService();
 
     let user = {};
 
@@ -188,6 +190,22 @@ async function signinController(req, res, next) {
           });
         }
       }
+    }
+
+    if (user.mfaEnabled) {
+      const mfaSession = await mfaSessionService.createSession({
+        userId: user._id,
+      });
+      const isProduction = getIsProduction();
+
+      res.cookie("mfaSessionId", mfaSession.sessionId, {
+        httpOnly: true,
+        sameSite: "strict",
+        expires: mfaSession.expiresAt,
+        domain: isProduction ? ".openlogo.fyi" : "localhost",
+      });
+
+      return res.status(200).json({ statusCode: 200, mfaRequired: true });
     }
 
     let session = {};
@@ -574,9 +592,12 @@ async function resetPasswordController(req, res, next) {
 async function siginWithMFAController(req, res, next) {
   try {
     const userService = new UserService();
+    const mfaSessionService = new MfaVerificationSessionService();
+    const userSessionService = new UserSessionService();
+
     const { token } = req.body;
-    const mfaSessionToken = req.cookies.mfaToken;
-    if (!mfaSessionToken) {
+    const mfaSessionId = req.cookies.mfaSessionId;
+    if (!mfaSessionId) {
       return res.status(401).json({
         error: STATUS_CODES[401],
         message: "MFA token not found",
@@ -584,16 +605,17 @@ async function siginWithMFAController(req, res, next) {
       });
     }
 
-    // check if mfaSessionToken is valid
-
-    const user = await userService.getUserById(mfaSessionToken.userId);
-    if (!user) {
-      return res.status(404).json({
-        error: STATUS_CODES[404],
-        message: Messages.USER_NOT_FOUND,
-        statusCode: 404,
+    const mfaSession =
+      await mfaSessionService.findAndUpdateActiveSession(mfaSessionId);
+    if (!mfaSession) {
+      return res.status(401).json({
+        error: STATUS_CODES[401],
+        message: "MFA session not found",
+        statusCode: 401,
       });
     }
+
+    const user = mfaSession.userId;
 
     const isVerified = await userService.mfaLogin(user, token);
     if (!isVerified) {
@@ -604,7 +626,33 @@ async function siginWithMFAController(req, res, next) {
       });
     }
 
-    // set session
+    const isProduction = getIsProduction();
+    res.clearCookie("mfaSessionId", {
+      httpOnly: true,
+      sameSite: "strict",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    });
+
+    let session = {};
+    session = await userSessionService.userActiveSession(user._id);
+    if (!session) {
+      session = await userSessionService.createSession({
+        userId: user._id,
+      });
+    }
+    const currentDate = new Date();
+    const oneDayValidityTimestamp = new Date(
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
+
+    const sessionCookieOptions = {
+      expires: oneDayValidityTimestamp,
+      sameSite: "strict",
+      httpOnly: true,
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    };
+
+    res.cookie("sessionId", session.sessionId, sessionCookieOptions);
 
     return res.status(200).json({ statusCode: 200 });
   } catch (error) {
@@ -616,7 +664,8 @@ async function enableMFAController(req, res, next) {
   try {
     const userService = new UserService();
     const { userId } = req.userData;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser(userId);
+
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -653,7 +702,7 @@ async function verifyMFAController(req, res, next) {
     const userService = new UserService();
     const { token } = req.body;
     const { userId } = req.userData;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser(userId);
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -686,7 +735,7 @@ async function cancelMFAController(req, res, next) {
   try {
     const userService = new UserService();
     const { userId } = req.userData;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser(userId);
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -720,7 +769,7 @@ async function disableMFAController(req, res, next) {
     const userService = new UserService();
     const { password } = req.body;
     const { userId } = req.userData;
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUser(userId);
     if (!user) {
       return res.status(404).json({
         error: STATUS_CODES[404],

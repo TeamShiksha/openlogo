@@ -6,8 +6,8 @@ const { UserType } = require("../utils/constants");
 const ImageService = require("../services/images");
 const LogoRequestLogsService = require("../services/logoRequestlogs");
 const { encrypt, decrypt } = require("../utils/crypto");
-const { OTP } = require("otplib");
 const QRCode = require("qrcode");
+const otplib = require("otplib");
 
 class UserService {
   constructor() {
@@ -17,11 +17,6 @@ class UserService {
     this.logoRequestLogsService = new LogoRequestLogsService();
     this.subscriptionService = new SubscriptionService();
     this.requestRepository = new RequestRepository();
-    this.otp = new OTP();
-    this.otp.options = {
-      step: 30,
-      window: 1,
-    };
   }
 
   /**
@@ -372,19 +367,18 @@ class UserService {
 
   async enableMfa(user) {
     try {
-      const secret = this.otp.generateSecret();
-
-      const otpauthurl = this.otp.generateAuthURL({
-        secret,
-        issuer: "OpenLogo",
+      const secret = otplib.generateSecret();
+      const otpauthurl = otplib.generateURI({
         label: user.email,
+        issuer: "OpenLogo",
+        secret,
       });
 
       const qrCode = await QRCode.toDataURL(otpauthurl);
 
       const updatedUser = await this.userRepository.update(user._id, {
-        mfaSecret: secret,
-        mfaTempSecretExpiresAt: Date.now() + 2 * 60 * 1000, // 2 minutes
+        mfaTempSecret: secret,
+        mfaTempSecretExpiresAt: Date.now() + 10 * 60 * 1000, // 2 minutes
       });
 
       if (!updatedUser) {
@@ -406,15 +400,15 @@ class UserService {
         !user.mfaTempSecretExpiresAt ||
         user.mfaTempSecretExpiresAt < Date.now()
       ) {
-        user.mfaTempSecret = null;
-        user.mfaTempSecretExpiresAt = null;
-        await user.save();
         const error = new Error("Temp secret expired");
         error.statusCode = 400;
         throw error;
       }
 
-      const isVerified = this.otp.verify({ token, secret: user.mfaSecret });
+      const isVerified = await otplib.verify({
+        secret: user.mfaTempSecret,
+        token,
+      });
 
       if (!isVerified) {
         const error = new Error("Invalid token");
@@ -422,7 +416,7 @@ class UserService {
         throw error;
       }
 
-      const encryptedSecret = encrypt(user.mfaSecret);
+      const encryptedSecret = encrypt(user.mfaTempSecret);
 
       const updatedUser = await this.userRepository.update(user._id, {
         mfaEnabled: true,
@@ -464,7 +458,7 @@ class UserService {
     }
   }
 
-  mfaLogin(user, token) {
+  async mfaLogin(user, token) {
     try {
       if (
         !user.mfaSecret ||
@@ -476,8 +470,11 @@ class UserService {
         error.statusCode = 400;
         throw error;
       }
-      const decryptedSecret = decrypt(user.mfaSecret);
-      const isVerified = this.otp.verify({ token, secret: decryptedSecret });
+
+      const { encrypted, iv, tag } = user.mfaSecret;
+      const decryptedSecret = decrypt(encrypted, iv, tag);
+      const result = await otplib.verify({ token, secret: decryptedSecret });
+      const isVerified = result.valid;
 
       if (!isVerified) {
         const error = new Error("Invalid token");

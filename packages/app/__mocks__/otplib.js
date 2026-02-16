@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
-// Mock for otplib to avoid ES module issues in Jest
+
+// Jest mock for otplib (v13 compatible)
+
 class OTP {
   constructor() {
     this.options = {};
@@ -10,22 +12,36 @@ class OTP {
   }
 
   verify({ token, secret }) {
-    return true;
+    return true; // must return boolean
   }
 }
 
-const authenticator = {
+// Functional helpers (v13 style)
+
+const generateSecret = jest.fn(() => "JBSWY3DPEHPK3PXP");
+
+const generateURI = jest.fn(
+  ({ type, accountName, issuer, secret }) =>
+    `otpauth://${type}/${issuer}:${accountName}?secret=${secret}&issuer=${issuer}`
+);
+
+// Functional API (sync — matches real behavior)
+const generate = jest.fn(() => "123456");
+
+const verify = jest.fn(() => true);
+
+// Class-based TOTP mock
+const TOTP = jest.fn().mockImplementation(() => ({
+  options: {},
   generate: jest.fn(() => "123456"),
   verify: jest.fn(() => true),
-  generateSecret: jest.fn(() => "JBSWY3DPEHPK3PXP"),
-  keyuri: jest.fn(
-    (user, service, secret) =>
-      `otpauth://totp/${service}:${user}?secret=${secret}&issuer=${service}`
-  ),
-  options: {},
-};
+}));
 
 module.exports = {
   OTP,
-  authenticator,
+  TOTP,
+  generateSecret,
+  generateURI,
+  generate,
+  verify,
 };

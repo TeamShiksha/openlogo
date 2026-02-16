@@ -10,6 +10,7 @@ const LogoRequestLogsService = require("./logoRequestlogs");
 const CreateLogoRequestService = require("./createLogoRequest");
 const PasswordResetService = require("./passwordReset");
 const UserSessionService = require("./userSession");
+const MfaVerificationSessionService = require("./mfaSession");
 
 module.exports = {
   ContactUsService,
@@ -24,4 +25,5 @@ module.exports = {
   CreateLogoRequestService,
   PasswordResetService,
   UserSessionService,
+  MfaVerificationSessionService,
 };
