@@ -6,6 +6,7 @@ import {
   waitFor,
   act,
 } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import Demo from "../../src/components/demo/Demo.jsx";
 import { ToastContext, AuthContext } from "../../src/contexts/Contexts.jsx";
 import { BUTTON_TEXT } from "../../src/utils/Constants.js";
@@ -46,11 +47,13 @@ describe("Demo Component", () => {
   it("renders the Demo component correctly", () => {
     const authContext = mockAuthContext(true);
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
     expect(screen.getByText("See In Action")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
@@ -73,11 +76,13 @@ describe("Demo Component", () => {
     });
 
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -102,11 +107,13 @@ describe("Demo Component", () => {
       errorMsg: null,
     });
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -123,11 +130,13 @@ describe("Demo Component", () => {
   it("shows 'No results' and request button if search returns nothing", async () => {
     const authContext = mockAuthContext(true);
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -137,6 +146,11 @@ describe("Demo Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/did not match any logo/i)).toBeInTheDocument();
+      const resultContainer = screen
+        .getByText(/did not match any logo/i)
+        .closest('[class*="result-container"]');
+      expect(resultContainer).toBeInTheDocument();
+      expect(resultContainer.className).toContain("no-result-container");
       expect(screen.getByText("Request Logo")).toBeInTheDocument();
     });
   });
@@ -144,11 +158,13 @@ describe("Demo Component", () => {
   it("opens LogoRequestForm modal when request logo is clicked and user is authenticated", async () => {
     const authContext = mockAuthContext(true);
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -168,11 +184,13 @@ describe("Demo Component", () => {
   it("opens auth modal when request logo is clicked and user is not authenticated", async () => {
     const authContext = mockAuthContext(false);
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("Search"), {
@@ -191,11 +209,13 @@ describe("Demo Component", () => {
   it("closes the LogoRequestForm modal when the close button is clicked", async () => {
     const authContext = mockAuthContext(true);
     render(
-      <AuthContext.Provider value={authContext}>
-        <ToastContext.Provider value={mockToastContext}>
-          <Demo openAuthModal={mockOpenAuthModal} />
-        </ToastContext.Provider>
-      </AuthContext.Provider>
+      <MemoryRouter>
+        <AuthContext.Provider value={authContext}>
+          <ToastContext.Provider value={mockToastContext}>
+            <Demo openAuthModal={mockOpenAuthModal} />
+          </ToastContext.Provider>
+        </AuthContext.Provider>
+      </MemoryRouter>
     );
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("Search"), {

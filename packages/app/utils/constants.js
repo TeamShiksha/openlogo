@@ -102,6 +102,9 @@ const Messages = {
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
   TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
   SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
+  LOGO_ALREADY_CREATED_AND_PENDING:
+    "Logo has already been created and is currently pending.",
+  CREATED_LOGO_NOT_FOUND: "Created logo not found",
   API_KEY_EXPIRED: "This Key has got expired.",
   UPDATE_API_KEY: "This Key needs an update.",
 };

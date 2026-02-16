@@ -92,9 +92,16 @@ describe("GETUSERDATA", () => {
     jest
       .spyOn(SubscriptionService.prototype, "getSubscription")
       .mockResolvedValue(mockSubscriptionModel);
-    jest
-      .spyOn(KeyService.prototype, "getAllUserKeys")
-      .mockResolvedValue([mockKeyModel]);
+    jest.spyOn(KeyService.prototype, "getAllUserKeys").mockResolvedValue([
+      {
+        _id: mockKeyModel._id.toString(),
+        key_description: mockKeyModel.key_description,
+        subscription_id: mockKeyModel.subscription_id,
+        created_at: mockKeyModel._id.getTimestamp().toISOString(),
+        updated_at: mockKeyModel.updated_at.toISOString(),
+        expires_at: mockKeyModel.expires_at.toISOString(),
+      },
+    ]);
 
     const response = await request(app)
       .get("/api/user/me")
@@ -123,8 +130,9 @@ describe("GETUSERDATA", () => {
       keys: [
         {
           _id: mockKeyModel._id.toString(),
-          api_key: mockKeyModel.api_key,
           key_description: mockKeyModel.key_description,
+          subscription_id: mockKeyModel.subscription_id,
+          created_at: mockKeyModel._id.getTimestamp().toISOString(),
           updated_at: mockKeyModel.updated_at.toISOString(),
           expires_at: mockKeyModel.expires_at.toISOString(),
         },

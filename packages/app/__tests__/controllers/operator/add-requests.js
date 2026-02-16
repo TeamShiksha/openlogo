@@ -3,7 +3,10 @@ const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { Messages, StatusTypes } = require("../../../utils/constants");
 const app = require("../../../server");
-const { RequestService } = require("../../../services");
+const {
+  RequestService,
+  CreateLogoRequestService,
+} = require("../../../services");
 const { default: mongoose } = require("mongoose");
 
 jest.mock("../../../middlewares/auth", () =>
@@ -89,6 +92,12 @@ describe("POST : /api/requests", () => {
       .mockResolvedValue(false);
     jest
       .spyOn(RequestService.prototype, "requestExistsForCompanyUrl")
+      .mockResolvedValue(false);
+    jest
+      .spyOn(
+        CreateLogoRequestService.prototype,
+        "findPendingRequestByCompanyUrl"
+      )
       .mockResolvedValue(false);
     jest
       .spyOn(RequestService.prototype, "createRaiseRequest")

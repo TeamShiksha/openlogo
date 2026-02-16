@@ -66,20 +66,20 @@ const getDemoSearchQuerySchema = Joi.object({
   return { ...value, companyNameBeginsWith };
 });
 
-const companyUriSchema = Joi.string()
+const companyUrlSchema = Joi.string()
   .required()
   .regex(/:\/\/[0-9a-z-.]+\.[a-z]+\//i)
   .uri({
     scheme: [/https?/],
   })
   .messages({
-    "any.required": "companyUri is required",
-    "string.pattern.base": "Invalid companyUri",
+    "any.required": "companyUrl is required",
+    "string.pattern.base": "Invalid companyUrl",
   });
 
 module.exports = {
   getLogoQuerySchema,
   getSearchQuerySchema,
-  companyUriSchema,
+  companyUrlSchema,
   getDemoSearchQuerySchema,
 };
