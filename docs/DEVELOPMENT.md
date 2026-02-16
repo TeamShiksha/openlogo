@@ -4,6 +4,7 @@
 - [Prerequisites](#prerequisites)
   - [Clone and run the project locally](#clone-and-run-the-project-locally)
 - [Environment variables](#environment-variables)
+- [Setting up AWS](#setting-up-aws)
 - [Hostname mapping](#hostname-mapping)
 - [Deployment flow](#deployment-flow)
 - [Postman API Collection](#postman-api-collection)
@@ -33,9 +34,50 @@ pnpm start
 
 Most of the environment variables can be used by copying them from the `.env.example` file. However, if you are trying to run the business APIs locally, you will need some additional environment variables associated with AWS.
 
+- Create a new `.env` file or rename `.env.example` to `.env`.
+
+- Change  `CLIENT_URL` , `CLIENT_PROXY_URL`  to
+```
+CLIENT_URL=http://localhost:8080     
+CLIENT_PROXY_URL=http://localhost:8080
+```
+- Fill your MongoDB URL (e.g., `mongodb+srv://username:<db_password>@...`) in MongoDB Compass.
+
+- The lines inside the file `app > controller > auth.js` comment them out to fix local authentication issues.
+``` 
+ //  sameSite: "strict",  
+ //  httpOnly: true,      
+ /// domain: ".openlogo.fyi",
+    comment them out. 
+```
+- **Frontend:** Must be running on port `8080`.
+- **Backend:** Must be running on port `5000`.
+- **Database:** Ensure MongoDB is connected and running.
+
+You can now sign up as a user.  
+To verify the user, check the terminal of your IDE (the verification email will not be sent to your inbox in local development).
+
+
+## Admin access
+
+now to gain admin access 
+
+- Go to your MongoDB   `your mongodb cluster > openlogo > users`.
+- Change the `role` from `CUSTOMER` to `ADMIN`.
+- Update those changes.
+
+## Setting up AWS
+
+You should have an AWS account 
+
+- Search **CloudFormation**
+- Click on **create stack**
+- Under the heading `Prepare template` select `Choose an existing template`.
+- Under  the heading `specify template` select `upload a template file`.
 - Create a stack using `cloudformation_dev_test.yml` file given inside `app/aws` directory.
 - You can generate the private and public RSA key by following the instructions given [here](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ private-content-trusted-signers.html).
 - While creating or updating a stack make sure for `AllowedOriginInS3` parameter select is `http://localhost:8080` to avoid CORS error for S3 in your local development environment.
+-keep everything same on the following steps.
 
   **NOTE**: Remember to revert it back to the stage URL before committing or deploying.
 
@@ -49,9 +91,21 @@ Most of the environment variables can be used by copying them from the `.env.exa
   - `ACCESS_KEY`
   - `SECRET_ACCESS_KEY`
   - `DISTRIBUTION_ID`
+  -`ADMINSEMAIL`should be the email used to create `AWS`account.This is `not` present in the values you copy from `output`
 
-    **NOTE**: These values will be comma seperated.
+    **NOTE**: These values will be comma-seperated.
     **NOTE**: Some changes in this file are manually updated in the prod. As the incremental changes trigger delete and replace, however if you are creating resources for the first time using this template then everthing should work fine.
+    **NOTE**: COPY them to `.env` & Remove commas.
+  `CLOUD_FRONT_PRIVATE_KEY`  - Make a variable with this name and paste your RSAPRIVATEKEY.
+
+ You have now successfully setup  the AWS , to verify if everything is working fine signIn from the credentials which had admin access 
+
+- Go to dashboard
+- Choose admin
+- Click on add image , select a `png`
+- Give full URL  for example (http://google.com/)
+**NOTE**: Dont forget the trailing `/`
+- The image should be uploaded and reflect in your S3 bucket too.
 
 ## Hostname mapping
 
