@@ -11,7 +11,18 @@
 
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 1fr;
-    align-items: start;
+    align-items: stretch;
+  }
+}
+
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
   }
 }
 

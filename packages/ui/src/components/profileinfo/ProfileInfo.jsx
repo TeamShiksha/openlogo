@@ -3,6 +3,7 @@ import styles from "./ProfileInfo.module.css";
 import UserInfo from "../userinfo/UserInfo";
 import ChangePassword from "../changepassword/ChangePassword";
 import SettingCard from "../settings/SettingCard";
+import CurrentPlan from "../currentplan/CurrentPlan";
 import { UserContext } from "../../contexts/Contexts";
 
 export default function ProfileInfo() {
@@ -26,18 +27,28 @@ export default function ProfileInfo() {
 
         {/* Security Section (Change Password) */}
         <div className={styles.card}>
-          <h2 className={styles.heading}>Security</h2>
+          <h2 className={styles.heading}>Change Password</h2>
           <div className={styles.section}>
             <ChangePassword isGuest={isGuest} />
           </div>
         </div>
       </div>
 
-      {/* Data Management Section */}
-      <div className={styles.card}>
-        <h2 className={styles.heading}>Data Management</h2>
-        <div className={styles.section}>
-          <SettingCard isGuest={isGuest} />
+      {/* Data Management + Plan Row */}
+      <div className={styles.bottomRow}>
+        <div className={styles.card}>
+          <h2 className={styles.heading}>Setting</h2>
+          <div className={styles.section}>
+            <SettingCard isGuest={isGuest} />
+          </div>
+        </div>
+
+        {/* Plan Section */}
+        <div className={styles.card}>
+          <h2 className={styles.heading}>Plan</h2>
+          <div className={styles.section}>
+            <CurrentPlan isGuest={isGuest} />
+          </div>
         </div>
       </div>
     </div>
