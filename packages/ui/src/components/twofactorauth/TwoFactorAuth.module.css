@@ -132,6 +132,7 @@
 .actionBtn {
   padding-left: 2rem;
   padding-right: 2rem;
+  color: var(--white-fixed);
 }
 
 /* Setup Mode Styles */
@@ -392,6 +393,11 @@
 
 [data-theme="dark"] .footer {
   background-color: rgba(30, 41, 59, 0.5);
+}
+
+.footer button[class*="primary"],
+.footer button[class*="danger"] {
+  color: var(--white-fixed);
 }
 
 .successIconWrapper {

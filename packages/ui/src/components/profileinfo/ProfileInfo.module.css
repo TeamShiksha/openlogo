@@ -55,3 +55,8 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
+.card button[class*="primary"],
+.card button[class*="danger"] {
+  color: var(--white-fixed);
+}
