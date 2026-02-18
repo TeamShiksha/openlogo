@@ -7,3 +7,7 @@
 .user-info-input-group button[class*="primary"] {
   color: var(--white-fixed);
 }
+
+.user-info-input-group button[class*="primary"] {
+  color: var(--white-fixed);
+}
