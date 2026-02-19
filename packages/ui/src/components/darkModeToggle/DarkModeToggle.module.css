@@ -12,7 +12,7 @@
   border: 0;
   border-radius: 50%;
   background-color: var(--white);
-  color: var(--black);
+  color: var(--description);
   cursor: pointer;
   display: flex;
   align-items: center;
