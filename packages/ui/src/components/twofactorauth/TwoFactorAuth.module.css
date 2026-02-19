@@ -81,6 +81,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .initialState,
@@ -184,9 +185,29 @@
 
 .qrPattern {
   width: 10rem;
-  height: 10rem;
-  background: repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 50% / 20px 20px;
-  opacity: 0.8;
+  aspect-ratio: 1;
+  position: relative;
+}
+
+.qrPattern::before,
+.qrPattern::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 6px;
+  background: #bdbdbd;
+  border-radius: 999px;
+  transform-origin: center;
+}
+
+.qrPattern::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.qrPattern::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .helperText {
@@ -282,104 +303,41 @@
   white-space: nowrap;
 }
 
-/* Recovery Section */
-.recoverySection {
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-color);
-  margin-top: auto;
-}
-
-.recoveryHeader {
+.disableCard {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-}
-
-.headingSmall {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--black);
-  margin: 0;
-}
-
-.subtextSmall {
-  font-size: 0.875rem;
-  color: var(--description);
-  margin: 0.25rem 0 0 0;
-}
-
-.actionGroup {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.smallBtn {
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-}
-
-.recoveryGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.recoveryCode {
-  padding: 0.75rem;
-  background-color: rgba(248, 250, 252, 1);
-  border-radius: 0.5rem;
-  border: var(--border);
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-family: monospace;
-  font-size: 0.8rem;
-  color: var(--description);
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
-
-[data-theme="dark"] .recoveryCode {
-  background-color: rgba(30, 41, 59, 0.5);
-}
-
-.warningBox {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: rgba(254, 242, 242, 1);
-  border: 1px solid rgba(254, 202, 202, 1);
-  border-radius: 0.75rem;
+.disableContent {
   display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
 
-[data-theme="dark"] .warningBox {
-  background-color: rgba(127, 29, 29, 0.15);
-  border-color: rgba(127, 29, 29, 0.4);
+.disableInput {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: var(--border);
+  background-color: var(--white);
+  color: var(--black);
+  transition: border-color 0.2s;
 }
 
-.warningIcon {
-  color: rgb(239, 68, 68);
-  flex-shrink: 0;
-}
-
-.warningText {
-  font-size: 0.8rem;
-  color: rgb(185, 28, 28);
-  margin: 0;
-  line-height: 1.4;
-}
-
-[data-theme="dark"] .warningText {
-  color: rgb(248, 113, 113);
+.disableCancleBtn {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
 }
 
 .footer {

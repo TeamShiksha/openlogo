@@ -1,38 +1,137 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./TwoFactorAuth.module.css";
 import Button from "../common/button/Button";
-import { Copy, ShieldCheck, QrCode, AlertTriangle } from "lucide-react";
+import { ShieldCheck, QrCode } from "lucide-react";
+import { useApi } from "../../hooks/useApi";
+import { useToast } from "../../hooks/useToast";
 
 export default function TwoFactorAuth() {
-  const [mode, setMode] = useState("INITIAL"); // INITIAL, SETUP, VERIFIED
+  const [isMFAEnabled, setIsMFAEnabled] = useState(false);
+  const [mode, setMode] = useState("VERIFIED"); // INITIAL, SETUP, VERIFIED, DISABLE
   const [verificationCode, setVerificationCode] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [qrData, setQRData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const toast = useToast();
 
-  const handleEnableClick = () => {
+  const { fetchRequest: checkMFARequest } = useApi({
+    method: "GET",
+    url: "/auth/mfa/status",
+  });
+
+  const { fetchRequest: fetchQR } = useApi({
+    method: "POST",
+    url: "/auth/mfa/enable",
+  });
+
+  const { fetchRequest: verifyRequest } = useApi({
+    method: "POST",
+    url: "/auth/mfa/verify",
+    data: {
+      token: verificationCode,
+    },
+  });
+
+  const { fetchRequest: cancelRequest } = useApi({
+    method: "POST",
+    url: "/auth/mfa/cancel",
+  });
+
+  const { fetchRequest: disableRequest } = useApi({
+    method: "POST",
+    url: "/auth/mfa/disable",
+  });
+
+  const handleChange = (e) => {
+    setPassword(e.target.value);
+  };
+  useEffect(() => {
+    const checkMFAStatus = async () => {
+      setIsLoading(true);
+      const { success, data, error } = await checkMFARequest();
+      if (success && data?.isMfaEnabled !== undefined) {
+        setIsMFAEnabled(data.isMfaEnabled);
+        setMode(data.isMfaEnabled ? "VERIFIED" : "INITIAL");
+      } else {
+        setIsMFAEnabled(false);
+        setMode("INITIAL");
+        toast.error(error);
+      }
+    };
+    checkMFAStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleEnableClick = async () => {
     setMode("SETUP");
+    setIsLoading(true);
+    const { data, success, error } = await fetchQR();
+    if (success) {
+      setQRData(data.data);
+      toast.success("QR code generated successfully");
+    } else {
+      toast.error(error);
+    }
+    setIsLoading(false);
   };
 
-  const handleCancelSetup = () => {
+  const handleCancelSetup = async () => {
     setMode("INITIAL");
     setVerificationCode("");
+    setQRData(null);
+    const { success, error } = await cancelRequest();
+    if (success) {
+      toast.success("2FA setup cancelled");
+    } else {
+      toast.error(error);
+    }
   };
 
-  const handleVerify = () => {
-    if (verificationCode.length !== 6) return;
-
-    setIsVerifying(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsVerifying(false);
+  const handleFinishSetup = async () => {
+    if (verificationCode.length !== 6) {
+      toast.error("Please enter a valid verification code");
+      return;
+    }
+    setIsLoading(true);
+    const { success, error } = await verifyRequest();
+    if (success) {
+      setQRData(null);
+      setIsMFAEnabled(true);
       setMode("VERIFIED");
-    }, 1000);
+      toast.success("2FA enabled successfully");
+      setVerificationCode("");
+    } else {
+      toast.error(error);
+    }
+    setIsLoading(false);
   };
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    // Could add toast here
+  const handleDisable = async () => {
+    if (password.length === 0) {
+      toast.error("Please enter your password");
+      return;
+    }
+    setIsLoading(true);
+    const { success, error } = await disableRequest({
+      data: {
+        password: password,
+      },
+    });
+    if (success) {
+      setPassword("");
+      setIsMFAEnabled(false);
+      setMode("INITIAL");
+      toast.success("2FA disabled successfully");
+    } else {
+      toast.error(error);
+    }
+    setIsLoading(false);
   };
 
+  const cancelDisableMfa = () => {
+    setMode("VERIFIED");
+    setPassword("");
+  };
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
@@ -48,9 +147,9 @@ export default function TwoFactorAuth() {
           </div>
         </div>
         <span
-          className={`${styles.statusBadge} ${mode === "VERIFIED" ? styles.successBadge : styles.pendingBadge}`}
+          className={`${styles.statusBadge} ${isMFAEnabled ? styles.successBadge : styles.pendingBadge}`}
         >
-          {mode === "VERIFIED"
+          {isMFAEnabled
             ? "Active"
             : mode === "SETUP"
               ? "Setup Required"
@@ -59,7 +158,7 @@ export default function TwoFactorAuth() {
       </div>
 
       <div className={styles.cardBody}>
-        {mode === "INITIAL" && (
+        {mode === "INITIAL" && !isMFAEnabled && (
           <div className={styles.initialState}>
             <div className={styles.qrPlaceholderIcon}>
               <QrCode size={48} className={styles.textMuted} />
@@ -79,17 +178,19 @@ export default function TwoFactorAuth() {
           </div>
         )}
 
-        {mode === "SETUP" && (
+        {mode === "SETUP" && !isMFAEnabled && (
           <div className={styles.setupContent}>
             <div className={styles.setupGrid}>
               {/* Step 1 */}
               <div>
                 <h3 className={styles.stepTitle}>Step 1: Scan QR Code</h3>
                 <div className={styles.qrContainer}>
-                  {/* Mock QR Code Pattern */}
-                  <div className={styles.qrPattern}>
-                    <div className={styles.qrInner} />
-                  </div>
+                  {qrData && <img src={qrData.qrCode} alt="QR Code" />}
+                  {!qrData && (
+                    <div className={styles.qrPattern}>
+                      <div className={styles.qrInner} />
+                    </div>
+                  )}
                 </div>
                 <p className={styles.helperText}>
                   Scan this code using an authenticator app like Google
@@ -99,26 +200,6 @@ export default function TwoFactorAuth() {
 
               {/* Step 2 */}
               <div className={styles.stepTwoColumn}>
-                {/* Manual Key */}
-                <div>
-                  <h3 className={styles.stepTitle}>Manual Entry Key</h3>
-                  <div className={styles.manualKeyBox}>
-                    <code className={styles.manualKey}>
-                      JK2X 9PL0 MZ5W 1A9B
-                    </code>
-                    <button
-                      className={styles.copyBtn}
-                      onClick={() => copyToClipboard("JK2X 9PL0 MZ5W 1A9B")}
-                    >
-                      <Copy size={16} />
-                    </button>
-                  </div>
-                  <p className={styles.helperTextSmall}>
-                    If you can&apos;t scan the QR code, enter this secret key
-                    manually.
-                  </p>
-                </div>
-
                 {/* Verification Input */}
                 <div>
                   <h3 className={styles.stepTitle}>
@@ -137,68 +218,14 @@ export default function TwoFactorAuth() {
                       className={styles.codeInput}
                       placeholder="000000"
                     />
-                    <Button
-                      variant="primary"
-                      onClick={handleVerify}
-                      isLoading={isVerifying}
-                      disabled={verificationCode.length !== 6}
-                      className={styles.verifyBtn}
-                    >
-                      Verify
-                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className={styles.recoverySection}>
-              <div className={styles.recoveryHeader}>
-                <div>
-                  <h3 className={styles.headingSmall}>Recovery Codes</h3>
-                  <p className={styles.subtextSmall}>
-                    Recovery codes can be used to access your account if you
-                    lose your device.
-                  </p>
-                </div>
-                <div className={styles.actionGroup}>
-                  <Button variant="secondary" className={styles.smallBtn}>
-                    Print
-                  </Button>
-                  <Button variant="secondary" className={styles.smallBtn}>
-                    Download
-                  </Button>
-                </div>
-              </div>
-
-              <div className={styles.recoveryGrid}>
-                {[
-                  "A1B2-C3D4",
-                  "E5F6-G7H8",
-                  "I9J0-K1L2",
-                  "M3N4-O5P6",
-                  "Q7R8-S9T0",
-                  "U1V2-W3X4",
-                  "Y5Z6-A7B8",
-                  "C9D0-E1F2",
-                ].map((code, i) => (
-                  <div key={i} className={styles.recoveryCode}>
-                    {code}
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.warningBox}>
-                <AlertTriangle size={18} className={styles.warningIcon} />
-                <p className={styles.warningText}>
-                  Keep these codes safe! They are the only way to recover your
-                  account if you lose your phone.
-                </p>
               </div>
             </div>
           </div>
         )}
 
-        {mode === "VERIFIED" && (
+        {mode === "VERIFIED" && isMFAEnabled && (
           <div className={styles.verifiedState}>
             <div className={styles.successIconWrapper}>
               <ShieldCheck size={64} className={styles.successIcon} />
@@ -207,30 +234,56 @@ export default function TwoFactorAuth() {
             <p className={styles.subtext}>
               Your account is secured with two-factor authentication.
             </p>
-            <div className={styles.recoverySection}>
-              {/* Reuse recovery section if needed or show a simplified version */}
-              <p className={styles.subtextSmall}>
-                You can regenerate recovery codes if you&apos;ve lost them.
+          </div>
+        )}
+
+        {mode === "DISABLE" && isMFAEnabled && (
+          <div className={styles.disableCard}>
+            <div className={styles.disableContent}>
+              <h3 className={styles.heading}>Disable 2FA</h3>
+              <p className={styles.subtext}>
+                Enter your password to confirm you want to disable 2FA.
               </p>
+              <input
+                type="password"
+                placeholder="Current Password"
+                className={styles.disableInput}
+                value={password}
+                onChange={handleChange}
+              />
             </div>
+            <Button variant="danger" onClick={handleDisable}>
+              Disable
+            </Button>
+            <Button
+              variant="primary"
+              className={styles.disableCancleBtn}
+              onClick={cancelDisableMfa}
+            >
+              Cancel
+            </Button>
           </div>
         )}
       </div>
 
-      {mode === "SETUP" && (
+      {mode === "SETUP" && !isMFAEnabled && (
         <div className={styles.footer}>
           <Button variant="secondary" onClick={handleCancelSetup}>
             Cancel Setup
           </Button>
-          <Button variant="primary" disabled>
-            Finish Configuration
+          <Button
+            variant="primary"
+            onClick={handleFinishSetup}
+            disabled={isLoading}
+          >
+            {isLoading ? "Verifying..." : "Finish Configuration"}
           </Button>
         </div>
       )}
 
-      {mode === "VERIFIED" && (
+      {mode === "VERIFIED" && isMFAEnabled && (
         <div className={styles.footer}>
-          <Button variant="danger" onClick={() => setMode("INITIAL")}>
+          <Button variant="danger" onClick={() => setMode("DISABLE")}>
             Disable 2FA
           </Button>
         </div>
