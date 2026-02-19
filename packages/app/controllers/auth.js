@@ -839,6 +839,26 @@ async function disableMFAController(req, res, next) {
   }
 }
 
+async function mfaStatusController(req, res, next) {
+  try {
+    const { userId } = req.userData;
+    const mfa = new MfaService();
+    const userService = new UserService();
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+    const isMfaEnabled = await mfa.getMfaStatus(user);
+    return res.status(200).json({ statusCode: 200, isMfaEnabled });
+  } catch (error) {
+    next(error);
+  }
+}
+
 function validateSessionController(req, res) {
   return res.status(200).json({ statusCode: 200, userData: req.userData });
 }
@@ -857,4 +877,5 @@ module.exports = {
   verifyMFAController,
   cancelMFAController,
   disableMFAController,
+  mfaStatusController,
 };

@@ -150,6 +150,11 @@ class MfaService {
       return false;
     }
   }
+
+  getMfaStatus(user) {
+    if (user.mfaEnabled) return true;
+    return false;
+  }
 }
 
 module.exports = MfaService;

@@ -15,6 +15,7 @@ const {
   verifyMFAController,
   cancelMFAController,
   disableMFAController,
+  mfaStatusController,
 } = require("../controllers/auth");
 
 router.post("/signup", signupController);
@@ -30,5 +31,6 @@ router.post("/mfa/enable", authMiddleware(), enableMFAController);
 router.post("/mfa/verify", authMiddleware(), verifyMFAController);
 router.post("/mfa/cancel", authMiddleware(), cancelMFAController);
 router.post("/mfa/disable", authMiddleware(), disableMFAController);
+router.get("/mfa/status", authMiddleware(), mfaStatusController);
 
 module.exports = router;
