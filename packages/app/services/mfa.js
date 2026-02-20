@@ -82,8 +82,7 @@ class MfaService {
       secret: user.mfaTempSecret,
       token,
     });
-    if (!isVerified) return false;
-    return true;
+    return isVerified;
   }
 
   /**
@@ -102,8 +101,8 @@ class MfaService {
         mfaTempSecret: null,
         mfaTempSecretExpiresAt: null,
       });
-      if (!updatedUser) return false;
-      return true;
+
+      return !!updatedUser;
     } catch (error) {
       console.log("Error in updateMfaUser:", error);
       return false;
@@ -124,8 +123,7 @@ class MfaService {
       mfaTempSecretExpiresAt: null,
     });
 
-    if (!updatedUser) return false;
-    return true;
+    return !!updatedUser;
   }
 
   /**
@@ -143,8 +141,7 @@ class MfaService {
         token,
         secret: decryptedSecret,
       });
-      if (!isVerified) return false;
-      return true;
+      return isVerified;
     } catch (error) {
       console.log("Error in mfaLogin:", error);
       return false;
@@ -152,8 +149,7 @@ class MfaService {
   }
 
   getMfaStatus(user) {
-    if (user.mfaEnabled) return true;
-    return false;
+    return user.mfaEnabled;
   }
 }
 
