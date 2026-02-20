@@ -115,7 +115,7 @@ describe("MULTI FACTOR AUTH API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
-      message: Messages.INVALID_TOKEN,
+      message: Messages.INCORRECT_PIN,
       statusCode: 400,
     });
   });

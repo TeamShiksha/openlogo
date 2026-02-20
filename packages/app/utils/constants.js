@@ -108,6 +108,7 @@ const Messages = {
   API_KEY_EXPIRED: "This Key has got expired.",
   UPDATE_API_KEY: "This Key needs an update.",
   MFA_FAILED: "Failed to enable/disable MFA",
+  INCORRECT_PIN: "Incorrect pin. Please try again.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;

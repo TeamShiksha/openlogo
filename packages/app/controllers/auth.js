@@ -625,17 +625,12 @@ async function siginWithMFAController(req, res, next) {
     if (!isVerified) {
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: Messages.INVALID_TOKEN,
+        message: Messages.INCORRECT_PIN,
         statusCode: 400,
       });
     }
 
     const isProduction = getIsProduction();
-    res.clearCookie("mfaSessionId", {
-      httpOnly: true,
-      sameSite: "strict",
-      domain: isProduction ? ".openlogo.fyi" : "localhost",
-    });
 
     let session = {};
     session = await userSessionService.userActiveSession(user._id);
@@ -656,6 +651,11 @@ async function siginWithMFAController(req, res, next) {
       domain: isProduction ? ".openlogo.fyi" : "localhost",
     };
 
+    res.clearCookie("mfaSessionId", {
+      httpOnly: true,
+      sameSite: "strict",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    });
     res.cookie("sessionId", session.sessionId, sessionCookieOptions);
 
     return res.status(200).json({ statusCode: 200 });
@@ -740,7 +740,7 @@ async function verifyMFAController(req, res, next) {
     if (!isVerified) {
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: Messages.INVALID_TOKEN,
+        message: Messages.INCORRECT_PIN,
         statusCode: 400,
       });
     }
@@ -838,6 +838,11 @@ async function disableMFAController(req, res, next) {
     next(error);
   }
 }
+
+/**
+ *
+ * Returns the MFA status for the authenticated user.
+ */
 
 async function mfaStatusController(req, res, next) {
   try {
