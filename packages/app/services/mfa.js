@@ -64,7 +64,7 @@ class MfaService {
 
     const updatedUser = await this.userRepository.update(user._id, {
       mfaTempSecret: secret,
-      mfaTempSecretExpiresAt: Date.now() + 10 * 60 * 1000, // 2 minutes
+      mfaTempSecretExpiresAt: Date.now() + 5 * 60 * 1000,
     });
     if (!updatedUser) return null;
     return { qrCode };
