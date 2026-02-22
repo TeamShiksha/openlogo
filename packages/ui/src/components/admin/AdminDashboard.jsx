@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
 import Analytics from "../../components/analytics/Analytics";
 import Catalog from "../catalog/Catalog.jsx";
+import PropTypes from "prop-types";
 
 function AdminDashboard({
   selectedDashboard,
@@ -11,7 +11,7 @@ function AdminDashboard({
   styles,
 }) {
   return (
-    <div className={styles["admin-dashboard"]} data-testid="admin-dashboard">
+    <div>
       <div className={styles["page-header"]}>
         <div className={styles["title-section"]}>
           <h1 className={styles["dashboard-title"]}>Admin Dashboard</h1>
