@@ -371,7 +371,7 @@ export const BUTTON_TEXT = {
   signIn: "Sign In",
   signOut: "Sign Out",
   changePasswordLabel: "Change password",
-  forgotPassword: "Forgot Password ?",
+  forgotPassword: "Forgot password?",
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
@@ -483,7 +483,8 @@ export const SIGNUP = {
 };
 
 export const SIGNIN = {
-  title: "Go to dashboard",
+  title: "Sign in to your account",
+  description: "Welcome back! Please enter your details",
   fields: [
     { type: "email", name: "email", label: "Email" },
     {

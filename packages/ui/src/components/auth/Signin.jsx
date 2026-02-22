@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, User } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
@@ -170,8 +170,9 @@ const SignIn = ({ toggleForm, onClose }) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
+        <img src="/openlogo.svg" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <p className={styles.description}>{SIGNIN.description}</p>
 
         <div className={styles["form-width"]}>
           {SIGNIN["fields"]
@@ -255,6 +256,7 @@ const SignIn = ({ toggleForm, onClose }) => {
         <Button
           type="submit"
           variant="primary"
+          className={styles["submit-button"]}
           isLoading={isLoading}
           disabled={
             !isFormValid ||
@@ -273,12 +275,15 @@ const SignIn = ({ toggleForm, onClose }) => {
       </form>
 
       <hr className={styles.separator} />
-      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
-        {SIGNIN.guestAccount}
-      </p>
-      <p onClick={toggleForm} className={styles.switch}>
-        {SIGNIN.footerText}
-      </p>
+      <div className={styles["footer-wrapper"]}>
+        <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+          <User size={18} /> {SIGNIN.guestAccount}
+        </p>
+        <p className={styles.switch} onClick={toggleForm}>
+          {SIGNIN.footerText}
+          <span className={styles["toggler"]}>Create an account</span>
+        </p>
+      </div>
     </>
   );
 };
