@@ -1,10 +1,7 @@
 import Analytics from "../../components/analytics/Analytics";
 import Catalog from "../catalog/Catalog.jsx";
 import styles from "./AdminDashboard.module.css";
-<<<<<<< HEAD
 import PropTypes from "prop-types";
-=======
->>>>>>> bf40cd7e (updated the ui of the admin dashboard)
 
 function AdminDashboard({
   selectedDashboard,
@@ -14,8 +11,7 @@ function AdminDashboard({
   handleRoleSelect,
 }) {
   return (
-<<<<<<< HEAD
-    <div>
+    <div className={styles["admin-dashboard"]} data-testid="admin-dashboard">
       {/* Header for Admin Dashboard */}
       <div className={styles["page-header"]}>
         <div className={styles["title-section"]}>
@@ -67,12 +63,6 @@ function AdminDashboard({
       </div>
 
       {/* Admin Dashboard Content */}
-=======
-    <div className={styles["admin-dashboard"]} data-testid="admin-dashboard">
-      <div className={styles["dashboard-header"]}>
-        <h2 className={styles["dashboard-title"]}>Admin Dashboard</h2>
-      </div>
->>>>>>> bf40cd7e (updated the ui of the admin dashboard)
       <Analytics />
       <Catalog />
     </div>
