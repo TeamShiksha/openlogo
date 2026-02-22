@@ -7,22 +7,64 @@
   gap: 1rem;
 }
 
-.dashboard-header {
+/* Page Header */
+.page-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.title-section {
+  flex: 1;
+  min-width: 250px;
 }
 
 .dashboard-title {
-  font-size: 1.5rem;
+  font-size: 1.875rem;
   font-weight: 700;
   color: var(--black);
-  letter-spacing: -0.025em;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.dashboard-subtitle {
+  color: var(--description);
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Header Right Section */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.875rem;
   }
 }

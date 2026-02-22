@@ -19,6 +19,7 @@ import CustomInput from "../../components/common/input/CustomInput.jsx";
 import OperatorDashboard from "../../components/operator/OperatorDashboard.jsx";
 import InformationModal from "../../components/information/InformationModal.jsx";
 import Graph from "../../components/graph/Graph.jsx";
+import Dropdown from "../../components/common/dropdown/Dropdown.jsx";
 
 function Dashboard() {
   const { userData, loading, fetchUserData } = useContext(UserContext);
@@ -32,7 +33,6 @@ function Dashboard() {
   const [showLoader, setShowLoader] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [activeTab, setActiveTab] = useState("api-keys");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toast = useToast();
 
   const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
@@ -174,11 +174,6 @@ function Dashboard() {
     dashboardDropdownOptions.push("OPERATOR", "USER");
   }
 
-  const handleRoleSelect = (role) => {
-    setSelectedDashboard(role);
-    setIsDropdownOpen(false);
-  };
-
   return (
     <div
       className={` ${styles["dashboard-container"]}`}
@@ -214,10 +209,7 @@ function Dashboard() {
           <AdminDashboard
             selectedDashboard={selectedDashboard}
             dashboardDropdownOptions={dashboardDropdownOptions}
-            isDropdownOpen={isDropdownOpen}
-            setIsDropdownOpen={setIsDropdownOpen}
-            handleRoleSelect={handleRoleSelect}
-            styles={styles}
+            setSelectedDashboard={setSelectedDashboard}
           />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
@@ -225,9 +217,7 @@ function Dashboard() {
           <OperatorDashboard
             selectedDashboard={selectedDashboard}
             dashboardDropdownOptions={dashboardDropdownOptions}
-            isDropdownOpen={isDropdownOpen}
-            setIsDropdownOpen={setIsDropdownOpen}
-            handleRoleSelect={handleRoleSelect}
+            setSelectedDashboard={setSelectedDashboard}
             headerStyles={styles}
           />
         </div>
@@ -247,40 +237,12 @@ function Dashboard() {
               {/* Role Dropdown */}
               {(userData?.role === "ADMIN" ||
                 userData?.role === "OPERATOR") && (
-                <div className={styles["dropdown-wrapper"]}>
-                  <button
-                    className={styles["dropdown"]}
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  >
-                    {selectedDashboard}
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </button>
-
-                  {isDropdownOpen && (
-                    <div className={styles["dropdown-menu"]}>
-                      {dashboardDropdownOptions.map((option) => (
-                        <div
-                          key={option}
-                          className={styles["dropdown-item"]}
-                          onClick={() => handleRoleSelect(option)}
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <Dropdown
+                  options={dashboardDropdownOptions}
+                  selectedOption={selectedDashboard}
+                  setSelectedOption={setSelectedDashboard}
+                  testId="user-role-dropdown"
+                />
               )}
 
               {/* Tabs */}
