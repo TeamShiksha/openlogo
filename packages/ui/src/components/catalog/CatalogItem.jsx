@@ -6,7 +6,17 @@ function CatalogItem({ company, onUpdate }) {
   return (
     <div className={styles["catalog-item"]}>
       <div className={styles["catalog-item-column-first"]}>
-        {company.company_name.toLowerCase()}.{company.extension}
+        <div className={styles["preview-placeholder"]}>
+          {/* Placeholder for preview thumbnail */}
+        </div>
+        <div>
+          <p className={styles["name-text"]}>
+            {company.company_name.toLowerCase()}.{company.extension}
+          </p>
+          <p className={styles["meta-text"]}>
+            {company.extension.toUpperCase()} • Logo Asset
+          </p>
+        </div>
       </div>
       <div className={styles["catalog-item-inner"]}>
         <div className={styles["created"]}>
