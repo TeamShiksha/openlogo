@@ -68,9 +68,9 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   mfaSecret: {
-    encrypted: { type: String, default: null },
-    iv: { type: String, default: null },
-    tag: { type: String, default: null },
+    encryptedValue: { type: String, default: null },
+    encryptedIv: { type: String, default: null },
+    encryptedTag: { type: String, default: null },
   },
   mfaTempSecret: {
     type: String,

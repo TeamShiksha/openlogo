@@ -153,7 +153,11 @@ describe("MFA Service", () => {
       const updatedUser = {
         ...user.toObject(),
         mfaEnabled: true,
-        mfaSecret: { encrypted: "encrypted", iv: "iv", tag: "tag" },
+        mfaSecret: {
+          encryptedValue: "encrypted",
+          encryptedIv: "iv",
+          encryptedTag: "tag",
+        },
         mfaTempSecret: null,
         mfaTempSecretExpiresAt: null,
       };
@@ -171,7 +175,11 @@ describe("MFA Service", () => {
         user._id,
         expect.objectContaining({
           mfaEnabled: true,
-          mfaSecret: { encrypted: "encrypted", iv: "iv", tag: "tag" },
+          mfaSecret: {
+            encryptedValue: "encrypted",
+            encryptedIv: "iv",
+            encryptedTag: "tag",
+          },
           mfaTempSecret: null,
           mfaTempSecretExpiresAt: null,
         })
@@ -195,7 +203,11 @@ describe("MFA Service", () => {
     it("should disable MFA successfully", async () => {
       const user = new Users(MOCK_USERS[0]);
       user.mfaEnabled = true;
-      user.mfaSecret = { encrypted: "encrypted", iv: "iv", tag: "tag" };
+      user.mfaSecret = {
+        encryptedValue: "encrypted",
+        encryptedIv: "iv",
+        encryptedTag: "tag",
+      };
 
       const updatedUser = {
         ...user.toObject(),
@@ -237,7 +249,11 @@ describe("MFA Service", () => {
   describe("mfaLogin", () => {
     it("should login with MFA successfully", async () => {
       const user = new Users(MOCK_USERS[0]);
-      user.mfaSecret = { encrypted: "encrypted", iv: "iv", tag: "tag" };
+      user.mfaSecret = {
+        encryptedValue: "encrypted",
+        encryptedIv: "iv",
+        encryptedTag: "tag",
+      };
 
       decrypt.mockReturnValue("JBSWY3DPEHPK3PXP");
       jest.spyOn(otplib, "verify").mockResolvedValue({ valid: true });
@@ -254,7 +270,11 @@ describe("MFA Service", () => {
 
     it("should return false if MFA login token is invalid", async () => {
       const user = new Users(MOCK_USERS[0]);
-      user.mfaSecret = { encrypted: "encrypted", iv: "iv", tag: "tag" };
+      user.mfaSecret = {
+        encryptedValue: "encrypted",
+        encryptedIv: "iv",
+        encryptedTag: "tag",
+      };
 
       decrypt.mockReturnValue("JBSWY3DPEHPK3PXP");
       jest.spyOn(otplib, "verify").mockResolvedValue({ valid: false });

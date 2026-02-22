@@ -94,14 +94,18 @@ class MfaService {
    */
   async updateMfaUser(user) {
     try {
-      const encryptedSecret = encrypt(user.mfaTempSecret);
+      const { encrypted, iv, tag } = encrypt(user.mfaTempSecret);
+
       const updatedUser = await this.userRepository.update(user._id, {
         mfaEnabled: true,
-        mfaSecret: encryptedSecret,
+        mfaSecret: {
+          encryptedValue: encrypted,
+          encryptedIv: iv,
+          encryptedTag: tag,
+        },
         mfaTempSecret: null,
         mfaTempSecretExpiresAt: null,
       });
-
       return !!updatedUser;
     } catch (error) {
       console.log("Error in updateMfaUser:", error);
@@ -135,8 +139,12 @@ class MfaService {
    */
   async mfaLogin(user, token) {
     try {
-      const { encrypted, iv, tag } = user.mfaSecret;
-      const decryptedSecret = decrypt(encrypted, iv, tag);
+      const { encryptedValue, encryptedIv, encryptedTag } = user.mfaSecret;
+      const decryptedSecret = decrypt(
+        encryptedValue,
+        encryptedIv,
+        encryptedTag
+      );
       const { valid: isVerified } = await otplib.verify({
         token,
         secret: decryptedSecret,
