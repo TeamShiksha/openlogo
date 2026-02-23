@@ -21,7 +21,7 @@ class SubscriptionService {
    */
   async createSubscription() {
     const now = new Date();
-    const end = new Date();
+    const end = new Date(now);
     end.setMonth(now.getMonth() + 1);
     const subscription = {
       start_date: now,
@@ -34,13 +34,9 @@ class SubscriptionService {
   /**
    * Increments the API usage count using subscriptionID.
    * @param {string} subscriptionId - subscriptionID of subscription
-   *  @returns {Promise<Object>} - The subscription details.
    **/
-  async incrementUsageCount(subscription) {
-    const data = {
-      usage_count: subscription.usage_count + 1,
-    };
-    return await this.subscriptionRepository.update(subscription._id, data);
+  async incrementUsageCount(subscriptionId) {
+    await this.subscriptionRepository.incrementUsageCount(subscriptionId);
   }
 
   /**
@@ -49,6 +45,14 @@ class SubscriptionService {
    */
   async getSubscriptionUsageCount() {
     return await this.subscriptionRepository.getSubscriptionUsageCount();
+  }
+
+  /**
+   * change the end-date to the next month and start date to the endDate and also make the usage count=0 for new month
+   * @param {number} subscriptionId
+   */
+  async resetLimitAndExpiryDate(subscriptionId) {
+    await this.subscriptionRepository.resetLimitAndExpiryDate(subscriptionId);
   }
 }
 

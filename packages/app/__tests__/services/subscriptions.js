@@ -25,8 +25,8 @@ describe("Subscription Service", () => {
   it("get a subscription", async () => {
     const subscription = new Subscriptions(MOCK_SUBSCRIPTION[0]);
     const now = new Date();
-    const end = new Date();
-    end.setMonth(now.getMonth() + 1);
+    const end = new Date(now);
+    end.setMonth(end.getMonth() + 1);
     const spy = jest
       .spyOn(SubscriptionsRepository.prototype, "getById")
       .mockResolvedValue(subscription);
@@ -68,19 +68,17 @@ describe("Subscription Service", () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it("increment usage count for a subscription", async () => {
-    const subscription = new Subscriptions(MOCK_SUBSCRIPTION[0]);
-    const updatedSubscription = {
-      ...subscription.toObject(),
-      usage_count: subscription.usage_count + 1,
-    };
-    jest
-      .spyOn(SubscriptionsRepository.prototype, "update")
-      .mockResolvedValue(updatedSubscription);
+  it("increment usage count for a subscription (Hardened Version)", async () => {
+  const mockSubId = MOCK_SUBSCRIPTION[0]._id;
+  
+  const repoSpy = jest
+    .spyOn(subscriptionService.subscriptionRepository, "incrementUsageCount") // Match your code's typo if it exists
+    .mockResolvedValue({ acknowledged: true });
 
-    const result = await subscriptionService.incrementUsageCount(subscription);
-
-    expect(result).toBeDefined();
-    expect(result.usage_count).toBe(1);
-  });
+  await subscriptionService.incrementUsageCount(mockSubId);
+  expect(repoSpy).toHaveBeenCalledWith(mockSubId);
+  
+  // Ensure it was called exactly once to prevent double-charging/usage
+  expect(repoSpy).toHaveBeenCalledTimes(1);
+});
 });

@@ -4,8 +4,8 @@ const { SubscriptionTypes, UserType, UserTokenTypes } = require("./constants");
 
 const subscriptionDates = () => {
   const now = new Date();
-  const end = new Date();
-  end.setMonth(now.getMonth() + 1);
+  const end = new Date(now);
+  end.setMonth(end.getMonth() + 1);
   return {
     start_date: now,
     end_date: end,

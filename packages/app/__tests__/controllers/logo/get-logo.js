@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../../server");
 const { Messages } = require("../../../utils/constants");
-const { MOCK_KEYS, MOCK_SUBSCRIPTION } = require("../../../utils/mocks");
+const { MOCK_KEYS } = require("../../../utils/mocks");
 
 const {
   ImageService,
@@ -10,212 +10,388 @@ const {
   UserService,
 } = require("../../../services");
 
-describe("GET /api/logo (with resetSubscription middleware)", () => {
-  const apiUrl = "/api/logo";
+const {
+  describeResetSubscriptionMiddleware,
+  VALID_KEY,
+  VALID_SUBSCRIPTION,
+} = require("../../shared/resetSUbscriptionShared.middleware");
 
-  const baseQuery = {
-    API_KEY: MOCK_KEYS[1].key,
-    key: "https://google.com",
-  };
+const API_URL = "/api/logo";
 
-  const imageUrl = "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
+const BASE_QUERY = {
+  API_KEY: MOCK_KEYS[1].key,
+  key: "https://google.com",
+};
 
-  beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
-    process.env.CLIENT_PROXY_URL = "http://localhost:3000";
-    process.env.KEY = "logos";
-  });
+const IMAGE_URL = "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
 
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
-    delete process.env.CLIENT_PROXY_URL;
-    delete process.env.KEY;
-  });
+function mockValidKey(overrides = {}) {
+  jest
+    .spyOn(KeyService.prototype, "getApiKey")
+    .mockResolvedValue({ ...VALID_KEY, ...overrides });
+}
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+function mockValidSubscription(overrides = {}) {
+  jest
+    .spyOn(SubscriptionService.prototype, "getSubscription")
+    .mockResolvedValue({ ...VALID_SUBSCRIPTION, ...overrides });
+}
 
-  function mockValidKeyAndSubscription(subscriptionOverrides = {}) {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...MOCK_KEYS[2],
-      subscription_id: "sub_id",
-      expires_at: new Date("2026-12-31T23:59:59Z"),
-    });
+function mockValidKeyAndSubscription(
+  keyOverrides = {},
+  subscriptionOverrides = {}
+) {
+  mockValidKey(keyOverrides);
+  mockValidSubscription(subscriptionOverrides);
+}
 
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue({
-        ...MOCK_SUBSCRIPTION[0],
-        usage_count: 5,
-        usage_limit: 100,
-        end_date: new Date("2026-12-31T23:59:59Z"),
-        ...subscriptionOverrides,
-      });
-  }
+function mockSuccessHandler() {
+  jest
+    .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+    .mockResolvedValue(IMAGE_URL);
+  jest
+    .spyOn(UserService.prototype, "logLogoRequestEntry")
+    .mockResolvedValue({});
+  jest
+    .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+    .mockResolvedValue({});
+}
 
-  it("422 if query missing", async () => {
-    const res = await request(app).get(apiUrl);
-    expect(res.status).toBe(422);
-  });
+// ─────────────────────────────────────────────────────────────────────────────
+// Env setup
+// ─────────────────────────────────────────────────────────────────────────────
 
-  it("403 if API key invalid", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(403);
-    expect(res.body.message).toBe(Messages.INVALID_KEY);
-  });
-
-  it("403 if API key expired", async () => {
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue({
-      ...MOCK_KEYS[0],
-      expires_at: new Date(Date.now() - 10000),
-    });
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(403);
-    expect(res.body.message).toBe(Messages.API_KEY_EXPIRED);
-  });
-
-  it("403 if usage limit reached", async () => {
-    mockValidKeyAndSubscription({
-      usage_count: 100,
-      usage_limit: 100,
-    });
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(403);
-    expect(res.body.message).toBe(Messages.LIMIT_REACHED);
-  });
-
-  it("403 if subscription expired", async () => {
-    mockValidKeyAndSubscription({
-      end_date: new Date(Date.now() - 10000),
-    });
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(403);
-    expect(res.body.message).toBe(Messages.Subscription_Expired);
-  });
-
-  it("404 if image not found", async () => {
-    mockValidKeyAndSubscription();
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
-      .mockResolvedValue(null);
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(404);
-    expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
-  });
-
-  it("200 success case", async () => {
-    mockValidKeyAndSubscription();
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
-      .mockResolvedValue(imageUrl);
-
-    jest
-      .spyOn(UserService.prototype, "logLogoRequestEntry")
-      .mockResolvedValue({});
-
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockResolvedValue({});
-
-    const res = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      statusCode: 200,
-      data: imageUrl,
-    });
-  });
+beforeAll(() => {
+  process.env.JWT_SECRET = "Your_JWT_SECRET";
+  process.env.CLIENT_PROXY_URL = "http://localhost:3000";
+  process.env.KEY = "logos";
 });
 
-describe("getLogoController - Operations Order Test", () => {
-  beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
-    process.env.CLIENT_PROXY_URL = "http://localhost:3000";
-    process.env.KEY = "logos";
-  });
+afterAll(() => {
+  delete process.env.JWT_SECRET;
+  delete process.env.CLIENT_PROXY_URL;
+  delete process.env.KEY;
+});
 
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
-    delete process.env.CLIENT_PROXY_URL;
-    delete process.env.KEY;
-  });
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+// ─────────────────────────────────────────────────────────────────────────────
+// Shared middleware tests
+// ─────────────────────────────────────────────────────────────────────────────
 
-  const apiUrl = "/api/logo";
+describeResetSubscriptionMiddleware(
+  () => request(app),
+  API_URL,
+  BASE_QUERY,
+  mockSuccessHandler
+);
 
-  it("should ensure image is fetched before usage count is incremented - operations order test", async () => {
-    const operationsOrder = [];
-    const imageUrl = "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTROLLER: getLogoController
+// ─────────────────────────────────────────────────────────────────────────────
 
-    const mockKeyRef = {
-      subscription_id: "test_subscription_id",
-      ...MOCK_KEYS[0],
-      expires_at: new Date("2026-12-31T23:59:59Z"),
-    };
-
-    jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(mockKeyRef);
-
-    const mockSubscription = {
-      usage_count: 5,
-      usage_limit: 100,
-      ...MOCK_SUBSCRIPTION[0],
-    };
-
-    jest
-      .spyOn(SubscriptionService.prototype, "getSubscription")
-      .mockResolvedValue(mockSubscription);
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
-      .mockImplementation(() => {
-        operationsOrder.push("image_fetched");
-        return imageUrl;
-      });
-    jest
-      .spyOn(UserService.prototype, "logLogoRequestEntry")
-      .mockResolvedValue({});
-    jest
-      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-      .mockImplementation(() => {
-        operationsOrder.push("usage_count_incremented");
-        return Promise.resolve();
-      });
-
-    const baseQuery = {
-      API_KEY: MOCK_KEYS[1].key,
-      key: "https://google.com",
-    };
-
-    const response = await request(app).get(apiUrl).query(baseQuery);
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      statusCode: 200,
-      data: imageUrl,
+describe("getLogoController", () => {
+  describe("422  Joi schema validation (key field)", () => {
+    beforeEach(() => {
+      mockValidKeyAndSubscription();
     });
 
-    expect(operationsOrder).toEqual([
-      "image_fetched",
-      "usage_count_incremented",
-    ]);
-    expect(operationsOrder[0]).toBe("image_fetched");
-    expect(operationsOrder[1]).toBe("usage_count_incremented");
+    it("rejects key with invalid characters", async () => {
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "https://google.com/<script>" });
+      expect(res.status).toBe(422);
+    });
+
+    it("key that is only a TLD resolves to nonempty company (schema passes, image not found → 404)", async () => {
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(null);
+
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "https://com" });
+
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
+    });
+
+    it("accepts key with subdomain (strips www)", async () => {
+      mockSuccessHandler();
+
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "https://www.google.com" });
+      expect(res.status).toBe(200);
+    });
+
+    it("accepts plain domain without protocol", async () => {
+      mockSuccessHandler();
+
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "google.com" });
+      expect(res.status).toBe(200);
+    });
+
+    it("accepts key with http (not https)", async () => {
+      mockSuccessHandler();
+
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "http://google.com" });
+      expect(res.status).toBe(200);
+    });
+
+    it("rejects API_KEY that is not a valid UUID v4", async () => {
+      jest.spyOn(KeyService.prototype, "getApiKey").mockResolvedValue(null);
+
+      const res = await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, API_KEY: "not a uuid" });
+
+      expect([403, 422]).toContain(res.status);
+    });
+  });
+
+  describe("404  image not found", () => {
+    it("returns 404 when fetchImageByCompanyFree returns null", async () => {
+      mockValidKeyAndSubscription();
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(null);
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
+    });
+
+    it("returns 404 when fetchImageByCompanyFree returns undefined", async () => {
+      mockValidKeyAndSubscription();
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(undefined);
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe(Messages.LOGO_NOT_FOUND);
+    });
+
+    it("does NOT increment usage count when image is not found", async () => {
+      mockValidKeyAndSubscription();
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(null);
+
+      const incrementSpy = jest.spyOn(
+        SubscriptionService.prototype,
+        "incrementUsageCount"
+      );
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+      expect(incrementSpy).not.toHaveBeenCalled();
+    });
+
+    it("does NOT log request entry when image is not found", async () => {
+      mockValidKeyAndSubscription();
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(null);
+
+      const logSpy = jest.spyOn(UserService.prototype, "logLogoRequestEntry");
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+      expect(logSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("200 – success", () => {
+    it("returns imageUrl in data field", async () => {
+      mockValidKeyAndSubscription();
+      mockSuccessHandler();
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ statusCode: 200, data: IMAGE_URL });
+    });
+
+    it("calls fetchImageByCompanyFree with uppercased company derived from key", async () => {
+      mockValidKeyAndSubscription();
+
+      const fetchSpy = jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue({});
+
+      await request(app)
+        .get(API_URL)
+        .query({ ...BASE_QUERY, key: "https://google.com" });
+
+      expect(fetchSpy).toHaveBeenCalledWith("GOOGLE");
+    });
+
+    it("calls logLogoRequestEntry after successful image fetch", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      const logSpy = jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue({});
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+      expect(logSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("calls incrementUsageCount after successful image fetch", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+
+      const incrementSpy = jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue({});
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+      expect(incrementSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("operations order", () => {
+    it("image fetched → logEntry → usage incremented (in that order)", async () => {
+      const order = [];
+
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockImplementation(() => {
+          order.push("image_fetched");
+          return Promise.resolve(IMAGE_URL);
+        });
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockImplementation(() => {
+          order.push("log_entry");
+          return Promise.resolve({});
+        });
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockImplementation(() => {
+          order.push("usage_count_incremented");
+          return Promise.resolve();
+        });
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+
+      expect(res.status).toBe(200);
+      expect(order).toEqual([
+        "image_fetched",
+        "log_entry",
+        "usage_count_incremented",
+      ]);
+    });
+
+    it("usage count must NOT be incremented before image is fetched", async () => {
+      const order = [];
+
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockImplementation(() => {
+          order.push("image_fetched");
+          return Promise.resolve(IMAGE_URL);
+        });
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockImplementation(() => {
+          order.push("usage_count_incremented");
+          return Promise.resolve();
+        });
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+
+      expect(order[0]).toBe("image_fetched");
+      expect(order[order.length - 1]).toBe("usage_count_incremented");
+    });
+  });
+
+  describe("error handling", () => {
+    it("passes error to next() when fetchImageByCompanyFree throws", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockRejectedValue(new Error("DB error"));
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(500);
+    });
+
+    it("passes error to next() when logLogoRequestEntry throws", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockRejectedValue(new Error("Log failed"));
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue({});
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(500);
+    });
+
+    it("passes error to next() when incrementUsageCount throws", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockRejectedValue(new Error("Increment failed"));
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+      expect(res.status).toBe(500);
+    });
   });
 });

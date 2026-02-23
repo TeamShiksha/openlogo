@@ -43,20 +43,19 @@ const resetSubscription = async (req, res, next) => {
         error: STATUS_CODES[403],
       });
     }
-    const subscriptionData = await subscriptionService.getSubscription(
+    let subscriptionData = await subscriptionService.getSubscription(
       keyVal.subscription_id
     );
+    const currentDate = new Date();
+    if (new Date(currentDate) > new Date(subscriptionData.end_date)) {
+      await subscriptionService.resetLimitAndExpiryDate(subscriptionData);
+      subscriptionData = await subscriptionService.getSubscription(
+        keyVal.subscription_id
+      );
+    }
     if (subscriptionData.usage_count >= subscriptionData.usage_limit) {
       return res.status(403).json({
         message: Messages.LIMIT_REACHED,
-        statusCode: 403,
-        error: STATUS_CODES[403],
-      });
-    }
-    const currentDate = new Date();
-    if (currentDate >= subscriptionData.end_date) {
-      return res.status(403).json({
-        message: Messages.Subscription_Expired,
         statusCode: 403,
         error: STATUS_CODES[403],
       });

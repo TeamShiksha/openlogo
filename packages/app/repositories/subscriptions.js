@@ -29,6 +29,39 @@ class SubscriptionsRepository extends BaseRepository {
     ]);
     return result.length > 0 ? result[0].totalUsage : 0;
   }
+
+  /**
+   *  update the subscription end date  start date and usage count
+   * @param {number} subscriptionId
+   */
+  async resetLimitAndExpiryDate(subscriptionId) {
+    await this.updateOne({ _id: subscriptionId }, [
+      {
+        $set: {
+          start_date: "$end_date",
+          end_date: {
+            $dateAdd: {
+              startDate: "$end_date",
+              unit: "month",
+              amount: 1,
+            },
+          },
+          usage_count: 0,
+        },
+      },
+    ]);
+  }
+
+  /**
+   * Increament the usage count
+   * @param {number} subscriptionId
+   */
+  async incrementUsageCount(subscriptionId) {
+    await this.subscriptionRepository.updateOne(
+      { _id: subscriptionId },
+      { $inc: { usage_count: 1 } }
+    );
+  }
 }
 
 module.exports = SubscriptionsRepository;
