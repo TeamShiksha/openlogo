@@ -76,7 +76,7 @@ describe.skip("Reward System", () => {
       const result = await rewardTrackingService.validateAndLogRequest({
         imageId: new mongoose.Types.ObjectId(),
         userId,
-        creatorId: userId, // Same as requester
+        creatorId: userId,
         keyId: new mongoose.Types.ObjectId(),
         subscriptionId: new mongoose.Types.ObjectId(),
         subscription: proSubscription,

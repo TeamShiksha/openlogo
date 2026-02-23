@@ -11,7 +11,6 @@ const {
   createValidRewardTrackingParams,
 } = require("../../utils/mocks");
 
-// Mock the repositories
 jest.mock("../../repositories");
 
 describe.skip("RewardTrackingService", () => {
@@ -19,18 +18,14 @@ describe.skip("RewardTrackingService", () => {
   let mockLogoRequestLogsRepository;
 
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
 
-    // Create a new instance of the service
     rewardTrackingService = new RewardTrackingService();
 
-    // Get mocked repository instances
     mockLogoRequestLogsRepository = LogoRequestLogsRepository.mock.instances[0];
     SubscriptionsRepository.mock.instances[0];
     UsersRepository.mock.instances[0];
 
-    // Setup default mock implementations
     if (mockLogoRequestLogsRepository) {
       mockLogoRequestLogsRepository.create = jest.fn();
       mockLogoRequestLogsRepository.find = jest.fn();
@@ -162,7 +157,6 @@ describe.skip("RewardTrackingService", () => {
 
       const result = rewardTrackingService.validateRequestParams(params);
 
-      // Empty strings are falsy, so they should be invalid
       expect(result.isValid).toBe(false);
     });
 
@@ -300,7 +294,6 @@ describe.skip("RewardTrackingService", () => {
 
         await rewardTrackingService.validateAndLogRequest(params);
 
-        // Should pass the self-usage check
         expect(mockLogoRequestLogsRepository.find).toHaveBeenCalled();
       });
     });
@@ -541,7 +534,6 @@ describe.skip("RewardTrackingService", () => {
         const result =
           await rewardTrackingService.validateAndLogRequest(params);
 
-        // Should fail on subscription type check first
         expect(result.reward_eligibility_reason).toBe("HOBBY_USER");
         expect(mockLogoRequestLogsRepository.find).not.toHaveBeenCalled();
       });
@@ -559,7 +551,6 @@ describe.skip("RewardTrackingService", () => {
         const result =
           await rewardTrackingService.validateAndLogRequest(params);
 
-        // Should fail on self-usage check before checking duplicates
         expect(result.reward_eligibility_reason).toBe("SELF_USAGE");
         expect(mockLogoRequestLogsRepository.find).not.toHaveBeenCalled();
       });
@@ -667,7 +658,7 @@ describe.skip("RewardTrackingService", () => {
       const params = {
         imageId: "logo-apple",
         userId: "user123",
-        creatorId: "user123", // Self-usage
+        creatorId: "user123",
         keyId: "key-123",
         subscriptionId: "sub-pro-001",
         subscription: { type: SubscriptionTypes.PRO },
@@ -685,7 +676,6 @@ describe.skip("RewardTrackingService", () => {
 
       const result = await rewardTrackingService.validateAndLogRequest(params);
 
-      // Should fail on self-usage check before checking duplicates
       expect(result.reward_eligibility_reason).toBe("SELF_USAGE");
       expect(mockLogoRequestLogsRepository.find).not.toHaveBeenCalled();
     });
