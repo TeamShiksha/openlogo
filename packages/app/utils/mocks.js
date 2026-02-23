@@ -21,15 +21,6 @@ const MOCK_SUBSCRIPTION = [
     usage_count: 15000,
     updatedAt: new Date(),
   },
-  {
-    _id: new mongoose.Types.ObjectId(),
-    type: SubscriptionTypes.TEAMS,
-    key_limit: 10,
-    is_active: true,
-    usage_limit: 50000,
-    usage_count: 0,
-    updatedAt: new Date(),
-  },
 ];
 
 const MOCK_USERS = [
@@ -482,6 +473,397 @@ const MOCK_USER_SESSIONS = [
   },
 ];
 
+// ImageService Mock Data
+const MOCK_IMAGE_DETAIL = {
+  _id: new mongoose.Types.ObjectId(),
+  user_id: MOCK_USERS[2]._id,
+  company_name: "GOOGLE.png",
+  company_uri: "https://example.com/google",
+  image_size: 1024,
+  is_published: true,
+  is_deleted: false,
+  extension: "png",
+  updated_at: new Date(),
+};
+
+const MOCK_IMAGE_DETAILS_LIST = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[2]._id,
+    company_name: "GOOGLE.png",
+    company_uri: "https://example.com/google",
+    image_size: 1024,
+    is_published: true,
+    is_deleted: false,
+    extension: "png",
+    updated_at: new Date(),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    company_name: "MICROSOFT.png",
+    company_uri: "https://example.com/microsoft",
+    image_size: 2048,
+    is_published: true,
+    is_deleted: false,
+    extension: "png",
+    updated_at: new Date("2025-05-12T10:00:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[1]._id,
+    company_name: "AMAZON.png",
+    company_uri: "https://example.com/amazon",
+    image_size: 512,
+    is_published: true,
+    is_deleted: false,
+    extension: "png",
+    updated_at: new Date("2025-04-18T15:30:00Z"),
+  },
+];
+
+const MOCK_CLOUDFRONT_URLS = [
+  "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
+  "https://cdn.myapp.com/png/MICROSOFT.png?v=1755253230001",
+  "https://cdn.myapp.com/png/AMAZON.png?v=1755253230002",
+];
+
+const MOCK_IMAGE_URL_RESPONSE =
+  "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000";
+
+const MOCK_DATA_LIST_RESPONSE = [
+  {
+    companyName: "GOOGLE",
+    image: "https://cdn.myapp.com/png/GOOGLE.png?v=1755253230000",
+  },
+  {
+    companyName: "MICROSOFT",
+    image: "https://cdn.myapp.com/png/MICROSOFT.png?v=1755253230001",
+  },
+  {
+    companyName: "AMAZON",
+    image: "https://cdn.myapp.com/png/AMAZON.png?v=1755253230002",
+  },
+];
+
+const MOCK_IMAGES_PAGINATED_RESPONSE = {
+  data: MOCK_IMAGE_DETAILS_LIST,
+  total: 3,
+  currentPage: 1,
+  totalPages: 1,
+};
+
+const MOCK_IMAGES_COUNT = 3;
+
+const MOCK_PRESIGNED_URL_RESPONSE = {
+  presignedUrl: "https://openlogo-bucket.s3.amazonaws.com/presigned-url",
+  key: "mockBucketKey/png/GOOGLE.png",
+};
+
+// Reward System Mock Data
+const MOCK_REWARD_VALIDATION_RESPONSES = {
+  hobbyUserNonEligible: {
+    is_reward_eligible: false,
+    reward_eligibility_reason: "HOBBY_USER",
+  },
+  selfUsageNonEligible: {
+    is_reward_eligible: false,
+    reward_eligibility_reason: "SELF_USAGE",
+  },
+  duplicateUsageNonEligible: {
+    is_reward_eligible: false,
+    reward_eligibility_reason: "DUPLICATE_USAGE",
+  },
+  validProUserEligible: {
+    is_reward_eligible: true,
+    reward_eligibility_reason: "VALID",
+  },
+};
+
+const MOCK_REWARD_VALIDATION_REQUEST = {
+  imageId: new mongoose.Types.ObjectId(),
+  userId: new mongoose.Types.ObjectId(),
+  creatorId: new mongoose.Types.ObjectId(),
+  keyId: new mongoose.Types.ObjectId(),
+  subscriptionId: new mongoose.Types.ObjectId(),
+  ipAddress: "192.168.1.1",
+  userAgent: "Mozilla/5.0",
+};
+
+const MOCK_PROCESS_REWARDS_SINGLE_MILESTONE = {
+  success: true,
+  newMilestones: [{ milestone: 5, points: 10 }],
+};
+
+const MOCK_PROCESS_REWARDS_MULTIPLE_MILESTONES = {
+  success: true,
+  newMilestones: [
+    { milestone: 5, points: 10 },
+    { milestone: 10, points: 10 },
+    { milestone: 15, points: 10 },
+  ],
+};
+
+const MOCK_PROCESS_REWARDS_NO_DUPLICATE = {
+  success: true,
+  newMilestones: [{ milestone: 10, points: 10 }],
+};
+
+const MOCK_USER_REWARD_DATA = {
+  userId: new mongoose.Types.ObjectId(),
+  currentRewardPoints: 100,
+  lifetimeRewardPoints: 500,
+};
+
+const MOCK_REWARDS_LEADERBOARD = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Creator 5",
+    reward_points_lifetime: 500,
+    rank: 1,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Creator 4",
+    reward_points_lifetime: 400,
+    rank: 2,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Creator 3",
+    reward_points_lifetime: 300,
+    rank: 3,
+  },
+];
+
+const MOCK_REVERSE_TRANSACTION_RESPONSE = {
+  success: true,
+  pointsReversed: 10,
+  transactionId: new mongoose.Types.ObjectId(),
+};
+
+// Reward Transaction Mock Data
+const MOCK_REWARD_TRANSACTION = {
+  _id: new mongoose.Types.ObjectId(),
+  user_id: MOCK_USERS[0]._id,
+  image_id: MOCK_IMAGES[0]._id,
+  creator_id: MOCK_USERS[2]._id,
+  points_earned: 10,
+  points_type: "USAGE_REWARD",
+  is_reversed: false,
+  reversed_at: null,
+  reversal_reason: null,
+  transaction_date: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+const MOCK_REWARD_TRANSACTIONS_LIST = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[0]._id,
+    image_id: MOCK_IMAGES[0]._id,
+    creator_id: MOCK_USERS[2]._id,
+    points_earned: 10,
+    points_type: "USAGE_REWARD",
+    is_reversed: false,
+    transaction_date: new Date(Date.now() - 86400000),
+    createdAt: new Date(Date.now() - 86400000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[1]._id,
+    image_id: MOCK_IMAGES[1]._id,
+    creator_id: MOCK_USERS[0]._id,
+    points_earned: 15,
+    points_type: "MILESTONE_REWARD",
+    is_reversed: false,
+    transaction_date: new Date(Date.now() - 172800000),
+    createdAt: new Date(Date.now() - 172800000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: MOCK_USERS[2]._id,
+    image_id: MOCK_IMAGES[2]._id,
+    creator_id: MOCK_USERS[1]._id,
+    points_earned: 20,
+    points_type: "BONUS_POINTS",
+    is_reversed: false,
+    transaction_date: new Date(Date.now() - 259200000),
+    createdAt: new Date(Date.now() - 259200000),
+  },
+];
+
+const MOCK_USER_TRANSACTION_STATS = {
+  userId: MOCK_USERS[0]._id,
+  totalPointsEarned: 150,
+  totalPointsReversed: 10,
+  currentBalance: 140,
+  totalTransactions: 15,
+  totalMilestones: 3,
+  averagePointsPerTransaction: 10,
+  lastTransactionDate: new Date(),
+};
+
+const MOCK_BONUS_POINTS_AWARD = {
+  success: true,
+  userId: MOCK_USERS[0]._id,
+  pointsAwarded: 50,
+  reason: "Referral bonus",
+  transactionId: new mongoose.Types.ObjectId(),
+  newBalance: 190,
+};
+
+const MOCK_IMAGE_TRANSACTION_SUMMARY = {
+  imageId: MOCK_IMAGES[0]._id,
+  totalRewardsEarned: 100,
+  creatorEarnings: 100,
+  usageCount: 10,
+  averagePointsPerUsage: 10,
+  milestones: [
+    { milestone: 5, pointsAwarded: 50, achievedAt: new Date() },
+    { milestone: 10, pointsAwarded: 50, achievedAt: new Date() },
+  ],
+};
+
+const MOCK_AUDIT_TRAIL_ENTRY = {
+  _id: new mongoose.Types.ObjectId(),
+  transactionId: new mongoose.Types.ObjectId(),
+  action: "POINTS_AWARDED",
+  actor: MOCK_USERS[3]._id,
+  details: "Awarded 10 points for usage",
+  timestamp: new Date(),
+  ipAddress: "192.168.1.1",
+  userAgent: "Mozilla/5.0",
+};
+
+const MOCK_AUDIT_TRAIL_LIST = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "POINTS_AWARDED",
+    actor: MOCK_USERS[3]._id,
+    details: "Awarded 10 points for usage",
+    timestamp: new Date(Date.now() - 3600000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "TRANSACTION_REVERSED",
+    actor: MOCK_USERS[3]._id,
+    details: "Reversed transaction due to abuse",
+    timestamp: new Date(Date.now() - 7200000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "BONUS_AWARDED",
+    actor: MOCK_USERS[3]._id,
+    details: "Awarded 50 bonus points",
+    timestamp: new Date(Date.now() - 10800000),
+  },
+];
+
+const MOCK_TRANSACTION_SEARCH_RESPONSE = {
+  data: MOCK_REWARD_TRANSACTIONS_LIST,
+  total: 3,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
+};
+
+// Reward Tracking Service Mock Factories
+const createMockLogoRequestLogEntry = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  user_id: "user123",
+  key_id: "key123",
+  image_id: "image123",
+  ip_address: "192.168.1.1",
+  user_agent: "Mozilla/5.0",
+  user_plan: SubscriptionTypes.PRO,
+  is_reward_eligible: true,
+  reward_eligibility_reason: "VALID",
+  createdAt: new Date(),
+});
+
+const createValidRewardTrackingParams = () => ({
+  imageId: "image123",
+  userId: "user123",
+  creatorId: "creator456",
+  keyId: "key123",
+  subscriptionId: "sub123",
+  subscription: { type: SubscriptionTypes.PRO },
+  ipAddress: "192.168.1.1",
+  userAgent: "Mozilla/5.0",
+});
+
+const MOCK_REWARD_TRACKING_SCENARIOS = {
+  hobbyUser: {
+    params: {
+      imageId: "image123",
+      userId: "user123",
+      creatorId: "creator456",
+      keyId: "key123",
+      subscriptionId: "sub123",
+      subscription: { type: SubscriptionTypes.HOBBY },
+      ipAddress: "192.168.1.1",
+      userAgent: "Mozilla/5.0",
+    },
+    expected: {
+      is_reward_eligible: false,
+      reward_eligibility_reason: "HOBBY_USER",
+    },
+  },
+  selfUsage: {
+    params: {
+      imageId: "image123",
+      userId: "user123",
+      creatorId: "user123",
+      keyId: "key123",
+      subscriptionId: "sub123",
+      subscription: { type: SubscriptionTypes.PRO },
+      ipAddress: "192.168.1.1",
+      userAgent: "Mozilla/5.0",
+    },
+    expected: {
+      is_reward_eligible: false,
+      reward_eligibility_reason: "SELF_USAGE",
+    },
+  },
+  duplicateUsage: {
+    params: {
+      imageId: "image123",
+      userId: "user123",
+      creatorId: "creator456",
+      keyId: "key123",
+      subscriptionId: "sub123",
+      subscription: { type: SubscriptionTypes.PRO },
+      ipAddress: "192.168.1.1",
+      userAgent: "Mozilla/5.0",
+    },
+    expected: {
+      is_reward_eligible: false,
+      reward_eligibility_reason: "DUPLICATE_USAGE",
+    },
+  },
+  validProUser: {
+    params: {
+      imageId: "image123",
+      userId: "user123",
+      creatorId: "creator456",
+      keyId: "key123",
+      subscriptionId: "sub123",
+      subscription: { type: SubscriptionTypes.PRO },
+      ipAddress: "192.168.1.1",
+      userAgent: "Mozilla/5.0",
+    },
+    expected: {
+      is_reward_eligible: true,
+      reward_eligibility_reason: "VALID",
+    },
+  },
+};
+
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -501,4 +883,35 @@ module.exports = {
   MOCK_MONTHLY_STATS,
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
+  // ImageService Mocks
+  MOCK_IMAGE_DETAIL,
+  MOCK_IMAGE_DETAILS_LIST,
+  MOCK_CLOUDFRONT_URLS,
+  MOCK_IMAGE_URL_RESPONSE,
+  MOCK_DATA_LIST_RESPONSE,
+  MOCK_IMAGES_PAGINATED_RESPONSE,
+  MOCK_IMAGES_COUNT,
+  MOCK_PRESIGNED_URL_RESPONSE,
+  // Reward System Mocks
+  MOCK_REWARD_VALIDATION_RESPONSES,
+  MOCK_REWARD_VALIDATION_REQUEST,
+  MOCK_PROCESS_REWARDS_SINGLE_MILESTONE,
+  MOCK_PROCESS_REWARDS_MULTIPLE_MILESTONES,
+  MOCK_PROCESS_REWARDS_NO_DUPLICATE,
+  MOCK_USER_REWARD_DATA,
+  MOCK_REWARDS_LEADERBOARD,
+  MOCK_REVERSE_TRANSACTION_RESPONSE,
+  // Reward Transaction Mocks
+  MOCK_REWARD_TRANSACTION,
+  MOCK_REWARD_TRANSACTIONS_LIST,
+  MOCK_USER_TRANSACTION_STATS,
+  MOCK_BONUS_POINTS_AWARD,
+  MOCK_IMAGE_TRANSACTION_SUMMARY,
+  MOCK_AUDIT_TRAIL_ENTRY,
+  MOCK_AUDIT_TRAIL_LIST,
+  MOCK_TRANSACTION_SEARCH_RESPONSE,
+  // Reward Tracking Service Mocks
+  createMockLogoRequestLogEntry,
+  createValidRewardTrackingParams,
+  MOCK_REWARD_TRACKING_SCENARIOS,
 };
