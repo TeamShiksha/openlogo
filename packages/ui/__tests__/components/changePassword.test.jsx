@@ -6,6 +6,7 @@ import {
   CHANGE_PASSWORD_FIELDS,
   MESSAGES,
 } from "../../src/utils/Constants";
+import * as useApiHook from "../../src/hooks/useApi";
 
 const mockMakeRequest = vi.fn();
 const mockToastSuccess = vi.fn();
@@ -26,13 +27,10 @@ vi.mock("../../src/hooks/useToast", () => ({
   }),
 }));
 
-const getInputs = () => {
-  const inputs = screen.getAllByRole("textbox");
-  return {
-    currPassword: inputs[0],
-    newPassword: inputs[1],
-  };
-};
+const getInputs = () => ({
+  currPassword: screen.getByPlaceholderText(CHANGE_PASSWORD_FIELDS[0].label),
+  newPassword: screen.getByPlaceholderText(CHANGE_PASSWORD_FIELDS[1].label),
+});
 
 const getSubmitButton = () =>
   screen.getByRole("button", { name: BUTTON_TEXT.changePasswordLabel });
@@ -54,7 +52,6 @@ describe("ChangePassword", () => {
     render(<ChangePassword isGuest={false} />);
     const { currPassword } = getInputs();
     fireEvent.focus(currPassword);
-    fireEvent.blur(currPassword);
 
     await waitFor(() => {
       expect(screen.getByText(/required/i)).toBeInTheDocument();
@@ -62,7 +59,7 @@ describe("ChangePassword", () => {
   });
 
   it("disables submit button when loading", () => {
-    vi.mocked(require("../../src/hooks/useApi").useApi).mockReturnValueOnce({
+    vi.spyOn(useApiHook, "useApi").mockReturnValueOnce({
       makeRequest: mockMakeRequest,
       errorMsg: null,
       loading: true,
@@ -94,7 +91,7 @@ describe("ChangePassword", () => {
   });
 
   it("shows error toast when api returns errorMsg", async () => {
-    vi.mocked(require("../../src/hooks/useApi").useApi).mockReturnValueOnce({
+    vi.spyOn(useApiHook, "useApi").mockReturnValueOnce({
       makeRequest: mockMakeRequest,
       errorMsg: "Incorrect current password",
       loading: false,

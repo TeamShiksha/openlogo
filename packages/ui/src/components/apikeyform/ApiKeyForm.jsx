@@ -172,6 +172,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            data-testid="generate-key-btn"
           >
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="8" x2="12" y2="16"></line>

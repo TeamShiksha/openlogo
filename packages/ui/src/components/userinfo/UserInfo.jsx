@@ -95,6 +95,7 @@ function UserInfo({ name, email, isGuest }) {
               onChange={handleUserInfoChange}
               className={styles["input"]}
               disabled={field.name === "email"}
+              data-testid={`input-${field.name}`}
             />
           </div>
           {field.name === "name" && formErrors.type === "error" && (
