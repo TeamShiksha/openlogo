@@ -71,6 +71,22 @@
 
 .catalog-table-content {
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-loading-spinner,
+.catalog-table-no-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.catalog-table-no-content {
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
 .catalog-table-footer {
