@@ -49,10 +49,14 @@ class SubscriptionService {
 
   /**
    * change the end-date to the next month and start date to the endDate and also make the usage count=0 for new month
-   * @param {number} subscriptionId
+   * @param {number} subscriptionId - id of the subscription
+   *  @param {date} currentDate - current date
    */
-  async resetLimitAndExpiryDate(subscriptionId) {
-    await this.subscriptionRepository.resetLimitAndExpiryDate(subscriptionId);
+  async resetLimitAndExpiryDate(subscriptionId, currentDate) {
+    await this.subscriptionRepository.resetLimitAndExpiryDate(
+      subscriptionId,
+      currentDate
+    );
   }
 }
 

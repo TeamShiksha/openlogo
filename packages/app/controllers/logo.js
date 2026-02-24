@@ -36,7 +36,7 @@ async function getLogoController(req, res, next) {
     }
 
     await userService.logLogoRequestEntry(company, subscriptionData, keyRef);
-    await subscriptionService.incrementUsageCount(subscriptionData);
+    await subscriptionService.incrementUsageCount(subscriptionData._id);
     return res.status(200).json({
       statusCode: 200,
       data: imageUrl,
@@ -76,7 +76,7 @@ async function searchLogoController(req, res, next) {
       });
     }
     const dataList = await imageServices.getDataList(companyList);
-    await subscriptionService.incrementUsageCount(subscriptionData);
+    await subscriptionService.incrementUsageCount(subscriptionData._id);
     return res.status(200).json({
       statusCode: 200,
       data: dataList,

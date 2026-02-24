@@ -34,22 +34,25 @@ class SubscriptionsRepository extends BaseRepository {
    *  update the subscription end date  start date and usage count
    * @param {number} subscriptionId
    */
-  async resetLimitAndExpiryDate(subscriptionId) {
-    await this.updateOne({ _id: subscriptionId }, [
-      {
-        $set: {
-          start_date: "$end_date",
-          end_date: {
-            $dateAdd: {
-              startDate: "$end_date",
-              unit: "month",
-              amount: 1,
+  async resetLimitAndExpiryDate(subscriptionId, currentDate) {
+    await this.model.updateOne(
+      { _id: subscriptionId, end_date: { $lt: currentDate } },
+      [
+        {
+          $set: {
+            start_date: "$end_date",
+            end_date: {
+              $dateAdd: {
+                startDate: "$end_date",
+                unit: "month",
+                amount: 1,
+              },
             },
+            usage_count: 0,
           },
-          usage_count: 0,
         },
-      },
-    ]);
+      ]
+    );
   }
 
   /**
@@ -57,7 +60,7 @@ class SubscriptionsRepository extends BaseRepository {
    * @param {number} subscriptionId
    */
   async incrementUsageCount(subscriptionId) {
-    await this.subscriptionRepository.updateOne(
+    await this.model.updateOne(
       { _id: subscriptionId },
       { $inc: { usage_count: 1 } }
     );

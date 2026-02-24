@@ -48,7 +48,7 @@ const resetSubscription = async (req, res, next) => {
     );
     const currentDate = new Date();
     if (new Date(currentDate) > new Date(subscriptionData.end_date)) {
-      await subscriptionService.resetLimitAndExpiryDate(subscriptionData);
+      await subscriptionService.resetLimitAndExpiryDate(subscriptionData._id,currentDate);
       subscriptionData = await subscriptionService.getSubscription(
         keyVal.subscription_id
       );
