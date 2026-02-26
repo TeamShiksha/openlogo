@@ -1,4 +1,3 @@
-/* Page Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -28,7 +27,6 @@
   line-height: 1.5;
 }
 
-/* Header Right Section */
 .header-right {
   display: flex;
   flex-direction: column;
@@ -36,7 +34,6 @@
   gap: 1rem;
 }
 
-/* Dropdown */
 .dropdown-wrapper {
   position: relative;
   align-self: flex-end;
@@ -88,7 +85,6 @@
   color: var(--black);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;

@@ -12,7 +12,6 @@ function AdminDashboard({
 }) {
   return (
     <div>
-      {/* Header for Admin Dashboard */}
       <div className={styles["page-header"]}>
         <div className={styles["title-section"]}>
           <h1 className={styles["dashboard-title"]}>Admin Dashboard</h1>
@@ -22,7 +21,6 @@ function AdminDashboard({
         </div>
 
         <div className={styles["header-right"]}>
-          {/* Role Dropdown */}
           {dashboardDropdownOptions && dashboardDropdownOptions.length > 0 && (
             <div className={styles["dropdown-wrapper"]}>
               <button
@@ -62,7 +60,6 @@ function AdminDashboard({
         </div>
       </div>
 
-      {/* Admin Dashboard Content */}
       <Analytics />
       <Catalog />
     </div>

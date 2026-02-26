@@ -4,8 +4,9 @@ import {
   screen,
   waitFor,
   within,
+  act,
 } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import {
   UserContext,
   AuthContext,
@@ -203,7 +204,151 @@ describe("Dashboard", () => {
   });
 });
 
-/* ---------------- Dropdown tests ---------------- */
+describe("Dashboard API Keys Count", () => {
+  it("shows singular 'key' when only one key exists", async () => {
+    const userContext = mockUserContext({
+      ...MOCK_USER_DATA,
+      keys: [MOCK_USER_DATA.keys[0]],
+    });
+    renderDashboard({ userContextValue: userContext });
+
+    await waitFor(() => {
+      expect(screen.getByText(/1 key found/i)).toBeInTheDocument();
+    });
+  });
+
+  it("shows plural 'keys' when multiple keys exist", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA);
+    renderDashboard({ userContextValue: userContext });
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(new RegExp(`${MOCK_USER_DATA.keys.length} keys found`))
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("shows 0 keys found when keys array is empty", async () => {
+    const userContext = mockUserContext({ ...MOCK_USER_DATA, keys: [] });
+    renderDashboard({ userContextValue: userContext });
+
+    await waitFor(() => {
+      expect(screen.getByText(/0 keys found/i)).toBeInTheDocument();
+    });
+  });
+});
+
+describe("Dashboard Guest Role", () => {
+  it("sets isGuest true when user role is GUEST", async () => {
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, role: "GUEST" },
+      false
+    );
+    renderDashboard({ userContextValue: userContext });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+    });
+  });
+
+  it("does not show role dropdown for GUEST user", async () => {
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, role: "GUEST" },
+      false
+    );
+    renderDashboard({ userContextValue: userContext });
+
+    expect(screen.queryByTestId("testid-dropdown")).not.toBeInTheDocument();
+  });
+});
+
+describe("Dashboard non-expiring API Keys", () => {
+  it("does not apply warning class to keys expiring beyond 7 days", () => {
+    const safeKey = {
+      ...MOCK_USER_DATA.keys[0],
+      expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
+    };
+
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, keys: [safeKey] },
+      false
+    );
+
+    renderDashboard({ userContextValue: userContext });
+
+    const rows = within(screen.getByRole("table")).getAllByRole("row");
+    expect(rows[1].className).not.toContain("expiry-warning-row");
+  });
+
+  it("applies warning class to key expiring exactly in 7 days", () => {
+    const borderlineKey = {
+      ...MOCK_USER_DATA.keys[0],
+      expires_at: new Date(Date.now() + 7 * 86400000).toISOString(),
+    };
+
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, keys: [borderlineKey] },
+      false
+    );
+
+    renderDashboard({ userContextValue: userContext });
+
+    const rows = within(screen.getByRole("table")).getAllByRole("row");
+    expect(rows[1].className).toContain("expiry-warning-row");
+  });
+});
+
+describe("Dashboard Modal Interactions", () => {
+  it("closes modal when cancel button is clicked", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    renderDashboard({ userContextValue: userContext });
+
+    const table = await screen.findByRole("table");
+    const deleteButton = within(table).getAllByRole("button")[0];
+    fireEvent.click(deleteButton);
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
+    const buttons = within(modal).getAllByRole("button");
+    const cancelButton = buttons[0];
+
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("delete-api-key-modal")
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("clears the confirmation input when modal is reopened", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    renderDashboard({ userContextValue: userContext });
+
+    const table = await screen.findByRole("table");
+    const deleteButton = within(table).getAllByRole("button")[0];
+
+    fireEvent.click(deleteButton);
+    let modal = await screen.findByTestId("delete-api-key-modal");
+
+    fireEvent.change(within(modal).getByTestId("api-key-confirm-input"), {
+      target: { value: "some-text" },
+    });
+
+    const buttons = within(modal).getAllByRole("button");
+    fireEvent.click(buttons[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("delete-api-key-modal")
+      ).not.toBeInTheDocument();
+    });
+
+    fireEvent.click(deleteButton);
+    modal = await screen.findByTestId("delete-api-key-modal");
+
+    expect(within(modal).getByTestId("api-key-confirm-input").value).toBe("");
+  });
+});
 
 describe("Dropdown", () => {
   it("renders nothing when options are empty", () => {

@@ -68,7 +68,6 @@ const Operator = ({
   const toast = useToast();
   const OperatorDashboardDropdownOptions = ["messages", "requests", "logos"];
 
-  // Data states
   const [messages, setMessages] = useState([]);
   const [requests, setRequests] = useState([]);
   const [logos, setLogos] = useState([]);
@@ -88,7 +87,6 @@ const Operator = ({
 
   const ITEMS_PER_PAGE = 6;
 
-  // Debounce logic for search
   useEffect(() => {
     if (searchTerm.length < 2) {
       setDebouncedSearchTerm("");
@@ -235,7 +233,6 @@ const Operator = ({
     } else {
       fetchLogos(currentPage);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchType, currentPage, activeTab]);
 
   useEffect(() => {
@@ -518,7 +515,6 @@ const Operator = ({
 
   return (
     <div>
-      {/* Header for Operator Dashboard */}
       <div className={headerStyles["page-header"]}>
         <div className={headerStyles["title-section"]}>
           <h1 className={headerStyles["dashboard-title"]}>
@@ -530,7 +526,6 @@ const Operator = ({
         </div>
 
         <div className={headerStyles["header-right"]}>
-          {/* Role Dropdown */}
           <div className={headerStyles["dropdown-wrapper"]}>
             <button
               className={headerStyles["dropdown"]}
@@ -568,7 +563,6 @@ const Operator = ({
         </div>
       </div>
 
-      {/* Operator Dashboard Content */}
       <div className={operatorStyles["operator-container"]}>
         <div className={operatorStyles["catalog-search"]}>
           <CustomInput
@@ -627,7 +621,7 @@ const Operator = ({
               </div>
             </div>
             <div className={operatorStyles["web-search-catalog-body"]}>
-              <p>We couldn't find this image in our catalog database.</p>
+              <p>We could not find this image in our catalog database.</p>
               <div className={operatorStyles["web-search-actions"]}>
                 <Button
                   variant="primary"
@@ -647,7 +641,6 @@ const Operator = ({
           </div>
         )}
 
-        {/* WEB SEARCH RESULTS DISPLAY - Updated: Extension removed */}
         {showWebResults &&
           searchData?.source === "web-search" &&
           searchData?.data?.length > 0 && (

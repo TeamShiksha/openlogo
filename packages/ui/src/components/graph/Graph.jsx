@@ -252,7 +252,7 @@ export default function Graph() {
           ...baseOptions.scales.x,
           type: "category",
           offset: true,
-          align: "center", // ← FIX: Center points on ticks
+          align: "center",
           ticks: {
             ...baseOptions.scales.x.ticks,
           },
@@ -292,9 +292,9 @@ export default function Graph() {
           borderColor: "#818cf8",
           spanGaps: true,
           fill: false,
-          clip: false, // ← CRITICAL: Prevents clipping
+          clip: false,
           pointHitRadius: 10,
-          pointOffset: 0, // ← Forces exact tick alignment
+          pointOffset: 0,
         },
       ],
     }),
