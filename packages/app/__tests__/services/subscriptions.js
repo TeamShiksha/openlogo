@@ -69,16 +69,14 @@ describe("Subscription Service", () => {
   });
 
   it("increment usage count for a subscription (Hardened Version)", async () => {
-  const mockSubId = MOCK_SUBSCRIPTION[0]._id;
-  
-  const repoSpy = jest
-    .spyOn(subscriptionService.subscriptionRepository, "incrementUsageCount") // Match your code's typo if it exists
-    .mockResolvedValue({ acknowledged: true });
+    const mockUpdated = { _id: "1", usage_count: 6 };
 
-  await subscriptionService.incrementUsageCount(mockSubId);
-  expect(repoSpy).toHaveBeenCalledWith(mockSubId);
-  
-  // Ensure it was called exactly once to prevent double-charging/usage
-  expect(repoSpy).toHaveBeenCalledTimes(1);
-});
+    const spy = jest
+      .spyOn(subscriptionService.subscriptionRepository, "incrementUsageCount")
+      .mockResolvedValue(mockUpdated);
+
+    const result = await subscriptionService.incrementUsageCount("1");
+    expect(spy).toHaveBeenCalledWith("1");
+    expect(result).toEqual(mockUpdated);
+  });
 });

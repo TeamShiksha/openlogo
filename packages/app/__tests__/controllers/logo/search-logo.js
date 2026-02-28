@@ -270,7 +270,67 @@ describe("searchLogoController", () => {
       await request(app).get(API_URL).query(BASE_QUERY);
       expect(incrementSpy).toHaveBeenCalledTimes(1);
     });
+  });    
+
+  describe("atomic incrementUsageCount behavior", () => {
+  it("returns 403 when incrementUsageCount returns null (limit reached)", async () => {
+    mockValidKeyAndSubscription();
+
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockResolvedValue(MOCK_COMPANY_LIST);
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockResolvedValue(null); // limit reached
+
+    const res = await request(app).get(API_URL).query(BASE_QUERY);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe(Messages.LIMIT_REACHED);
   });
+
+  it("does NOT call getDataList when incrementUsageCount returns null", async () => {
+    mockValidKeyAndSubscription();
+
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockResolvedValue(MOCK_COMPANY_LIST);
+
+    const getDataListSpy = jest.spyOn(
+      ImageService.prototype,
+      "getDataList"
+    );
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockResolvedValue(null);
+
+    await request(app).get(API_URL).query(BASE_QUERY);
+
+    expect(getDataListSpy).not.toHaveBeenCalled();
+  });
+
+  it("proceeds when incrementUsageCount succeeds", async () => {
+    mockValidKeyAndSubscription();
+
+    jest
+      .spyOn(ImageService.prototype, "fetchCompanyList")
+      .mockResolvedValue(MOCK_COMPANY_LIST);
+
+    jest
+      .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+      .mockResolvedValue({ _id: "sub1", usage_count: 6 });
+
+    jest
+      .spyOn(ImageService.prototype, "getDataList")
+      .mockResolvedValue(MOCK_DATA_LIST);
+
+    const res = await request(app).get(API_URL).query(BASE_QUERY);
+
+    expect(res.status).toBe(200);
+  });
+});
 
   describe("operations order", () => {
     it("fetchCompanyList  getDataList  incrementUsageCount (in that order)", async () => {
@@ -283,7 +343,14 @@ describe("searchLogoController", () => {
         .mockImplementation(() => {
           order.push("fetch_company_list");
           return Promise.resolve(MOCK_COMPANY_LIST);
-        });
+        });  
+
+         jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockImplementation(() => {
+          order.push("usage_count_incremented");
+          return Promise.resolve({ _id: "sub1" });
+        }); 
 
       jest
         .spyOn(ImageService.prototype, "getDataList")
@@ -292,20 +359,14 @@ describe("searchLogoController", () => {
           return Promise.resolve(MOCK_DATA_LIST);
         });
 
-      jest
-        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
-        .mockImplementation(() => {
-          order.push("usage_count_incremented");
-          return Promise.resolve();
-        });
 
       const res = await request(app).get(API_URL).query(BASE_QUERY);
 
       expect(res.status).toBe(200);
       expect(order).toEqual([
         "fetch_company_list",
-        "get_data_list",
         "usage_count_incremented",
+        "get_data_list",
       ]);
     });
 

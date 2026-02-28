@@ -35,8 +35,17 @@ async function getLogoController(req, res, next) {
       });
     }
 
+    const updatedUsageCount = await subscriptionService.incrementUsageCount(
+      subscriptionData._id
+    );
+    if (!updatedUsageCount) {
+      return res.status(403).json({
+        message: Messages.LIMIT_REACHED,
+        statusCode: 403,
+        error: STATUS_CODES[403],
+      });
+    }
     await userService.logLogoRequestEntry(company, subscriptionData, keyRef);
-    await subscriptionService.incrementUsageCount(subscriptionData._id);
     return res.status(200).json({
       statusCode: 200,
       data: imageUrl,
@@ -75,8 +84,17 @@ async function searchLogoController(req, res, next) {
         error: STATUS_CODES[404],
       });
     }
+    const updatedUsageCount = await subscriptionService.incrementUsageCount(
+      subscriptionData._id
+    );
+    if (!updatedUsageCount) {
+      return res.status(403).json({
+        message: Messages.LIMIT_REACHED,
+        statusCode: 403,
+        error: STATUS_CODES[403],
+      });
+    }
     const dataList = await imageServices.getDataList(companyList);
-    await subscriptionService.incrementUsageCount(subscriptionData._id);
     return res.status(200).json({
       statusCode: 200,
       data: dataList,

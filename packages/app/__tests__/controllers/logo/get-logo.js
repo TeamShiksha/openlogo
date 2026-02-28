@@ -277,6 +277,61 @@ describe("getLogoController", () => {
     });
   });
 
+  describe("atomic incrementUsageCount behavior", () => {
+    it("returns 403 when incrementUsageCount returns null (limit reached)", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue(null); // limit reached
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+
+      expect(res.status).toBe(403);
+      expect(res.body.message).toBe(Messages.LIMIT_REACHED);
+    });
+
+    it("does NOT log request when incrementUsageCount returns null", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      const logSpy = jest.spyOn(UserService.prototype, "logLogoRequestEntry");
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue(null);
+
+      await request(app).get(API_URL).query(BASE_QUERY);
+
+      expect(logSpy).not.toHaveBeenCalled();
+    });
+    it("proceeds when incrementUsageCount succeeds", async () => {
+      mockValidKeyAndSubscription();
+
+      jest
+        .spyOn(ImageService.prototype, "fetchImageByCompanyFree")
+        .mockResolvedValue(IMAGE_URL);
+
+      jest
+        .spyOn(UserService.prototype, "logLogoRequestEntry")
+        .mockResolvedValue({});
+
+      jest
+        .spyOn(SubscriptionService.prototype, "incrementUsageCount")
+        .mockResolvedValue({ _id: "sub1", usage_count: 6 });
+
+      const res = await request(app).get(API_URL).query(BASE_QUERY);
+
+      expect(res.status).toBe(200);
+    });
+  });
   describe("operations order", () => {
     it("image fetched → logEntry → usage incremented (in that order)", async () => {
       const order = [];
@@ -301,7 +356,7 @@ describe("getLogoController", () => {
         .spyOn(SubscriptionService.prototype, "incrementUsageCount")
         .mockImplementation(() => {
           order.push("usage_count_incremented");
-          return Promise.resolve();
+          return Promise.resolve({ _id: "sub1" });
         });
 
       const res = await request(app).get(API_URL).query(BASE_QUERY);
@@ -309,8 +364,8 @@ describe("getLogoController", () => {
       expect(res.status).toBe(200);
       expect(order).toEqual([
         "image_fetched",
-        "log_entry",
         "usage_count_incremented",
+        "log_entry",
       ]);
     });
 
