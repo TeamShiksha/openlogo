@@ -18,9 +18,12 @@ class SubscriptionsRepository extends BaseRepository {
   async getSubscriptionUsageCount() {
     const result = await Subscriptions.aggregate([
       {
+        $match: { is_active: true },
+      },
+      {
         $group: {
           _id: null,
-          totalUsage: { $sum: "usage_count" },
+          totalUsage: { $sum: "$usage_count" },
         },
       },
     ]);

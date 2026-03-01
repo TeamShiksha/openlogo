@@ -102,8 +102,11 @@ const Messages = {
   RESEND_EMAIL_FAILED: "Failed to resend verification email.",
   TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
   SENT_FORGOT_PASSWORD_EMAIL: "Email sent to reset password.",
-  API_KEY_EXPIRED: "Your Key has been expired",
-  UPDATE_API_KEY: "Your API Key needs an update",
+  LOGO_ALREADY_CREATED_AND_PENDING:
+    "Logo has already been created and is currently pending.",
+  CREATED_LOGO_NOT_FOUND: "Created logo not found",
+  API_KEY_EXPIRED: "This Key has got expired.",
+  UPDATE_API_KEY: "This Key needs an update.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
@@ -112,6 +115,16 @@ const CLOUD_FRONT_REGION = "us-east-1";
 
 const getIsProduction = () =>
   process.env.NODE_ENV?.trim().toLowerCase() === "prod";
+
+const USER_SAFE_FIELDS =
+  "name email role is_verified subscription_id created_at is_deleted updated_at ";
+
+const SESSION_ID_REGEX = /^[a-f0-9]{128}$/i;
+
+const TEMPORARY_SESSION_TYPES = {
+  PASSWORD_RESET: "PASSWORD_RESET",
+  MFA: "MFA",
+};
 
 module.exports = {
   EmailValidationRegex,
@@ -126,4 +139,7 @@ module.exports = {
   TAB_OPTIONS,
   CLOUD_FRONT_REGION,
   getIsProduction,
+  USER_SAFE_FIELDS,
+  SESSION_ID_REGEX,
+  TEMPORARY_SESSION_TYPES,
 };

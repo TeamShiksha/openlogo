@@ -1,34 +1,37 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { MOCK_USERS } = require("../../../utils/mocks");
-const { Users } = require("../../../models");
-const { UserService } = require("../../../services");
+const {
+  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
+const { UserService, UserSessionService } = require("../../../services");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("Update User Profile", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_UR;
   });
 
   it("422 - First name should only contain alphabets", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       name: "name@1234",
     };
 
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
+
     const response = await request(app)
       .patch("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(422);
@@ -40,16 +43,17 @@ describe("Update User Profile", () => {
   });
 
   it("404 - User not found", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       name: "Mockname",
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
 
     const response = await request(app)
       .patch("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(404);
@@ -61,11 +65,12 @@ describe("Update User Profile", () => {
   });
 
   it("500 - Failed to update profile", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       name: "Mockname",
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -73,7 +78,7 @@ describe("Update User Profile", () => {
 
     const response = await request(app)
       .patch("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(500);
@@ -85,11 +90,12 @@ describe("Update User Profile", () => {
   });
 
   it("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       name: "Mockname",
     };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -99,19 +105,20 @@ describe("Update User Profile", () => {
 
     const response = await request(app)
       .patch("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(500);
   });
 
   it("200 - User profile updated", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
     const mockInput = {
       name: "Mockname",
     };
     const mockUpdatedResponse = { ...MOCK_USERS[1], name: mockInput.name };
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "getUser")
       .mockResolvedValue(MOCK_USERS[1]);
@@ -121,7 +128,7 @@ describe("Update User Profile", () => {
 
     const response = await request(app)
       .patch("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(mockInput);
 
     expect(response.status).toBe(200);

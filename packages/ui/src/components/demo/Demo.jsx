@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { SVGS, BUTTON_TEXT, DEMO } from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
@@ -50,9 +51,19 @@ const Demo = ({ openAuthModal }) => {
   const openModal = () => setIsRequestModalOpen(true);
   const closeModal = () => setIsRequestModalOpen(false);
 
+  const navigate = useNavigate();
+
   const handleRequestClick = () => {
     if (isAuthenticated) {
       openModal();
+    } else {
+      openAuthModal();
+    }
+  };
+
+  const handleCreateLogoClick = () => {
+    if (isAuthenticated) {
+      navigate("/createLogo");
     } else {
       openAuthModal();
     }
@@ -83,7 +94,9 @@ const Demo = ({ openAuthModal }) => {
 
             {showResults && (
               <div
-                className={`${styles["result-container"]} ${styles["show"]}`}
+                className={`${styles["result-container"]} ${
+                  styles["show"]
+                } ${!loading && apiResults.length === 0 ? styles["no-result-container"] : ""}`}
               >
                 {loading && (
                   <div className={styles.loading}>
@@ -97,9 +110,17 @@ const Demo = ({ openAuthModal }) => {
                       <b className={styles["search-term"]}>{searchTerm}</b>
                       {"” did not match any logo."}
                     </p>
-                    <Button onClick={handleRequestClick} variant={"primary"}>
-                      {BUTTON_TEXT.requestLogo}
-                    </Button>
+                    <div className={styles["no-result-buttons"]}>
+                      <Button onClick={handleRequestClick} variant={"primary"}>
+                        {BUTTON_TEXT.requestLogo}
+                      </Button>
+                      <Button
+                        onClick={handleCreateLogoClick}
+                        variant={"primary"}
+                      >
+                        {BUTTON_TEXT.createLogo}
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <>

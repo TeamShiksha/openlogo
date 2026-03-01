@@ -1,9 +1,13 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
-const { UserService, SendEmailService } = require("../../../services");
+const {
+  UserService,
+  SendEmailService,
+  UserSessionService,
+} = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const { MOCK_USERS, MOCK_USER_SESSIONS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const dummyPassword =
@@ -14,11 +18,6 @@ jest.mock("../../../utils/sendEmail");
 describe("SIGNIN API", () => {
   beforeAll(() => {
     sendEmail.mockResolvedValue(true);
-    process.env.JWT_SECRET = "jwtsecret";
-  });
-
-  afterAll(() => {
-    delete process.env.JWT_SECRET;
   });
 
   it("422 - Invalid email", async () => {
@@ -151,10 +150,15 @@ describe("SIGNIN API", () => {
       is_verified: true,
       is_deleted: false,
       matchPassword: jest.fn().mockResolvedValue(true),
-      generateJWT: jest.fn().mockReturnValue("jwt-token"),
     };
 
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
+    jest
+      .spyOn(UserSessionService.prototype, "userActiveSession")
+      .mockResolvedValue(null);
+    jest
+      .spyOn(UserSessionService.prototype, "createSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
     const response = await request(app)
       .post(ENDPOINTS.SIGNIN)

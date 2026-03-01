@@ -88,6 +88,15 @@
   text-align: center;
 }
 
+.expiry-warning-row {
+  background-color: #fee2e2;
+}
+
+.expiry-warning-row td {
+  color: #dc2626;
+  font-weight: 500;
+}
+
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
