@@ -2,10 +2,11 @@ import { useState, useContext, useEffect, useRef } from "react";
 import styles from "./UserDropDown.module.css";
 import { AuthContext, UserContext } from "../../contexts/Contexts";
 import { BUTTON_TEXT } from "../../utils/Constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LogOut, LayoutDashboard } from "lucide-react";
 
 export default function UserDropDown() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,12 +21,13 @@ export default function UserDropDown() {
     setIsOpen(!isOpen);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoading(true);
-    logout();
+    await logout();
     setUserData(null);
     setIsLoading(false);
     setIsOpen(false);
+    navigate("/");
   };
 
   useEffect(() => {

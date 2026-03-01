@@ -1,0 +1,15 @@
+.pieChart {
+  background: var(--white);
+}
+
+.pieBackground {
+  fill: var(--white);
+}
+
+.pieFill {
+  fill: transparent;
+}
+
+.pieText {
+  fill: var(--black);
+}

@@ -8,7 +8,7 @@ const {
   ContactUsService,
 } = require("../services");
 const { addAdminSchema, imageReuploadSchema } = require("../schemas/admin");
-const { companyUriSchema } = require("../schemas/catalog");
+const { companyUrlSchema } = require("../schemas/catalog");
 const {
   Messages,
   ExtractCompanyNameFromUrlRegex,
@@ -128,7 +128,7 @@ async function getPreSignedController(req, res, next) {
   try {
     const imageService = new ImageService();
     const { companyUri, extension, type } = req.body;
-    const { error } = companyUriSchema.validate(companyUri);
+    const { error } = companyUrlSchema.validate(companyUri);
 
     if (error) {
       return res.status(400).json({
@@ -340,7 +340,7 @@ async function addCatalogController(req, res, next) {
     const { userId } = req.userData;
     const imageSize = req.body.size;
     const companyUri = req.body.companyUri;
-    const { error } = companyUriSchema.validate(companyUri);
+    const { error } = companyUrlSchema.validate(companyUri);
 
     if (error) {
       return res.status(500).json({

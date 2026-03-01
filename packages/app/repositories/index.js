@@ -6,6 +6,8 @@ const UserTokenRepository = require("./usertoken");
 const UsersRepository = require("./users");
 const RequestRepository = require("./request");
 const LogoRequestLogsRepository = require("./logoRequestLogs");
+const CreateLogoRequestRepository = require("./createLogoRequest");
+
 module.exports = {
   ContactUsRepository,
   ImagesRepository,
@@ -15,4 +17,5 @@ module.exports = {
   UsersRepository,
   RequestRepository,
   LogoRequestLogsRepository,
+  CreateLogoRequestRepository,
 };
