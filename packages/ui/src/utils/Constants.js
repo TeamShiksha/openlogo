@@ -865,7 +865,7 @@ export const RELEASE_PAGE = {
     versionsData: [
           {
         versionName: "0.7.0 version",
-        releaseDate: "Jan 2026",
+        releaseDate: "Mar 2026",
         imgSrc: version07,
         releaseNotes: [
           {
