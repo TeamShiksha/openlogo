@@ -26,6 +26,7 @@ import javaLogo from "../assets/java.png";
 import tick from "../assets/tick.png";
 import copycodeicon from "../assets/copy-code-icon.png";
 import version06 from "../assets/version06.png";
+import version07 from "../assets/version07.png";
 
 export const SVGS = {
   searchIcon,
@@ -856,12 +857,85 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["0.6.0 version", "Previous version"],
-  latestVersion: "0.6.0 version",
+  versions: ["0.7.0 version", "0.6.0 version", "Previous version"],
+  latestVersion: "0.7.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
+          {
+        versionName: "0.7.0 version",
+        releaseDate: "Mar 2026",
+        imgSrc: version07,
+        releaseNotes: [
+          {
+            releaseNote:
+              "Authentication has been migrated from JWT to a secure session-based system, improving overall security and simplifying token management.",
+            contributors: [
+              {
+                contributorName: "Mantu01",
+                contributorGithubLink: "https://github.com/Mantu01",
+              },
+              {
+                contributorName: "Smayur0",
+                contributorGithubLink: "https://github.com/Smayur0",
+              },
+              {
+                contributorName: "printgourav",
+                contributorGithubLink: "https://github.com/printgourav",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "You can now switch between Light and Dark themes to personalize your experience.",
+            contributors: [
+              {
+                contributorName: "sachinkmrsin",
+                contributorGithubLink: "https://github.com/sachinkmrsin",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Notifications are now available for important events such as API expiry and usage limit being reached, so you never miss critical updates.",
+            contributors: [
+              {
+                contributorName: "YashDevani-source",
+                contributorGithubLink: "https://github.com/YashDevani-source",
+              },
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "You can now create and use your own custom logo image directly within the platform.",
+            contributors: [
+              {
+                contributorName: "biplab-sutradhar",
+                contributorGithubLink: "https://github.com/biplab-sutradhar",
+              },
+              {
+                contributorName: "mridul-giri",
+                contributorGithubLink: "https://github.com/mridul-giri",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "API keys are now securely hidden to prevent accidental exposure and enhance account security.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+        ],
+      },
       {
         versionName: "0.6.0 version",
         releaseDate: "Dec 2025",
