@@ -1,6 +1,5 @@
 import Analytics from "../../components/analytics/Analytics";
 import Catalog from "../catalog/Catalog.jsx";
-import styles from "./AdminDashboard.module.css";
 import PropTypes from "prop-types";
 
 function AdminDashboard({
@@ -9,6 +8,7 @@ function AdminDashboard({
   isDropdownOpen,
   setIsDropdownOpen,
   handleRoleSelect,
+  styles,
 }) {
   return (
     <div>
@@ -72,6 +72,7 @@ AdminDashboard.propTypes = {
   isDropdownOpen: PropTypes.bool.isRequired,
   setIsDropdownOpen: PropTypes.func.isRequired,
   handleRoleSelect: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
 };
 
 export default AdminDashboard;

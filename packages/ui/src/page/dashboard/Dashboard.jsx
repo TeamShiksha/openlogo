@@ -181,7 +181,7 @@ function Dashboard() {
 
   return (
     <div
-      className={` ${styles["dashboard-container"]}`}
+      className={styles["dashboard-container"]}
       data-testid="testid-dashboard"
     >
       {showLoader && (
@@ -233,7 +233,6 @@ function Dashboard() {
         </div>
       ) : (
         <>
-          {/* Page Header */}
           <div className={styles["page-header"]}>
             <div className={styles["title-section"]}>
               <h1 className={styles["dashboard-title"]}>Dashboard</h1>
@@ -244,7 +243,6 @@ function Dashboard() {
             </div>
 
             <div className={styles["header-right"]}>
-              {/* Role Dropdown */}
               {(userData?.role === "ADMIN" ||
                 userData?.role === "OPERATOR") && (
                 <div className={styles["dropdown-wrapper"]}>
@@ -283,7 +281,6 @@ function Dashboard() {
                 </div>
               )}
 
-              {/* Tabs */}
               <div className={styles["tabs"]}>
                 <button
                   className={`${styles["tab"]} ${
@@ -313,7 +310,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Tab Content */}
           <div className={styles["content"]}>
             {activeTab === "analytics" && (
               <div className={styles["analytics-content"]}>
