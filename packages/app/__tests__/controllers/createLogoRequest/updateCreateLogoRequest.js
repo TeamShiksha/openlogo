@@ -2,13 +2,20 @@ const request = require("supertest");
 const { STATUS_CODES } = require("node:http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
-const { CreateLogoRequestService } = require("../../../services");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const {
+  CreateLogoRequestService,
+  UserSessionService,
+  UserService,
+} = require("../../../services");
+const {
+  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
 describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Request", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
     process.env.KEY = "logos";
   });
@@ -18,20 +25,33 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
     delete process.env.KEY;
   });
 
   const mockCreateLogoId = "507f1f77bcf86cd799439011";
 
+  /**
+   * Helper to mock valid session + user
+   */
+  const mockValidSession = (userIndex) => {
+    const mockUser = new Users(MOCK_USERS[userIndex]);
+
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[userIndex]);
+
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockUser);
+
+    return mockUser;
+  };
+
   it("should return 422 if validation fails for invalid status", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     const res = await request(app)
       .put(`/api/create-logo-request/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ status: "INVALID_STATUS", comment: "test" });
 
     expect(res.statusCode).toEqual(422);
@@ -39,8 +59,7 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
   });
 
   it("should return 404 if created logo not found", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     jest
       .spyOn(CreateLogoRequestService.prototype, "getLogoById")
@@ -48,7 +67,7 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
 
     const res = await request(app)
       .put(`/api/create-logo-request/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
     expect(res.statusCode).toEqual(404);
@@ -60,8 +79,7 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
   });
 
   it("should return 409 if logo request already processed", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     const mockCreatedLogo = {
       _id: mockCreateLogoId,
@@ -72,13 +90,14 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
     jest
       .spyOn(CreateLogoRequestService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
+
     jest
       .spyOn(CreateLogoRequestService.prototype, "respondToLogo")
       .mockResolvedValue({ alreadyProcessed: true });
 
     const res = await request(app)
       .put(`/api/create-logo-request/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
     expect(res.statusCode).toEqual(409);
@@ -90,8 +109,7 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
   });
 
   it("should return 200 on successful update", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     const mockCreatedLogo = {
       _id: mockCreateLogoId,
@@ -102,13 +120,14 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
     jest
       .spyOn(CreateLogoRequestService.prototype, "getLogoById")
       .mockResolvedValue(mockCreatedLogo);
+
     jest
       .spyOn(CreateLogoRequestService.prototype, "respondToLogo")
       .mockResolvedValue({ modifiedCount: 1 });
 
     const res = await request(app)
       .put(`/api/create-logo-request/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
     expect(res.statusCode).toEqual(200);
@@ -130,12 +149,11 @@ describe("PUT /api/create-logo-request/:createLogoId - Update Create Logo Reques
   });
 
   it("should return 401 for customer role (not authorized)", async () => {
-    const mockCustomer = new Users(MOCK_USERS[1]);
-    const token = mockCustomer.generateJWT();
+    mockValidSession(1); // CUSTOMER
 
     const res = await request(app)
       .put(`/api/create-logo-request/${mockCreateLogoId}`)
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ status: "RESOLVED", comment: "Approved" });
 
     expect(res.statusCode).toEqual(401);

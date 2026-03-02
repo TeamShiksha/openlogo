@@ -1,14 +1,16 @@
 const request = require("supertest");
-const { ImageService } = require("../../../services");
-const { Users } = require("../../../models");
+const { ImageService, UserSessionService } = require("../../../services");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
-const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
+const {
+  MOCK_IMAGES,
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
+} = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
 describe("PUT /api/catalog/logo", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "test-secret-key";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
     process.env.KEY = "logos";
   });
@@ -18,18 +20,18 @@ describe("PUT /api/catalog/logo", () => {
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
     delete process.env.KEY;
   });
 
   it("Should return 404 if pre existing image metadata not found, for admin", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(ImageService.prototype, "getImageById").mockResolvedValue(null);
     const res = await request(app)
       .put("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({ id: "615f1b5e6b1f1c3f8a123456" });
     expect(res.statusCode).toEqual(404);
     expect(res.body).toEqual({
@@ -40,10 +42,10 @@ describe("PUT /api/catalog/logo", () => {
   });
 
   it("should return 500 if image update throws error", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
     const mockPreviousImage = MOCK_IMAGES[0];
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
 
     jest
       .spyOn(ImageService.prototype, "getImageById")
@@ -55,7 +57,7 @@ describe("PUT /api/catalog/logo", () => {
 
     const res = await request(app)
       .put("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         id: MOCK_IMAGES[0]._id.toString(),
         companyUri: "https://www.google.com",
@@ -67,10 +69,10 @@ describe("PUT /api/catalog/logo", () => {
   });
 
   it("Should return 200 if Image Updates", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
-
     const mockPreviousImage = MOCK_IMAGES[0];
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
 
     jest
       .spyOn(ImageService.prototype, "getImageById")
@@ -94,7 +96,7 @@ describe("PUT /api/catalog/logo", () => {
 
     const res = await request(app)
       .put("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send(updatePayload);
 
     expect(res.body).toEqual({

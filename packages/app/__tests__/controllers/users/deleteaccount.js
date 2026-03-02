@@ -1,28 +1,24 @@
 const request = require("supertest");
-const { MOCK_USERS } = require("../../../utils/mocks");
-const { Users } = require("../../../models");
-const { UserService } = require("../../../services");
+const { MOCK_SESSION_ID, MOCK_USER_SESSIONS } = require("../../../utils/mocks");
+const { UserService, UserSessionService } = require("../../../services");
 const app = require("../../../server");
 
 describe("Delete User Account", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
   });
   beforeEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
   });
 
   it("500 - Unexpected Error", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = { userId: "mockUserId@123" };
-
     // Spy on the actual function used in controller
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest
       .spyOn(UserService.prototype, "markDeleteUser")
       .mockImplementation(() => {
@@ -31,24 +27,21 @@ describe("Delete User Account", () => {
 
     const response = await request(app)
       .delete("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(500);
   });
 
   it("200 - User account deleted", async () => {
-    const mockUserModel = new Users(MOCK_USERS[1]);
-    const mockToken = mockUserModel.generateJWT();
-    const mockInput = { userId: "mockUserId@123" };
-
     // Spy on markDeleteUser function
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
     jest.spyOn(UserService.prototype, "markDeleteUser").mockResolvedValue(true);
 
     const response = await request(app)
       .delete("/api/user/me")
-      .set("Cookie", `jwt=${mockToken}`)
-      .send(mockInput);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(200);
 

@@ -2,13 +2,20 @@ const request = require("supertest");
 const { STATUS_CODES } = require("node:http");
 const app = require("../../../server");
 const { Users } = require("../../../models");
-const { CreateLogoRequestService } = require("../../../services");
-const { MOCK_USERS } = require("../../../utils/mocks");
+const {
+  CreateLogoRequestService,
+  UserSessionService,
+  UserService,
+} = require("../../../services");
+const {
+  MOCK_USERS,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
 describe("GET /api/create-logo-request - Get Create Logo Request", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
     process.env.KEY = "logos";
   });
@@ -18,26 +25,38 @@ describe("GET /api/create-logo-request - Get Create Logo Request", () => {
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
     delete process.env.KEY;
   });
 
+  /**
+   * Helper: mock valid session + user
+   */
+  const mockValidSession = (userIndex) => {
+    const mockUser = new Users(MOCK_USERS[userIndex]);
+
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[userIndex]);
+
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockUser);
+
+    return mockUser;
+  };
+
   it("should return 422 if invalid query params provided", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     const res = await request(app)
       .get("/api/create-logo-request?page=invalid&limit=abc")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.statusCode).toEqual(422);
     expect(res.body.error).toEqual(STATUS_CODES[422]);
   });
 
   it("should return 200 with empty results when no logos exist", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     jest
       .spyOn(CreateLogoRequestService.prototype, "getPaginatedCreateLogos")
@@ -50,7 +69,7 @@ describe("GET /api/create-logo-request - Get Create Logo Request", () => {
 
     const res = await request(app)
       .get("/api/create-logo-request?page=1&limit=10&tab=active")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toMatchObject({
@@ -64,8 +83,7 @@ describe("GET /api/create-logo-request - Get Create Logo Request", () => {
   });
 
   it("should return 200 with paginated results", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    mockValidSession(2); // ADMIN
 
     const mockData = [
       {
@@ -110,7 +128,7 @@ describe("GET /api/create-logo-request - Get Create Logo Request", () => {
 
     const res = await request(app)
       .get("/api/create-logo-request?page=1&limit=10&tab=active")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.statusCode).toEqual(200);
@@ -128,12 +146,11 @@ describe("GET /api/create-logo-request - Get Create Logo Request", () => {
   });
 
   it("should return 401 for customer role (not authorized)", async () => {
-    const mockCustomer = new Users(MOCK_USERS[1]);
-    const token = mockCustomer.generateJWT();
+    mockValidSession(1); // CUSTOMER (assuming index 1 is customer)
 
     const res = await request(app)
       .get("/api/create-logo-request?page=1&limit=10")
-      .set("Cookie", `jwt=${token}`);
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(res.statusCode).toEqual(401);
   });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
@@ -29,6 +29,7 @@ const ResetPassword = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const hasValidatedToken = useRef(false);
 
   const token = searchParams.get("token");
   const {
@@ -62,6 +63,10 @@ const ResetPassword = () => {
         setLocalErrorMsg("Invalid or missing token.");
         return;
       }
+
+      if (hasValidatedToken.current) return;
+      hasValidatedToken.current = true;
+
       const success = await validateTokenRequest();
       if (success) {
         setTokenValid(true);
@@ -70,7 +75,7 @@ const ResetPassword = () => {
       }
     };
     validateToken();
-  }, [token, tokenErrorMsg]);
+  }, [token]);
 
   useEffect(() => {
     if (focusedField === "confirmPassword") {

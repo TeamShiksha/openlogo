@@ -1,14 +1,16 @@
 const request = require("supertest");
-const { ImageService } = require("../../../services");
-const { Users } = require("../../../models");
+const { ImageService, UserSessionService } = require("../../../services");
 const { STATUS_CODES } = require("http");
 const app = require("../../../server");
-const { MOCK_USERS, MOCK_IMAGES } = require("../../../utils/mocks");
+const {
+  MOCK_IMAGES,
+  MOCK_USER_SESSIONS,
+  MOCK_SESSION_ID,
+} = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 
 describe("POST /api/catalog/logo", () => {
   beforeAll(() => {
-    process.env.JWT_SECRET = "Your_JWT_SECRET";
     process.env.CLIENT_PROXY_URL = "https://validcorsorigin.com";
     process.env.KEY = "logos";
   });
@@ -18,20 +20,20 @@ describe("POST /api/catalog/logo", () => {
   });
 
   afterAll(() => {
-    delete process.env.JWT_SECRET;
     delete process.env.CLIENT_PROXY_URL;
     delete process.env.KEY;
   });
 
   it("should return 400 if image already exist as a response for admin", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockResolvedValue(MOCK_IMAGES[0]);
     const res = await request(app)
       .post("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
@@ -47,8 +49,9 @@ describe("POST /api/catalog/logo", () => {
   });
 
   it("should return 500 if imageData is not present in response for admin", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest
       .spyOn(ImageService.prototype, "getImageByCompanyName")
       .mockResolvedValue(null);
@@ -59,7 +62,7 @@ describe("POST /api/catalog/logo", () => {
 
     const res = await request(app)
       .post("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyUri: "https://google.com/",
         size: 1024,
@@ -74,8 +77,9 @@ describe("POST /api/catalog/logo", () => {
   });
 
   it("should return 200 if imageData present in response for admin", async () => {
-    const mockAdmin = new Users(MOCK_USERS[2]);
-    const token = mockAdmin.generateJWT();
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[2]);
     jest.spyOn(ImageService.prototype, "createImageData").mockResolvedValue({
       imageData: {
         id: "651f3a8d2b4c9e12f7a9d3f4",
@@ -84,7 +88,7 @@ describe("POST /api/catalog/logo", () => {
     });
     const res = await request(app)
       .post("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
@@ -105,15 +109,13 @@ describe("POST /api/catalog/logo", () => {
   });
 
   it("should return 500 if imageData is not present in response for operator", async () => {
-    const mockAdmin = new Users(MOCK_USERS[3]);
-    const token = mockAdmin.generateJWT();
     jest
       .spyOn(ImageService.prototype, "createImageData")
       .mockResolvedValue(null);
 
     const res = await request(app)
       .post("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
@@ -129,8 +131,6 @@ describe("POST /api/catalog/logo", () => {
   });
 
   it("should return 200 if imageData present in response for operator", async () => {
-    const mockAdmin = new Users(MOCK_USERS[3]);
-    const token = mockAdmin.generateJWT();
     jest.spyOn(ImageService.prototype, "createImageData").mockResolvedValue({
       imageData: {
         id: "651f3a8d2b4c9e12f7a9d3f4",
@@ -139,7 +139,7 @@ describe("POST /api/catalog/logo", () => {
     });
     const res = await request(app)
       .post("/api/catalog/logo")
-      .set("Cookie", `jwt=${token}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
       .send({
         companyName: "GOOGLE",
         companyUri: "https://google.com/",
