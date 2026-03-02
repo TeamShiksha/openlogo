@@ -215,3 +215,242 @@
     font-size: 0.8rem;
   }
 }
+
+/* ===== Signup Page Redesign Styles ===== */
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 0;
+}
+
+.signup-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.1rem;
+}
+
+.signup-icon {
+  width: 36px;
+  height: 36px;
+  background-color: var(--primary-focus);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.2rem;
+}
+
+.signup-icon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+}
+
+.signup-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 0.1rem;
+  text-align: center;
+}
+
+.signup-subtitle {
+  font-size: 0.75rem;
+  color: var(--description);
+  text-align: center;
+}
+
+/* Override CustomInput margin inside signup form for proper spacing */
+.signup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+/* Override ALL CustomInput .group margins inside signup fields */
+.signup-fields div[class*="group"] {
+  margin-top: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+/* --- Password Strength Card --- */
+.strength-card {
+  background-color: rgba(124, 58, 237, 0.04);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.15rem;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.strength-bar {
+  height: 5px;
+  flex: 1;
+  border-radius: 9999px;
+  background-color: #b4aee8;
+  transition: background-color 0.35s ease;
+}
+
+.strength-bar-active {
+  background-color: #10b981;
+}
+
+.criteria-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: #4b5563;
+  font-weight: 600;
+  width: calc(50% - 0.3rem);
+  transition: color 0.3s ease;
+}
+
+.criteria-item.met {
+  color: #10b981;
+}
+
+.criteria-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #7c73c0;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.criteria-item.met .criteria-icon {
+  color: #10b981;
+}
+
+.gradient-button {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(to right, var(--primary), #7c3aed);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+  margin-top: 0.3rem;
+}
+
+.gradient-button:hover {
+  background: linear-gradient(to right, #4338ca, #6d28d9);
+  transform: scale(1.02);
+}
+
+.gradient-button:active {
+  transform: scale(0.98);
+}
+
+.gradient-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.signup-divider {
+  position: relative;
+  margin: 0.5rem 0;
+}
+
+.signup-divider-line {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.signup-divider-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--white);
+  padding: 0 0.75rem;
+  font-size: 0.75rem;
+  color: var(--label-color);
+}
+
+.guest-button {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--black);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.guest-button:hover {
+  background-color: var(--primary-focus);
+}
+
+.signup-footer-terms {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--label-color);
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+.signup-footer-terms a {
+  text-decoration: underline;
+  color: var(--label-color);
+  transition: color 0.2s ease;
+}
+
+.signup-footer-terms a:hover {
+  color: var(--description);
+}
+
+.signup-footer-login {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--description);
+  margin-top: 0.5rem;
+  cursor: default;
+}
+
+.signup-footer-login-clickable {
+  cursor: pointer;
+}
+
+.signup-footer-login-link {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.signup-footer-login-link:hover {
+  color: var(--primary-hover);
+}
