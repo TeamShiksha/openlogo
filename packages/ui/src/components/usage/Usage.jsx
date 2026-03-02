@@ -53,7 +53,6 @@ function Usage({ usageCount, usageLimit }) {
     }
   }, [percentage, usageCount, usageLimit, toast, billingCycleStartDate]);
 
-  // SVG circle calculations
   const radius = 60;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -62,8 +61,13 @@ function Usage({ usageCount, usageLimit }) {
     <div className={styles["usage-container"]}>
       <div className={styles["usage-content"]}>
         <div className={styles["donut-wrapper"]}>
-          <svg width="160" height="160" viewBox="0 0 160 160">
-            {/* Background circle */}
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 160 160"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            {" "}
             <circle
               className={styles["donut-circle"]}
               stroke="var(--border-color)"
@@ -73,7 +77,6 @@ function Usage({ usageCount, usageLimit }) {
               cx="80"
               cy="80"
             />
-            {/* Progress circle */}
             <circle
               className={styles["donut-circle"]}
               stroke="#818cf8"

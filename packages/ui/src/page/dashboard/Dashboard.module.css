@@ -1,7 +1,7 @@
 /* Dashboard Container */
 .dashboard-container {
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--bg-color);
   padding: 3% 8%;
 }
 
@@ -160,7 +160,7 @@
 
 .analytics-grid {
   display: grid;
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 1fr minmax(0, 350px);
   gap: 1.5rem;
 }
 
@@ -235,6 +235,8 @@
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .card-title {

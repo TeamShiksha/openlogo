@@ -1,6 +1,10 @@
 .usage-container {
   width: 100%;
-  height: 100%;
+  max-width: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .usage-content {
@@ -9,13 +13,18 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  padding: 1rem 0;
+  padding: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .donut-wrapper {
   position: relative;
   width: 160px;
   height: 160px;
+  max-width: 100%;
+  flex-shrink: 0;
 }
 
 .donut-circle {
@@ -41,24 +50,34 @@
   gap: 0.5rem;
   text-align: left;
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .usage-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .usage-label {
   color: var(--description);
   font-size: 0.875rem;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .usage-value {
   color: var(--primary);
   font-weight: 700;
   font-size: 1.125rem;
+  min-width: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .usage-reset {

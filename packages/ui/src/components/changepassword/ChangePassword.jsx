@@ -99,7 +99,6 @@ function ChangePassword({ isGuest }) {
     >
       {CHANGE_PASSWORD_FIELDS.map((field) => {
         const isCurrentPassword = field.name === "currPassword";
-        const isNewPassword = field.name === "newPassword";
         const showPassword = isCurrentPassword
           ? showCurrentPassword
           : showNewPassword;

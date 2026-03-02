@@ -251,7 +251,7 @@ export default function Graph() {
         x: {
           ...baseOptions.scales.x,
           type: "category",
-          offset: true,
+          offset: false,
           align: "center",
           ticks: {
             ...baseOptions.scales.x.ticks,
@@ -281,7 +281,7 @@ export default function Graph() {
           label: "Requests",
           data: chartData.dataPoints,
           borderWidth: 2,
-          pointRadius: 4, // ← Increased
+          pointRadius: 4,
           pointHoverRadius: 6,
           pointBackgroundColor: "#ffffff",
           pointBorderColor: "#4f46e5",

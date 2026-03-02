@@ -4,21 +4,15 @@ import {
   screen,
   waitFor,
   within,
-  act,
 } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   UserContext,
   AuthContext,
   ToastContext,
 } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
-import {
-  API_KEY_TABLE,
-  BUTTON_TEXT,
-  DASHBOARD_CARDS_TITLE,
-  MOCK_USER_DATA,
-} from "../../../src/utils/Constants";
+import { API_KEY_TABLE, MOCK_USER_DATA } from "../../../src/utils/Constants";
 import Dropdown from "../../../src/components/common/dropdown/Dropdown";
 
 /* ---------------- mocks ---------------- */
