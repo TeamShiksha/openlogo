@@ -597,7 +597,7 @@ async function resetPasswordController(req, res, next) {
  */
 async function siginWithMFAController(req, res, next) {
   try {
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const userSessionService = new UserSessionService();
 
     const { token } = req.body;
@@ -610,7 +610,8 @@ async function siginWithMFAController(req, res, next) {
       });
     }
 
-    const mfaSession = await mfa.findAndUpdateActiveSession(mfaSessionId);
+    const mfaSession =
+      await mfaService.findAndUpdateActiveSession(mfaSessionId);
     if (!mfaSession) {
       return res.status(401).json({
         error: STATUS_CODES[401],
@@ -621,7 +622,7 @@ async function siginWithMFAController(req, res, next) {
 
     const user = mfaSession.userId;
 
-    const isVerified = await mfa.mfaLogin(user, token);
+    const isVerified = await mfaService.mfaLogin(user, token);
     if (!isVerified) {
       return res.status(400).json({
         error: STATUS_CODES[400],
@@ -640,12 +641,12 @@ async function siginWithMFAController(req, res, next) {
       });
     }
     const currentDate = new Date();
-    const oneDayValidityTimestamp = new Date(
+    const oneWeekValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
     );
 
     const sessionCookieOptions = {
-      expires: oneDayValidityTimestamp,
+      expires: oneWeekValidityTimestamp,
       sameSite: "strict",
       httpOnly: true,
       domain: isProduction ? ".openlogo.fyi" : "localhost",
@@ -674,7 +675,7 @@ async function siginWithMFAController(req, res, next) {
 async function enableMFAController(req, res, next) {
   try {
     const userService = new UserService();
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
 
@@ -686,7 +687,7 @@ async function enableMFAController(req, res, next) {
       });
     }
 
-    const { qrCode } = await mfa.enableMfa(user);
+    const { qrCode } = await mfaService.enableMfa(user);
     if (!qrCode) {
       return res.status(500).json({
         error: STATUS_CODES[500],
@@ -715,7 +716,7 @@ async function enableMFAController(req, res, next) {
 async function verifyMFAController(req, res, next) {
   try {
     const userService = new UserService();
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const { token } = req.body;
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
@@ -736,7 +737,7 @@ async function verifyMFAController(req, res, next) {
         statusCode: 400,
       });
     }
-    const isVerified = await mfa.verifyMfa(user, token);
+    const isVerified = await mfaService.verifyMfa(user, token);
     if (!isVerified) {
       return res.status(400).json({
         error: STATUS_CODES[400],
@@ -744,7 +745,7 @@ async function verifyMFAController(req, res, next) {
         statusCode: 400,
       });
     }
-    const isUpdated = await mfa.updateMfaUser(user);
+    const isUpdated = await mfaService.updateMfaUser(user);
     if (!isUpdated) {
       return res.status(500).json({
         error: STATUS_CODES[500],
@@ -767,7 +768,7 @@ async function verifyMFAController(req, res, next) {
 async function cancelMFAController(req, res, next) {
   try {
     const userService = new UserService();
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
     if (!user) {
@@ -778,7 +779,7 @@ async function cancelMFAController(req, res, next) {
       });
     }
 
-    const isDisabled = await mfa.disableMfa(user);
+    const isDisabled = await mfaService.disableMfa(user);
     if (!isDisabled) {
       return res.status(500).json({
         error: STATUS_CODES[500],
@@ -803,7 +804,7 @@ async function cancelMFAController(req, res, next) {
 async function disableMFAController(req, res, next) {
   try {
     const userService = new UserService();
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const { password } = req.body;
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
@@ -824,7 +825,7 @@ async function disableMFAController(req, res, next) {
       });
     }
 
-    const isDisabled = await mfa.disableMfa(user);
+    const isDisabled = await mfaService.disableMfa(user);
     if (!isDisabled) {
       return res.status(500).json({
         error: STATUS_CODES[500],
@@ -847,7 +848,7 @@ async function disableMFAController(req, res, next) {
 async function mfaStatusController(req, res, next) {
   try {
     const { userId } = req.userData;
-    const mfa = new MfaService();
+    const mfaService = new MfaService();
     const userService = new UserService();
     const user = await userService.getUser(userId);
     if (!user) {
@@ -857,7 +858,7 @@ async function mfaStatusController(req, res, next) {
         statusCode: 404,
       });
     }
-    const isMfaEnabled = await mfa.getMfaStatus(user);
+    const isMfaEnabled = await mfaService.getMfaStatus(user);
     return res.status(200).json({ statusCode: 200, isMfaEnabled });
   } catch (error) {
     next(error);
