@@ -7,6 +7,8 @@
 - [Setting up AWS](#setting-up-aws)
 - [Hostname mapping](#hostname-mapping)
 - [Deployment flow](#deployment-flow)
+- [User flow](#user-flow)
+- [Admin flow](#admin-flow)
 - [Postman API Collection](#postman-api-collection)
 - [Collections Uses](#collections-uses)
 - [API Endpoints Documentation](#api-endpoints-documentation)
@@ -129,6 +131,15 @@ For windows, modify `\etc\hosts` file located inside `System32\drivers` folder a
 
 - [deploy-frontend.yaml](../../.github/workflows/deploy-frontend.yaml)
 - [deploy-backend.yaml](../../.github/workflows/deploy-backend.yaml)
+
+## User flow 
+ ![User flow](./Flow%20Diagrams/api_key_generation.png)
+ ![User flow](./Flow%20Diagrams/logo_retrieval.png)
+ ![User flow](./Flow%20Diagrams/signIn.png)
+ ![User flow](./Flow%20Diagrams/signUp.png)
+
+ ## Admin flow
+ ![Admin flow](./Flow%20Diagrams/admin_add_logo.png)
 
 ## Postman API Collection
 
