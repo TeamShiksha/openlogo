@@ -80,7 +80,6 @@
   width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 2;
 }
 
 .logo {
@@ -195,7 +194,7 @@
   border: 1px solid var(--border);
   border-radius: 0.6rem;
   padding: 0.5rem 0.65rem;
-  margin-top: 0.2rem;
+  margin-top: 0.5 rem;
   margin-bottom: 0.15rem;
   width: 400px;
 }
