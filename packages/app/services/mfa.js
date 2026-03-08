@@ -26,11 +26,11 @@ class MfaService {
    * @param {string} [params.verificationToken] - Verification Token
    * @returns {Promise<Object>} - Created session object.
    */
-  createSession({ userId }) {
+  async createSession({ userId }) {
     const sessionId = this.generateSessionId();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    return this.verificationSessionRepository.create({
+    return await this.verificationSessionRepository.create({
       userId,
       sessionId,
       sessionType: this.TEMPORARY_SESSION_TYPES.MFA,
@@ -38,8 +38,8 @@ class MfaService {
     });
   }
 
-  findAndUpdateActiveSession(sessionId) {
-    return this.verificationSessionRepository.findAndUpdateActiveSession({
+  async findAndUpdateActiveSession(sessionId) {
+    return await this.verificationSessionRepository.findAndUpdateActiveSession({
       sessionType: this.TEMPORARY_SESSION_TYPES.MFA,
       sessionId,
     });
