@@ -80,7 +80,8 @@ const Messages = {
   IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
-  INCORRECT_PASSWORD: "Current password is incorrect",
+  INCORRECT_PASSWORD: "Current password is incorrect", 
+  SAME_PASSWORD:"Current password is same as old password",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
