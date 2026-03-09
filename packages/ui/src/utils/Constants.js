@@ -396,6 +396,8 @@ export const BUTTON_TEXT = {
 
 export const BRANDING = {
   imageSrc: "openlogo.svg",
+  imageSrcDark: "openlogo-white.svg",
+  imageAlt: "Brand Logo",
   brandName: "Openlogo",
   poweredByText: "Powered by TeamShiksha",
   poweredByLink: "https://team.shiksha",

@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed, User } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
+import { BRANDING, BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
+import { useTheme } from "../../hooks/useTheme.js";
 
 const SignIn = ({ toggleForm, onClose }) => {
   const toast = useToast();
@@ -24,6 +25,7 @@ const SignIn = ({ toggleForm, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const { isDarkMode } = useTheme();
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -170,7 +172,11 @@ const SignIn = ({ toggleForm, onClose }) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <img src="/openlogo.svg" alt="openlogo" className={styles.logo} />
+        <img
+          src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
+          alt="openlogo"
+          className={styles.logo}
+        />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
         <p className={styles.description}>{SIGNIN.description}</p>
 
