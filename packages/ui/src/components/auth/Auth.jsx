@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Modal from "../common/modal/Modal";
 import SignUp from "./Signup";
 import SignIn from "./Signin";
+import styles from "./Auth.module.css";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -21,7 +22,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen} customWidth={"500px"}>
+    <Modal onClose={onClose} isOpen={isOpen} customWidth={"500px"} customClass={styles["auth-modal"]}>
       <div
         style={{ opacity: isTransitioning ? 0 : 1, transition: "opacity 0.3s" }}
       >

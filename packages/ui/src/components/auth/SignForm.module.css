@@ -11,12 +11,12 @@
   text-align: center;
   font-size: 1.6rem;
   color: var(--black);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.15rem;
 }
 
 .description {
   font-size: 0.8rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
   color: var(--description);
 }
 
@@ -59,6 +59,10 @@
   cursor: pointer;
   color: var(--primary);
   font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
 }
 
 .forgot-password {
@@ -83,7 +87,7 @@
 }
 
 .logo {
-  width: 60px;
+  width: 50px;
   height: auto;
 }
 
@@ -91,7 +95,7 @@
   border-top: 1px solid var(--description);
   opacity: 0.2;
   width: 100%;
-  margin: 1rem 0;
+  margin: 0.35rem 0;
 }
 
 .cross {
@@ -186,16 +190,16 @@
 
 /* Override ALL CustomInput .group margins inside signup fields */
 .signup-fields div[class*="group"] {
-  margin-top: 6px !important;
-  margin-bottom: 6px !important;
+  margin-top: 3px !important;
+  margin-bottom: 3px !important;
 }
 
 .strength-card {
   border: 1px solid var(--border);
   border-radius: 0.6rem;
-  padding: 0.5rem 0.65rem;
-  margin-top: 0.5 rem;
-  margin-bottom: 0.15rem;
+  padding: 0.3rem 0.65rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.1rem;
   width: 400px;
 }
 
@@ -259,7 +263,7 @@
 
 .signup-divider {
   position: relative;
-  margin: 0.5rem 0;
+  margin: 0.2rem 0;
 }
 
 .signup-divider-line {
@@ -300,7 +304,7 @@
   text-align: center;
   font-size: 0.68rem;
   color: var(--label-color);
-  margin-top: 0.4rem;
+  margin-top: 0.1rem;
   line-height: 1.5;
 }
 

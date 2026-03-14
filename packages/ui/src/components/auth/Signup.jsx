@@ -83,7 +83,7 @@ function SignUp({ toggleForm, onClose }) {
       { label: "8+ characters", met: pwd.length >= 8 },
       { label: "Uppercase", met: /[A-Z]/.test(pwd) },
       { label: "Lowercase", met: /[a-z]/.test(pwd) },
-      { label: "Number (0-9)", met: /[0-9]/.test(pwd) },
+      { label: "Number (0-9)", met: /\d/.test(pwd) },
       { label: "Special char", met: /[^A-Za-z0-9]/.test(pwd) },
     ];
   }, [formValues.password]);
@@ -237,7 +237,7 @@ function SignUp({ toggleForm, onClose }) {
             ))}
           </ul>
         </div>
-
+      
         {/* Submit button */}
         <Button
           type="submit"
@@ -278,20 +278,15 @@ function SignUp({ toggleForm, onClose }) {
       {/* Already have an account */}
       <hr className={styles.separator} />
       <div className={styles["footer-wrapper"]}>
-        <p onClick={toggleForm} className={styles.switch}>
+        <p className={styles.switch}>
           {SIGNUP.footerText}{" "}
-          <span
+          <button
+            type="button"
             className={styles["toggler"]}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                toggleForm();
-              }
-            }}
+            onClick={toggleForm}
           >
             Log in
-          </span>
+          </button>
         </p>
       </div>
     </>
