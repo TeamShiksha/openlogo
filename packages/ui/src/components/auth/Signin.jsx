@@ -11,7 +11,8 @@ import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
 
-const SignIn = ({ toggleForm, onClose }) => {
+const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
+  console.log("redirectAfterLogin:", redirectAfterLogin);
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
@@ -137,7 +138,9 @@ const SignIn = ({ toggleForm, onClose }) => {
           setFormData(SIGNIN.initialValues);
           setIsAuthenticated(true);
           onClose();
-          navigate("/dashboard");
+          if (window.location.pathname !== redirectAfterLogin) {
+            navigate(redirectAfterLogin);
+          }
           toast.success(MESSAGES.SIGN_IN_SUCCESS);
         }
         setFocusedField(null);
@@ -154,7 +157,9 @@ const SignIn = ({ toggleForm, onClose }) => {
       setIsAuthenticated(true);
       setIsSubmit(false);
       onClose();
-      navigate("/dashboard");
+      if (window.location.pathname !== redirectAfterLogin) {
+        navigate(redirectAfterLogin);
+      }
       toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
     }
   };
@@ -286,6 +291,7 @@ const SignIn = ({ toggleForm, onClose }) => {
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func,
+  redirectAfterLogin: PropTypes.string,
 };
 
 export default SignIn;
