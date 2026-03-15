@@ -550,7 +550,6 @@ async function resetPasswordController(req, res, next) {
       });
     }
     const { userId: user } = resetSession;
-
     if (resetSession.token !== value.token) {
       return res.status(403).json({
         error: STATUS_CODES[403],
@@ -558,14 +557,19 @@ async function resetPasswordController(req, res, next) {
         statusCode: 403,
       });
     }
-
     const userToken = await userTokenService.fetchUserToken(value.token);
-
+    const isSameAsOldPassword = await user.matchPassword(value.newPassword);
+    if (isSameAsOldPassword) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: Messages.SAME_PASSWORD,
+        statusCode: 400,
+      });
+    }
     const result = await userService.updateUserPassword(
       user,
       value.newPassword
     );
-
     if (!result) {
       return res.status(400).json({
         error: STATUS_CODES[400],
