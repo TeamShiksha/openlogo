@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 
 /**
  * Encrypts and decrypts data using AES-256-GCM Algorithm.

@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 const VerificationSessionRepository = require("../repositories/verificationSession");
 const { UsersRepository } = require("../repositories");
 const { TEMPORARY_SESSION_TYPES } = require("../utils/constants");

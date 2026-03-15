@@ -19,7 +19,7 @@ class UserService {
   /**
    * Gets User by Id.
    * @param {string} userId - The userId of the user.
-   * @returns {Object} - User Object.
+   * @returns {Promise<Object>} - User Object.
    */
   async getUser(userId) {
     return await this.userRepository.getById(userId);

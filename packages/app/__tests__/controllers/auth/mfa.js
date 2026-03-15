@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const { Users } = require("../../../models");
 const {
