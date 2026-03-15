@@ -219,6 +219,7 @@ export default function CreateLogo({ openAuthModal }) {
   const handleUploadClick = () => {
     if (!isAuthenticated || isGuest) {
       openAuthModal("/createlogo");
+      setIsUploadModalOpen(true);
       return;
     }
     setIsUploadModalOpen(true);
