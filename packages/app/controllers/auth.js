@@ -7,6 +7,7 @@ const {
   SendEmailService,
   UserSessionService,
   PasswordResetService,
+  MfaService,
 } = require("../services");
 const {
   signupPayloadSchema,
@@ -130,6 +131,7 @@ async function signinController(req, res, next) {
     const userService = new UserService();
     const sendEmailService = new SendEmailService();
     const userSessionService = new UserSessionService();
+    const mfaSessionService = new MfaService();
 
     let user = {};
 
@@ -188,6 +190,22 @@ async function signinController(req, res, next) {
           });
         }
       }
+    }
+
+    if (user.mfaEnabled) {
+      const mfaSession = await mfaSessionService.createSession({
+        userId: user._id,
+      });
+      const isProduction = getIsProduction();
+
+      res.cookie("mfaSessionId", mfaSession.sessionId, {
+        httpOnly: true,
+        sameSite: "strict",
+        expires: mfaSession.expiresAt,
+        domain: isProduction ? ".openlogo.fyi" : "localhost",
+      });
+
+      return res.status(200).json({ statusCode: 200, mfaRequired: true });
     }
 
     let session = {};
@@ -571,6 +589,282 @@ async function resetPasswordController(req, res, next) {
   }
 }
 
+/**
+ * Completes MFA sign-in by validating the `mfaSessionId` cookie,
+ * verifying the provided TOTP token, clearing the MFA session,
+ * ensuring/creating a user session, setting the auth session cookie,
+ * and returning a success response. Responds with 401/400 on failure.
+ */
+async function siginWithMFAController(req, res, next) {
+  try {
+    const mfaService = new MfaService();
+    const userSessionService = new UserSessionService();
+
+    const { token } = req.body;
+    const mfaSessionId = req.cookies.mfaSessionId;
+    if (!mfaSessionId) {
+      return res.status(401).json({
+        error: STATUS_CODES[401],
+        message: Messages.VERIFICATION_FAIL,
+        statusCode: 401,
+      });
+    }
+
+    const mfaSession =
+      await mfaService.findAndUpdateActiveSession(mfaSessionId);
+    if (!mfaSession) {
+      return res.status(401).json({
+        error: STATUS_CODES[401],
+        message: Messages.VERIFICATION_FAIL,
+        statusCode: 401,
+      });
+    }
+
+    const user = mfaSession.userId;
+
+    const isVerified = await mfaService.mfaLogin(user, token);
+    if (!isVerified) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: Messages.INCORRECT_PIN,
+        statusCode: 400,
+      });
+    }
+
+    const isProduction = getIsProduction();
+
+    let session = {};
+    session = await userSessionService.userActiveSession(user._id);
+    if (!session) {
+      session = await userSessionService.createSession({
+        userId: user._id,
+      });
+    }
+    const currentDate = new Date();
+    const oneWeekValidityTimestamp = new Date(
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
+
+    const sessionCookieOptions = {
+      expires: oneWeekValidityTimestamp,
+      sameSite: "strict",
+      httpOnly: true,
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    };
+
+    res.clearCookie("mfaSessionId", {
+      httpOnly: true,
+      sameSite: "strict",
+      domain: isProduction ? ".openlogo.fyi" : "localhost",
+    });
+    res.cookie("sessionId", session.sessionId, sessionCookieOptions);
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Initiates MFA setup for the authenticated user.
+ *
+ * Retrieves the user, generates and stores a new MFA secret,
+ * returns the corresponding QR code for authenticator setup,
+ * and responds with appropriate 404/500 errors on failure.
+ */
+async function enableMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const mfaService = new MfaService();
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const { qrCode } = await mfaService.enableMfa(user);
+    if (!qrCode) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: Messages.MFA_FAILED,
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: { qrCode },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Verifies MFA setup for the authenticated user.
+ *
+ * Validates the temporary MFA secret and its expiry,
+ * verifies the provided TOTP token,
+ * promotes the temporary secret to active MFA on success,
+ * and returns appropriate 404/400/500 errors on failure.
+ */
+async function verifyMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const mfaService = new MfaService();
+    const { token } = req.body;
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+    if (
+      !user.mfaTempSecretExpiresAt ||
+      user.mfaTempSecretExpiresAt < Date.now()
+    ) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: Messages.EXPIRED_TOKEN,
+        statusCode: 400,
+      });
+    }
+    const isVerified = await mfaService.verifyMfa(user, token);
+    if (!isVerified) {
+      return res.status(400).json({
+        error: STATUS_CODES[400],
+        message: Messages.INCORRECT_PIN,
+        statusCode: 400,
+      });
+    }
+    const isUpdated = await mfaService.updateMfaUser(user);
+    if (!isUpdated) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: Messages.MFA_FAILED,
+        statusCode: 500,
+      });
+    }
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Cancles MFA for the authenticated user.
+ *
+ * Retrieves the user, removes or deactivates MFA configuration,
+ * and returns appropriate 404/500 errors if the operation fails.
+ */
+async function cancelMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const mfaService = new MfaService();
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const isDisabled = await mfaService.disableMfa(user);
+    if (!isDisabled) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: Messages.MFA_FAILED,
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Disables MFA after password confirmation.
+ *
+ * Retrieves the authenticated user, verifies the provided password,
+ * disables MFA configuration on success,
+ * and returns appropriate 404/500 errors if validation or update fails.
+ */
+async function disableMFAController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const mfaService = new MfaService();
+    const { password } = req.body;
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+
+    const matchPassword = await user.matchPassword(password);
+    if (!matchPassword) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.INCORRECT_EMAIL_PASS,
+        statusCode: 404,
+      });
+    }
+
+    const isDisabled = await mfaService.disableMfa(user);
+    if (!isDisabled) {
+      return res.status(500).json({
+        error: STATUS_CODES[500],
+        message: Messages.MFA_FAILED,
+        statusCode: 500,
+      });
+    }
+
+    return res.status(200).json({ statusCode: 200 });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ *
+ * Returns the MFA status for the authenticated user.
+ */
+
+async function mfaStatusController(req, res, next) {
+  try {
+    const { userId } = req.userData;
+    const mfaService = new MfaService();
+    const userService = new UserService();
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+        statusCode: 404,
+      });
+    }
+    const isMfaEnabled = await mfaService.getMfaStatus(user);
+    return res.status(200).json({ statusCode: 200, isMfaEnabled });
+  } catch (error) {
+    next(error);
+  }
+}
+
 function validateSessionController(req, res) {
   return res.status(200).json({ statusCode: 200, userData: req.userData });
 }
@@ -584,4 +878,10 @@ module.exports = {
   resetPasswordSessionController,
   resetPasswordController,
   validateSessionController,
+  siginWithMFAController,
+  enableMFAController,
+  verifyMFAController,
+  cancelMFAController,
+  disableMFAController,
+  mfaStatusController,
 };
