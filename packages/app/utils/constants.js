@@ -74,14 +74,15 @@ const Messages = {
   UPLOAD_SUCCESS: "Image updated successfully.",
   INVALID_KEY: "Invalid API key.",
   LIMIT_REACHED: "Limit reached. Consider upgrading your plan.",
-  Subscription_Expired: "Please Renew your subscription",
+  SUBSCRIPTION_EXPIRED: "Please Renew your subscription",
   LOGO_NOT_FOUND: "Logo not found.",
   FETCH_ALL_MESSAGE: "Fetched all contact us messages.",
   MESSAGE_NOT_FOUND: "Message not found.",
   IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
-  INCORRECT_PASSWORD: "Current password is incorrect",
+  INCORRECT_PASSWORD: "Current password is incorrect", 
+  SAME_PASSWORD:"Current password is same as old password",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
@@ -108,6 +109,8 @@ const Messages = {
   CREATED_LOGO_NOT_FOUND: "Created logo not found",
   API_KEY_EXPIRED: "This Key has got expired.",
   UPDATE_API_KEY: "This Key needs an update.",
+  MFA_FAILED: "Failed to enable/disable MFA",
+  INCORRECT_PIN: "Incorrect pin. Please try again.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;

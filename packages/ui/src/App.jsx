@@ -18,7 +18,9 @@ import CreateLogo from "./page/createlogo/CreateLogo.jsx";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
-  const openCloseAuthModal = () => {
+  const [redirectAfterLogin, setRedirectAfterLogin] = useState("/dashboard");
+  const openCloseAuthModal = (redirectPath = "/dashboard") => {
+    setRedirectAfterLogin(redirectPath);
     setAuthModal(!authModal);
   };
   return (
@@ -36,7 +38,10 @@ function App() {
           <Route path="/verify" element={<Verification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/release" element={<Release />} />
-          <Route path="/createlogo" element={<CreateLogo />} />
+          <Route
+            path="/createlogo"
+            element={<CreateLogo openAuthModal={openCloseAuthModal} />}
+          />
           <Route
             path="/dashboard"
             element={
@@ -49,7 +54,11 @@ function App() {
         </Routes>
       </div>
       <Footer />
-      <AuthModal isOpen={authModal} onClose={openCloseAuthModal} />
+      <AuthModal
+        isOpen={authModal}
+        onClose={openCloseAuthModal}
+        redirectAfterLogin={redirectAfterLogin}
+      />{" "}
     </div>
   );
 }

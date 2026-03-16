@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { STATUS_CODES } = require("http");
 const { ENDPOINTS } = require("../../../utils/testconstants");
+const { Users } = require("../../../models");
 const {
   UserService,
   UserTokenService,
@@ -9,9 +10,21 @@ const {
 const { Messages } = require("../../../utils/constants");
 
 const app = require("../../../server");
-const { MOCK_SESSION_ID, MOCK_USER_SESSIONS } = require("../../../utils/mocks");
+const {
+  MOCK_SESSION_ID,
+  MOCK_USER_SESSIONS,
+  MOCK_USERS,
+} = require("../../../utils/mocks");
 const dummyPassword =
   require("../../../utils/generatePassword").generatePassword();
+const bcrypt = require("bcryptjs");
+
+function createMockUser(password = dummyPassword) {
+  return new Users({
+    ...MOCK_USERS[0],
+    password: bcrypt.hashSync(password, 10),
+  });
+}
 
 describe("RESET PASSWORD API", () => {
   it("401 - User is not signed in", async () => {
@@ -206,17 +219,27 @@ describe("RESET PASSWORD API", () => {
     });
   });
 
-  it("400 - Failed to update password", async () => {
-    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
+  it("400 - New password cannot be same as old password", async () => {
+    const mockUser = {
+      ...MOCK_USERS[0],
+      matchPassword: jest.fn().mockResolvedValue(true),
+    };
+
     jest
-      .spyOn(UserService.prototype, "updateUserPassword")
-      .mockResolvedValue(null);
+      .spyOn(PasswordResetService.prototype, "findAndUpdateActiveSession")
+      .mockResolvedValue({
+        ...MOCK_USER_SESSIONS[0],
+        userId: mockUser,
+      });
+
     jest
       .spyOn(UserTokenService.prototype, "fetchUserToken")
       .mockResolvedValue({ token: "validToken" });
+
     jest
-      .spyOn(PasswordResetService.prototype, "findAndUpdateActiveSession")
-      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
+      .spyOn(UserTokenService.prototype, "deleteUserToken")
+      .mockResolvedValue({});
+
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", [`resetPasswordSessionId=${MOCK_SESSION_ID}`])
@@ -229,11 +252,44 @@ describe("RESET PASSWORD API", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       error: STATUS_CODES[400],
+      message: Messages.SAME_PASSWORD,
+      statusCode: 400,
+    });
+  });
+  it("400 - Failed to update password", async () => {
+    const mockUser = createMockUser();
+
+    jest
+      .spyOn(PasswordResetService.prototype, "findAndUpdateActiveSession")
+      .mockResolvedValue({
+        ...MOCK_USER_SESSIONS[0],
+        userId: mockUser,
+      });
+
+    jest
+      .spyOn(UserService.prototype, "updateUserPassword")
+      .mockResolvedValue(null);
+
+    jest
+      .spyOn(UserTokenService.prototype, "fetchUserToken")
+      .mockResolvedValue({ token: "validToken" });
+
+    const response = await request(app)
+      .patch(ENDPOINTS.RESET_PASSWORD)
+      .set("Cookie", [`resetPasswordSessionId=${MOCK_SESSION_ID}`])
+      .send({
+        newPassword: dummyPassword + "1",
+        confirmPassword: dummyPassword + "1",
+        token: "validToken",
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: STATUS_CODES[400],
       message: Messages.PASS_FAILED,
       statusCode: 400,
     });
   });
-
   it("403 - Invalid credentials", async () => {
     jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
     jest
@@ -264,26 +320,33 @@ describe("RESET PASSWORD API", () => {
   });
 
   it("200 - Success", async () => {
-    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(null);
+    const mockUser = createMockUser();
+
+    jest
+      .spyOn(PasswordResetService.prototype, "findAndUpdateActiveSession")
+      .mockResolvedValue({
+        ...MOCK_USER_SESSIONS[0],
+        userId: mockUser,
+      });
+
     jest
       .spyOn(UserService.prototype, "updateUserPassword")
       .mockResolvedValue({});
+
     jest
       .spyOn(UserTokenService.prototype, "fetchUserToken")
       .mockResolvedValue({ token: "validToken" });
+
     jest
       .spyOn(UserTokenService.prototype, "deleteUserToken")
       .mockResolvedValue({});
-    jest
-      .spyOn(PasswordResetService.prototype, "findAndUpdateActiveSession")
-      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
     const response = await request(app)
       .patch(ENDPOINTS.RESET_PASSWORD)
       .set("Cookie", [`resetPasswordSessionId=${MOCK_SESSION_ID}`])
       .send({
-        newPassword: dummyPassword,
-        confirmPassword: dummyPassword,
+        newPassword: dummyPassword + "1",
+        confirmPassword: dummyPassword + "1",
         token: "validToken",
       });
 
