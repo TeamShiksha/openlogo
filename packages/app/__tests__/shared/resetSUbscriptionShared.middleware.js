@@ -122,7 +122,6 @@ function describeResetSubscriptionMiddleware(
             usage_count: 100,
             usage_limit: 100,
           });
-
         const res = await getApp().get(apiUrl).query(baseQuery);
         expect(res.status).toBe(403);
         expect(res.body.message).toBe(Messages.LIMIT_REACHED);
@@ -148,7 +147,44 @@ function describeResetSubscriptionMiddleware(
 
     // ── Subscription auto-reset flow ────────────────────────────────────────
 
-    describe("subscription auto reset when end_date passed", () => {
+    describe("subscription auto reset when end_date passed or existing user migration for start_date and end_date", () => {
+      it("resets subscription when start_date and end_date are missing (migration case)", async () => {
+        jest
+          .spyOn(KeyService.prototype, "getApiKey")
+          .mockResolvedValue(VALID_KEY);
+
+        const missingDatesSubscription = {
+          ...VALID_SUBSCRIPTION,
+          start_date: undefined,
+          end_date: undefined,
+          usage_count: 40,
+        };
+
+        const refreshedSubscription = {
+          ...VALID_SUBSCRIPTION,
+          start_date: new Date(),
+          end_date: new Date("2027-01-01T00:00:00Z"),
+          usage_count: 40, // should remain unchanged for migration
+        };
+
+        const getSubscriptionSpy = jest
+          .spyOn(SubscriptionService.prototype, "getSubscription")
+          .mockResolvedValueOnce(missingDatesSubscription)
+          .mockResolvedValueOnce(refreshedSubscription);
+
+        const resetSpy = jest
+          .spyOn(SubscriptionService.prototype, "resetLimitAndExpiryDate")
+          .mockResolvedValue({});
+
+        mockSuccessHandler();
+
+        const res = await getApp().get(apiUrl).query(baseQuery);
+
+        expect(resetSpy).toHaveBeenCalledTimes(1);
+        expect(getSubscriptionSpy).toHaveBeenCalledTimes(2);
+        expect(res.status).toBe(200);
+      });
+
       it("resets and re fetches subscription when end_date is in the past, then proceeds", async () => {
         jest
           .spyOn(KeyService.prototype, "getApiKey")
