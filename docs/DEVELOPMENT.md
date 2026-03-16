@@ -137,6 +137,7 @@ For windows, modify `\etc\hosts` file located inside `System32\drivers` folder a
  ![User flow](./Flow%20Diagrams/logo_retrieval.png)
  ![User flow](./Flow%20Diagrams/signIn.png)
  ![User flow](./Flow%20Diagrams/signUp.png)
+ ![User flow](./Flow%20Diagrams/see-in-action.png)
 
  ## Admin flow
  ![Admin flow](./Flow%20Diagrams/admin_add_logo.png)
