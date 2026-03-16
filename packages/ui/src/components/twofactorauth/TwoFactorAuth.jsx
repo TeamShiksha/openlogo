@@ -132,6 +132,13 @@ export default function TwoFactorAuth() {
     setMode("VERIFIED");
     setPassword("");
   };
+
+  const getStatusText = () => {
+    if (isMFAEnabled) return "Active";
+    if (mode === "SETUP") return "Setup Required";
+    return "Not Configured";
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
@@ -149,11 +156,7 @@ export default function TwoFactorAuth() {
         <span
           className={`${styles.statusBadge} ${isMFAEnabled ? styles.successBadge : styles.pendingBadge}`}
         >
-          {isMFAEnabled
-            ? "Active"
-            : mode === "SETUP"
-              ? "Setup Required"
-              : "Not Configured"}
+          {getStatusText()}
         </span>
       </div>
 
@@ -212,7 +215,7 @@ export default function TwoFactorAuth() {
                       value={verificationCode}
                       onChange={(e) =>
                         setVerificationCode(
-                          e.target.value.replace(/[^0-9]/g, "")
+                          e.target.value.replaceAll(/\D/g, "")
                         )
                       }
                       className={styles.codeInput}

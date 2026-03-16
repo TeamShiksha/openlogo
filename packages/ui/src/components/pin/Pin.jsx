@@ -1,15 +1,22 @@
 import styles from "./Pin.module.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
 import { AuthContext } from "../../contexts/Contexts";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+const PIN_INPUTS = [
+  { id: "p1", index: 0 },
+  { id: "p2", index: 1 },
+  { id: "p3", index: 2 },
+  { id: "p4", index: 3 },
+  { id: "p5", index: 4 },
+  { id: "p6", index: 5 },
+];
 
 function Pin({ onClose }) {
-  const [pin, setPin] = useState(Array(6).fill(""));
+  const [pin, setPin] = useState(new Array(6).fill(""));
   const inputsRef = useRef([]);
   const toast = useToast();
   const { setIsAuthenticated } = useContext(AuthContext);
@@ -28,7 +35,7 @@ function Pin({ onClose }) {
       },
     });
     if (success) {
-      setPin(Array(6).fill(""));
+      setPin(new Array(6).fill(""));
       setIsAuthenticated(true);
       navigate("/dashboard");
       onClose();
@@ -59,17 +66,17 @@ function Pin({ onClose }) {
   return (
     <div className={styles["pin-wrapper"]}>
       <div className={styles["pin-container"]}>
-        {pin.map((digit, index) => (
+        {PIN_INPUTS.map((input) => (
           <input
-            key={index}
-            ref={(el) => (inputsRef.current[index] = el)}
+            key={input.id}
+            ref={(el) => (inputsRef.current[input.index] = el)}
             type="text"
             inputMode="numeric"
             maxLength="1"
             className={styles["pin-input"]}
-            value={digit}
-            onChange={(e) => handleChange(e.target.value, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
+            value={pin[input.index]}
+            onChange={(e) => handleChange(e.target.value, input.index)}
+            onKeyDown={(e) => handleKeyDown(e, input.index)}
           />
         ))}
       </div>
