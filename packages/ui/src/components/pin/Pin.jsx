@@ -28,7 +28,7 @@ function Pin({ onClose }) {
   });
 
   const handleSubmit = async () => {
-    console.log("pin", pin);
+  
     const { success, error } = await fetchRequest({
       data: {
         token: pin.join(""),
