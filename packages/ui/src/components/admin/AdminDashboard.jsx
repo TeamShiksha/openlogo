@@ -11,7 +11,7 @@ function AdminDashboard({
   styles,
 }) {
   return (
-    <div>
+    <div className={styles["admin-dashboard"]} data-testid="admin-dashboard">
       <div className={styles["page-header"]}>
         <div className={styles["title-section"]}>
           <h1 className={styles["dashboard-title"]}>Admin Dashboard</h1>
