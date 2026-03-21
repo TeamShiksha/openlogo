@@ -237,7 +237,7 @@ function SignUp({ toggleForm, onClose }) {
             ))}
           </ul>
         </div>
-      
+
         {/* Submit button */}
         <Button
           type="submit"
@@ -278,16 +278,16 @@ function SignUp({ toggleForm, onClose }) {
       {/* Already have an account */}
       <hr className={styles.separator} />
       <div className={styles["footer-wrapper"]}>
-        <p className={styles.switch}>
+        <div className={styles.switch}>
           {SIGNUP.footerText}{" "}
           <button
             type="button"
             className={styles["toggler"]}
             onClick={toggleForm}
           >
-            Log in
+            {SIGNUP.signinToggleButtonText}
           </button>
-        </p>
+        </div>
       </div>
     </>
   );

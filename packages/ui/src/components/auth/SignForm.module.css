@@ -65,6 +65,10 @@
   font-size: inherit;
 }
 
+.toggler:hover {
+  text-decoration: underline;
+}
+
 .forgot-password {
   margin-left: auto;
   color: var(--primary);

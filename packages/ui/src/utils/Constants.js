@@ -478,6 +478,7 @@ export const SIGNUP = {
     },
   ],
   footerText: "Already have an account ?",
+  signinToggleButtonText: "Login",
   initialValues: {
     name: "",
     email: "",
@@ -500,6 +501,7 @@ export const SIGNIN = {
   ],
   guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
+  signupToggleButtonText: "Create an account",
   initialValues: { email: "", password: "" },
 };
 

@@ -285,10 +285,12 @@ const SignIn = ({ toggleForm, onClose }) => {
         <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
           <User size={18} /> {SIGNIN.guestAccount}
         </p>
-        <p className={styles.switch} onClick={toggleForm}>
+        <div className={styles.switch}>
           {SIGNIN.footerText}
-          <span className={styles["toggler"]}>Create an account</span>
-        </p>
+          <button onClick={toggleForm} className={styles["toggler"]}>
+            {SIGNIN.signupToggleButtonText}
+          </button>
+        </div>
       </div>
     </>
   );
