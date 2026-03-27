@@ -4,6 +4,7 @@ const {
   LogoRequestLogsRepository,
   SubscriptionsRepository,
   UsersRepository,
+  ImagesRepository,
 } = require("../../repositories");
 const { SubscriptionTypes } = require("../../utils/constants");
 const {
@@ -13,9 +14,10 @@ const {
 
 jest.mock("../../repositories");
 
-describe.skip("RewardTrackingService", () => {
+describe("RewardTrackingService", () => {
   let rewardTrackingService;
   let mockLogoRequestLogsRepository;
+  let mockImagesRepository;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,10 +27,15 @@ describe.skip("RewardTrackingService", () => {
     mockLogoRequestLogsRepository = LogoRequestLogsRepository.mock.instances[0];
     SubscriptionsRepository.mock.instances[0];
     UsersRepository.mock.instances[0];
+    mockImagesRepository = ImagesRepository.mock.instances[0];
 
     if (mockLogoRequestLogsRepository) {
       mockLogoRequestLogsRepository.create = jest.fn();
       mockLogoRequestLogsRepository.find = jest.fn();
+    }
+
+    if (mockImagesRepository) {
+      mockImagesRepository.update = jest.fn().mockResolvedValue({});
     }
   });
 
@@ -37,6 +44,7 @@ describe.skip("RewardTrackingService", () => {
       expect(rewardTrackingService.logoRequestLogsRepository).toBeDefined();
       expect(rewardTrackingService.subscriptionsRepository).toBeDefined();
       expect(rewardTrackingService.usersRepository).toBeDefined();
+      expect(rewardTrackingService.imagesRepository).toBeDefined();
     });
 
     it("should create separate repository instances", () => {
@@ -377,8 +385,6 @@ describe.skip("RewardTrackingService", () => {
             user_id: params.userId,
             key_id: params.keyId,
             image_id: params.imageId,
-            ip_address: params.ipAddress,
-            user_agent: params.userAgent,
             user_plan: SubscriptionTypes.PRO,
             is_reward_eligible: true,
             reward_eligibility_reason: "VALID",
@@ -400,8 +406,6 @@ describe.skip("RewardTrackingService", () => {
         expect(result).toHaveProperty("user_id");
         expect(result).toHaveProperty("image_id");
         expect(result).toHaveProperty("key_id");
-        expect(result).toHaveProperty("ip_address");
-        expect(result).toHaveProperty("user_agent");
         expect(result).toHaveProperty("user_plan");
         expect(result).toHaveProperty("is_reward_eligible");
         expect(result).toHaveProperty("reward_eligibility_reason");
@@ -420,8 +424,6 @@ describe.skip("RewardTrackingService", () => {
           user_id: params.userId,
           key_id: params.keyId,
           image_id: params.imageId,
-          ip_address: params.ipAddress,
-          user_agent: params.userAgent,
           user_plan: SubscriptionTypes.PRO,
           is_reward_eligible: true,
           reward_eligibility_reason: "VALID",
@@ -558,59 +560,40 @@ describe.skip("RewardTrackingService", () => {
   });
 
   describe("triggerAsyncRewardProcessing", () => {
-    it("should log message when triggered", () => {
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
-      const imageId = "image123";
+    it("should set has_pending_reward = true on the image", async () => {
+      const imageId = new mongoose.Types.ObjectId();
 
-      rewardTrackingService.triggerAsyncRewardProcessing(imageId);
+      await rewardTrackingService.triggerAsyncRewardProcessing(imageId);
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Triggered async reward processing")
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(imageId));
-
-      consoleSpy.mockRestore();
+      expect(mockImagesRepository.update).toHaveBeenCalledWith(imageId, {
+        has_pending_reward: true,
+      });
     });
 
-    it("should handle any image ID format", () => {
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    it("should call update once per invocation", async () => {
+      const imageId = new mongoose.Types.ObjectId();
 
-      rewardTrackingService.triggerAsyncRewardProcessing("123");
-      rewardTrackingService.triggerAsyncRewardProcessing(
-        new mongoose.Types.ObjectId()
-      );
-      rewardTrackingService.triggerAsyncRewardProcessing("uuid-string");
+      await rewardTrackingService.triggerAsyncRewardProcessing(imageId);
 
-      expect(consoleSpy).toHaveBeenCalledTimes(3);
-
-      consoleSpy.mockRestore();
+      expect(mockImagesRepository.update).toHaveBeenCalledTimes(1);
     });
 
-    it("should log with the correct imageId for different formats", () => {
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
-      const objectId = new mongoose.Types.ObjectId();
+    it("should pass the exact imageId to update for different ID formats", async () => {
+      const stringId = "image123";
+      await rewardTrackingService.triggerAsyncRewardProcessing(stringId);
 
-      rewardTrackingService.triggerAsyncRewardProcessing(objectId);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining(objectId.toString())
-      );
-
-      consoleSpy.mockRestore();
+      expect(mockImagesRepository.update).toHaveBeenCalledWith(stringId, {
+        has_pending_reward: true,
+      });
     });
 
-    it("should not throw for null or undefined imageId", () => {
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    it("should propagate repository errors", async () => {
+      const imageId = new mongoose.Types.ObjectId();
+      mockImagesRepository.update.mockRejectedValue(new Error("DB error"));
 
-      expect(() => {
-        rewardTrackingService.triggerAsyncRewardProcessing(null);
-      }).not.toThrow();
-
-      expect(() => {
-        rewardTrackingService.triggerAsyncRewardProcessing(undefined);
-      }).not.toThrow();
-
-      consoleSpy.mockRestore();
+      await expect(
+        rewardTrackingService.triggerAsyncRewardProcessing(imageId)
+      ).rejects.toThrow("DB error");
     });
   });
 
@@ -623,8 +606,6 @@ describe.skip("RewardTrackingService", () => {
         keyId: "key-123",
         subscriptionId: "sub-pro-001",
         subscription: { type: SubscriptionTypes.PRO },
-        ipAddress: "192.168.1.1",
-        userAgent: "Chrome/90",
       };
 
       const mockLogEntry = {
@@ -632,8 +613,6 @@ describe.skip("RewardTrackingService", () => {
         user_id: params.userId,
         key_id: params.keyId,
         image_id: params.imageId,
-        ip_address: params.ipAddress,
-        user_agent: params.userAgent,
         user_plan: SubscriptionTypes.PRO,
         is_reward_eligible: true,
         reward_eligibility_reason: "VALID",
@@ -642,16 +621,14 @@ describe.skip("RewardTrackingService", () => {
       mockLogoRequestLogsRepository.find.mockResolvedValue([]);
       mockLogoRequestLogsRepository.create.mockResolvedValue(mockLogEntry);
 
-      const consoleSpy = jest.spyOn(console, "log").mockImplementation();
-
       const result = await rewardTrackingService.validateAndLogRequest(params);
 
       expect(result.is_reward_eligible).toBe(true);
       expect(result.reward_eligibility_reason).toBe("VALID");
       expect(mockLogoRequestLogsRepository.create).toHaveBeenCalled();
-      expect(consoleSpy).toHaveBeenCalled();
-
-      consoleSpy.mockRestore();
+      expect(mockImagesRepository.update).toHaveBeenCalledWith(params.imageId, {
+        has_pending_reward: true,
+      });
     });
 
     it("should stop processing after first validation failure", async () => {
@@ -662,8 +639,6 @@ describe.skip("RewardTrackingService", () => {
         keyId: "key-123",
         subscriptionId: "sub-pro-001",
         subscription: { type: SubscriptionTypes.PRO },
-        ipAddress: "192.168.1.1",
-        userAgent: "Chrome/90",
       };
 
       const mockLogEntry = {
@@ -691,8 +666,6 @@ describe.skip("RewardTrackingService", () => {
         keyId: "api-key-abc123",
         subscriptionId: "sub-pro-xyz",
         subscription: { type: SubscriptionTypes.PRO },
-        ipAddress: "203.0.113.45",
-        userAgent: "node-fetch/2.6.7",
       };
 
       const mockLogEntry = {
@@ -700,8 +673,6 @@ describe.skip("RewardTrackingService", () => {
         user_id: userId,
         key_id: "api-key-abc123",
         image_id: "apple-logo-2024",
-        ip_address: "203.0.113.45",
-        user_agent: "node-fetch/2.6.7",
         user_plan: SubscriptionTypes.PRO,
         is_reward_eligible: true,
         reward_eligibility_reason: "VALID",
@@ -739,8 +710,6 @@ describe.skip("RewardTrackingService", () => {
           keyId: "key123",
           subscriptionId: "sub123",
           subscription: { type: testCase.type },
-          ipAddress: "192.168.1.1",
-          userAgent: "Mozilla/5.0",
         };
 
         const mockLogEntry = {
