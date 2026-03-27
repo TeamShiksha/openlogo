@@ -733,7 +733,6 @@ const MOCK_AUDIT_TRAIL_ENTRY = {
   actor: MOCK_USERS[3]._id,
   details: "Awarded 10 points for usage",
   timestamp: new Date(),
-  ipAddress: "192.168.1.1",
   userAgent: "Mozilla/5.0",
 };
 
@@ -778,8 +777,8 @@ const createMockLogoRequestLogEntry = () => ({
   user_id: "user123",
   key_id: "key123",
   image_id: "image123",
-  ip_address: "192.168.1.1",
   user_agent: "Mozilla/5.0",
+  response_size_bytes: 1024,
   user_plan: SubscriptionTypes.PRO,
   is_reward_eligible: true,
   reward_eligibility_reason: "VALID",
@@ -793,8 +792,8 @@ const createValidRewardTrackingParams = () => ({
   keyId: "key123",
   subscriptionId: "sub123",
   subscription: { type: SubscriptionTypes.PRO },
-  ipAddress: "192.168.1.1",
   userAgent: "Mozilla/5.0",
+  response_size_bytes: 1024,
 });
 
 const MOCK_REWARD_TRACKING_SCENARIOS = {
@@ -806,7 +805,6 @@ const MOCK_REWARD_TRACKING_SCENARIOS = {
       keyId: "key123",
       subscriptionId: "sub123",
       subscription: { type: SubscriptionTypes.HOBBY },
-      ipAddress: "192.168.1.1",
       userAgent: "Mozilla/5.0",
     },
     expected: {
@@ -822,7 +820,6 @@ const MOCK_REWARD_TRACKING_SCENARIOS = {
       keyId: "key123",
       subscriptionId: "sub123",
       subscription: { type: SubscriptionTypes.PRO },
-      ipAddress: "192.168.1.1",
       userAgent: "Mozilla/5.0",
     },
     expected: {
@@ -838,7 +835,6 @@ const MOCK_REWARD_TRACKING_SCENARIOS = {
       keyId: "key123",
       subscriptionId: "sub123",
       subscription: { type: SubscriptionTypes.PRO },
-      ipAddress: "192.168.1.1",
       userAgent: "Mozilla/5.0",
     },
     expected: {
@@ -854,7 +850,6 @@ const MOCK_REWARD_TRACKING_SCENARIOS = {
       keyId: "key123",
       subscriptionId: "sub123",
       subscription: { type: SubscriptionTypes.PRO },
-      ipAddress: "192.168.1.1",
       userAgent: "Mozilla/5.0",
     },
     expected: {
@@ -863,7 +858,260 @@ const MOCK_REWARD_TRACKING_SCENARIOS = {
     },
   },
 };
+const REWARD_TEST_IMAGE_ID = new mongoose.Types.ObjectId();
+const REWARD_TEST_CREATOR_ID = new mongoose.Types.ObjectId();
 
+const REWARD_TEST_PRO_USER_IDS_10 = Array.from(
+  { length: 10 },
+  () => new mongoose.Types.ObjectId()
+);
+const REWARD_TEST_PRO_USER_IDS_15 = Array.from(
+  { length: 15 },
+  () => new mongoose.Types.ObjectId()
+);
+
+const createMockRewardRecordEmpty = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_id: REWARD_TEST_CREATOR_ID,
+  unique_pro_users: [],
+  unique_pro_users_count: 0,
+  milestones_achieved: [],
+  total_points_awarded: 0,
+});
+const createMockRewardRecord5Achieved = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_id: REWARD_TEST_CREATOR_ID,
+  unique_pro_users: [...REWARD_TEST_PRO_USER_IDS_10.slice(0, 5)],
+  unique_pro_users_count: 5,
+  milestones_achieved: [
+    { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+  ],
+  total_points_awarded: 10,
+});
+
+const MOCK_ELIGIBLE_LOG_ENTRIES_5 = REWARD_TEST_PRO_USER_IDS_10.slice(0, 5).map(
+  (userId) => ({
+    _id: new mongoose.Types.ObjectId(),
+    user_id: userId,
+    image_id: REWARD_TEST_IMAGE_ID,
+    user_plan: SubscriptionTypes.PRO,
+    is_reward_eligible: true,
+    reward_eligibility_reason: "VALID",
+    createdAt: new Date(),
+  })
+);
+
+const MOCK_ELIGIBLE_LOG_ENTRIES_5_SECOND = REWARD_TEST_PRO_USER_IDS_10.slice(
+  5,
+  10
+).map((userId) => ({
+  _id: new mongoose.Types.ObjectId(),
+  user_id: userId,
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_plan: SubscriptionTypes.PRO,
+  is_reward_eligible: true,
+  reward_eligibility_reason: "VALID",
+  createdAt: new Date(),
+}));
+const MOCK_ELIGIBLE_LOG_ENTRIES_15 = REWARD_TEST_PRO_USER_IDS_15.map(
+  (userId) => ({
+    _id: new mongoose.Types.ObjectId(),
+    user_id: userId,
+    image_id: REWARD_TEST_IMAGE_ID,
+    user_plan: SubscriptionTypes.PRO,
+    is_reward_eligible: true,
+    reward_eligibility_reason: "VALID",
+    createdAt: new Date(),
+  })
+);
+
+const MOCK_REWARD_CREATOR_USER = {
+  _id: REWARD_TEST_CREATOR_ID,
+  name: "Creator User",
+  email: "creator@example.com",
+  reward_points_current: 0,
+  reward_points_lifetime: 0,
+};
+
+const MOCK_REWARD_USER_WITH_POINTS = {
+  _id: new mongoose.Types.ObjectId(),
+  name: "Rewards User",
+  email: "rewards@example.com",
+  reward_points_current: 100,
+  reward_points_lifetime: 500,
+};
+
+const MOCK_USER_REWARD_RECORDS = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    image_id: MOCK_IMAGES[0]._id,
+    user_id: MOCK_REWARD_USER_WITH_POINTS._id,
+    unique_pro_users: Array.from(
+      { length: 10 },
+      () => new mongoose.Types.ObjectId()
+    ),
+    total_points_awarded: 20,
+    milestones_achieved: [
+      { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+      { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+    ],
+  },
+];
+
+const MOCK_LOG_ENTRY_HOBBY = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.HOBBY,
+  response_size_bytes: 0,
+  is_reward_eligible: false,
+  reward_eligibility_reason: "HOBBY_USER",
+  createdAt: new Date(),
+};
+
+const MOCK_LOG_ENTRY_SELF_USAGE = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.PRO,
+  response_size_bytes: 0,
+  is_reward_eligible: false,
+  reward_eligibility_reason: "SELF_USAGE",
+  createdAt: new Date(),
+};
+
+const MOCK_LOG_ENTRY_DUPLICATE = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.PRO,
+  response_size_bytes: 0,
+  is_reward_eligible: false,
+  reward_eligibility_reason: "DUPLICATE_USAGE",
+  createdAt: new Date(),
+};
+
+const MOCK_LOG_ENTRY_VALID = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.PRO,
+  response_size_bytes: 1024,
+  is_reward_eligible: true,
+  reward_eligibility_reason: "VALID",
+  createdAt: new Date(),
+};
+const MOCK_UNREVERSED_TRANSACTION = {
+  _id: new mongoose.Types.ObjectId(),
+  image_id: MOCK_IMAGES[0]._id,
+  user_id: MOCK_USERS[0]._id,
+  transaction_type: "MILESTONE_REWARD",
+  points_awarded: 10,
+  is_reversed: false,
+  description: "Milestone 5 reached",
+};
+
+const MOCK_REVERSED_TRANSACTION = {
+  ...MOCK_UNREVERSED_TRANSACTION,
+  is_reversed: true,
+  reversed_at: new Date(),
+  reversal_reason: "Abuse detected",
+};
+const MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD = {
+  data: [
+    {
+      user_id: {
+        _id: MOCK_USERS[0]._id,
+        name: "Creator A",
+        email: "a@example.com",
+      },
+      image_id: MOCK_IMAGES[0]._id,
+      unique_pro_users: Array.from(
+        { length: 15 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 30,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 15, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+    {
+      user_id: {
+        _id: MOCK_USERS[1]._id,
+        name: "Creator B",
+        email: "b@example.com",
+      },
+      image_id: MOCK_IMAGES[1]._id,
+      unique_pro_users: Array.from(
+        { length: 10 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 20,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+    {
+      user_id: {
+        _id: MOCK_USERS[2]._id,
+        name: "Creator C",
+        email: "c@example.com",
+      },
+      image_id: MOCK_IMAGES[2]._id,
+      unique_pro_users: Array.from(
+        { length: 5 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 10,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+  ],
+  total: 3,
+  currentPage: 1,
+  totalPages: 1,
+};
+
+// const createValidRewardTrackingParams = () => ({
+//   imageId: "image123",
+//   userId: "user123",
+//   creatorId: "creator456",
+//   keyId: "key123",
+//   subscriptionId: "sub123",
+//   subscription: { type: SubscriptionTypes.PRO },
+// });
+
+const MOCK_MILESTONE_CONFIG = {
+  _id: new mongoose.Types.ObjectId(),
+  name: "Q1 2026 Campaign",
+  thresholds: [
+    { at: 5, points: 10 },
+    { at: 10, points: 10 },
+    { at: 15, points: 10 },
+    { at: 20, points: 10 },
+    { at: 25, points: 10 },
+    { at: 50, points: 20 },
+    { at: 100, points: 50 },
+  ],
+  is_active: true,
+  is_deleted: false,
+  created_by: MOCK_USERS[2]._id,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+const MOCK_MILESTONE_CONFIG_INACTIVE = {
+  _id: new mongoose.Types.ObjectId(),
+  name: "Q2 2026 Campaign",
+  thresholds: [
+    { at: 10, points: 15 },
+    { at: 25, points: 30 },
+    { at: 50, points: 75 },
+  ],
+  is_active: false,
+  is_deleted: false,
+  created_by: MOCK_USERS[2]._id,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
 module.exports = {
   MOCK_SUBSCRIPTION,
   MOCK_USERS,
@@ -883,7 +1131,6 @@ module.exports = {
   MOCK_MONTHLY_STATS,
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
-  // ImageService Mocks
   MOCK_IMAGE_DETAIL,
   MOCK_IMAGE_DETAILS_LIST,
   MOCK_CLOUDFRONT_URLS,
@@ -892,7 +1139,6 @@ module.exports = {
   MOCK_IMAGES_PAGINATED_RESPONSE,
   MOCK_IMAGES_COUNT,
   MOCK_PRESIGNED_URL_RESPONSE,
-  // Reward System Mocks
   MOCK_REWARD_VALIDATION_RESPONSES,
   MOCK_REWARD_VALIDATION_REQUEST,
   MOCK_PROCESS_REWARDS_SINGLE_MILESTONE,
@@ -901,7 +1147,6 @@ module.exports = {
   MOCK_USER_REWARD_DATA,
   MOCK_REWARDS_LEADERBOARD,
   MOCK_REVERSE_TRANSACTION_RESPONSE,
-  // Reward Transaction Mocks
   MOCK_REWARD_TRANSACTION,
   MOCK_REWARD_TRANSACTIONS_LIST,
   MOCK_USER_TRANSACTION_STATS,
@@ -910,8 +1155,26 @@ module.exports = {
   MOCK_AUDIT_TRAIL_ENTRY,
   MOCK_AUDIT_TRAIL_LIST,
   MOCK_TRANSACTION_SEARCH_RESPONSE,
-  // Reward Tracking Service Mocks
   createMockLogoRequestLogEntry,
   createValidRewardTrackingParams,
   MOCK_REWARD_TRACKING_SCENARIOS,
+  REWARD_TEST_IMAGE_ID,
+  REWARD_TEST_CREATOR_ID,
+  createMockRewardRecordEmpty,
+  createMockRewardRecord5Achieved,
+  MOCK_ELIGIBLE_LOG_ENTRIES_5,
+  MOCK_ELIGIBLE_LOG_ENTRIES_5_SECOND,
+  MOCK_ELIGIBLE_LOG_ENTRIES_15,
+  MOCK_REWARD_CREATOR_USER,
+  MOCK_REWARD_USER_WITH_POINTS,
+  MOCK_USER_REWARD_RECORDS,
+  MOCK_LOG_ENTRY_HOBBY,
+  MOCK_LOG_ENTRY_SELF_USAGE,
+  MOCK_LOG_ENTRY_DUPLICATE,
+  MOCK_LOG_ENTRY_VALID,
+  MOCK_UNREVERSED_TRANSACTION,
+  MOCK_REVERSED_TRANSACTION,
+  MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD,
+  MOCK_MILESTONE_CONFIG,
+  MOCK_MILESTONE_CONFIG_INACTIVE,
 };
