@@ -220,6 +220,7 @@ describe("RewardTrackingService", () => {
         expect(result.reward_eligibility_reason).toBe("HOBBY_USER");
         expect(mockLogoRequestLogsRepository.create).toHaveBeenCalledWith(
           expect.objectContaining({
+            response_size_bytes: params.response_size_bytes,
             user_plan: SubscriptionTypes.HOBBY,
             is_reward_eligible: false,
             reward_eligibility_reason: "HOBBY_USER",
@@ -385,6 +386,7 @@ describe("RewardTrackingService", () => {
             user_id: params.userId,
             key_id: params.keyId,
             image_id: params.imageId,
+            response_size_bytes: params.response_size_bytes,
             user_plan: SubscriptionTypes.PRO,
             is_reward_eligible: true,
             reward_eligibility_reason: "VALID",
@@ -406,6 +408,7 @@ describe("RewardTrackingService", () => {
         expect(result).toHaveProperty("user_id");
         expect(result).toHaveProperty("image_id");
         expect(result).toHaveProperty("key_id");
+        expect(result).toHaveProperty("response_size_bytes");
         expect(result).toHaveProperty("user_plan");
         expect(result).toHaveProperty("is_reward_eligible");
         expect(result).toHaveProperty("reward_eligibility_reason");
@@ -424,6 +427,7 @@ describe("RewardTrackingService", () => {
           user_id: params.userId,
           key_id: params.keyId,
           image_id: params.imageId,
+          response_size_bytes: params.response_size_bytes,
           user_plan: SubscriptionTypes.PRO,
           is_reward_eligible: true,
           reward_eligibility_reason: "VALID",
