@@ -1,0 +1,36 @@
+name: Naming Convention Checks
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-branch-name:
+    name: Branch Name Convention
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Branch Name
+        run: |
+          BRANCH="$ github.head_ref "
+          PATTERN="^(Feat|Fix|HotFix|Refact|Docs|Test)/issue-[a-zA-Z0-9]+-[a-zA-Z0-9-]+$"
+          if ! echo "$BRANCH" | grep -Eq "$PATTERN"; then
+            echo "❌ Invalid branch name: '$BRANCH'"
+            echo "Expected format: Fix/issue-931-short-description"
+            exit 1
+          fi
+          echo "✅ Branch name is valid."
+
+  check-pr-title:
+    name: PR Title Convention
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Title
+        run: |
+          TITLE="$ github.event.pull_request.title "
+          PATTERN="^\[(Feat|Fix|HotFix|Refact|Docs|Test)\] issue-[a-zA-Z0-9]+ .+$"
+          if ! echo "$TITLE" | grep -Eq "$PATTERN"; then
+            echo "❌ PR title does not follow convention."
+            echo "Expected format: [Fix] issue-931 Fix something meaningful"
+            exit 1
+          fi
+          echo "✅ PR title is valid."
