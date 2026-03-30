@@ -362,6 +362,12 @@ export const TICK = {
   alt: "Tick Icon",
 };
 
+export const nextTheme = {
+  light: "dark",
+  dark: "device",
+  device: "light",
+};
+
 export const BUTTON_TEXT = {
   getStarted: "Get started",
   gotoDashboard: "Go to Dashboard",
@@ -863,7 +869,7 @@ export const RELEASE_PAGE = {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
-          {
+      {
         versionName: "0.7.0 version",
         releaseDate: "Mar 2026",
         imgSrc: version07,

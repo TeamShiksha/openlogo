@@ -4,87 +4,74 @@ import { DarkModeToggle } from "../../src/components/darkModeToggle/DarkModeTogg
 import { ThemeContext } from "../../src/contexts/Contexts";
 
 describe("DarkModeToggle Component", () => {
-  const mockToggleTheme = vi.fn();
+  const mockSetTheme = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  const renderComponent = (isDarkMode = false) =>
+  const renderComponent = (theme = "light") =>
     render(
-      <ThemeContext.Provider
-        value={{ isDarkMode, toggleTheme: mockToggleTheme }}
-      >
+      <ThemeContext.Provider value={{ theme, setTheme: mockSetTheme }}>
         <DarkModeToggle />
       </ThemeContext.Provider>
     );
 
   it("renders the toggle button", () => {
     renderComponent();
+    expect(screen.getByRole("button")).toBeInTheDocument();
+  });
+
+  it("displays Sun icon when theme is light", () => {
+    renderComponent("light");
+    expect(screen.getByRole("button")).toHaveTextContent(""); // Icons are SVGs
+    const svg = screen.getByRole("button").querySelector("svg");
+    expect(svg).toBeInTheDocument();
+  });
+
+  it("displays Moon icon when theme is dark", () => {
+    renderComponent("dark");
+    const svg = screen.getByRole("button").querySelector("svg");
+    expect(svg).toBeInTheDocument();
+  });
+
+  it("displays Monitor icon when theme is device", () => {
+    renderComponent("device");
+    const svg = screen.getByRole("button").querySelector("svg");
+    expect(svg).toBeInTheDocument();
+  });
+
+  it("cycles theme correctly on click (light → dark)", () => {
+    renderComponent("light");
     const button = screen.getByRole("button");
-    expect(button).toBeInTheDocument();
+
+    fireEvent.click(button);
+
+    expect(mockSetTheme).toHaveBeenCalledTimes(1);
+    expect(mockSetTheme).toHaveBeenCalledWith("dark");
   });
 
-  it("displays Sun icon when isDarkMode is true", () => {
-    renderComponent(true);
-    const sunIcon = screen.getByRole("button").querySelector("svg");
-    expect(sunIcon).toBeInTheDocument();
-    // Sun icon has a specific class/data attribute from lucide-react
-    const icons = screen.getByRole("button").querySelectorAll("svg");
-    expect(icons.length).toBeGreaterThan(0);
-  });
-
-  it("displays Moon icon when isDarkMode is false", () => {
-    renderComponent(false);
-    const moonIcon = screen.getByRole("button").querySelector("svg");
-    expect(moonIcon).toBeInTheDocument();
-    const icons = screen.getByRole("button").querySelectorAll("svg");
-    expect(icons.length).toBeGreaterThan(0);
-  });
-
-  it("calls toggleTheme when button is clicked", () => {
-    renderComponent(false);
+  it("cycles theme correctly on click (dark → device)", () => {
+    renderComponent("dark");
     const button = screen.getByRole("button");
+
     fireEvent.click(button);
-    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+
+    expect(mockSetTheme).toHaveBeenCalledWith("device");
   });
 
-  it("calls toggleTheme multiple times on multiple clicks", () => {
-    renderComponent(false);
+  it("cycles theme correctly on click (device → light)", () => {
+    renderComponent("device");
     const button = screen.getByRole("button");
+
     fireEvent.click(button);
-    fireEvent.click(button);
-    fireEvent.click(button);
-    expect(mockToggleTheme).toHaveBeenCalledTimes(3);
+
+    expect(mockSetTheme).toHaveBeenCalledWith("light");
   });
 
   it("applies the correct CSS class", () => {
     renderComponent();
     const button = screen.getByRole("button");
     expect(button.className).toContain("darkModeToggle");
-  });
-
-  it("toggles between icons when isDarkMode changes", () => {
-    const { rerender } = render(
-      <ThemeContext.Provider
-        value={{ isDarkMode: false, toggleTheme: mockToggleTheme }}
-      >
-        <DarkModeToggle />
-      </ThemeContext.Provider>
-    );
-
-    let icons = screen.getByRole("button").querySelectorAll("svg");
-    expect(icons.length).toBeGreaterThan(0);
-
-    rerender(
-      <ThemeContext.Provider
-        value={{ isDarkMode: true, toggleTheme: mockToggleTheme }}
-      >
-        <DarkModeToggle />
-      </ThemeContext.Provider>
-    );
-
-    icons = screen.getByRole("button").querySelectorAll("svg");
-    expect(icons.length).toBeGreaterThan(0);
   });
 });

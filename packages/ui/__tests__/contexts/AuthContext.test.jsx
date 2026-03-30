@@ -4,11 +4,18 @@ import { AuthProvider } from "../../src/contexts/AuthContext";
 import { AuthContext, ToastContext } from "../../src/contexts/Contexts";
 import { useContext } from "react";
 
-const makeRequestMock = vi.fn();
+const signOutMock = vi.fn();
+const validateSessionMock = vi.fn();
 
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: () => ({
-    makeRequest: makeRequestMock,
+  useApi: vi.fn((config) => {
+    if (config.url === "/auth/validate-session") {
+      return { makeRequest: validateSessionMock };
+    }
+    if (config.url === "/auth/signout") {
+      return { makeRequest: signOutMock };
+    }
+    return { makeRequest: vi.fn() };
   }),
 }));
 
@@ -44,7 +51,7 @@ describe("AuthProvider", () => {
   });
 
   it("Successfully authenticates after success response", async () => {
-    makeRequestMock.mockImplementation(() => Promise.resolve(true));
+    validateSessionMock.mockResolvedValue(true);
 
     render(
       <ToastContext.Provider value={mockToastContext}>
@@ -55,13 +62,14 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(authStatusText).toBe("Authenticated");
+      expect(screen.getByTestId("auth-status").textContent).toBe(
+        "Authenticated"
+      );
     });
   });
 
-  it("Not authenticated after fialure", async () => {
-    makeRequestMock.mockImplementation(() => Promise.resolve(false));
+  it("Not authenticated after failure", async () => {
+    validateSessionMock.mockResolvedValue(false);
 
     render(
       <ToastContext.Provider value={mockToastContext}>
@@ -72,13 +80,15 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(authStatusText).toBe("Not Authenticated");
+      expect(screen.getByTestId("auth-status").textContent).toBe(
+        "Not Authenticated"
+      );
     });
   });
 
   it("Set authenticated to false on logout", async () => {
-    makeRequestMock.mockImplementation(() => Promise.resolve(true));
+    validateSessionMock.mockResolvedValue(true);
+    signOutMock.mockResolvedValue(true);
 
     render(
       <ToastContext.Provider value={mockToastContext}>
@@ -89,16 +99,18 @@ describe("AuthProvider", () => {
     );
 
     await waitFor(() => {
-      const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(authStatusText).toBe("Authenticated");
+      expect(screen.getByTestId("auth-status").textContent).toBe(
+        "Authenticated"
+      );
     });
 
     screen.getByTestId("logout-btn").click();
 
     await waitFor(() => {
-      const authStatusText = screen.getByTestId("auth-status").textContent;
-      expect(makeRequestMock).toHaveBeenCalled();
-      expect(authStatusText).toBe("Not Authenticated");
+      expect(signOutMock).toHaveBeenCalled();
+      expect(screen.getByTestId("auth-status").textContent).toBe(
+        "Not Authenticated"
+      );
     });
   });
 });

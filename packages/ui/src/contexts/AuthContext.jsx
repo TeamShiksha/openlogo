@@ -8,7 +8,7 @@ import { AuthContext } from "./Contexts";
 export const AuthProvider = ({ children }) => {
   const toast = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthCheckComplete, setIsAuthCheckComplete] = useState(false);
+
   const { makeRequest, errorMsg } = useApi({
     method: "post",
     url: `/auth/signout`,
@@ -24,15 +24,11 @@ export const AuthProvider = ({ children }) => {
   }, [errorMsg, toast]);
 
   useEffect(() => {
-    validateSession()
-      .then((data) => {
-        if (data) {
-          setIsAuthenticated(true);
-        }
-      })
-      .finally(() => {
-        setIsAuthCheckComplete(true);
-      });
+    validateSession().then((data) => {
+      if (data) {
+        setIsAuthenticated(true);
+      }
+    });
   }, []);
 
   const logout = useCallback(async () => {
@@ -41,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       toast.success(MESSAGES.SIGN_OUT_SUCCESS);
     }
-  }, [setIsAuthenticated, makeRequest, toast]);
+  }, [makeRequest, toast]);
 
   const authValue = useMemo(
     () => ({
@@ -49,13 +45,11 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated,
       logout,
     }),
-    [isAuthenticated, setIsAuthenticated, logout]
+    [isAuthenticated, logout]
   );
 
   return (
-    <AuthContext.Provider value={authValue}>
-      {isAuthCheckComplete ? children : null}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
   );
 };
 
