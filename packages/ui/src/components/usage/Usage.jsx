@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import PieGraph from "./PieGraph";
 import styles from "./Usage.module.css";
 import { USAGE } from "../../utils/Constants";
 import { useContext, useEffect, useMemo } from "react";
@@ -16,7 +15,7 @@ const THRESHOLDS = [
 function Usage({ usageCount, usageLimit }) {
   const { userData } = useContext(UserContext);
   const percentage = useMemo(
-    () => (usageCount / usageLimit) * 100,
+    () => Math.min((usageCount / usageLimit) * 100, 100),
     [usageCount, usageLimit]
   );
   const toast = useToast();
@@ -54,29 +53,63 @@ function Usage({ usageCount, usageLimit }) {
     }
   }, [percentage, usageCount, usageLimit, toast, billingCycleStartDate]);
 
+  const radius = 60;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
   return (
-    <>
-      <div className={styles["usage-body-container"]}>
-        <div className={styles["circular-chart"]}>
-          <PieGraph
-            percentage={percentage}
-            colour="var(--primary)"
-            fill="var(--border)"
-          />
-        </div>
-        <div className={styles["usage-statistics"]}>
-          <div>
-            <div className={styles["data-heading"]}>{USAGE.callsText}</div>
-            <div className={styles.data}>{usageCount}</div>
-          </div>
-          <div>
-            <div className={styles["data-heading"]}>{USAGE.limitText}</div>
-            <div className={styles.data}>{usageLimit}</div>
-          </div>
-        </div>
+    <div className={styles["usage-container"]}>
+      <div className={styles["card-header"]}>
+        <h2 className={styles["card-title"]}>Usage</h2>
       </div>
-      <div className={styles["dashboard-reset-date"]}>{USAGE.resetText}</div>
-    </>
+      <div className={styles["usage-content"]}>
+        <div className={styles["donut-wrapper"]}>
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 160 160"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            {" "}
+            <circle
+              className={styles["donut-circle"]}
+              stroke="var(--border-color)"
+              strokeWidth="20"
+              fill="transparent"
+              r={radius}
+              cx="80"
+              cy="80"
+            />
+            <circle
+              className={styles["donut-circle"]}
+              stroke="#818cf8"
+              strokeWidth="20"
+              fill="transparent"
+              r={radius}
+              cx="80"
+              cy="80"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className={styles["donut-text"]}>{Math.round(percentage)}%</div>
+        </div>
+
+        <div className={styles["usage-legend"]}>
+          <div className={styles["usage-item"]}>
+            <span className={styles["usage-label"]}>{USAGE.callsText}</span>
+            <span className={styles["usage-value"]}>{usageCount}</span>
+          </div>
+          <div className={styles["usage-item"]}>
+            <span className={styles["usage-label"]}>{USAGE.limitText}</span>
+            <span className={styles["usage-value"]}>{usageLimit}</span>
+          </div>
+        </div>
+
+        <p className={styles["usage-reset"]}>{USAGE.resetText}</p>
+      </div>
+    </div>
   );
 }
 

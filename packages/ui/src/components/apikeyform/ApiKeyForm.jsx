@@ -10,7 +10,6 @@ import {
   TICK,
   API_KEY,
   BUTTON_TEXT,
-  API_KEY_FORM,
   EXPIRY_KEYS_OPTION,
 } from "../../utils/Constants.js";
 import { useToast } from "../../hooks/useToast.js";
@@ -98,40 +97,89 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
     Object.values(description).some((val) => !val);
 
   return (
-    <section className={styles["dashboard-content-section"]}>
+    <>
+      <div className={styles["card-header"]}>
+        <div className={styles["key-icon"]}>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+          </svg>
+        </div>
+        <h2 className={styles["card-title"]}>Generate Key</h2>
+      </div>
+
+      <p className={styles["card-description"]}>
+        Create a unique key to authenticate your application requests securely.
+      </p>
+
       <form
-        className={styles["api-key-container"]}
+        className={styles["api-key-form"]}
         noValidate
         onSubmit={handleGenerateKey}
       >
-        <p className={styles["dashboard-reset-date"]}>{API_KEY_FORM.tagLine}</p>
-        <CustomInput
-          type="text"
-          name="apikey"
-          label="Add the description"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          disabled={loading}
-          error={formErrors.apikey}
-          onFocus={() => setFocusedField("apikey")}
-          onBlur={() => setFocusedField(null)}
-        />
-
-        <div className={styles["expiry-dropdown"]}>
-          <label htmlFor="expiry" className={styles["expiry-label"]}>
-            {API_KEY_FORM.expiryLabel}
+        <div className={styles["form-group"]}>
+          <label htmlFor="description" className={styles["label"]}>
+            Description
           </label>
-          <p className={styles["expiry-description"]}>
-            {API_KEY_FORM.expiryDescription}
-          </p>
+          <CustomInput
+            type="text"
+            name="apikey"
+            placeholder="e.g., Production API Key"
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            disabled={loading}
+            error={formErrors.apikey}
+            onFocus={() => setFocusedField("apikey")}
+            onBlur={() => setFocusedField(null)}
+          />
+        </div>
+
+        <div className={styles["form-group"]}>
+          <label htmlFor="expiry" className={styles["label"]}>
+            Expiry Period
+          </label>
           <Dropdown
             options={EXPIRY_KEYS_OPTION}
             selectedOption={String(expiresInDays)}
             setSelectedOption={(value) => setExpiresInDays(Number(value))}
             testId="testid-expiry-dropdown"
-            className={styles["expiry-select"]}
+            className={styles["expiry-dropdown"]}
           />
         </div>
+
+        <Button
+          className={styles["submit-btn"]}
+          variant="primary"
+          type="submit"
+          disabled={isGuest || !description.trim() || !isFieldValid}
+          isLoading={loading}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            data-testid="generate-key-btn"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          {BUTTON_TEXT.generateKey}
+        </Button>
+
         <Modal
           isOpen={showApiKeyModal}
           onClose={handleCloseModal}
@@ -168,17 +216,8 @@ function ApiKeyForm({ isGuest, onKeyGenerated }) {
             )}
           </div>
         </Modal>
-        <Button
-          className={styles.width}
-          variant="primary"
-          type="submit"
-          disabled={isGuest || !description.trim() || !isFieldValid}
-          isLoading={loading}
-        >
-          {BUTTON_TEXT.generateKey}
-        </Button>
       </form>
-    </section>
+    </>
   );
 }
 

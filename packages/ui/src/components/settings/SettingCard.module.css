@@ -1,21 +1,36 @@
-.action-button-wrapper {
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.action-section {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  align-items: center;
-  margin-top: 1rem;
+}
+
+.action-section:not(:last-child) {
+  padding-bottom: 1.5rem;
 }
 
 .action-text {
-  font-size: var(--medium-text);
-  font-weight: 400;
-  line-height: 1.25rem;
   color: var(--description);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .action-button {
   width: 100%;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings-container {
+    gap: 1rem;
+  }
 }
