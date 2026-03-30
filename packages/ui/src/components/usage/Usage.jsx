@@ -59,6 +59,9 @@ function Usage({ usageCount, usageLimit }) {
 
   return (
     <div className={styles["usage-container"]}>
+      <div className={styles["card-header"]}>
+        <h2 className={styles["card-title"]}>Usage</h2>
+      </div>
       <div className={styles["usage-content"]}>
         <div className={styles["donut-wrapper"]}>
           <svg

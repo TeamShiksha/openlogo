@@ -379,6 +379,126 @@ describe("Dropdown", () => {
       });
     }).not.toThrow();
   });
+  it("displays options in uppercase", () => {
+    renderDropdown({ options: ["admin", "user"], selectedOption: "user" });
+    const renderedOptions = screen.getAllByRole("option");
+    expect(renderedOptions.map((opt) => opt.textContent)).toEqual([
+      "ADMIN",
+      "USER",
+    ]);
+  });
+
+  it("sets selected option correctly", () => {
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+    });
+    expect(dropdown.value).toBe("ADMIN");
+  });
+
+  it("calls setSelectedOption on change", () => {
+    const mockSet = vi.fn();
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+      setSelectedOption: mockSet,
+    });
+    fireEvent.change(dropdown, { target: { value: "USER" } });
+    expect(mockSet).toHaveBeenCalledWith("USER");
+  });
+
+  it("handles undefined options without crashing", () => {
+    const { dropdown } = renderDropdown({
+      options: undefined,
+      selectedOption: "",
+    });
+    expect(dropdown.children.length).toBe(0);
+  });
+
+  it("renders options with special characters", () => {
+    renderDropdown({ options: ["@dm!n", "us3r_1"], selectedOption: "us3r_1" });
+    expect(screen.getAllByRole("option").map((o) => o.value)).toEqual([
+      "@dm!n",
+      "us3r_1",
+    ]);
+  });
+
+  it("displays options in uppercase", () => {
+    renderDropdown({ options: ["admin", "user"], selectedOption: "user" });
+    const renderedOptions = screen.getAllByRole("option");
+    expect(renderedOptions.map((opt) => opt.textContent)).toEqual([
+      "ADMIN",
+      "USER",
+    ]);
+  });
+
+  it("sets selected option correctly", () => {
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+    });
+    expect(dropdown.value).toBe("ADMIN");
+  });
+
+  it("calls setSelectedOption on change", () => {
+    const mockSet = vi.fn();
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+      setSelectedOption: mockSet,
+    });
+    fireEvent.change(dropdown, { target: { value: "USER" } });
+    expect(mockSet).toHaveBeenCalledWith("USER");
+  });
+
+  it("handles undefined options without crashing", () => {
+    const { dropdown } = renderDropdown({
+      options: undefined,
+      selectedOption: "",
+    });
+    expect(dropdown.children.length).toBe(0);
+  });
+
+  it("renders options with special characters", () => {
+    renderDropdown({ options: ["@dm!n", "us3r_1"], selectedOption: "us3r_1" });
+    expect(screen.getAllByRole("option").map((o) => o.value)).toEqual([
+      "@dm!n",
+      "us3r_1",
+    ]);
+  });
+});
+
+//new tests 2
+describe("Dashboard Key Expiry Edge Cases", () => {
+  it("applies warning class to key expiring in exactly 1 day", () => {
+    const key = {
+      ...MOCK_USER_DATA.keys[0],
+      expires_at: new Date(Date.now() + 1 * 86400000).toISOString(),
+    };
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, keys: [key] },
+      false
+    );
+    renderDashboard({ userContextValue: userContext });
+
+    const rows = within(screen.getByRole("table")).getAllByRole("row");
+    expect(rows[1].className).toContain("expiry-warning-row");
+  });
+
+  it("does not apply warning class to key expiring in 8 days", () => {
+    const key = {
+      ...MOCK_USER_DATA.keys[0],
+      expires_at: new Date(Date.now() + 10 * 86400000).toISOString(),
+    };
+    const userContext = mockUserContext(
+      { ...MOCK_USER_DATA, keys: [key] },
+      false
+    );
+    renderDashboard({ userContextValue: userContext });
+
+    const rows = within(screen.getByRole("table")).getAllByRole("row");
+    expect(rows[1].className).not.toContain("expiry-warning-row");
+  });
 });
 
 /* ---------------- API Key Deletion ---------------- */
