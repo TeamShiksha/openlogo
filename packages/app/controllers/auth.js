@@ -196,19 +196,18 @@ async function signinController(req, res, next) {
       const mfaSession = await mfaSessionService.createSession({
         userId: user._id,
       });
+      const isProduction = getIsProduction();
 
       res.cookie("mfaSessionId", mfaSession.sessionId, {
         httpOnly: true,
-        // sameSite: "strict",
-        // expires: mfaSession.expiresAt,
-        // domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
+        sameSite: "strict",
+        expires: mfaSession.expiresAt,
+        domain: isProduction ? ".openlogo.fyi" : "localhost",
       });
 
       return res.status(200).json({ statusCode: 200, mfaRequired: true });
     }
 
-    // Always create a new session for this device/browser.
-    // Per-device design: each sign-in gets its own independent session.
     const session = await userSessionService.createSession({
       userId: user._id,
       userAgent: req.headers["user-agent"] || "",
@@ -636,8 +635,6 @@ async function siginWithMFAController(req, res, next) {
 
     const isProduction = getIsProduction();
 
-    // Always create a new session for this device/browser.
-    // Per-device design: each MFA sign-in gets its own independent session.
     const session = await userSessionService.createSession({
       userId: user._id,
       userAgent: req.headers["user-agent"] || "",
@@ -884,7 +881,6 @@ async function listSessionsController(req, res, next) {
     const sessions = await userSessionService.getActiveSessions(userId);
 
     const formattedSessions = sessions.map((session) => {
-      // Mask IP address like 192.168.x.x
       let maskedIp = session.ipAddress;
       if (maskedIp?.includes(".")) {
         const parts = maskedIp.split(".");

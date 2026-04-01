@@ -53,14 +53,12 @@ module.exports = (options = {}) => {
         });
       }
 
-      // Throttled: update lastActiveAt at most once per 5 minutes
       const FIVE_MINUTES = 5 * 60 * 1000;
       const lastActiveTime = validateSession.lastActiveAt
         ? new Date(validateSession.lastActiveAt).getTime()
         : 0;
 
       if (Date.now() - lastActiveTime > FIVE_MINUTES) {
-        // Fire and forget to not block the current request latency
         userSessionService.touchSession(sessionId).catch(console.error);
       }
 
