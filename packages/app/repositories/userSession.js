@@ -57,9 +57,6 @@ class UserSessionRepository extends BaseRepository {
   }
 
   /**
-   * @deprecated — No longer called during sign-in.
-   * The per-device design always creates a new session on each sign-in.
-   * Retained for backward compatibility; will be removed in a later cleanup PR.
    * @param {string} userId
    */
   async findActiveSessionByUser(userId) {
