@@ -196,13 +196,12 @@ async function signinController(req, res, next) {
       const mfaSession = await mfaSessionService.createSession({
         userId: user._id,
       });
-      const isProduction = getIsProduction();
 
       res.cookie("mfaSessionId", mfaSession.sessionId, {
         httpOnly: true,
-        sameSite: "strict",
-        expires: mfaSession.expiresAt,
-        domain: isProduction ? ".openlogo.fyi" : "localhost",
+        // sameSite: "strict",
+        // expires: mfaSession.expiresAt,
+        // domain: getIsProduction() ? ".openlogo.fyi" : "localhost",
       });
 
       return res.status(200).json({ statusCode: 200, mfaRequired: true });
