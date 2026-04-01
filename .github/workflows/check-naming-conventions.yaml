@@ -35,10 +35,10 @@ jobs:
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PATTERN="^\[(Feat|Fix|HotFix|Refact|Docs|Test)\] issue-[a-zA-Z0-9]+ .+$"
+          PATTERN="^\[(Feat|Fix|HotFix|Refact|Docs|Test)\] Issue-[a-zA-Z0-9]+ .+$"
           if ! echo "$TITLE" | grep -Eq "$PATTERN"; then
             echo "❌ PR title does not follow convention."
-            echo "Expected format: [Fix] issue-931 Fix something meaningful"
+            echo "Expected format: [Fix] Issue-931 Fix something meaningful"
             exit 1
           fi
           echo "✅ PR title is valid."
