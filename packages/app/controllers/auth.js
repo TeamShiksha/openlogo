@@ -119,7 +119,7 @@ async function signupController(req, res, next) {
  * This controller validates the sign-in payload, checks if the email exists,
  * verifies the user's email status, and compares the provided password with
  * the stored one.
- * On successful authentication, it creates or reuses an active user session
+ * On successful authentication, it always creates a new per-device session
  * and sets a sessionId cookie to maintain a session-based login.
  *
  * @param {import("express").Request} req
@@ -207,13 +207,13 @@ async function signinController(req, res, next) {
       return res.status(200).json({ statusCode: 200, mfaRequired: true });
     }
 
-    let session = {};
-    session = await userSessionService.userActiveSession(user._id);
-    if (!session) {
-      session = await userSessionService.createSession({
-        userId: user._id,
-      });
-    }
+    // Always create a new session for this device/browser.
+    // Per-device design: each sign-in gets its own independent session.
+    const session = await userSessionService.createSession({
+      userId: user._id,
+      userAgent: req.headers["user-agent"] || "",
+      ipAddress: req.ip,
+    });
 
     const currentDate = new Date();
     const oneDayValidityTimestamp = new Date(
@@ -636,13 +636,13 @@ async function siginWithMFAController(req, res, next) {
 
     const isProduction = getIsProduction();
 
-    let session = {};
-    session = await userSessionService.userActiveSession(user._id);
-    if (!session) {
-      session = await userSessionService.createSession({
-        userId: user._id,
-      });
-    }
+    // Always create a new session for this device/browser.
+    // Per-device design: each MFA sign-in gets its own independent session.
+    const session = await userSessionService.createSession({
+      userId: user._id,
+      userAgent: req.headers["user-agent"] || "",
+      ipAddress: req.ip,
+    });
     const currentDate = new Date();
     const oneWeekValidityTimestamp = new Date(
       currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
