@@ -11,6 +11,7 @@ function CurrentPlan({ isGuest }) {
       <p className={styles["current-plan-tagline"]}>{CURRENT_PLAN.tagline}</p>
 
       <Button
+        variant="primary"
         className={styles["upgrade-button"]}
         disabled={keepBtnDisabled || isGuest}
         style={{ cursor: isGuest ? "default" : "pointer" }}

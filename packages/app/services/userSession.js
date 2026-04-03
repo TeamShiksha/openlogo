@@ -154,4 +154,3 @@ class UserSessionService {
 }
 
 module.exports = UserSessionService;
-

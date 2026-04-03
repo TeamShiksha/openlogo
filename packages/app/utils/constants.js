@@ -80,8 +80,8 @@ const Messages = {
   IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
-  INCORRECT_PASSWORD: "Current password is incorrect", 
-  SAME_PASSWORD:"Current password is same as old password",
+  INCORRECT_PASSWORD: "Current password is incorrect",
+  SAME_PASSWORD: "Current password is same as old password",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
@@ -111,7 +111,8 @@ const Messages = {
   MFA_FAILED: "Failed to enable/disable MFA",
   INCORRECT_PIN: "Incorrect pin. Please try again.",
   SESSION_NOT_FOUND: "Session not found.",
-  CANNOT_REVOKE_CURRENT_SESSION: "Cannot revoke current session. Use signout instead.",
+  CANNOT_REVOKE_CURRENT_SESSION:
+    "Cannot revoke current session. Use signout instead.",
   SESSION_LIMIT_EXCEEDED: "Maximum number of active sessions exceeded.",
 };
 

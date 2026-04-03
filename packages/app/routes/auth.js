@@ -38,7 +38,11 @@ router.post("/mfa/disable", authMiddleware(), disableMFAController);
 router.get("/mfa/status", authMiddleware(), mfaStatusController);
 
 router.get("/sessions", authMiddleware(), listSessionsController);
-router.delete("/sessions/:sessionId", authMiddleware(), revokeSessionController);
+router.delete(
+  "/sessions/:sessionId",
+  authMiddleware(),
+  revokeSessionController
+);
 router.post("/signout/others", authMiddleware(), signoutOthersController);
 router.post("/signout/all", authMiddleware(), signoutAllController);
 

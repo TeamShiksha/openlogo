@@ -8,6 +8,7 @@ import UserInfo from "../../components/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
 import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
 import SettingCard from "../../components/settings/SettingCard";
+import DeviceSessionCard from "../../components/devicesession/DeviceSessionCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
@@ -221,7 +222,7 @@ function Dashboard() {
       ) : (
         <>
           <div className={styles["dashboard-content-container"]}>
-            <CardWrapper>
+            <CardWrapper title="Overview">
               <Graph />
             </CardWrapper>
           </div>
@@ -268,6 +269,9 @@ function Dashboard() {
               </CardWrapper>
               <CardWrapper title="Change Password">
                 <ChangePassword isGuest={isGuest} />
+              </CardWrapper>
+              <CardWrapper title="Device Sessions">
+                <DeviceSessionCard isGuest={isGuest} />
               </CardWrapper>
               <CardWrapper title="Setting">
                 <SettingCard isGuest={isGuest} />

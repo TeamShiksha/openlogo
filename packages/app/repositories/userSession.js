@@ -127,4 +127,3 @@ class UserSessionRepository extends BaseRepository {
 }
 
 module.exports = UserSessionRepository;
-
