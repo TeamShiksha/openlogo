@@ -163,7 +163,9 @@ describe("ThemeProvider", () => {
 
     expect(contextValue).toHaveProperty("theme");
     expect(contextValue).toHaveProperty("setTheme");
+    expect(contextValue).toHaveProperty("toggleTheme");
     expect(typeof contextValue.setTheme).toBe("function");
+    expect(typeof contextValue.toggleTheme).toBe("function");
     expect(["light", "dark", "device"]).toContain(contextValue.theme);
   });
 

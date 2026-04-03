@@ -24,52 +24,60 @@ ChartJS.register(
   Legend
 );
 
-const getBaseOptions = (isDarkMode) => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    title: {
-      display: true,
-      text: "Requests",
-      color: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
-      font: {
-        size: 20,
+const getBaseOptions = (theme) => {
+  const isDarkMode =
+    theme === "dark" ||
+    (theme === "device" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: "Requests",
+        color: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
+        font: {
+          size: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: isDarkMode ? "rgb(31, 41, 55)" : "rgb(255, 255, 255)",
+        titleColor: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
+        bodyColor: isDarkMode ? "rgb(209, 213, 219)" : "rgb(75, 85, 99)",
+        borderColor: isDarkMode
+          ? "rgba(75, 85, 99, 0.3)"
+          : "rgb(177, 179, 183, 0.3)",
+        borderWidth: 1,
       },
     },
-    tooltip: {
-      backgroundColor: isDarkMode ? "rgb(31, 41, 55)" : "rgb(255, 255, 255)",
-      titleColor: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
-      bodyColor: isDarkMode ? "rgb(209, 213, 219)" : "rgb(75, 85, 99)",
-      borderColor: isDarkMode
-        ? "rgba(75, 85, 99, 0.3)"
-        : "rgb(177, 179, 183, 0.3)",
-      borderWidth: 1,
-    },
-  },
-  scales: {
-    x: {
-      grid: {
-        color: isDarkMode
-          ? "rgba(75, 85, 99, 0.2)"
-          : "rgba(177, 179, 183, 0.2)",
+    scales: {
+      x: {
+        grid: {
+          color: isDarkMode
+            ? "rgba(75, 85, 99, 0.2)"
+            : "rgba(177, 179, 183, 0.2)",
+        },
+        ticks: {
+          color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
+        },
       },
-      ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
-      },
-    },
-    y: {
-      grid: {
-        color: isDarkMode
-          ? "rgba(75, 85, 99, 0.2)"
-          : "rgba(177, 179, 183, 0.2)",
-      },
-      ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
+      y: {
+        grid: {
+          color: isDarkMode
+            ? "rgba(75, 85, 99, 0.2)"
+            : "rgba(177, 179, 183, 0.2)",
+        },
+        ticks: {
+          color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
+        },
       },
     },
-  },
-});
+  };
+};
 
 function parseStatsDataForPeriod(data, period) {
   if (!Array.isArray(data)) {
@@ -140,7 +148,7 @@ function niceStep(maxValue, targetTicks = 10) {
 }
 
 export default function Graph() {
-  const { isDarkMode } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [selectedPeriod, setSelectedPeriod] = useState("week");
   const [chartData, setChartData] = useState({
     labels: [],
@@ -225,7 +233,7 @@ export default function Graph() {
 
   const options = useMemo(() => {
     const maxTicks = Math.min(100, Math.ceil(yMax / step) + 1);
-    const baseOptions = getBaseOptions(isDarkMode);
+    const baseOptions = getBaseOptions(theme);
 
     return {
       ...baseOptions,
@@ -245,7 +253,7 @@ export default function Graph() {
         },
       },
     };
-  }, [yMax, step, isDarkMode]);
+  }, [yMax, step, theme]);
 
   const dataConfig = {
     labels: chartData.labels,
@@ -256,7 +264,13 @@ export default function Graph() {
         borderWidth: 2,
         pointRadius: 3,
         tension: 0.2,
-        borderColor: isDarkMode ? "rgb(99, 102, 241)" : "rgb(79, 71, 228)",
+        borderColor:
+          theme === "dark" ||
+          (theme === "device" &&
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ? "rgb(99, 102, 241)"
+            : "rgb(79, 71, 228)",
         spanGaps: true,
         fill: false,
       },
