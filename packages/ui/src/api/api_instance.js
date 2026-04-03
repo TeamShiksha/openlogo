@@ -17,10 +17,10 @@ export const instance = axios.create({
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      if (window.location.pathname !== "/") {
+    if (error.response?.status === 401) {
+      if (globalThis.location.pathname !== "/") {
         localStorage.clear();
-        window.location.href = "/";
+        globalThis.location.href = "/";
       }
     }
     return Promise.reject(error);

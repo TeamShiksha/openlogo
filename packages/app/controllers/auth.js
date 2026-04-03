@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 
 const {
   UserService,
@@ -886,7 +886,7 @@ async function listSessionsController(req, res, next) {
     const formattedSessions = sessions.map((session) => {
       // Mask IP address like 192.168.x.x
       let maskedIp = session.ipAddress;
-      if (maskedIp && maskedIp.includes(".")) {
+      if (maskedIp?.includes(".")) {
         const parts = maskedIp.split(".");
         if (parts.length === 4) {
           maskedIp = `${parts[0]}.${parts[1]}.x.x`;

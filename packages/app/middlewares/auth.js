@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const UserSessionService = require("../services/userSession");
 const {
   UserType,

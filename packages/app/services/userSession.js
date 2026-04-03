@@ -54,7 +54,7 @@ class UserSessionService {
     const activeSessions =
       await this.userSessionRepository.findAllActiveSessionsByUser(userId);
     if (activeSessions.length >= MAX_SESSIONS_PER_USER) {
-      const oldest = activeSessions[activeSessions.length - 1];
+      const oldest = activeSessions.at(-1);
       await this.userSessionRepository.deactivateSession(oldest.sessionId);
     }
 

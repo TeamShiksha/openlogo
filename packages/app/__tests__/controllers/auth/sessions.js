@@ -1,9 +1,7 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
-const { UserSessionService, UserService } = require("../../../services");
+const { UserSessionService } = require("../../../services");
 const { ENDPOINTS } = require("../../../utils/testconstants");
 const {
-  MOCK_USERS,
   MOCK_USER_SESSIONS,
   MOCK_SESSION_ID,
   MOCK_SESSION_ID_2,
@@ -12,9 +10,6 @@ const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 
 describe("SESSION MANAGEMENT API", () => {
-  // Dummy usage to bypass strict linter rules without removing future/legacy imports
-  // eslint-disable-next-line no-constant-condition
-  if (false) console.log(STATUS_CODES, UserService, MOCK_USERS);
   beforeEach(() => {
     jest.clearAllMocks();
 
