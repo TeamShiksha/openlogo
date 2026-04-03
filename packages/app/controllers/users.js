@@ -309,8 +309,16 @@ async function updatePasswordController(req, res, next) {
         error: STATUS_CODES[400],
       });
     }
+    const isSameAsOldPassword = await user.matchPassword(newPassword);
+    if (isSameAsOldPassword) {
+      return res.status(400).json({
+        message: Messages.SAME_PASSWORD,
+        statusCode: 400,
+        error: STATUS_CODES[400],
+      });
+    }
 
-    const userUpdateSuccessful = userService.updateUserPassword(
+    const userUpdateSuccessful = await userService.updateUserPassword(
       user,
       newPassword
     );
