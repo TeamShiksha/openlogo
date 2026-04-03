@@ -903,7 +903,9 @@ async function listSessionsController(req, res, next) {
       };
     });
 
-    return res.status(200).json({ statusCode: 200, sessions: formattedSessions });
+    return res
+      .status(200)
+      .json({ statusCode: 200, sessions: formattedSessions });
   } catch (error) {
     next(error);
   }
@@ -922,12 +924,17 @@ async function revokeSessionController(req, res, next) {
     if (sessionId === currentSessionId) {
       return res.status(400).json({
         error: STATUS_CODES[400],
-        message: Messages.CANNOT_REVOKE_CURRENT_SESSION || "Cannot revoke current session",
+        message:
+          Messages.CANNOT_REVOKE_CURRENT_SESSION ||
+          "Cannot revoke current session",
         statusCode: 400,
       });
     }
 
-    const deactivated = await userSessionService.revokeSession(userId, sessionId);
+    const deactivated = await userSessionService.revokeSession(
+      userId,
+      sessionId
+    );
     if (!deactivated) {
       return res.status(404).json({
         error: STATUS_CODES[404],
@@ -951,7 +958,10 @@ async function signoutOthersController(req, res, next) {
     const { userId } = req.userData;
     const currentSessionId = req.cookies.sessionId;
 
-    const result = await userSessionService.revokeOtherSessions(userId, currentSessionId);
+    const result = await userSessionService.revokeOtherSessions(
+      userId,
+      currentSessionId
+    );
 
     return res.status(200).json({
       statusCode: 200,

@@ -13,6 +13,7 @@ function CurrentPlan({ isGuest }) {
       </div>
 
       <Button
+        variant="primary"
         className={styles["upgrade-button"]}
         variant="primary"
         disabled={keepBtnDisabled || isGuest}

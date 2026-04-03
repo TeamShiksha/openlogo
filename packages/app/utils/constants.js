@@ -111,7 +111,8 @@ const Messages = {
   MFA_FAILED: "Failed to enable/disable MFA",
   INCORRECT_PIN: "Incorrect pin. Please try again.",
   SESSION_NOT_FOUND: "Session not found.",
-  CANNOT_REVOKE_CURRENT_SESSION: "Cannot revoke current session. Use signout instead.",
+  CANNOT_REVOKE_CURRENT_SESSION:
+    "Cannot revoke current session. Use signout instead.",
   SESSION_LIMIT_EXCEEDED: "Maximum number of active sessions exceeded.",
 };
 
