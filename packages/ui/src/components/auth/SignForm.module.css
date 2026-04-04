@@ -85,9 +85,7 @@
 }
 
 .form-width {
-  width: 400px;
-  display: flex;
-  flex-direction: column;
+  width: 380px;
 }
 
 .logo {
@@ -162,7 +160,7 @@
 .eye-button {
   position: absolute;
   right: 8px;
-  top: 22px;
+  top: 10px;
   background: none;
   border: none;
   cursor: pointer;

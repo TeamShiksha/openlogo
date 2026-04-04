@@ -84,7 +84,7 @@ function SignUp({ toggleForm, onClose }) {
       { label: "Uppercase", met: /[A-Z]/.test(pwd) },
       { label: "Lowercase", met: /[a-z]/.test(pwd) },
       { label: "Number (0-9)", met: /\d/.test(pwd) },
-      { label: "Special char", met: /[^A-Za-z0-9]/.test(pwd) },
+      { label: "Special character", met: /[^A-Za-z0-9]/.test(pwd) },
     ];
   }, [formValues.password]);
 

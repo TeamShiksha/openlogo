@@ -22,7 +22,12 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin }) => {
   if (!isOpen) return null;
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen} customWidth={"500px"} customClass={styles["auth-modal"]}>
+    <Modal
+      onClose={onClose}
+      isOpen={isOpen}
+      customWidth={"460px"}
+      customClass={styles["auth-modal"]}
+    >
       <div
         style={{ opacity: isTransitioning ? 0 : 1, transition: "opacity 0.3s" }}
       >

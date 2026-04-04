@@ -458,7 +458,7 @@ export const PRIVACY_AND_TERMS = [
 
 export const SIGNUP = {
   title: "Sign up for free",
-  description: "Create your account and start building in seconds",
+  description: "Create your account and start integrating in seconds",
   termsUrl: "/privacy#terms",
   privacyUrl: "/privacy#privacy",
   fields: [
