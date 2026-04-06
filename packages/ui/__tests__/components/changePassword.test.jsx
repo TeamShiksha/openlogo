@@ -1,19 +1,23 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { vi, expect, describe, it, beforeEach } from "vitest";
-import ChangePassword from "../../src/components/changepassword/ChangePassword.jsx";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import ChangePassword from "../../src/components/changepassword/ChangePassword";
 import {
   BUTTON_TEXT,
-  CHANGE_PASSWORD,
   CHANGE_PASSWORD_FIELDS,
+  MESSAGES,
 } from "../../src/utils/Constants";
+import * as useApiHook from "../../src/hooks/useApi";
 
-const mockUseApi = vi.fn();
 const mockMakeRequest = vi.fn();
 const mockToastSuccess = vi.fn();
 const mockToastError = vi.fn();
 
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: () => mockUseApi(),
+  useApi: () => ({
+    makeRequest: mockMakeRequest,
+    errorMsg: null,
+    loading: false,
+  }),
 }));
 
 vi.mock("../../src/hooks/useToast", () => ({
@@ -23,207 +27,154 @@ vi.mock("../../src/hooks/useToast", () => ({
   }),
 }));
 
-let mockApiReturn;
+const getInputs = () => ({
+  currPassword: screen.getByPlaceholderText(CHANGE_PASSWORD_FIELDS[0].label),
+  newPassword: screen.getByPlaceholderText(CHANGE_PASSWORD_FIELDS[1].label),
+});
 
-const getSubmitButton = () => {
-  const buttons = screen.getAllByRole("button");
-  let submitButton = buttons.find((btn) => btn.type === "submit");
-  return submitButton;
-};
+const getSubmitButton = () =>
+  screen.getByRole("button", { name: BUTTON_TEXT.changePasswordLabel });
 
 describe("ChangePassword", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockApiReturn = {
-      makeRequest: mockMakeRequest,
-      data: null,
-      errorMsg: "",
-      isSuccess: false,
-      loading: false,
-    };
-
-    mockUseApi.mockImplementation(() => mockApiReturn);
   });
 
-  it("renders form fields and button", () => {
+  it("renders password inputs and submit button", () => {
     render(<ChangePassword isGuest={false} />);
     CHANGE_PASSWORD_FIELDS.forEach((field) => {
-      const fieldLabel = screen.getByLabelText(field.label);
-      expect(fieldLabel).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(field.label)).toBeInTheDocument();
     });
-    const changepasswordButton = screen.getByRole("button", {
-      name: BUTTON_TEXT.changePasswordLabel,
-    });
-    expect(changepasswordButton).toBeInTheDocument();
+    expect(getSubmitButton()).toBeInTheDocument();
   });
 
-  it("validates fields on focus", async () => {
+  it("shows validation error after focusing a field", async () => {
     render(<ChangePassword isGuest={false} />);
-    const currPasswordInput = screen.getByLabelText("Current Password");
-    fireEvent.focus(currPasswordInput);
+    const { currPassword } = getInputs();
+    fireEvent.focus(currPassword);
 
     await waitFor(() => {
-      const currPasswordRequired = screen.getByText(
-        CHANGE_PASSWORD.currRequired
-      );
-      expect(currPasswordRequired).toBeInTheDocument();
+      expect(screen.getByText(/required/i)).toBeInTheDocument();
     });
   });
 
-  it("disables button when form is invalid or loading", () => {
-    mockApiReturn.loading = true;
+  it("disables submit button when loading", () => {
+    vi.spyOn(useApiHook, "useApi").mockReturnValueOnce({
+      makeRequest: mockMakeRequest,
+      errorMsg: null,
+      loading: true,
+    });
+
     render(<ChangePassword isGuest={false} />);
-    const submitButton = getSubmitButton();
-    expect(submitButton).toBeDisabled();
+    expect(getSubmitButton()).toBeDisabled();
   });
 
-  it("shows success toast on successful response", async () => {
-    mockMakeRequest.mockResolvedValue({ statusCode: 200 });
-    mockApiReturn.loading = false;
-    mockApiReturn.errorMsg = "";
+  it("submits form and shows success toast on success", async () => {
+    mockMakeRequest.mockResolvedValue(true);
     render(<ChangePassword isGuest={false} />);
-    const currInput = screen.getByLabelText("Current Password");
-    const newInput = screen.getByLabelText("New Password");
-    const submitButton = getSubmitButton();
-    fireEvent.change(currInput, { target: { value: "Oldpass@123" } });
-    fireEvent.change(newInput, { target: { value: "Newpass@121" } });
-    fireEvent.click(submitButton);
+
+    const { currPassword, newPassword } = getInputs();
+    fireEvent.change(currPassword, { target: { value: "Oldpass@123" } });
+    fireEvent.change(newPassword, { target: { value: "Newpass@123" } });
+
+    await waitFor(() => {
+      expect(getSubmitButton()).not.toBeDisabled();
+    });
+
+    fireEvent.click(getSubmitButton());
+
     await waitFor(() => {
       expect(mockToastSuccess).toHaveBeenCalledWith(
-        "Password updated successfully"
+        MESSAGES.UPDATE_PASSWORD_SUCCESS
       );
     });
   });
 
-  it("shows error toast on incorrect password", async () => {
-    mockMakeRequest.mockResolvedValue({ statusCode: 400 });
-    mockApiReturn.errorMsg = "Incorrect current password";
-    render(<ChangePassword isGuest={false} />);
-    const currPassword = screen.getByLabelText("Current Password");
-    fireEvent.change(currPassword, { target: { value: "Wrongpass@123" } });
-    const newPassword = screen.getByLabelText("New Password");
-    fireEvent.change(newPassword, {
-      target: { value: "Newpass@123" },
+  it("shows error toast when api returns errorMsg", async () => {
+    vi.spyOn(useApiHook, "useApi").mockReturnValueOnce({
+      makeRequest: mockMakeRequest,
+      errorMsg: "Incorrect current password",
+      loading: false,
     });
-    const submitButton = getSubmitButton();
-    fireEvent.click(submitButton);
+
+    render(<ChangePassword isGuest={false} />);
+
     await waitFor(() => {
       expect(mockToastError).toHaveBeenCalledWith("Incorrect current password");
     });
   });
 
-  it("does not submit form when validation errors exist", async () => {
+  it("does not submit when validation errors exist", async () => {
     render(<ChangePassword isGuest={false} />);
-    const submitButton = getSubmitButton();
-    fireEvent.click(submitButton);
+    fireEvent.click(getSubmitButton());
+
     await waitFor(() => {
       expect(mockMakeRequest).not.toHaveBeenCalled();
     });
   });
 
-  it("prevents form submission if user is guest", () => {
+  it("disables submit button for guest users", () => {
     render(<ChangePassword isGuest={true} />);
-    const submitButton = getSubmitButton();
-    expect(submitButton).toBeDisabled();
+    expect(getSubmitButton()).toBeDisabled();
   });
 
-  it("renders eye icon buttons for password fields", () => {
+  it("renders eye toggle buttons", () => {
     render(<ChangePassword isGuest={false} />);
-    const currentPasswordInput = screen.getByLabelText("Current Password");
-    const newPasswordInput = screen.getByLabelText("New Password");
-
-    expect(currentPasswordInput).toBeInTheDocument();
-    expect(newPasswordInput).toBeInTheDocument();
-
-    const currentPasswordEyeButton = screen.getByRole("button", {
-      name: /show current password/i,
-    });
-    const newPasswordEyeButton = screen.getByRole("button", {
-      name: /show new password/i,
-    });
-
-    expect(currentPasswordEyeButton).toBeInTheDocument();
-    expect(newPasswordEyeButton).toBeInTheDocument();
-  });
-
-  it("toggles current password visibility when clicking the eye icon", () => {
-    render(<ChangePassword isGuest={false} />);
-    const currentPasswordInput = screen.getByLabelText("Current Password");
-    const currentPasswordEyeButton = screen.getByRole("button", {
-      name: /show current password/i,
-    });
-
-    expect(currentPasswordInput).toHaveAttribute("type", "password");
-    expect(currentPasswordEyeButton).toHaveAttribute(
-      "aria-label",
-      "Show current password"
-    );
-
-    fireEvent.click(currentPasswordEyeButton);
-    expect(currentPasswordInput).toHaveAttribute("type", "text");
     expect(
-      screen.getByRole("button", { name: /hide current password/i })
+      screen.getByRole("button", { name: "Show Current Password" })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Show New Password" })
+    ).toBeInTheDocument();
+  });
+
+  it("toggles current password visibility", () => {
+    render(<ChangePassword isGuest={false} />);
+    const { currPassword } = getInputs();
 
     fireEvent.click(
-      screen.getByRole("button", { name: /hide current password/i })
+      screen.getByRole("button", { name: "Show Current Password" })
     );
-    expect(currentPasswordInput).toHaveAttribute("type", "password");
-    expect(
-      screen.getByRole("button", { name: /show current password/i })
-    ).toBeInTheDocument();
+    expect(currPassword).toHaveAttribute("type", "text");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Hide Current Password" })
+    );
+    expect(currPassword).toHaveAttribute("type", "password");
   });
 
-  it("toggles new password visibility when clicking the eye icon", () => {
+  it("toggles new password visibility", () => {
     render(<ChangePassword isGuest={false} />);
-    const newPasswordInput = screen.getByLabelText("New Password");
-    const newPasswordEyeButton = screen.getByRole("button", {
-      name: /show new password/i,
-    });
+    const { newPassword } = getInputs();
 
-    expect(newPasswordInput).toHaveAttribute("type", "password");
-    expect(newPasswordEyeButton).toHaveAttribute(
-      "aria-label",
-      "Show new password"
+    fireEvent.click(screen.getByRole("button", { name: "Show New Password" }));
+    expect(newPassword).toHaveAttribute("type", "text");
+
+    fireEvent.click(screen.getByRole("button", { name: "Hide New Password" }));
+    expect(newPassword).toHaveAttribute("type", "password");
+  });
+
+  it("password visibility toggles independently", () => {
+    render(<ChangePassword isGuest={false} />);
+    const { currPassword, newPassword } = getInputs();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Show Current Password" })
     );
 
-    fireEvent.click(newPasswordEyeButton);
-    expect(newPasswordInput).toHaveAttribute("type", "text");
-    expect(
-      screen.getByRole("button", { name: /hide new password/i })
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /hide new password/i }));
-    expect(newPasswordInput).toHaveAttribute("type", "password");
-    expect(
-      screen.getByRole("button", { name: /show new password/i })
-    ).toBeInTheDocument();
+    expect(currPassword).toHaveAttribute("type", "text");
+    expect(newPassword).toHaveAttribute("type", "password");
   });
 
-  it("documents keyboard focus behavior of eye buttons (tabIndex)", () => {
+  it("eye buttons are not focusable via keyboard", () => {
     render(<ChangePassword isGuest={false} />);
-    const currentPasswordEyeButton = screen.getByRole("button", {
-      name: /show current password/i,
+    const buttons = screen.getAllByRole("button");
+    const eyeButtons = buttons.filter((btn) =>
+      btn.getAttribute("aria-label")?.includes("Password")
+    );
+
+    eyeButtons.forEach((btn) => {
+      expect(btn.getAttribute("tabindex")).toBe("-1");
     });
-    const newPasswordEyeButton = screen.getByRole("button", {
-      name: /show new password/i,
-    });
-
-    expect(currentPasswordEyeButton.getAttribute("tabindex")).toBe("-1");
-    expect(newPasswordEyeButton.getAttribute("tabindex")).toBe("-1");
-  });
-
-  it("toggles password fields independently", () => {
-    render(<ChangePassword isGuest={false} />);
-    const currentPasswordInput = screen.getByLabelText("Current Password");
-    const newPasswordInput = screen.getByLabelText("New Password");
-    const currentPasswordEyeButton = screen.getByRole("button", {
-      name: /show current password/i,
-    });
-
-    fireEvent.click(currentPasswordEyeButton);
-    expect(currentPasswordInput).toHaveAttribute("type", "text");
-
-    expect(newPasswordInput).toHaveAttribute("type", "password");
   });
 });

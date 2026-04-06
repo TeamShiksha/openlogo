@@ -34,10 +34,10 @@ describe("UserInfo Component", () => {
       </ToastContext.Provider>
     );
 
-    const nameInput = screen.getByLabelText(/name/i);
+    const nameInput = screen.getByTestId("input-name");
     expect(nameInput.value).toBe(MOCK_USER_DATA.name);
 
-    const emailInput = screen.getByLabelText(/email/i);
+    const emailInput = screen.getByTestId("input-email");
     expect(emailInput.value).toBe(MOCK_USER_DATA.email);
     expect(emailInput).toBeDisabled();
 
@@ -52,7 +52,7 @@ describe("UserInfo Component", () => {
       </ToastContext.Provider>
     );
 
-    const nameInput = screen.getByLabelText(/name/i);
+    const nameInput = screen.getByDisplayValue(MOCK_USER_DATA.name);
     fireEvent.change(nameInput, { target: { value: "New Name" } });
     expect(nameInput.value).toBe("New Name");
   });
@@ -64,7 +64,7 @@ describe("UserInfo Component", () => {
       </ToastContext.Provider>
     );
 
-    const nameInput = screen.getByLabelText(/name/i);
+    const nameInput = screen.getByDisplayValue(MOCK_USER_DATA.name);
     fireEvent.change(nameInput, { target: { value: "" } });
 
     const saveButton = screen.getByText("Save");
@@ -91,7 +91,7 @@ describe("UserInfo Component", () => {
       </ToastContext.Provider>
     );
 
-    const nameInput = screen.getByLabelText(/name/i);
+    const nameInput = screen.getByDisplayValue(MOCK_USER_DATA.name);
     const saveButton = screen.getByText("Save");
     expect(saveButton).toBeDisabled();
 
@@ -110,7 +110,7 @@ describe("UserInfo Component", () => {
       </ToastContext.Provider>
     );
 
-    const nameInput = screen.getByLabelText("Username");
+    const nameInput = screen.getByTestId("input-name");
     expect(nameInput.value).toBe(MOCK_USER_DATA.name);
 
     fireEvent.change(nameInput, { target: { value: "Updated Name" } });

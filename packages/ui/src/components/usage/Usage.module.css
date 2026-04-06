@@ -1,50 +1,118 @@
-.usage-body-container {
+.usage-container {
+  width: 100%;
+  max-width: 100%;
+  min-height: 300px;
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding-top: 10px;
+  margin-bottom: 1.5rem;
 }
 
-.usage-body-container .data-heading {
-  font-size: medium;
+.card-title {
+  font-size: 1.125rem;
   font-weight: 600;
-  line-height: 28px;
-  color: var(--label-color);
+  color: var(--black);
+  margin: 0;
 }
 
-.usage-body-container .data {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 20px;
-  color: var(--primary);
-  margin-bottom: 12px;
-}
-
-.circular-chart {
-  width: 160px;
-  max-height: 250px;
-  background-color: var(--white);
-}
-
-.usage-statistics {
-  min-width: 110px;
-  max-height: 250px;
-}
-
-.dashboard-reset-date {
-  font-size: medium;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--description);
+.usage-content {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-@media (min-width: 768px) and (max-width: 1300px) {
-  .usage-statistics {
-    display: flex;
-    justify-content: space-between;
+.donut-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+.donut-circle {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.donut-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--black);
+}
+
+.usage-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.usage-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.usage-label {
+  color: var(--description);
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.usage-value {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.125rem;
+  min-width: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.usage-reset {
+  color: var(--description);
+  font-size: 0.8125rem;
+  margin: 0.75rem 0 0 0;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .donut-wrapper {
+    width: 140px;
+    height: 140px;
+  }
+
+  .donut-text {
+    font-size: 1.25rem;
+  }
+
+  .usage-value {
+    font-size: 1rem;
   }
 }
