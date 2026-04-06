@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+set -e
 
 BRANCH=$(git symbolic-ref --short HEAD)
 PATTERN="^(Feat|Fix|HotFix|Refact|Docs|Test)/issue-[a-zA-Z0-9]+-[a-zA-Z0-9-]+$"
