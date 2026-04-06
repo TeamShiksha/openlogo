@@ -30,6 +30,7 @@ const CodeBlock = ({
         <div className={styles["language-selector"]}>
           {Object.keys(codeExamples).map((lang) => (
             <button
+              type="button"
               key={`${id}-${lang}`}
               onClick={() => setSelectedLanguage(lang)}
               className={`${styles["language-button"]} ${
@@ -47,6 +48,7 @@ const CodeBlock = ({
         <div className={styles["copy-inside"]}>
           <code>{codeExamples[selectedLanguage]}</code>
           <button
+            type="button"
             onClick={() => copyToClipboard(codeExamples[selectedLanguage])}
           >
             <img

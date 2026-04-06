@@ -857,12 +857,46 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["0.7.0 version", "0.6.0 version", "Previous version"],
-  latestVersion: "0.7.0 version",
+  versions: [
+    "0.8.0 version",
+    "0.7.0 version",
+    "0.6.0 version",
+    "Previous version",
+  ],
+  latestVersion: "0.8.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
+      {
+        versionName: "0.8.0 version",
+        releaseDate: "Apr 2026",
+        imgSrc: version07,
+        releaseNotes: [
+          {
+            releaseNote:
+              "Documentation experience has been redesigned with a cleaner visual system, improved endpoint readability, and a stronger quickstart flow (#953).",
+            contributors: [
+              {
+                contributorName: "openlogo-community",
+                contributorGithubLink:
+                  "https://github.com/TeamShiksha/openlogo",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Code examples are now easier to scan with clearer language selection and copy actions across endpoints.",
+            contributors: [
+              {
+                contributorName: "openlogo-community",
+                contributorGithubLink:
+                  "https://github.com/TeamShiksha/openlogo",
+              },
+            ],
+          },
+        ],
+      },
       {
         versionName: "0.7.0 version",
         releaseDate: "Mar 2026",
