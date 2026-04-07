@@ -49,7 +49,7 @@ class UserSessionService {
    * @param {string} [params.ipAddress] - Client IP address.
    * @returns {Promise<Object>} Created session document.
    */
-  async createSession({ userId, userAgent = "", ipAddress = null }) {
+  async createSession({ userId, userAgent = "" }) {
     // Enforce max concurrent sessions — revoke the oldest if at the limit.
     const activeSessions =
       await this.userSessionRepository.findAllActiveSessionsByUser(userId);
@@ -67,7 +67,6 @@ class UserSessionService {
       sessionId,
       expiresAt,
       deviceInfo,
-      ipAddress,
     });
   }
 

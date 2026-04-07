@@ -41,8 +41,6 @@ const userSessionSchema = new mongoose.Schema({
     deviceType: { type: String, default: "Unknown" },
   },
 
-  ipAddress: { type: String, default: null },
-
   lastActiveAt: { type: Date, default: Date.now },
 });
 
