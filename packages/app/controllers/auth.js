@@ -211,7 +211,6 @@ async function signinController(req, res, next) {
     const session = await userSessionService.createSession({
       userId: user._id,
       userAgent: req.headers["user-agent"] || "",
-      ipAddress: req.ip,
     });
 
     const currentDate = new Date();
@@ -638,7 +637,6 @@ async function siginWithMFAController(req, res, next) {
     const session = await userSessionService.createSession({
       userId: user._id,
       userAgent: req.headers["user-agent"] || "",
-      ipAddress: req.ip,
     });
     const currentDate = new Date();
     const oneWeekValidityTimestamp = new Date(
@@ -881,18 +879,10 @@ async function listSessionsController(req, res, next) {
     const sessions = await userSessionService.getActiveSessions(userId);
 
     const formattedSessions = sessions.map((session) => {
-      let maskedIp = session.ipAddress;
-      if (maskedIp?.includes(".")) {
-        const parts = maskedIp.split(".");
-        if (parts.length === 4) {
-          maskedIp = `${parts[0]}.${parts[1]}.x.x`;
-        }
-      }
 
       return {
         id: session.sessionId,
         deviceInfo: session.deviceInfo,
-        ipAddress: maskedIp,
         createdAt: session.createdAt,
         lastActiveAt: session.lastActiveAt,
         isCurrent: session.sessionId === currentSessionId,

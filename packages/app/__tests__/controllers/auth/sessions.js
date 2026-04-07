@@ -34,7 +34,6 @@ describe("SESSION MANAGEMENT API", () => {
       expect(response.status).toBe(200);
       expect(response.body.sessions).toHaveLength(2);
       expect(response.body.sessions[0].isCurrent).toBe(true);
-      expect(response.body.sessions[0].ipAddress).toBe("192.168.x.x");
     });
   });
 

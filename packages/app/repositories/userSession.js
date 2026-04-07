@@ -77,7 +77,7 @@ class UserSessionRepository extends BaseRepository {
   async findAllActiveSessionsByUser(userId) {
     return await this.model
       .find({ userId, isActive: true, expiresAt: { $gt: new Date() } })
-      .select("sessionId deviceInfo ipAddress createdAt lastActiveAt")
+      .select("sessionId deviceInfo createdAt lastActiveAt")
       .sort({ lastActiveAt: -1 });
   }
 

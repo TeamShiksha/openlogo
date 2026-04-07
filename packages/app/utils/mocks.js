@@ -468,7 +468,7 @@ const MOCK_USER_SESSIONS = [
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     deviceInfo: { browser: "Chrome", os: "Windows 10", deviceType: "desktop" },
-    ipAddress: "192.168.1.1", // NOSONAR
+
     lastActiveAt: new Date(Date.now()),
   },
   {
@@ -478,7 +478,7 @@ const MOCK_USER_SESSIONS = [
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     deviceInfo: { browser: "Safari", os: "iOS", deviceType: "mobile" },
-    ipAddress: "10.0.0.1", // NOSONAR
+
     lastActiveAt: new Date(Date.now()),
   },
   {
@@ -488,7 +488,7 @@ const MOCK_USER_SESSIONS = [
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     deviceInfo: { browser: "Firefox", os: "Mac OS", deviceType: "desktop" },
-    ipAddress: "172.16.0.1", // NOSONAR
+
     lastActiveAt: new Date(Date.now()),
   },
   {
@@ -498,7 +498,7 @@ const MOCK_USER_SESSIONS = [
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     deviceInfo: { browser: "Edge", os: "Windows 11", deviceType: "desktop" },
-    ipAddress: "192.168.1.100", // NOSONAR
+
     lastActiveAt: new Date(Date.now()),
   },
 ];
