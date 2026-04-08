@@ -117,9 +117,25 @@
   background: #f1f5f9;
 }
 
-.catalog-footer-nav-btn:disabled {
+.catalog-footer-nav-btn:disabled,
+.catalog-footer-nav-btn-disable {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.catalog-nav-left-arrow::after {
+  content: "Previous";
+}
+
+.catalog-nav-right-arrow::before {
+  content: "Next";
+}
+
+@media (max-width: 640px) {
+  .catalog-nav-left-arrow::after,
+  .catalog-nav-right-arrow::before {
+    display: none;
+  }
 }
 
 .cur-page {
