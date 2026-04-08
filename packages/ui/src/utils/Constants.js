@@ -88,6 +88,12 @@ export const HEADER_ITEMS = [
     type: "route",
   },
   {
+    name: "explore",
+    title: "Explore",
+    url: "/explore",
+    type: "route",
+  },
+  {
     name: "features",
     title: "Features",
     url: "/#features",
@@ -319,6 +325,21 @@ export const PRICING = {
       ],
     },
   ],
+};
+
+export const EXPLORE_BANNER = {
+  title: {
+    main: "Logo Assets for",
+    highlight: "Modern Brands",
+  },
+  subtitle: [
+    "High-fidelity SVG and PNG logo assets delivered via premium API.",
+    "The gold standard for developers and designers at scale.",
+  ],
+  search: {
+    placeholder: "Search logos by name, industry, or color...",
+    shortcut: "⌘K",
+  },
 };
 
 export const SETTING = [

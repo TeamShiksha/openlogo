@@ -1,0 +1,163 @@
+.catalog {
+  padding: 2.5rem 1.25rem; /* 40px 20px */
+  background: var(--white);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem; /* 24px */
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header h2 {
+  color: var(--black);
+  font-size: 1.375rem; /* 22px */
+  margin-bottom: 0.25rem;
+}
+
+.header p {
+  color: var(--description);
+  font-size: 0.875rem; /* 14px */
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 0.625rem; /* 10px */
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 0.375rem 0.75rem; /* 6px 12px */
+  border-radius: 1.25rem; /* 20px */
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--description);
+  cursor: pointer;
+  font-size: 0.8125rem; /* 13px */
+  white-space: nowrap;
+}
+
+.filterBtn:hover {
+  background: var(--primary-focus);
+}
+
+.active {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.75rem, 1fr)); /* 140px */
+  gap: 1.25rem; /* 20px */
+}
+
+/* Card */
+.card {
+  background: var(--white);
+  border-radius: 0.75rem; /* 12px */
+  padding: 1rem; /* 16px */
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-0.25rem); /* 4px */
+}
+
+/* Logo box */
+.logoBox {
+  height: 6.25rem; /* 100px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--table-background);
+  border-radius: 0.625rem; /* 10px */
+  margin-bottom: 0.75rem; /* 12px */
+}
+
+/* Meta */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-size: 0.875rem; /* 14px */
+  color: var(--black);
+}
+
+.type {
+  font-size: 0.6875rem; /* 11px */
+  color: var(--label-color);
+  background: var(--table-background);
+  padding: 0.125rem 0.375rem; /* 2px 6px */
+  border-radius: 0.25rem;
+}
+
+/* Load more */
+.loadMore {
+  margin-top: 1.875rem; /* 30px */
+  display: flex;
+  justify-content: center;
+}
+
+.loadMore button {
+  padding: 0.625rem 1rem; /* 10px 16px */
+  border-radius: var(--bradius);
+  border: none;
+  background: var(--primary-focus);
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .catalog {
+    padding: 2rem 1rem;
+  }
+
+  .header h2 {
+    font-size: 1.25rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); /* 120px */
+  }
+}
+
+@media (max-width: 480px) {
+  .catalog {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filters {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* clean 2-column layout */
+    gap: 1rem;
+  }
+
+  .logoBox {
+    height: 5rem; /* 80px */
+  }
+}

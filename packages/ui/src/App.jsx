@@ -15,6 +15,7 @@ import "./index.css";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
 import Release from "./page/release/Release.jsx";
 import CreateLogo from "./page/createlogo/CreateLogo.jsx";
+import Explore from "./page/explore/Explore.jsx";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
@@ -35,6 +36,7 @@ function App() {
           />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/docs" element={<Documentation />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/verify" element={<Verification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/release" element={<Release />} />
