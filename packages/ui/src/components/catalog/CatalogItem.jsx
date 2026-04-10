@@ -7,7 +7,18 @@ function CatalogItem({ company, onUpdate }) {
     <div className={styles["catalog-item"]}>
       <div className={styles["catalog-item-column-first"]}>
         <div className={styles["preview-placeholder"]}>
-          {/* Placeholder for preview thumbnail */}
+          {company.imageUrl ? (
+            <img
+              src={company.imageUrl}
+              alt={company.company_name}
+              className={styles["preview-image"]}
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
+            />
+          ) : (
+            <span className={styles["preview-fallback"]}>
+              {company.company_name.charAt(0).toUpperCase()}
+            </span>
+          )}
         </div>
         <div>
           <p className={styles["name-text"]}>
@@ -47,6 +58,7 @@ CatalogItem.propTypes = {
     extension: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
 };
