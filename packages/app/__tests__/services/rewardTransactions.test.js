@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const RewardTrackingService = require("../../services/rewardTransactions");
-const {
-  LogoRequestLogsRepository,
-  SubscriptionsRepository,
-  UsersRepository,
-  ImagesRepository,
-} = require("../../repositories");
 const { SubscriptionTypes } = require("../../utils/constants");
 const {
   createMockLogoRequestLogEntry,
   createValidRewardTrackingParams,
+  createMockIntegrationValidProScenario,
+  createMockIntegrationSelfUsageScenario,
+  createMockIntegrationObjectIdScenario,
+  MOCK_LOG_ENTRY_HOBBY,
+  MOCK_LOG_ENTRY_VALID,
 } = require("../../utils/mocks");
 
 jest.mock("../../repositories");
@@ -24,19 +23,13 @@ describe("RewardTrackingService", () => {
 
     rewardTrackingService = new RewardTrackingService();
 
-    mockLogoRequestLogsRepository = LogoRequestLogsRepository.mock.instances[0];
-    SubscriptionsRepository.mock.instances[0];
-    UsersRepository.mock.instances[0];
-    mockImagesRepository = ImagesRepository.mock.instances[0];
+    mockLogoRequestLogsRepository =
+      rewardTrackingService.logoRequestLogsRepository;
+    mockImagesRepository = rewardTrackingService.imagesRepository;
 
-    if (mockLogoRequestLogsRepository) {
-      mockLogoRequestLogsRepository.create = jest.fn();
-      mockLogoRequestLogsRepository.find = jest.fn();
-    }
-
-    if (mockImagesRepository) {
-      mockImagesRepository.update = jest.fn().mockResolvedValue({});
-    }
+    mockLogoRequestLogsRepository.create = jest.fn();
+    mockLogoRequestLogsRepository.find = jest.fn();
+    mockImagesRepository.update = jest.fn().mockResolvedValue({});
   });
 
   describe("Constructor", () => {
@@ -603,24 +596,7 @@ describe("RewardTrackingService", () => {
 
   describe("Integration scenarios", () => {
     it("should handle full flow for valid PRO user", async () => {
-      const params = {
-        imageId: "logo-apple",
-        userId: new mongoose.Types.ObjectId(),
-        creatorId: new mongoose.Types.ObjectId(),
-        keyId: "key-123",
-        subscriptionId: "sub-pro-001",
-        subscription: { type: SubscriptionTypes.PRO },
-      };
-
-      const mockLogEntry = {
-        _id: new mongoose.Types.ObjectId(),
-        user_id: params.userId,
-        key_id: params.keyId,
-        image_id: params.imageId,
-        user_plan: SubscriptionTypes.PRO,
-        is_reward_eligible: true,
-        reward_eligibility_reason: "VALID",
-      };
+      const { params, mockLogEntry } = createMockIntegrationValidProScenario();
 
       mockLogoRequestLogsRepository.find.mockResolvedValue([]);
       mockLogoRequestLogsRepository.create.mockResolvedValue(mockLogEntry);
@@ -636,20 +612,7 @@ describe("RewardTrackingService", () => {
     });
 
     it("should stop processing after first validation failure", async () => {
-      const params = {
-        imageId: "logo-apple",
-        userId: "user123",
-        creatorId: "user123",
-        keyId: "key-123",
-        subscriptionId: "sub-pro-001",
-        subscription: { type: SubscriptionTypes.PRO },
-      };
-
-      const mockLogEntry = {
-        _id: new mongoose.Types.ObjectId(),
-        is_reward_eligible: false,
-        reward_eligibility_reason: "SELF_USAGE",
-      };
+      const { params, mockLogEntry } = createMockIntegrationSelfUsageScenario();
 
       mockLogoRequestLogsRepository.create.mockResolvedValue(mockLogEntry);
 
@@ -660,27 +623,7 @@ describe("RewardTrackingService", () => {
     });
 
     it("should handle complex ObjectId comparisons in real-world scenario", async () => {
-      const userId = new mongoose.Types.ObjectId();
-      const creatorId = new mongoose.Types.ObjectId();
-
-      const params = {
-        imageId: "apple-logo-2024",
-        userId,
-        creatorId,
-        keyId: "api-key-abc123",
-        subscriptionId: "sub-pro-xyz",
-        subscription: { type: SubscriptionTypes.PRO },
-      };
-
-      const mockLogEntry = {
-        _id: new mongoose.Types.ObjectId(),
-        user_id: userId,
-        key_id: "api-key-abc123",
-        image_id: "apple-logo-2024",
-        user_plan: SubscriptionTypes.PRO,
-        is_reward_eligible: true,
-        reward_eligibility_reason: "VALID",
-      };
+      const { params, mockLogEntry } = createMockIntegrationObjectIdScenario();
 
       mockLogoRequestLogsRepository.find.mockResolvedValue([]);
       mockLogoRequestLogsRepository.create.mockResolvedValue(mockLogEntry);
@@ -690,49 +633,34 @@ describe("RewardTrackingService", () => {
       expect(result.is_reward_eligible).toBe(true);
     });
 
-    it("should validate all subscription types correctly", async () => {
-      const testCases = [
-        {
-          type: SubscriptionTypes.HOBBY,
-          shouldBeEligible: false,
-          reason: "HOBBY_USER",
-        },
-        {
-          type: SubscriptionTypes.PRO,
-          shouldBeEligible: true,
-          reason: "VALID",
-        },
-      ];
+    it("should mark HOBBY users as non-eligible", async () => {
+      const params = {
+        ...createValidRewardTrackingParams(),
+        subscription: { type: SubscriptionTypes.HOBBY },
+      };
 
-      for (const testCase of testCases) {
-        jest.clearAllMocks();
+      mockLogoRequestLogsRepository.create.mockResolvedValue(
+        MOCK_LOG_ENTRY_HOBBY
+      );
 
-        const params = {
-          imageId: "test-image",
-          userId: "user123",
-          creatorId: "creator456",
-          keyId: "key123",
-          subscriptionId: "sub123",
-          subscription: { type: testCase.type },
-        };
+      const result = await rewardTrackingService.validateAndLogRequest(params);
 
-        const mockLogEntry = {
-          _id: new mongoose.Types.ObjectId(),
-          is_reward_eligible: testCase.shouldBeEligible,
-          reward_eligibility_reason: testCase.reason,
-        };
+      expect(result.is_reward_eligible).toBe(false);
+      expect(result.reward_eligibility_reason).toBe("HOBBY_USER");
+    });
 
-        if (testCase.shouldBeEligible) {
-          mockLogoRequestLogsRepository.find.mockResolvedValue([]);
-        }
-        mockLogoRequestLogsRepository.create.mockResolvedValue(mockLogEntry);
+    it("should mark PRO users as eligible", async () => {
+      const params = createValidRewardTrackingParams();
 
-        const result =
-          await rewardTrackingService.validateAndLogRequest(params);
+      mockLogoRequestLogsRepository.find.mockResolvedValue([]);
+      mockLogoRequestLogsRepository.create.mockResolvedValue(
+        MOCK_LOG_ENTRY_VALID
+      );
 
-        expect(result.is_reward_eligible).toBe(testCase.shouldBeEligible);
-        expect(result.reward_eligibility_reason).toBe(testCase.reason);
-      }
+      const result = await rewardTrackingService.validateAndLogRequest(params);
+
+      expect(result.is_reward_eligible).toBe(true);
+      expect(result.reward_eligibility_reason).toBe("VALID");
     });
   });
 });

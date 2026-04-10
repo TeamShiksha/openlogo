@@ -30,16 +30,19 @@ const {
 } = require("../../utils/mocks");
 
 describe("Reward System", () => {
-  let rewardTrackingService;
   let rewardsService;
 
   beforeEach(() => {
-    rewardTrackingService = new RewardTrackingService();
-    rewardsService = new RewardsService();
     jest.clearAllMocks();
+    rewardsService = new RewardsService();
   });
 
   describe("RewardTrackingService.validateAndLogRequest", () => {
+    let rewardTrackingService;
+
+    beforeEach(() => {
+      rewardTrackingService = new RewardTrackingService();
+    });
     it("should mark Hobby user requests as non-eligible", async () => {
       jest
         .spyOn(rewardTrackingService.logoRequestLogsRepository, "create")
@@ -169,10 +172,15 @@ describe("Reward System", () => {
         await rewardsService.processRewardsForImage(REWARD_TEST_IMAGE_ID);
 
       expect(result.success).toBe(true);
-      expect(result.newMilestones).toBeDefined();
-      expect(result.newMilestones.length).toBe(1);
-      expect(result.newMilestones[0].milestone).toBe(5);
-      expect(result.totalPointsAwarded).toBe(10);
+      expect(result).toMatchObject({
+        imageId: REWARD_TEST_IMAGE_ID,
+        newUsersAdded: MOCK_ELIGIBLE_LOG_ENTRIES_5.length,
+        totalPointsAwarded: 10,
+        newMilestones: [
+          expect.objectContaining({ milestone: 5, points_awarded: 10 }),
+        ],
+      });
+      expect(result.newMilestones).toHaveLength(1);
     });
 
     it("should award multiple milestones for high usage", async () => {
@@ -186,8 +194,17 @@ describe("Reward System", () => {
         await rewardsService.processRewardsForImage(REWARD_TEST_IMAGE_ID);
 
       expect(result.success).toBe(true);
-      expect(result.newMilestones.length).toBe(3);
-      expect(result.totalPointsAwarded).toBe(30);
+      expect(result).toMatchObject({
+        imageId: REWARD_TEST_IMAGE_ID,
+        newUsersAdded: MOCK_ELIGIBLE_LOG_ENTRIES_15.length,
+        totalPointsAwarded: 30,
+        newMilestones: expect.arrayContaining([
+          expect.objectContaining({ milestone: 5 }),
+          expect.objectContaining({ milestone: 10 }),
+          expect.objectContaining({ milestone: 15 }),
+        ]),
+      });
+      expect(result.newMilestones).toHaveLength(3);
     });
 
     it("should not award duplicate milestones", async () => {
@@ -200,8 +217,14 @@ describe("Reward System", () => {
         await rewardsService.processRewardsForImage(REWARD_TEST_IMAGE_ID);
 
       expect(result.success).toBe(true);
-      expect(result.newMilestones.length).toBe(1);
-      expect(result.newMilestones[0].milestone).toBe(10);
+      expect(result).toMatchObject({
+        imageId: REWARD_TEST_IMAGE_ID,
+        totalPointsAwarded: 10,
+        newMilestones: [
+          expect.objectContaining({ milestone: 10, points_awarded: 10 }),
+        ],
+      });
+      expect(result.newMilestones).toHaveLength(1);
     });
   });
 
@@ -281,6 +304,7 @@ describe("Reward System", () => {
       );
 
       expect(result.is_reversed).toBe(true);
+      expect(result.points_awarded).toBeDefined();
       expect(result.points_awarded).toBe(
         MOCK_UNREVERSED_TRANSACTION.points_awarded
       );
