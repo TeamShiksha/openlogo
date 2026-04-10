@@ -306,14 +306,19 @@ export default function Graph() {
 
       <div className={styles.buttonParent}>
         <button
-          className={styles.button}
+          className={`${styles.button} ${
+            selectedPeriod === "month" ? "segment-btn-active" : ""
+          }`}
           onClick={() => setSelectedPeriod("month")}
           aria-pressed={selectedPeriod === "month"}
         >
           Month
         </button>
+
         <button
-          className={styles.button}
+          className={`${styles.button} ${
+            selectedPeriod === "week" ? "segment-btn-active" : ""
+          }`}
           onClick={() => setSelectedPeriod("week")}
           aria-pressed={selectedPeriod === "week"}
         >

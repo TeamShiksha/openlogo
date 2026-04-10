@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { instance } from "../api/api_instance";
+import { instance } from "../api/api_instance.js";
 
 /**
  * Custom React hook to make API requests using axios.
