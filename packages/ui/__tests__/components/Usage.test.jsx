@@ -1,8 +1,25 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, beforeAll } from "vitest";
 import Usage from "../../src/components/usage/Usage";
 import { MOCK_USER_DATA } from "../../src/utils/Constants";
 
+const localStorageStore = {};
+const localStorageMock = {
+  getItem: vi.fn((key) => localStorageStore[key] ?? null),
+  setItem: vi.fn((key, value) => {
+    localStorageStore[key] = String(value);
+  }),
+  clear: vi.fn(() => {
+    Object.keys(localStorageStore).forEach((k) => delete localStorageStore[k]);
+  }),
+  removeItem: vi.fn((key) => {
+    delete localStorageStore[key];
+  }),
+};
+
+beforeAll(() => {
+  vi.stubGlobal("localStorage", localStorageMock);
+});
 const mockToastWarning = vi.fn();
 const mockToastError = vi.fn();
 
@@ -36,7 +53,11 @@ describe("Usage Component", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
+    mockToastWarning.mockClear();
+    mockToastError.mockClear();
   });
 
   it("Should show correct usage count, usage limit", () => {
