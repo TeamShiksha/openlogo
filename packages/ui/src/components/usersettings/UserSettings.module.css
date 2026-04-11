@@ -2,12 +2,12 @@
   max-width: 1440px;
   margin: 0 auto;
   padding: 3rem 8%;
-  background-color: var(--background-light);
+  background-color: var(--white);
   min-height: 100vh;
 }
 
 [data-theme="dark"] .container {
-  background-color: var(--background-dark);
+  background-color: var(--black);
 }
 
 .header {
