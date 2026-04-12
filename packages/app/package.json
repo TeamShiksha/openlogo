@@ -33,7 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "multer": "^1.4.5-lts.1",
-    "otplib": "^11.0.0",
+    "otplib": "^11.0.2",
     "puppeteer-core": "^24.34.0",
     "qrcode": "^1.5.4",
     "swagger-jsdoc": "^6.2.8",
