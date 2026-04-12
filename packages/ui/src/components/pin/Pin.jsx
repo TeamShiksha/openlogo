@@ -58,8 +58,14 @@ function Pin({ onClose }) {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !pin[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
+    if (e.key === "Backspace") {
+      if (pin[index]) {
+        const newPin = [...pin];
+        newPin[index] = "";
+        setPin(newPin);
+      } else if (index > 0) {
+        inputsRef.current[index - 1].focus();
+      }
     }
   };
 
@@ -93,7 +99,7 @@ function Pin({ onClose }) {
 }
 
 Pin.propTypes = {
-  onClose: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default Pin;

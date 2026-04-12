@@ -39,7 +39,7 @@
 }
 
 [data-theme="dark"] .card {
-  background-color: var(--background-dark);
+  background-color: var(--white);
   border-color: var(--border-color);
 }
 

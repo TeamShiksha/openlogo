@@ -54,8 +54,8 @@ export default function UserSettings() {
             <div className={styles.card}>
               <div className={styles.cardBody}>
                 <div className={styles.initialState}>
-                  <h3 className={styles.heading}>Coming Soon</h3>
-                  <p className={styles.subtext}>
+                  <h3>Coming Soon</h3>
+                  <p>
                     The {menuItems.find((i) => i.id === activeTab)?.label}{" "}
                     settings are currently under development.
                   </p>

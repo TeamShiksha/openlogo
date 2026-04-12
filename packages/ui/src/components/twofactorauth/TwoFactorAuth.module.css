@@ -334,7 +334,7 @@
   transition: border-color 0.2s;
 }
 
-.disableCancleBtn {
+.disableCancelBtn {
   position: absolute;
   right: 2rem;
   bottom: 2rem;

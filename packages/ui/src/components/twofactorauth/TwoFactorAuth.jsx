@@ -7,7 +7,7 @@ import { useToast } from "../../hooks/useToast";
 
 export default function TwoFactorAuth() {
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
-  const [mode, setMode] = useState("VERIFIED"); // INITIAL, SETUP, VERIFIED, DISABLE
+  const [mode, setMode] = useState("INITIAL"); // INITIAL, SETUP, VERIFIED, DISABLE
   const [verificationCode, setVerificationCode] = useState("");
   const [qrData, setQRData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,9 +27,6 @@ export default function TwoFactorAuth() {
   const { fetchRequest: verifyRequest } = useApi({
     method: "POST",
     url: "/auth/mfa/verify",
-    data: {
-      token: verificationCode,
-    },
   });
 
   const { fetchRequest: cancelRequest } = useApi({
@@ -52,10 +49,12 @@ export default function TwoFactorAuth() {
       if (success && data?.isMfaEnabled !== undefined) {
         setIsMFAEnabled(data.isMfaEnabled);
         setMode(data.isMfaEnabled ? "VERIFIED" : "INITIAL");
+        setIsLoading(false);
       } else {
         setIsMFAEnabled(false);
         setMode("INITIAL");
         toast.error(error);
+        setIsLoading(false);
       }
     };
     checkMFAStatus();
@@ -93,7 +92,9 @@ export default function TwoFactorAuth() {
       return;
     }
     setIsLoading(true);
-    const { success, error } = await verifyRequest();
+    const { success, error } = await verifyRequest({
+      data: { token: verificationCode },
+    });
     if (success) {
       setQRData(null);
       setIsMFAEnabled(true);
@@ -260,7 +261,7 @@ export default function TwoFactorAuth() {
             </Button>
             <Button
               variant="primary"
-              className={styles.disableCancleBtn}
+              className={styles.disableCancelBtn}
               onClick={cancelDisableMfa}
             >
               Cancel
