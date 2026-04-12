@@ -863,9 +863,9 @@ export const RELEASE_PAGE = {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
-          {
+      {
         versionName: "0.7.0 version",
-        releaseDate: "Jan 2026",
+        releaseDate: "Mar 2026",
         imgSrc: version07,
         releaseNotes: [
           {
