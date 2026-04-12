@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from "lucide-react";
@@ -23,6 +23,7 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const isGuestLock = useRef(false);
   const [timer, setTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -151,18 +152,34 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
 
   const handleGuestSignIn = async (submitEvent) => {
     submitEvent.preventDefault();
+
+    // 1. INSTANT LOCK: Because a ref mutates synchronously, it is mathematically impossible for 2 clicks to pass this.
+    if (isGuestLock.current) return;
+
+    // 2. Shut the gate
+    isGuestLock.current = true;
     setIsSubmit(true);
-    const success = await makeGuestRequest();
-    if (success) {
-      setIsAuthenticated(true);
-      setIsSubmit(false);
-      onClose();
-      if (window.location.pathname !== redirectAfterLogin) {
-        navigate(redirectAfterLogin);
+
+    try {
+      const success = await makeGuestRequest();
+
+      if (success) {
+        setIsAuthenticated(true);
+        onClose();
+        if (window.location.pathname !== redirectAfterLogin) {
+          navigate(redirectAfterLogin);
+        }
+        toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
       }
-      toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
+    } finally {
+      // 3. Open the gate 1 second later
+      setTimeout(() => {
+        isGuestLock.current = false;
+        setIsSubmit(false);
+      }, 1000);
     }
   };
+
 
   const handleToggleForgotPassword = () => {
     setFormErrors({});
