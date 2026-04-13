@@ -12,8 +12,7 @@ export default function ProfileInfo() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.topRow}>
-        {/* User Info Section */}
+      <div className={styles.grid}>
         <div className={styles.card}>
           <h2 className={styles.heading}>User Info</h2>
           {userData && (
@@ -25,29 +24,22 @@ export default function ProfileInfo() {
           )}
         </div>
 
-        {/* Security Section (Change Password) */}
         <div className={styles.card}>
           <h2 className={styles.heading}>Change Password</h2>
           <div className={styles.section}>
             <ChangePassword isGuest={isGuest} />
           </div>
         </div>
-      </div>
 
-      {/* Data Management + Plan Row */}
-      <div className={styles.bottomRow}>
-        <div className={styles.card}>
-          <h2 className={styles.heading}>Setting</h2>
-          <div className={styles.section}>
-            <SettingCard isGuest={isGuest} />
-          </div>
-        </div>
-
-        {/* Plan Section */}
         <div className={styles.card}>
           <h2 className={styles.heading}>Plan</h2>
+          <CurrentPlan isGuest={isGuest} />
+        </div>
+
+        <div className={styles.card}>
+          <h2 className={styles.heading}>Data Management</h2>
           <div className={styles.section}>
-            <CurrentPlan isGuest={isGuest} />
+            <SettingCard isGuest={isGuest} />
           </div>
         </div>
       </div>

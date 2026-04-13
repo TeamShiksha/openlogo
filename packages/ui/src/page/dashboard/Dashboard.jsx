@@ -2,10 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/apikeyform/ApiKeyForm";
 import Usage from "../../components/usage/Usage";
-
 import styles from "./Dashboard.module.css";
-import CardWrapper from "../../components/cardwrapper/CardWrapper.jsx";
-
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
@@ -297,41 +294,61 @@ function Dashboard() {
                 >
                   API Keys
                 </button>
-                <button
-                  className={`${styles["tab"]} ${
-                    activeTab === "settings" ? styles["active-tab"] : ""
-                  }`}
-                  onClick={() => setActiveTab("settings")}
-                >
-                  Settings
-                </button>
               </div>
             </div>
           </div>
-          <div className={styles["dashboard-content-container"]}>
-            <section className={styles["dashboard-content-section"]}>
-              <CardWrapper title="Usage">
-                <Usage
-                  usageCount={userData?.subscription.usage_count || 0}
-                  usageLimit={userData?.subscription.usage_limit || 0}
-                />
-              </CardWrapper>
-              <CardWrapper title="Generate New API Key">
-                <ApiKeyForm
-                  isGuest={isGuest}
-                  onKeyGenerated={handleKeyGenerated}
-                />
-              </CardWrapper>
-            </section>
-          </div>
-          <div className={styles["table-wrapper"]}>
-            <Table
-              headers={API_KEY_TABLE.headers}
-              rows={apiKeyTableData}
-              onDelete={handleDeleteClick}
-              isGuest={isGuest}
-              emptyMessage={API_KEY_TABLE.emptyMessage}
-            />
+
+          <div className={styles["content"]}>
+            {activeTab === "analytics" && (
+              <div className={styles["analytics-content"]}>
+                <div className={styles["analytics-grid"]}>
+                  <div className={styles["analytics-card"]}>
+                    <Graph />
+                  </div>
+                  <div className={styles["analytics-card"]}>
+                    <Usage
+                      usageCount={userData?.subscription.usage_count || 0}
+                      usageLimit={userData?.subscription.usage_limit || 0}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "api-keys" && (
+              <div className={styles["api-keys-grid"]}>
+                <div className={styles["left-column"]}>
+                  <div className={styles["card"]}>
+                    <ApiKeyForm
+                      isGuest={isGuest}
+                      onKeyGenerated={handleKeyGenerated}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles["card"]}>
+                  <div className={styles["keys-header"]}>
+                    <h2 className={styles["card-title"]}>Active API Keys</h2>
+                    <span className={styles["badge"]}>
+                      {apiKeys.length} {apiKeys.length === 1 ? "key" : "keys"}{" "}
+                      found
+                    </span>
+                  </div>
+                  <p className={styles["subtext"]}>
+                    Manage and monitor your existing access credentials
+                  </p>
+                  <div className={styles["table-wrapper"]}>
+                    <Table
+                      headers={API_KEY_TABLE.headers}
+                      rows={apiKeyTableData}
+                      onDelete={handleDeleteClick}
+                      isGuest={isGuest}
+                      emptyMessage={API_KEY_TABLE.emptyMessage}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}

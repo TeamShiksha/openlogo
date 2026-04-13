@@ -4,25 +4,13 @@
   gap: 2rem;
 }
 
-.topRow {
+.grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 
-  @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-  }
-}
-
-.bottomRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -35,7 +23,6 @@
   border: var(--border);
   padding: 2rem;
   height: 100%;
-  /* Ensure equal height in grid */
 }
 
 [data-theme="dark"] .card {
