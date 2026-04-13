@@ -6,6 +6,8 @@ const {
   cloudFrontInvalidate,
 } = require("../utils/cloudFront");
 
+const { sanitizeFilePath } = require("../utils/sanitize");
+
 /**
  * The ImageRepository extends BaseRepository to manage ContactUs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete..
  * It passes the Images model to the base repository for database interactions.
@@ -70,9 +72,11 @@ class ImagesRepository extends BaseRepository {
 
     const imagesData = images.map((image) => {
       const imageData = image.data();
-      const imagePath = `${image.extension}/${image.company_name}.${image.extension}`;
+      const imagePath = `${image.extension}/${sanitizeFilePath(image.company_name)}.${image.extension}`;
       const signedUrlResult = cloudFrontSignedURL(`/${imagePath}`);
-      imageData.imageUrl = signedUrlResult.success ? signedUrlResult.data : null;
+      imageData.imageUrl = signedUrlResult.success
+        ? signedUrlResult.data
+        : null;
       return imageData;
     });
 

@@ -1,18 +1,21 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import styles from "./CatalogItem.module.css";
 import Button from "../common/button/Button";
 import { formatDate } from "../../utils/Helpers";
 function CatalogItem({ company, onUpdate }) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className={styles["catalog-item"]}>
       <div className={styles["catalog-item-column-first"]}>
         <div className={styles["preview-placeholder"]}>
-          {company.imageUrl ? (
+          {company.imageUrl && !imageError ? (
             <img
               src={company.imageUrl}
               alt={company.company_name}
               className={styles["preview-image"]}
-              onError={(e) => { e.currentTarget.style.display = "none"; }}
+              onError={() => setImageError(true)}
             />
           ) : (
             <span className={styles["preview-fallback"]}>
