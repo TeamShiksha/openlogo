@@ -30,12 +30,8 @@ function CatalogItem({ company, onUpdate }) {
         </div>
       </div>
       <div className={styles["catalog-item-inner"]}>
-        <div className={styles["created"]}>
-          {formatDate(company.created_at)}
-        </div>
-        <div className={styles["updated"]}>
-          {formatDate(company.updated_at)}
-        </div>
+        <div>{formatDate(company.created_at)}</div>
+        <div>{formatDate(company.updated_at)}</div>
       </div>
       <div className={styles["catalog-item-column-last"]}>
         <Button

@@ -9,7 +9,7 @@
 }
 
 .catalog-item:hover {
-  background: #f8fafc;
+  background: #e2e8f0;
 }
 
 .catalog-item:last-child {
@@ -80,11 +80,21 @@
   color: var(--label-color);
 }
 
+.created {
+  color: var(--description);
+  font-size: 0.875rem;
+}
+
+.updated {
+  color: var(--description);
+  font-size: 0.875rem;
+}
+
 .reupload-btn {
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-  padding: 0.375rem 0.75rem !important;
-  border-radius: 0.5rem !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
 }
 
 [data-theme="dark"] .catalog-item {
@@ -108,6 +118,16 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+  }
+
+  .catalog-item-inner > div:first-child:before {
+    content: "Created ";
+    color: var(--smooth-gray);
+  }
+
+  .catalog-item-inner > div:last-child:before {
+    content: "Updated ";
+    color: var(--smooth-gray);
   }
 
   .catalog-item-column-last {
