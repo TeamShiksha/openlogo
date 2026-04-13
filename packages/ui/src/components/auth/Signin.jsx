@@ -180,7 +180,6 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
     }
   };
 
-
   const handleToggleForgotPassword = () => {
     setFormErrors({});
     setFocusedField(null);
