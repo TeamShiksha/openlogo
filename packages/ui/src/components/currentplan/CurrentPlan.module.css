@@ -39,13 +39,11 @@
   border: var(--border);
   cursor: pointer;
   min-height: 39px;
-  padding: 12px;
   margin-top: 8px;
   font-size: 16px;
   font-weight: 500;
   width: 100%;
   padding: 0.75rem;
-  font-weight: 600;
   flex-shrink: 0;
 }
 
