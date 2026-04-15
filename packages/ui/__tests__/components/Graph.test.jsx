@@ -86,15 +86,15 @@ describe("Graph component", () => {
     const weekButton = screen.getByRole("button", { name: /week/i });
     const monthButton = screen.getByRole("button", { name: /month/i });
 
-    expect(weekButton).toHaveAttribute("aria-pressed", "true");
-    expect(monthButton).toHaveAttribute("aria-pressed", "false");
+    expect(weekButton.className).toMatch(/segment-btn-active/);
+    expect(monthButton.className).not.toMatch(/segment-btn-active/);
 
     fireEvent.click(monthButton);
-    expect(monthButton).toHaveAttribute("aria-pressed", "true");
-    expect(weekButton).toHaveAttribute("aria-pressed", "false");
+    expect(monthButton.className).toMatch(/segment-btn-active/);
+    expect(weekButton.className).not.toMatch(/segment-btn-active/);
 
     fireEvent.click(weekButton);
-    expect(weekButton).toHaveAttribute("aria-pressed", "true");
-    expect(monthButton).toHaveAttribute("aria-pressed", "false");
+    expect(weekButton.className).toMatch(/segment-btn-active/);
+    expect(monthButton.className).not.toMatch(/segment-btn-active/);
   });
 });

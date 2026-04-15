@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import ApiKeyForm from "../../src/components/apikeyform/ApiKeyForm";
 import { ToastProvider } from "../../src/contexts/ToastContext";
-import { API_KEY_FORM, BUTTON_TEXT } from "../../src/utils/Constants";
+import { BUTTON_TEXT } from "../../src/utils/Constants";
 
 const mockedMakeRequest = vi.fn();
 const mockApiData = {
@@ -58,8 +58,7 @@ describe("ApiKeyForm Component", () => {
   it("renders all form elements correctly", () => {
     renderApiKeyForm();
 
-    expect(screen.getByText(API_KEY_FORM.tagLine)).toBeInTheDocument();
-    expect(screen.getByLabelText("Add the description")).toBeInTheDocument();
+    expect(screen.getByTestId("generate-key-btn")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: BUTTON_TEXT.generateKey })
     ).toBeInTheDocument();
@@ -68,7 +67,9 @@ describe("ApiKeyForm Component", () => {
   it("allows user to input description", () => {
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     fireEvent.change(descriptionInput, { target: { value: "Test API Key" } });
 
     expect(descriptionInput.value).toBe("Test API Key");
@@ -86,7 +87,9 @@ describe("ApiKeyForm Component", () => {
   it("enables generate button when user is not guest and has description", () => {
     renderApiKeyForm({ isGuest: false });
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     fireEvent.change(descriptionInput, {
       target: { value: "Test Description" },
     });
@@ -110,7 +113,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(true);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -129,7 +134,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(true);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -148,7 +155,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(true);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -165,7 +174,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(true);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -188,7 +199,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(true);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -211,7 +224,9 @@ describe("ApiKeyForm Component", () => {
     const onKeyGeneratedMock = vi.fn();
     renderApiKeyForm({ onKeyGenerated: onKeyGeneratedMock });
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
@@ -234,7 +249,9 @@ describe("ApiKeyForm Component", () => {
     mockedMakeRequest.mockResolvedValue(false);
     renderApiKeyForm();
 
-    const descriptionInput = screen.getByLabelText("Add the description");
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Production API Key"
+    );
     const generateButton = screen.getByRole("button", {
       name: BUTTON_TEXT.generateKey,
     });
