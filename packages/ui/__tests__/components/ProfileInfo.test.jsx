@@ -47,7 +47,7 @@ describe("ProfileInfo Component", () => {
     // Check headings
     expect(screen.getByText("User Info")).toBeInTheDocument();
     expect(screen.getByText("Change Password")).toBeInTheDocument();
-    expect(screen.getByText("Setting")).toBeInTheDocument();
+    expect(screen.getByText("Data Management")).toBeInTheDocument();
     expect(screen.getByText("Plan")).toBeInTheDocument();
 
     // Check if child components are rendered with correct data

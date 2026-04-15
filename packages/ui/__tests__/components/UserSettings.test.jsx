@@ -12,13 +12,16 @@ vi.mock("../../src/components/twofactorauth/TwoFactorAuth", () => ({
     <div data-testid="two-factor-auth">Two Factor Auth Component</div>
   ),
 }));
-
 const mockUserContext = {
-  user: {
+  userData: {
     name: "Test User",
     email: "test@example.com",
     role: "USER",
   },
+  loading: false,
+  error: null,
+  fetchUserData: vi.fn(),
+  setUserData: vi.fn(),
   isGuest: false,
 };
 

@@ -8,7 +8,7 @@ const mockFetchRequest = vi.fn();
 vi.mock("../../../src/hooks/useApi", () => ({
   useApi: ({ url }) => ({
     fetchRequest: (...args) => mockFetchRequest(url, ...args),
-    isLoading: false,
+    loading: false,
   }),
 }));
 
@@ -114,7 +114,9 @@ describe("TwoFactorAuth Component", () => {
     fireEvent.click(finishBtn);
 
     await waitFor(() => {
-      expect(mockFetchRequest).toHaveBeenCalledWith("/auth/mfa/verify");
+      expect(mockFetchRequest).toHaveBeenCalledWith("/auth/mfa/verify", {
+        data: { token: "123456" },
+      });
       expect(screen.getByText("2FA is Active")).toBeInTheDocument();
       expect(screen.getByText("Active")).toBeInTheDocument();
     });
