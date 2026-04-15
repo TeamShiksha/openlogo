@@ -3,10 +3,10 @@ const sanitizeFilePath = (str) => {
   return str
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9._-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
+    .replaceAll(/[^a-z0-9._-]/g, "-")
+    .replaceAll(/-+/g, "-")
+    .replaceAll(/^-+/, "")
+    .replaceAll(/-+$/, "");
 };
 
 module.exports = { sanitizeFilePath };
