@@ -190,7 +190,7 @@ export default function Graph() {
   useEffect(() => {
     fetchWeekData();
     fetchMonthData();
-  }, []);
+  }, [fetchWeekData, fetchMonthData]);
 
   useEffect(() => {
     if (weekLoaded && weekResponse) {

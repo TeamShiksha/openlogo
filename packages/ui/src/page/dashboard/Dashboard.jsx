@@ -119,7 +119,7 @@ function Dashboard() {
     }
 
     checkOldKeys();
-  }, []);
+  }, [toast, updateOldKeysRequest]);
 
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);

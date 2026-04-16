@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Button from "../common/button/Button";
 import styles from "./DeviceSessionCard.module.css";
@@ -16,7 +16,7 @@ function DeviceSessionCard({ isGuest }) {
   const { fetchRequest: revokeSessionRequest } = useApi();
   const { fetchRequest: signoutOthersRequest } = useApi();
 
-  const loadSessions = async () => {
+  const loadSessions = useCallback(async () => {
     const { success, data, error } = await fetchSessionsRequest({
       url: "/auth/sessions",
       method: "GET",
@@ -26,13 +26,13 @@ function DeviceSessionCard({ isGuest }) {
     } else if (error) {
       toast.error(error);
     }
-  };
+  }, [fetchSessionsRequest, toast]);
 
   useEffect(() => {
     if (!isGuest) {
       loadSessions();
     }
-  }, [isGuest]);
+  }, [isGuest, loadSessions]);
 
   const handleRevokeSession = async (sessionId) => {
     const { success, error } = await revokeSessionRequest({
