@@ -1,6 +1,6 @@
 const trimTrailingHyphens = (s) => {
   let end = s.length;
-  while (end > 0 && s.charCodeAt(end - 1) === 45) end -= 1;
+  while (end > 0 && s.codePointAt(end - 1) === 45) end -= 1;
   return end === s.length ? s : s.slice(0, end);
 };
 
