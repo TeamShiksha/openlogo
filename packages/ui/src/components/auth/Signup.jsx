@@ -5,7 +5,11 @@ import Button from "../common/button/Button";
 import PropTypes from "prop-types";
 import { SIGNUP, BUTTON_TEXT, MESSAGES, BRANDING } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
-import { handleNavigation, validate } from "../../utils/Helpers";
+import {
+  getPasswordCriteria,
+  handleNavigation,
+  validate,
+} from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,16 +81,10 @@ function SignUp({ toggleForm, onClose }) {
   };
 
   // Password strength criteria
-  const passwordCriteria = useMemo(() => {
-    const pwd = formValues.password;
-    return [
-      { label: "8+ characters", met: pwd.length >= 8 },
-      { label: "Uppercase", met: /[A-Z]/.test(pwd) },
-      { label: "Lowercase", met: /[a-z]/.test(pwd) },
-      { label: "Number (0-9)", met: /\d/.test(pwd) },
-      { label: "Special character", met: /[^A-Za-z0-9]/.test(pwd) },
-    ];
-  }, [formValues.password]);
+  const passwordCriteria = useMemo(
+    () => getPasswordCriteria(formValues.password),
+    [formValues.password]
+  );
 
   const strengthCount = passwordCriteria.filter((c) => c.met).length;
 
@@ -104,7 +102,7 @@ function SignUp({ toggleForm, onClose }) {
           alt="openlogo"
           className={styles.logo}
         />
-        <h2 className={styles["signup-title"]}>{SIGNUP.title}</h2>
+        <h2 className={styles["title"]}>{SIGNUP.title}</h2>
         <p className={styles.description}>{SIGNUP.description}</p>
 
         {/* Form fields */}

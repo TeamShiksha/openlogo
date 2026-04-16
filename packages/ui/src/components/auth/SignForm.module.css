@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  align-items: center;
   max-width: 600px;
   padding-bottom: 1rem;
 }
@@ -190,12 +189,6 @@
   margin: 0 auto;
 }
 
-/* Override ALL CustomInput .group margins inside signup fields */
-.signup-fields div[class*="group"] {
-  margin-top: 3px !important;
-  margin-bottom: 3px !important;
-}
-
 .strength-card {
   border: 1px solid var(--border);
   border-radius: 0.6rem;
@@ -272,30 +265,6 @@
   border: none;
   border-top: 1px solid var(--border-color);
   width: 100%;
-}
-
-.signup-divider-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--white);
-  padding: 0 0.75rem;
-  font-size: 0.75rem;
-  color: var(--label-color);
-}
-
-.guest-button {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--black);
-  font-weight: 600;
-  font-size: 0.85rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .guest-button:hover {
