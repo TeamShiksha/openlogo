@@ -1,10 +1,14 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./CatalogItem.module.css";
 import Button from "../common/button/Button";
 import { formatDate } from "../../utils/Helpers";
 function CatalogItem({ company, onUpdate }) {
   const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [company.imageUrl, company._id]);
 
   return (
     <div className={styles["catalog-item"]}>
