@@ -337,6 +337,25 @@ class UserService {
   }
 
   /**
+   * Lists CUSTOMER users with their subscription details.
+   * Supports search by name/email, pagination, and optionally includes deleted users.
+   * @param {Object} options
+   * @param {string} [options.search]
+   * @param {number} options.page
+   * @param {number} options.limit
+   * @param {boolean} options.includeDeleted
+   * @returns {Promise<{ users: Array, total: number }>}
+   */
+  async listUsers({ search, page, limit, includeDeleted }) {
+    return await this.userRepository.findUsersWithSubscription({
+      search,
+      page,
+      limit,
+      includeDeleted,
+    });
+  }
+
+  /**
    * Logs an API request entry for a logo fetch operation.
    * This is a non-fatal operation - failures are logged but do not interrupt the flow.
    * @param {string} company - The company name.

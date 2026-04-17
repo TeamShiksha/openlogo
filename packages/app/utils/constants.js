@@ -48,6 +48,13 @@ const DefaultSubscriptionPlan = {
   is_active: true,
 };
 
+const ProSubscriptionPlan = {
+  type: SubscriptionTypes.PRO,
+  key_limit: 5,
+  usage_limit: 15000,
+  is_active: true,
+};
+
 const Messages = {
   INVALID_USER_ID: "Invalid user id.",
   EMAIL_EXISTS: "Email already exists.",
@@ -80,8 +87,8 @@ const Messages = {
   IMAGE_NOT_EXIST: "Image does not exist",
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
-  INCORRECT_PASSWORD: "Current password is incorrect", 
-  SAME_PASSWORD:"Current password is same as old password",
+  INCORRECT_PASSWORD: "Current password is incorrect",
+  SAME_PASSWORD: "Current password is same as old password",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
@@ -110,6 +117,8 @@ const Messages = {
   UPDATE_API_KEY: "This Key needs an update.",
   MFA_FAILED: "Failed to enable/disable MFA",
   INCORRECT_PIN: "Incorrect pin. Please try again.",
+  PLAN_ALREADY_ACTIVE: "User is already on this plan.",
+  PLAN_CHANGE_SUCCESS: "Subscription plan updated successfully.",
 };
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
@@ -138,6 +147,7 @@ module.exports = {
   SubscriptionTypes,
   StatusTypes,
   DefaultSubscriptionPlan,
+  ProSubscriptionPlan,
   Messages,
   TAB_OPTIONS,
   CLOUD_FRONT_REGION,

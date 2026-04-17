@@ -1,9 +1,17 @@
-const { SubscriptionsRepository } = require("../repositories");
-const { DefaultSubscriptionPlan } = require("../utils/constants");
+const {
+  SubscriptionsRepository,
+  SubscriptionLogRepository,
+} = require("../repositories");
+const {
+  DefaultSubscriptionPlan,
+  ProSubscriptionPlan,
+  SubscriptionTypes,
+} = require("../utils/constants");
 
 class SubscriptionService {
   constructor() {
     this.subscriptionRepository = new SubscriptionsRepository();
+    this.subscriptionLogRepository = new SubscriptionLogRepository();
   }
 
   /**
@@ -41,6 +49,43 @@ class SubscriptionService {
    */
   async getSubscriptionUsageCount() {
     return await this.subscriptionRepository.getSubscriptionUsageCount();
+  }
+
+  /**
+   * Changes a user's subscription plan (admin-only).
+   * Preserves the existing usage_count.
+   * @param {string} subscriptionId - The subscription document ID.
+   * @param {string} newPlanType - "HOBBY" or "PRO".
+   * @returns {Promise<Object>} - Updated subscription document.
+   */
+  async changeSubscriptionPlan(subscriptionId, newPlanType) {
+    const planTemplate =
+      newPlanType === SubscriptionTypes.PRO
+        ? ProSubscriptionPlan
+        : DefaultSubscriptionPlan;
+
+    const update = {
+      type: planTemplate.type,
+      key_limit: planTemplate.key_limit,
+      usage_limit: planTemplate.usage_limit,
+      is_active: planTemplate.is_active,
+      updated_at: new Date(),
+    };
+
+    return await this.subscriptionRepository.findOneAndUpdate(
+      { _id: subscriptionId },
+      update,
+      { new: true }
+    );
+  }
+
+  /**
+   * Creates an audit log entry for a subscription plan change.
+   * @param {Object} logData - { user_id, subscription_id, from_plan, to_plan, changed_by, reason? }
+   * @returns {Promise<Object>} - Created log document.
+   */
+  async createSubscriptionLog(logData) {
+    return await this.subscriptionLogRepository.create(logData);
   }
 }
 
