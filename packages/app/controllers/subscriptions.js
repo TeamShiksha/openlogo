@@ -14,7 +14,6 @@ async function changeSubscriptionPlanController(req, res, next) {
     const subscriptionService = new SubscriptionService();
     const usersService = new UsersService();
 
-    // 1. Validate request body
     const { error, value } = changeSubscriptionPlanSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -29,7 +28,6 @@ async function changeSubscriptionPlanController(req, res, next) {
     const { plan, reason } = value;
     const { userId } = req.params;
 
-    // 2. Validate userId format
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         statusCode: 400,
@@ -38,7 +36,6 @@ async function changeSubscriptionPlanController(req, res, next) {
       });
     }
 
-    // 3. Fetch user
     const user = await usersService.getUser(userId);
     if (!user) {
       return res.status(404).json({
@@ -48,7 +45,6 @@ async function changeSubscriptionPlanController(req, res, next) {
       });
     }
 
-    // 4. Fetch current subscription
     const subscription = await subscriptionService.getSubscription(
       user.subscription_id
     );
@@ -60,7 +56,6 @@ async function changeSubscriptionPlanController(req, res, next) {
       });
     }
 
-    // 5. Reject no-op (same plan)
     if (subscription.type === plan) {
       return res.status(400).json({
         statusCode: 400,
@@ -69,14 +64,12 @@ async function changeSubscriptionPlanController(req, res, next) {
       });
     }
 
-    // 6. Update subscription
     const updatedSubscription =
       await subscriptionService.changeSubscriptionPlan(
         user.subscription_id,
         plan
       );
 
-    // 7. Write audit log only when upgrading to PRO (not on downgrade to HOBBY)
     if (plan !== "HOBBY") {
       await subscriptionService.createSubscriptionLog({
         user_id: user._id,
@@ -85,7 +78,6 @@ async function changeSubscriptionPlanController(req, res, next) {
       });
     }
 
-    // 8. Return updated subscription
     return res.status(200).json({
       statusCode: 200,
       message: Messages.PLAN_CHANGE_SUCCESS,
