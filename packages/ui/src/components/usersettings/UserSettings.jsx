@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./UserSettings.module.css";
-import { Shield, User, Lock, Bell } from "lucide-react";
+import { Shield, User } from "lucide-react";
 import TwoFactorAuth from "../twofactorauth/TwoFactorAuth";
 import ProfileInfo from "../profileinfo/ProfileInfo";
 
@@ -10,8 +10,6 @@ export default function UserSettings() {
   const menuItems = [
     { id: "profile", label: "Profile Info", icon: <User size={20} /> },
     { id: "2fa", label: "2FA Settings", icon: <Shield size={20} /> },
-    { id: "password", label: "Password", icon: <Lock size={20} /> },
-    { id: "notifications", label: "Notifications", icon: <Bell size={20} /> },
   ];
 
   return (
@@ -50,19 +48,6 @@ export default function UserSettings() {
         <div className={styles.content}>
           {activeTab === "profile" && <ProfileInfo />}
           {activeTab === "2fa" && <TwoFactorAuth />}
-          {activeTab !== "2fa" && activeTab !== "profile" && (
-            <div className={styles.card}>
-              <div className={styles.cardBody}>
-                <div className={styles.initialState}>
-                  <h3>Coming Soon</h3>
-                  <p>
-                    The {menuItems.find((i) => i.id === activeTab)?.label}{" "}
-                    settings are currently under development.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
