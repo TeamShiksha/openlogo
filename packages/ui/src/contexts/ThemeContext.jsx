@@ -4,9 +4,22 @@ import PropTypes from "prop-types";
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) return saved;
-    return "light";
+    const saved = localStorage.getItem("theme") || "light";
+
+    const isDark =
+      saved === "dark" ||
+      (saved === "device" &&
+        window.matchMedia?.("(prefers-color-scheme: dark)").matches);
+
+    if (isDark) {
+      document.documentElement.dataset.theme = "dark";
+      document.documentElement.style.colorScheme = "dark";
+    } else {
+      delete document.documentElement.dataset.theme;
+      document.documentElement.style.colorScheme = "light";
+    }
+
+    return saved;
   });
 
   const applyTheme = (isDark) => {
