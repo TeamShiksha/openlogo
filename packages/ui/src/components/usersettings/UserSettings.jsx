@@ -1,31 +1,64 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styles from "./UserSettings.module.css";
-import { Shield, User, Lock, Bell } from "lucide-react";
+import { Shield, User, Lock, Bell, MonitorSmartphone } from "lucide-react";
 import TwoFactorAuth from "../twofactorauth/TwoFactorAuth";
 import ProfileInfo from "../profileinfo/ProfileInfo";
+import DeviceSessionCard from "../devicesession/DeviceSessionCard";
+import { UserContext } from "../../contexts/Contexts";
+
+function headerCopy(activeTab) {
+  switch (activeTab) {
+    case "profile":
+      return {
+        title: "Profile Info",
+        subtitle:
+          "Manage your personal details and account security preferences.",
+      };
+    case "2fa":
+      return {
+        title: "Security Settings",
+        subtitle: "Manage your account security and two-factor authentication.",
+      };
+    case "sessions":
+      return {
+        title: "Active Sessions",
+        subtitle:
+          "View devices where you're signed in and revoke access you don't recognize.",
+      };
+    default:
+      return {
+        title: "Security Settings",
+        subtitle: "Manage your account security and two-factor authentication.",
+      };
+  }
+}
 
 export default function UserSettings() {
   const [activeTab, setActiveTab] = useState("profile");
+  const { userData } = useContext(UserContext);
+  const isGuest = userData?.role === "GUEST" || Boolean(userData?.isGuest);
 
   const menuItems = [
     { id: "profile", label: "Profile Info", icon: <User size={20} /> },
     { id: "2fa", label: "2FA Settings", icon: <Shield size={20} /> },
+    {
+      id: "sessions",
+      label: "Sessions",
+      icon: <MonitorSmartphone size={20} />,
+    },
     { id: "password", label: "Password", icon: <Lock size={20} /> },
     { id: "notifications", label: "Notifications", icon: <Bell size={20} /> },
   ];
+
+  const { title: headerTitle, subtitle: headerSubtitle } =
+    headerCopy(activeTab);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.title}>
-          <h1>
-            {activeTab === "profile" ? "Profile Info" : "Security Settings"}
-          </h1>
-          <p>
-            {activeTab === "profile"
-              ? "Manage your personal details and account security preferences."
-              : "Manage your account security and two-factor authentication."}
-          </p>
+          <h1>{headerTitle}</h1>
+          <p>{headerSubtitle}</p>
         </div>
       </div>
 
@@ -50,19 +83,28 @@ export default function UserSettings() {
         <div className={styles.content}>
           {activeTab === "profile" && <ProfileInfo />}
           {activeTab === "2fa" && <TwoFactorAuth />}
-          {activeTab !== "2fa" && activeTab !== "profile" && (
+          {activeTab === "sessions" && (
             <div className={styles.card}>
               <div className={styles.cardBody}>
-                <div className={styles.initialState}>
-                  <h3>Coming Soon</h3>
-                  <p>
-                    The {menuItems.find((i) => i.id === activeTab)?.label}{" "}
-                    settings are currently under development.
-                  </p>
-                </div>
+                <DeviceSessionCard isGuest={isGuest} />
               </div>
             </div>
           )}
+          {activeTab !== "2fa" &&
+            activeTab !== "profile" &&
+            activeTab !== "sessions" && (
+              <div className={styles.card}>
+                <div className={styles.cardBody}>
+                  <div className={styles.initialState}>
+                    <h3>Coming Soon</h3>
+                    <p>
+                      The {menuItems.find((i) => i.id === activeTab)?.label}{" "}
+                      settings are currently under development.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
       </div>
     </div>

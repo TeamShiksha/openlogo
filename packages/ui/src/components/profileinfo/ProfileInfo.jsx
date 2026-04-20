@@ -4,7 +4,6 @@ import UserInfo from "../userinfo/UserInfo";
 import ChangePassword from "../changepassword/ChangePassword";
 import SettingCard from "../settings/SettingCard";
 import CurrentPlan from "../currentplan/CurrentPlan";
-import DeviceSessionCard from "../devicesession/DeviceSessionCard";
 import { UserContext } from "../../contexts/Contexts";
 
 export default function ProfileInfo() {
@@ -30,11 +29,6 @@ export default function ProfileInfo() {
           <div className={styles.section}>
             <ChangePassword isGuest={isGuest} />
           </div>
-        </div>
-
-        <div className={styles.card}>
-          <h2 className={styles.heading}>Device Sessions</h2>
-          <DeviceSessionCard isGuest={isGuest} />
         </div>
 
         <div className={styles.card}>
