@@ -324,6 +324,7 @@ export default function Graph() {
         >
           Week
         </button>
+
         <div className={styles.refreshContainer}>
           <button
             className={styles.button}
