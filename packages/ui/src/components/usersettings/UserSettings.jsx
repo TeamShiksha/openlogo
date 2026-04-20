@@ -14,17 +14,13 @@ function headerCopy(activeTab) {
         subtitle:
           "Manage your personal details and account security preferences.",
       };
-    case "2fa":
-      return {
-        title: "Security Settings",
-        subtitle: "Manage your account security and two-factor authentication.",
-      };
     case "sessions":
       return {
         title: "Active Sessions",
         subtitle:
           "View devices where you're signed in and revoke access you don't recognize.",
       };
+    case "2fa":
     default:
       return {
         title: "Security Settings",
