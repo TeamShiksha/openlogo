@@ -110,6 +110,7 @@ class UsersRepository extends BaseRepository {
           },
         },
       },
+      { $sort: { _id: -1 } },
       {
         $facet: {
           data: [{ $skip: skip }, { $limit: limit }],
