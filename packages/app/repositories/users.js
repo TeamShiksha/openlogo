@@ -90,7 +90,7 @@ class UsersRepository extends BaseRepository {
       {
         $unwind: {
           path: "$subscription",
-          preserveNullAndEmpty: true,
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -109,6 +109,7 @@ class UsersRepository extends BaseRepository {
           },
         },
       },
+      { $sort: { _id: -1 } },
       {
         $facet: {
           data: [{ $skip: skip }, { $limit: limit }],

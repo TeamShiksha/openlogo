@@ -74,8 +74,8 @@ class SubscriptionService {
 
     return await this.subscriptionRepository.findOneAndUpdate(
       { _id: subscriptionId },
-      update,
-      { new: true }
+      { $set: update },
+      { new: true, runValidators: true }
     );
   }
 
