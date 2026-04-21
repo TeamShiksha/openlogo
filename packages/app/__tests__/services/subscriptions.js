@@ -110,11 +110,13 @@ describe("Subscription Service", () => {
     expect(spy).toHaveBeenCalledWith(
       { _id: subscriptionId },
       expect.objectContaining({
-        type: ProSubscriptionPlan.type,
-        key_limit: ProSubscriptionPlan.key_limit,
-        usage_limit: ProSubscriptionPlan.usage_limit,
+        $set: expect.objectContaining({
+          type: ProSubscriptionPlan.type,
+          key_limit: ProSubscriptionPlan.key_limit,
+          usage_limit: ProSubscriptionPlan.usage_limit,
+        }),
       }),
-      { new: true }
+      { new: true, runValidators: true }
     );
   });
 

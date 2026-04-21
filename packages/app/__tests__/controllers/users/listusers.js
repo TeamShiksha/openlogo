@@ -64,10 +64,10 @@ describe("GET /api/admin/users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.statusCode).toBe(200);
-    expect(response.body.data).toEqual(mockResult.users);
+    expect(response.body.results).toEqual(mockResult.users);
     expect(response.body.total).toBe(1);
-    expect(response.body.page).toBe(1);
-    expect(response.body.limit).toBe(20);
+    expect(response.body.currentPage).toBe(1);
+    expect(response.body.totalPages).toBe(1);
   });
 
   it("200 - returns users with search param", async () => {
@@ -81,10 +81,10 @@ describe("GET /api/admin/users", () => {
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.data).toEqual([]);
+    expect(response.body.results).toEqual([]);
     expect(response.body.total).toBe(0);
-    expect(response.body.page).toBe(2);
-    expect(response.body.limit).toBe(5);
+    expect(response.body.currentPage).toBe(2);
+    expect(response.body.totalPages).toBe(0);
     expect(listSpy).toHaveBeenCalledWith({
       search: "john",
       page: 2,
