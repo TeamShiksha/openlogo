@@ -430,10 +430,10 @@ async function listUsersController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      data: users,
+      results: users,
       total,
-      page,
-      limit,
+      currentPage: page,
+      totalPages: limit ? Math.ceil(total / limit) : 0,
     });
   } catch (err) {
     next(err);

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const mongoose = require("mongoose");
 const { UserSessionService } = require("../../../services");
 const SubscriptionService = require("../../../services/subscriptions");

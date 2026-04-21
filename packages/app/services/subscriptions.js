@@ -74,14 +74,14 @@ class SubscriptionService {
 
     return await this.subscriptionRepository.findOneAndUpdate(
       { _id: subscriptionId },
-      update,
-      { new: true }
+      { $set: update },
+      { new: true, runValidators: true }
     );
   }
 
   /**
    * Creates an audit log entry for a subscription plan change.
-   * @param {Object} logData - { user_id, subscription_id, from_plan, to_plan, changed_by, reason? }
+   * @param {Object} logData - { user_id, changed_by, reason? }
    * @returns {Promise<Object>} - Created log document.
    */
   async createSubscriptionLog(logData) {

@@ -71,7 +71,8 @@ class UsersRepository extends BaseRepository {
     }
 
     if (search) {
-      const regex = new RegExp(search, "i");
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedSearch, "i");
       matchStage.$or = [{ name: regex }, { email: regex }];
     }
 
@@ -90,7 +91,7 @@ class UsersRepository extends BaseRepository {
       {
         $unwind: {
           path: "$subscription",
-          preserveNullAndEmpty: true,
+          preserveNullAndEmptyArrays: true,
         },
       },
       {

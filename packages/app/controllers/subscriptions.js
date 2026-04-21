@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const mongoose = require("mongoose");
 const { Messages } = require("../utils/constants");
 const { changeSubscriptionPlanSchema } = require("../schemas/admin");
@@ -69,10 +69,13 @@ async function changeSubscriptionPlanController(req, res, next) {
         user.subscription_id,
         plan
       );
-
+    // We Intentionally do not log HOBBY plan changes as they are free and do not impact billing, but we log all other plan changes for audit purposes.
     if (plan !== "HOBBY") {
       await subscriptionService.createSubscriptionLog({
         user_id: user._id,
+        subscription_id: user.subscription_id,
+        from_plan: subscription.type,
+        to_plan: plan,
         changed_by: req.userData.userId,
         ...(reason && { reason }),
       });
