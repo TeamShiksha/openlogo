@@ -45,5 +45,5 @@
 
 .card button[class*="primary"],
 .card button[class*="danger"] {
-  color: var(--white-fixed);
+  color: var(--white);
 }
