@@ -14,7 +14,6 @@ import { useTheme } from "../../hooks/useTheme.js";
 import Pin from "../pin/Pin";
 
 const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
-  console.log("redirectAfterLogin:", redirectAfterLogin);
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
@@ -27,6 +26,8 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const { isDarkMode } = useTheme();
+  const [isMFAEnabled, setIsMFAEnabled] = useState(false);
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -275,19 +276,22 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
           </p>
         )}
 
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isLoading}
-          disabled={
-            !isFormValid ||
-            isSubmit ||
-            isLoading ||
-            (isForgotPassword && timer > 0)
-          }
-        >
-          {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
-        </Button>
+        {!isMFAEnabled && (
+          <Button
+            type="submit"
+            variant="primary"
+            className={styles["submit-button"]}
+            isLoading={isLoading}
+            disabled={
+              !isFormValid ||
+              isSubmit ||
+              isLoading ||
+              (isForgotPassword && timer > 0)
+            }
+          >
+            {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
+          </Button>
+        )}
         {isForgotPassword && timer > 0 && (
           <p className={styles["timer"]}>
             Please wait {timer} seconds before retrying.
