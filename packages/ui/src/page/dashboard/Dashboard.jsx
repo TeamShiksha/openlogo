@@ -213,7 +213,6 @@ function Dashboard() {
             isDropdownOpen={isDropdownOpen}
             setIsDropdownOpen={setIsDropdownOpen}
             handleRoleSelect={handleRoleSelect}
-            styles={styles}
           />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
