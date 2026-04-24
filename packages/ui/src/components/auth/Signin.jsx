@@ -12,7 +12,6 @@ import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
 import Pin from "../pin/Pin";
 import { useTheme } from "../../hooks/useTheme.js";
-import Pin from "../pin/Pin";
 
 const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const toast = useToast();
@@ -277,23 +276,6 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
           </p>
         )}
 
-        {!isMFAEnabled && (
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={isLoading}
-            disabled={
-              !isFormValid ||
-              isSubmit ||
-              isLoading ||
-              (isForgotPassword && timer > 0)
-            }
-          >
-            {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
-          </Button>
-        )}
-
-        {isForgotPassword && !isMFAEnabled && timer > 0 && (
         {!isMFAEnabled && (
           <Button
             type="submit"
