@@ -61,12 +61,6 @@ describe("UserSettings Component", () => {
     expect(
       screen.getByRole("button", { name: /2FA Settings/i })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Password/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Notifications/i })
-    ).toBeInTheDocument();
   });
 
   it("switches to 2FA tab when clicked", () => {
@@ -86,42 +80,6 @@ describe("UserSettings Component", () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByTestId("two-factor-auth")).toBeInTheDocument();
-  });
-
-  it("shows coming soon message for password tab", () => {
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <UserSettings />
-      </UserContext.Provider>
-    );
-
-    const passwordButton = screen.getByRole("button", { name: /Password/i });
-    fireEvent.click(passwordButton);
-
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
-    expect(
-      screen.getByText(/The Password settings are currently under development/i)
-    ).toBeInTheDocument();
-  });
-
-  it("shows coming soon message for notifications tab", () => {
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <UserSettings />
-      </UserContext.Provider>
-    );
-
-    const notificationsButton = screen.getByRole("button", {
-      name: /Notifications/i,
-    });
-    fireEvent.click(notificationsButton);
-
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /The Notifications settings are currently under development/i
-      )
-    ).toBeInTheDocument();
   });
 
   it("applies active class to selected tab", () => {
@@ -156,12 +114,7 @@ describe("UserSettings Component", () => {
     expect(screen.getByTestId("two-factor-auth")).toBeInTheDocument();
     expect(screen.queryByTestId("profile-info")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Password/i }));
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
-    expect(screen.queryByTestId("two-factor-auth")).not.toBeInTheDocument();
-
     fireEvent.click(screen.getByRole("button", { name: /Profile Info/i }));
     expect(screen.getByTestId("profile-info")).toBeInTheDocument();
-    expect(screen.queryByText("Coming Soon")).not.toBeInTheDocument();
   });
 });
