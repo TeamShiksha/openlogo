@@ -29,10 +29,12 @@ if (process.env.NODE_ENV !== "test") {
 const app = express();
 app.use(cookieParser());
 app.disable("x-powered-by");
+// Trust first proxy (needed for correct client IP when behind load balancer / reverse proxy)
+// Ensures req.ip is accurate for rate limiting, logging, etc.
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", routes);
-
 if (process.env.NODE_ENV !== "test") {
   const PORT = process.env.PORT;
   app.listen(PORT, () => {
