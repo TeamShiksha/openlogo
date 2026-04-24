@@ -645,9 +645,8 @@ export const API_KEY_TABLE = {
     "Your api keys will be visible here, click on generate key to add new api key",
 };
 
-export const DASHBOARD_CARDS_TITLE = [
-  "Usage",
-  "Generate New API Key",
+export const DASHBOARD_CARDS_TITLE = ["Usage", "Generate New API Key"];
+export const USER_SETTINGS_TITLE = [
   "Plan",
   "User Info",
   "Change Password",
