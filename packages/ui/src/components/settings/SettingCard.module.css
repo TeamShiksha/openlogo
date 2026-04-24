@@ -36,5 +36,5 @@
 }
 
 .action-button button[class*="danger"] {
-  color: var(--white-fixed);
+  color: var(--white);
 }

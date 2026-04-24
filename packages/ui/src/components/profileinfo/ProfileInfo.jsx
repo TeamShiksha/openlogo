@@ -8,7 +8,7 @@ import { UserContext } from "../../contexts/Contexts";
 
 export default function ProfileInfo() {
   const { userData } = useContext(UserContext);
-  const isGuest = userData?.role === "GUEST" || Boolean(userData?.isGuest);
+  const isGuest = userData?.isGuest || false;
 
   return (
     <div className={styles.container}>

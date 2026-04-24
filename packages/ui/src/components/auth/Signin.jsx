@@ -1,19 +1,20 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, User } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
+import { BRANDING, BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
 import Pin from "../pin/Pin";
+import { useTheme } from "../../hooks/useTheme.js";
+import Pin from "../pin/Pin";
 
 const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
-  console.log("redirectAfterLogin:", redirectAfterLogin);
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
@@ -26,6 +27,7 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const { isDarkMode } = useTheme();
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
 
   const { fetchRequest, errorMsg } = useApi({
@@ -179,8 +181,13 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
+        <img
+          src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
+          alt="openlogo"
+          className={styles.logo}
+        />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
+        <p className={styles.description}>{SIGNIN.description}</p>
 
         {!isMFAEnabled && (
           <div className={styles["form-width"]}>
@@ -287,6 +294,23 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
         )}
 
         {isForgotPassword && !isMFAEnabled && timer > 0 && (
+        {!isMFAEnabled && (
+          <Button
+            type="submit"
+            variant="primary"
+            className={styles["submit-button"]}
+            isLoading={isLoading}
+            disabled={
+              !isFormValid ||
+              isSubmit ||
+              isLoading ||
+              (isForgotPassword && timer > 0)
+            }
+          >
+            {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
+          </Button>
+        )}
+        {isForgotPassword && timer > 0 && (
           <p className={styles["timer"]}>
             Please wait {timer} seconds before retrying.
           </p>
@@ -294,12 +318,17 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
       </form>
 
       <hr className={styles.separator} />
-      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
-        {SIGNIN.guestAccount}
-      </p>
-      <p onClick={toggleForm} className={styles.switch}>
-        {SIGNIN.footerText}
-      </p>
+      <div className={styles["footer-wrapper"]}>
+        <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+          <User size={18} /> {SIGNIN.guestAccount}
+        </p>
+        <div className={styles.switch}>
+          {SIGNIN.footerText}
+          <button onClick={toggleForm} className={styles["toggler"]}>
+            {SIGNIN.signupToggleButtonText}
+          </button>
+        </div>
+      </div>
     </>
   );
 };

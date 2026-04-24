@@ -32,7 +32,7 @@ function headerCopy(activeTab) {
 export default function UserSettings() {
   const [activeTab, setActiveTab] = useState("profile");
   const { userData } = useContext(UserContext);
-  const isGuest = userData?.role === "GUEST" || Boolean(userData?.isGuest);
+  const isGuest = userData?.isGuest || false;
 
   const menuItems = [
     { id: "profile", label: "Profile Info", icon: <User size={20} /> },

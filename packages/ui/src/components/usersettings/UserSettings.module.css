@@ -134,14 +134,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: rgb(254, 243, 199);
-  color: rgb(146, 64, 14);
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgb(217, 119, 6);
 }
 
 [data-theme="dark"] .statusBadge {
-  background-color: rgb(30, 41, 59);
-  color: rgb(252, 211, 77);
-  border: 1px solid rgb(217, 119, 6);
+  background-color: rgba(245, 158, 11, 0.2);
+  color: rgb(251, 191, 36);
 }
 
 .cardBody {

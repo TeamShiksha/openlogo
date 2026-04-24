@@ -50,3 +50,7 @@ dialog {
   transform: rotateY(180deg);
   z-index: 1;
 }
+
+.auth-modal {
+  padding: 1.5rem 2rem !important;
+}

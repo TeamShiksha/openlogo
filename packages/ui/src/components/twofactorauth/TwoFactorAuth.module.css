@@ -57,25 +57,23 @@
 }
 
 .pendingBadge {
-  background-color: rgb(254, 243, 199);
-  color: rgb(146, 64, 14);
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgb(217, 119, 6);
 }
 
 .successBadge {
-  background-color: rgb(209, 250, 229);
-  color: rgb(6, 95, 70);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: rgb(5, 150, 105);
 }
 
 [data-theme="dark"] .pendingBadge {
-  background-color: rgb(30, 41, 59);
-  color: rgb(252, 211, 77);
-  border: 1px solid rgb(217, 119, 6);
+  background-color: rgba(245, 158, 11, 0.2);
+  color: rgb(251, 191, 36);
 }
 
 [data-theme="dark"] .successBadge {
-  background-color: rgb(30, 41, 59);
-  color: rgb(110, 231, 183);
-  border: 1px solid rgb(5, 150, 105);
+  background-color: rgba(16, 185, 129, 0.2);
+  color: rgb(52, 211, 153);
 }
 
 .cardBody {
@@ -135,7 +133,7 @@
 .actionBtn {
   padding-left: 2rem;
   padding-right: 2rem;
-  color: var(--white-fixed);
+  color: var(--white);
 }
 
 /* Setup Mode Styles */
@@ -357,7 +355,7 @@
 
 .footer button[class*="primary"],
 .footer button[class*="danger"] {
-  color: var(--white-fixed);
+  color: var(--white);
 }
 
 .successIconWrapper {

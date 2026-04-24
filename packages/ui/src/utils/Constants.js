@@ -372,7 +372,7 @@ export const BUTTON_TEXT = {
   signIn: "Sign In",
   signOut: "Sign Out",
   changePasswordLabel: "Change password",
-  forgotPassword: "Forgot Password ?",
+  forgotPassword: "Forgot password?",
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
@@ -396,6 +396,8 @@ export const BUTTON_TEXT = {
 
 export const BRANDING = {
   imageSrc: "openlogo.svg",
+  imageSrcDark: "openlogo-white.svg",
+  imageAlt: "Brand Logo",
   brandName: "Openlogo",
   poweredByText: "Powered by TeamShiksha",
   poweredByLink: "https://team.shiksha",
@@ -456,6 +458,7 @@ export const PRIVACY_AND_TERMS = [
 
 export const SIGNUP = {
   title: "Sign up for free",
+  description: "Create your account and start integrating in seconds",
   termsUrl: "/privacy#terms",
   privacyUrl: "/privacy#privacy",
   fields: [
@@ -475,6 +478,7 @@ export const SIGNUP = {
     },
   ],
   footerText: "Already have an account ?",
+  signinToggleButtonText: "Login",
   initialValues: {
     name: "",
     email: "",
@@ -484,7 +488,8 @@ export const SIGNUP = {
 };
 
 export const SIGNIN = {
-  title: "Go to dashboard",
+  title: "Sign in to your account",
+  description: "Welcome back! Please enter your details",
   fields: [
     { type: "email", name: "email", label: "Email" },
     {
@@ -496,6 +501,7 @@ export const SIGNIN = {
   ],
   guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
+  signupToggleButtonText: "Create an account",
   initialValues: { email: "", password: "" },
 };
 

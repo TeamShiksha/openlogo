@@ -71,5 +71,5 @@
 }
 
 .user-info-input-group button[class*="primary"] {
-  color: var(--white-fixed);
+  color: var(--white);
 }
