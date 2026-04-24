@@ -1,59 +1,95 @@
 .table-container {
   overflow-x: auto;
-}
-
-.custom-table {
   width: 100%;
-  background-color: var(--table-background);
-  border: var(--border);
-  border-radius: 0.5rem;
-  box-shadow: var(--shadow-bottom);
-  border-spacing: 0;
 }
 
-.custom-table th {
-  color: var(--description);
-  border-bottom: var(--border);
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table-header {
-  padding: 0.75rem 3.5rem;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: var(--black);
-  background-color: var(--header-background);
+  text-align: left;
+  color: var(--description);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  padding: 0.75rem 0;
+  letter-spacing: 0.025em;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
 }
 
 .table-cell {
-  padding: 0.5rem 4rem;
-  text-align: center;
-  font-size: 1rem;
-  color: var(--description);
+  padding: 1rem 0;
+  color: var(--black);
+  font-size: 0.875rem;
+}
+
+.key-name {
   font-weight: 500;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-color);
+  transition: color 0.2s;
+}
+
+.action-btn:hover:not(:disabled) {
+  color: var(--black);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-icon {
+  transition: color 0.2s;
+}
+
+.action-btn:hover:not(:disabled) .delete-icon {
+  color: #ef4444;
 }
 
 .no-data {
   text-align: center;
-  padding: 1rem;
-  font-size: 1rem;
+  padding: 2rem 1rem;
+  font-size: 0.875rem;
   color: var(--description);
   font-style: italic;
-  background-color: var(--table-background);
-  border: 1px solid var(--border-color);
 }
 
-.delete-btn {
-  padding: 0.5rem 1rem;
-}
-
+/* Responsive */
 @media only screen and (max-width: 1024px) {
+  .table {
+    min-width: 600px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
   .table-header,
   .table-cell {
-    padding: 0.5rem 1rem;
-  }
-
-  .custom-table {
-    min-width: 600px;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8125rem;
   }
 }

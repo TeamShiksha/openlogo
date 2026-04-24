@@ -1,5 +1,75 @@
-.user-info-input-group {
+.user-info-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.floating-label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background: var(--white);
+  padding: 0 4px;
+  font-size: 0.75rem;
+  color: var(--description);
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: var(--border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--black);
+  background-color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+}
+
+.input:disabled {
+  background-color: var(--table-background);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-info-form {
+    gap: 0.875rem;
+  }
+}
+
+.user-info-input-group button[class*="primary"] {
+  color: var(--white);
 }
