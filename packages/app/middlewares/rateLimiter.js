@@ -14,4 +14,11 @@ const baseLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-module.exports = { logoLimiter, baseLimiter };
+const searchLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 30,
+  standardHeaders: "draft-8", //  eigth draft of the IETF rate limit header specification
+  legacyHeaders: false,
+});
+
+module.exports = { logoLimiter, baseLimiter, searchLimiter };
