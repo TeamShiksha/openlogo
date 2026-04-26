@@ -20,11 +20,11 @@ jobs:
         run: |
           echo "Branch: $BRANCH"
 
-          PATTERN="^(Feat|Fix|HotFix|Refact|Docs|Test)/issue-[a-zA-Z0-9]+-[a-zA-Z0-9-]+$"
+          PATTERN="^(feat|fix|hotfix|refact|docs|test)/issue-[a-z0-9]+-[a-z0-9-]+$"
 
           if ! echo "$BRANCH" | grep -Eq "$PATTERN"; then
             echo "❌ Invalid branch name: '$BRANCH'"
-            echo "Expected format: Fix/issue-931-short-description"
+            echo "Expected format: fix/issue-931-short-description"
             exit 1
           fi
 
@@ -43,11 +43,11 @@ jobs:
         run: |
           echo "PR Title: $TITLE"
 
-          PATTERN="^\[(Feat|Fix|HotFix|Refact|Docs|Test)\] Issue-[a-zA-Z0-9]+ .+$"
+          PATTERN="^\[(feat|fix|hotfix|refact|docs|test)\] issue-[a-z0-9]+ .+$"
 
           if ! echo "$TITLE" | grep -Eq "$PATTERN"; then
             echo "❌ PR title does not follow convention."
-            echo "Expected format: [Fix] Issue-931 Fix something meaningful"
+            echo "Expected format: [fix] issue-931 Fix something meaningful"
             exit 1
           fi
 
