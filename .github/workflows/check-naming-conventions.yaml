@@ -43,11 +43,11 @@ jobs:
         run: |
           echo "PR Title: $TITLE"
 
-          PATTERN="^\[(feat|fix|hotfix|refact|docs|test)\] issue-[a-z0-9]+ .+$"
+          PATTERN="^\[(Feat|Fix|HotFix|Refact|Docs|Test)\] Issue-[a-zA-Z0-9]+ .+$"
 
           if ! echo "$TITLE" | grep -Eq "$PATTERN"; then
             echo "❌ PR title does not follow convention."
-            echo "Expected format: [fix] issue-931 Fix something meaningful"
+            echo "Expected format: [Fix] Issue-931 Fix something meaningful"
             exit 1
           fi
 
