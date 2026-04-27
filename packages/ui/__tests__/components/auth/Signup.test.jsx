@@ -65,7 +65,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       const label = screen.getByLabelText(item.label);
       expect(label).toBeInTheDocument();
     }
-    const footerText = screen.getByText(SIGNUP.footerText);
+    const footerText = screen.getByText(SIGNUP.signinToggleButtonText);
     expect(footerText).toBeInTheDocument();
   });
 
@@ -84,7 +84,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       </BrowserRouter>
     );
 
-    const switchButton = screen.getByText(SIGNUP.footerText);
+    const switchButton = screen.getByText(SIGNUP.signinToggleButtonText);
     fireEvent.click(switchButton);
     expect(toggleFormMock).toHaveBeenCalled();
   });

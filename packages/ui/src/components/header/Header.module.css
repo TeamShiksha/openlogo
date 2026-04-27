@@ -17,12 +17,14 @@
   min-height: 5.25rem;
   padding: 0.9rem 0;
 }
+
 .mobile-header {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
 }
+
 .brand {
   display: flex;
   flex-direction: row;
@@ -36,6 +38,7 @@
 .brand-img {
   width: 36px;
   height: 36px;
+  object-fit: contain;
 }
 
 .brand-name {
