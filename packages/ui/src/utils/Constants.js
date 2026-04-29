@@ -602,7 +602,7 @@ export const DOCUMENTATION = {
     },
     {
       heading: "Search Logos",
-      text: "Find logos by brand keyword, industry, or color palette with semantic search. This endpoint returns ranked logo matches with brand metadata for faster discovery workflows.",
+      text: "Find logos by brand keyword or domain fragment. This endpoint returns matching logos for faster discovery workflows.",
       endPoint: "Endpoint: /logo/search?key={query}&API_KEY={YOUR_API_KEY}",
       tableDataContent: [
         [
