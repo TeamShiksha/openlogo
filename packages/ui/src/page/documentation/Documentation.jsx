@@ -82,7 +82,11 @@ const Documentation = () => {
 
                 <CodeBlock
                   id={feature.heading}
-                  codeExamples={feature.codeExample}
+                  codeExamples={
+                    typeof feature.codeExample === "function"
+                      ? feature.codeExample(baseAPI.replace("Base URL: ", ""))
+                      : feature.codeExample
+                  }
                   selectedLanguage={getSelectedLanguage(feature.heading)}
                   setSelectedLanguage={(language) =>
                     handleLanguageChange(feature.heading, language)

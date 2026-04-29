@@ -532,18 +532,14 @@ export const LOGOUPLOAD = {
   },
 };
 
-const CODE_EXAMPLE_SEARCH = {
+export const CODE_EXAMPLE_SEARCH = (baseUrl) => ({
   curl: `curl --request GET \\
-  --url 'https://api.openlogo.dev/v1/search/logo?q=goo' \\
-  --header 'Authorization: Bearer YOUR_API_KEY'`,
+  --url '${baseUrl}/logo/search?key=goo&API_KEY=YOUR_API_KEY'`,
 
   javascript: `const response = await fetch(
-  "https://api.openlogo.dev/v1/search/logo?q=goo",
+  "${baseUrl}/logo/search?key=goo&API_KEY=YOUR_API_KEY",
   {
     method: "GET",
-    headers: {
-      Authorization: "Bearer YOUR_API_KEY",
-    },
   }
 );
 
@@ -552,26 +548,21 @@ const data = await response.json();`,
   python: `import requests
 
 response = requests.get(
-  "https://api.openlogo.dev/v1/search/logo",
-  params={"q": "goo"},
-  headers={"Authorization": "Bearer YOUR_API_KEY"},
+  "${baseUrl}/logo/search",
+  params={"key": "goo", "API_KEY": "YOUR_API_KEY"},
 )
 
 data = response.json()`,
-};
+});
 
-const CODE_EXAMPLE = {
+export const CODE_EXAMPLE = (baseUrl) => ({
   curl: `curl --request GET \\
-  --url 'https://api.openlogo.dev/v1/logo/google.com' \\
-  --header 'Authorization: Bearer YOUR_API_KEY'`,
+  --url '${baseUrl}/logo?key=google.com&API_KEY=YOUR_API_KEY'`,
 
   javascript: `const response = await fetch(
-  "https://api.openlogo.dev/v1/logo/google.com",
+  "${baseUrl}/logo?key=google.com&API_KEY=YOUR_API_KEY",
   {
     method: "GET",
-    headers: {
-      Authorization: "Bearer YOUR_API_KEY",
-    },
   }
 );
 
@@ -580,12 +571,12 @@ const data = await response.json();`,
   python: `import requests
 
 response = requests.get(
-  "https://api.openlogo.dev/v1/logo/google.com",
-  headers={"Authorization": "Bearer YOUR_API_KEY"},
+  "${baseUrl}/logo",
+  params={"key": "google.com", "API_KEY": "YOUR_API_KEY"},
 )
 
 data = response.json()`,
-};
+});
 
 export const DOCUMENTATION = {
   introduction: {
@@ -597,48 +588,30 @@ export const DOCUMENTATION = {
     {
       heading: "Logo Retrieval",
       text: "Fetch the official logo for any company using their domain name. Our system automatically detects the best quality asset, including high-resolution SVGs and PNGs.",
-      endPoint: "Endpoint: /v1/logo/{domain}",
+      endPoint: "Endpoint: /logo?key={domain}&API_KEY={YOUR_API_KEY}",
       tableDataContent: [
         [
-          "domain",
+          "key",
           "string",
           "The domain name of the company (e.g., apple.com).",
           "Yes",
         ],
-        [
-          "size",
-          "integer",
-          "Target width in pixels. Aspect ratio is preserved.",
-          "No",
-        ],
-        ["format", "string", "Preferred image format (png, svg, webp).", "No"],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
       ],
       codeExample: CODE_EXAMPLE,
     },
     {
       heading: "Search Logos",
       text: "Find logos by brand keyword, industry, or color palette with semantic search. This endpoint returns ranked logo matches with brand metadata for faster discovery workflows.",
-      endPoint: "Endpoint: /v1/search/logo?q={query}",
+      endPoint: "Endpoint: /logo/search?key={query}&API_KEY={YOUR_API_KEY}",
       tableDataContent: [
-        ["q", "string", "Search query (brand name or domain fragment).", "Yes"],
         [
-          "industry",
+          "key",
           "string",
-          "Optional industry filter for semantic ranking.",
-          "No",
+          "Search query (brand name or domain fragment).",
+          "Yes",
         ],
-        [
-          "color",
-          "string",
-          "Optional hex color filter for palette matching.",
-          "No",
-        ],
-        [
-          "limit",
-          "integer",
-          "Maximum number of search results to return.",
-          "No",
-        ],
+        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
       ],
       codeExample: CODE_EXAMPLE_SEARCH,
     },
