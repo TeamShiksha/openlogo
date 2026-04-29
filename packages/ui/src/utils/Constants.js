@@ -533,99 +533,112 @@ export const LOGOUPLOAD = {
 };
 
 const CODE_EXAMPLE_SEARCH = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
+  curl: `curl --request GET \\
+  --url 'https://api.openlogo.dev/v1/search/logo?q=goo' \\
+  --header 'Authorization: Bearer YOUR_API_KEY'`,
 
-  python: `# import package
-import requests
-# send GET request
-response = requests.get("api/logo/search",
-  params={
-    "key": "{prefix}",
-    "API_KEY": '{YOUR_API_KEY}'
-  },
-  headers={
-    "Content-Type": "application/json"
+  javascript: `const response = await fetch(
+  "https://api.openlogo.dev/v1/search/logo?q=goo",
+  {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+    },
   }
-)`,
+);
 
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();
-// send GET request
-HttpResponse<String> response = client.send(request,
-  HttpResponse.BodyHandlers.ofString());`,
+const data = await response.json();`,
+
+  python: `import requests
+
+response = requests.get(
+  "https://api.openlogo.dev/v1/search/logo",
+  params={"q": "goo"},
+  headers={"Authorization": "Bearer YOUR_API_KEY"},
+)
+
+data = response.json()`,
 };
 
 const CODE_EXAMPLE = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
+  curl: `curl --request GET \\
+  --url 'https://api.openlogo.dev/v1/logo/google.com' \\
+  --header 'Authorization: Bearer YOUR_API_KEY'`,
 
-  python: `# import package
-import requests
-# send GET request
-response = requests.get("api/logo",
-  params={
-    "domain": "{domain}",
-    "API_KEY": "{YOUR_API_KEY}"
-  },
-  headers={
-    "Content-Type": "application/json"
+  javascript: `const response = await fetch(
+  "https://api.openlogo.dev/v1/logo/google.com",
+  {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+    },
   }
-)`,
+);
 
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();
-// send GET request
-HttpResponse<String> response = client.send(request,
-  HttpResponse.BodyHandlers.ofString());`,
+const data = await response.json();`,
+
+  python: `import requests
+
+response = requests.get(
+  "https://api.openlogo.dev/v1/logo/google.com",
+  headers={"Authorization": "Bearer YOUR_API_KEY"},
+)
+
+data = response.json()`,
 };
 
 export const DOCUMENTATION = {
   introduction: {
     heading: "Introduction",
-    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we're here to help. Contact us anytime!",
+    text: "Welcome to the Openlogo API documentation. Openlogo is a high-performance, real-time logo retrieval service designed to help you integrate brand assets directly into your applications.",
   },
   tableDataHeaders: ["Parameter", "Type", "Description", "Required"],
   apiDocs: [
     {
       heading: "Logo Retrieval",
-      text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
-      endPoint: "Endpoint: /logo?key=google&API_KEY=YOUR_API_KEY",
+      text: "Fetch the official logo for any company using their domain name. Our system automatically detects the best quality asset, including high-resolution SVGs and PNGs.",
+      endPoint: "Endpoint: /v1/logo/{domain}",
       tableDataContent: [
-        ["key", "string", "The domain name of the company.", "Yes"],
-        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+        [
+          "domain",
+          "string",
+          "The domain name of the company (e.g., apple.com).",
+          "Yes",
+        ],
+        [
+          "size",
+          "integer",
+          "Target width in pixels. Aspect ratio is preserved.",
+          "No",
+        ],
+        ["format", "string", "Preferred image format (png, svg, webp).", "No"],
       ],
       codeExample: CODE_EXAMPLE,
     },
     {
-      heading: "Search (Now Available)",
-      text: "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
-      endPoint: "Endpoint: /logo/search?key=go&API_KEY=YOUR_API_KEY",
+      heading: "Search Logos",
+      text: "Find logos by brand keyword, industry, or color palette with semantic search. This endpoint returns ranked logo matches with brand metadata for faster discovery workflows.",
+      endPoint: "Endpoint: /v1/search/logo?q={query}",
       tableDataContent: [
-        ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
-        ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
+        ["q", "string", "Search query (brand name or domain fragment).", "Yes"],
+        [
+          "industry",
+          "string",
+          "Optional industry filter for semantic ranking.",
+          "No",
+        ],
+        [
+          "color",
+          "string",
+          "Optional hex color filter for palette matching.",
+          "No",
+        ],
+        [
+          "limit",
+          "integer",
+          "Maximum number of search results to return.",
+          "No",
+        ],
       ],
       codeExample: CODE_EXAMPLE_SEARCH,
     },
@@ -862,12 +875,46 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["0.7.0 version", "0.6.0 version", "Previous version"],
-  latestVersion: "0.7.0 version",
+  versions: [
+    "0.8.0 version",
+    "0.7.0 version",
+    "0.6.0 version",
+    "Previous version",
+  ],
+  latestVersion: "0.8.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
+      {
+        versionName: "0.8.0 version",
+        releaseDate: "Apr 2026",
+        imgSrc: version07,
+        releaseNotes: [
+          {
+            releaseNote:
+              "Documentation experience has been redesigned with a cleaner visual system, improved endpoint readability, and a stronger quickstart flow (#953).",
+            contributors: [
+              {
+                contributorName: "openlogo-community",
+                contributorGithubLink:
+                  "https://github.com/TeamShiksha/openlogo",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Code examples are now easier to scan with clearer language selection and copy actions across endpoints.",
+            contributors: [
+              {
+                contributorName: "openlogo-community",
+                contributorGithubLink:
+                  "https://github.com/TeamShiksha/openlogo",
+              },
+            ],
+          },
+        ],
+      },
       {
         versionName: "0.7.0 version",
         releaseDate: "Mar 2026",
