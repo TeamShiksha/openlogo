@@ -8,27 +8,19 @@ import { getBaseApiUrl } from "../../utils/Helpers.js";
 
 const RESPONSE_EXAMPLES = {
   "Logo Retrieval": `{
-  "status": "success",
-  "data": {
-    "brand_name": "Google",
-    "domain": "google.com",
-    "logo_url": "https://assets.openlogo.dev/logos/google.svg",
-    "colors": ["#4285F4", "#EA4335", "#FBBC05", "#34A853"],
-    "icon_url": "https://assets.openlogo.dev/icons/google.png"
-  }
+  "statusCode": 200,
+  "data": "https://assets.openlogo.dev/png/google.com.png"
 }`,
   "Search Logos": `{
-  "status": "success",
+  "statusCode": 200,
   "data": [
     {
-      "brand_name": "Google",
-      "domain": "google.com",
-      "logo_url": "https://assets.openlogo.dev/logos/google.svg"
+      "companyName": "google",
+      "image": "https://assets.openlogo.dev/png/google.com.png"
     },
     {
-      "brand_name": "GoDaddy",
-      "domain": "godaddy.com",
-      "logo_url": "https://assets.openlogo.dev/logos/godaddy.svg"
+      "companyName": "godaddy",
+      "image": "https://assets.openlogo.dev/png/godaddy.com.png"
     }
   ]
 }`,
