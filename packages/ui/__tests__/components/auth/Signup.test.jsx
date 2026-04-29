@@ -343,14 +343,13 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
+      expect(signUpButton).toBeEnabled();
     });
 
     expect(nameInput.value).toBe("Test User");
     expect(emailInput.value).toBe("testuser@example.com");
     expect(passwordInput.value).toBe("Password@123");
     expect(confirmPasswordInput.value).toBe("Password@123");
-
-    expect(signUpButton).toBeEnabled();
   });
 
   it("connectivity test passed", async () => {
