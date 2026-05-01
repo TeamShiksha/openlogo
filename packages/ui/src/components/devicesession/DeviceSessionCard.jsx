@@ -87,7 +87,7 @@ function DeviceSessionCard({ isGuest }) {
                     )}
                   </p>
                   <p className={styles["session-details"]}>
-                    IP: {session.ipAddress} • Last active:{" "}
+                    Last active:{" "}
                     {session.lastActiveAt
                       ? formatDate(session.lastActiveAt)
                       : "Unknown"}
