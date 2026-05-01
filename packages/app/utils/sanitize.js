@@ -11,7 +11,7 @@ const sanitizeFilePath = (str) => {
     .toLowerCase()
     .replaceAll(/[^a-z0-9._-]/g, "-")
     .replaceAll(/-+/g, "-")
-    .replaceAll(/^-+/, "");
+    .replace(/^-+/, "");
   return trimTrailingHyphens(normalized);
 };
 
