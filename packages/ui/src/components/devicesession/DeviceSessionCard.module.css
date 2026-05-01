@@ -31,7 +31,7 @@
 .session-device {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-color, #333);
+  color: var(--black);
   margin: 0;
 }
 
@@ -66,5 +66,6 @@
 }
 
 .revoke-all-btn {
-  width: 100%;
+  width: min(100%, 360px);
+  max-width: 100%;
 }
