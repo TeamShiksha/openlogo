@@ -148,10 +148,15 @@ function Dashboard() {
   if (loading) {
     return (
       <div
-        data-testid="loading-spinner"
-        className={styles["spinner-container"]}
+        className={styles["dashboard-container"]}
+        data-testid="testid-dashboard"
       >
-        <LoadingSpinner size={40} border={4} color={`gray`} />
+        <div
+          data-testid="loading-spinner"
+          className={styles["spinner-container"]}
+        >
+          <LoadingSpinner size={40} border={4} color="var(--primary)" />
+        </div>
       </div>
     );
   }
