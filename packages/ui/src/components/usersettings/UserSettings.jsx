@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import styles from "./UserSettings.module.css";
-import { Shield, User, Lock, Bell, MonitorSmartphone } from "lucide-react";
+import { Shield, User, MonitorSmartphone } from "lucide-react";
 import TwoFactorAuth from "../twofactorauth/TwoFactorAuth";
 import ProfileInfo from "../profileinfo/ProfileInfo";
 import DeviceSessionCard from "../devicesession/DeviceSessionCard";
@@ -42,8 +42,6 @@ export default function UserSettings() {
       label: "Sessions",
       icon: <MonitorSmartphone size={20} />,
     },
-    { id: "password", label: "Password", icon: <Lock size={20} /> },
-    { id: "notifications", label: "Notifications", icon: <Bell size={20} /> },
   ];
 
   const { title: headerTitle, subtitle: headerSubtitle } =
@@ -86,21 +84,6 @@ export default function UserSettings() {
               </div>
             </div>
           )}
-          {activeTab !== "2fa" &&
-            activeTab !== "profile" &&
-            activeTab !== "sessions" && (
-              <div className={styles.card}>
-                <div className={styles.cardBody}>
-                  <div className={styles.initialState}>
-                    <h3>Coming Soon</h3>
-                    <p>
-                      The {menuItems.find((i) => i.id === activeTab)?.label}{" "}
-                      settings are currently under development.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
         </div>
       </div>
     </div>
