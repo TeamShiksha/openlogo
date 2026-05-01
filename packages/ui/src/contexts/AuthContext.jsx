@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       .finally(() => {
         setIsAuthCheckComplete(true);
       });
-  }, []);
+  }, [validateSession]);
 
   const logout = useCallback(async () => {
     const success = await makeRequest();

@@ -458,6 +458,7 @@ const MOCK_MONTHLY_STATS = {
 };
 
 const MOCK_SESSION_ID = "a".repeat(128);
+const MOCK_SESSION_ID_2 = "b".repeat(128);
 
 const MOCK_USER_SESSIONS = [
   {
@@ -466,13 +467,19 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Chrome", os: "Windows 10", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
-    sessionId: MOCK_SESSION_ID,
+    sessionId: MOCK_SESSION_ID_2,
     userId: MOCK_USERS[1],
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Safari", os: "iOS", deviceType: "mobile" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
     sessionId: MOCK_SESSION_ID,
@@ -480,6 +487,9 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Firefox", os: "Mac OS", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
     sessionId: MOCK_SESSION_ID,
@@ -487,6 +497,9 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Edge", os: "Windows 11", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
   },
 ];
 
@@ -525,6 +538,7 @@ module.exports = {
   MOCK_WEEKLY_STATS,
   MOCK_MONTHLY_STATS,
   MOCK_SESSION_ID,
+  MOCK_SESSION_ID_2,
   MOCK_USER_SESSIONS,
   MOCK_MFA_SESSIONS,
 };

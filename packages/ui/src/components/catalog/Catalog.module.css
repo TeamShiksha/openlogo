@@ -224,6 +224,22 @@
   color: var(--black);
 }
 
+.catalog-search-modal {
+  background: var(--white);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.catalog-search-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 [data-theme="dark"] .catalog-search,
 [data-theme="dark"] .catalog-table-wrapper,
 [data-theme="dark"] .catalog-table-footer {
