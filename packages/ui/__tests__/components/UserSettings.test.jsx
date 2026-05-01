@@ -12,6 +12,13 @@ vi.mock("../../src/components/twofactorauth/TwoFactorAuth", () => ({
     <div data-testid="two-factor-auth">Two Factor Auth Component</div>
   ),
 }));
+
+vi.mock("../../src/components/devicesession/DeviceSessionCard", () => ({
+  default: () => (
+    <div data-testid="device-session-card">Device Session Card Component</div>
+  ),
+}));
+
 const mockUserContext = {
   userData: {
     name: "Test User",
@@ -61,6 +68,9 @@ describe("UserSettings Component", () => {
     expect(
       screen.getByRole("button", { name: /2FA Settings/i })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Sessions/i })
+    ).toBeInTheDocument();
   });
 
   it("switches to 2FA tab when clicked", () => {
@@ -80,6 +90,25 @@ describe("UserSettings Component", () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByTestId("two-factor-auth")).toBeInTheDocument();
+  });
+
+  it("switches to Sessions tab when clicked", () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <UserSettings />
+      </UserContext.Provider>
+    );
+
+    const sessionsButton = screen.getByRole("button", { name: /Sessions/i });
+    fireEvent.click(sessionsButton);
+
+    expect(screen.getByText("Active Sessions")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "View and manage your active sessions across all devices."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("device-session-card")).toBeInTheDocument();
   });
 
   it("applies active class to selected tab", () => {
@@ -113,6 +142,10 @@ describe("UserSettings Component", () => {
     fireEvent.click(screen.getByRole("button", { name: /2FA Settings/i }));
     expect(screen.getByTestId("two-factor-auth")).toBeInTheDocument();
     expect(screen.queryByTestId("profile-info")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Sessions/i }));
+    expect(screen.getByTestId("device-session-card")).toBeInTheDocument();
+    expect(screen.queryByTestId("two-factor-auth")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Profile Info/i }));
     expect(screen.getByTestId("profile-info")).toBeInTheDocument();

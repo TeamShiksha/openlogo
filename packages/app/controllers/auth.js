@@ -879,7 +879,6 @@ async function listSessionsController(req, res, next) {
     const sessions = await userSessionService.getActiveSessions(userId);
 
     const formattedSessions = sessions.map((session) => {
-
       return {
         id: session.sessionId,
         deviceInfo: session.deviceInfo,
