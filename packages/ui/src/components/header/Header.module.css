@@ -13,20 +13,22 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 1.2rem 0;
+  align-items: center;
+  min-height: 5.25rem;
+  padding: 0.9rem 0;
 }
 
 .mobile-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0;
+  gap: 0.35rem;
 }
 
 .brand {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.55rem;
   align-items: center;
   cursor: pointer;
   border: none;
@@ -41,7 +43,8 @@
 
 .brand-name {
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--black);
 }
 
@@ -52,7 +55,7 @@
 }
 
 .ml {
-  margin-left: 1rem;
+  margin-left: 0.4rem;
 }
 
 .nav {
@@ -94,8 +97,12 @@
     gap: 1rem;
   }
 
+  .nav {
+    font-size: 1.05rem;
+  }
+
   .ml {
-    margin-left: 12px;
+    margin-left: 0.25rem;
   }
 }
 
@@ -128,7 +135,7 @@
 
   .brand-name {
     font-size: 1.6rem;
-    font-weight: bold;
+    font-weight: 700;
   }
 
   .hamburger-img {

@@ -70,6 +70,7 @@ export default function TwoFactorAuth() {
       toast.success("QR code generated successfully");
     } else {
       toast.error(error);
+      setMode("INITIAL");
     }
     setIsLoading(false);
   };
@@ -176,6 +177,7 @@ export default function TwoFactorAuth() {
               variant="primary"
               onClick={handleEnableClick}
               className={styles.actionBtn}
+              isLoading={isLoading}
             >
               Generate QR Code
             </Button>
@@ -287,7 +289,11 @@ export default function TwoFactorAuth() {
 
       {mode === "VERIFIED" && isMFAEnabled && (
         <div className={styles.footer}>
-          <Button variant="danger" onClick={() => setMode("DISABLE")}>
+          <Button
+            variant="danger"
+            onClick={() => setMode("DISABLE")}
+            disabled={isLoading}
+          >
             Disable 2FA
           </Button>
         </div>
