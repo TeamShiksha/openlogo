@@ -861,28 +861,103 @@ export const RELEASE_PAGE = {
     versionsData: [
       {
         versionName: "0.8.0 version",
-        releaseDate: "Apr 2026",
+        releaseDate: "May 2026",
         imgSrc: version07,
         releaseNotes: [
           {
-            releaseNote:
-              "Documentation experience has been redesigned with a cleaner visual system, improved endpoint readability, and a stronger quickstart flow (#953).",
+            releaseNote: "Revamp USER dashboard according to the design.",
             contributors: [
               {
-                contributorName: "openlogo-community",
-                contributorGithubLink:
-                  "https://github.com/TeamShiksha/openlogo",
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
+          },
+          {
+            releaseNote: "Enhancing the UI of the admin dashboard.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Add 2FA section in user settings.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Implementing a dedicated settings page for MFA.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Multi factor authentication.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
               },
             ],
           },
           {
             releaseNote:
-              "Code examples are now easier to scan with clearer language selection and copy actions across endpoints.",
+              "Prevent Users From Reusing Old Password During Password Reset.",
             contributors: [
               {
-                contributorName: "openlogo-community",
-                contributorGithubLink:
-                  "https://github.com/TeamShiksha/openlogo",
+                contributorName: "rishang14",
+                contributorGithubLink: "https://github.com/rishang14",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Fix bugs on createLogo page and allow users to access this page without authentication.",
+            contributors: [
+              {
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
+          },
+          {
+            releaseNote: "Feature for user session management.",
+            contributors: [
+              {
+                contributorName: "kadamsahil2511",
+                contributorGithubLink: "https://github.com/kadamsahil2511",
+              },
+              {
+                contributorName: "DeepAkdotcom",
+                contributorGithubLink: "https://github.com/DeepAkdotcom",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Feature to enforce branch & PR naming conventions via husky + GitHub Actions.",
+            contributors: [
+              {
+                contributorName: "Smayur0",
+                contributorGithubLink: "https://github.com/Smayur0",
+              },
+            ],
+          },
+          {
+            releaseNote: "Redesign documentation page.",
+            contributors: [
+              {
+                contributorName: "Dhirenderchoudhary",
+                contributorGithubLink: "https://github.com/Dhirenderchoudhary",
               },
             ],
           },
