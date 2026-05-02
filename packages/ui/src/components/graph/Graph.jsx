@@ -94,7 +94,6 @@ function generateDummyData(period) {
   const today = new Date();
   const labels = [];
   const counts = [];
-  // Seeded values that look like realistic API usage
   const weekSeed = [4, 7, 3, 12, 9, 15, 6];
   const monthSeed = [
     2, 5, 3, 8, 6, 11, 9, 4, 7, 13, 10, 8, 15, 12, 6, 9, 11, 7, 14, 10, 5, 8,
