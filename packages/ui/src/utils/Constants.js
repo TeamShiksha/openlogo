@@ -148,6 +148,12 @@ export const LOGGEDIN_MOBILE_ITEMS = [
     url: "/dashboard",
     type: "route",
   },
+  {
+    name: "settings",
+    title: "Settings",
+    url: "/settings",
+    type: "route",
+  },
   LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
   LOGGEDIN_ITEMS.find((i) => i.name === "features"),
   LOGGEDIN_ITEMS.find((i) => i.name === "pricing"),
