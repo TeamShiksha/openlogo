@@ -967,6 +967,19 @@ export const RELEASE_PAGE = {
               },
             ],
           },
+          {
+            releaseNote: "Revamp sign in and sign up form",
+            contributors: [
+              {
+                contributorName: "0-mstrmind",
+                contributorGithubLink: "https://github.com/0-mstrmind",
+              },
+              {
+                contributorName: "kunjesh360",
+                contributorGithubLink: "https://github.com/kunjesh360",
+              },
+            ],
+          },
         ],
       },
       {
