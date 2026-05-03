@@ -111,6 +111,12 @@
     display: none;
   }
 
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   .hamburger {
     display: flex;
     align-items: center;
