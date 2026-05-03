@@ -127,6 +127,12 @@ export const LOGGEDIN_ITEMS = [
     type: "route",
   },
   {
+    name: "explore",
+    title: "Explore",
+    url: "/explore",
+    type: "route",
+  },
+  {
     name: "features",
     title: "Features",
     url: "/#features",
@@ -155,6 +161,7 @@ export const LOGGEDIN_MOBILE_ITEMS = [
     type: "route",
   },
   LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
+  LOGGEDIN_ITEMS.find((i) => i.name === "explore"),
   LOGGEDIN_ITEMS.find((i) => i.name === "features"),
   LOGGEDIN_ITEMS.find((i) => i.name === "pricing"),
   LOGGEDIN_ITEMS.find((i) => i.name === "about"),
