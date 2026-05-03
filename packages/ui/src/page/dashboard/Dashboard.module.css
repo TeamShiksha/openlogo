@@ -19,6 +19,10 @@
   background: rgba(255, 255, 255, 0.55);
 }
 
+[data-theme="dark"] .spinner-container {
+  background: rgba(17, 24, 39, 0.85);
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
