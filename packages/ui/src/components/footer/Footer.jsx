@@ -2,9 +2,11 @@ import { BRANDING, FOOTER_ITEMS } from "../../utils/Constants";
 import styles from "./Footer.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { handleNavigation } from "../../utils/Helpers";
+import { useTheme } from "../../hooks/useTheme";
 
 function Footer() {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   return (
     <div data-testid="footer" className={`container ${styles.block}`}>
@@ -16,8 +18,8 @@ function Footer() {
             onClick={() => navigate("/")}
           >
             <img
-              alt={BRANDING.imageSrc}
-              src={BRANDING.imageSrc}
+              alt={BRANDING.imageAlt}
+              src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
               width={30}
               height={30}
             />

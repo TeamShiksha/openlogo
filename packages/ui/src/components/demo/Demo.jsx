@@ -61,14 +61,6 @@ const Demo = ({ openAuthModal }) => {
     }
   };
 
-  const handleCreateLogoClick = () => {
-    if (isAuthenticated) {
-      navigate("/createLogo");
-    } else {
-      openAuthModal();
-    }
-  };
-
   return (
     <>
       <div data-testid="demo" id="demo" className={styles["demo-container"]}>
@@ -115,8 +107,8 @@ const Demo = ({ openAuthModal }) => {
                         {BUTTON_TEXT.requestLogo}
                       </Button>
                       <Button
-                        onClick={handleCreateLogoClick}
-                        variant={"primary"}
+                        onClick={() => navigate("/createlogo")}
+                        variant="primary"
                       >
                         {BUTTON_TEXT.createLogo}
                       </Button>

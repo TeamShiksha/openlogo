@@ -65,7 +65,7 @@ describe("Header component", () => {
       </BrowserRouter>
     );
 
-    const brandImage = screen.getByAltText(BRANDING.imageSrc);
+    const brandImage = screen.getByAltText(BRANDING.imageAlt);
     const brandName = screen.getByText(BRANDING.brandName);
     expect(brandImage).toBeInTheDocument();
     expect(brandName).toBeInTheDocument();
