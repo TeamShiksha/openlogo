@@ -15,6 +15,16 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid transparent;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .cardHeader {
+    padding: 1rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .headerGroup {
@@ -82,6 +92,12 @@
   display: flex;
   flex-direction: column;
   position: relative;
+}
+
+@media (max-width: 640px) {
+  .cardBody {
+    padding: 1rem 1.5rem;
+  }
 }
 
 .initialState,
@@ -165,6 +181,13 @@
   }
 }
 
+@media (max-width: 640px) {
+  .setupGrid {
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
 .stepTitle {
   font-size: 0.8rem;
   font-weight: 600;
@@ -181,12 +204,27 @@
   border-radius: 0.75rem;
   display: inline-block;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .qrContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 .qrPattern {
   width: 10rem;
   aspect-ratio: 1;
   position: relative;
+}
+
+@media (max-width: 640px) {
+  .qrPattern {
+    width: 8rem;
+  }
 }
 
 .qrPattern::before,
@@ -291,6 +329,14 @@
   background-color: var(--white);
   color: var(--black);
   transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .codeInput {
+    font-size: 1.25rem;
+    padding: 0.6rem;
+  }
 }
 
 .codeInput:focus {
@@ -332,12 +378,26 @@
   background-color: var(--white);
   color: var(--black);
   transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .disableInput {
+    padding: 0.6rem;
+  }
 }
 
 .disableCancelBtn {
   position: absolute;
   right: 2rem;
   bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .disableCancelBtn {
+    position: static;
+    margin-top: 1rem;
+  }
 }
 
 .footer {
@@ -347,6 +407,19 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 1rem 1.5rem;
+    justify-content: stretch;
+  }
+
+  .footer > button {
+    flex: 1;
+    min-width: 120px;
+  }
 }
 
 [data-theme="dark"] .footer {
