@@ -63,6 +63,23 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  mfaEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  mfaSecret: {
+    encryptedValue: { type: String, default: null },
+    encryptedIv: { type: String, default: null },
+    encryptedTag: { type: String, default: null },
+  },
+  mfaTempSecret: {
+    type: String,
+    default: null,
+  },
+  mfaTempSecretExpiresAt: {
+    type: Date,
+    default: null,
+  },
 });
 
 userSchema.methods.matchPassword = async function (password) {
