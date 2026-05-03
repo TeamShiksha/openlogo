@@ -4,6 +4,9 @@
   background-color: var(--white);
   padding: 3% 8%;
   margin: 0 auto;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .spinner-container {
@@ -27,7 +30,7 @@
 
 .title-section {
   flex: 1;
-  min-width: 250px;
+  min-width: 0;
 }
 
 .dashboard-title {
@@ -154,6 +157,8 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .api-keys-grid {
@@ -365,6 +370,7 @@
   .dashboard-container {
     padding: 1rem 1rem;
   }
+
   .header-right {
     flex-direction: column-reverse;
     align-items: flex-start;
@@ -378,5 +384,15 @@
   .tabs {
     width: 100%;
     overflow-x: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .dashboard-container {
+    padding: 0.75rem;
+  }
+
+  .analytics-card {
+    padding: 1rem;
   }
 }

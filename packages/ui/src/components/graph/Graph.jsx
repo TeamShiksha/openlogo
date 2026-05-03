@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState, useEffect, useMemo, useContext } from "react";
+import PropTypes from "prop-types";
 import styles from "./Graph.module.css";
 import { useApi } from "../../hooks/useApi";
 import { ThemeContext } from "../../contexts/Contexts";
@@ -88,6 +89,31 @@ const getBaseOptions = (isDarkMode) => ({
   },
 });
 
+function generateDummyData(period) {
+  const days = period === "week" ? 7 : 30;
+  const today = new Date();
+  const labels = [];
+  const counts = [];
+  const weekSeed = [4, 7, 3, 12, 9, 15, 6];
+  const monthSeed = [
+    2, 5, 3, 8, 6, 11, 9, 4, 7, 13, 10, 8, 15, 12, 6, 9, 11, 7, 14, 10, 5, 8,
+    12, 9, 6, 11, 8, 13, 10, 7,
+  ];
+  const seed = period === "week" ? weekSeed : monthSeed;
+  for (let offset = days - 1; offset >= 0; offset--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - offset);
+    labels.push(
+      new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+      }).format(date)
+    );
+    counts.push(seed[days - 1 - offset] ?? 0);
+  }
+  return [labels, counts];
+}
+
 function parseStatsDataForPeriod(data, period) {
   if (!Array.isArray(data)) {
     return [[], []];
@@ -156,7 +182,7 @@ function niceStep(maxValue, targetTicks = 10) {
   return rounded * powerOfTen;
 }
 
-export default function Graph() {
+export default function Graph({ isGuest = false }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [selectedPeriod, setSelectedPeriod] = useState("week");
   const [chartData, setChartData] = useState({
@@ -188,6 +214,11 @@ export default function Graph() {
   });
 
   useEffect(() => {
+    if (isGuest) {
+      const [labels, counts] = generateDummyData(selectedPeriod);
+      setChartData({ labels, dataPoints: counts });
+      return;
+    }
     fetchWeekData();
     fetchMonthData();
   }, [fetchWeekData, fetchMonthData]);
@@ -312,7 +343,7 @@ export default function Graph() {
     return <div className={styles["error"]}>Error loading chart data</div>;
   }
 
-  const isLoading = !cachedWeekData && !cachedMonthData;
+  const isLoading = !isGuest && !cachedWeekData && !cachedMonthData;
 
   return (
     <div className={styles["graph-container"]}>
@@ -320,9 +351,10 @@ export default function Graph() {
         <h2 className={styles["card-title"]}>Requests</h2>
         <button
           className={styles["refresh-btn"]}
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          aria-label="Refresh"
+          onClick={isGuest ? undefined : handleRefresh}
+          disabled={isRefreshing || isGuest}
+          aria-label={isGuest ? "Sign up to refresh data" : "Refresh"}
+          title={isGuest ? "Sign up to refresh live data" : undefined}
         >
           <svg
             width="14"
@@ -378,3 +410,7 @@ export default function Graph() {
     </div>
   );
 }
+
+Graph.propTypes = {
+  isGuest: PropTypes.bool,
+};

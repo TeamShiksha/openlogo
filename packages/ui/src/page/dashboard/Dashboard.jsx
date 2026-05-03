@@ -307,10 +307,11 @@ function Dashboard() {
               <div className={styles["analytics-content"]}>
                 <div className={styles["analytics-grid"]}>
                   <div className={styles["analytics-card"]}>
-                    <Graph />
+                    <Graph isGuest={isGuest} />
                   </div>
                   <div className={styles["analytics-card"]}>
                     <Usage
+                      isGuest={isGuest}
                       usageCount={userData?.subscription.usage_count || 0}
                       usageLimit={userData?.subscription.usage_limit || 0}
                     />
