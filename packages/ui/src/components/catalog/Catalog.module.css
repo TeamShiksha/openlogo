@@ -40,10 +40,10 @@
 
 .catalog-table-header {
   display: flex;
-  background: #f8fafc;
+  background: var(--table-heading-bg);
   padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
-  color: #64748b;
+  color: var(--description);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;

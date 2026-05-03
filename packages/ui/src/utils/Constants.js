@@ -4,22 +4,22 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
-import apple from "../assets/apple.png";
-import amazon from "../assets/amazon.png";
-import united_healthcare from "../assets/united_healthcare.png";
 import microsoft from "../assets/microsoft.png";
-import nvidia from "../assets/nvidia.png";
-import mastercard from "../assets/mastercard.png";
 import target from "../assets/target.png";
 import ford from "../assets/ford.png";
 import adobe from "../assets/adobe.png";
 import ibm from "../assets/ibm.png";
 import alphabet from "../assets/alphabet.png";
-import nike from "../assets/nike.png";
 import tesla from "../assets/tesla.png";
 import walmart from "../assets/walmart.png";
 import salesforce from "../assets/salesforce.png";
-import meta from "../assets/meta.png";
+import airbnb from "../assets/airbnb.png";
+import bmw from "../assets/bmw.png";
+import byd from "../assets/byd.png";
+import google from "../assets/google.png";
+import sap from "../assets/sap.png";
+import slack from "../assets/slack.png";
+import spotify from "../assets/spotify.png";
 import jsLogo from "../assets/js.png";
 import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
@@ -243,22 +243,22 @@ export const ABOUT = {
   DESCRIPTION:
     "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding. Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
   INTEGRATIONS: [
-    { id: 1, src: apple, alt: "Apple" },
-    { id: 2, src: amazon, alt: "Amazon" },
-    { id: 3, src: united_healthcare, alt: "United Health Care" },
+    { id: 1, src: airbnb, alt: "Airbnb" },
+    { id: 2, src: bmw, alt: "BMW" },
+    { id: 3, src: byd, alt: "BYD" },
     { id: 4, src: alphabet, alt: "Alphabet" },
     { id: 5, src: adobe, alt: "Adobe" },
-    { id: 6, src: meta, alt: "Meta" },
-    { id: 7, src: ibm, alt: "Ibm" },
-    { id: 8, src: target, alt: "target" },
-    { id: 9, src: nike, alt: "Nike" },
+    { id: 6, src: google, alt: "Google" },
+    { id: 7, src: ibm, alt: "IBM" },
+    { id: 8, src: target, alt: "Target" },
+    { id: 9, src: sap, alt: "SAP" },
     { id: 10, src: salesforce, alt: "Salesforce" },
-    { id: 11, src: mastercard, alt: "Master Card" },
+    { id: 11, src: slack, alt: "Slack" },
     { id: 12, src: ford, alt: "Ford" },
-    { id: 13, src: nvidia, alt: "Google Calendar" },
-    { id: 14, src: microsoft, alt: "microsoft" },
-    { id: 15, src: tesla, alt: "tesla" },
-    { id: 16, src: walmart, alt: "walmart" },
+    { id: 13, src: spotify, alt: "Spotify" },
+    { id: 14, src: microsoft, alt: "Microsoft" },
+    { id: 15, src: tesla, alt: "Tesla" },
+    { id: 16, src: walmart, alt: "Walmart" },
   ],
 };
 

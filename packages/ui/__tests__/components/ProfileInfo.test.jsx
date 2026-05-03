@@ -41,7 +41,7 @@ vi.mock("../../src/components/currentplan/CurrentPlan", () => ({
 const mockUserData = {
   name: "John Doe",
   email: "john@example.com",
-  isGuest: false,
+  role: "USER",
 };
 
 describe("ProfileInfo Component", () => {
@@ -64,7 +64,7 @@ describe("ProfileInfo Component", () => {
   });
 
   it("passes isGuest=true to child components when user is a guest", () => {
-    const guestData = { ...mockUserData, isGuest: true };
+    const guestData = { ...mockUserData, role: "GUEST" };
     renderWithProviders({ userData: guestData });
 
     expect(screen.getByTestId("user-info")).toHaveTextContent("Guest");
