@@ -119,7 +119,7 @@ function Dashboard() {
     }
 
     checkOldKeys();
-  }, []);
+  }, [toast, updateOldKeysRequest]);
 
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
@@ -148,10 +148,15 @@ function Dashboard() {
   if (loading) {
     return (
       <div
-        data-testid="loading-spinner"
-        className={styles["spinner-container"]}
+        className={styles["dashboard-container"]}
+        data-testid="testid-dashboard"
       >
-        <LoadingSpinner size={40} border={4} color={`gray`} />
+        <div
+          data-testid="loading-spinner"
+          className={styles["spinner-container"]}
+        >
+          <LoadingSpinner size={40} border={4} color="var(--primary)" />
+        </div>
       </div>
     );
   }
@@ -302,10 +307,11 @@ function Dashboard() {
               <div className={styles["analytics-content"]}>
                 <div className={styles["analytics-grid"]}>
                   <div className={styles["analytics-card"]}>
-                    <Graph />
+                    <Graph isGuest={isGuest} />
                   </div>
                   <div className={styles["analytics-card"]}>
                     <Usage
+                      isGuest={isGuest}
                       usageCount={userData?.subscription.usage_count || 0}
                       usageLimit={userData?.subscription.usage_limit || 0}
                     />

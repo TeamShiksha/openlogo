@@ -62,7 +62,7 @@ function Catalog() {
     if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
       makeRequest();
     }
-  }, [pageNum, debouncedSearchTerm]);
+  }, [pageNum, debouncedSearchTerm, makeRequest]);
 
   useEffect(() => {
     const currentDataString = JSON.stringify(data);

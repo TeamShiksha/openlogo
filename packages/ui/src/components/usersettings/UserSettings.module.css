@@ -6,6 +6,18 @@
   min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem 5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1.5rem 4%;
+  }
+}
+
 [data-theme="dark"] .container {
   background-color: var(--white);
 }

@@ -119,7 +119,13 @@ const Messages = {
   INCORRECT_PIN: "Incorrect pin. Please try again.",
   PLAN_ALREADY_ACTIVE: "User is already on this plan.",
   PLAN_CHANGE_SUCCESS: "Subscription plan updated successfully.",
+  SESSION_NOT_FOUND: "Session not found.",
+  CANNOT_REVOKE_CURRENT_SESSION:
+    "Cannot revoke current session. Use signout instead.",
+  SESSION_LIMIT_EXCEEDED: "Maximum number of active sessions exceeded.",
 };
+
+const MAX_SESSIONS_PER_USER = 5;
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
 
@@ -155,4 +161,5 @@ module.exports = {
   USER_SAFE_FIELDS,
   SESSION_ID_REGEX,
   TEMPORARY_SESSION_TYPES,
+  MAX_SESSIONS_PER_USER,
 };

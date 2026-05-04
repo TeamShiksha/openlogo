@@ -10,8 +10,8 @@ import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
-import { useTheme } from "../../hooks/useTheme.js";
 import Pin from "../pin/Pin";
+import { useTheme } from "../../hooks/useTheme.js";
 
 const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const toast = useToast();

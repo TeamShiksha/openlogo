@@ -2,6 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import ProfileInfo from "../../src/components/profileinfo/ProfileInfo";
 import { UserContext } from "../../src/contexts/Contexts";
+import { ToastProvider } from "../../src/contexts/ToastContext";
+
+const renderWithProviders = (userValue, ui = <ProfileInfo />) =>
+  render(
+    <ToastProvider>
+      <UserContext.Provider value={userValue}>{ui}</UserContext.Provider>
+    </ToastProvider>
+  );
 
 // Mock child components to isolate ProfileInfo testing
 vi.mock("../../src/components/userinfo/UserInfo", () => ({
@@ -33,16 +41,12 @@ vi.mock("../../src/components/currentplan/CurrentPlan", () => ({
 const mockUserData = {
   name: "John Doe",
   email: "john@example.com",
-  isGuest: false,
+  role: "USER",
 };
 
 describe("ProfileInfo Component", () => {
   it("renders all sections correctly for a regular user", () => {
-    render(
-      <UserContext.Provider value={{ userData: mockUserData }}>
-        <ProfileInfo />
-      </UserContext.Provider>
-    );
+    renderWithProviders({ userData: mockUserData });
 
     // Check headings
     expect(screen.getByText("User Info")).toBeInTheDocument();
@@ -60,12 +64,8 @@ describe("ProfileInfo Component", () => {
   });
 
   it("passes isGuest=true to child components when user is a guest", () => {
-    const guestData = { ...mockUserData, isGuest: true };
-    render(
-      <UserContext.Provider value={{ userData: guestData }}>
-        <ProfileInfo />
-      </UserContext.Provider>
-    );
+    const guestData = { ...mockUserData, role: "GUEST" };
+    renderWithProviders({ userData: guestData });
 
     expect(screen.getByTestId("user-info")).toHaveTextContent("Guest");
     expect(screen.getByTestId("change-password")).toHaveTextContent("Guest");
@@ -74,11 +74,7 @@ describe("ProfileInfo Component", () => {
   });
 
   it("does not render UserInfo if userData is missing", () => {
-    render(
-      <UserContext.Provider value={{ userData: null }}>
-        <ProfileInfo />
-      </UserContext.Provider>
-    );
+    renderWithProviders({ userData: null });
 
     expect(screen.queryByTestId("user-info")).not.toBeInTheDocument();
     // Other components still render because they only depend on isGuest (defaulting to false)
