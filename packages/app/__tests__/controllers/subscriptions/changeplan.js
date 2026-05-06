@@ -137,6 +137,9 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
     expect(logSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         user_id: MOCK_USERS[1]._id,
+        subscription_id: MOCK_SUBSCRIPTION[0]._id,
+        from_plan: "HOBBY",
+        to_plan: "PRO",
         reason: "Upgrade requested",
       })
     );
