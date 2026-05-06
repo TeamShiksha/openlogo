@@ -69,17 +69,15 @@ async function changeSubscriptionPlanController(req, res, next) {
         user.subscription_id,
         plan
       );
-    // We Intentionally do not log HOBBY plan changes as they are free and do not impact billing, but we log all other plan changes for audit purposes.
-    if (plan !== "HOBBY") {
-      await subscriptionService.createSubscriptionLog({
-        user_id: user._id,
-        subscription_id: user.subscription_id,
-        from_plan: subscription.type,
-        to_plan: plan,
-        changed_by: req.userData.userId,
-        ...(reason && { reason }),
-      });
-    }
+
+    await subscriptionService.createSubscriptionLog({
+      user_id: user._id,
+      subscription_id: user.subscription_id,
+      from_plan: subscription.type,
+      to_plan: plan,
+      changed_by: req.userData.userId,
+      ...(reason && { reason }),
+    });
 
     return res.status(200).json({
       statusCode: 200,
