@@ -825,6 +825,29 @@ export const IMAGE_UPLOAD_MODEL = {
   or: "OR",
 };
 
+export const USER_SUBSCRIPTIONS = {
+  title: "User Subscriptions",
+  subtitle: "View and manage subscription plans for all users.",
+  searchPlaceholder: "Search by name or email...",
+  tableHeaders: ["User", "Plan", "Usage", "Action"],
+  plans: {
+    HOBBY: "Hobby",
+    PRO: "Pro",
+  },
+  modal: {
+    title: "Change Subscription Plan",
+    planLabel: "Select Plan",
+    reasonLabel: "Reason (optional)",
+    reasonPlaceholder: "Provide a reason for the plan change...",
+    confirmButton: "Confirm Change",
+  },
+  emptyState: "No users found matching your search.",
+  toasts: {
+    success: "Subscription plan updated successfully.",
+    error: "Failed to update subscription plan.",
+  },
+};
+
 export const RELEASE_PAGE = {
   introduction: {
     heading: "About",
