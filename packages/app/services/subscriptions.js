@@ -81,7 +81,7 @@ class SubscriptionService {
 
   /**
    * Creates an audit log entry for a subscription plan change.
-   * @param {Object} logData - { user_id, changed_by, reason? }
+   * @param {Object} logData - { user_id, subscription_id, changed_by, from_plan, to_plan, reason? }
    * @returns {Promise<Object>} - Created log document.
    */
   async createSubscriptionLog(logData) {

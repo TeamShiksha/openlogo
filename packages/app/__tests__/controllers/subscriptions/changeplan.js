@@ -137,12 +137,15 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
     expect(logSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         user_id: MOCK_USERS[1]._id,
+        subscription_id: MOCK_SUBSCRIPTION[0]._id,
+        from_plan: "HOBBY",
+        to_plan: "PRO",
         reason: "Upgrade requested",
       })
     );
   });
 
-  it("200 - downgrade to HOBBY (no audit log)", async () => {
+  it("200 - downgrade to HOBBY", async () => {
     const updatedSub = { ...MOCK_SUBSCRIPTION[0] };
     jest.spyOn(UsersService.prototype, "getUser").mockResolvedValue({
       _id: MOCK_USERS[1]._id,
@@ -165,7 +168,15 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe(Messages.PLAN_CHANGE_SUCCESS);
-    expect(logSpy).not.toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: MOCK_USERS[1]._id,
+        subscription_id: MOCK_SUBSCRIPTION[1]._id,
+        from_plan: "PRO",
+        to_plan: "HOBBY",
+      })
+    );
   });
 
   it("500 - unexpected error", async () => {

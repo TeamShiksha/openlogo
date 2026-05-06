@@ -64,7 +64,7 @@ describe("GET /api/admin/users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.statusCode).toBe(200);
-    expect(response.body.results).toEqual(mockResult.users);
+    expect(response.body.data).toEqual(mockResult.users);
     expect(response.body.total).toBe(1);
     expect(response.body.currentPage).toBe(1);
     expect(response.body.totalPages).toBe(1);
@@ -81,7 +81,7 @@ describe("GET /api/admin/users", () => {
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.results).toEqual([]);
+    expect(response.body.data).toEqual([]);
     expect(response.body.total).toBe(0);
     expect(response.body.currentPage).toBe(2);
     expect(response.body.totalPages).toBe(0);
