@@ -104,6 +104,12 @@
   margin: 0.125rem 0 0;
 }
 
+.user-joined {
+  font-size: 0.7rem;
+  color: var(--label-color);
+  margin: 0.125rem 0 0;
+}
+
 /* ── Plan badge ────────────────────────────────────────────── */
 .plan-badge {
   display: inline-flex;
@@ -141,6 +147,35 @@
   font-size: 0.8rem;
   color: var(--description);
   white-space: nowrap;
+}
+
+/* ── Kebab / row-actions menu ──────────────────────────────── */
+.menu-cell {
+  width: 2.5rem;
+  text-align: center;
+  padding: 0.5rem !important;
+}
+
+.menu-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--description);
+  padding: 0.3rem;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  line-height: 0;
+}
+
+.menu-btn:hover {
+  background-color: var(--table-background);
+  color: var(--black);
 }
 
 /* ── Empty & loading states ────────────────────────────────── */

@@ -35,7 +35,15 @@ const makeUser = (overrides = {}) => ({
   _id: "user-1",
   name: "Alice",
   email: "alice@example.com",
-  subscription: { type: "HOBBY", usage_count: 42, usage_limit: 500 },
+  is_verified: true,
+  is_deleted: false,
+  created_at: "2025-11-23T16:47:48.000Z",
+  subscription: {
+    type: "HOBBY",
+    is_active: true,
+    usage_count: 42,
+    usage_limit: 500,
+  },
   ...overrides,
 });
 
@@ -44,7 +52,7 @@ const makeListResponse = (
   total = users.length,
   totalPages = 1
 ) => ({
-  data: { results: users, total, currentPage: 1, totalPages },
+  data: { data: users, total, currentPage: 1, totalPages },
 });
 
 const wrapper = ({ children }) => (
@@ -95,7 +103,13 @@ describe("UserSubscriptions", () => {
         _id: "u2",
         name: "Bob",
         email: "bob@example.com",
-        subscription: { type: "PRO", usage_count: 100, usage_limit: 10000 },
+        is_verified: false,
+        subscription: {
+          type: "PRO",
+          is_active: false,
+          usage_count: 100,
+          usage_limit: 10000,
+        },
       }),
     ];
     instance.mockResolvedValueOnce(makeListResponse(users));
@@ -110,6 +124,10 @@ describe("UserSubscriptions", () => {
       screen.getByText(USER_SUBSCRIPTIONS.plans.HOBBY)
     ).toBeInTheDocument();
     expect(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO)).toBeInTheDocument();
+    // Joined date rendered
+    expect(screen.getAllByText(/Joined/).length).toBeGreaterThanOrEqual(1);
+    // Kebab buttons present (one per row)
+    expect(screen.getAllByLabelText("Row actions").length).toBe(2);
   });
 
   it("shows empty state when no users are returned", async () => {
@@ -169,7 +187,7 @@ describe("UserSubscriptions", () => {
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
 
     expect(
       screen.getByText(USER_SUBSCRIPTIONS.modal.title)
@@ -185,10 +203,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     expect(
       screen.getByText(USER_SUBSCRIPTIONS.modal.title)
     ).toBeInTheDocument();
@@ -201,16 +219,21 @@ describe("UserSubscriptions", () => {
 
   it("disables the Confirm button when the selected plan is the user's current plan", async () => {
     const user = makeUser({
-      subscription: { type: "HOBBY", usage_count: 0, usage_limit: 500 },
+      subscription: {
+        type: "HOBBY",
+        is_active: true,
+        usage_count: 0,
+        usage_limit: 500,
+      },
     });
     instance.mockResolvedValueOnce(makeListResponse([user]));
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
 
     const confirmBtn = screen.getByText(USER_SUBSCRIPTIONS.modal.confirmButton);
     // HOBBY is pre-selected (current plan) → button must be disabled
@@ -223,10 +246,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
 
     // Switch to PRO
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
@@ -239,7 +262,12 @@ describe("UserSubscriptions", () => {
 
   it("optimistically updates the plan badge before the API responds", async () => {
     const user = makeUser({
-      subscription: { type: "HOBBY", usage_count: 0, usage_limit: 500 },
+      subscription: {
+        type: "HOBBY",
+        is_active: true,
+        usage_count: 0,
+        usage_limit: 500,
+      },
     });
     instance.mockResolvedValueOnce(makeListResponse([user]));
 
@@ -254,10 +282,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.modal.confirmButton));
 
@@ -280,10 +308,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.modal.confirmButton));
 
@@ -296,7 +324,12 @@ describe("UserSubscriptions", () => {
 
   it("reverts the plan badge and shows error toast when PATCH fails", async () => {
     const user = makeUser({
-      subscription: { type: "HOBBY", usage_count: 0, usage_limit: 500 },
+      subscription: {
+        type: "HOBBY",
+        is_active: true,
+        usage_count: 0,
+        usage_limit: 500,
+      },
     });
     instance.mockResolvedValueOnce(makeListResponse([user]));
     instance.mockRejectedValueOnce({
@@ -305,10 +338,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.modal.confirmButton));
 
@@ -332,10 +365,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
 
     const textarea = screen.getByPlaceholderText(
@@ -362,10 +395,10 @@ describe("UserSubscriptions", () => {
 
     render(<UserSubscriptions />, { wrapper });
     await waitFor(() =>
-      expect(screen.getByText("Change Plan")).toBeInTheDocument()
+      expect(screen.getByLabelText("Row actions")).toBeInTheDocument()
     );
 
-    fireEvent.click(screen.getByText("Change Plan"));
+    fireEvent.click(screen.getByLabelText("Row actions"));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.plans.PRO));
     fireEvent.click(screen.getByText(USER_SUBSCRIPTIONS.modal.confirmButton));
 

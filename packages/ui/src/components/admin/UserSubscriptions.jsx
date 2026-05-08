@@ -9,10 +9,20 @@ import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../common/input/CustomInput.jsx";
 import styles from "./UserSubscriptions.module.css";
 import { USER_SUBSCRIPTIONS } from "../../utils/Constants.js";
+import { MoreVertical } from "lucide-react";
 
 const PLANS = ["HOBBY", "PRO"];
 const ITEMS_PER_PAGE = 10;
 const DEBOUNCE_MS = 500;
+
+function formatDate(isoString) {
+  if (!isoString) return "—";
+  return new Date(isoString).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 function PlanBadge({ plan }) {
   const badgeClass =
@@ -27,7 +37,7 @@ PlanBadge.propTypes = {
   plan: PropTypes.string.isRequired,
 };
 
-function UserSubscriptions() {
+function UserSubscriptions({ embedded = false }) {
   const toast = useToast();
 
   // ── List state ────────────────────────────────────────
@@ -67,7 +77,7 @@ function UserSubscriptions() {
     const load = async () => {
       const { success, data, error } = await fetchRequest();
       if (success && data) {
-        setUsers(data.results ?? []);
+        setUsers(data.data ?? []);
         setTotalPages(data.totalPages ?? 1);
       } else if (error) {
         toast.error(error);
@@ -75,7 +85,6 @@ function UserSubscriptions() {
       setInitialized(true);
     };
     load();
-    // fetchRequest and toast are stable refs; only page / debouncedSearch drives reload
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, debouncedSearch]);
 
@@ -147,7 +156,10 @@ function UserSubscriptions() {
 
   // ── Render ────────────────────────────────────────────
   return (
-    <div className={styles.panel} data-testid="user-subscriptions-panel">
+    <div
+      className={embedded ? undefined : styles.panel}
+      data-testid="user-subscriptions-panel"
+    >
       {/* Header */}
       <div className={styles["panel-header"]}>
         <div className={styles["panel-title-group"]}>
@@ -180,8 +192,8 @@ function UserSubscriptions() {
           <table className={styles.table}>
             <thead>
               <tr>
-                {USER_SUBSCRIPTIONS.tableHeaders.map((h) => (
-                  <th key={h}>{h}</th>
+                {USER_SUBSCRIPTIONS.tableHeaders.map((h, i) => (
+                  <th key={i}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -192,6 +204,11 @@ function UserSubscriptions() {
                   <td>
                     <p className={styles["user-name"]}>{user.name}</p>
                     <p className={styles["user-email"]}>{user.email}</p>
+                    {user.created_at && (
+                      <p className={styles["user-joined"]}>
+                        Joined {formatDate(user.created_at)}
+                      </p>
+                    )}
                   </td>
 
                   {/* Plan */}
@@ -208,14 +225,16 @@ function UserSubscriptions() {
                     </span>
                   </td>
 
-                  {/* Action */}
-                  <td>
-                    <Button
-                      variant="secondary"
+                  {/* Kebab menu */}
+                  <td className={styles["menu-cell"]}>
+                    <button
+                      className={styles["menu-btn"]}
+                      aria-label="Row actions"
+                      title="Change Plan"
                       onClick={() => handleOpenModal(user)}
                     >
-                      Change Plan
-                    </Button>
+                      <MoreVertical size={16} aria-hidden="true" />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -322,5 +341,9 @@ function UserSubscriptions() {
     </div>
   );
 }
+
+UserSubscriptions.propTypes = {
+  embedded: PropTypes.bool,
+};
 
 export default UserSubscriptions;
