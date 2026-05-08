@@ -1,7 +1,10 @@
 const { STATUS_CODES } = require("node:http");
 const mongoose = require("mongoose");
 const { Messages } = require("../utils/constants");
-const { changeSubscriptionPlanSchema } = require("../schemas/admin");
+const {
+  changeSubscriptionPlanSchema,
+  listSubscriptionLogsQuerySchema,
+} = require("../schemas/admin");
 const SubscriptionService = require("../services/subscriptions");
 const UsersService = require("../services/users");
 
@@ -89,4 +92,43 @@ async function changeSubscriptionPlanController(req, res, next) {
   }
 }
 
-module.exports = { changeSubscriptionPlanController };
+/**
+ * GET /api/admin/users/subscription/logs
+ * Admin-only: list all subscription plan-change audit logs, paginated.
+ */
+async function listSubscriptionLogsController(req, res, next) {
+  try {
+    const subscriptionService = new SubscriptionService();
+
+    const { error, value } = listSubscriptionLogsQuerySchema.validate(
+      req.query,
+      { abortEarly: false }
+    );
+    if (error) {
+      return res.status(422).json({
+        statusCode: 422,
+        error: STATUS_CODES[422],
+        message: error.details.map((d) => d.message).join(", "),
+      });
+    }
+
+    const { page, limit } = value;
+    const { logs, total, totalPages } =
+      await subscriptionService.getSubscriptionLogs(page, limit);
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: logs,
+      total,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  changeSubscriptionPlanController,
+  listSubscriptionLogsController,
+};
