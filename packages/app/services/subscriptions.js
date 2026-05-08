@@ -87,6 +87,16 @@ class SubscriptionService {
   async createSubscriptionLog(logData) {
     return await this.subscriptionLogRepository.create(logData);
   }
+
+  /**
+   * Returns a paginated list of all subscription change logs.
+   * @param {number} page  - 1-based page number
+   * @param {number} limit - records per page
+   * @returns {Promise<{ logs: Array, total: number, totalPages: number }>}
+   */
+  async getSubscriptionLogs(page, limit) {
+    return await this.subscriptionLogRepository.findPaginated(page, limit);
+  }
 }
 
 module.exports = SubscriptionService;
