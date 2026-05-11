@@ -114,23 +114,25 @@ function generateDummyData(period) {
   return [labels, counts];
 }
 
-function parseStatsDataForPeriod(data, period) {
-  if (!Array.isArray(data)) {
+function parseStatsDataForPeriod(apiData) {
+  const data = apiData?.data;
+  if (!Array.isArray(data) || !apiData.startDate || !apiData.endDate) {
     return [[], []];
   }
 
-  const daysToDisplay = period === "week" ? 7 : 30;
+  const startTime = Date.parse(apiData.startDate);
+  const endTime = Date.parse(apiData.endDate);
 
-  const today = new Date();
+  if (Number.isNaN(startTime) || Number.isNaN(endTime)) {
+    return [[], []];
+  }
 
   const dateRange = [];
-  for (let offset = daysToDisplay - 1; offset >= 0; offset--) {
-    const date = new Date(today);
-    const dayPadding = 3;
-    date.setDate(date.getDate() + dayPadding);
-    date.setDate(date.getDate() - offset);
-    dateRange.push(date);
+  const dayInMs = 24 * 60 * 60 * 1000;
+  for (let time = startTime; time <= endTime; time += dayInMs) {
+    dateRange.push(new Date(time));
   }
+
   const dateToCount = new Map();
   data.forEach((item) => {
     if (item?.date && item.count !== undefined) {
@@ -149,6 +151,7 @@ function parseStatsDataForPeriod(data, period) {
     const label = new Intl.DateTimeFormat("en-GB", {
       day: "2-digit",
       month: "short",
+      timeZone: "UTC",
     }).format(date);
 
     labels.push(label);
@@ -217,45 +220,39 @@ export default function Graph({ isGuest = false }) {
     if (isGuest) {
       const [labels, counts] = generateDummyData(selectedPeriod);
       setChartData({ labels, dataPoints: counts });
+    }
+  }, [isGuest, selectedPeriod]);
+
+  useEffect(() => {
+    if (isGuest) {
       return;
     }
+
     fetchWeekData();
     fetchMonthData();
-  }, [fetchWeekData, fetchMonthData]);
+  }, []);
 
   useEffect(() => {
     if (weekLoaded && weekResponse) {
       setCachedWeekData(weekResponse);
     }
+  }, [weekLoaded, weekResponse]);
 
+  useEffect(() => {
     if (monthLoaded && monthResponse) {
       setCachedMonthData(monthResponse);
     }
+  }, [monthLoaded, monthResponse]);
 
-    if (selectedPeriod === "week" && cachedWeekData?.data?.data) {
-      const [labels, counts] = parseStatsDataForPeriod(
-        cachedWeekData.data.data,
-        "week"
-      );
+  useEffect(() => {
+    const currentCache =
+      selectedPeriod === "week" ? cachedWeekData : cachedMonthData;
+
+    if (currentCache?.data?.data) {
+      const [labels, counts] = parseStatsDataForPeriod(currentCache.data);
       setChartData({ labels, dataPoints: counts });
     }
-
-    if (selectedPeriod === "month" && cachedMonthData?.data?.data) {
-      const [labels, counts] = parseStatsDataForPeriod(
-        cachedMonthData.data.data,
-        "month"
-      );
-      setChartData({ labels, dataPoints: counts });
-    }
-  }, [
-    selectedPeriod,
-    weekLoaded,
-    monthLoaded,
-    weekResponse,
-    monthResponse,
-    cachedWeekData,
-    cachedMonthData,
-  ]);
+  }, [selectedPeriod, cachedWeekData, cachedMonthData]);
 
   const { yMax, step } = useMemo(() => {
     const values = chartData.dataPoints;
