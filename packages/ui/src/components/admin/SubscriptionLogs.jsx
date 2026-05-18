@@ -21,6 +21,50 @@ PlanBadge.propTypes = {
   plan: PropTypes.string.isRequired,
 };
 
+function UserInfo({ user }) {
+  return (
+    <>
+      <p className={styles["user-name"]}>{user?.name ?? "—"}</p>
+      <p className={styles["user-email"]}>{user?.email ?? ""}</p>
+    </>
+  );
+}
+
+UserInfo.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+  }),
+};
+
+function UsageText({ children }) {
+  return <span className={styles["usage-text"]}>{children}</span>;
+}
+
+UsageText.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+function PaginationButton({ label, disabled, onClick, ariaLabel }) {
+  return (
+    <button
+      className={styles["page-btn"]}
+      disabled={disabled}
+      onClick={onClick}
+      aria-label={ariaLabel}
+    >
+      {label}
+    </button>
+  );
+}
+
+PaginationButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  ariaLabel: PropTypes.string.isRequired,
+};
+
 function formatDate(isoString) {
   if (!isoString) return "—";
   return new Date(isoString).toLocaleDateString(undefined, {
@@ -93,29 +137,17 @@ function SubscriptionLogs() {
                 <tr key={log._id}>
                   {/* Date */}
                   <td>
-                    <span className={styles["usage-text"]}>
-                      {formatDate(log.createdAt)}
-                    </span>
+                    <UsageText>{formatDate(log.createdAt)}</UsageText>
                   </td>
 
                   {/* User */}
                   <td>
-                    <p className={styles["user-name"]}>
-                      {log.user_id?.name ?? "—"}
-                    </p>
-                    <p className={styles["user-email"]}>
-                      {log.user_id?.email ?? ""}
-                    </p>
+                    <UserInfo user={log.user_id} />
                   </td>
 
                   {/* Changed By */}
                   <td>
-                    <p className={styles["user-name"]}>
-                      {log.changed_by?.name ?? "—"}
-                    </p>
-                    <p className={styles["user-email"]}>
-                      {log.changed_by?.email ?? ""}
-                    </p>
+                    <UserInfo user={log.changed_by} />
                   </td>
 
                   {/* From */}
@@ -130,9 +162,7 @@ function SubscriptionLogs() {
 
                   {/* Reason */}
                   <td>
-                    <span className={styles["usage-text"]}>
-                      {log.reason ?? "—"}
-                    </span>
+                    <UsageText>{log.reason ?? "—"}</UsageText>
                   </td>
                 </tr>
               ))}
@@ -144,25 +174,21 @@ function SubscriptionLogs() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
-            className={styles["page-btn"]}
+          <PaginationButton
+            label="&laquo;"
             disabled={page === 1 || loading}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            aria-label="Previous page"
-          >
-            &laquo;
-          </button>
+            ariaLabel="Previous page"
+          />
           <span className={styles["page-indicator"]}>
             Page {page} of {totalPages}
           </span>
-          <button
-            className={styles["page-btn"]}
+          <PaginationButton
+            label="&raquo;"
             disabled={page === totalPages || loading}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            aria-label="Next page"
-          >
-            &raquo;
-          </button>
+            ariaLabel="Next page"
+          />
         </div>
       )}
     </div>
