@@ -14,7 +14,6 @@ import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme.js";
-
 function SignUp({ toggleForm, onClose }) {
   const navigate = useNavigate();
   const toast = useToast();
@@ -24,6 +23,7 @@ function SignUp({ toggleForm, onClose }) {
   const [focusedField, setFocusedField] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordRules, setShowPasswordRules] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isDarkMode } = useTheme();
   const { makeRequest, errorMsg } = useApi({
@@ -49,7 +49,7 @@ function SignUp({ toggleForm, onClose }) {
       setFormErrors({
         [focusedField]: validationErrors[focusedField] || "",
       });
-    }, 500);
+    }, 2000);
 
     return () => clearTimeout(timeout);
   }, [focusedField, formValues]);
@@ -62,6 +62,9 @@ function SignUp({ toggleForm, onClose }) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+    if (name === "password") {
+      setShowPasswordRules(true);
+    }
   };
 
   const handleSubmit = async (submitEvent) => {
@@ -87,7 +90,19 @@ function SignUp({ toggleForm, onClose }) {
   );
 
   const strengthCount = passwordCriteria.filter((c) => c.met).length;
+  const allConditionsMet = strengthCount === passwordCriteria.length;
+  useEffect(() => {
+    if (allConditionsMet) {
+      setShowPasswordRules(false);
+    }
+  }, [allConditionsMet]);
+  const getStrengthLevel = (count) => {
+    if (count <= 2) return "weak";
+    if (count === 3) return "medium";
+    return "strong";
+  };
 
+  const strengthLevel = getStrengthLevel(strengthCount);
   return (
     <>
       <form
@@ -118,7 +133,10 @@ function SignUp({ toggleForm, onClose }) {
                     label={field.label}
                     value={formValues[field.name]}
                     onChange={handleChange}
-                    onFocus={() => setFocusedField(field.name)}
+                    onFocus={() => {
+                      setFocusedField(field.name);
+                      setShowPasswordRules(true);
+                    }}
                     onBlur={() => setFocusedField(null)}
                     disabled={isLoading}
                     autoComplete={field.autoComplete}
@@ -203,8 +221,17 @@ function SignUp({ toggleForm, onClose }) {
         </div>
 
         {/* Password strength card */}
-        <div className={styles["strength-card"]}>
-          <div className={styles["strength-bars"]}>
+        <div
+          className={`${styles["strength-card"]} ${
+            showPasswordRules && !allConditionsMet
+              ? styles["visible"]
+              : styles["hidden"]
+          }`}
+        >
+          {/* Bars */}
+          <div
+            className={`${styles["strength-bars"]} ${styles[strengthLevel]}`}
+          >
             {[0, 1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -215,19 +242,20 @@ function SignUp({ toggleForm, onClose }) {
             ))}
           </div>
 
+          {/* Checklist */}
           <ul className={styles["criteria-list"]}>
             {passwordCriteria.map((criterion) => (
               <li
                 key={criterion.label}
                 className={`${styles["criteria-item"]} ${
-                  criterion.met ? styles["met"] : ""
+                  criterion.met ? styles["met"] : styles["unmet"]
                 }`}
               >
                 <span className={styles["criteria-icon"]}>
                   {criterion.met ? (
-                    <CheckCircle2 size={12} />
+                    <CheckCircle2 size={14} />
                   ) : (
-                    <Circle size={12} />
+                    <Circle size={14} />
                   )}
                 </span>
                 {criterion.label}

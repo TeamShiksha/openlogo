@@ -1,8 +1,4 @@
-import {
-  DOCUMENTATION,
-  PASSWORD_VALIDATION_MESSAGES,
-  CHANGE_PASSWORD,
-} from "./Constants";
+import { DOCUMENTATION, CHANGE_PASSWORD } from "./Constants";
 
 const PASSWORD_RULES = {
   minLength: 8,
@@ -18,46 +14,7 @@ export const isValidPassword = (password) => {
   const errors = {};
 
   if (!password) {
-    errors.password = PASSWORD_VALIDATION_MESSAGES.required;
-  } else {
-    const checks = [
-      {
-        condition: password.length < PASSWORD_RULES.minLength,
-        message: PASSWORD_VALIDATION_MESSAGES.minLength(
-          PASSWORD_RULES.minLength
-        ),
-      },
-      {
-        condition: password.length > PASSWORD_RULES.maxLength,
-        message: PASSWORD_VALIDATION_MESSAGES.maxLength(
-          PASSWORD_RULES.maxLength
-        ),
-      },
-      {
-        condition: PASSWORD_RULES.requiresUppercase && !/[A-Z]/.test(password),
-        message: PASSWORD_VALIDATION_MESSAGES.uppercase,
-      },
-      {
-        condition: PASSWORD_RULES.requiresLowercase && !/[a-z]/.test(password),
-        message: PASSWORD_VALIDATION_MESSAGES.lowercase,
-      },
-      {
-        condition: PASSWORD_RULES.requiresDigit && !/\d/.test(password),
-        message: PASSWORD_VALIDATION_MESSAGES.digit,
-      },
-      {
-        condition:
-          PASSWORD_RULES.requiresSpecialChar &&
-          !PASSWORD_RULES.specialCharRegex.test(password),
-        message: PASSWORD_VALIDATION_MESSAGES.specialChar,
-      },
-    ];
-
-    checks.forEach(({ condition, message }) => {
-      if (condition) {
-        errors.password = message;
-      }
-    });
+    errors.password = "Password is required";
   }
 
   return Object.keys(errors).length === 0 ? {} : errors;
