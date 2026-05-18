@@ -429,8 +429,8 @@ const MOCK_LOGO_REQUESTS = [
 
 const MOCK_WEEKLY_STATS = {
   period: "week",
-  startDate: "2025-11-24",
-  endDate: "2025-12-01",
+  startDate: "2025-11-23",
+  endDate: "2025-11-29",
   summary: {
     totalCount: 15,
     totalKB: "45.50",
@@ -445,7 +445,7 @@ const MOCK_WEEKLY_STATS = {
 const MOCK_MONTHLY_STATS = {
   period: "month",
   startDate: "2025-11-01",
-  endDate: "2025-12-01",
+  endDate: "2025-11-30",
   summary: {
     totalCount: 50,
     totalKB: "150.75",
