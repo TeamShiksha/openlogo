@@ -6,21 +6,37 @@
   justify-content: center;
   min-height: 70vh;
   text-align: center;
+  padding: 2rem;
+}
+
+.not-found-image {
+  max-width: 100%;
+  max-height: 400px;
+  height: auto;
+  margin-bottom: 2rem;
 }
 
 .not-found-title {
   font-size: 3rem;
   font-weight: bold;
+  color: var(--black, #111827);
+  margin-bottom: 0.5rem;
 }
 
 .not-found-message {
-  font-size: 1.2rem;
-  margin: 20px 0;
-  color: var(--black);
+  font-size: 1.125rem;
+  margin: 0 0 2rem;
+  color: #6b7280;
+  max-width: 600px;
+  line-height: 1.6;
 }
 
 @media screen and (max-width: 640px) {
   .not-found-title {
     font-size: 2rem;
+  }
+
+  .action-button {
+    width: 100%;
   }
 }

@@ -672,7 +672,8 @@ export const EMAIL_DOES_NOT_EXIST = {
 
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
-  MESSAGE: "The page you are looking for does not exist.",
+  MESSAGE:
+    "The page you are looking for doesn't exist. It might have been moved, deleted, or perhaps the URL is incorrect.",
 };
 
 export const VERIFICATION = {
