@@ -12,7 +12,7 @@ import { instance } from "../api/api_instance.js";
 export const useApi = (config) => {
   const configRef = useRef(config);
   configRef.current = config;
-  console.log("finalConfig", config);
+
   const [data, setData] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,7 +26,6 @@ export const useApi = (config) => {
     const finalConfig = { ...configRef.current, ...dynamicConfig };
     let success = false;
     try {
-      console.log("process.env.API_BASE_URL", process.env.API_BASE_URL);
       const response = await instance(finalConfig);
       setData(response.data);
       setIsSuccess(true);
