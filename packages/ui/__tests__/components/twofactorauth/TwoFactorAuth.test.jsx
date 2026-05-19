@@ -13,10 +13,14 @@ vi.mock("../../../src/hooks/useApi", () => ({
 }));
 
 // Mock the lucide-react icons
-vi.mock("lucide-react", () => ({
-  ShieldCheck: () => <div data-testid="shield-icon" />,
-  QrCode: () => <div data-testid="qr-icon" />,
-}));
+vi.mock("lucide-react", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    ShieldCheck: () => <div data-testid="shield-icon" />,
+    QrCode: () => <div data-testid="qr-icon" />,
+  };
+});
 
 describe("TwoFactorAuth Component", () => {
   beforeEach(() => {
