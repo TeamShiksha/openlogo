@@ -37,10 +37,77 @@ PlanBadge.propTypes = {
   plan: PropTypes.string.isRequired,
 };
 
+function renderTable(loading, initialized, users, styles, handleOpenModal) {
+  if (loading || !initialized) {
+    return (
+      <div className={styles["loading-container"]}>
+        <LoadingSpinner size={36} border={3} color="var(--primary)" />
+      </div>
+    );
+  }
+
+  if (users.length === 0) {
+    return (
+      <p className={styles["empty-state"]}>{USER_SUBSCRIPTIONS.emptyState}</p>
+    );
+  }
+
+  return (
+    <div className={styles["table-wrapper"]}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {USER_SUBSCRIPTIONS.tableHeaders.map((h, i) => (
+              <th key={i}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user._id}>
+              <td>
+                <p className={styles["user-name"]}>{user.name}</p>
+                <p className={styles["user-email"]}>{user.email}</p>
+                {user.created_at && (
+                  <p className={styles["user-joined"]}>
+                    Joined {formatDate(user.created_at)}
+                  </p>
+                )}
+              </td>
+
+              <td>
+                <PlanBadge plan={user.subscription?.type ?? "HOBBY"} />
+              </td>
+
+              <td>
+                <span className={styles["usage-text"]}>
+                  {user.subscription?.usage_count ?? 0}
+                  {" / "}
+                  {user.subscription?.usage_limit ?? "—"}
+                </span>
+              </td>
+
+              <td className={styles["menu-cell"]}>
+                <button
+                  className={styles["menu-btn"]}
+                  aria-label="Row actions"
+                  title="Change Plan"
+                  onClick={() => handleOpenModal(user)}
+                >
+                  <MoreVertical size={16} aria-hidden="true" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function UserSubscriptions({ embedded = false }) {
   const toast = useToast();
 
-  // ── List state ────────────────────────────────────────
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -48,13 +115,11 @@ function UserSubscriptions({ embedded = false }) {
   const [totalPages, setTotalPages] = useState(1);
   const [initialized, setInitialized] = useState(false);
 
-  // ── Modal state ───────────────────────────────────────
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newPlan, setNewPlan] = useState("");
   const [reason, setReason] = useState("");
 
-  // ── API: list users ───────────────────────────────────
   const searchParam = debouncedSearch
     ? `&search=${encodeURIComponent(debouncedSearch)}`
     : "";
@@ -63,7 +128,6 @@ function UserSubscriptions({ embedded = false }) {
     url: `/admin/users?page=${page}&limit=${ITEMS_PER_PAGE}${searchParam}`,
   });
 
-  // ── Debounce search & reset page ──────────────────────
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search.trim());
@@ -72,7 +136,6 @@ function UserSubscriptions({ embedded = false }) {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // ── Fetch on page or search change ────────────────────
   useEffect(() => {
     const load = async () => {
       const { success, data, error } = await fetchRequest();
@@ -88,7 +151,6 @@ function UserSubscriptions({ embedded = false }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, debouncedSearch]);
 
-  // ── Modal helpers ─────────────────────────────────────
   const handleOpenModal = (user) => {
     setSelectedUser(user);
     setNewPlan(user.subscription?.type ?? "HOBBY");
@@ -112,7 +174,6 @@ function UserSubscriptions({ embedded = false }) {
     const planToSet = newPlan;
     const reasonToSend = reason.trim();
 
-    // 1. Optimistically update the row
     setUsers((prev) =>
       prev.map((u) =>
         u._id === userId
@@ -121,10 +182,8 @@ function UserSubscriptions({ embedded = false }) {
       )
     );
 
-    // 2. Close modal immediately (feels instant)
     handleCloseModal();
 
-    // 3. Persist to API
     try {
       await instance({
         method: "PATCH",
@@ -136,7 +195,6 @@ function UserSubscriptions({ embedded = false }) {
       });
       toast.success(USER_SUBSCRIPTIONS.toasts.success);
     } catch (err) {
-      // 4. Revert the single row on failure
       setUsers((prev) =>
         prev.map((u) =>
           u._id === userId
@@ -154,13 +212,11 @@ function UserSubscriptions({ embedded = false }) {
 
   const isCurrentPlan = selectedUser?.subscription?.type === newPlan;
 
-  // ── Render ────────────────────────────────────────────
   return (
     <div
       className={embedded ? undefined : styles.panel}
       data-testid="user-subscriptions-panel"
     >
-      {/* Header */}
       <div className={styles["panel-header"]}>
         <div className={styles["panel-title-group"]}>
           <h2 className={styles["panel-title"]}>{USER_SUBSCRIPTIONS.title}</h2>
@@ -180,70 +236,8 @@ function UserSubscriptions({ embedded = false }) {
         </div>
       </div>
 
-      {/* Table */}
-      {loading || !initialized ? (
-        <div className={styles["loading-container"]}>
-          <LoadingSpinner size={36} border={3} color="var(--primary)" />
-        </div>
-      ) : users.length === 0 ? (
-        <p className={styles["empty-state"]}>{USER_SUBSCRIPTIONS.emptyState}</p>
-      ) : (
-        <div className={styles["table-wrapper"]}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {USER_SUBSCRIPTIONS.tableHeaders.map((h, i) => (
-                  <th key={i}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  {/* User */}
-                  <td>
-                    <p className={styles["user-name"]}>{user.name}</p>
-                    <p className={styles["user-email"]}>{user.email}</p>
-                    {user.created_at && (
-                      <p className={styles["user-joined"]}>
-                        Joined {formatDate(user.created_at)}
-                      </p>
-                    )}
-                  </td>
+      {renderTable(loading, initialized, users, styles, handleOpenModal)}
 
-                  {/* Plan */}
-                  <td>
-                    <PlanBadge plan={user.subscription?.type ?? "HOBBY"} />
-                  </td>
-
-                  {/* Usage */}
-                  <td>
-                    <span className={styles["usage-text"]}>
-                      {user.subscription?.usage_count ?? 0}
-                      {" / "}
-                      {user.subscription?.usage_limit ?? "—"}
-                    </span>
-                  </td>
-
-                  {/* Kebab menu */}
-                  <td className={styles["menu-cell"]}>
-                    <button
-                      className={styles["menu-btn"]}
-                      aria-label="Row actions"
-                      title="Change Plan"
-                      onClick={() => handleOpenModal(user)}
-                    >
-                      <MoreVertical size={16} aria-hidden="true" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
@@ -268,7 +262,6 @@ function UserSubscriptions({ embedded = false }) {
         </div>
       )}
 
-      {/* Change Plan Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -287,7 +280,6 @@ function UserSubscriptions({ embedded = false }) {
             )}
           </div>
 
-          {/* Plan selector */}
           <div>
             <span className={styles["modal-label"]}>
               {USER_SUBSCRIPTIONS.modal.planLabel}
@@ -308,7 +300,6 @@ function UserSubscriptions({ embedded = false }) {
             </div>
           </div>
 
-          {/* Optional reason */}
           <div>
             <span className={styles["modal-label"]}>
               {USER_SUBSCRIPTIONS.modal.reasonLabel}
@@ -323,7 +314,6 @@ function UserSubscriptions({ embedded = false }) {
             />
           </div>
 
-          {/* Actions */}
           <div className={styles["modal-actions"]}>
             <Button variant="secondary" onClick={handleCloseModal}>
               Cancel

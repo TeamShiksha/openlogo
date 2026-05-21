@@ -74,6 +74,65 @@ function formatDate(isoString) {
   });
 }
 
+function renderContent(loading, initialized, logs) {
+  if (loading || !initialized) {
+    return (
+      <div className={styles["loading-container"]}>
+        <LoadingSpinner size={36} border={3} color="var(--primary)" />
+      </div>
+    );
+  }
+
+  if (logs.length === 0) {
+    return (
+      <p className={styles["empty-state"]}>{SUBSCRIPTION_LOGS.emptyState}</p>
+    );
+  }
+
+  return (
+    <div className={styles["table-wrapper"]}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {SUBSCRIPTION_LOGS.tableHeaders.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {logs.map((log) => (
+            <tr key={log._id}>
+              <td>
+                <UsageText>{formatDate(log.createdAt)}</UsageText>
+              </td>
+
+              <td>
+                <UserInfo user={log.user_id} />
+              </td>
+
+              <td>
+                <UserInfo user={log.changed_by} />
+              </td>
+
+              <td>
+                <PlanBadge plan={log.from_plan} />
+              </td>
+
+              <td>
+                <PlanBadge plan={log.to_plan} />
+              </td>
+
+              <td>
+                <UsageText>{log.reason ?? "—"}</UsageText>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function SubscriptionLogs() {
   const toast = useToast();
 
@@ -105,7 +164,6 @@ function SubscriptionLogs() {
 
   return (
     <div data-testid="subscription-logs-panel">
-      {/* Header */}
       <div className={styles["panel-header"]}>
         <div className={styles["panel-title-group"]}>
           <h2 className={styles["panel-title"]}>{SUBSCRIPTION_LOGS.title}</h2>
@@ -115,63 +173,8 @@ function SubscriptionLogs() {
         </div>
       </div>
 
-      {/* Table / loading / empty */}
-      {loading || !initialized ? (
-        <div className={styles["loading-container"]}>
-          <LoadingSpinner size={36} border={3} color="var(--primary)" />
-        </div>
-      ) : logs.length === 0 ? (
-        <p className={styles["empty-state"]}>{SUBSCRIPTION_LOGS.emptyState}</p>
-      ) : (
-        <div className={styles["table-wrapper"]}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {SUBSCRIPTION_LOGS.tableHeaders.map((h) => (
-                  <th key={h}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log._id}>
-                  {/* Date */}
-                  <td>
-                    <UsageText>{formatDate(log.createdAt)}</UsageText>
-                  </td>
+      {renderContent(loading, initialized, logs)}
 
-                  {/* User */}
-                  <td>
-                    <UserInfo user={log.user_id} />
-                  </td>
-
-                  {/* Changed By */}
-                  <td>
-                    <UserInfo user={log.changed_by} />
-                  </td>
-
-                  {/* From */}
-                  <td>
-                    <PlanBadge plan={log.from_plan} />
-                  </td>
-
-                  {/* To */}
-                  <td>
-                    <PlanBadge plan={log.to_plan} />
-                  </td>
-
-                  {/* Reason */}
-                  <td>
-                    <UsageText>{log.reason ?? "—"}</UsageText>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <PaginationButton
