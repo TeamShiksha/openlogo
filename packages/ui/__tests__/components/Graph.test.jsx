@@ -11,6 +11,8 @@ vi.mock("react-chartjs-2", () => ({
 vi.mock("../../src/hooks/useApi", () => {
   const mockWeekApiResponse = {
     data: {
+      startDate: "2025-11-01",
+      endDate: "2025-11-07",
       data: [
         { date: "2025-11-01T00:00:00Z", count: 2 },
         { date: "2025-11-02T00:00:00Z", count: 3 },
@@ -24,6 +26,8 @@ vi.mock("../../src/hooks/useApi", () => {
   };
   const mockMonthApiResponse = {
     data: {
+      startDate: "2025-11-01",
+      endDate: "2025-11-30",
       data: Array.from({ length: 30 }, (_, dayIndex) => ({
         date: new Date(2025, 10, dayIndex + 1).toISOString(),
         count: Math.floor(Math.random() * 8),
@@ -86,15 +90,15 @@ describe("Graph component", () => {
     const weekButton = screen.getByRole("button", { name: /week/i });
     const monthButton = screen.getByRole("button", { name: /month/i });
 
-    expect(weekButton).toHaveAttribute("aria-pressed", "true");
-    expect(monthButton).toHaveAttribute("aria-pressed", "false");
+    expect(weekButton.className).toMatch(/segment-btn-active/);
+    expect(monthButton.className).not.toMatch(/segment-btn-active/);
 
     fireEvent.click(monthButton);
-    expect(monthButton).toHaveAttribute("aria-pressed", "true");
-    expect(weekButton).toHaveAttribute("aria-pressed", "false");
+    expect(monthButton.className).toMatch(/segment-btn-active/);
+    expect(weekButton.className).not.toMatch(/segment-btn-active/);
 
     fireEvent.click(weekButton);
-    expect(weekButton).toHaveAttribute("aria-pressed", "true");
-    expect(monthButton).toHaveAttribute("aria-pressed", "false");
+    expect(weekButton.className).toMatch(/segment-btn-active/);
+    expect(monthButton.className).not.toMatch(/segment-btn-active/);
   });
 });

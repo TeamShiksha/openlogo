@@ -62,7 +62,7 @@ function Catalog() {
     if (debouncedSearchTerm.length === 0 || debouncedSearchTerm.length >= 2) {
       makeRequest();
     }
-  }, [pageNum, debouncedSearchTerm]);
+  }, [pageNum, debouncedSearchTerm, makeRequest]);
 
   useEffect(() => {
     const currentDataString = JSON.stringify(data);
@@ -307,9 +307,7 @@ function Catalog() {
       {showWebCatalog && data?.source === "web-search" && (
         <div className={styles["catalog-search-modal"]}>
           <div className={styles["catalog-search-modal-header"]}>
-            <div className={styles["catalog-search-modal-title"]}>
-              Image Not Found
-            </div>
+            Image Not Found
             <button
               type="button"
               className={styles["catalog-search-modal-cross"]}
@@ -427,9 +425,10 @@ function Catalog() {
           <button
             onClick={handlePreviousBtnClick}
             disabled={pageNum === 0}
-            className={`${pageNum === 0 && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-left-arrow"]}`}
+            aria-label="Previous page"
+            className={`${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-left-arrow"]} ${pageNum === 0 ? styles["catalog-footer-nav-btn-disable"] : ""}`}
           >
-            <img src={leftArrow} alt="left-arrow" />
+            <img src={leftArrow} alt="left-arrow" aria-hidden="true" />
           </button>
           <div>
             Page{" "}
@@ -441,9 +440,10 @@ function Catalog() {
           <button
             onClick={handleNextBtnClick}
             disabled={pageNum === totalPages}
-            className={`${pageNum === totalPages && styles["catalog-footer-nav-btn-disable"]} ${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-right-arrow"]}`}
+            aria-label="Next page"
+            className={`${styles["catalog-footer-nav-btn"]} ${styles["catalog-nav-right-arrow"]} ${pageNum === totalPages ? styles["catalog-footer-nav-btn-disable"] : ""}`}
           >
-            <img src={rightArrow} alt="right-arrow" />
+            <img src={rightArrow} alt="right-arrow" aria-hidden="true" />
           </button>
         </div>
       </div>

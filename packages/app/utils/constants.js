@@ -81,6 +81,7 @@ const Messages = {
   ALREADY_SEND_RESPOND: "Already sent the response.",
   UPDATE_SUCCESS: "Responded successfully.",
   INCORRECT_PASSWORD: "Current password is incorrect",
+  SAME_PASSWORD: "Current password is same as old password",
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   FORM_ALREADY_SUBMITTED: "Form already submitted, try again later",
@@ -107,7 +108,15 @@ const Messages = {
   CREATED_LOGO_NOT_FOUND: "Created logo not found",
   API_KEY_EXPIRED: "This Key has got expired.",
   UPDATE_API_KEY: "This Key needs an update.",
+  MFA_FAILED: "Failed to enable/disable MFA",
+  INCORRECT_PIN: "Incorrect pin. Please try again.",
+  SESSION_NOT_FOUND: "Session not found.",
+  CANNOT_REVOKE_CURRENT_SESSION:
+    "Cannot revoke current session. Use signout instead.",
+  SESSION_LIMIT_EXCEEDED: "Maximum number of active sessions exceeded.",
 };
+
+const MAX_SESSIONS_PER_USER = 5;
 
 const ExtractCompanyNameFromUrlRegex = /:\/\/(?:www\.)?([^./]+)\./i;
 
@@ -142,4 +151,5 @@ module.exports = {
   USER_SAFE_FIELDS,
   SESSION_ID_REGEX,
   TEMPORARY_SESSION_TYPES,
+  MAX_SESSIONS_PER_USER,
 };

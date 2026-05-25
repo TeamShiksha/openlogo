@@ -330,7 +330,7 @@ async function reverseTransactionController(req, res, next) {
  * - Processes rewards for each image
  * - Returns summary with success/failure counts and points awarded
  */
-async function processBatchRewardsController(req, res) {
+async function processBatchRewardsController(req, res, next) {
   const startTime = Date.now();
 
   try {

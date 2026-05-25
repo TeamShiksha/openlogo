@@ -50,11 +50,7 @@ function validateProcessorToken(req, res, next) {
  * - Returns summary with success/failure counts and statistics
  * - Requires: Bearer token via REWARD_PROCESSOR_TOKEN env variable
  */
-router.post(
-  "/process-batch",
-  validateProcessorToken,
-  processBatchRewardsController
-);
+router.post("/process-batch", validateProcessorToken, processBatchRewardsController);
 
 /**
  * GET /api/admin/rewards/pending
