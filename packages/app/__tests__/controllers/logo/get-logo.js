@@ -5,7 +5,6 @@ const { Messages } = require("../../../utils/constants");
 const {
   MOCK_KEYS,
   MOCK_SUBSCRIPTION,
-  MOCK_IMAGE_DETAIL,
   MOCK_IMAGE_URL_RESPONSE,
 } = require("../../../utils/mocks");
 
@@ -57,10 +56,6 @@ describe("getLogoController", () => {
     jest
       .spyOn(SubscriptionService.prototype, "getSubscription")
       .mockResolvedValue(mockSubscription);
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFreeWithDetails")
-      .mockResolvedValue(MOCK_IMAGE_DETAIL);
 
     jest
       .spyOn(RewardTransactionsService.prototype, "validateAndLogRequest")
@@ -221,10 +216,6 @@ describe("getLogoController - Operations Order Test", () => {
         operationsOrder.push("image_fetched");
         return MOCK_IMAGE_URL_RESPONSE;
       });
-
-    jest
-      .spyOn(ImageService.prototype, "fetchImageByCompanyFreeWithDetails")
-      .mockResolvedValue(null);
 
     jest
       .spyOn(UserService.prototype, "logLogoRequestEntry")

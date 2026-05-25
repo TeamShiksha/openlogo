@@ -586,7 +586,6 @@ const MOCK_REWARD_VALIDATION_REQUEST = {
   creatorId: new mongoose.Types.ObjectId(),
   keyId: new mongoose.Types.ObjectId(),
   subscriptionId: new mongoose.Types.ObjectId(),
-  ipAddress: "192.168.1.1",
   userAgent: "Mozilla/5.0",
 };
 
@@ -1070,6 +1069,73 @@ const MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD = {
   totalPages: 1,
 };
 
+// Integration scenario factories
+const createMockIntegrationValidProScenario = () => {
+  const userId = new mongoose.Types.ObjectId();
+  const creatorId = new mongoose.Types.ObjectId();
+  const params = {
+    imageId: "logo-apple",
+    userId,
+    creatorId,
+    keyId: "key-123",
+    subscriptionId: "sub-pro-001",
+    subscription: { type: SubscriptionTypes.PRO },
+  };
+  return {
+    params,
+    mockLogEntry: {
+      _id: new mongoose.Types.ObjectId(),
+      user_id: userId,
+      key_id: params.keyId,
+      image_id: params.imageId,
+      user_plan: SubscriptionTypes.PRO,
+      is_reward_eligible: true,
+      reward_eligibility_reason: "VALID",
+    },
+  };
+};
+
+const createMockIntegrationSelfUsageScenario = () => ({
+  params: {
+    imageId: "logo-apple",
+    userId: "user123",
+    creatorId: "user123",
+    keyId: "key-123",
+    subscriptionId: "sub-pro-001",
+    subscription: { type: SubscriptionTypes.PRO },
+  },
+  mockLogEntry: {
+    _id: new mongoose.Types.ObjectId(),
+    is_reward_eligible: false,
+    reward_eligibility_reason: "SELF_USAGE",
+  },
+});
+
+const createMockIntegrationObjectIdScenario = () => {
+  const userId = new mongoose.Types.ObjectId();
+  const creatorId = new mongoose.Types.ObjectId();
+  const params = {
+    imageId: "apple-logo-2024",
+    userId,
+    creatorId,
+    keyId: "api-key-abc123",
+    subscriptionId: "sub-pro-xyz",
+    subscription: { type: SubscriptionTypes.PRO },
+  };
+  return {
+    params,
+    mockLogEntry: {
+      _id: new mongoose.Types.ObjectId(),
+      user_id: userId,
+      key_id: params.keyId,
+      image_id: params.imageId,
+      user_plan: SubscriptionTypes.PRO,
+      is_reward_eligible: true,
+      reward_eligibility_reason: "VALID",
+    },
+  };
+};
+
 // const createValidRewardTrackingParams = () => ({
 //   imageId: "image123",
 //   userId: "user123",
@@ -1157,6 +1223,9 @@ module.exports = {
   MOCK_TRANSACTION_SEARCH_RESPONSE,
   createMockLogoRequestLogEntry,
   createValidRewardTrackingParams,
+  createMockIntegrationValidProScenario,
+  createMockIntegrationSelfUsageScenario,
+  createMockIntegrationObjectIdScenario,
   MOCK_REWARD_TRACKING_SCENARIOS,
   REWARD_TEST_IMAGE_ID,
   REWARD_TEST_CREATOR_ID,

@@ -10,7 +10,9 @@ const LogoRequestLogsService = require("./logoRequestlogs");
 const CreateLogoRequestService = require("./createLogoRequest");
 const PasswordResetService = require("./passwordReset");
 const UserSessionService = require("./userSession");
-
+const RewardsService = require("./rewards");
+const MilestoneConfigService = require("./milestoneConfig");
+const RewardTransactionsService = require("./rewardTransactions");
 module.exports = {
   ContactUsService,
   ImageService,
@@ -24,4 +26,7 @@ module.exports = {
   CreateLogoRequestService,
   PasswordResetService,
   UserSessionService,
+  RewardsService,
+  RewardTransactionsService,
+  MilestoneConfigService,
 };
