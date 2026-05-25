@@ -72,7 +72,7 @@ describe("Auth Component", () => {
       </BrowserRouter>
     );
 
-    const toggleSpan = screen.getByText(SIGNIN.signupToggleButtonText);
+    const toggleSpan = screen.getByText(SIGNIN.footerText);
     fireEvent.click(toggleSpan);
 
     await waitFor(

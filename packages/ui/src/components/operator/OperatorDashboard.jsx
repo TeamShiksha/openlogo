@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import operatorStyles from "./OperatorDashboard.module.css";
+import { useState, useEffect } from "react";
+import styles from "./OperatorDashboard.module.css";
 import Modal from "../common/modal/Modal";
 import OperatorCard from "../operatorcard/OperatorCard";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner";
@@ -13,7 +13,6 @@ import ImageUploadModal from "../catalog/ImageUploadModal";
 import CustomInput from "../common/input/CustomInput";
 import { useApi } from "../../hooks/useApi";
 import axios from "axios";
-import PropTypes from "prop-types";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -46,14 +45,7 @@ const showSuccessToast = (toast, searchType, responseAction) => {
   }
 };
 
-const Operator = ({
-  selectedDashboard,
-  dashboardDropdownOptions,
-  isDropdownOpen,
-  setIsDropdownOpen,
-  handleRoleSelect,
-  headerStyles,
-}) => {
+const Operator = () => {
   const [activeTab, setActiveTab] = useState("active");
   const [searchType, setSearchType] = useState("messages");
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,6 +60,7 @@ const Operator = ({
   const toast = useToast();
   const OperatorDashboardDropdownOptions = ["messages", "requests", "logos"];
 
+  // Data states
   const [messages, setMessages] = useState([]);
   const [requests, setRequests] = useState([]);
   const [logos, setLogos] = useState([]);
@@ -87,6 +80,7 @@ const Operator = ({
 
   const ITEMS_PER_PAGE = 6;
 
+  // Debounce logic for search
   useEffect(() => {
     if (searchTerm.length < 2) {
       setDebouncedSearchTerm("");
@@ -112,13 +106,11 @@ const Operator = ({
     method: "GET",
     url: `/catalog/logos?skip=0&limit=10&search=${debouncedSearchTerm}`,
   });
-
   useEffect(() => {
     if (debouncedSearchTerm.length >= 2) {
       searchMakeRequest();
     }
-  }, [debouncedSearchTerm, searchMakeRequest]);
-
+  }, [debouncedSearchTerm]);
   useEffect(() => {
     if (searchData?.source === "web-search") {
       setShowWebCatalog(true);
@@ -131,71 +123,62 @@ const Operator = ({
     }
   }, [searchData, debouncedSearchTerm]);
 
-  const fetchMessages = useCallback(
-    async (page = 1) => {
-      setLoading(true);
-      try {
-        const response = await instance.get("/messages", {
-          params: {
-            page,
-            limit: ITEMS_PER_PAGE,
-            tab: activeTab,
-          },
-        });
-        setMessages(response.data.results);
-        setTotalPages(response.data.totalPages || 1);
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeTab]
-  );
+  const fetchMessages = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await instance.get("/messages", {
+        params: {
+          page,
+          limit: ITEMS_PER_PAGE,
+          tab: activeTab,
+        },
+      });
+      setMessages(response.data.results);
+      setTotalPages(response.data.totalPages || 1);
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const fetchRequests = useCallback(
-    async (page = 1) => {
-      setLoading(true);
-      try {
-        const response = await instance.get("/requests", {
-          params: {
-            page,
-            limit: ITEMS_PER_PAGE,
-            tab: activeTab,
-          },
-        });
-        setRequests(response.data.results);
-        setTotalPages(response.data.totalPages || 1);
-      } catch (err) {
-        console.error("Error fetching requests:", err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeTab]
-  );
+  const fetchRequests = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await instance.get("/requests", {
+        params: {
+          page,
+          limit: ITEMS_PER_PAGE,
+          tab: activeTab,
+        },
+      });
+      setRequests(response.data.results);
+      setTotalPages(response.data.totalPages || 1);
+    } catch (err) {
+      console.error("Error fetching requests:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const fetchLogos = useCallback(
-    async (page = 1) => {
-      setLoading(true);
-      try {
-        const response = await instance.get("/create-logo-request", {
-          params: {
-            page,
-            limit: ITEMS_PER_PAGE,
-            tab: activeTab,
-          },
-        });
-        setLogos(response.data.results);
-        setTotalPages(response.data.totalPages || 1);
-      } catch (error) {
-        console.error("Error fetching logos:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeTab]
-  );
+  const fetchLogos = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await instance.get("/create-logo-request", {
+        params: {
+          page,
+          limit: ITEMS_PER_PAGE,
+          tab: activeTab,
+        },
+      });
+      setLogos(response.data.results);
+      setTotalPages(response.data.totalPages || 1);
+    } catch (error) {
+      console.error("Error fetching logos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleResponseSubmit = async () => {
     if (!currentItem) return;
@@ -242,14 +225,8 @@ const Operator = ({
     } else {
       fetchLogos(currentPage);
     }
-  }, [
-    searchType,
-    currentPage,
-    activeTab,
-    fetchMessages,
-    fetchRequests,
-    fetchLogos,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchType, currentPage, activeTab]);
 
   useEffect(() => {
     if (!focusedField) {
@@ -377,7 +354,6 @@ const Operator = ({
       setLoading(false);
     }
   };
-
   const handleImageUpload = async ({ file, companyUri }) => {
     if (!file || !companyUri) {
       toast.error(MESSAGES.UPLOAD_VALID_IMAGE);
@@ -424,7 +400,6 @@ const Operator = ({
       setUploadLoading(false);
     }
   };
-
   const handleUpdateImage = async ({ file }) => {
     if (!file || !updateImageId) {
       toast.error(MESSAGES.IMAGE_UPDATE_ERROR);
@@ -504,19 +479,19 @@ const Operator = ({
   let contentToRender;
   if (loading) {
     contentToRender = (
-      <div className={operatorStyles["loading-container"]}>
+      <div className={styles["loading-container"]}>
         <LoadingSpinner size={40} color="black" />
       </div>
     );
   } else if (filteredData.length === 0) {
     contentToRender = (
-      <div className={operatorStyles["empty-state"]}>
+      <div className={styles["empty-state"]}>
         No {searchType} found for this filter.
       </div>
     );
   } else {
     contentToRender = (
-      <div className={operatorStyles["cards-container"]}>
+      <div className={styles["cards-container"]}>
         {filteredData.map((item) => (
           <OperatorCard
             key={item._id}
@@ -530,343 +505,275 @@ const Operator = ({
   }
 
   return (
-    <div>
-      <div className={headerStyles["page-header"]}>
-        <div className={headerStyles["title-section"]}>
-          <h1 className={headerStyles["dashboard-title"]}>
-            Operator Dashboard
-          </h1>
-          <p className={headerStyles["dashboard-subtitle"]}>
-            Monitor operations and manage system resources.
-          </p>
-        </div>
-
-        <div className={headerStyles["header-right"]}>
-          <div className={headerStyles["dropdown-wrapper"]}>
-            <button
-              className={headerStyles["dropdown"]}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              {selectedDashboard}
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-
-            {isDropdownOpen && (
-              <div className={headerStyles["dropdown-menu"]}>
-                {dashboardDropdownOptions.map((option) => (
-                  <div
-                    key={option}
-                    className={headerStyles["dropdown-item"]}
-                    onClick={() => handleRoleSelect(option)}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className={operatorStyles["operator-container"]}>
-        <div className={operatorStyles["catalog-search"]}>
-          <CustomInput
-            name="search"
-            type="search"
-            label="Search"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-          />
-          <Button
-            onClick={() => {
-              setPreSelectedFile(null);
-              setPreFilledUri("");
-              setIsUploadModalOpen(true);
-            }}
-            variant="primary"
-            className={operatorStyles["catalog-add-image-btn"]}
-          >
-            Add image
-          </Button>
-          <ImageUploadModal
-            isOpen={isUploadModalOpen}
-            onClose={() => {
-              setIsUploadModalOpen(false);
-              setPreSelectedFile(null);
-              setPreFilledUri("");
-              setUpdateImageId(null);
-              setUpdatedImageCompanyUri(null);
-            }}
-            onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
-            isUpdate={!!updateImageId}
-            isLoading={uploadLoading}
-            initialFile={preSelectedFile}
-            initialCompanyUri={preFilledUri}
-          />
-        </div>
-        {searchLoading && (
-          <div
-            className={operatorStyles["loading-container"]}
-            style={{ marginTop: "20px" }}
-          >
-            <LoadingSpinner size={20} color="rgba(45, 8, 193, 1)" />
-          </div>
-        )}
-        {showWebCatalog && searchData?.source === "web-search" && (
-          <div className={operatorStyles["catalog-search-modal"]}>
-            <div className={operatorStyles["catalog-search-modal-header"]}>
-              <div className={operatorStyles["catalog-search-modal-title"]}>
-                Image Not Found in DB
-              </div>
-              <div
-                className={operatorStyles["catalog-search-modal-cross"]}
-                onClick={() => setShowWebCatalog(false)}
-              >
-                ✕
-              </div>
-            </div>
-            <div className={operatorStyles["web-search-catalog-body"]}>
-              <p>We could not find this image in our catalog database.</p>
-              <div className={operatorStyles["web-search-actions"]}>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    setPreSelectedFile(null);
-                    setPreFilledUri("");
-                    setIsUploadModalOpen(true);
-                  }}
-                >
-                  ADD IMAGE
-                </Button>
-                <Button variant="secondary" onClick={handleSearchOnWeb}>
-                  Search on Web
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showWebResults &&
-          searchData?.source === "web-search" &&
-          searchData?.data?.length > 0 && (
-            <div className={operatorStyles["catalog-table-wrapper"]}>
-              <div className={operatorStyles["catalog-table-header"]}>
-                <div className={operatorStyles["catalog-table-column-first"]}>
-                  Image
-                </div>
-                <div
-                  className={operatorStyles["catalog-table-column-last"]}
-                ></div>
-              </div>
-
-              <div className={operatorStyles["operator-catalog-list"]}>
-                {searchData.data.map((img, index) => (
-                  <div
-                    key={img.companyUri || img.url || index}
-                    className={operatorStyles["operator-catalog-row"]}
-                  >
-                    <div className={operatorStyles["operator-catalog-left"]}>
-                      <div className={operatorStyles["catalog-item-img"]}>
-                        <img src={img.url} alt={img.companyName || "image"} />
-                      </div>
-                      <div className={operatorStyles["operator-catalog-name"]}>
-                        {(img.companyName || "unknown").toLowerCase()}
-                      </div>
-                    </div>
-                    <div className={operatorStyles["operator-catalog-actions"]}>
-                      <Button
-                        onClick={() => handleWebResultUpload(img)}
-                        variant="primary"
-                        className={operatorStyles["reupload-btn"]}
-                      >
-                        Upload
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-        {showDbResults &&
-          searchData?.source === "db-search" &&
-          searchData?.data?.data?.length > 0 && (
-            <div className={operatorStyles["catalog-table-wrapper"]}>
-              <div className={operatorStyles["catalog-table-header"]}>
-                <div className={operatorStyles["catalog-table-column-first"]}>
-                  Images
-                </div>
-                <div
-                  className={operatorStyles["catalog-table-column-last"]}
-                ></div>
-              </div>
-
-              <div className={operatorStyles["operator-catalog-list"]}>
-                {searchData.data.data.map((company) => (
-                  <div
-                    key={company._id}
-                    className={operatorStyles["operator-catalog-row"]}
-                  >
-                    <div className={operatorStyles["operator-catalog-left"]}>
-                      <div className={operatorStyles["catalog-item-img"]}>
-                        <div
-                          className={operatorStyles["catalog-item-initials"]}
-                        >
-                          {company.company_name
-                            ? company.company_name[0].toUpperCase()
-                            : "#"}
-                        </div>
-                      </div>
-                      <div className={operatorStyles["operator-catalog-name"]}>
-                        {company.company_name.toLowerCase()}.{company.extension}
-                      </div>
-                    </div>
-                    <div className={operatorStyles["operator-catalog-actions"]}>
-                      <Button
-                        onClick={() => {
-                          setPreSelectedFile(null);
-                          setPreFilledUri(company.company_uri || "");
-                          setUpdateImageId(company._id);
-                          setUpdatedImageCompanyUri(company.company_uri || "");
-                          setIsUploadModalOpen(true);
-                        }}
-                        variant="primary"
-                        className={operatorStyles["reupload-btn"]}
-                      >
-                        Reupload
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-        <div className={operatorStyles.header}>
-          <div className={operatorStyles["tabs-container"]}>
-            <button
-              className={`${operatorStyles["tab-button"]} ${activeTab === "active" ? operatorStyles["active-tab"] : ""}`}
-              onClick={() => handleTabChange("active")}
-            >
-              Active
-            </button>
-            <button
-              className={`${operatorStyles["tab-button"]} ${activeTab === "archived" ? operatorStyles["active-tab"] : ""}`}
-              onClick={() => handleTabChange("archived")}
-            >
-              Archived
-            </button>
-          </div>
-          <Dropdown
-            options={OperatorDashboardDropdownOptions}
-            selectedOption={searchType}
-            setSelectedOption={setSearchType}
-            className={operatorStyles["type-selector"]}
-          />
-        </div>
-
-        {contentToRender}
-
-        {totalPages > 1 && (
-          <div className={operatorStyles.pagination}>
-            <button
-              className={operatorStyles["page-button"]}
-              disabled={currentPage === 1 || loading}
-              onClick={goToPreviousPage}
-            >
-              &laquo;
-            </button>
-            <span className={operatorStyles["page-indicator"]}>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              className={operatorStyles["page-button"]}
-              disabled={currentPage === totalPages || loading}
-              onClick={goToNextPage}
-            >
-              &raquo;
-            </button>
-          </div>
-        )}
-
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setFormErrors({});
+    <div className={styles["operator-container"]}>
+      <div className={styles["catalog-search"]}>
+        <CustomInput
+          name="search"
+          type="search"
+          label="Search"
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+        />
+        <Button
+          onClick={() => {
+            setPreSelectedFile(null);
+            setPreFilledUri("");
+            setIsUploadModalOpen(true);
           }}
-          customWidth="350px"
-          closeOnOverlayClick={!loading}
-          showCloseButton={!loading}
-          customClass={operatorStyles["response-modal"]}
+          variant="primary"
+          className={styles["catalog-add-image-btn"]}
         >
-          <h2>{modalTitle}</h2>
-
-          <div className={operatorStyles["response-field"]}>
-            <textarea
-              id="response"
-              name="message"
-              value={responseText}
-              onChange={handleResponseChange}
-              rows={2}
-              placeholder={
-                responseAction === "respond"
-                  ? MODAL_MESSAGES.RESPOND
-                  : MODAL_MESSAGES.REJECT
-              }
-              disabled={loading}
-              onFocus={() => setFocusedField("message")}
-              onBlur={() => setFocusedField(null)}
-            />
-            <div className={operatorStyles["character-limit"]}>
-              <p>
-                {`[${responseText.length}/` +
-                  MODAL_MESSAGES.CHARACTER_LIMIT +
-                  `]`}
-              </p>
+          Add image
+        </Button>
+        <ImageUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => {
+            setIsUploadModalOpen(false);
+            setPreSelectedFile(null);
+            setPreFilledUri("");
+            setUpdateImageId(null);
+            setUpdatedImageCompanyUri(null);
+          }}
+          onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
+          isUpdate={!!updateImageId}
+          isLoading={uploadLoading}
+          initialFile={preSelectedFile}
+          initialCompanyUri={preFilledUri}
+        />
+      </div>
+      {searchLoading && (
+        <div
+          className={styles["loading-container"]}
+          style={{ marginTop: "20px" }}
+        >
+          <LoadingSpinner size={20} color="rgba(45, 8, 193, 1)" />
+        </div>
+      )}
+      {showWebCatalog && searchData?.source === "web-search" && (
+        <div className={styles["catalog-search-modal"]}>
+          <div className={styles["catalog-search-modal-header"]}>
+            <div className={styles["catalog-search-modal-title"]}>
+              Image Not Found in DB
             </div>
             <div
-              className={`${operatorStyles["error-container"]} ${formErrors.message ? "has-error" : ""}`}
+              className={styles["catalog-search-modal-cross"]}
+              onClick={() => setShowWebCatalog(false)}
             >
-              <p className="input-error">{formErrors.message}</p>
+              ✕
             </div>
           </div>
-
-          <div className={operatorStyles["modal-actions"]}>
-            <Button
-              onClick={handleResponseSubmit}
-              disabled={!isFormValid || loading}
-              variant={responseAction === "respond" ? "primary" : "danger"}
-              className={operatorStyles["send-button"]}
-              isLoading={loading}
-            >
-              {submitButtonText}
-            </Button>
+          <div className={styles["web-search-catalog-body"]}>
+            <p>We couldn’t find this image in our catalog database.</p>
+            <div className={styles["web-search-actions"]}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setPreSelectedFile(null);
+                  setPreFilledUri("");
+                  setIsUploadModalOpen(true);
+                }}
+              >
+                ADD IMAGE
+              </Button>
+              <Button variant="secondary" onClick={handleSearchOnWeb}>
+                Search on Web
+              </Button>
+            </div>
           </div>
-        </Modal>
+        </div>
+      )}
+
+      {/* WEB SEARCH RESULTS DISPLAY - Updated: Extension removed */}
+      {showWebResults &&
+        searchData?.source === "web-search" &&
+        searchData?.data?.length > 0 && (
+          <div className={styles["catalog-table-wrapper"]}>
+            <div className={styles["catalog-table-header"]}>
+              <div className={styles["catalog-table-column-first"]}>Image</div>
+              <div className={styles["catalog-table-column-last"]}></div>
+            </div>
+
+            <div className={styles["operator-catalog-list"]}>
+              {searchData.data.map((img, index) => (
+                <div
+                  key={img.companyUri || img.url || index}
+                  className={styles["operator-catalog-row"]}
+                >
+                  <div className={styles["operator-catalog-left"]}>
+                    <div className={styles["catalog-item-img"]}>
+                      <img src={img.url} alt={img.companyName || "image"} />
+                    </div>
+                    <div className={styles["operator-catalog-name"]}>
+                      {(img.companyName || "unknown").toLowerCase()}
+                    </div>
+                  </div>
+                  <div className={styles["operator-catalog-actions"]}>
+                    <Button
+                      onClick={() => handleWebResultUpload(img)}
+                      variant="primary"
+                      className={styles["reupload-btn"]}
+                    >
+                      Upload
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      {showDbResults &&
+        searchData?.source === "db-search" &&
+        searchData?.data?.data?.length > 0 && (
+          <div className={styles["catalog-table-wrapper"]}>
+            <div className={styles["catalog-table-header"]}>
+              <div className={styles["catalog-table-column-first"]}>Images</div>
+              <div className={styles["catalog-table-column-last"]}></div>
+            </div>
+
+            <div className={styles["operator-catalog-list"]}>
+              {searchData.data.data.map((company) => (
+                <div
+                  key={company._id}
+                  className={styles["operator-catalog-row"]}
+                >
+                  <div className={styles["operator-catalog-left"]}>
+                    <div className={styles["catalog-item-img"]}>
+                      <div className={styles["catalog-item-initials"]}>
+                        {company.company_name
+                          ? company.company_name[0].toUpperCase()
+                          : "#"}
+                      </div>
+                    </div>
+                    <div className={styles["operator-catalog-name"]}>
+                      {company.company_name.toLowerCase()}.{company.extension}
+                    </div>
+                  </div>
+                  <div className={styles["operator-catalog-actions"]}>
+                    <Button
+                      onClick={() => {
+                        setPreSelectedFile(null);
+                        setPreFilledUri(company.company_uri || "");
+                        setUpdateImageId(company._id);
+                        setUpdatedImageCompanyUri(company.company_uri || "");
+                        setIsUploadModalOpen(true);
+                      }}
+                      variant="primary"
+                      className={styles["reupload-btn"]}
+                    >
+                      Reupload
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      <div className={styles.header}>
+        <div className={styles["tabs-container"]}>
+          <button
+            className={`${styles["tab-button"]} ${activeTab === "active" ? styles["active-tab"] : ""}`}
+            onClick={() => handleTabChange("active")}
+          >
+            Active
+          </button>
+          <button
+            className={`${styles["tab-button"]} ${activeTab === "archived" ? styles["active-tab"] : ""}`}
+            onClick={() => handleTabChange("archived")}
+          >
+            Archived
+          </button>
+        </div>
+        <Dropdown
+          options={OperatorDashboardDropdownOptions}
+          selectedOption={searchType}
+          setSelectedOption={setSearchType}
+          className={styles["type-selector"]}
+        />
       </div>
+
+      {contentToRender}
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            className={styles["page-button"]}
+            disabled={currentPage === 1 || loading}
+            onClick={goToPreviousPage}
+          >
+            &laquo;
+          </button>
+          <span className={styles["page-indicator"]}>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className={styles["page-button"]}
+            disabled={currentPage === totalPages || loading}
+            onClick={goToNextPage}
+          >
+            &raquo;
+          </button>
+        </div>
+      )}
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setFormErrors({});
+        }}
+        customWidth="350px"
+        closeOnOverlayClick={!loading}
+        showCloseButton={!loading}
+        customClass={styles["response-modal"]}
+      >
+        <h2>{modalTitle}</h2>
+
+        <div className={styles["response-field"]}>
+          <textarea
+            id="response"
+            name="message"
+            value={responseText}
+            onChange={handleResponseChange}
+            rows={2}
+            placeholder={
+              responseAction === "respond"
+                ? MODAL_MESSAGES.RESPOND
+                : MODAL_MESSAGES.REJECT
+            }
+            disabled={loading}
+            onFocus={() => setFocusedField("message")}
+            onBlur={() => setFocusedField(null)}
+          />
+          <div className={styles["character-limit"]}>
+            <p>
+              {`[${responseText.length}/` +
+                MODAL_MESSAGES.CHARACTER_LIMIT +
+                `]`}
+            </p>
+          </div>
+          <div
+            className={`${styles["error-container"]} ${formErrors.message ? "has-error" : ""}`}
+          >
+            <p className="input-error">{formErrors.message}</p>
+          </div>
+        </div>
+
+        <div className={styles["modal-actions"]}>
+          <Button
+            onClick={handleResponseSubmit}
+            disabled={!isFormValid || loading}
+            variant={responseAction === "respond" ? "primary" : "danger"}
+            className={styles["send-button"]}
+            isLoading={loading}
+          >
+            {submitButtonText}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
-};
-
-Operator.propTypes = {
-  selectedDashboard: PropTypes.string.isRequired,
-  dashboardDropdownOptions: PropTypes.array.isRequired,
-  isDropdownOpen: PropTypes.bool.isRequired,
-  setIsDropdownOpen: PropTypes.func.isRequired,
-  handleRoleSelect: PropTypes.func.isRequired,
-  headerStyles: PropTypes.object.isRequired,
 };
 
 export default Operator;

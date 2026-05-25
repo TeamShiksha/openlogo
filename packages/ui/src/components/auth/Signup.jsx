@@ -1,19 +1,14 @@
-import { useState, useEffect, useMemo } from "react";
-import { Eye, EyeClosed, CheckCircle2, Circle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import PropTypes from "prop-types";
-import { SIGNUP, BUTTON_TEXT, MESSAGES, BRANDING } from "../../utils/Constants";
+import { SIGNUP, BUTTON_TEXT, MESSAGES } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
-import {
-  getPasswordCriteria,
-  handleNavigation,
-  validate,
-} from "../../utils/Helpers";
+import { handleNavigation, validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast.js";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "../../hooks/useTheme.js";
 
 function SignUp({ toggleForm, onClose }) {
   const navigate = useNavigate();
@@ -25,7 +20,6 @@ function SignUp({ toggleForm, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { isDarkMode } = useTheme();
   const { makeRequest, errorMsg } = useApi({
     url: `/auth/signup`,
     method: "post",
@@ -80,14 +74,6 @@ function SignUp({ toggleForm, onClose }) {
     setIsLoading(false);
   };
 
-  // Password strength criteria
-  const passwordCriteria = useMemo(
-    () => getPasswordCriteria(formValues.password),
-    [formValues.password]
-  );
-
-  const strengthCount = passwordCriteria.filter((c) => c.met).length;
-
   return (
     <>
       <form
@@ -96,16 +82,7 @@ function SignUp({ toggleForm, onClose }) {
         data-testid="signup-form"
         onSubmit={handleSubmit}
       >
-        {/* Header with icon */}
-        <img
-          src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
-          alt="openlogo"
-          className={styles.logo}
-        />
-        <h2 className={styles["title"]}>{SIGNUP.title}</h2>
-        <p className={styles.description}>{SIGNUP.description}</p>
-
-        {/* Form fields */}
+        <h2 className={styles.title}>{SIGNUP.title}</h2>
         <div className={styles["form-width"]}>
           {SIGNUP["fields"].map((field) => {
             if (field.name === "password") {
@@ -201,92 +178,44 @@ function SignUp({ toggleForm, onClose }) {
             );
           })}
         </div>
-
-        {/* Password strength card */}
-        <div className={styles["strength-card"]}>
-          <div className={styles["strength-bars"]}>
-            {[0, 1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className={`${styles["strength-bar"]} ${
-                  i < strengthCount ? styles["strength-bar-active"] : ""
-                }`}
-              />
-            ))}
-          </div>
-
-          <ul className={styles["criteria-list"]}>
-            {passwordCriteria.map((criterion) => (
-              <li
-                key={criterion.label}
-                className={`${styles["criteria-item"]} ${
-                  criterion.met ? styles["met"] : ""
-                }`}
-              >
-                <span className={styles["criteria-icon"]}>
-                  {criterion.met ? (
-                    <CheckCircle2 size={12} />
-                  ) : (
-                    <Circle size={12} />
-                  )}
-                </span>
-                {criterion.label}
-              </li>
-            ))}
-          </ul>
+        <div className={styles["disclaimer-container"]}>
+          <label htmlFor="agree-terms" className={styles["disclaimer-label"]}>
+            By Signing Up, you agree to our{" "}
+            <Link
+              to={SIGNUP.termsUrl}
+              onClick={(event) => {
+                onClose();
+                handleNavigation(event, SIGNUP.termsUrl, navigate);
+              }}
+            >
+              Terms of Service
+            </Link>{" "}
+            and that you have read our{" "}
+            <Link
+              to={SIGNUP.privacyUrl}
+              onClick={(event) => {
+                onClose();
+                handleNavigation(event, SIGNUP.privacyUrl, navigate);
+              }}
+            >
+              Privacy Policy
+            </Link>
+            .
+          </label>
         </div>
-
-        {/* Submit button */}
         <Button
           type="submit"
           variant="primary"
-          className={styles["submit-button"]}
+          disabled={!isFormValid || isLoading}
           isLoading={isLoading}
-          disabled={!isFormValid}
         >
           {BUTTON_TEXT.signUp}
         </Button>
       </form>
-
-      {/* Terms & Privacy */}
-      <p className={styles["signup-footer-terms"]}>
-        By Signing Up, you agree to our{" "}
-        <Link
-          to={SIGNUP.termsUrl}
-          onClick={(event) => {
-            onClose();
-            handleNavigation(event, SIGNUP.termsUrl, navigate);
-          }}
-        >
-          Terms of Service
-        </Link>{" "}
-        and{" "}
-        <Link
-          to={SIGNUP.privacyUrl}
-          onClick={(event) => {
-            onClose();
-            handleNavigation(event, SIGNUP.privacyUrl, navigate);
-          }}
-        >
-          Privacy Policy
-        </Link>
-        .
-      </p>
-
-      {/* Already have an account */}
       <hr className={styles.separator} />
-      <div className={styles["footer-wrapper"]}>
-        <div className={styles.switch}>
-          {SIGNUP.footerText}{" "}
-          <button
-            type="button"
-            className={styles["toggler"]}
-            onClick={toggleForm}
-          >
-            {SIGNUP.signinToggleButtonText}
-          </button>
-        </div>
-      </div>
+      <p onClick={toggleForm} className={styles.switch}>
+        {SIGNUP.footerText}
+      </p>
     </>
   );
 }

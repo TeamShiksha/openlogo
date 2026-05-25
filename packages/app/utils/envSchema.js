@@ -29,11 +29,6 @@ const EnvSchema = Joi.object()
     EMAIL_SERVICE_AUTH_TOKEN: Joi.string().optional(),
     ADMINSEMAILS: Joi.string().required(),
     BUCKET_KEY: Joi.string().required(),
-    CRYPTO_KEY: Joi.string().length(64).hex().required().messages({
-      "string.length":
-        "Crypto key must be exactly 64 hex characters (32 bytes)",
-      "string.hex": "Crypto key must be a valid hex string",
-    }),
   })
   .unknown(true);
 

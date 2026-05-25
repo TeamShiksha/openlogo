@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import { UserContext, AuthContext } from "../../contexts/Contexts.jsx";
+import { UserContext } from "../../contexts/Contexts.jsx";
 import { useToast } from "../../hooks/useToast.js";
 import styles from "./CreateLogo.module.css";
 import { useCanvasControls } from "../../components/logo/useCanvasControls.js";
@@ -7,14 +7,13 @@ import { useFileOperations } from "../../components/logo/useFileOperations.js";
 import TopToolbar from "../../components/logo/TopToolbar.jsx";
 import ToolbarSection from "../../components/logo/ToolbarSection.jsx";
 import LogoUploadForm from "../../components/logo/LogoUploadForm.jsx";
-import PropTypes from "prop-types";
 
-export default function CreateLogo({ openAuthModal }) {
+export default function CreateLogo() {
   const fileInputRef = useRef(null);
   const { userData } = useContext(UserContext);
-  const { isAuthenticated } = useContext(AuthContext);
   const toast = useToast();
   const isGuest = userData?.role === "GUEST";
+  const isAuthenticated = !isGuest;
 
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -76,8 +75,6 @@ export default function CreateLogo({ openAuthModal }) {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    // Mount-only: canvas and listeners must not re-init every render; handlers close over initial canvasControls
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fileOperations = useFileOperations(
@@ -132,15 +129,6 @@ export default function CreateLogo({ openAuthModal }) {
   };
 
   const handleKeyDown = (e) => {
-    const canvas = canvasControls.fabricCanvasRef.current;
-    const activeObj = canvas?.getActiveObject();
-    const isEditingText = activeObj?.isEditing;
-    const isTypingInInput = ["INPUT", "TEXTAREA"].includes(
-      document.activeElement?.tagName
-    );
-
-    if (isEditingText || isTypingInInput) return;
-
     if (e.key === "Delete" || e.key === "Backspace") {
       e.preventDefault();
       canvasControls.deleteSelected();
@@ -219,17 +207,16 @@ export default function CreateLogo({ openAuthModal }) {
   };
 
   const handleUploadClick = () => {
-    if (!isAuthenticated || isGuest) {
-      openAuthModal("/createlogo");
-      setIsUploadModalOpen(true);
+    if (!isAuthenticated) {
+      toast?.error("Please log in to upload logos");
       return;
     }
     setIsUploadModalOpen(true);
   };
 
   const handleExportClick = () => {
-    if (!isAuthenticated || isGuest) {
-      openAuthModal("/createlogo");
+    if (!isAuthenticated) {
+      toast?.error("Please log in to export logos");
       return;
     }
     fileOperations.handleExport(exportType);
@@ -293,9 +280,9 @@ export default function CreateLogo({ openAuthModal }) {
         canvasControls.fabricCanvasRef.current.isDrawingMode = newMode;
         if (newMode) {
           canvasControls.setupDrawing(currentColor, drawingConfig.brushSize);
-          setActiveTool("draw");
+          setActiveTool("draw"); // Activate draw tool
         } else {
-          setActiveTool(null);
+          setActiveTool(null); // Deactivate draw tool
         }
       },
       setBrushSize: (size) => {
@@ -359,6 +346,3 @@ export default function CreateLogo({ openAuthModal }) {
     </div>
   );
 }
-CreateLogo.propTypes = {
-  openAuthModal: PropTypes.func.isRequired,
-};

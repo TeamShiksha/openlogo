@@ -115,9 +115,9 @@ function SettingCard({ isGuest }) {
   };
 
   return (
-    <div className={styles["settings-container"]}>
+    <>
       {SETTING.map((setting, index) => (
-        <div key={index} className={styles["action-section"]}>
+        <div key={index} className={styles["action-button-wrapper"]}>
           <p className={styles["action-text"]}>{setting.subtitle}</p>
           <Button
             type="submit"
@@ -160,7 +160,7 @@ function SettingCard({ isGuest }) {
           </ConfirmationModal>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

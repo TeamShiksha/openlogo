@@ -15,13 +15,10 @@ import "./index.css";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
 import Release from "./page/release/Release.jsx";
 import CreateLogo from "./page/createlogo/CreateLogo.jsx";
-import UserSettings from "./components/usersettings/UserSettings.jsx";
 
 function App() {
   const [authModal, setAuthModal] = useState(false);
-  const [redirectAfterLogin, setRedirectAfterLogin] = useState("/dashboard");
-  const openCloseAuthModal = (redirectPath = "/dashboard") => {
-    setRedirectAfterLogin(redirectPath);
+  const openCloseAuthModal = () => {
     setAuthModal(!authModal);
   };
   return (
@@ -39,10 +36,7 @@ function App() {
           <Route path="/verify" element={<Verification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/release" element={<Release />} />
-          <Route
-            path="/createlogo"
-            element={<CreateLogo openAuthModal={openCloseAuthModal} />}
-          />
+          <Route path="/createlogo" element={<CreateLogo />} />
           <Route
             path="/dashboard"
             element={
@@ -51,23 +45,11 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute adminOnly={false}>
-                <UserSettings />
-              </ProtectedRoute>
-            }
-          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
-      <AuthModal
-        isOpen={authModal}
-        onClose={openCloseAuthModal}
-        redirectAfterLogin={redirectAfterLogin}
-      />{" "}
+      <AuthModal isOpen={authModal} onClose={openCloseAuthModal} />
     </div>
   );
 }

@@ -29,7 +29,7 @@ describe("Footer Component", () => {
       </BrowserRouter>
     );
 
-    const logoImage = screen.getByAltText(BRANDING.imageAlt);
+    const logoImage = screen.getByAltText(BRANDING.imageSrc);
     expect(logoImage).toBeInTheDocument();
     expect(logoImage).toHaveAttribute("src", BRANDING.imageSrc);
     const logoText = screen.getByText(BRANDING.brandName);

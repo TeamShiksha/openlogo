@@ -4,15 +4,10 @@ const {
   UserService,
   SendEmailService,
   UserSessionService,
-  MfaService,
 } = require("../../../services");
 const { Users } = require("../../../models");
 const { ENDPOINTS } = require("../../../utils/testconstants");
-const {
-  MOCK_USERS,
-  MOCK_USER_SESSIONS,
-  MOCK_MFA_SESSIONS,
-} = require("../../../utils/mocks");
+const { MOCK_USERS, MOCK_USER_SESSIONS } = require("../../../utils/mocks");
 const { Messages } = require("../../../utils/constants");
 const app = require("../../../server");
 const dummyPassword =
@@ -159,6 +154,9 @@ describe("SIGNIN API", () => {
 
     jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
     jest
+      .spyOn(UserSessionService.prototype, "userActiveSession")
+      .mockResolvedValue(null);
+    jest
       .spyOn(UserSessionService.prototype, "createSession")
       .mockResolvedValue(MOCK_USER_SESSIONS[0]);
 
@@ -183,45 +181,6 @@ describe("SIGNIN API", () => {
     expect(response.body).toEqual({
       statusCode: 200,
     });
-    expect(response.headers["set-cookie"]).toBeDefined();
-  });
-
-  it("200 - Signin successful and set mfa cookie ", async () => {
-    const user = new Users(MOCK_USERS[1]);
-    user.mfaEnabled = true;
-    user.matchPassword = jest.fn().mockResolvedValue(true);
-    const mfaSession = MOCK_MFA_SESSIONS[0];
-
-    jest.spyOn(UserService.prototype, "getUserByEmail").mockResolvedValue(user);
-    jest
-      .spyOn(MfaService.prototype, "createSession")
-      .mockResolvedValue(mfaSession);
-
-    const response = await request(app)
-      .post(ENDPOINTS.SIGNIN)
-      .send({ email: user.email, password: dummyPassword });
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ statusCode: 200, mfaRequired: true });
-    expect(response.headers["set-cookie"]).toBeDefined();
-  });
-  it("200 - Signin successful with mfa ", async () => {
-    const mfaSession = MOCK_MFA_SESSIONS[0];
-    jest
-      .spyOn(MfaService.prototype, "findAndUpdateActiveSession")
-      .mockResolvedValue(MOCK_MFA_SESSIONS[0]);
-    jest.spyOn(MfaService.prototype, "mfaLogin").mockResolvedValue(true);
-    jest
-      .spyOn(UserSessionService.prototype, "createSession")
-      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
-
-    const response = await request(app)
-      .post(ENDPOINTS.SIGNIN_WITH_MFA)
-      .set("Cookie", `mfaSessionId=${mfaSession.sessionId}`)
-      .send({ token: "123456" });
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ statusCode: 200 });
     expect(response.headers["set-cookie"]).toBeDefined();
   });
 });

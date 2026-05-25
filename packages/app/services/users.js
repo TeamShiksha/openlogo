@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
+
 const SubscriptionService = require("../services/subscriptions");
 const { UsersRepository, RequestRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
@@ -19,7 +20,7 @@ class UserService {
   /**
    * Gets User by Id.
    * @param {string} userId - The userId of the user.
-   * @returns {Promise<Object>} - User Object.
+   * @returns {Object} - User Object.
    */
   async getUser(userId) {
     return await this.userRepository.getById(userId);

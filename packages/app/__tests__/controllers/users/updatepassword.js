@@ -116,34 +116,6 @@ describe("Update User Password", () => {
     });
   });
 
-  it("400 - New password cannot be same as old password", async () => {
-    const mockUserModel = new Users({
-      ...MOCK_USERS[1],
-      password: bcrypt.hashSync(dummyPassword, 10),
-    });
-
-    const mockInput = {
-      currPassword: dummyPassword,
-      newPassword: dummyPassword,
-    };
-
-    jest
-      .spyOn(UserService.prototype, "getUserByEmail")
-      .mockResolvedValue(mockUserModel);
-
-    const response = await request(app)
-      .put("/api/user/password")
-      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
-      .send(mockInput);
-
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual({
-      message: Messages.SAME_PASSWORD,
-      statusCode: 400,
-      error: STATUS_CODES[400],
-    });
-  });
-
   it("500 - Something went wrong. Try again later", async () => {
     const mockUserModel = new Users({
       ...MOCK_USERS[1],
@@ -151,7 +123,7 @@ describe("Update User Password", () => {
     });
     const mockInput = {
       currPassword: dummyPassword,
-      newPassword: dummyPassword + "1",
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
@@ -180,7 +152,7 @@ describe("Update User Password", () => {
     });
     const mockInput = {
       currPassword: dummyPassword,
-      newPassword: dummyPassword + "1",
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")
@@ -206,7 +178,7 @@ describe("Update User Password", () => {
     });
     const mockInput = {
       currPassword: dummyPassword,
-      newPassword: dummyPassword + "1",
+      newPassword: dummyPassword,
     };
     jest
       .spyOn(UserService.prototype, "getUserByEmail")

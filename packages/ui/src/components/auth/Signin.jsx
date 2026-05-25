@@ -1,19 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeClosed, User } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
-import { BRANDING, BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
+import { BUTTON_TEXT, MESSAGES, SIGNIN } from "../../utils/Constants";
 import styles from "./SignForm.module.css";
 import { validate } from "../../utils/Helpers";
 import { useApi } from "../../hooks/useApi";
 import { AuthContext } from "../../contexts/Contexts";
 import { useToast } from "../../hooks/useToast.js";
-import Pin from "../pin/Pin";
-import { useTheme } from "../../hooks/useTheme.js";
 
-const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
+const SignIn = ({ toggleForm, onClose }) => {
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(SIGNIN.initialValues);
@@ -26,8 +24,6 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
-  const { isDarkMode } = useTheme();
-  const [isMFAEnabled, setIsMFAEnabled] = useState(false);
 
   const { fetchRequest, errorMsg } = useApi({
     method: "post",
@@ -137,15 +133,11 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
       if (success) {
         if (data.source && data.statusCode === 201) {
           toast.success(MESSAGES.VERIFICATION_EMAIL_SENT);
-        } else if (data.mfaRequired && data.statusCode === 200) {
-          setIsMFAEnabled(true);
         } else {
           setFormData(SIGNIN.initialValues);
           setIsAuthenticated(true);
           onClose();
-          if (window.location.pathname !== redirectAfterLogin) {
-            navigate(redirectAfterLogin);
-          }
+          navigate("/dashboard");
           toast.success(MESSAGES.SIGN_IN_SUCCESS);
         }
         setFocusedField(null);
@@ -162,9 +154,7 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
       setIsAuthenticated(true);
       setIsSubmit(false);
       onClose();
-      if (window.location.pathname !== redirectAfterLogin) {
-        navigate(redirectAfterLogin);
-      }
+      navigate("/dashboard");
       toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
     }
   };
@@ -180,85 +170,71 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <img
-          src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
-          alt="openlogo"
-          className={styles.logo}
-        />
+        <img src="/logo-images.png" alt="openlogo" className={styles.logo} />
         <h2 className={styles.title}>{SIGNIN.title}</h2>
-        <p className={styles.description}>{SIGNIN.description}</p>
 
-        {!isMFAEnabled && (
-          <div className={styles["form-width"]}>
-            {SIGNIN["fields"]
-              .filter(
-                (field) => !(isForgotPassword && field.name === "password")
-              )
-              .map((field) => {
-                if (field.name === "password" && !isForgotPassword) {
-                  return (
-                    <div
-                      key={field.name}
-                      className={styles["password-wrapper"]}
-                    >
-                      <CustomInput
-                        error={formErrors[field.name]}
-                        type={showPassword ? "text" : "password"}
-                        name={field.name}
-                        label={field.label}
-                        value={formData[field.name]}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField(field.name)}
-                        onBlur={() => setFocusedField(null)}
-                        disabled={isLoading}
-                        autoComplete={field.autoComplete}
-                      />
-                      <button
-                        type="button"
-                        className={styles["eye-button"]}
-                        onClick={() => setShowPassword(!showPassword)}
-                        aria-label={
-                          showPassword ? "Hide password" : "Show password"
-                        }
-                        tabIndex={-1}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            setShowPassword(!showPassword);
-                          }
-                        }}
-                      >
-                        {showPassword ? (
-                          <Eye size={20} />
-                        ) : (
-                          <EyeClosed size={20} />
-                        )}
-                      </button>
-                    </div>
-                  );
-                }
+        <div className={styles["form-width"]}>
+          {SIGNIN["fields"]
+            .filter((field) => !(isForgotPassword && field.name === "password"))
+            .map((field) => {
+              if (field.name === "password" && !isForgotPassword) {
                 return (
-                  <CustomInput
-                    error={formErrors[field.name]}
-                    key={field.name}
-                    type={field.type}
-                    name={field.name}
-                    label={field.label}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField(field.name)}
-                    onBlur={() => setFocusedField(null)}
-                    disabled={isLoading}
-                    autoComplete={field.autoComplete}
-                  />
+                  <div key={field.name} className={styles["password-wrapper"]}>
+                    <CustomInput
+                      error={formErrors[field.name]}
+                      type={showPassword ? "text" : "password"}
+                      name={field.name}
+                      label={field.label}
+                      value={formData[field.name]}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField(field.name)}
+                      onBlur={() => setFocusedField(null)}
+                      disabled={isLoading}
+                      autoComplete={field.autoComplete}
+                    />
+                    <button
+                      type="button"
+                      className={styles["eye-button"]}
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      tabIndex={-1}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setShowPassword(!showPassword);
+                        }
+                      }}
+                    >
+                      {showPassword ? (
+                        <Eye size={20} />
+                      ) : (
+                        <EyeClosed size={20} />
+                      )}
+                    </button>
+                  </div>
                 );
-              })}
-          </div>
-        )}
+              }
+              return (
+                <CustomInput
+                  error={formErrors[field.name]}
+                  key={field.name}
+                  type={field.type}
+                  name={field.name}
+                  label={field.label}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField(field.name)}
+                  onBlur={() => setFocusedField(null)}
+                  disabled={isLoading}
+                  autoComplete={field.autoComplete}
+                />
+              );
+            })}
+        </div>
 
-        {isMFAEnabled && <Pin onClose={onClose} />}
-
-        {isForgotPassword && !isMFAEnabled && (
+        {isForgotPassword && (
           <p
             onClick={handleToggleForgotPassword}
             className={styles["forgot-password"]}
@@ -267,7 +243,7 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
           </p>
         )}
 
-        {!isForgotPassword && !isMFAEnabled && (
+        {!isForgotPassword && (
           <p
             className={styles["forgot-password"]}
             onClick={handleToggleForgotPassword}
@@ -276,22 +252,19 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
           </p>
         )}
 
-        {!isMFAEnabled && (
-          <Button
-            type="submit"
-            variant="primary"
-            className={styles["submit-button"]}
-            isLoading={isLoading}
-            disabled={
-              !isFormValid ||
-              isSubmit ||
-              isLoading ||
-              (isForgotPassword && timer > 0)
-            }
-          >
-            {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
-          </Button>
-        )}
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isLoading}
+          disabled={
+            !isFormValid ||
+            isSubmit ||
+            isLoading ||
+            (isForgotPassword && timer > 0)
+          }
+        >
+          {isForgotPassword ? BUTTON_TEXT.submit : BUTTON_TEXT.signIn}
+        </Button>
         {isForgotPassword && timer > 0 && (
           <p className={styles["timer"]}>
             Please wait {timer} seconds before retrying.
@@ -300,17 +273,12 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
       </form>
 
       <hr className={styles.separator} />
-      <div className={styles["footer-wrapper"]}>
-        <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
-          <User size={18} /> {SIGNIN.guestAccount}
-        </p>
-        <div className={styles.switch}>
-          {SIGNIN.footerText}
-          <button onClick={toggleForm} className={styles["toggler"]}>
-            {SIGNIN.signupToggleButtonText}
-          </button>
-        </div>
-      </div>
+      <p onClick={handleGuestSignIn} className={styles["guest-sign-in"]}>
+        {SIGNIN.guestAccount}
+      </p>
+      <p onClick={toggleForm} className={styles.switch}>
+        {SIGNIN.footerText}
+      </p>
     </>
   );
 };
@@ -318,7 +286,6 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
 SignIn.propTypes = {
   toggleForm: PropTypes.func.isRequired,
   onClose: PropTypes.func,
-  redirectAfterLogin: PropTypes.string,
 };
 
 export default SignIn;

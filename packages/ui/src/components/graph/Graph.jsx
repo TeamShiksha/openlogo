@@ -10,7 +10,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState, useEffect, useMemo, useContext } from "react";
-import PropTypes from "prop-types";
 import styles from "./Graph.module.css";
 import { useApi } from "../../hooks/useApi";
 import { ThemeContext } from "../../contexts/Contexts";
@@ -30,7 +29,14 @@ const getBaseOptions = (isDarkMode) => ({
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    title: { display: false },
+    title: {
+      display: true,
+      text: "Requests",
+      color: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
+      font: {
+        size: 20,
+      },
+    },
     tooltip: {
       backgroundColor: isDarkMode ? "rgb(31, 41, 55)" : "rgb(255, 255, 255)",
       titleColor: isDarkMode ? "rgb(255, 255, 255)" : "rgb(17, 24, 39)",
@@ -39,100 +45,49 @@ const getBaseOptions = (isDarkMode) => ({
         ? "rgba(75, 85, 99, 0.3)"
         : "rgb(177, 179, 183, 0.3)",
       borderWidth: 1,
-      padding: 12,
-      displayColors: false,
-      callbacks: {
-        title: function (context) {
-          return context[0].label;
-        },
-        label: function (context) {
-          return `Requests: ${context.parsed.y}`;
-        },
-      },
     },
   },
   scales: {
     x: {
-      offset: true,
-      align: "center",
       grid: {
         color: isDarkMode
-          ? "rgba(75, 85, 99, 0.1)"
-          : "rgba(177, 179, 183, 0.1)",
-        drawBorder: true,
-        lineWidth: 1,
+          ? "rgba(75, 85, 99, 0.2)"
+          : "rgba(177, 179, 183, 0.2)",
       },
       ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(107, 114, 128)",
-        font: {
-          size: 11,
-        },
+        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
       },
     },
     y: {
       grid: {
-        color: isDarkMode ? "rgba(75, 85, 99, 0.1)" : "rgba(243, 244, 246, 1)",
-        drawBorder: false,
+        color: isDarkMode
+          ? "rgba(75, 85, 99, 0.2)"
+          : "rgba(177, 179, 183, 0.2)",
       },
       ticks: {
-        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(156, 163, 175)",
-        font: {
-          size: 11,
-        },
+        color: isDarkMode ? "rgb(156, 163, 175)" : "rgb(134, 137, 139)",
       },
-    },
-  },
-  elements: {
-    point: {
-      pointOffset: 0,
     },
   },
 });
 
-function generateDummyData(period) {
-  const days = period === "week" ? 7 : 30;
+function parseStatsDataForPeriod(data, period) {
+  if (!Array.isArray(data)) {
+    return [[], []];
+  }
+
+  const daysToDisplay = period === "week" ? 7 : 30;
+
   const today = new Date();
-  const labels = [];
-  const counts = [];
-  const weekSeed = [4, 7, 3, 12, 9, 15, 6];
-  const monthSeed = [
-    2, 5, 3, 8, 6, 11, 9, 4, 7, 13, 10, 8, 15, 12, 6, 9, 11, 7, 14, 10, 5, 8,
-    12, 9, 6, 11, 8, 13, 10, 7,
-  ];
-  const seed = period === "week" ? weekSeed : monthSeed;
-  for (let offset = days - 1; offset >= 0; offset--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - offset);
-    labels.push(
-      new Intl.DateTimeFormat("en-GB", {
-        day: "2-digit",
-        month: "short",
-      }).format(date)
-    );
-    counts.push(seed[days - 1 - offset] ?? 0);
-  }
-  return [labels, counts];
-}
-
-function parseStatsDataForPeriod(apiData) {
-  const data = apiData?.data;
-  if (!Array.isArray(data) || !apiData.startDate || !apiData.endDate) {
-    return [[], []];
-  }
-
-  const startTime = Date.parse(apiData.startDate);
-  const endTime = Date.parse(apiData.endDate);
-
-  if (Number.isNaN(startTime) || Number.isNaN(endTime)) {
-    return [[], []];
-  }
 
   const dateRange = [];
-  const dayInMs = 24 * 60 * 60 * 1000;
-  for (let time = startTime; time <= endTime; time += dayInMs) {
-    dateRange.push(new Date(time));
+  for (let offset = daysToDisplay - 1; offset >= 0; offset--) {
+    const date = new Date(today);
+    const dayPadding = 3;
+    date.setDate(date.getDate() + dayPadding);
+    date.setDate(date.getDate() - offset);
+    dateRange.push(date);
   }
-
   const dateToCount = new Map();
   data.forEach((item) => {
     if (item?.date && item.count !== undefined) {
@@ -151,7 +106,6 @@ function parseStatsDataForPeriod(apiData) {
     const label = new Intl.DateTimeFormat("en-GB", {
       day: "2-digit",
       month: "short",
-      timeZone: "UTC",
     }).format(date);
 
     labels.push(label);
@@ -185,7 +139,7 @@ function niceStep(maxValue, targetTicks = 10) {
   return rounded * powerOfTen;
 }
 
-export default function Graph({ isGuest = false }) {
+export default function Graph() {
   const { isDarkMode } = useContext(ThemeContext);
   const [selectedPeriod, setSelectedPeriod] = useState("week");
   const [chartData, setChartData] = useState({
@@ -217,17 +171,6 @@ export default function Graph({ isGuest = false }) {
   });
 
   useEffect(() => {
-    if (isGuest) {
-      const [labels, counts] = generateDummyData(selectedPeriod);
-      setChartData({ labels, dataPoints: counts });
-    }
-  }, [isGuest, selectedPeriod]);
-
-  useEffect(() => {
-    if (isGuest) {
-      return;
-    }
-
     fetchWeekData();
     fetchMonthData();
   }, []);
@@ -236,23 +179,35 @@ export default function Graph({ isGuest = false }) {
     if (weekLoaded && weekResponse) {
       setCachedWeekData(weekResponse);
     }
-  }, [weekLoaded, weekResponse]);
 
-  useEffect(() => {
     if (monthLoaded && monthResponse) {
       setCachedMonthData(monthResponse);
     }
-  }, [monthLoaded, monthResponse]);
 
-  useEffect(() => {
-    const currentCache =
-      selectedPeriod === "week" ? cachedWeekData : cachedMonthData;
-
-    if (currentCache?.data?.data) {
-      const [labels, counts] = parseStatsDataForPeriod(currentCache.data);
+    if (selectedPeriod === "week" && cachedWeekData?.data?.data) {
+      const [labels, counts] = parseStatsDataForPeriod(
+        cachedWeekData.data.data,
+        "week"
+      );
       setChartData({ labels, dataPoints: counts });
     }
-  }, [selectedPeriod, cachedWeekData, cachedMonthData]);
+
+    if (selectedPeriod === "month" && cachedMonthData?.data?.data) {
+      const [labels, counts] = parseStatsDataForPeriod(
+        cachedMonthData.data.data,
+        "month"
+      );
+      setChartData({ labels, dataPoints: counts });
+    }
+  }, [
+    selectedPeriod,
+    weekLoaded,
+    monthLoaded,
+    weekResponse,
+    monthResponse,
+    cachedWeekData,
+    cachedMonthData,
+  ]);
 
   const { yMax, step } = useMemo(() => {
     const values = chartData.dataPoints;
@@ -276,15 +231,6 @@ export default function Graph({ isGuest = false }) {
       ...baseOptions,
       scales: {
         ...baseOptions.scales,
-        x: {
-          ...baseOptions.scales.x,
-          type: "category",
-          offset: false,
-          align: "center",
-          ticks: {
-            ...baseOptions.scales.x.ticks,
-          },
-        },
         y: {
           ...baseOptions.scales.y,
           beginAtZero: true,
@@ -301,33 +247,21 @@ export default function Graph({ isGuest = false }) {
     };
   }, [yMax, step, isDarkMode]);
 
-  const dataConfig = useMemo(
-    () => ({
-      labels: chartData.labels,
-      datasets: [
-        {
-          label: "Requests",
-          data: chartData.dataPoints,
-          borderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          pointBackgroundColor: "#ffffff",
-          pointBorderColor: "#4f46e5",
-          pointBorderWidth: 2,
-          pointHoverBackgroundColor: "#ffffff",
-          pointHoverBorderColor: "#4f46e5",
-          tension: 0.4,
-          borderColor: "#818cf8",
-          spanGaps: true,
-          fill: false,
-          clip: false,
-          pointHitRadius: 10,
-          pointOffset: 0,
-        },
-      ],
-    }),
-    [chartData]
-  );
+  const dataConfig = {
+    labels: chartData.labels,
+    datasets: [
+      {
+        label: "Requests",
+        data: chartData.dataPoints,
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.2,
+        borderColor: isDarkMode ? "rgb(99, 102, 241)" : "rgb(79, 71, 228)",
+        spanGaps: true,
+        fill: false,
+      },
+    ],
+  };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -337,77 +271,53 @@ export default function Graph({ isGuest = false }) {
 
   const error = selectedPeriod === "week" ? weekError : monthError;
   if (error) {
-    return <div className={styles["error"]}>Error loading chart data</div>;
+    return <div>Error: {error}</div>;
   }
 
-  const isLoading = !isGuest && !cachedWeekData && !cachedMonthData;
+  const isLoading = !cachedWeekData && !cachedMonthData;
 
   return (
-    <div className={styles["graph-container"]}>
-      <div className={styles["card-header"]}>
-        <h2 className={styles["card-title"]}>Requests</h2>
+    <div className={styles.graph}>
+      {isLoading ? (
+        <div className={styles.mainSpinner}></div>
+      ) : (
+        chartData.labels.length > 0 && (
+          <Line
+            key={`${selectedPeriod}-${yMax}-${step}`}
+            data={dataConfig}
+            options={options}
+          />
+        )
+      )}
+
+      <div className={styles.buttonParent}>
         <button
-          className={styles["refresh-btn"]}
-          onClick={isGuest ? undefined : handleRefresh}
-          disabled={isRefreshing || isGuest}
-          aria-label={isGuest ? "Sign up to refresh data" : "Refresh"}
-          title={isGuest ? "Sign up to refresh live data" : undefined}
+          className={styles.button}
+          onClick={() => setSelectedPeriod("month")}
+          aria-pressed={selectedPeriod === "month"}
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M23 4v6h-6"></path>
-            <path d="M1 20v-6h6"></path>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-          </svg>
+          Month
         </button>
-      </div>
-
-      <div className={styles["chart-wrapper"]}>
-        {isLoading ? (
-          <div className={styles["loading"]}>Loading...</div>
-        ) : (
-          chartData.labels.length > 0 && (
-            <Line
-              key={`${selectedPeriod}-${yMax}-${step}`}
-              data={dataConfig}
-              options={options}
-            />
-          )
-        )}
-      </div>
-
-      <div className={styles["chart-controls"]}>
-        <div className={styles["segment-control"]}>
+        <button
+          className={styles.button}
+          onClick={() => setSelectedPeriod("week")}
+          aria-pressed={selectedPeriod === "week"}
+        >
+          Week
+        </button>
+        <div className={styles.refreshContainer}>
           <button
-            className={`${styles["segment-btn"]} ${
-              selectedPeriod === "month" ? styles["segment-btn-active"] : ""
-            }`}
-            onClick={() => setSelectedPeriod("month")}
+            className={styles.button}
+            onClick={handleRefresh}
+            disabled={isRefreshing}
           >
-            Month
+            Refresh
           </button>
-          <button
-            className={`${styles["segment-btn"]} ${
-              selectedPeriod === "week" ? styles["segment-btn-active"] : ""
-            }`}
-            onClick={() => setSelectedPeriod("week")}
-          >
-            Week
-          </button>
+          <div className={styles.spinnerSlot}>
+            {isRefreshing && <div className={styles.smallSpinner}></div>}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-Graph.propTypes = {
-  isGuest: PropTypes.bool,
-};

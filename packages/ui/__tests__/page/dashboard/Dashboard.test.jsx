@@ -12,10 +12,13 @@ import {
   ToastContext,
 } from "../../../src/contexts/Contexts";
 import Dashboard from "../../../src/page/dashboard/Dashboard";
-import { API_KEY_TABLE, MOCK_USER_DATA } from "../../../src/utils/Constants";
+import {
+  API_KEY_TABLE,
+  BUTTON_TEXT,
+  DASHBOARD_CARDS_TITLE,
+  MOCK_USER_DATA,
+} from "../../../src/utils/Constants";
 import Dropdown from "../../../src/components/common/dropdown/Dropdown";
-
-/* ---------------- mocks ---------------- */
 
 vi.mock("../../src/hooks/useApi.js", () => ({
   useApi: vi.fn(() => ({
@@ -51,8 +54,8 @@ const renderDashboard = ({
   userContextValue,
   authContextValue = mockAuthContext(true),
   toastContextValue = mockToastContext,
-} = {}) =>
-  render(
+} = {}) => {
+  return render(
     <ToastContext.Provider value={toastContextValue}>
       <AuthContext.Provider value={authContextValue}>
         <UserContext.Provider value={userContextValue}>
@@ -61,8 +64,7 @@ const renderDashboard = ({
       </AuthContext.Provider>
     </ToastContext.Provider>
   );
-
-/* ---------------- Dropdown helpers ---------------- */
+};
 
 const renderDropdown = ({
   options = [],
@@ -82,488 +84,332 @@ const renderDropdown = ({
   };
 };
 
-/* ---------------- Dashboard tests ---------------- */
+const renderDropdown_add = ({
+  options = ["ADMIN", "USER"],
+  selectedOption = "USER",
+  setSelectedOption = vi.fn(),
+} = {}) =>
+  render(
+    <Dropdown
+      options={options}
+      selectedOption={selectedOption}
+      setSelectedOption={setSelectedOption}
+    />
+  );
 
 describe("Dashboard", () => {
-  it("renders loading spinner when loading is true", () => {
+  it("should render loading text when loading is true", () => {
     const userContext = mockUserContext(null, true);
     renderDashboard({ userContextValue: userContext });
 
-    expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
+    const spinner = screen.getByTestId("loading-spinner");
+    expect(spinner).toBeInTheDocument();
     expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 
-  it("renders dashboard when loading is false", async () => {
+  it("should render dashboard with user data when loading is false", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     renderDashboard({ userContextValue: userContext });
 
-    await waitFor(() => {
-      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+    await waitFor(async () => {
+      const dashboard = screen.getByTestId("testid-dashboard");
+      expect(dashboard).toBeInTheDocument();
+
+      DASHBOARD_CARDS_TITLE.forEach((title) => {
+        const titleText = screen.getByText(title);
+        expect(titleText).toBeInTheDocument();
+      });
+
+      API_KEY_TABLE.headers.forEach((header) => {
+        const headerText = screen.getByText(header);
+        expect(headerText).toBeInTheDocument();
+      });
+      const apiKeyTable = screen
+        .getByText(API_KEY_TABLE.headers[0])
+        .closest("table");
+      const deleteButtons = await within(apiKeyTable).findAllByRole("button", {
+        name: BUTTON_TEXT.delete,
+      });
+      fireEvent.click(deleteButtons[0]);
     });
 
-    expect(screen.getByText("Active API Keys")).toBeInTheDocument();
-    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(userContext.fetchUserData).toHaveBeenCalled();
   });
 
-  it("allows ADMIN to switch dashboards", async () => {
+  it("should render dashboard with default values when user data is null and loading is false", async () => {
+    const userContext = mockUserContext(null, false);
+    renderDashboard({ userContextValue: userContext });
+    await waitFor(() => {
+      const emptyMessage = screen.getByText(API_KEY_TABLE.emptyMessage);
+      expect(emptyMessage).toBeInTheDocument();
+    });
+
+    expect(userContext.fetchUserData).toHaveBeenCalled();
+  });
+
+  it("should allow ADMIN to switch between ADMIN, OPERATOR, and USER dashboards", async () => {
     const adminUserContext = mockUserContext(
       { ...MOCK_USER_DATA, role: "ADMIN" },
       false
     );
-
     renderDashboard({ userContextValue: adminUserContext });
-
-    fireEvent.click(screen.getByText("USER"));
-    fireEvent.click(screen.getByText("OPERATOR"));
+    const dropdown = await screen.findByTestId("testid-dropdown");
+    const options = within(dropdown).getAllByRole("option");
+    expect(options.map((opt) => opt.value)).toEqual([
+      "ADMIN",
+      "OPERATOR",
+      "USER",
+    ]);
+    expect(dropdown.value).toBe("USER");
+    fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
 
     await waitFor(() => {
-      expect(
-        screen.getByTestId("testid-operator-dashboard")
-      ).toBeInTheDocument();
+      expect(dropdown.value).toBe("OPERATOR");
+      const operatorDashboard = screen.getByTestId("testid-operator-dashboard");
+      expect(operatorDashboard).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("OPERATOR"));
-    fireEvent.click(screen.getByText("ADMIN"));
-
+    fireEvent.change(dropdown, { target: { value: "ADMIN" } });
     await waitFor(() => {
-      expect(screen.getByTestId("testid-admin-dashboard")).toBeInTheDocument();
+      expect(dropdown.value).toBe("ADMIN");
+      const adminDashboard = screen.getByTestId("testid-admin-dashboard");
+      expect(adminDashboard).toBeInTheDocument();
     });
   });
 
-  it("allows OPERATOR to switch dashboards", async () => {
+  it("should allow OPERATOR to switch between OPERATOR and USER dashboards", async () => {
     const operatorUserContext = mockUserContext(
       { ...MOCK_USER_DATA, role: "OPERATOR" },
       false
     );
-
     renderDashboard({ userContextValue: operatorUserContext });
-
-    fireEvent.click(screen.getByText("USER"));
-    fireEvent.click(screen.getByText("OPERATOR"));
-
+    const dropdown = await screen.findByTestId("testid-dropdown");
+    const options = within(dropdown).getAllByRole("option");
+    expect(options.map((opt) => opt.value)).toEqual(["OPERATOR", "USER"]);
+    expect(dropdown.value).toBe("USER");
+    fireEvent.change(dropdown, { target: { value: "OPERATOR" } });
     await waitFor(() => {
-      expect(
-        screen.getByTestId("testid-operator-dashboard")
-      ).toBeInTheDocument();
+      expect(dropdown.value).toBe("OPERATOR");
+      const operatorDashboard = screen.getByTestId("testid-operator-dashboard");
+      expect(operatorDashboard).toBeInTheDocument();
     });
   });
 
-  it("does not render dashboard dropdown for USER role", () => {
+  it("should not render dashboard dropdown if user role is USER", () => {
     const userContext = mockUserContext(
       { ...MOCK_USER_DATA, role: "USER" },
       false
     );
-
     renderDashboard({ userContextValue: userContext });
-
-    expect(
-      screen.queryByRole("button", { name: "USER" })
-    ).not.toBeInTheDocument();
-
-    expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
+    const dropdown = screen.queryByTestId("testid-dropdown");
+    expect(dropdown).not.toBeInTheDocument();
+    const dashboard = screen.getByTestId("testid-dashboard");
+    expect(dashboard).toBeInTheDocument();
   });
 
-  it("applies warning class to expiring API keys", () => {
+  it("should apply warning className to expiring API keys", async () => {
     const expiringKey = {
       ...MOCK_USER_DATA.keys[0],
-      expires_at: new Date(Date.now() + 5 * 86400000).toISOString(),
+      expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
     const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, keys: [expiringKey] },
+      {
+        ...MOCK_USER_DATA,
+        keys: [expiringKey],
+      },
       false
     );
 
     renderDashboard({ userContextValue: userContext });
 
-    const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows[1].className).toContain("expiry-warning-row");
+    const table = screen.getByRole("table");
+    const rows = within(table).getAllByRole("row");
+    const dataRow = rows[1];
+
+    expect(dataRow.className).toContain("expiry-warning-row");
   });
 
-  it("shows empty API key message when no keys exist", async () => {
-    const userContext = mockUserContext({ ...MOCK_USER_DATA, keys: [] }, false);
-
-    renderDashboard({ userContextValue: userContext });
-
-    await waitFor(() => {
-      expect(screen.getByText(API_KEY_TABLE.emptyMessage)).toBeInTheDocument();
-    });
-  });
-
-  it("calls fetchUserData only once", () => {
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    renderDashboard({ userContextValue: userContext });
-
-    expect(userContext.fetchUserData).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe("Dashboard API Keys Count", () => {
-  it("shows singular 'key' when only one key exists", async () => {
-    const userContext = mockUserContext({
-      ...MOCK_USER_DATA,
-      keys: [MOCK_USER_DATA.keys[0]],
-    });
-    renderDashboard({ userContextValue: userContext });
-
-    await waitFor(() => {
-      expect(screen.getByText(/1 key found/i)).toBeInTheDocument();
-    });
-  });
-
-  it("shows plural 'keys' when multiple keys exist", async () => {
-    const userContext = mockUserContext(MOCK_USER_DATA);
-    renderDashboard({ userContextValue: userContext });
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(new RegExp(`${MOCK_USER_DATA.keys.length} keys found`))
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("shows 0 keys found when keys array is empty", async () => {
-    const userContext = mockUserContext({ ...MOCK_USER_DATA, keys: [] });
-    renderDashboard({ userContextValue: userContext });
-
-    await waitFor(() => {
-      expect(screen.getByText(/0 keys found/i)).toBeInTheDocument();
-    });
-  });
-});
-
-describe("Dashboard Guest Role", () => {
-  it("sets isGuest true when user role is GUEST", async () => {
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, role: "GUEST" },
-      false
-    );
-    renderDashboard({ userContextValue: userContext });
-
-    await waitFor(() => {
-      expect(screen.getByTestId("testid-dashboard")).toBeInTheDocument();
-    });
-  });
-
-  it("does not show role dropdown for GUEST user", async () => {
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, role: "GUEST" },
-      false
-    );
-    renderDashboard({ userContextValue: userContext });
-
-    expect(screen.queryByTestId("testid-dropdown")).not.toBeInTheDocument();
-  });
-});
-
-describe("Dashboard non-expiring API Keys", () => {
-  it("does not apply warning class to keys expiring beyond 7 days", () => {
-    const safeKey = {
-      ...MOCK_USER_DATA.keys[0],
-      expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
-    };
-
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, keys: [safeKey] },
-      false
-    );
-
-    renderDashboard({ userContextValue: userContext });
-
-    const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows[1].className).not.toContain("expiry-warning-row");
-  });
-
-  it("applies warning class to key expiring exactly in 7 days", () => {
-    const borderlineKey = {
-      ...MOCK_USER_DATA.keys[0],
-      expires_at: new Date(Date.now() + 7 * 86400000).toISOString(),
-    };
-
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, keys: [borderlineKey] },
-      false
-    );
-
-    renderDashboard({ userContextValue: userContext });
-
-    const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows[1].className).toContain("expiry-warning-row");
-  });
-});
-
-describe("Dashboard Modal Interactions", () => {
-  it("closes modal when cancel button is clicked", async () => {
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    renderDashboard({ userContextValue: userContext });
-
-    const table = await screen.findByRole("table");
-    const deleteButton = within(table).getAllByRole("button")[0];
-    fireEvent.click(deleteButton);
-
-    const modal = await screen.findByTestId("delete-api-key-modal");
-    const buttons = within(modal).getAllByRole("button");
-    const cancelButton = buttons[0];
-
-    fireEvent.click(cancelButton);
-
-    await waitFor(() => {
-      expect(
-        screen.queryByTestId("delete-api-key-modal")
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it("clears the confirmation input when modal is reopened", async () => {
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    renderDashboard({ userContextValue: userContext });
-
-    const table = await screen.findByRole("table");
-    const deleteButton = within(table).getAllByRole("button")[0];
-
-    fireEvent.click(deleteButton);
-    let modal = await screen.findByTestId("delete-api-key-modal");
-
-    fireEvent.change(within(modal).getByTestId("api-key-confirm-input"), {
-      target: { value: "some-text" },
-    });
-
-    const buttons = within(modal).getAllByRole("button");
-    fireEvent.click(buttons[0]);
-
-    await waitFor(() => {
-      expect(
-        screen.queryByTestId("delete-api-key-modal")
-      ).not.toBeInTheDocument();
-    });
-
-    fireEvent.click(deleteButton);
-    modal = await screen.findByTestId("delete-api-key-modal");
-
-    expect(within(modal).getByTestId("api-key-confirm-input").value).toBe("");
-  });
-});
-
-describe("Dropdown", () => {
-  it("renders nothing when options are empty", () => {
+  it("should render nothing if options array is empty", () => {
     render(
       <Dropdown options={[]} selectedOption="" setSelectedOption={vi.fn()} />
     );
     expect(screen.getByTestId("testid-dropdown").children.length).toBe(0);
   });
 
-  it("renders options when opened", () => {
-    renderDropdown({ options: ["ADMIN", "USER"], selectedOption: "USER" });
-
-    fireEvent.click(screen.getByText("USER"));
-
-    expect(screen.getByText("ADMIN")).toBeInTheDocument();
-    expect(screen.getByText("USER")).toBeInTheDocument();
+  it("should render all provided options", () => {
+    const options = ["ADMIN", "USER", "OPERATOR"];
+    renderDropdown({ options, selectedOption: "USER" });
+    const dropdown = screen.getByTestId("testid-dropdown");
+    const renderedOptions = within(dropdown).getAllByRole("option");
+    expect(renderedOptions).toHaveLength(options.length);
+    expect(renderedOptions.map((opt) => opt.value)).toEqual(options);
   });
 
-  it("is focusable", () => {
+  it("should display options in uppercase", () => {
+    const options = ["admin", "user"];
+    renderDropdown({ options, selectedOption: "user" });
+    const renderedOptions = screen.getAllByRole("option");
+    expect(renderedOptions.map((opt) => opt.textContent)).toEqual([
+      "ADMIN",
+      "USER",
+    ]);
+  });
+
+  it("should set selected option based on selectedOption prop", () => {
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+    });
+    expect(dropdown.value).toBe("ADMIN");
+  });
+
+  it("should call setSelectedOption function in case of onChange event", () => {
+    const mockSetSelectedOption = vi.fn();
+    const { dropdown } = renderDropdown({
+      options: ["ADMIN", "USER"],
+      selectedOption: "ADMIN",
+      setSelectedOption: mockSetSelectedOption,
+    });
+    fireEvent.change(dropdown, { target: { value: "USER" } });
+    expect(mockSetSelectedOption).toHaveBeenCalledWith("USER");
+  });
+
+  it("should handle undefined options without crashing", () => {
+    const { dropdown } = renderDropdown({
+      options: undefined,
+      selectedOption: "",
+    });
+    expect(dropdown.children.length).toBe(0);
+  });
+
+  it("should focusable and allows keyboard interaction", () => {
     const { dropdown } = renderDropdown({
       options: ["ADMIN", "USER"],
       selectedOption: "USER",
     });
-
     dropdown.focus();
     expect(dropdown).toHaveFocus();
   });
 
-  it("does not crash if selectedOption is not in options", () => {
+  it("should render options with special characters", () => {
+    const options = ["@dm!n", "us3r_1"];
+    renderDropdown({ options, selectedOption: "us3r_1" });
+    const renderedOptions = screen.getAllByRole("option");
+    expect(renderedOptions.map((opt) => opt.value)).toEqual([
+      "@dm!n",
+      "us3r_1",
+    ]);
+  });
+
+  it("should call fetchUserData only once", () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    renderDashboard({ userContextValue: userContext });
+    expect(userContext.fetchUserData).toHaveBeenCalledTimes(1);
+  });
+
+  it("should show empty message if user has no API keys", async () => {
+    const userWithoutKeys = { ...MOCK_USER_DATA, keys: [] };
+    const userContext = mockUserContext(userWithoutKeys, false);
+    renderDashboard({ userContextValue: userContext });
+    await waitFor(() => {
+      expect(screen.getByTestId("empty-api-message")).toHaveTextContent(
+        API_KEY_TABLE.emptyMessage
+      );
+    });
+  });
+
+  it("should not crash if selectedOption is not in options", () => {
     expect(() => {
-      renderDropdown({
-        options: ["ADMIN", "USER"],
-        selectedOption: "GUEST",
-      });
+      renderDropdown_add({ selectedOption: "GUEST" });
     }).not.toThrow();
   });
-  it("displays options in uppercase", () => {
-    renderDropdown({ options: ["admin", "user"], selectedOption: "user" });
-    const renderedOptions = screen.getAllByRole("option");
-    expect(renderedOptions.map((opt) => opt.textContent)).toEqual([
-      "ADMIN",
-      "USER",
-    ]);
-  });
-
-  it("sets selected option correctly", () => {
-    const { dropdown } = renderDropdown({
-      options: ["ADMIN", "USER"],
-      selectedOption: "ADMIN",
-    });
-    expect(dropdown.value).toBe("ADMIN");
-  });
-
-  it("calls setSelectedOption on change", () => {
-    const mockSet = vi.fn();
-    const { dropdown } = renderDropdown({
-      options: ["ADMIN", "USER"],
-      selectedOption: "ADMIN",
-      setSelectedOption: mockSet,
-    });
-    fireEvent.change(dropdown, { target: { value: "USER" } });
-    expect(mockSet).toHaveBeenCalledWith("USER");
-  });
-
-  it("handles undefined options without crashing", () => {
-    const { dropdown } = renderDropdown({
-      options: undefined,
-      selectedOption: "",
-    });
-    expect(dropdown.children.length).toBe(0);
-  });
-
-  it("renders options with special characters", () => {
-    renderDropdown({ options: ["@dm!n", "us3r_1"], selectedOption: "us3r_1" });
-    expect(screen.getAllByRole("option").map((o) => o.value)).toEqual([
-      "@dm!n",
-      "us3r_1",
-    ]);
-  });
-
-  it("displays options in uppercase", () => {
-    renderDropdown({ options: ["admin", "user"], selectedOption: "user" });
-    const renderedOptions = screen.getAllByRole("option");
-    expect(renderedOptions.map((opt) => opt.textContent)).toEqual([
-      "ADMIN",
-      "USER",
-    ]);
-  });
-
-  it("sets selected option correctly", () => {
-    const { dropdown } = renderDropdown({
-      options: ["ADMIN", "USER"],
-      selectedOption: "ADMIN",
-    });
-    expect(dropdown.value).toBe("ADMIN");
-  });
-
-  it("calls setSelectedOption on change", () => {
-    const mockSet = vi.fn();
-    const { dropdown } = renderDropdown({
-      options: ["ADMIN", "USER"],
-      selectedOption: "ADMIN",
-      setSelectedOption: mockSet,
-    });
-    fireEvent.change(dropdown, { target: { value: "USER" } });
-    expect(mockSet).toHaveBeenCalledWith("USER");
-  });
-
-  it("handles undefined options without crashing", () => {
-    const { dropdown } = renderDropdown({
-      options: undefined,
-      selectedOption: "",
-    });
-    expect(dropdown.children.length).toBe(0);
-  });
-
-  it("renders options with special characters", () => {
-    renderDropdown({ options: ["@dm!n", "us3r_1"], selectedOption: "us3r_1" });
-    expect(screen.getAllByRole("option").map((o) => o.value)).toEqual([
-      "@dm!n",
-      "us3r_1",
-    ]);
-  });
 });
-
-//new tests 2
-describe("Dashboard Key Expiry Edge Cases", () => {
-  it("applies warning class to key expiring in exactly 1 day", () => {
-    const key = {
-      ...MOCK_USER_DATA.keys[0],
-      expires_at: new Date(Date.now() + 1 * 86400000).toISOString(),
-    };
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, keys: [key] },
-      false
-    );
-    renderDashboard({ userContextValue: userContext });
-
-    const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows[1].className).toContain("expiry-warning-row");
-  });
-
-  it("does not apply warning class to key expiring in 8 days", () => {
-    const key = {
-      ...MOCK_USER_DATA.keys[0],
-      expires_at: new Date(Date.now() + 10 * 86400000).toISOString(),
-    };
-    const userContext = mockUserContext(
-      { ...MOCK_USER_DATA, keys: [key] },
-      false
-    );
-    renderDashboard({ userContextValue: userContext });
-
-    const rows = within(screen.getByRole("table")).getAllByRole("row");
-    expect(rows[1].className).not.toContain("expiry-warning-row");
-  });
-});
-
-/* ---------------- API Key Deletion ---------------- */
 
 describe("API Key Deletion", () => {
-  it("opens confirmation modal on delete click", async () => {
+  it("opens confirmation modal on delete button click", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     renderDashboard({ userContextValue: userContext });
-
-    // find table
-    const table = await screen.findByRole("table");
-
-    // find first button inside table (delete icon)
-    const deleteButton = within(table).getAllByRole("button")[0];
-
-    fireEvent.click(deleteButton);
-
-    expect(
-      await screen.findByTestId("delete-api-key-modal")
-    ).toBeInTheDocument();
-  });
-
-  it("disables confirm button when key name does not match", async () => {
-    const userContext = mockUserContext(MOCK_USER_DATA, false);
-    renderDashboard({ userContextValue: userContext });
-
-    const table = await screen.findByRole("table");
-    const deleteButton = within(table).getAllByRole("button")[0];
-    fireEvent.click(deleteButton);
+    const deleteButtons = await screen.findAllByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    fireEvent.click(deleteButtons[0]);
 
     const modal = await screen.findByTestId("delete-api-key-modal");
+    expect(modal).toBeInTheDocument();
+  });
 
-    fireEvent.change(within(modal).getByTestId("api-key-confirm-input"), {
-      target: { value: "Wrong_Key_Name" },
+  it("disables confirm button if ApiKeyName does not match", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    renderDashboard({ userContextValue: userContext });
+    const deleteButtons = await screen.findAllByRole("button", {
+      name: BUTTON_TEXT.delete,
     });
+    fireEvent.click(deleteButtons[0]);
 
-    const buttons = within(modal).getAllByRole("button");
-    const confirmButton = buttons[buttons.length - 1];
+    const modal = await screen.findByTestId("delete-api-key-modal");
+    const input = within(modal).getByTestId("api-key-confirm-input");
+    fireEvent.change(input, { target: { value: "Wrong_Key_Name" } });
 
+    const confirmButton = within(modal).getByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
     expect(confirmButton).toBeDisabled();
   });
 
-  it("enables confirm button when key name matches", async () => {
+  it("enables confirm button if ApiKeyName matches", async () => {
     const userContext = mockUserContext(MOCK_USER_DATA, false);
     renderDashboard({ userContextValue: userContext });
-
-    const table = await screen.findByRole("table");
-    const deleteButton = within(table).getAllByRole("button")[0];
-    fireEvent.click(deleteButton);
+    const deleteButtons = await screen.findAllByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    fireEvent.click(deleteButtons[0]);
 
     const modal = await screen.findByTestId("delete-api-key-modal");
-
-    const keyName = within(modal)
-      .getByText((_, el) => el?.tagName === "STRONG")
-      .textContent.trim();
-
-    fireEvent.change(within(modal).getByTestId("api-key-confirm-input"), {
-      target: { value: keyName },
+    const keyDescriptionEl = within(modal).getByText((_, element) => {
+      return element?.tagName === "STRONG";
     });
 
-    const buttons = within(modal).getAllByRole("button");
-    const confirmButton = buttons[buttons.length - 1];
+    const keyDescription = keyDescriptionEl.textContent.trim();
+    const input = within(modal).getByTestId("api-key-confirm-input");
+    fireEvent.change(input, { target: { value: keyDescription } });
+
+    const confirmButton = within(modal).getByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
 
     await waitFor(() => {
       expect(confirmButton).toBeEnabled();
+    });
+  });
+
+  it.skip("calls API and closes modal on successful deletion", async () => {
+    const userContext = mockUserContext(MOCK_USER_DATA, false);
+    const mockFetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({}) })
+    );
+    globalThis.fetch = mockFetch;
+    renderDashboard({ userContextValue: userContext });
+    const deleteButtons = await screen.findAllByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    fireEvent.click(deleteButtons[0]);
+
+    const modal = await screen.findByTestId("delete-api-key-modal");
+    const input = within(modal).getByTestId("api-key-confirm-input");
+    fireEvent.change(input, {
+      target: { value: MOCK_USER_DATA.keys[0].key_description },
+    });
+    const confirmButton = within(modal).getByRole("button", {
+      name: BUTTON_TEXT.delete,
+    });
+    fireEvent.click(confirmButton);
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalled();
+      expect(
+        screen.queryByTestId("delete-api-key-modal")
+      ).not.toBeInTheDocument();
+      expect(mockToastContext.success).toHaveBeenCalled();
     });
   });
 });

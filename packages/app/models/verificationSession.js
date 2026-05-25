@@ -29,9 +29,7 @@ const verificationSessionSchema = new mongoose.Schema({
 
   token: {
     type: String,
-    required: function () {
-      return this.sessionType === TEMPORARY_SESSION_TYPES.PASSWORD_RESET;
-    },
+    required: true,
   },
 
   usedAt: {

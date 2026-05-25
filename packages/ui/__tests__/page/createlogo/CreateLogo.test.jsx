@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CreateLogo from "../../../src/page/createlogo/CreateLogo";
-import { UserContext, AuthContext } from "../../../src/contexts/Contexts";
+import { UserContext } from "../../../src/contexts/Contexts";
 
 // Mock fabric
 vi.mock("fabric", async (importOriginal) => {
@@ -70,8 +70,6 @@ vi.mock("../../../src/hooks/useToast", () => ({
   useToast: () => mockToast,
 }));
 
-const mockOpenAuthModal = vi.fn();
-
 // Mock useCanvasControls
 vi.mock("../../../src/components/logo/useCanvasControls", () => ({
   useCanvasControls: () => {
@@ -131,13 +129,9 @@ vi.mock("../../../src/components/logo/useFileOperations", () => ({
 
 const renderCreateLogo = (role = "USER") =>
   render(
-    <AuthContext.Provider value={{ isAuthenticated: role !== "GUEST" }}>
-      {" "}
-      {/* 👈 */}
-      <UserContext.Provider value={{ userData: { role } }}>
-        <CreateLogo openAuthModal={mockOpenAuthModal} />
-      </UserContext.Provider>
-    </AuthContext.Provider>
+    <UserContext.Provider value={{ userData: { role } }}>
+      <CreateLogo />
+    </UserContext.Provider>
   );
 
 describe("CreateLogo", () => {

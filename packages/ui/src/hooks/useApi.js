@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from "react";
-import { instance } from "../api/api_instance.js";
+import { useState } from "react";
+import { instance } from "../api/api_instance";
 
 /**
  * Custom React hook to make API requests using axios.
@@ -10,20 +10,17 @@ import { instance } from "../api/api_instance.js";
  */
 
 export const useApi = (config) => {
-  const configRef = useRef(config);
-  configRef.current = config;
-
   const [data, setData] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const makeRequest = useCallback(async (dynamicConfig = {}) => {
+  const makeRequest = async (dynamicConfig = {}) => {
     setErrorMsg(null);
     setIsSuccess(false);
     setLoading(true);
 
-    const finalConfig = { ...configRef.current, ...dynamicConfig };
+    const finalConfig = { ...config, ...dynamicConfig };
     let success = false;
     try {
       const response = await instance(finalConfig);
@@ -42,14 +39,14 @@ export const useApi = (config) => {
       setLoading(false);
     }
     return success;
-  }, []);
+  };
 
-  const fetchRequest = useCallback(async (dynamicConfig = {}) => {
+  const fetchRequest = async (dynamicConfig = {}) => {
     setErrorMsg(null);
     setIsSuccess(false);
     setLoading(true);
 
-    const finalConfig = { ...configRef.current, ...dynamicConfig };
+    const finalConfig = { ...config, ...dynamicConfig };
     try {
       const response = await instance(finalConfig);
       setData(response.data);
@@ -70,7 +67,7 @@ export const useApi = (config) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
   return {
     data,
     setData,

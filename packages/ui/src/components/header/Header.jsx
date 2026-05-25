@@ -20,12 +20,10 @@ import {
 } from "../../utils/Helpers";
 import { AuthContext } from "../../contexts/Contexts";
 import { DarkModeToggle } from "../darkModeToggle/DarkModeToggle.jsx";
-import { useTheme } from "../../hooks/useTheme.js";
 
 const Header = ({ openAuthModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isDarkMode } = useTheme();
   const [activeSection, setActiveSection] = useState("");
   const currentPath = location.pathname;
   const [showMenu, setShowMenu] = useState(false);
@@ -66,8 +64,8 @@ const Header = ({ openAuthModal }) => {
         >
           <img
             className={styles["brand-img"]}
-            alt={BRANDING.imageAlt}
-            src={isDarkMode ? BRANDING.imageSrcDark : BRANDING.imageSrc}
+            alt={BRANDING.imageSrc}
+            src={BRANDING.imageSrc}
           />
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>

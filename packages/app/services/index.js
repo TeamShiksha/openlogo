@@ -13,8 +13,6 @@ const UserSessionService = require("./userSession");
 const RewardsService = require("./rewards");
 const MilestoneConfigService = require("./milestoneConfig");
 const RewardTransactionsService = require("./rewardTransactions");
-const MfaService = require("./mfa");
-
 module.exports = {
   ContactUsService,
   ImageService,
@@ -31,5 +29,4 @@ module.exports = {
   RewardsService,
   RewardTransactionsService,
   MilestoneConfigService,
-  MfaService,
 };

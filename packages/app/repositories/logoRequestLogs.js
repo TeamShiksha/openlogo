@@ -1,10 +1,7 @@
 const { LogoRequestLogs } = require("../models");
 const BaseRepository = require("./base");
 const dayjs = require("dayjs");
-const utc = require("dayjs/plugin/utc");
 const mongoose = require("mongoose");
-
-dayjs.extend(utc);
 
 /**
  * The LogoRequestLogsRepository extends BaseRepository to manage LogoRequestLogs model operations, inheriting CRUD methods like getById, getAll, create, update, and delete.
@@ -19,12 +16,15 @@ class LogoRequestLogsRepository extends BaseRepository {
   /**
    * Generic method to get aggregated data for a date range
    * @param {string} userId - The user ID to filter by
-   * @param {dayjs.Dayjs} startDate - Start of the date range
-   * @param {dayjs.Dayjs} endDate - End of the date range
+   * @param {number} days - Number of days to look back
    * @param {string} period - Period label (e.g., 'week', 'month')
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
-  async getDataForPeriod(userId, startDate, endDate, period) {
+  async getDataForPeriod(userId, days, period) {
+    const today = dayjs();
+    const startDate = today.subtract(days, "day").startOf("day");
+    const endDate = today.endOf("day");
+
     const result = await this.model.aggregate([
       {
         $match: {
@@ -80,29 +80,21 @@ class LogoRequestLogsRepository extends BaseRepository {
   }
 
   /**
-   * Get current calendar week data for a specific user
+   * Get last 7 days data for a specific user
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
   getCurrentWeekData(userId) {
-    const today = dayjs.utc();
-    const startDate = today.startOf("week").startOf("day");
-    const endDate = today.endOf("week").endOf("day");
-
-    return this.getDataForPeriod(userId, startDate, endDate, "week");
+    return this.getDataForPeriod(userId, 7, "week");
   }
 
   /**
-   * Get current calendar month data for a specific user
+   * Get last 30 days data for a specific user
    * @param {string} userId - The user ID to filter by
    * @returns {Promise<Object>} - An object containing the count of requests for each day
    */
   getCurrentMonthData(userId) {
-    const today = dayjs.utc();
-    const startDate = today.startOf("month").startOf("day");
-    const endDate = today.endOf("month").endOf("day");
-
-    return this.getDataForPeriod(userId, startDate, endDate, "month");
+    return this.getDataForPeriod(userId, 30, "month");
   }
 }
 

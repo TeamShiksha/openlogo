@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       .finally(() => {
         setIsAuthCheckComplete(true);
       });
-  }, [validateSession]);
+  }, []);
 
   const logout = useCallback(async () => {
     const success = await makeRequest();
@@ -47,14 +47,15 @@ export const AuthProvider = ({ children }) => {
     () => ({
       isAuthenticated,
       setIsAuthenticated,
-      isAuthCheckComplete,
       logout,
     }),
-    [isAuthenticated, setIsAuthenticated, isAuthCheckComplete, logout]
+    [isAuthenticated, setIsAuthenticated, logout]
   );
 
   return (
-    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>
+      {isAuthCheckComplete ? children : null}
+    </AuthContext.Provider>
   );
 };
 

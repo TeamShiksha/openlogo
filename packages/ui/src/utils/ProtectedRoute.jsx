@@ -6,24 +6,15 @@ import LoadingSpinner from "../components/common/loadingspinner/LoadingSpinner";
 
 function ProtectedRoute({ adminOnly = false, children }) {
   const location = useLocation();
-  const { isAuthenticated, isAuthCheckComplete = true } =
-    useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const { userData, loading, fetchUserData } = useContext(UserContext);
   const [hasFetched, setHasFetched] = useState(false);
   useEffect(() => {
-    if (
-      isAuthCheckComplete &&
-      adminOnly &&
-      isAuthenticated &&
-      !loading &&
-      !userData &&
-      !hasFetched
-    ) {
+    if (adminOnly && isAuthenticated && !loading && !userData && !hasFetched) {
       setHasFetched(true);
       fetchUserData();
     }
   }, [
-    isAuthCheckComplete,
     adminOnly,
     loading,
     userData,
@@ -31,21 +22,6 @@ function ProtectedRoute({ adminOnly = false, children }) {
     fetchUserData,
     isAuthenticated,
   ]);
-
-  if (!isAuthCheckComplete) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "60vh",
-        }}
-      >
-        <LoadingSpinner size={40} border={4} color="var(--primary)" />
-      </div>
-    );
-  }
 
   if (!isAuthenticated) {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
