@@ -117,6 +117,7 @@ const Messages = {
   UPDATE_API_KEY: "This Key needs an update.",
   MFA_FAILED: "Failed to enable/disable MFA",
   INCORRECT_PIN: "Incorrect pin. Please try again.",
+  SUBSCRIPTION_NOT_FOUND: "Subscription not found.",
   PLAN_ALREADY_ACTIVE: "User is already on this plan.",
   PLAN_CHANGE_SUCCESS: "Subscription plan updated successfully.",
   SESSION_NOT_FOUND: "Session not found.",

@@ -55,7 +55,7 @@ async function changeSubscriptionPlanController(req, res, next) {
       return res.status(404).json({
         statusCode: 404,
         error: STATUS_CODES[404],
-        message: "Subscription not found.",
+        message: Messages.SUBSCRIPTION_NOT_FOUND,
       });
     }
 
@@ -78,7 +78,7 @@ async function changeSubscriptionPlanController(req, res, next) {
       subscription_id: user.subscription_id,
       from_plan: subscription.type,
       to_plan: plan,
-      changed_by: req.userData.userId,
+      changed_by: new mongoose.Types.ObjectId(req.userData.userId),
       ...(reason && { reason }),
     });
 
