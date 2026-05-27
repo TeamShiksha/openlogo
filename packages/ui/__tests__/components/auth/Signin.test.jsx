@@ -158,7 +158,7 @@ describe("SignInForm UI and Functionality Tests", () => {
       </BrowserRouter>
     );
 
-    const closeButton = screen.getByText(SIGNIN.footerText);
+    const closeButton = screen.getByText(SIGNIN.signupToggleButtonText);
     fireEvent.click(closeButton);
     expect(toggleForm).toHaveBeenCalled();
   });

@@ -33,6 +33,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  z-index: 1;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -109,6 +110,8 @@ form {
   left: 40%;
   width: 200px;
   height: 200px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .result-container {
@@ -254,11 +257,7 @@ form {
   }
 
   .curved-arrow {
-    top: 40%;
-    left: 0;
-    transform: rotate(60deg);
-    width: 100px;
-    height: 100px;
+    display: none;
   }
 
   .search-box {
