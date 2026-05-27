@@ -158,10 +158,8 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
   const handleGuestSignIn = async (submitEvent) => {
     submitEvent.preventDefault();
 
-    // 1. INSTANT LOCK: Because a ref mutates synchronously, it is mathematically impossible for 2 clicks to pass this.
     if (isGuestLock.current) return;
 
-    // 2. Shut the gate
     isGuestLock.current = true;
     setIsSubmit(true);
 
@@ -177,7 +175,6 @@ const SignIn = ({ toggleForm, onClose, redirectAfterLogin = "/dashboard" }) => {
         toast.success(MESSAGES.GUEST_SIGN_IN_SUCCESS);
       }
     } finally {
-      // 3. Open the gate 1 second later
       setTimeout(() => {
         isGuestLock.current = false;
         setIsSubmit(false);
