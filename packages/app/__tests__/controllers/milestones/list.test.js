@@ -16,9 +16,6 @@ const {
 } = require("../../../utils/mocks");
 const app = require("../../../server");
 
-jest.mock("../../../services/milestoneConfig");
-jest.mock("../../../services/userSession");
-
 describe("MilestoneConfig Controller – List & Get", () => {
   // admin session stub
   const adminSession = { userId: MOCK_USERS[2] }; // role: ADMIN

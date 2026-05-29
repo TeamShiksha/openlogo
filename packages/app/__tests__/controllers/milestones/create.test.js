@@ -13,9 +13,6 @@ const {
 } = require("../../../utils/mocks");
 const app = require("../../../server");
 
-jest.mock("../../../services/milestoneConfig");
-jest.mock("../../../services/userSession");
-
 describe("MilestoneConfig Controller – Create", () => {
   const adminSession = { userId: MOCK_USERS[2] }; // ADMIN
   const endpoint = "/api/admin/milestones";

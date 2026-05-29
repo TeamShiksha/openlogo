@@ -24,9 +24,6 @@ const MOCK_BONUS_POINTS_AWARD = {
 };
 const app = require("../../../server");
 
-jest.mock("../../../services/rewards");
-jest.mock("../../../services/userSession");
-
 describe("Rewards Controller - Bonus Points", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";

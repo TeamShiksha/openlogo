@@ -15,9 +15,6 @@ const {
 } = require("../../../utils/mocks");
 const app = require("../../../server");
 
-jest.mock("../../../services/milestoneConfig");
-jest.mock("../../../services/userSession");
-
 describe("MilestoneConfig Controller – Activate", () => {
   const adminSession = { userId: MOCK_USERS[2] }; // ADMIN
   const id = MOCK_MILESTONE_CONFIG_INACTIVE._id.toString();

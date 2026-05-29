@@ -22,9 +22,6 @@ const MOCK_TRANSACTION_SEARCH_RESPONSE = {
 };
 const app = require("../../../server");
 
-jest.mock("../../../services/rewards");
-jest.mock("../../../services/userSession");
-
 describe("Rewards Controller - Search Transactions", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";

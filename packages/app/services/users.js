@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const KeyService = require("../services/keys");
-
 const SubscriptionService = require("../services/subscriptions");
 const { UsersRepository, RequestRepository } = require("../repositories");
 const { UserType } = require("../utils/constants");
@@ -20,10 +19,11 @@ class UserService {
   /**
    * Gets User by Id.
    * @param {string} userId - The userId of the user.
-   * @returns {Object} - User Object.
+   * @param {Object} session - mongoose session
+   * @returns {Promise<Object>} - User Object.
    */
-  async getUser(userId) {
-    return await this.userRepository.getById(userId);
+  async getUser(userId, { session } = {}) {
+    return await this.userRepository.getById(userId, { session });
   }
 
   /**
@@ -335,6 +335,25 @@ class UserService {
    */
   async getUserBySubscriptionId(subscriptionId) {
     return await this.userRepository.findUserBySubscriptionId(subscriptionId);
+  }
+
+  /**
+   * Lists CUSTOMER users with their subscription details.
+   * Supports search by name/email, pagination, and optionally includes deleted users.
+   * @param {Object} options
+   * @param {string} [options.search]
+   * @param {number} options.page
+   * @param {number} options.limit
+   * @param {boolean} options.includeDeleted
+   * @returns {Promise<{ users: Array, total: number }>}
+   */
+  async listUsers({ search, page, limit, includeDeleted }) {
+    return await this.userRepository.findUsersWithSubscription({
+      search,
+      page,
+      limit,
+      includeDeleted,
+    });
   }
 
   /**

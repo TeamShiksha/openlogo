@@ -21,6 +21,15 @@ const MOCK_SUBSCRIPTION = [
     usage_count: 15000,
     updatedAt: new Date(),
   },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    type: SubscriptionTypes.TEAMS,
+    key_limit: 10,
+    is_active: true,
+    usage_limit: 50000,
+    usage_count: 0,
+    updatedAt: new Date(),
+  },
 ];
 
 const MOCK_USERS = [
@@ -33,6 +42,10 @@ const MOCK_USERS = [
     is_verified: false,
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    mfa_enabled: true,
+    mfa_secret: "JBSWY3DPEHPK3PXP",
+    mfa_temp_secret: null,
+    mfa_temp_secret_expires_at: null,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -44,6 +57,10 @@ const MOCK_USERS = [
     subscription_id: new mongoose.Types.ObjectId(),
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    mfa_enabled: false,
+    mfa_secret: null,
+    mfa_temp_secret: null,
+    mfa_temp_secret_expires_at: null,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -412,8 +429,8 @@ const MOCK_LOGO_REQUESTS = [
 
 const MOCK_WEEKLY_STATS = {
   period: "week",
-  startDate: "2025-11-24",
-  endDate: "2025-12-01",
+  startDate: "2025-11-23",
+  endDate: "2025-11-29",
   summary: {
     totalCount: 15,
     totalKB: "45.50",
@@ -428,7 +445,7 @@ const MOCK_WEEKLY_STATS = {
 const MOCK_MONTHLY_STATS = {
   period: "month",
   startDate: "2025-11-01",
-  endDate: "2025-12-01",
+  endDate: "2025-11-30",
   summary: {
     totalCount: 50,
     totalKB: "150.75",
@@ -441,6 +458,7 @@ const MOCK_MONTHLY_STATS = {
 };
 
 const MOCK_SESSION_ID = "a".repeat(128);
+const MOCK_SESSION_ID_2 = "b".repeat(128);
 
 const MOCK_USER_SESSIONS = [
   {
@@ -449,13 +467,19 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Chrome", os: "Windows 10", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
-    sessionId: MOCK_SESSION_ID,
+    sessionId: MOCK_SESSION_ID_2,
     userId: MOCK_USERS[1],
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Safari", os: "iOS", deviceType: "mobile" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
     sessionId: MOCK_SESSION_ID,
@@ -463,6 +487,9 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Firefox", os: "Mac OS", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
   },
   {
     sessionId: MOCK_SESSION_ID,
@@ -470,6 +497,86 @@ const MOCK_USER_SESSIONS = [
     token: "validToken",
     usedAt: null,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    deviceInfo: { browser: "Edge", os: "Windows 11", deviceType: "desktop" },
+
+    lastActiveAt: new Date(Date.now()),
+  },
+];
+
+const MOCK_MFA_SESSIONS = [
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[0],
+    sessionType: "MFA",
+    usedAt: null,
+    expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
+  },
+  {
+    sessionId: MOCK_SESSION_ID,
+    userId: MOCK_USERS[1],
+    sessionType: "MFA",
+    usedAt: null,
+    expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
+  },
+];
+
+const MOCK_SUBSCRIPTION_LOGS = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: {
+      _id: MOCK_USERS[1]._id,
+      name: MOCK_USERS[1].name,
+      email: MOCK_USERS[1].email,
+    },
+    subscription_id: MOCK_SUBSCRIPTION[0]._id,
+    changed_by: {
+      _id: MOCK_USERS[2]._id,
+      name: MOCK_USERS[2].name,
+      email: MOCK_USERS[2].email,
+    },
+    from_plan: "HOBBY",
+    to_plan: "PRO",
+    reason: "Upgrade requested by user",
+    createdAt: new Date("2026-05-01T10:00:00Z"),
+    updatedAt: new Date("2026-05-01T10:00:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: {
+      _id: MOCK_USERS[1]._id,
+      name: MOCK_USERS[1].name,
+      email: MOCK_USERS[1].email,
+    },
+    subscription_id: MOCK_SUBSCRIPTION[1]._id,
+    changed_by: {
+      _id: MOCK_USERS[2]._id,
+      name: MOCK_USERS[2].name,
+      email: MOCK_USERS[2].email,
+    },
+    from_plan: "PRO",
+    to_plan: "HOBBY",
+    reason: null,
+    createdAt: new Date("2026-04-15T08:30:00Z"),
+    updatedAt: new Date("2026-04-15T08:30:00Z"),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    user_id: {
+      _id: MOCK_USERS[0]._id,
+      name: MOCK_USERS[0].name,
+      email: MOCK_USERS[0].email,
+    },
+    subscription_id: MOCK_SUBSCRIPTION[0]._id,
+    changed_by: {
+      _id: MOCK_USERS[2]._id,
+      name: MOCK_USERS[2].name,
+      email: MOCK_USERS[2].email,
+    },
+    from_plan: "HOBBY",
+    to_plan: "PRO",
+    reason: "Special promotion",
+    createdAt: new Date("2026-03-20T14:00:00Z"),
+    updatedAt: new Date("2026-03-20T14:00:00Z"),
   },
 ];
 
@@ -681,7 +788,10 @@ module.exports = {
   MOCK_WEEKLY_STATS,
   MOCK_MONTHLY_STATS,
   MOCK_SESSION_ID,
+  MOCK_SESSION_ID_2,
   MOCK_USER_SESSIONS,
+  MOCK_MFA_SESSIONS,
+  MOCK_SUBSCRIPTION_LOGS,
   MOCK_IMAGE_DETAIL,
   MOCK_IMAGE_DETAILS_LIST,
   MOCK_CLOUDFRONT_URLS,

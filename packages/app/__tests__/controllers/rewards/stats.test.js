@@ -25,9 +25,6 @@ const MOCK_USER_TRANSACTION_STATS = {
 };
 const app = require("../../../server");
 
-jest.mock("../../../services/rewards");
-jest.mock("../../../services/userSession");
-
 describe("Rewards Controller - Transaction Stats", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";

@@ -12,6 +12,8 @@ const createLogoRequestRouter = require("./createLogoRequest");
 const rewardsRouter = require("./rewards");
 const adminRewardsRouter = require("./admin/rewards");
 const adminMilestonesRouter = require("./admin/milestoneConfig");
+const adminUsersRouter = require("./admin");
+
 const privateRouteCORS = {
   origin: (origin, callback) => {
     if (origin === process.env.CLIENT_URL || !origin) {
@@ -49,6 +51,12 @@ router.use(
 );
 router.use("/rewards", baseLimiter, cors(privateRouteCORS), rewardsRouter);
 router.use("/admin/rewards", baseLimiter, adminRewardsRouter);
+router.use(
+  "/admin/users",
+  baseLimiter,
+  cors(privateRouteCORS),
+  adminUsersRouter
+);
 
 router.use("/admin/milestones", baseLimiter, adminMilestonesRouter);
 module.exports = router;

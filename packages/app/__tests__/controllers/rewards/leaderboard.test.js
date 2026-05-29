@@ -9,8 +9,6 @@ const { RewardsService } = require("../../../services");
 const { MOCK_USERS } = require("../../../utils/mocks");
 const app = require("../../../server");
 
-jest.mock("../../../services/rewards");
-
 describe("Rewards Controller - Leaderboard", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";

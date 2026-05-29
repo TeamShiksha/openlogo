@@ -43,9 +43,6 @@ const MOCK_AUDIT_TRAIL_LIST = [
 ];
 const app = require("../../../server");
 
-jest.mock("../../../services/rewards");
-jest.mock("../../../services/userSession");
-
 describe("Rewards Controller - Audit Trail", () => {
   beforeAll(() => {
     process.env.JWT_SECRET = "Your_JWT_SECRET";
