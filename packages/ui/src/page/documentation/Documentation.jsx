@@ -5,6 +5,7 @@ import styles from "./Documentation.module.css";
 import CodeBlock from "./CodeBlock.jsx";
 import ContactForm from "../../components/contact/ContactForm.jsx";
 import { getBaseApiUrl } from "../../utils/Helpers.js";
+import PageMeta from "../../components/common/PageMeta.jsx";
 
 const RESPONSE_EXAMPLES = {
   "Logo Retrieval": `{
@@ -47,6 +48,11 @@ const Documentation = () => {
 
   return (
     <section className={`container ${styles.documentationShell}`}>
+      <PageMeta
+        title="API Documentation"
+        path="/docs"
+        description="Comprehensive guide to the Openlogo API. Fetch brand logos by domain with simple HTTP requests, with examples in JavaScript, Python, and more."
+      />
       <div className={styles.docsLayout}>
         <main className={styles.contentColumn}>
           <section className={styles.introPanel}>
