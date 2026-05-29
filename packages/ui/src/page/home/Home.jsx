@@ -9,6 +9,7 @@ import FAQs from "../../components/faqs/FAQs";
 import Pricing from "../../components/pricing/Pricing";
 import GetInTouch from "../../components/contact/GetInTouch";
 import { AuthContext, UserContext } from "../../contexts/Contexts";
+import PageMeta from "../../components/common/PageMeta";
 
 const Home = ({ openAuthModal }) => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const Home = ({ openAuthModal }) => {
 
   return (
     <div className="container">
+      <PageMeta
+        path="/"
+        description="Tap into a vast logo library with thousands of brands. Openlogo gives developers a simple API to fetch logos by domain, plus a free in-browser logo maker."
+      />
       <HeroSection
         onPrimaryButtonClick={onHeroSectionButtonClick}
         isAuthenticated={isAuthenticated}
