@@ -72,7 +72,7 @@ class UsersRepository extends BaseRepository {
 
     if (search) {
       const escapedSearch = search.replaceAll(
-        /[.*+?^${}()|[\]\\]/g,
+        /[.*+?^${}()|[\\\]\\]/g,
         String.raw`\$&`
       );
       const regex = new RegExp(escapedSearch, "i");

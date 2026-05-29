@@ -14,6 +14,7 @@ const UsersService = require("../services/users");
  */
 async function changeSubscriptionPlanController(req, res, next) {
   try {
+    const session = await mongoose.startSession();
     const subscriptionService = new SubscriptionService();
     const usersService = new UsersService();
 
@@ -38,54 +39,60 @@ async function changeSubscriptionPlanController(req, res, next) {
         message: Messages.INVALID_USER_ID,
       });
     }
+    const result = await session.withTransaction(async () => {
+      const user = await usersService.getUser(userId, { session });
+      if (!user) {
+        return res.status(404).json({
+          statusCode: 404,
+          error: STATUS_CODES[404],
+          message: Messages.USER_NOT_FOUND,
+        });
+      }
 
-    const user = await usersService.getUser(userId);
-    if (!user) {
-      return res.status(404).json({
-        statusCode: 404,
-        error: STATUS_CODES[404],
-        message: Messages.USER_NOT_FOUND,
-      });
-    }
-
-    const subscription = await subscriptionService.getSubscription(
-      user.subscription_id
-    );
-    if (!subscription) {
-      return res.status(404).json({
-        statusCode: 404,
-        error: STATUS_CODES[404],
-        message: "Subscription not found.",
-      });
-    }
-
-    if (subscription.type === plan) {
-      return res.status(400).json({
-        statusCode: 400,
-        error: STATUS_CODES[400],
-        message: Messages.PLAN_ALREADY_ACTIVE,
-      });
-    }
-
-    const updatedSubscription =
-      await subscriptionService.changeSubscriptionPlan(
+      const subscription = await subscriptionService.getSubscription(
         user.subscription_id,
-        plan
+        { session }
       );
+      if (!subscription) {
+        return res.status(404).json({
+          statusCode: 404,
+          error: STATUS_CODES[404],
+          message: Messages.SUBSCRIPTION_NOT_FOUND,
+        });
+      }
 
-    await subscriptionService.createSubscriptionLog({
-      user_id: user._id,
-      subscription_id: user.subscription_id,
-      from_plan: subscription.type,
-      to_plan: plan,
-      changed_by: req.userData.userId,
-      ...(reason && { reason }),
+      if (subscription.type === plan) {
+        return res.status(400).json({
+          statusCode: 400,
+          error: STATUS_CODES[400],
+          message: Messages.PLAN_ALREADY_ACTIVE,
+        });
+      }
+
+      const updatedSubscription =
+        await subscriptionService.changeSubscriptionPlan(
+          user.subscription_id,
+          plan,
+          { session }
+        );
+
+      await subscriptionService.createSubscriptionLog(
+        {
+          user_id: user._id,
+          subscription_id: user.subscription_id,
+          from_plan: subscription.type,
+          to_plan: plan,
+          changed_by: new mongoose.Types.ObjectId(req.userData.userId),
+          ...(reason && { reason }),
+        },
+        { session }
+      );
+      return updatedSubscription;
     });
-
     return res.status(200).json({
       statusCode: 200,
       message: Messages.PLAN_CHANGE_SUCCESS,
-      data: updatedSubscription,
+      data: result,
     });
   } catch (err) {
     next(err);

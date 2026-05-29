@@ -25,6 +25,12 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
     jest
       .spyOn(UserSessionService.prototype, "validateSession")
       .mockResolvedValue(ADMIN_SESSION);
+
+    const mockSession = {
+      withTransaction: jest.fn(async (fn) => await fn()),
+      endSession: jest.fn(),
+    };
+    jest.spyOn(mongoose, "startSession").mockResolvedValue(mockSession);
   });
   afterAll(() => {
     delete process.env.CLIENT_PROXY_URL;
@@ -141,7 +147,8 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
         from_plan: "HOBBY",
         to_plan: "PRO",
         reason: "Upgrade requested",
-      })
+      }),
+      expect.objectContaining({ session: expect.any(Object) })
     );
   });
 
@@ -175,7 +182,8 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
         subscription_id: MOCK_SUBSCRIPTION[1]._id,
         from_plan: "PRO",
         to_plan: "HOBBY",
-      })
+      }),
+      expect.objectContaining({ session: expect.any(Object) })
     );
   });
 
@@ -203,5 +211,61 @@ describe("PATCH /api/admin/users/:userId/subscription", () => {
       .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
 
     expect(response.status).toBe(401);
+  });
+
+  it("passes session to getSubscription and changeSubscriptionPlan", async () => {
+    const updatedSub = { ...MOCK_SUBSCRIPTION[1] };
+    const getUserSpy = jest
+      .spyOn(UsersService.prototype, "getUser")
+      .mockResolvedValue({
+        _id: MOCK_USERS[1]._id,
+        subscription_id: MOCK_SUBSCRIPTION[0]._id,
+      });
+    const getSubSpy = jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue({ ...MOCK_SUBSCRIPTION[0], type: "HOBBY" });
+    const changeSpy = jest
+      .spyOn(SubscriptionService.prototype, "changeSubscriptionPlan")
+      .mockResolvedValue(updatedSub);
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscriptionLog")
+      .mockResolvedValue({});
+
+    await request(app)
+      .patch(`/api/admin/users/${VALID_USER_ID}/subscription`)
+      .send({ plan: "PRO" })
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
+
+    const { session } = getUserSpy.mock.calls[0][1];
+    expect(session).toBeDefined();
+    expect(getSubSpy).toHaveBeenCalledWith(MOCK_SUBSCRIPTION[0]._id, {
+      session,
+    });
+    expect(changeSpy).toHaveBeenCalledWith(MOCK_SUBSCRIPTION[0]._id, "PRO", {
+      session,
+    });
+  });
+
+  it("500 - transaction rolls back when createSubscriptionLog fails", async () => {
+    jest.spyOn(UsersService.prototype, "getUser").mockResolvedValue({
+      _id: MOCK_USERS[1]._id,
+      subscription_id: MOCK_SUBSCRIPTION[0]._id,
+    });
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue({ ...MOCK_SUBSCRIPTION[0], type: "HOBBY" });
+    jest
+      .spyOn(SubscriptionService.prototype, "changeSubscriptionPlan")
+      .mockResolvedValue({ ...MOCK_SUBSCRIPTION[1] });
+    jest
+      .spyOn(SubscriptionService.prototype, "createSubscriptionLog")
+      .mockRejectedValue(new Error("Log creation failed"));
+
+    const response = await request(app)
+      .patch(`/api/admin/users/${VALID_USER_ID}/subscription`)
+      .send({ plan: "PRO" })
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
+
+    expect(response.status).toBe(500);
   });
 });

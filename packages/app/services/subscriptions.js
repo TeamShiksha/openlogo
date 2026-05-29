@@ -19,8 +19,10 @@ class SubscriptionService {
    * @param {string} subscriptionId - The subscription_id of the user.
    * @returns {Promise<Object>} - Subscription Object.
    */
-  async getSubscription(subscriptionId) {
-    return await this.subscriptionRepository.getById(subscriptionId);
+  async getSubscription(subscriptionId, { session } = {}) {
+    return await this.subscriptionRepository.getById(subscriptionId, {
+      session,
+    });
   }
 
   /**
@@ -58,7 +60,7 @@ class SubscriptionService {
    * @param {string} newPlanType - "HOBBY" or "PRO".
    * @returns {Promise<Object>} - Updated subscription document.
    */
-  async changeSubscriptionPlan(subscriptionId, newPlanType) {
+  async changeSubscriptionPlan(subscriptionId, newPlanType, { session } = {}) {
     const planTemplate =
       newPlanType === SubscriptionTypes.PRO
         ? ProSubscriptionPlan
@@ -72,10 +74,15 @@ class SubscriptionService {
       updated_at: new Date(),
     };
 
+    const options = { new: true, runValidators: true };
+    if (session) {
+      options.session = session;
+    }
+
     return await this.subscriptionRepository.findOneAndUpdate(
       { _id: subscriptionId },
       { $set: update },
-      { new: true, runValidators: true }
+      options
     );
   }
 
@@ -84,7 +91,10 @@ class SubscriptionService {
    * @param {Object} logData - { user_id, subscription_id, changed_by, from_plan, to_plan, reason? }
    * @returns {Promise<Object>} - Created log document.
    */
-  async createSubscriptionLog(logData) {
+  async createSubscriptionLog(logData, { session } = {}) {
+    if (session) {
+      return await this.subscriptionLogRepository.create(logData, { session });
+    }
     return await this.subscriptionLogRepository.create(logData);
   }
 

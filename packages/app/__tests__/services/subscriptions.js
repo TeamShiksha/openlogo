@@ -39,7 +39,7 @@ describe("Subscription Service", () => {
     expect(result).toBeDefined();
     expect(result.key_limit).toBe(2);
     expect(result.usage_limit).toBe(5000);
-    expect(spy).toHaveBeenCalledWith(subscription.id);
+    expect(spy).toHaveBeenCalledWith(subscription.id, { session: undefined });
   });
 
   it("Return null for invalid subscription id", async () => {
@@ -50,7 +50,7 @@ describe("Subscription Service", () => {
 
     const result = await subscriptionService.getSubscription(subscriptionId);
     expect(result).toBe(null);
-    expect(spy).toHaveBeenCalledWith(subscriptionId);
+    expect(spy).toHaveBeenCalledWith(subscriptionId, { session: undefined });
   });
 
   it("Get total usage count for all subscriptions", async () => {
@@ -155,5 +155,96 @@ describe("Subscription Service", () => {
 
     expect(result).toEqual(logData);
     expect(spy).toHaveBeenCalledWith(logData);
+  });
+
+  describe("Session propagation", () => {
+    it("getSubscription forwards session to repository getById", async () => {
+      const subscriptionId = MOCK_SUBSCRIPTION[0]._id;
+      const mockSession = { id: "mock-session" };
+      const spy = jest
+        .spyOn(SubscriptionsRepository.prototype, "getById")
+        .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
+
+      await subscriptionService.getSubscription(subscriptionId, {
+        session: mockSession,
+      });
+
+      expect(spy).toHaveBeenCalledWith(subscriptionId, {
+        session: mockSession,
+      });
+    });
+
+    it("getSubscription without session passes undefined session to repository", async () => {
+      const subscriptionId = MOCK_SUBSCRIPTION[0]._id;
+      const spy = jest
+        .spyOn(SubscriptionsRepository.prototype, "getById")
+        .mockResolvedValue(MOCK_SUBSCRIPTION[0]);
+
+      await subscriptionService.getSubscription(subscriptionId);
+
+      expect(spy).toHaveBeenCalledWith(subscriptionId, {
+        session: undefined,
+      });
+    });
+
+    it("changeSubscriptionPlan forwards session to repository findOneAndUpdate", async () => {
+      const subscriptionId = MOCK_SUBSCRIPTION[0]._id;
+      const mockSession = { id: "mock-session" };
+      const spy = jest
+        .spyOn(SubscriptionsRepository.prototype, "findOneAndUpdate")
+        .mockResolvedValue(MOCK_SUBSCRIPTION[1]);
+
+      await subscriptionService.changeSubscriptionPlan(subscriptionId, "PRO", {
+        session: mockSession,
+      });
+
+      expect(spy).toHaveBeenCalledWith(
+        { _id: subscriptionId },
+        expect.objectContaining({
+          $set: expect.objectContaining({ type: "PRO" }),
+        }),
+        expect.objectContaining({ session: mockSession })
+      );
+    });
+
+    it("changeSubscriptionPlan without session omits session from options", async () => {
+      const subscriptionId = MOCK_SUBSCRIPTION[0]._id;
+      const spy = jest
+        .spyOn(SubscriptionsRepository.prototype, "findOneAndUpdate")
+        .mockResolvedValue(MOCK_SUBSCRIPTION[1]);
+
+      await subscriptionService.changeSubscriptionPlan(subscriptionId, "PRO");
+
+      expect(spy).toHaveBeenCalledWith(
+        { _id: subscriptionId },
+        expect.any(Object),
+        { new: true, runValidators: true }
+      );
+    });
+
+    it("createSubscriptionLog forwards session to repository create", async () => {
+      const logData = { user_id: "user123", changed_by: "admin456" };
+      const mockSession = { id: "mock-session" };
+      const spy = jest
+        .spyOn(SubscriptionLogRepository.prototype, "create")
+        .mockResolvedValue(logData);
+
+      await subscriptionService.createSubscriptionLog(logData, {
+        session: mockSession,
+      });
+
+      expect(spy).toHaveBeenCalledWith(logData, { session: mockSession });
+    });
+
+    it("createSubscriptionLog without session does not pass session to repository", async () => {
+      const logData = { user_id: "user123", changed_by: "admin456" };
+      const spy = jest
+        .spyOn(SubscriptionLogRepository.prototype, "create")
+        .mockResolvedValue(logData);
+
+      await subscriptionService.createSubscriptionLog(logData);
+
+      expect(spy).toHaveBeenCalledWith(logData);
+    });
   });
 });
