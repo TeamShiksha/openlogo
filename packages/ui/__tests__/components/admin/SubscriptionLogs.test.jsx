@@ -524,7 +524,7 @@ describe("SubscriptionLogs", () => {
     render(<SubscriptionLogs />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByText("—")).toBeInTheDocument();
+      expect(screen.getAllByText("—").length).toBeGreaterThan(0);
     });
   });
 

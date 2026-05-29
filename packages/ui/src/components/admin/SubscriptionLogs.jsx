@@ -5,6 +5,7 @@ import { useToast } from "../../hooks/useToast";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import styles from "./UserSubscriptions.module.css"; // reuse shared table/badge/pagination styles
 import { SUBSCRIPTION_LOGS } from "../../utils/Constants.js";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,7 +26,7 @@ function UserInfo({ user }) {
   return (
     <>
       <p className={styles["user-name"]}>{user?.name ?? "—"}</p>
-      <p className={styles["user-email"]}>{user?.email ?? ""}</p>
+      <p className={styles["user-email"]}>{user?.email ?? "—"}</p>
     </>
   );
 }
@@ -48,6 +49,7 @@ UsageText.propTypes = {
 function PaginationButton({ label, disabled, onClick, ariaLabel }) {
   return (
     <button
+      type="button"
       className={styles["page-btn"]}
       disabled={disabled}
       onClick={onClick}
@@ -59,7 +61,7 @@ function PaginationButton({ label, disabled, onClick, ariaLabel }) {
 }
 
 PaginationButton.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node.isRequired,
   disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   ariaLabel: PropTypes.string.isRequired,
@@ -152,13 +154,15 @@ function SubscriptionLogs() {
       if (success && data) {
         setLogs(data.data ?? []);
         setTotalPages(data.totalPages ?? 1);
+        if (page > (data.totalPages ?? 1)) {
+          setPage(1);
+        }
       } else if (error) {
         toast.error(error);
       }
       setInitialized(true);
     };
     load();
-    // fetchRequest and toast are stable refs; only page drives reload
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
@@ -178,7 +182,7 @@ function SubscriptionLogs() {
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <PaginationButton
-            label="&laquo;"
+            label={<ChevronLeft size={16} aria-hidden="true" />}
             disabled={page === 1 || loading}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             ariaLabel="Previous page"
@@ -187,7 +191,7 @@ function SubscriptionLogs() {
             Page {page} of {totalPages}
           </span>
           <PaginationButton
-            label="&raquo;"
+            label={<ChevronRight size={16} aria-hidden="true" />}
             disabled={page === totalPages || loading}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             ariaLabel="Next page"

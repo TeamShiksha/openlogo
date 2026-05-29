@@ -9,7 +9,7 @@ import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../common/input/CustomInput.jsx";
 import styles from "./UserSubscriptions.module.css";
 import { USER_SUBSCRIPTIONS } from "../../utils/Constants.js";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
 
 const PLANS = ["HOBBY", "PRO"];
 const ITEMS_PER_PAGE = 10;
@@ -66,7 +66,7 @@ function renderTable(loading, initialized, users, styles, handleOpenModal) {
           {users.map((user) => (
             <tr key={user._id}>
               <td>
-                <p className={styles["user-name"]}>{user.name}</p>
+                <p className={styles["user-name"]}>{user.name ?? "—"}</p>
                 <p className={styles["user-email"]}>{user.email}</p>
                 {user.created_at && (
                   <p className={styles["user-joined"]}>
@@ -142,6 +142,9 @@ function UserSubscriptions({ embedded = false }) {
       if (success && data) {
         setUsers(data.data ?? []);
         setTotalPages(data.totalPages ?? 1);
+        if (page > (data.totalPages ?? 1)) {
+          setPage(1);
+        }
       } else if (error) {
         toast.error(error);
       }
@@ -165,14 +168,13 @@ function UserSubscriptions({ embedded = false }) {
     setReason("");
   };
 
-  // ── Optimistic plan change ────────────────────────────
   const handleConfirmChange = async () => {
     if (!selectedUser || !newPlan) return;
 
     const userId = selectedUser._id;
     const previousPlan = selectedUser.subscription?.type;
     const planToSet = newPlan;
-    const reasonToSend = reason.trim();
+    const reasonToSend = reason;
 
     setUsers((prev) =>
       prev.map((u) =>
@@ -185,7 +187,7 @@ function UserSubscriptions({ embedded = false }) {
     handleCloseModal();
 
     try {
-      await instance({
+      const { data: response } = await instance({
         method: "PATCH",
         url: `/admin/users/${userId}/subscription`,
         data: {
@@ -193,6 +195,13 @@ function UserSubscriptions({ embedded = false }) {
           ...(reasonToSend && { reason: reasonToSend }),
         },
       });
+      if (response?.data) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u._id === userId ? { ...u, subscription: response.data } : u
+          )
+        );
+      }
       toast.success(USER_SUBSCRIPTIONS.toasts.success);
     } catch (err) {
       setUsers((prev) =>
@@ -241,23 +250,25 @@ function UserSubscriptions({ embedded = false }) {
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
+            type="button"
             className={styles["page-btn"]}
             disabled={page === 1 || loading}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             aria-label="Previous page"
           >
-            &laquo;
+            <ChevronLeft size={16} aria-hidden="true" />
           </button>
           <span className={styles["page-indicator"]}>
             Page {page} of {totalPages}
           </span>
           <button
+            type="button"
             className={styles["page-btn"]}
             disabled={page === totalPages || loading}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             aria-label="Next page"
           >
-            &raquo;
+            <ChevronRight size={16} aria-hidden="true" />
           </button>
         </div>
       )}
