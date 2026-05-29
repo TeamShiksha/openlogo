@@ -10,8 +10,16 @@ const { UserSessionService } = require("../../../services");
 const {
   MOCK_SESSION_ID,
   MOCK_USERS,
-  MOCK_TRANSACTION_SEARCH_RESPONSE,
+  MOCK_REWARD_TRANSACTIONS_LIST,
 } = require("../../../utils/mocks");
+
+const MOCK_TRANSACTION_SEARCH_RESPONSE = {
+  data: MOCK_REWARD_TRANSACTIONS_LIST,
+  total: 3,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
+};
 const app = require("../../../server");
 
 jest.mock("../../../services/rewards");

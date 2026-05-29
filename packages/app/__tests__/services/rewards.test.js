@@ -10,24 +10,210 @@ const RewardsService = require("../../services/rewards");
 const { SubscriptionTypes } = require("../../utils/constants");
 const mongoose = require("mongoose");
 const {
+  MOCK_USERS,
+  MOCK_IMAGES,
   MOCK_LOG_ENTRY_HOBBY,
-  MOCK_LOG_ENTRY_SELF_USAGE,
-  MOCK_LOG_ENTRY_DUPLICATE,
   MOCK_LOG_ENTRY_VALID,
-  createMockRewardRecordEmpty,
-  createMockRewardRecord5Achieved,
-  MOCK_ELIGIBLE_LOG_ENTRIES_5,
-  MOCK_ELIGIBLE_LOG_ENTRIES_5_SECOND,
-  MOCK_ELIGIBLE_LOG_ENTRIES_15,
-  MOCK_REWARD_CREATOR_USER,
-  MOCK_REWARD_USER_WITH_POINTS,
-  MOCK_USER_REWARD_RECORDS,
-  MOCK_UNREVERSED_TRANSACTION,
-  MOCK_REVERSED_TRANSACTION,
-  MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD,
-  REWARD_TEST_IMAGE_ID,
   MOCK_MILESTONE_CONFIG,
 } = require("../../utils/mocks");
+
+const REWARD_TEST_IMAGE_ID = new mongoose.Types.ObjectId();
+const REWARD_TEST_CREATOR_ID = new mongoose.Types.ObjectId();
+
+const REWARD_TEST_PRO_USER_IDS_10 = Array.from(
+  { length: 10 },
+  () => new mongoose.Types.ObjectId()
+);
+const REWARD_TEST_PRO_USER_IDS_15 = Array.from(
+  { length: 15 },
+  () => new mongoose.Types.ObjectId()
+);
+
+const createMockRewardRecordEmpty = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_id: REWARD_TEST_CREATOR_ID,
+  unique_pro_users: [],
+  unique_pro_users_count: 0,
+  milestones_achieved: [],
+  total_points_awarded: 0,
+});
+
+const createMockRewardRecord5Achieved = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_id: REWARD_TEST_CREATOR_ID,
+  unique_pro_users: [...REWARD_TEST_PRO_USER_IDS_10.slice(0, 5)],
+  unique_pro_users_count: 5,
+  milestones_achieved: [
+    { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+  ],
+  total_points_awarded: 10,
+});
+
+const MOCK_ELIGIBLE_LOG_ENTRIES_5 = REWARD_TEST_PRO_USER_IDS_10.slice(0, 5).map(
+  (userId) => ({
+    _id: new mongoose.Types.ObjectId(),
+    user_id: userId,
+    image_id: REWARD_TEST_IMAGE_ID,
+    user_plan: SubscriptionTypes.PRO,
+    is_reward_eligible: true,
+    reward_eligibility_reason: "VALID",
+    createdAt: new Date(),
+  })
+);
+
+const MOCK_ELIGIBLE_LOG_ENTRIES_5_SECOND = REWARD_TEST_PRO_USER_IDS_10.slice(
+  5,
+  10
+).map((userId) => ({
+  _id: new mongoose.Types.ObjectId(),
+  user_id: userId,
+  image_id: REWARD_TEST_IMAGE_ID,
+  user_plan: SubscriptionTypes.PRO,
+  is_reward_eligible: true,
+  reward_eligibility_reason: "VALID",
+  createdAt: new Date(),
+}));
+
+const MOCK_ELIGIBLE_LOG_ENTRIES_15 = REWARD_TEST_PRO_USER_IDS_15.map(
+  (userId) => ({
+    _id: new mongoose.Types.ObjectId(),
+    user_id: userId,
+    image_id: REWARD_TEST_IMAGE_ID,
+    user_plan: SubscriptionTypes.PRO,
+    is_reward_eligible: true,
+    reward_eligibility_reason: "VALID",
+    createdAt: new Date(),
+  })
+);
+
+const MOCK_REWARD_CREATOR_USER = {
+  _id: REWARD_TEST_CREATOR_ID,
+  name: "Creator User",
+  email: "creator@example.com",
+  reward_points_current: 0,
+  reward_points_lifetime: 0,
+};
+
+const MOCK_REWARD_USER_WITH_POINTS = {
+  _id: new mongoose.Types.ObjectId(),
+  name: "Rewards User",
+  email: "rewards@example.com",
+  reward_points_current: 100,
+  reward_points_lifetime: 500,
+};
+
+const MOCK_USER_REWARD_RECORDS = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    image_id: MOCK_IMAGES[0]._id,
+    user_id: MOCK_REWARD_USER_WITH_POINTS._id,
+    unique_pro_users: Array.from(
+      { length: 10 },
+      () => new mongoose.Types.ObjectId()
+    ),
+    total_points_awarded: 20,
+    milestones_achieved: [
+      { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+      { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+    ],
+  },
+];
+
+const MOCK_LOG_ENTRY_SELF_USAGE = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.PRO,
+  response_size_bytes: 0,
+  is_reward_eligible: false,
+  reward_eligibility_reason: "SELF_USAGE",
+  createdAt: new Date(),
+};
+
+const MOCK_LOG_ENTRY_DUPLICATE = {
+  _id: new mongoose.Types.ObjectId(),
+  user_plan: SubscriptionTypes.PRO,
+  response_size_bytes: 0,
+  is_reward_eligible: false,
+  reward_eligibility_reason: "DUPLICATE_USAGE",
+  createdAt: new Date(),
+};
+
+const MOCK_UNREVERSED_TRANSACTION = {
+  _id: new mongoose.Types.ObjectId(),
+  image_id: MOCK_IMAGES[0]._id,
+  user_id: MOCK_USERS[0]._id,
+  transaction_type: "MILESTONE_REWARD",
+  points_awarded: 10,
+  is_reversed: false,
+  description: "Milestone 5 reached",
+};
+
+const MOCK_REVERSED_TRANSACTION = {
+  ...MOCK_UNREVERSED_TRANSACTION,
+  is_reversed: true,
+  reversed_at: new Date(),
+  reversal_reason: "Abuse detected",
+};
+
+const MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD = {
+  data: [
+    {
+      user_id: {
+        _id: MOCK_USERS[0]._id,
+        name: "Creator A",
+        email: "a@example.com",
+      },
+      image_id: MOCK_IMAGES[0]._id,
+      unique_pro_users: Array.from(
+        { length: 15 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 30,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 15, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+    {
+      user_id: {
+        _id: MOCK_USERS[1]._id,
+        name: "Creator B",
+        email: "b@example.com",
+      },
+      image_id: MOCK_IMAGES[1]._id,
+      unique_pro_users: Array.from(
+        { length: 10 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 20,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+    {
+      user_id: {
+        _id: MOCK_USERS[2]._id,
+        name: "Creator C",
+        email: "c@example.com",
+      },
+      image_id: MOCK_IMAGES[2]._id,
+      unique_pro_users: Array.from(
+        { length: 5 },
+        () => new mongoose.Types.ObjectId()
+      ),
+      total_points_awarded: 10,
+      milestones_achieved: [
+        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+      ],
+    },
+  ],
+  total: 3,
+  currentPage: 1,
+  totalPages: 1,
+};
 
 describe("Reward System", () => {
   let rewardsService;

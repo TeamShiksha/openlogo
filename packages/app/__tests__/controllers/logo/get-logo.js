@@ -5,7 +5,6 @@ const { Messages } = require("../../../utils/constants");
 const {
   MOCK_KEYS,
   MOCK_SUBSCRIPTION,
-  MOCK_IMAGE_DETAIL,
   MOCK_IMAGE_URL_RESPONSE,
 } = require("../../../utils/mocks");
 

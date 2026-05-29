@@ -5,14 +5,23 @@
  */
 
 const request = require("supertest");
+const mongoose = require("mongoose");
 const { RewardsService } = require("../../../services");
 const { UserSessionService } = require("../../../services");
 const {
   MOCK_SESSION_ID,
   MOCK_USERS,
   MOCK_IMAGES,
-  MOCK_BONUS_POINTS_AWARD,
 } = require("../../../utils/mocks");
+
+const MOCK_BONUS_POINTS_AWARD = {
+  success: true,
+  userId: MOCK_USERS[0]._id,
+  pointsAwarded: 50,
+  reason: "Referral bonus",
+  transactionId: new mongoose.Types.ObjectId(),
+  newBalance: 190,
+};
 const app = require("../../../server");
 
 jest.mock("../../../services/rewards");

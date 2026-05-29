@@ -5,14 +5,42 @@
  */
 
 const request = require("supertest");
+const mongoose = require("mongoose");
 const { RewardsService } = require("../../../services");
 const { UserSessionService } = require("../../../services");
 const {
+  MOCK_USERS,
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
   MOCK_IMAGES,
-  MOCK_AUDIT_TRAIL_LIST,
 } = require("../../../utils/mocks");
+
+const MOCK_AUDIT_TRAIL_LIST = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "POINTS_AWARDED",
+    actor: MOCK_USERS[3]._id,
+    details: "Awarded 10 points for usage",
+    timestamp: new Date(Date.now() - 3600000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "TRANSACTION_REVERSED",
+    actor: MOCK_USERS[3]._id,
+    details: "Reversed transaction due to abuse",
+    timestamp: new Date(Date.now() - 7200000),
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    transactionId: new mongoose.Types.ObjectId(),
+    action: "BONUS_AWARDED",
+    actor: MOCK_USERS[3]._id,
+    details: "Awarded 50 bonus points",
+    timestamp: new Date(Date.now() - 10800000),
+  },
+];
 const app = require("../../../server");
 
 jest.mock("../../../services/rewards");

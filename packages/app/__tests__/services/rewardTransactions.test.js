@@ -2,14 +2,99 @@ const mongoose = require("mongoose");
 const RewardTrackingService = require("../../services/rewardTransactions");
 const { SubscriptionTypes } = require("../../utils/constants");
 const {
-  createMockLogoRequestLogEntry,
-  createValidRewardTrackingParams,
-  createMockIntegrationValidProScenario,
-  createMockIntegrationSelfUsageScenario,
-  createMockIntegrationObjectIdScenario,
   MOCK_LOG_ENTRY_HOBBY,
   MOCK_LOG_ENTRY_VALID,
 } = require("../../utils/mocks");
+
+const createMockLogoRequestLogEntry = () => ({
+  _id: new mongoose.Types.ObjectId(),
+  user_id: "user123",
+  key_id: "key123",
+  image_id: "image123",
+  user_agent: "Mozilla/5.0",
+  response_size_bytes: 1024,
+  user_plan: SubscriptionTypes.PRO,
+  is_reward_eligible: true,
+  reward_eligibility_reason: "VALID",
+  createdAt: new Date(),
+});
+
+const createValidRewardTrackingParams = () => ({
+  imageId: "image123",
+  userId: "user123",
+  creatorId: "creator456",
+  keyId: "key123",
+  subscriptionId: "sub123",
+  subscription: { type: SubscriptionTypes.PRO },
+  userAgent: "Mozilla/5.0",
+  response_size_bytes: 1024,
+});
+
+const createMockIntegrationValidProScenario = () => {
+  const userId = new mongoose.Types.ObjectId();
+  const creatorId = new mongoose.Types.ObjectId();
+  const params = {
+    imageId: "logo-apple",
+    userId,
+    creatorId,
+    keyId: "key-123",
+    subscriptionId: "sub-pro-001",
+    subscription: { type: SubscriptionTypes.PRO },
+  };
+  return {
+    params,
+    mockLogEntry: {
+      _id: new mongoose.Types.ObjectId(),
+      user_id: userId,
+      key_id: params.keyId,
+      image_id: params.imageId,
+      user_plan: SubscriptionTypes.PRO,
+      is_reward_eligible: true,
+      reward_eligibility_reason: "VALID",
+    },
+  };
+};
+
+const createMockIntegrationSelfUsageScenario = () => ({
+  params: {
+    imageId: "logo-apple",
+    userId: "user123",
+    creatorId: "user123",
+    keyId: "key-123",
+    subscriptionId: "sub-pro-001",
+    subscription: { type: SubscriptionTypes.PRO },
+  },
+  mockLogEntry: {
+    _id: new mongoose.Types.ObjectId(),
+    is_reward_eligible: false,
+    reward_eligibility_reason: "SELF_USAGE",
+  },
+});
+
+const createMockIntegrationObjectIdScenario = () => {
+  const userId = new mongoose.Types.ObjectId();
+  const creatorId = new mongoose.Types.ObjectId();
+  const params = {
+    imageId: "apple-logo-2024",
+    userId,
+    creatorId,
+    keyId: "api-key-abc123",
+    subscriptionId: "sub-pro-xyz",
+    subscription: { type: SubscriptionTypes.PRO },
+  };
+  return {
+    params,
+    mockLogEntry: {
+      _id: new mongoose.Types.ObjectId(),
+      user_id: userId,
+      key_id: params.keyId,
+      image_id: params.imageId,
+      user_plan: SubscriptionTypes.PRO,
+      is_reward_eligible: true,
+      reward_eligibility_reason: "VALID",
+    },
+  };
+};
 
 jest.mock("../../repositories");
 

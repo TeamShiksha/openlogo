@@ -8,10 +8,21 @@ const request = require("supertest");
 const { RewardsService } = require("../../../services");
 const { UserSessionService } = require("../../../services");
 const {
+  MOCK_USERS,
   MOCK_SESSION_ID,
   MOCK_USER_SESSIONS,
-  MOCK_USER_TRANSACTION_STATS,
 } = require("../../../utils/mocks");
+
+const MOCK_USER_TRANSACTION_STATS = {
+  userId: MOCK_USERS[0]._id,
+  totalPointsEarned: 150,
+  totalPointsReversed: 10,
+  currentBalance: 140,
+  totalTransactions: 15,
+  totalMilestones: 3,
+  averagePointsPerTransaction: 10,
+  lastTransactionDate: new Date(),
+};
 const app = require("../../../server");
 
 jest.mock("../../../services/rewards");
