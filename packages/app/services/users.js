@@ -19,10 +19,11 @@ class UserService {
   /**
    * Gets User by Id.
    * @param {string} userId - The userId of the user.
+   * @param {Object} session - mongoose session
    * @returns {Promise<Object>} - User Object.
    */
-  async getUser(userId) {
-    return await this.userRepository.getById(userId);
+  async getUser(userId, { session } = {}) {
+    return await this.userRepository.getById(userId, { session });
   }
 
   /**
