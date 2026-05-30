@@ -7,7 +7,7 @@ const NotFound = () => {
   return (
     <div className={styles["not-found-container"]}>
       <img
-        src="/404-illustration.webp"
+        src="/404_illustration.png"
         alt="404 Illustration"
         className={styles["not-found-image"]}
       />

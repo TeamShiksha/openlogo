@@ -163,7 +163,7 @@ footer {
 
 .btn-link-primary {
   background: var(--primary);
-  color: var(--white);
+  color: var(--white-fixed);
 }
 
 .btn-link-primary:hover {
