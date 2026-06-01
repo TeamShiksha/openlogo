@@ -1,8 +1,11 @@
 .contact-modal {
   width: 660px;
   max-width: 95vw;
+  max-height: calc(100dvh - 2rem);
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
 }
 
 /* ─── Split layout wrapper ─── */
@@ -226,6 +229,7 @@
 .submit-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  color: var(--white-fixed);
 }
 
 .submit-btn-icon {
@@ -237,6 +241,7 @@
 @media (max-width: 600px) {
   .contact-modal {
     width: 95vw;
+    max-height: calc(100dvh - 1rem);
   }
 
   .contact-wrapper {
