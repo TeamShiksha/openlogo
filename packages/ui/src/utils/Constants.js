@@ -870,6 +870,54 @@ export const SUBSCRIPTION_PANEL = {
   },
 };
 
+export const MILESTONE_CONFIG = {
+  title: "Rewards Milestone Configuration",
+  subtitle: "Manage reward milestone thresholds and activate configurations.",
+  createButton: "Create Config",
+  tableHeaders: ["Name", "Thresholds", "Status", ""],
+  status: {
+    active: "Active",
+    inactive: "Inactive",
+  },
+  modal: {
+    createTitle: "Create Milestone Config",
+    editTitle: "Edit Milestone Config",
+    nameLabel: "Configuration Name",
+    namePlaceholder: "e.g. Q3 2026 Campaign",
+    thresholdsLabel: "Reward Thresholds",
+    atLabel: "At (submissions)",
+    pointsLabel: "Points",
+    addThreshold: "Add Threshold",
+    removeThreshold: "Remove",
+    saveButton: "Save",
+    cancelButton: "Cancel",
+  },
+  activate: {
+    heading: "Activate Configuration",
+    description:
+      "Activating this configuration will deactivate the currently active one. The new configuration takes effect on the next worker run.",
+    confirmButton: "Activate",
+  },
+  delete: {
+    heading: "Delete Configuration",
+    description:
+      "Are you sure you want to delete this configuration? This action cannot be undone.",
+    confirmButton: "Delete",
+  },
+  emptyState: "No milestone configurations found. Create one to get started.",
+  toasts: {
+    createSuccess: "Milestone configuration created successfully.",
+    createError: "Failed to create milestone configuration.",
+    updateSuccess: "Milestone configuration updated successfully.",
+    updateError: "Failed to update milestone configuration.",
+    activateSuccess: "Milestone configuration activated successfully.",
+    activateError: "Failed to activate milestone configuration.",
+    deleteSuccess: "Milestone configuration deleted successfully.",
+    deleteError: "Failed to delete milestone configuration.",
+    loadError: "Failed to load milestone configurations.",
+  },
+};
+
 export const RELEASE_PAGE = {
   introduction: {
     heading: "About",
