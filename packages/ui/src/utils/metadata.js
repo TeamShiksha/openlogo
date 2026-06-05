@@ -4,7 +4,7 @@ export const SITE_DEFAULTS = {
   titleTemplate: "%s | Openlogo",
   description:
     "Openlogo gives you instant access to a vast library of brand logos through a simple API, plus tools to design and export your own.",
-  ogImage: "/openlogo.svg",
+  ogImage: "/openlogo.png",
   siteUrl: "https://openlogo.fyi",
 };
 
