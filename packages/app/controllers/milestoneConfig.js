@@ -72,18 +72,32 @@ async function createMilestoneConfigController(req, res, next) {
       });
     }
 
-    const hasInvalidThreshold = thresholds.some(
-      (t) =>
+    const hasInvalidThreshold = thresholds.some((t, i) => {
+      if (
         typeof t.at !== "number" ||
         t.at < 1 ||
+        !Number.isInteger(t.at) ||
         typeof t.points !== "number" ||
-        t.points < 1
-    );
+        t.points < 1 ||
+        !Number.isInteger(t.points)
+      ) {
+        return true;
+      }
+      if (i > 0) {
+        if (
+          t.at <= thresholds[i - 1].at ||
+          t.points < thresholds[i - 1].points
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
     if (hasInvalidThreshold) {
       return res.status(422).json({
         statusCode: 422,
         message:
-          'Each threshold must have positive numeric "at" and "points" values',
+          'Thresholds must have positive integer values with "at" in strictly ascending order and "points" in ascending order',
         error: STATUS_CODES[422],
       });
     }
@@ -163,18 +177,32 @@ async function updateMilestoneConfigController(req, res, next) {
         });
       }
 
-      const hasInvalidThreshold = thresholds.some(
-        (t) =>
+      const hasInvalidThreshold = thresholds.some((t, i) => {
+        if (
           typeof t.at !== "number" ||
           t.at < 1 ||
+          !Number.isInteger(t.at) ||
           typeof t.points !== "number" ||
-          t.points < 1
-      );
+          t.points < 1 ||
+          !Number.isInteger(t.points)
+        ) {
+          return true;
+        }
+        if (i > 0) {
+          if (
+            t.at <= thresholds[i - 1].at ||
+            t.points < thresholds[i - 1].points
+          ) {
+            return true;
+          }
+        }
+        return false;
+      });
       if (hasInvalidThreshold) {
         return res.status(422).json({
           statusCode: 422,
           message:
-            'Each threshold must have positive numeric "at" and "points" values',
+            'Thresholds must have positive integer values with "at" in strictly ascending order and "points" in ascending order',
           error: STATUS_CODES[422],
         });
       }

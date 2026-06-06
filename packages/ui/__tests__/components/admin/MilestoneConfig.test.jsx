@@ -793,4 +793,165 @@ describe("MilestoneConfig", () => {
     fireEvent.click(kebab);
     expect(screen.queryByText("Edit")).not.toBeInTheDocument();
   });
+
+  // ── Ordering Validation ────────────────────────────────────────────────────
+
+  it("validates that 'at' values must be in strictly ascending order", async () => {
+    render(<MilestoneConfig />, { wrapper });
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(MILESTONE_CONFIG.createButton)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.createButton));
+
+    const nameInput = screen.getByLabelText(MILESTONE_CONFIG.modal.nameLabel);
+    fireEvent.change(nameInput, { target: { value: "Test Config" } });
+
+    // Fill first threshold
+    const atInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(atInputs[0], { target: { value: "10" } });
+    const pointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(pointsInputs[0], { target: { value: "20" } });
+
+    // Add second threshold with lower 'at' value
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.addThreshold));
+
+    const newAtInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(newAtInputs[1], { target: { value: "5" } });
+    const newPointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(newPointsInputs[1], { target: { value: "30" } });
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.saveButton));
+
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Threshold 'at' values must be in strictly ascending order."
+    );
+  });
+
+  it("validates that 'at' values cannot have duplicates", async () => {
+    render(<MilestoneConfig />, { wrapper });
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(MILESTONE_CONFIG.createButton)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.createButton));
+
+    const nameInput = screen.getByLabelText(MILESTONE_CONFIG.modal.nameLabel);
+    fireEvent.change(nameInput, { target: { value: "Test Config" } });
+
+    // Fill first threshold
+    const atInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(atInputs[0], { target: { value: "10" } });
+    const pointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(pointsInputs[0], { target: { value: "20" } });
+
+    // Add second threshold with same 'at' value
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.addThreshold));
+
+    const newAtInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(newAtInputs[1], { target: { value: "10" } });
+    const newPointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(newPointsInputs[1], { target: { value: "30" } });
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.saveButton));
+
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Threshold 'at' values must be in strictly ascending order."
+    );
+  });
+
+  it("validates that 'points' values must be in ascending order", async () => {
+    render(<MilestoneConfig />, { wrapper });
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(MILESTONE_CONFIG.createButton)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.createButton));
+
+    const nameInput = screen.getByLabelText(MILESTONE_CONFIG.modal.nameLabel);
+    fireEvent.change(nameInput, { target: { value: "Test Config" } });
+
+    // Fill first threshold
+    const atInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(atInputs[0], { target: { value: "5" } });
+    const pointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(pointsInputs[0], { target: { value: "50" } });
+
+    // Add second threshold with lower 'points' value
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.addThreshold));
+
+    const newAtInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(newAtInputs[1], { target: { value: "10" } });
+    const newPointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(newPointsInputs[1], { target: { value: "20" } });
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.saveButton));
+
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Threshold 'points' values must be in ascending order."
+    );
+  });
+
+  // ── Integer Validation ─────────────────────────────────────────────────────
+
+  it("validates that 'at' values must be integers", async () => {
+    render(<MilestoneConfig />, { wrapper });
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(MILESTONE_CONFIG.createButton)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.createButton));
+
+    const nameInput = screen.getByLabelText(MILESTONE_CONFIG.modal.nameLabel);
+    fireEvent.change(nameInput, { target: { value: "Test Config" } });
+
+    const atInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(atInputs[0], { target: { value: "5.5" } });
+    const pointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(pointsInputs[0], { target: { value: "10" } });
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.saveButton));
+
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Each threshold must have a positive integer 'at' value."
+    );
+  });
+
+  it("validates that 'points' values must be integers", async () => {
+    render(<MilestoneConfig />, { wrapper });
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(MILESTONE_CONFIG.createButton)
+      ).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.createButton));
+
+    const nameInput = screen.getByLabelText(MILESTONE_CONFIG.modal.nameLabel);
+    fireEvent.change(nameInput, { target: { value: "Test Config" } });
+
+    const atInputs = screen.getAllByPlaceholderText("5");
+    fireEvent.change(atInputs[0], { target: { value: "5" } });
+    const pointsInputs = screen.getAllByPlaceholderText("10");
+    fireEvent.change(pointsInputs[0], { target: { value: "10.5" } });
+
+    fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.saveButton));
+
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Each threshold must have a positive integer 'points' value."
+    );
+  });
 });

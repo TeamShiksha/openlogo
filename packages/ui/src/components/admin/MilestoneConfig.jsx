@@ -128,13 +128,22 @@ function MilestoneConfig() {
     if (!formName.trim()) return "Name is required.";
     if (formThresholds.length === 0)
       return "At least one threshold is required.";
-    for (const t of formThresholds) {
+    for (let i = 0; i < formThresholds.length; i++) {
+      const t = formThresholds[i];
       const at = Number(t.at);
       const points = Number(t.points);
-      if (!t.at || isNaN(at) || at < 1)
-        return "Each threshold must have a positive 'at' value.";
-      if (!t.points || isNaN(points) || points < 1)
-        return "Each threshold must have a positive 'points' value.";
+      if (!t.at || isNaN(at) || at < 1 || !Number.isInteger(at))
+        return "Each threshold must have a positive integer 'at' value.";
+      if (!t.points || isNaN(points) || points < 1 || !Number.isInteger(points))
+        return "Each threshold must have a positive integer 'points' value.";
+      if (i > 0) {
+        const prevAt = Number(formThresholds[i - 1].at);
+        const prevPoints = Number(formThresholds[i - 1].points);
+        if (at <= prevAt)
+          return "Threshold 'at' values must be in strictly ascending order.";
+        if (points < prevPoints)
+          return "Threshold 'points' values must be in ascending order.";
+      }
     }
     return null;
   };
@@ -394,6 +403,7 @@ function MilestoneConfig() {
                     <input
                       type="number"
                       min="1"
+                      step="1"
                       value={threshold.at}
                       onChange={(e) =>
                         handleThresholdChange(index, "at", e.target.value)
@@ -406,6 +416,7 @@ function MilestoneConfig() {
                     <input
                       type="number"
                       min="1"
+                      step="1"
                       value={threshold.points}
                       onChange={(e) =>
                         handleThresholdChange(index, "points", e.target.value)
@@ -492,6 +503,7 @@ function MilestoneConfig() {
         customHeading={MILESTONE_CONFIG.activate.heading}
         customDescription={MILESTONE_CONFIG.activate.description}
         confirmButtonContent={MILESTONE_CONFIG.activate.confirmButton}
+        customWidth="500px"
       />
 
       <ConfirmationModal
