@@ -14,11 +14,11 @@ class BaseRepository {
   }
 
   async getById(id, { session } = {}) {
-    const query = await this.model.findById(id).select("-__v");
+    const query = this.model.findById(id).select("-__v");
     if (session) {
       query.session(session);
     }
-    return query;
+    return await query;
   }
 
   async getAll(page = 1, limit = 10, tab = "active") {
