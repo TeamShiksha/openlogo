@@ -83,17 +83,17 @@
 }
 
 .text-pending {
-  color: #b9ab46;
+  color: #665800;
   background-color: rgba(185, 171, 70, 0.15);
 }
 
 .text-resolved {
-  color: #3da03d;
+  color: #1b5e20;
   background-color: rgba(61, 160, 61, 0.15);
 }
 
 .text-rejected {
-  color: #f03a3a;
+  color: #b71c1c;
   background-color: rgba(240, 58, 58, 0.15);
 }
 
