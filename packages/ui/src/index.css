@@ -145,3 +145,39 @@ footer {
     padding: 0 1rem;
   }
 }
+
+/* Button-like Links */
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  padding: 16px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-link-primary {
+  background: var(--primary);
+  color: var(--white-fixed);
+}
+
+.btn-link-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-link-secondary {
+  padding: 14px 26px;
+  background: var(--white);
+  color: var(--input-color);
+  border: var(--border);
+}
+
+.btn-link-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
