@@ -1,10 +1,17 @@
 .card {
   background-color: var(--white);
-  border-radius: var(--bradius);
-  border: var(--border);
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   position: relative;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .content {
@@ -22,9 +29,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  background-color: rgb(226, 224, 224, 0.3);
+  background-color: rgba(177, 179, 183, 0.1);
   padding: 1rem 1.5rem;
   flex-wrap: wrap;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .status-container-left {
@@ -48,34 +58,43 @@
 }
 
 .status {
-  padding: 0.25rem 0rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ball-pending {
-  background-color: var(--warning);
+  display: none;
 }
 
 .ball-resolved {
-  background-color: var(--success);
+  display: none;
 }
 
 .ball-rejected {
-  background-color: var(--error);
+  display: none;
 }
 
 .text-pending {
-  color: var(--warning);
+  color: #b9ab46;
+  background-color: rgba(185, 171, 70, 0.15);
 }
 
 .text-resolved {
-  color: var(--success);
+  color: #3da03d;
+  background-color: rgba(61, 160, 61, 0.15);
 }
 
 .text-rejected {
-  color: var(--error);
+  color: #f03a3a;
+  background-color: rgba(240, 58, 58, 0.15);
 }
 
 .date-container {
@@ -113,13 +132,14 @@
 }
 
 .logo-preview {
-  max-width: 120px;
-  max-height: 120px;
+  max-width: 140px;
+  max-height: 140px;
   object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid var(--border-color, #e0e0e0);
-  background-color: #f9f9f9;
-  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  padding: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .user-info {
