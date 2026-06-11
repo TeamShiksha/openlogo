@@ -10,6 +10,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --white: rgb(255, 255, 255);
+  --grey: rgb(248, 250, 252);
   --primary: #4f46e5;
   --primary-focus: #4f46e51a;
   --primary-hover: #4338ca;
@@ -32,6 +33,7 @@
 
 [data-theme="dark"] {
   --white: rgb(17, 24, 39);
+  --grey: rgb(26, 36, 58);
   --black: rgb(255, 255, 255);
   --description: rgb(209, 213, 219);
   --border-color: rgba(75, 85, 99, 0.3);
@@ -63,12 +65,9 @@
     border-color 0.3s ease;
 }
 
-body {
+.container {
   max-width: 1440px;
   margin: 0 auto;
-}
-
-.container {
   padding: 0 8%;
 }
 
@@ -143,4 +142,19 @@ footer {
   .container {
     padding: 0 1rem;
   }
+}
+
+/* Scroll Reveal Animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }

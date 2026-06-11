@@ -31,14 +31,10 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        closeMenu(false);
-      }
+      if (window.innerWidth >= 1024) closeMenu(false);
     };
     window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -47,39 +43,62 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     return cleanup;
   }, [sectionIds]);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div data-testid="mobile-menu" className={styles["mobile-header"]}>
-      <div className={styles.navbar}>
-        {NAVBAR_ITEMS.map((item) => {
-          const [itemPath, itemSection] = item.url.split("#");
+    <div
+      data-testid="mobile-menu"
+      className={styles.overlay}
+      onClick={() => closeMenu(false)}
+    >
+      <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
+        {/* Close button */}
+        <button
+          className={styles["close-btn"]}
+          onClick={() => closeMenu(false)}
+          aria-label="Close menu"
+        >
+          ✕
+        </button>
 
-          const isActive =
-            item.type === "route"
-              ? currentPath === item.url
-              : currentPath === itemPath && activeSection === itemSection;
-          return (
-            <Link
-              key={item.name}
-              className={`${styles.nav} ${isActive ? styles.active : ""}`}
-              to={item.url}
-              onClick={(event) => {
-                handleNavigation(event, item.url, navigate, setActiveSection);
-                closeMenu(false);
-              }}
-            >
-              {item.title}
-            </Link>
-          );
-        })}
+        <nav className={styles.navbar}>
+          {NAVBAR_ITEMS.map((item) => {
+            const [itemPath, itemSection] = item.url.split("#");
+            const isActive =
+              item.type === "route"
+                ? currentPath === item.url
+                : currentPath === itemPath && activeSection === itemSection;
+
+            return (
+              <Link
+                key={item.name}
+                className={`${styles.nav} ${isActive ? styles.active : ""}`}
+                to={item.url}
+                onClick={(event) => {
+                  handleNavigation(event, item.url, navigate, setActiveSection);
+                  closeMenu(false);
+                }}
+              >
+                {item.title}
+              </Link>
+            );
+          })}
+        </nav>
+
         {isAuthenticated && (
-          <button
-            className={`${styles.nav} ${styles["logout-btn"]}`}
-            onClick={handleLogout}
-          >
-            Sign Out
-          </button>
+          <div className={styles.footer}>
+            <button className={styles["logout-btn"]} onClick={handleLogout}>
+              Sign Out
+            </button>
+          </div>
         )}
       </div>
     </div>

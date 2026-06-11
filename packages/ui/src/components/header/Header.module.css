@@ -1,34 +1,27 @@
 .block {
-  display: flex;
-  justify-content: center;
+  padding-top: 0.5rem;
   background-color: var(--white);
-  border-bottom: var(--border);
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 1.2rem 0;
-}
-.mobile-header {
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 0;
+  justify-content: space-between;
+  position: relative;
+  padding: 2rem 0 1rem 0;
 }
+
 .brand {
   display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
   align-items: center;
+  gap: 0.5rem;
   cursor: pointer;
   border: none;
-  background-color: var(--white);
+  background: none;
 }
 
 .brand-img {
@@ -37,95 +30,105 @@
 }
 
 .brand-name {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--black);
 }
 
 .nav-bar {
   display: flex;
-  gap: 1.5rem;
   align-items: center;
-}
-
-.ml {
-  margin-left: 1rem;
+  gap: 2.5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .nav {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   text-decoration: none;
-  font-weight: 600;
   color: var(--description);
+  position: relative;
 }
 
 .nav:hover {
-  color: var(--primary);
-  transition: all 0.3s ease-in-out;
-  text-decoration: underline;
-  text-decoration-color: var(--primary);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  color: var(--primary-hover);
+}
+
+.nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.nav:hover::after {
+  width: 100%;
 }
 
 .active {
   color: var(--primary);
-  text-decoration: underline;
-  text-decoration-color: var(--primary);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  position: relative;
 }
 
-/* This media query handles responsive styling like font-size, gaps, etc. down to 1024px */
-@media only screen and (max-width: 1024px) {
+.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hamburger {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hamburger-img {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 1.5rem 0 0.75rem 0;
+  }
+
   .brand-img {
     width: 32px;
     height: 32px;
   }
 
   .brand-name {
-    font-size: 1.8rem;
-  }
-
-  .nav-bar {
-    gap: 1rem;
-  }
-
-  .ml {
-    margin-left: 12px;
+    font-size: 1.1rem;
   }
 }
 
-@media only screen and (width < 1024px) {
-  .nav-bar {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    justify-content: flex-end;
-  }
-
-  .hamburger-img {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media only screen and (max-width: 564px) {
+@media (max-width: 564px) {
   .brand-img {
     width: 28px;
     height: 28px;
   }
 
   .brand-name {
-    font-size: 1.6rem;
-    font-weight: bold;
+    font-size: 1rem;
   }
 
   .hamburger-img {

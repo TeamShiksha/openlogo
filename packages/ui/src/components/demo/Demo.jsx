@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { CircleCheck } from "lucide-react";
 import { SVGS, BUTTON_TEXT, DEMO } from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
@@ -63,85 +64,127 @@ const Demo = ({ openAuthModal }) => {
 
   return (
     <>
-      <div data-testid="demo" id="demo" className={styles["demo-container"]}>
-        <div className={styles.content}>
-          <h1>{DEMO.heading}</h1>
-          <p>{DEMO.summary}</p>
-        </div>
-        <div className={`${styles["search-box"]}`}>
-          <div className={styles["search-content"]}>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <input
-                name="search"
-                type="text"
-                value={searchTerm}
-                onChange={handleInputChange}
-                className={styles["search-box-input"]}
-                placeholder="Search"
-              />
-              <button type="submit" className={styles["search-button"]}>
-                <img src={SVGS.searchIcon} alt="Search" />
-              </button>
-            </form>
+      <div data-testid="demo" id="demo" className={styles["demo-wrapper"]}>
+        <div className="container">
+          <div className={styles["demo-container"]}>
+            {/* Search Area Box */}
+            <div className={styles.searchBox}>
+              <div className={styles.searchContent}>
+                <form onSubmit={(e) => e.preventDefault()}>
+                  <button type="submit" className={styles.searchButton}>
+                    <img src={SVGS.searchIcon} alt="Search" />
+                  </button>
+                  <input
+                    name="search"
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                    className={styles.searchInput}
+                    placeholder="Search for a domain (e.g. google.com)"
+                  />
+                </form>
 
-            {showResults && (
-              <div
-                className={`${styles["result-container"]} ${
-                  styles["show"]
-                } ${!loading && apiResults.length === 0 ? styles["no-result-container"] : ""}`}
-              >
-                {loading && (
-                  <div className={styles.loading}>
-                    <LoadingSpinner color="blue" />
-                  </div>
-                )}
-                {!loading && apiResults.length === 0 ? (
-                  <div className={styles["no-result"]}>
-                    <p>
-                      {"Your search “"}
-                      <b className={styles["search-term"]}>{searchTerm}</b>
-                      {"” did not match any logo."}
-                    </p>
-                    <div className={styles["no-result-buttons"]}>
-                      <Button onClick={handleRequestClick} variant={"primary"}>
-                        {BUTTON_TEXT.requestLogo}
-                      </Button>
-                      <Button
-                        onClick={() => navigate("/createlogo")}
-                        variant="primary"
-                      >
-                        {BUTTON_TEXT.createLogo}
-                      </Button>
-                    </div>
+                {/* RESULT CARD */}
+                {showResults ? (
+                  <div className={styles.resultContainer}>
+                    {loading && (
+                      <div className={styles.loading}>
+                        <LoadingSpinner color="blue" />
+                      </div>
+                    )}
+
+                    {!loading && apiResults.length === 0 ? (
+                      <div className={styles.noResult}>
+                        <p>
+                          Your search &ldquo;
+                          <b className={styles.searchTerm}>{searchTerm}</b>
+                          &rdquo; did not match any logo.
+                        </p>
+
+                        <div className={styles.noResultButtons}>
+                          <Button
+                            onClick={handleRequestClick}
+                            variant="primary"
+                          >
+                            {BUTTON_TEXT.requestLogo}
+                          </Button>
+                          <Button
+                            onClick={() => navigate("/createlogo")}
+                            variant="primary"
+                          >
+                            {BUTTON_TEXT.createLogo}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {apiResults.map((company) => (
+                          <div
+                            key={company.companyName}
+                            className={styles.resultCard}
+                          >
+                            <div className={styles.resultHeader}>
+                              <img src={company.image} alt="logo" />
+                              <h3>
+                                {firstLetterCapitalString(company.companyName)}
+                              </h3>
+                            </div>
+
+                            <div className={styles.formatBox}>
+                              <p>Format</p>
+                              <div className={styles.formatButtons}>
+                                <button>SVG</button>
+                                <button>PNG</button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
                   </div>
                 ) : (
-                  <>
-                    {apiResults.map((company, index) => (
-                      <div
-                        key={company.companyName}
-                        className={`${styles["result-item"]} ${styles["show"]}`}
-                        style={{ transitionDelay: `${index * 0.1}s` }}
-                      >
+                  /* Static demo preview — shown when no search is active */
+                  <div className={styles.resultContainer}>
+                    <div className={styles.resultCard}>
+                      <div className={styles.resultHeader}>
                         <img
-                          src={company.image}
-                          alt={`${company.companyName} Logo`}
+                          src="https://www.google.com/favicon.ico"
+                          alt="Google logo"
                         />
-                        <span>
-                          {firstLetterCapitalString(company.companyName)}
-                        </span>
+                        <h3>Google</h3>
                       </div>
-                    ))}
-                  </>
+                      <div className={styles.formatBox}>
+                        <p>Format</p>
+                        <div className={styles.formatButtons}>
+                          <button>SVG</button>
+                          <button>PNG</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
-            )}
+            </div>
+
+            {/* Content */}
+            <div className={styles.content}>
+              <h1>
+                Try it yourself.
+                <br />
+                Instant logo retrieval.
+              </h1>
+              <p>{DEMO.summary}</p>
+
+              <ul className={styles.features}>
+                {DEMO.features.map((item) => (
+                  <li key={item} className={styles.feature}>
+                    <CircleCheck className={styles["features-icon"]} /> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <img
-          src={SVGS.curvedArrow}
-          alt="curved-arrow"
-          className={styles["curved-arrow"]}
-        />
       </div>
       {isRequestModalOpen && <LogoRequestForm closeModal={closeModal} />}
     </>

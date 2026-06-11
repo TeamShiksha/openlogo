@@ -31,18 +31,13 @@ const Header = ({ openAuthModal }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
-
   const sectionIds = extractSectionIds(NAVBAR_ITEMS);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
     window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -50,13 +45,10 @@ const Header = ({ openAuthModal }) => {
     return cleanup;
   }, [sectionIds]);
 
-  const toggleMenu = () => {
-    setShowMenu((prev) => !prev);
-  };
-
   return (
-    <div data-testid="header" className={`container ${styles.block}`}>
-      <header className={styles.header}>
+    <div data-testid="header" className={styles.block}>
+      <header className={`container ${styles.header}`}>
+        {/* Brand */}
         <button
           type="button"
           className={styles.brand}
@@ -64,59 +56,64 @@ const Header = ({ openAuthModal }) => {
         >
           <img
             className={styles["brand-img"]}
-            alt={BRANDING.imageSrc}
+            alt={BRANDING.brandName}
             src={BRANDING.imageSrc}
           />
           <span className={styles["brand-name"]}>{BRANDING.brandName}</span>
         </button>
-        <div className={styles["nav-bar"]}>
-          {NAVBAR_ITEMS.map((item) => {
-            const [itemPath, itemSection] = item.url.split("#");
-            const isActive =
-              item.type === "route"
-                ? currentPath === item.url
-                : currentPath === itemPath && activeSection === itemSection;
 
-            return (
-              <Link
-                key={item.name}
-                className={`${styles.nav} ${isActive ? styles.active : ""}`}
-                to={item.url}
-                onClick={(event) =>
-                  handleNavigation(event, item.url, navigate, setActiveSection)
-                }
-              >
-                {item.title}
-              </Link>
-            );
-          })}
+        {/* Desktop Nav */}
+        {!isMobile && (
+          <nav className={styles["nav-bar"]}>
+            {NAVBAR_ITEMS.map((item) => {
+              const [itemPath, itemSection] = item.url.split("#");
+              const isActive =
+                item.type === "route"
+                  ? currentPath === item.url
+                  : currentPath === itemPath && activeSection === itemSection;
+
+              return (
+                <Link
+                  key={item.name}
+                  className={`${styles.nav} ${isActive ? styles.active : ""}`}
+                  to={item.url}
+                  onClick={(e) =>
+                    handleNavigation(e, item.url, navigate, setActiveSection)
+                  }
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+
+        {/* Right side */}
+        <div className={styles["right-side"]}>
           <DarkModeToggle />
           {isAuthenticated ? (
             <UserDropDown />
           ) : (
-            <Button
-              variant="primary"
-              className={styles.ml}
-              onClick={openAuthModal}
-            >
+            <Button variant="primary" onClick={openAuthModal}>
               {BUTTON_TEXT.getStarted}
             </Button>
           )}
-        </div>
-        {isMobile && (
-          <div className={styles["mobile-header"]}>
-            <DarkModeToggle />
-            <button className={styles.hamburger} onClick={toggleMenu}>
+          {isMobile && (
+            <button
+              className={styles.hamburger}
+              onClick={() => setShowMenu((p) => !p)}
+            >
               <img
                 className={styles["hamburger-img"]}
                 src={menuIcon.src}
                 alt={menuIcon.alt}
               />
             </button>
-          </div>
-        )}
-        <MobileHeaderMenu isOpen={showMenu} closeMenu={setShowMenu} />
+          )}
+        </div>
       </header>
+
+      <MobileHeaderMenu isOpen={showMenu} closeMenu={setShowMenu} />
     </div>
   );
 };
