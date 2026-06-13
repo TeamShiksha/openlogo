@@ -10,10 +10,10 @@ class MilestoneConfigRepository extends BaseRepository {
    * Find the single active, non-deleted config
    * @returns {Promise<Object|null>}
    */
-  async findActive() {
-    return await this.model
-      .findOne({ is_active: true, is_deleted: false })
-      .lean();
+  async findActive({ session } = {}) {
+    const q = this.model.findOne({ is_active: true, is_deleted: false });
+    if (session) q.session(session);
+    return await q.lean();
   }
 
   /**

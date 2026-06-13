@@ -78,6 +78,27 @@ async function getRewardsLeaderboardController(req, res, next) {
 }
 
 /**
+ * Retrieves the authenticated user's rank in the leaderboard
+ * - Returns rank, total points, and total users
+ * - Requires: authentication
+ */
+async function getUserLeaderboardRankController(req, res, next) {
+  try {
+    const rewardsService = new RewardsService();
+    const userId = req.userData.userId;
+
+    const rankData = await rewardsService.getUserLeaderboardRank(userId);
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: rankData,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
  * Retrieves transaction history for a specific image
  * - Query params: page (default: 1), limit (default: 20)
  */
@@ -254,9 +275,9 @@ async function awardBonusPointsController(req, res, next) {
     const { imageId, userId, points, reason, description } = req.body;
 
     // Validation
-    if (!imageId || !userId || !points) {
+    if (!userId || !points) {
       return res.status(400).json({
-        message: "Missing required fields: imageId, userId, points",
+        message: "Missing required fields: userId, points",
         statusCode: 400,
         error: STATUS_CODES[400],
       });
@@ -324,191 +345,11 @@ async function reverseTransactionController(req, res, next) {
   }
 }
 
-/**
- * Processes all pending reward-eligible logo requests
- * - Fetches images with pending rewards
- * - Processes rewards for each image
- * - Returns summary with success/failure counts and points awarded
- */
-async function processBatchRewardsController(req, res) {
-  const startTime = Date.now();
-
-  try {
-    console.log("[RewardBatch] Starting batch reward processing...");
-
-    const rewardsService = new RewardsService();
-    const { ImagesRepository } = require("../repositories");
-
-    const pendingImages = await ImagesRepository.find({
-      has_pending_reward: true,
-    });
-
-    console.log(
-      `[RewardBatch] Found ${pendingImages.length} image(s) with pending rewards`
-    );
-
-    if (pendingImages.length === 0) {
-      return res.status(200).json({
-        success: true,
-        message: "No pending rewards to process",
-        processedImages: 0,
-        results: [],
-        executionTime: `${Date.now() - startTime}ms`,
-        timestamp: new Date(),
-      });
-    }
-
-    const results = [];
-    let successCount = 0;
-    let failureCount = 0;
-    let totalPointsAwarded = 0;
-
-    for (const image of pendingImages) {
-      const imageIdStr = image._id.toString();
-      try {
-        const result = await rewardsService.processRewardsForImage(image._id);
-        results.push(result);
-
-        if (result.success) {
-          successCount++;
-          totalPointsAwarded += result.totalPointsAwarded || 0;
-          console.log(
-            `[RewardBatch] ✓ Processed image ${imageIdStr}: +${result.totalPointsAwarded} points`
-          );
-        } else {
-          failureCount++;
-          console.error(
-            `[RewardBatch] ✗ Failed to process image ${imageIdStr}: ${result.error}`
-          );
-        }
-      } catch (error) {
-        failureCount++;
-        results.push({
-          success: false,
-          imageId: imageIdStr,
-          error: error.message,
-        });
-        console.error(
-          `[RewardBatch] ✗ Error processing image ${imageIdStr}:`,
-          error
-        );
-      }
-    }
-
-    const executionTime = Date.now() - startTime;
-
-    const response = {
-      success: true,
-      summary: {
-        processedImages: pendingImages.length,
-        successCount,
-        failureCount,
-        totalPointsAwarded,
-      },
-      results,
-      executionTime: `${executionTime}ms`,
-      timestamp: new Date(),
-    };
-
-    console.log(
-      `[RewardBatch] ✓ Batch processing completed in ${executionTime}ms`
-    );
-    console.log(`[RewardBatch] Summary:`, response.summary);
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.error("[RewardBatch] Batch processing error:", error);
-
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-      statusCode: 500,
-      executionTime: `${Date.now() - startTime}ms`,
-      timestamp: new Date(),
-    });
-  }
-}
-
-/**
- * Retrieves all images with pending rewards without processing them
- * - Returns count and details of pending images
- * - Useful for monitoring and debugging
- */
-async function getPendingRewardsController(req, res, next) {
-  try {
-    const { ImagesRepository } = require("../repositories");
-
-    const pendingImages = await ImagesRepository.find({
-      has_pending_reward: true,
-    });
-
-    return res.status(200).json({
-      success: true,
-      pendingImages: pendingImages.length,
-      images: pendingImages.map((img) => ({
-        imageId: img._id.toString(),
-        company_name: img.company_name,
-      })),
-      timestamp: new Date(),
-    });
-  } catch (error) {
-    console.error("[RewardBatch] Error fetching pending rewards:", error);
-    next(error);
-  }
-}
-
-/**
- * Processes rewards for a specific image manually
- * - Triggers manual reward processing for a single image
- * - Useful for testing and manual corrections
- */
-async function processSpecificImageRewardController(req, res, next) {
-  try {
-    const { imageId } = req.params;
-    const rewardsService = new RewardsService();
-
-    console.log(`[RewardBatch] Manual trigger: Processing image ${imageId}`);
-
-    const result = await rewardsService.processRewardsForImage(imageId);
-
-    if (result.success) {
-      console.log(
-        `[RewardBatch] ✓ Manually processed image ${imageId}: +${result.totalPointsAwarded} points`
-      );
-    } else {
-      console.error(
-        `[RewardBatch] ✗ Failed to process image ${imageId}: ${result.error}`
-      );
-    }
-
-    const statusCode = result.success ? 200 : 400;
-    return res.status(statusCode).json({
-      success: result.success,
-      data: result,
-      timestamp: new Date(),
-    });
-  } catch (error) {
-    console.error(`[RewardBatch] Error processing image:`, error);
-    next(error);
-  }
-}
-
-/**
- * Health check endpoint for the rewards processor
- * - Returns healthy status and timestamp
- */
-function getRewardsHealthController(req, res) {
-  return res.status(200).json({
-    success: true,
-    status: "healthy",
-    timestamp: new Date(),
-  });
-}
-
 module.exports = {
   getRewardSummaryForImageController,
   getRewardSummaryForUserController,
   getRewardsLeaderboardController,
+  getUserLeaderboardRankController,
   getImageTransactionsController,
   getUserTransactionsController,
   getTransactionController,
@@ -517,8 +358,4 @@ module.exports = {
   searchTransactionsController,
   awardBonusPointsController,
   reverseTransactionController,
-  processBatchRewardsController,
-  getPendingRewardsController,
-  processSpecificImageRewardController,
-  getRewardsHealthController,
 };

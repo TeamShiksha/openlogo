@@ -11,7 +11,7 @@ const rewardTransactionSchema = new mongoose.Schema(
     image_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "images",
-      required: true,
+      default: null,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

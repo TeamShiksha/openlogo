@@ -50,7 +50,12 @@ router.use(
   createLogoRequestRouter
 );
 router.use("/rewards", baseLimiter, cors(privateRouteCORS), rewardsRouter);
-router.use("/admin/rewards", baseLimiter, adminRewardsRouter);
+router.use(
+  "/admin/rewards",
+  baseLimiter,
+  cors(privateRouteCORS),
+  adminRewardsRouter
+);
 router.use(
   "/admin/users",
   baseLimiter,
