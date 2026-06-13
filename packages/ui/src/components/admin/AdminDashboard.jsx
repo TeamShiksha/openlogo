@@ -2,7 +2,8 @@ import { useState } from "react";
 import Analytics from "../../components/analytics/Analytics";
 import Catalog from "../catalog/Catalog.jsx";
 import SubscriptionPanel from "./SubscriptionPanel.jsx";
-import MilestoneConfig from "./MilestoneConfig.jsx";
+
+import RewardPanel from './RewardPanel.jsx'
 import PropTypes from "prop-types";
 import styles from "./AdminDashboard.module.css";
 
@@ -105,7 +106,7 @@ function AdminDashboard({
         </>
       )}
       {activeTab === TABS.SUBSCRIPTIONS && <SubscriptionPanel />}
-      {activeTab === TABS.REWARDS && <MilestoneConfig />}
+      {activeTab === TABS.REWARDS && <RewardPanel />}
     </div>
   );
 }

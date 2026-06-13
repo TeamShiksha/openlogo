@@ -104,6 +104,8 @@ class UsersRepository extends BaseRepository {
           email: 1,
           is_verified: 1,
           is_deleted: 1,
+          reward_points_current: 1,
+          reward_points_lifetime: 1,
           created_at: { $toDate: "$_id" },
           subscription: {
             type: "$subscription.type",

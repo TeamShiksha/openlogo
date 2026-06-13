@@ -6,6 +6,7 @@ const {
   RewardTransactionsRepository,
   MilestoneConfigRepository,
 } = require("../repositories");
+const { cloudFrontSignedURL } = require("../utils/cloudFront");
 
 class RewardsService {
   constructor() {
@@ -23,165 +24,200 @@ class RewardsService {
    * @returns {Promise<Object>} - Processing result with details
    */
   async processRewardsForImage(imageId) {
+    const mongoose = require("mongoose");
+    const session = await mongoose.startSession();
+
     try {
-      const milestoneConfig = await this.milestoneConfigRepository.findActive();
-      if (!milestoneConfig) {
-        return {
-          success: false,
-          imageId,
-          error: "No active MilestoneConfig found. Aborting.",
-        };
-      }
+      let result;
+      await session.withTransaction(async () => {
+        const milestoneConfig = await this.milestoneConfigRepository.findActive(
+          { session }
+        );
+        if (!milestoneConfig) {
+          throw new Error("No active MilestoneConfig found. Aborting.");
+        }
 
-      const image = await this.imagesRepository.getById(imageId);
-      if (!image) {
-        return { success: false, error: "Image not found" };
-      }
+        const image = await this.imagesRepository.getById(imageId, {
+          session,
+        });
+        if (!image) {
+          throw new Error("Image not found");
+        }
 
-      const creatorId = image.user_id;
+        const creatorId = image.user_id;
 
-      const eligibleRequests = await this.logoRequestLogsRepository.find({
-        image_id: imageId,
-        is_reward_eligible: true,
-      });
+        const eligibleRequests = await this.logoRequestLogsRepository.find(
+          { image_id: imageId, is_reward_eligible: true },
+          { session }
+        );
 
-      const reward = await this.rewardsRepository.findOrCreateByImageId(
-        imageId,
-        creatorId
-      );
-
-      const existingUserIds = new Set(
-        reward.unique_pro_users.map((uid) => uid.toString())
-      );
-
-      const newUsers = eligibleRequests
-        .filter((req) => !existingUserIds.has(req.user_id.toString()))
-        .map((req) => req.user_id);
-
-      await this.imagesRepository.update(imageId, {
-        has_pending_reward: false,
-      });
-
-      if (newUsers.length === 0) {
-        return {
-          success: true,
+        const reward = await this.rewardsRepository.findOrCreateByImageId(
           imageId,
           creatorId,
-          newUsersAdded: 0,
-          newMilestones: [],
-          totalPointsAwarded: 0,
-          message: "No new users found",
-        };
-      }
+          { session }
+        );
 
-      reward.unique_pro_users.push(...newUsers);
-      const previousCount = reward.unique_pro_users_count || 0;
-      const newCount = reward.unique_pro_users.length;
+        const existingUserIds = new Set(
+          reward.unique_pro_users.map((uid) => uid.toString())
+        );
 
-      const alreadyAchieved = new Set(
-        reward.milestones_achieved.map((m) => m.milestone)
-      );
+        const newUsers = eligibleRequests
+          .filter((req) => !existingUserIds.has(req.user_id.toString()))
+          .map((req) => req.user_id);
 
-      const newMilestones = milestoneConfig.thresholds
-        .filter((t) => t.at <= newCount && !alreadyAchieved.has(t.at))
-        .map((t) => ({
-          milestone: t.at,
-          achieved_at: new Date(),
-          points_awarded: t.points,
+        if (newUsers.length === 0) {
+          await this.imagesRepository.update(
+            imageId,
+            { has_pending_reward: false },
+            { session }
+          );
+
+          result = {
+            success: true,
+            imageId,
+            creatorId,
+            newUsersAdded: 0,
+            newMilestones: [],
+            totalPointsAwarded: 0,
+            message: "No new users found",
+          };
+          return;
+        }
+
+        const previousCount = reward.unique_pro_users_count || 0;
+        const newCount = previousCount + newUsers.length;
+
+        const alreadyAchieved = new Set(
+          reward.milestones_achieved.map((m) => m.milestone)
+        );
+
+        const newMilestones = milestoneConfig.thresholds
+          .filter((t) => t.at <= newCount && !alreadyAchieved.has(t.at))
+          .map((t) => ({
+            milestone: t.at,
+            achieved_at: new Date(),
+            points_awarded: t.points,
+          }));
+
+        if (newMilestones.length === 0) {
+          await this.rewardsRepository.update(
+            reward._id,
+            {
+              $push: { unique_pro_users: { $each: newUsers } },
+              $inc: { unique_pro_users_count: newUsers.length },
+              $set: { updated_at: new Date() },
+            },
+            { session }
+          );
+
+          await this.imagesRepository.update(
+            imageId,
+            { has_pending_reward: false },
+            { session }
+          );
+
+          result = {
+            success: true,
+            imageId,
+            creatorId,
+            previousUniqueCount: previousCount,
+            newUniqueCount: newCount,
+            newUsersAdded: newUsers.length,
+            newMilestones: [],
+            totalPointsAwarded: 0,
+            message: `Added ${newUsers.length} new users, no milestones reached`,
+          };
+          return;
+        }
+
+        const totalNewPoints = newMilestones.reduce(
+          (sum, m) => sum + m.points_awarded,
+          0
+        );
+        const previousTotal = reward.total_points_awarded || 0;
+
+        await this.rewardsRepository.update(
+          reward._id,
+          {
+            $push: { unique_pro_users: { $each: newUsers } },
+            $inc: {
+              unique_pro_users_count: newUsers.length,
+              total_points_awarded: totalNewPoints,
+            },
+            $set: { updated_at: new Date() },
+            $addToSet: {
+              milestones_achieved: { $each: newMilestones },
+            },
+          },
+          { session }
+        );
+
+        await this.usersRepository.update(
+          creatorId,
+          {
+            $inc: {
+              reward_points_current: totalNewPoints,
+              reward_points_lifetime: totalNewPoints,
+            },
+            $set: { updated_at: new Date() },
+          },
+          { session }
+        );
+
+        const transactions = newMilestones.map((milestone, index) => ({
+          image_id: imageId,
+          user_id: creatorId,
+          transaction_type: "MILESTONE_REWARD",
+          milestone: milestone.milestone,
+          points_awarded: milestone.points_awarded,
+          description: `Milestone ${milestone.milestone} reached - ${milestone.milestone} unique Pro users`,
+          reason: "NORMAL_MILESTONE",
+          previous_total:
+            previousTotal +
+            (index > 0
+              ? newMilestones
+                  .slice(0, index)
+                  .reduce((sum, m) => sum + m.points_awarded, 0)
+              : 0),
+          new_total:
+            previousTotal +
+            newMilestones
+              .slice(0, index + 1)
+              .reduce((sum, m) => sum + m.points_awarded, 0),
+          is_reversed: false,
+          metadata: {
+            unique_pro_users_count: newCount,
+            processed_at: new Date(),
+          },
         }));
 
-      if (newMilestones.length === 0) {
-        await this.rewardsRepository.update(reward._id, {
-          unique_pro_users: reward.unique_pro_users,
-          unique_pro_users_count: newCount,
-          updated_at: new Date(),
-        });
+        await Promise.all(
+          transactions.map((t) =>
+            this.rewardTransactionsRepository.createTransaction(t, {
+              session,
+            })
+          )
+        );
 
-        return {
+        await this.imagesRepository.update(
+          imageId,
+          { has_pending_reward: false },
+          { session }
+        );
+
+        result = {
           success: true,
           imageId,
           creatorId,
           previousUniqueCount: previousCount,
           newUniqueCount: newCount,
           newUsersAdded: newUsers.length,
-          newMilestones: [],
-          totalPointsAwarded: 0,
-          message: `Added ${newUsers.length} new users, no milestones reached`,
+          newMilestones: newMilestones,
+          totalPointsAwarded: totalNewPoints,
         };
-      }
-
-      const totalNewPoints = newMilestones.reduce(
-        (sum, m) => sum + m.points_awarded,
-        0
-      );
-      const previousTotal = reward.total_points_awarded || 0;
-      const newTotal = previousTotal + totalNewPoints;
-
-      await this.rewardsRepository.update(reward._id, {
-        unique_pro_users: reward.unique_pro_users,
-        unique_pro_users_count: newCount,
-        milestones_achieved: [...reward.milestones_achieved, ...newMilestones],
-        total_points_awarded: newTotal,
-        updated_at: new Date(),
       });
 
-      const creator = await this.usersRepository.getById(creatorId);
-      const newPointsCurrent =
-        (creator.reward_points_current || 0) + totalNewPoints;
-      const newPointsLifetime =
-        (creator.reward_points_lifetime || 0) + totalNewPoints;
-
-      await this.usersRepository.update(creatorId, {
-        reward_points_current: newPointsCurrent,
-        reward_points_lifetime: newPointsLifetime,
-        updated_at: new Date(),
-      });
-
-      const transactions = newMilestones.map((milestone, index) => ({
-        image_id: imageId,
-        user_id: creatorId,
-        transaction_type: "MILESTONE_REWARD",
-        milestone: milestone.milestone,
-        points_awarded: milestone.points_awarded,
-        description: `Milestone ${milestone.milestone} reached - ${milestone.milestone} unique Pro users`,
-        reason: "NORMAL_MILESTONE",
-        previous_total:
-          previousTotal +
-          (index > 0
-            ? newMilestones
-                .slice(0, index)
-                .reduce((sum, m) => sum + m.points_awarded, 0)
-            : 0),
-        new_total:
-          previousTotal +
-          newMilestones
-            .slice(0, index + 1)
-            .reduce((sum, m) => sum + m.points_awarded, 0),
-        is_reversed: false,
-        metadata: {
-          unique_pro_users_count: newCount,
-          processed_at: new Date(),
-        },
-      }));
-
-      Promise.all(
-        transactions.map((t) =>
-          this.rewardTransactionsRepository.createTransaction(t)
-        )
-      ).catch((err) =>
-        console.error("Failed to create reward transactions:", err.message)
-      );
-
-      return {
-        success: true,
-        imageId,
-        creatorId,
-        previousUniqueCount: previousCount,
-        newUniqueCount: newCount,
-        newUsersAdded: newUsers.length,
-        newMilestones: newMilestones,
-        totalPointsAwarded: totalNewPoints,
-      };
+      return result;
     } catch (error) {
       console.error(
         `[RewardsService] Error processing rewards for image ${imageId}:`,
@@ -192,6 +228,8 @@ class RewardsService {
         imageId,
         error: error.message,
       };
+    } finally {
+      session.endSession();
     }
   }
 
@@ -269,6 +307,24 @@ class RewardsService {
         0
       );
 
+      const rewardsWithImages = rewards.map((r) => {
+        let imageUrl = null;
+        if (r.image_id && r.image_id.company_name && r.image_id.extension) {
+          const imagePath = `${r.image_id.extension}/${r.image_id.company_name}.${r.image_id.extension}`;
+          const signedUrlResult = cloudFrontSignedURL(`/${imagePath}`);
+          imageUrl = signedUrlResult.success ? signedUrlResult.data : null;
+        }
+
+        return {
+          imageId: r.image_id?._id || r.image_id,
+          imageName: r.image_id?.company_name || "Unknown",
+          imageUrl,
+          uniqueProUsersCount: r.unique_pro_users.length,
+          totalPointsAwarded: r.total_points_awarded,
+          milestonesAchieved: r.milestones_achieved.length,
+        };
+      });
+
       return {
         userId,
         userName: user.name,
@@ -281,12 +337,7 @@ class RewardsService {
           rewards.length > 0
             ? Math.round(totalPointsAwarded / rewards.length)
             : 0,
-        rewards: rewards.map((r) => ({
-          imageId: r.image_id,
-          uniqueProUsersCount: r.unique_pro_users.length,
-          totalPointsAwarded: r.total_points_awarded,
-          milestonesAchieved: r.milestones_achieved.length,
-        })),
+        rewards: rewardsWithImages,
       };
     } catch (error) {
       console.error(
@@ -298,29 +349,43 @@ class RewardsService {
   }
 
   /**
-   * Gets leaderboard of top creators by reward points
+   * Gets leaderboard of top creators by reward points (aggregated per user)
    * @param {number} limit - Number of top creators to return
    * @returns {Promise<Array>} - Top creators list
    */
   async getRewardsLeaderboard(limit = 10) {
     try {
-      const topCreators = await this.rewardsRepository.getPaginatedRewards(
-        1,
-        limit
-      );
+      const topCreators =
+        await this.rewardsRepository.getLeaderboardAggregated(limit);
 
-      return topCreators.data.map((reward, index) => ({
+      return topCreators.map((entry, index) => ({
         rank: index + 1,
-        userId: reward.user_id._id || reward.user_id,
-        name: reward.user_id.name || "Unknown",
-        email: reward.user_id.email || "Unknown",
-        uniqueProUsersCount: reward.unique_pro_users.length,
-        totalPointsAwarded: reward.total_points_awarded,
-        milestonesAchieved: reward.milestones_achieved.length,
+        userId: entry.userId,
+        name: entry.name || "Unknown",
+        email: entry.email || "Unknown",
+        totalPointsAwarded: entry.totalPointsAwarded,
+        milestonesAchieved: entry.milestonesAchieved,
       }));
     } catch (error) {
       console.error(
         `[RewardsService] Error retrieving rewards leaderboard:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Gets a user's rank in the leaderboard
+   * @param {string} userId - The user ID
+   * @returns {Promise<Object>} - User's rank, total points, and total users
+   */
+  async getUserLeaderboardRank(userId) {
+    try {
+      return await this.rewardsRepository.getUserRankAggregated(userId);
+    } catch (error) {
+      console.error(
+        `[RewardsService] Error retrieving user leaderboard rank:`,
         error
       );
       throw error;
@@ -484,13 +549,13 @@ class RewardsService {
 
       // Create a reversal transaction record
       await this.rewardTransactionsRepository.createTransaction({
-        image_id: transaction.image_id,
+        image_id: transaction.image_id?._id ?? transaction.image_id,
         user_id: transaction.user_id,
         transaction_type: "REVERSAL",
         points_awarded: 0,
         points_reversed: transaction.points_awarded,
         description: `Reversal of transaction ${transactionId}: ${reason}`,
-        reason: "SYSTEM_ERROR",
+        reason,
         previous_total: user.reward_points_current || 0,
         new_total: Math.max(0, newPointsCurrent),
         is_reversed: false,

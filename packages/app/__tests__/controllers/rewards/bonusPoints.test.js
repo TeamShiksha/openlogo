@@ -40,7 +40,7 @@ describe("Rewards Controller - Bonus Points", () => {
   });
 
   describe("awardBonusPointsController", () => {
-    const endpoint = `/api/rewards/bonus`;
+    const endpoint = `/api/admin/rewards/bonus`;
 
     it("401 - User not authenticated", async () => {
       const response = await request(app).post(endpoint).send({

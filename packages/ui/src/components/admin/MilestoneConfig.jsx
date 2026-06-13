@@ -10,6 +10,7 @@ import ConfirmationModal from "../confirm/ConfirmationModal.jsx";
 import styles from "./MilestoneConfig.module.css";
 import { MILESTONE_CONFIG } from "../../utils/Constants.js";
 import { MoreVertical, Plus, Trash2 } from "lucide-react";
+import PropTypes from "prop-types";
 
 function formatThresholds(thresholds) {
   if (!thresholds || thresholds.length === 0) return "No thresholds";
@@ -22,7 +23,7 @@ function formatThresholds(thresholds) {
   return `${count} tier${count !== 1 ? "s" : ""}: ${preview}${suffix}`;
 }
 
-function MilestoneConfig() {
+function MilestoneConfig({ embedded = false }) {
   const toast = useToast();
 
   const [configs, setConfigs] = useState([]);
@@ -353,7 +354,10 @@ function MilestoneConfig() {
   };
 
   return (
-    <div className={styles.panel} data-testid="milestone-config-panel">
+    <div
+      className={embedded ? undefined : styles.panel}
+      data-testid="milestone-config-panel"
+    >
       <div className={styles["panel-header"]}>
         <div className={styles["panel-title-group"]}>
           <h2 className={styles["panel-title"]}>{MILESTONE_CONFIG.title}</h2>
@@ -518,5 +522,9 @@ function MilestoneConfig() {
     </div>
   );
 }
+
+MilestoneConfig.propTypes = {
+  embedded: PropTypes.bool,
+};
 
 export default MilestoneConfig;

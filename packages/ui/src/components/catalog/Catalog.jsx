@@ -4,6 +4,7 @@ import rightArrow from "../../assets/right-arrow.svg";
 import styles from "./Catalog.module.css";
 import CatalogItem from "./CatalogItem";
 import ImageUploadModal from "./ImageUploadModal";
+import ImageRewardModal from "./ImageRewardModal";
 import CustomInput from "../common/input/CustomInput";
 import Button from "../common/button/Button";
 import { useApi } from "../../hooks/useApi";
@@ -28,6 +29,9 @@ function Catalog() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [preSelectedFile, setPreSelectedFile] = useState(null);
   const [preFilledUri, setPreFilledUri] = useState("");
+  const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
+  const [rewardImageId, setRewardImageId] = useState(null);
+  const [rewardImageName, setRewardImageName] = useState("");
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -267,6 +271,12 @@ function Catalog() {
     setUpdatedImageCompanyUri(companyuri);
   };
 
+  const handleViewRewardsClick = (id, imageName) => {
+    setRewardImageId(id);
+    setRewardImageName(imageName);
+    setIsRewardModalOpen(true);
+  };
+
   return (
     <div className={styles["catalog-wrapper"]} data-testid="catalog">
       <div className={styles["catalog-search"]}>
@@ -417,6 +427,7 @@ function Catalog() {
                 key={company._id}
                 company={company}
                 onUpdate={handleReuploadBtnClick}
+                onViewRewards={handleViewRewardsClick}
               />
             ))}
         </div>
@@ -447,6 +458,16 @@ function Catalog() {
           </button>
         </div>
       </div>
+      <ImageRewardModal
+        isOpen={isRewardModalOpen}
+        onClose={() => {
+          setIsRewardModalOpen(false);
+          setRewardImageId(null);
+          setRewardImageName("");
+        }}
+        imageId={rewardImageId}
+        imageName={rewardImageName}
+      />
     </div>
   );
 }

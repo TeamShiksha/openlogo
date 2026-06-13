@@ -3,14 +3,12 @@ const {
   getRewardSummaryForImageController,
   getRewardSummaryForUserController,
   getRewardsLeaderboardController,
+  getUserLeaderboardRankController,
   getImageTransactionsController,
   getUserTransactionsController,
   getTransactionController,
   getUserTransactionStatsController,
   getAuditTrailController,
-  searchTransactionsController,
-  awardBonusPointsController,
-  reverseTransactionController,
 } = require("../controllers/rewards");
 const authMiddleware = require("../middlewares/auth");
 
@@ -32,6 +30,18 @@ router.get(
  * - Returns reward details associated with the image
  */
 router.get("/summary/image/:imageId", getRewardSummaryForImageController);
+
+/**
+ * GET /api/rewards/leaderboard/rank
+ * Retrieves the authenticated user's rank in the leaderboard
+ * - Returns rank, total points, and total users
+ * - Requires: authentication
+ */
+router.get(
+  "/leaderboard/rank",
+  authMiddleware(),
+  getUserLeaderboardRankController
+);
 
 /**
  * GET /api/rewards/leaderboard
@@ -60,18 +70,6 @@ router.get(
 );
 
 /**
- * GET /api/rewards/transactions/search
- * Searches transactions with multiple filter options
- * - Query params: userId, imageId, type, isReversed, reason, startDate, endDate, page, limit
- * - Requires: authentication, admin role
- */
-router.get(
-  "/transactions/search",
-  authMiddleware({ adminOnly: true }),
-  searchTransactionsController
-);
-
-/**
  * GET /api/rewards/transactions/stats/user
  * Get transaction statistics for authenticated user
  * Requires: authentication
@@ -94,29 +92,5 @@ router.get("/transactions/:transactionId", getTransactionController);
  * Requires: authentication
  */
 router.get("/audit-trail/:imageId", authMiddleware(), getAuditTrailController);
-
-/**
- * POST /api/rewards/bonus
- * Award bonus points to a user (admin only)
- * Body: { imageId, userId, points, reason, description }
- * Requires: authentication, admin role
- */
-router.post(
-  "/bonus",
-  authMiddleware({ adminOnly: true }),
-  awardBonusPointsController
-);
-
-/**
- * POST /api/rewards/transactions/:transactionId/reverse
- * Reverse a transaction (admin only)
- * Body: { reason }
- * Requires: authentication, admin role
- */
-router.post(
-  "/transactions/:transactionId/reverse",
-  authMiddleware({ adminOnly: true }),
-  reverseTransactionController
-);
 
 module.exports = router;
