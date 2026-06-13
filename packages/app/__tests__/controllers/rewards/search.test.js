@@ -38,7 +38,7 @@ describe("Rewards Controller - Search Transactions", () => {
   });
 
   describe("searchTransactionsController", () => {
-    const endpoint = `/api/rewards/transactions/search`;
+    const endpoint = `/api/admin/rewards/transactions/search`;
 
     it("401 - User not authenticated", async () => {
       const response = await request(app).get(endpoint);

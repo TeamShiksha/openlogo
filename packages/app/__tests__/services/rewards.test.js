@@ -156,64 +156,29 @@ const MOCK_REVERSED_TRANSACTION = {
   reversal_reason: "Abuse detected",
 };
 
-const MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD = {
-  data: [
-    {
-      user_id: {
-        _id: MOCK_USERS[0]._id,
-        name: "Creator A",
-        email: "a@example.com",
-      },
-      image_id: MOCK_IMAGES[0]._id,
-      unique_pro_users: Array.from(
-        { length: 15 },
-        () => new mongoose.Types.ObjectId()
-      ),
-      total_points_awarded: 30,
-      milestones_achieved: [
-        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
-        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
-        { milestone: 15, achieved_at: new Date(), points_awarded: 10 },
-      ],
-    },
-    {
-      user_id: {
-        _id: MOCK_USERS[1]._id,
-        name: "Creator B",
-        email: "b@example.com",
-      },
-      image_id: MOCK_IMAGES[1]._id,
-      unique_pro_users: Array.from(
-        { length: 10 },
-        () => new mongoose.Types.ObjectId()
-      ),
-      total_points_awarded: 20,
-      milestones_achieved: [
-        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
-        { milestone: 10, achieved_at: new Date(), points_awarded: 10 },
-      ],
-    },
-    {
-      user_id: {
-        _id: MOCK_USERS[2]._id,
-        name: "Creator C",
-        email: "c@example.com",
-      },
-      image_id: MOCK_IMAGES[2]._id,
-      unique_pro_users: Array.from(
-        { length: 5 },
-        () => new mongoose.Types.ObjectId()
-      ),
-      total_points_awarded: 10,
-      milestones_achieved: [
-        { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
-      ],
-    },
-  ],
-  total: 3,
-  currentPage: 1,
-  totalPages: 1,
-};
+const MOCK_AGGREGATED_LEADERBOARD = [
+  {
+    userId: MOCK_USERS[0]._id,
+    name: "Creator A",
+    email: "a@example.com",
+    totalPointsAwarded: 30,
+    milestonesAchieved: 3,
+  },
+  {
+    userId: MOCK_USERS[1]._id,
+    name: "Creator B",
+    email: "b@example.com",
+    totalPointsAwarded: 20,
+    milestonesAchieved: 2,
+  },
+  {
+    userId: MOCK_USERS[2]._id,
+    name: "Creator C",
+    email: "c@example.com",
+    totalPointsAwarded: 10,
+    milestonesAchieved: 1,
+  },
+];
 
 describe("Reward System", () => {
   let rewardsService;
@@ -315,7 +280,15 @@ describe("Reward System", () => {
   });
 
   describe("RewardsService.processRewardsForImage", () => {
+    let createTransactionSpy;
+
     const setupProcessRewardsMocks = (eligibleLogs, rewardRecord) => {
+      const mockSession = {
+        withTransaction: jest.fn((cb) => cb()),
+        endSession: jest.fn(),
+      };
+      jest.spyOn(mongoose, "startSession").mockResolvedValue(mockSession);
+
       jest
         .spyOn(rewardsService.milestoneConfigRepository, "findActive")
         .mockResolvedValue(MOCK_MILESTONE_CONFIG);
@@ -334,12 +307,9 @@ describe("Reward System", () => {
         .spyOn(rewardsService.rewardsRepository, "update")
         .mockResolvedValue({});
       jest
-        .spyOn(rewardsService.usersRepository, "getById")
-        .mockResolvedValue(MOCK_REWARD_CREATOR_USER);
-      jest
         .spyOn(rewardsService.usersRepository, "update")
         .mockResolvedValue({});
-      jest
+      createTransactionSpy = jest
         .spyOn(rewardsService.rewardTransactionsRepository, "createTransaction")
         .mockResolvedValue({});
       jest
@@ -367,6 +337,15 @@ describe("Reward System", () => {
         ],
       });
       expect(result.newMilestones).toHaveLength(1);
+      expect(createTransactionSpy).toHaveBeenCalledTimes(1);
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transaction_type: "MILESTONE_REWARD",
+          milestone: 5,
+          points_awarded: 10,
+        }),
+        expect.any(Object)
+      );
     });
 
     it("should award multiple milestones for high usage", async () => {
@@ -391,6 +370,19 @@ describe("Reward System", () => {
         ]),
       });
       expect(result.newMilestones).toHaveLength(3);
+      expect(createTransactionSpy).toHaveBeenCalledTimes(3);
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ milestone: 5, points_awarded: 10 }),
+        expect.any(Object)
+      );
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ milestone: 10, points_awarded: 10 }),
+        expect.any(Object)
+      );
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ milestone: 15, points_awarded: 10 }),
+        expect.any(Object)
+      );
     });
 
     it("should not award duplicate milestones", async () => {
@@ -411,6 +403,15 @@ describe("Reward System", () => {
         ],
       });
       expect(result.newMilestones).toHaveLength(1);
+      expect(createTransactionSpy).toHaveBeenCalledTimes(1);
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transaction_type: "MILESTONE_REWARD",
+          milestone: 10,
+          points_awarded: 10,
+        }),
+        expect.any(Object)
+      );
     });
   });
 
@@ -441,8 +442,8 @@ describe("Reward System", () => {
   describe("RewardsService.getRewardsLeaderboard", () => {
     it("should return top creators ordered by total points awarded", async () => {
       jest
-        .spyOn(rewardsService.rewardsRepository, "getPaginatedRewards")
-        .mockResolvedValue(MOCK_PAGINATED_REWARDS_FOR_LEADERBOARD);
+        .spyOn(rewardsService.rewardsRepository, "getLeaderboardAggregated")
+        .mockResolvedValue(MOCK_AGGREGATED_LEADERBOARD);
 
       const leaderboard = await rewardsService.getRewardsLeaderboard(3);
 

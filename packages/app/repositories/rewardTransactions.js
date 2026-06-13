@@ -11,8 +11,8 @@ class RewardTransactionsRepository extends BaseRepository {
    * @param {Object} transactionData - Transaction data
    * @returns {Promise<Object>} - Created transaction record
    */
-  async createTransaction(transactionData) {
-    return await this.create(transactionData);
+  async createTransaction(transactionData, { session } = {}) {
+    return await this.create(transactionData, { session });
   }
 
   /**

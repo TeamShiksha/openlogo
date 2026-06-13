@@ -31,7 +31,7 @@ describe("Rewards Controller - Transaction Reversal", () => {
 
   describe("reverseTransactionController", () => {
     const transactionId = MOCK_REWARD_TRANSACTION._id.toString();
-    const endpoint = `/api/rewards/transactions/${transactionId}/reverse`;
+    const endpoint = `/api/admin/rewards/transactions/${transactionId}/reverse`;
 
     it("401 - User not authenticated", async () => {
       const response = await request(app).post(endpoint).send({
