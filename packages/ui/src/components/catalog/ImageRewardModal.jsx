@@ -33,12 +33,20 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
   const toast = useToast();
   const [page, setPage] = useState(1);
 
-  const { fetchRequest: fetchSummary, data: summaryData, loading: summaryLoading } = useApi({
+  const {
+    fetchRequest: fetchSummary,
+    data: summaryData,
+    loading: summaryLoading,
+  } = useApi({
     method: "GET",
     url: `/rewards/summary/image/${imageId}`,
   });
 
-  const { fetchRequest: fetchTransactions, data: transactionsData, loading: transactionsLoading } = useApi({
+  const {
+    fetchRequest: fetchTransactions,
+    data: transactionsData,
+    loading: transactionsLoading,
+  } = useApi({
     method: "GET",
     url: `/rewards/transactions/image/${imageId}?page=${page}&limit=${TRANSACTIONS_PER_PAGE}`,
   });
@@ -80,9 +88,7 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
     >
       <div className={styles["modal-content"]}>
         <div className={styles["modal-header"]}>
-          <h2 className={styles["modal-title"]}>
-            {IMAGE_REWARD_MODAL.title}
-          </h2>
+          <h2 className={styles["modal-title"]}>{IMAGE_REWARD_MODAL.title}</h2>
           <p className={styles["modal-subtitle"]}>
             {imageName || IMAGE_REWARD_MODAL.subtitle}
           </p>

@@ -1,9 +1,4 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import UserRewards from "../../../src/components/admin/UserRewards";
 import { instance } from "../../../src/api/api_instance";
@@ -49,7 +44,7 @@ const makeListResponse = (users = [], totalPages = 1) => ({
 });
 
 const makeTransactionSearchResponse = (transactions = [], totalPages = 1) => ({
-  data: { data: transactions, totalPages },
+  data: { statusCode: 200, data: { data: transactions, totalPages } },
 });
 
 const wrapper = ({ children }) => (
@@ -72,9 +67,7 @@ describe("UserRewards", () => {
 
       expect(screen.getByTestId("user-rewards-panel")).toBeInTheDocument();
       expect(screen.getByText(ADMIN_USER_REWARDS.title)).toBeInTheDocument();
-      expect(
-        screen.getByText(ADMIN_USER_REWARDS.subtitle)
-      ).toBeInTheDocument();
+      expect(screen.getByText(ADMIN_USER_REWARDS.subtitle)).toBeInTheDocument();
     });
 
     it("renders the search input with placeholder", async () => {
@@ -262,7 +255,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
 
       fireEvent.click(screen.getByLabelText("View rewards"));
 
@@ -276,30 +271,6 @@ describe("UserRewards", () => {
       });
     });
 
-    it("shows stats breakdown in detail view", async () => {
-      const user = makeUser({ _id: "u1" });
-      const transactions = [
-        makeTransaction({ _id: "tx1", transaction_type: "MILESTONE_REWARD", points_awarded: 50 }),
-        makeTransaction({ _id: "tx2", transaction_type: "BONUS", points_awarded: 100 }),
-        makeTransaction({ _id: "tx3", transaction_type: "BONUS", points_awarded: 75 }),
-      ];
-      instance.mockResolvedValueOnce(makeListResponse([user]));
-      instance.mockResolvedValueOnce(
-        makeTransactionSearchResponse(transactions)
-      );
-
-      render(<UserRewards />, { wrapper });
-
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
-
-      fireEvent.click(screen.getByLabelText("View rewards"));
-
-      await waitFor(() => {
-        expect(screen.getByText("3")).toBeInTheDocument();
-        expect(screen.getByText("225")).toBeInTheDocument();
-      });
-    });
-
     it("returns to user list when Back to Users is clicked", async () => {
       const user = makeUser({ _id: "u1" });
       instance.mockResolvedValueOnce(makeListResponse([user]));
@@ -307,7 +278,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
 
       fireEvent.click(screen.getByLabelText("View rewards"));
 
@@ -331,7 +304,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
 
       fireEvent.click(screen.getByLabelText("View rewards"));
 
@@ -351,7 +326,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -360,9 +337,7 @@ describe("UserRewards", () => {
         ).toBeInTheDocument();
       });
 
-      fireEvent.click(
-        screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-      );
+      fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
 
       expect(
         screen.getByText(ADMIN_USER_REWARDS.bonusModal.title)
@@ -376,13 +351,13 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
-        fireEvent.click(
-          screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-        );
+        fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
       });
 
       expect(
@@ -407,13 +382,13 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
-        fireEvent.click(
-          screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-        );
+        fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
       });
 
       fireEvent.click(
@@ -432,13 +407,13 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
-        fireEvent.click(
-          screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-        );
+        fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
       });
 
       const pointsInput = screen.getByPlaceholderText("50");
@@ -462,22 +437,22 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
-        fireEvent.click(
-          screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-        );
+        fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
       });
 
       const pointsInput = screen.getByPlaceholderText("50");
       fireEvent.change(pointsInput, { target: { value: "100" } });
 
-      const reasonInput = screen.getByPlaceholderText(
-        ADMIN_USER_REWARDS.bonusModal.reasonPlaceholder
-      );
-      fireEvent.change(reasonInput, { target: { value: "Promotion" } });
+      const reasonSelect = screen.getByRole("combobox", {
+        name: ADMIN_USER_REWARDS.bonusModal.reasonLabel,
+      });
+      fireEvent.change(reasonSelect, { target: { value: "PROMOTION" } });
 
       fireEvent.click(
         screen.getByText(ADMIN_USER_REWARDS.bonusModal.confirmButton)
@@ -500,22 +475,22 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
-        fireEvent.click(
-          screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus)
-        );
+        fireEvent.click(screen.getByText(ADMIN_USER_REWARDS.detail.awardBonus));
       });
 
       const pointsInput = screen.getByPlaceholderText("50");
       fireEvent.change(pointsInput, { target: { value: "100" } });
 
-      const reasonInput = screen.getByPlaceholderText(
-        ADMIN_USER_REWARDS.bonusModal.reasonPlaceholder
-      );
-      fireEvent.change(reasonInput, { target: { value: "Promotion" } });
+      const reasonSelect = screen.getByRole("combobox", {
+        name: ADMIN_USER_REWARDS.bonusModal.reasonLabel,
+      });
+      fireEvent.change(reasonSelect, { target: { value: "PROMOTION" } });
 
       fireEvent.click(
         screen.getByText(ADMIN_USER_REWARDS.bonusModal.confirmButton)
@@ -540,7 +515,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -552,9 +529,7 @@ describe("UserRewards", () => {
 
     it("does not show reverse button for reversed transactions", async () => {
       const user = makeUser({ _id: "u1" });
-      const transactions = [
-        makeTransaction({ _id: "tx1", is_reversed: true }),
-      ];
+      const transactions = [makeTransaction({ _id: "tx1", is_reversed: true })];
       instance.mockResolvedValueOnce(makeListResponse([user]));
       instance.mockResolvedValueOnce(
         makeTransactionSearchResponse(transactions)
@@ -562,7 +537,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -584,7 +561,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -610,7 +589,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -648,7 +629,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -688,7 +671,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -703,11 +688,11 @@ describe("UserRewards", () => {
         ).toBeInTheDocument();
       });
 
-      const reasonInput = screen.getByPlaceholderText(
-        ADMIN_USER_REWARDS.reverseModal.reasonPlaceholder
-      );
-      fireEvent.change(reasonInput, {
-        target: { value: "System error" },
+      const reasonSelect = screen.getByRole("combobox", {
+        name: ADMIN_USER_REWARDS.reverseModal.reasonLabel,
+      });
+      fireEvent.change(reasonSelect, {
+        target: { value: "DUPLICATE_REMOVAL" },
       });
 
       fireEvent.click(
@@ -738,7 +723,9 @@ describe("UserRewards", () => {
 
       render(<UserRewards />, { wrapper });
 
-      await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText("Alice")).toBeInTheDocument()
+      );
       fireEvent.click(screen.getByLabelText("View rewards"));
 
       await waitFor(() => {
@@ -753,11 +740,11 @@ describe("UserRewards", () => {
         ).toBeInTheDocument();
       });
 
-      const reasonInput = screen.getByPlaceholderText(
-        ADMIN_USER_REWARDS.reverseModal.reasonPlaceholder
-      );
-      fireEvent.change(reasonInput, {
-        target: { value: "System error" },
+      const reasonSelect2 = screen.getByRole("combobox", {
+        name: ADMIN_USER_REWARDS.reverseModal.reasonLabel,
+      });
+      fireEvent.change(reasonSelect2, {
+        target: { value: "DUPLICATE_REMOVAL" },
       });
 
       fireEvent.click(

@@ -946,7 +946,8 @@ export const REWARD_PANEL = {
 
 export const ADMIN_USER_REWARDS = {
   title: "User Rewards",
-  subtitle: "Search users and view their reward summary and transaction history.",
+  subtitle:
+    "Search users and view their reward summary and transaction history.",
   searchPlaceholder: "Search by name or email...",
   tableHeaders: ["User", "Plan", "Points", ""],
   emptyState: "No users found matching your search.",

@@ -80,7 +80,9 @@
   border-radius: var(--bradius);
   border: 1px solid var(--border-color);
   align-items: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .image-card:hover {
@@ -212,7 +214,9 @@
 
 .stat-card-clickable {
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .stat-card-clickable:hover {

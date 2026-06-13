@@ -18,6 +18,11 @@
   flex-wrap: wrap;
 }
 
+.create-btn {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+}
+
 .panel-title-group {
   display: flex;
   flex-direction: column;

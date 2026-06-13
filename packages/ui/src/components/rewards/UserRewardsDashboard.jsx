@@ -7,7 +7,14 @@ import Modal from "../common/modal/Modal.jsx";
 import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import LeaderboardView from "./LeaderboardView.jsx";
 import { USER_REWARDS_DASHBOARD } from "../../utils/Constants.js";
-import { ChevronLeft, ChevronRight, Trophy, Star, TrendingUp, Upload } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Trophy,
+  Star,
+  TrendingUp,
+  Upload,
+} from "lucide-react";
 import styles from "./UserRewardsDashboard.module.css";
 
 const TRANSACTIONS_PER_PAGE = 10;
@@ -50,12 +57,20 @@ function UserRewardsDashboard() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showTxModal, setShowTxModal] = useState(false);
 
-  const { fetchRequest: fetchSummary, data: summaryData, loading: summaryLoading } = useApi({
+  const {
+    fetchRequest: fetchSummary,
+    data: summaryData,
+    loading: summaryLoading,
+  } = useApi({
     method: "GET",
     url: "/rewards/summary/user",
   });
 
-  const { fetchRequest: fetchTransactions, data: transactionsData, loading: txLoading } = useApi({
+  const {
+    fetchRequest: fetchTransactions,
+    data: transactionsData,
+    loading: txLoading,
+  } = useApi({
     method: "GET",
     url: `/rewards/transactions/user?page=${txPage}&limit=${TRANSACTIONS_PER_PAGE}`,
   });
@@ -88,11 +103,7 @@ function UserRewardsDashboard() {
   const isLoading = summaryLoading;
 
   if (showLeaderboard) {
-    return (
-      <LeaderboardView
-        onBack={() => setShowLeaderboard(false)}
-      />
-    );
+    return <LeaderboardView onBack={() => setShowLeaderboard(false)} />;
   }
 
   return (
@@ -131,7 +142,9 @@ function UserRewardsDashboard() {
               onClick={() => setShowTxModal(true)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setShowTxModal(true); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setShowTxModal(true);
+              }}
             >
               <div className={styles["stat-icon-wrapper"]}>
                 <Star size={24} className={styles["stat-icon"]} />
@@ -151,7 +164,9 @@ function UserRewardsDashboard() {
               onClick={() => setShowTxModal(true)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setShowTxModal(true); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setShowTxModal(true);
+              }}
             >
               <div className={styles["stat-icon-wrapper"]}>
                 <Trophy size={24} className={styles["stat-icon"]} />
@@ -194,7 +209,8 @@ function UserRewardsDashboard() {
                 </div>
                 <div className={styles["images-header-actions"]}>
                   <span className={styles["images-contributed-label"]}>
-                    {summary?.totalImages || 0} {USER_REWARDS_DASHBOARD.stats.totalImages}
+                    {summary?.totalImages || 0}{" "}
+                    {USER_REWARDS_DASHBOARD.stats.totalImages}
                   </span>
                   <Button
                     variant="primary"
@@ -230,7 +246,9 @@ function UserRewardsDashboard() {
                       </div>
                     </div>
                     <div className={styles["image-info"]}>
-                      <h4 className={styles["image-name"]}>{reward.imageName}</h4>
+                      <h4 className={styles["image-name"]}>
+                        {reward.imageName}
+                      </h4>
                       <div className={styles["image-stats"]}>
                         <div className={styles["image-stat"]}>
                           <span className={styles["image-stat-value"]}>
@@ -271,9 +289,11 @@ function UserRewardsDashboard() {
                     <table className={styles["table"]}>
                       <thead>
                         <tr>
-                          {USER_REWARDS_DASHBOARD.history.headers.map((h, i) => (
-                            <th key={i}>{h}</th>
-                          ))}
+                          {USER_REWARDS_DASHBOARD.history.headers.map(
+                            (h, i) => (
+                              <th key={i}>{h}</th>
+                            )
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -315,7 +335,9 @@ function UserRewardsDashboard() {
                         type="button"
                         className={styles["page-btn"]}
                         disabled={txPage === txTotalPages || txLoading}
-                        onClick={() => setTxPage((p) => Math.min(txTotalPages, p + 1))}
+                        onClick={() =>
+                          setTxPage((p) => Math.min(txTotalPages, p + 1))
+                        }
                         aria-label="Next page"
                       >
                         <ChevronRight size={16} aria-hidden="true" />

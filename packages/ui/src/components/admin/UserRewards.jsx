@@ -5,13 +5,7 @@ import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../common/input/CustomInput.jsx";
 import Modal from "../common/modal/Modal.jsx";
 import { ADMIN_USER_REWARDS } from "../../utils/Constants.js";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Plus,
-  RotateCcw,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Plus, RotateCcw } from "lucide-react";
 import styles from "./UserRewards.module.css";
 
 const ITEMS_PER_PAGE = 10;
@@ -232,269 +226,268 @@ function UserRewards() {
 
   if (selectedUser) {
     return (
-      <><div className={styles["detail-view"]}>
-        <div className={styles["detail-header"]}>
-          <button
-            type="button"
-            className={styles["back-btn"]}
-            onClick={handleBackToList}
-          >
-            <ChevronLeft size={18} aria-hidden="true" />
-            Back to Users
-          </button>
-          <div className={styles["user-info"]}>
-            <h3 className={styles["user-name"]}>{selectedUser.name || "—"}</h3>
-            <p className={styles["user-email"]}>{selectedUser.email}</p>
-          </div>
-          <button
-            type="button"
-            className={styles["bonus-btn"]}
-            onClick={handleOpenBonusModal}
-          >
-            <Plus size={16} aria-hidden="true" />
-            {ADMIN_USER_REWARDS.detail.awardBonus}
-          </button>
-        </div>
-
-        {txLoading ? (
-          <div className={styles["loading-container"]}>
-            <LoadingSpinner size={36} border={3} color="var(--primary)" />
-          </div>
-        ) : (
-          <>
-            <div className={styles["history-section"]}>
-              <h4 className={styles["history-title"]}>
-                {ADMIN_USER_REWARDS.detail.historyTitle}
-              </h4>
-              {transactions.length === 0 ? (
-                <p className={styles["empty-state"]}>
-                  {ADMIN_USER_REWARDS.detail.emptyHistory}
-                </p>
-              ) : (
-                <>
-                  <div className={styles["table-wrapper"]}>
-                    <table className={styles["table"]}>
-                      <thead>
-                        <tr>
-                          {ADMIN_USER_REWARDS.detail.historyHeaders.map(
-                            (h, i) => (
-                              <th key={i}>{h}</th>
-                            )
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactions.map((tx) => (
-                          <tr key={tx._id}>
-                            <td>
-                              <span className={styles["type-badge"]}>
-                                {formatTransactionType(tx.transaction_type)}
-                              </span>
-                            </td>
-                            <td className={styles["points-cell"]}>
-                              {tx.points_awarded > 0 ? "+" : ""}
-                              {tx.points_awarded}
-                            </td>
-                            <td>{formatTransactionReason(tx.reason)}</td>
-                            <td>{formatDate(tx.createdAt)}</td>
-                            <td className={styles["action-cell"]}>
-                              {!tx.is_reversed && tx.transaction_type !== "REVERSAL" && (
-                                <button
-                                  type="button"
-                                  className={styles["reverse-btn"]}
-                                  onClick={() =>
-                                    handleOpenReverseModal(tx)
-                                  }
-                                  aria-label="Reverse transaction"
-                                  title="Reverse transaction"
-                                >
-                                  <RotateCcw size={14} aria-hidden="true" />
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {txTotalPages > 1 && (
-                    <div className={styles["pagination"]}>
-                      <button
-                        type="button"
-                        className={styles["page-btn"]}
-                        disabled={txPage === 1 || txLoading}
-                        onClick={() => setTxPage((p) => Math.max(1, p - 1))}
-                        aria-label="Previous page"
-                      >
-                        <ChevronLeft size={16} aria-hidden="true" />
-                      </button>
-                      <span className={styles["page-indicator"]}>
-                        Page {txPage} of {txTotalPages}
-                      </span>
-                      <button
-                        type="button"
-                        className={styles["page-btn"]}
-                        disabled={txPage === txTotalPages || txLoading}
-                        onClick={() =>
-                          setTxPage((p) => Math.min(txTotalPages, p + 1))
-                        }
-                        aria-label="Next page"
-                      >
-                        <ChevronRight size={16} aria-hidden="true" />
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
+      <>
+        <div className={styles["detail-view"]}>
+          <div className={styles["detail-header"]}>
+            <button
+              type="button"
+              className={styles["back-btn"]}
+              onClick={handleBackToList}
+            >
+              <ChevronLeft size={18} aria-hidden="true" />
+              Back to Users
+            </button>
+            <div className={styles["user-info"]}>
+              <h3 className={styles["user-name"]}>
+                {selectedUser.name || "—"}
+              </h3>
+              <p className={styles["user-email"]}>{selectedUser.email}</p>
             </div>
-          </>
-        )}
-      </div>
+            <button
+              type="button"
+              className={styles["bonus-btn"]}
+              onClick={handleOpenBonusModal}
+            >
+              <Plus size={16} aria-hidden="true" />
+              {ADMIN_USER_REWARDS.detail.awardBonus}
+            </button>
+          </div>
 
-      <Modal
-        isOpen={showBonusModal}
-        onClose={handleCloseBonusModal}
-      >
-        <div className={styles["modal-body"]}>
-          <h3 className={styles["modal-title"]}>
-            {ADMIN_USER_REWARDS.bonusModal.title}
-          </h3>
-          <div className={styles["modal-field"]}>
-            <label className={styles["modal-label"]}>
-              {ADMIN_USER_REWARDS.bonusModal.pointsLabel}
-            </label>
-            <input
-              type="number"
-              className={styles["modal-input"]}
-              value={bonusPoints}
-              onChange={(e) => setBonusPoints(e.target.value)}
-              placeholder="50"
-              min="1"
-            />
-          </div>
-          <div className={styles["modal-field"]}>
-            <label className={styles["modal-label"]}>
-              {ADMIN_USER_REWARDS.bonusModal.reasonLabel}
-            </label>
-            <select
-              className={styles["modal-select"]}
-              value={bonusReason}
-              onChange={(e) => setBonusReason(e.target.value)}
-            >
-              <option value="">
-                {ADMIN_USER_REWARDS.bonusModal.reasonPlaceholder}
-              </option>
-              {ADMIN_USER_REWARDS.bonusModal.reasonOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles["modal-field"]}>
-            <label className={styles["modal-label"]}>
-              {ADMIN_USER_REWARDS.bonusModal.descriptionLabel}
-            </label>
-            <textarea
-              className={styles["modal-textarea"]}
-              value={bonusDescription}
-              onChange={(e) => setBonusDescription(e.target.value)}
-              placeholder={ADMIN_USER_REWARDS.bonusModal.descriptionPlaceholder}
-              rows={3}
-            />
-          </div>
-          <div className={styles["modal-actions"]}>
-            <button
-              type="button"
-              className={styles["modal-cancel-btn"]}
-              onClick={handleCloseBonusModal}
-              disabled={bonusSubmitting}
-            >
-              {ADMIN_USER_REWARDS.bonusModal.cancelButton}
-            </button>
-            <button
-              type="button"
-              className={styles["modal-confirm-btn"]}
-              onClick={handleAwardBonus}
-              disabled={bonusSubmitting}
-            >
-              {bonusSubmitting
-                ? ADMIN_USER_REWARDS.bonusModal.submittingText
-                : ADMIN_USER_REWARDS.bonusModal.confirmButton}
-            </button>
-          </div>
+          {txLoading ? (
+            <div className={styles["loading-container"]}>
+              <LoadingSpinner size={36} border={3} color="var(--primary)" />
+            </div>
+          ) : (
+            <>
+              <div className={styles["history-section"]}>
+                <h4 className={styles["history-title"]}>
+                  {ADMIN_USER_REWARDS.detail.historyTitle}
+                </h4>
+                {transactions.length === 0 ? (
+                  <p className={styles["empty-state"]}>
+                    {ADMIN_USER_REWARDS.detail.emptyHistory}
+                  </p>
+                ) : (
+                  <>
+                    <div className={styles["table-wrapper"]}>
+                      <table className={styles["table"]}>
+                        <thead>
+                          <tr>
+                            {ADMIN_USER_REWARDS.detail.historyHeaders.map(
+                              (h, i) => (
+                                <th key={i}>{h}</th>
+                              )
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {transactions.map((tx) => (
+                            <tr key={tx._id}>
+                              <td>
+                                <span className={styles["type-badge"]}>
+                                  {formatTransactionType(tx.transaction_type)}
+                                </span>
+                              </td>
+                              <td className={styles["points-cell"]}>
+                                {tx.points_awarded > 0 ? "+" : ""}
+                                {tx.points_awarded}
+                              </td>
+                              <td>{formatTransactionReason(tx.reason)}</td>
+                              <td>{formatDate(tx.createdAt)}</td>
+                              <td className={styles["action-cell"]}>
+                                {!tx.is_reversed &&
+                                  tx.transaction_type !== "REVERSAL" && (
+                                    <button
+                                      type="button"
+                                      className={styles["reverse-btn"]}
+                                      onClick={() => handleOpenReverseModal(tx)}
+                                      aria-label="Reverse transaction"
+                                      title="Reverse transaction"
+                                    >
+                                      <RotateCcw size={14} aria-hidden="true" />
+                                    </button>
+                                  )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {txTotalPages > 1 && (
+                      <div className={styles["pagination"]}>
+                        <button
+                          type="button"
+                          className={styles["page-btn"]}
+                          disabled={txPage === 1 || txLoading}
+                          onClick={() => setTxPage((p) => Math.max(1, p - 1))}
+                          aria-label="Previous page"
+                        >
+                          <ChevronLeft size={16} aria-hidden="true" />
+                        </button>
+                        <span className={styles["page-indicator"]}>
+                          Page {txPage} of {txTotalPages}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles["page-btn"]}
+                          disabled={txPage === txTotalPages || txLoading}
+                          onClick={() =>
+                            setTxPage((p) => Math.min(txTotalPages, p + 1))
+                          }
+                          aria-label="Next page"
+                        >
+                          <ChevronRight size={16} aria-hidden="true" />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </div>
-      </Modal>
 
-      <Modal
-        isOpen={showReverseModal}
-        onClose={handleCloseReverseModal}
-      >
-        <div className={styles["modal-body"]}>
-          <h3 className={styles["modal-title"]}>
-            {ADMIN_USER_REWARDS.reverseModal.title}
-          </h3>
-          <p className={styles["modal-description"]}>
-            {reverseTransaction &&
-              ADMIN_USER_REWARDS.reverseModal.description(
-                reverseTransaction.points_awarded,
-                formatTransactionType(reverseTransaction.transaction_type)
-              )}
-          </p>
-          <div className={styles["modal-field"]}>
-            <label className={styles["modal-label"]}>
-              {ADMIN_USER_REWARDS.reverseModal.reasonLabel}
-            </label>
-            <select
-              className={styles["modal-select"]}
-              value={reverseReason}
-              onChange={(e) => setReverseReason(e.target.value)}
-            >
-              <option value="">
-                {ADMIN_USER_REWARDS.reverseModal.reasonPlaceholder}
-              </option>
-              {ADMIN_USER_REWARDS.reverseModal.reversalReasonOptions.map(
-                (opt) => (
+        <Modal isOpen={showBonusModal} onClose={handleCloseBonusModal}>
+          <div className={styles["modal-body"]}>
+            <h3 className={styles["modal-title"]}>
+              {ADMIN_USER_REWARDS.bonusModal.title}
+            </h3>
+            <div className={styles["modal-field"]}>
+              <label className={styles["modal-label"]}>
+                {ADMIN_USER_REWARDS.bonusModal.pointsLabel}
+              </label>
+              <input
+                type="number"
+                className={styles["modal-input"]}
+                value={bonusPoints}
+                onChange={(e) => setBonusPoints(e.target.value)}
+                placeholder="50"
+                min="1"
+              />
+            </div>
+            <div className={styles["modal-field"]}>
+              <label className={styles["modal-label"]}>
+                {ADMIN_USER_REWARDS.bonusModal.reasonLabel}
+              </label>
+              <select
+                className={styles["modal-select"]}
+                value={bonusReason}
+                onChange={(e) => setBonusReason(e.target.value)}
+                aria-label={ADMIN_USER_REWARDS.bonusModal.reasonLabel}
+              >
+                <option value="">
+                  {ADMIN_USER_REWARDS.bonusModal.reasonPlaceholder}
+                </option>
+                {ADMIN_USER_REWARDS.bonusModal.reasonOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
-                )
-              )}
-            </select>
+                ))}
+              </select>
+            </div>
+            <div className={styles["modal-field"]}>
+              <label className={styles["modal-label"]}>
+                {ADMIN_USER_REWARDS.bonusModal.descriptionLabel}
+              </label>
+              <textarea
+                className={styles["modal-textarea"]}
+                value={bonusDescription}
+                onChange={(e) => setBonusDescription(e.target.value)}
+                placeholder={
+                  ADMIN_USER_REWARDS.bonusModal.descriptionPlaceholder
+                }
+                rows={3}
+              />
+            </div>
+            <div className={styles["modal-actions"]}>
+              <button
+                type="button"
+                className={styles["modal-cancel-btn"]}
+                onClick={handleCloseBonusModal}
+                disabled={bonusSubmitting}
+              >
+                {ADMIN_USER_REWARDS.bonusModal.cancelButton}
+              </button>
+              <button
+                type="button"
+                className={styles["modal-confirm-btn"]}
+                onClick={handleAwardBonus}
+                disabled={bonusSubmitting}
+              >
+                {bonusSubmitting
+                  ? ADMIN_USER_REWARDS.bonusModal.submittingText
+                  : ADMIN_USER_REWARDS.bonusModal.confirmButton}
+              </button>
+            </div>
           </div>
-          <div className={styles["modal-actions"]}>
-            <button
-              type="button"
-              className={styles["modal-cancel-btn"]}
-              onClick={handleCloseReverseModal}
-              disabled={reverseSubmitting}
-            >
-              {ADMIN_USER_REWARDS.reverseModal.cancelButton}
-            </button>
-            <button
-              type="button"
-              className={styles["modal-confirm-btn"]}
-              onClick={handleReverseTransaction}
-              disabled={reverseSubmitting}
-            >
-              {reverseSubmitting
-                ? ADMIN_USER_REWARDS.reverseModal.submittingText
-                : ADMIN_USER_REWARDS.reverseModal.confirmButton}
-            </button>
+        </Modal>
+
+        <Modal isOpen={showReverseModal} onClose={handleCloseReverseModal}>
+          <div className={styles["modal-body"]}>
+            <h3 className={styles["modal-title"]}>
+              {ADMIN_USER_REWARDS.reverseModal.title}
+            </h3>
+            <p className={styles["modal-description"]}>
+              {reverseTransaction &&
+                ADMIN_USER_REWARDS.reverseModal.description(
+                  reverseTransaction.points_awarded,
+                  formatTransactionType(reverseTransaction.transaction_type)
+                )}
+            </p>
+            <div className={styles["modal-field"]}>
+              <label className={styles["modal-label"]}>
+                {ADMIN_USER_REWARDS.reverseModal.reasonLabel}
+              </label>
+              <select
+                className={styles["modal-select"]}
+                value={reverseReason}
+                onChange={(e) => setReverseReason(e.target.value)}
+                aria-label={ADMIN_USER_REWARDS.reverseModal.reasonLabel}
+              >
+                <option value="">
+                  {ADMIN_USER_REWARDS.reverseModal.reasonPlaceholder}
+                </option>
+                {ADMIN_USER_REWARDS.reverseModal.reversalReasonOptions.map(
+                  (opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+            <div className={styles["modal-actions"]}>
+              <button
+                type="button"
+                className={styles["modal-cancel-btn"]}
+                onClick={handleCloseReverseModal}
+                disabled={reverseSubmitting}
+              >
+                {ADMIN_USER_REWARDS.reverseModal.cancelButton}
+              </button>
+              <button
+                type="button"
+                className={styles["modal-confirm-btn"]}
+                onClick={handleReverseTransaction}
+                disabled={reverseSubmitting}
+              >
+                {reverseSubmitting
+                  ? ADMIN_USER_REWARDS.reverseModal.submittingText
+                  : ADMIN_USER_REWARDS.reverseModal.confirmButton}
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
-    </>);
+        </Modal>
+      </>
+    );
   }
 
   return (
     <div className={styles.panel} data-testid="user-rewards-panel">
       <div className={styles["panel-header"]}>
         <div className={styles["panel-title-group"]}>
-          <h2 className={styles["panel-title"]}>
-            {ADMIN_USER_REWARDS.title}
-          </h2>
+          <h2 className={styles["panel-title"]}>{ADMIN_USER_REWARDS.title}</h2>
           <p className={styles["panel-subtitle"]}>
             {ADMIN_USER_REWARDS.subtitle}
           </p>
@@ -516,9 +509,7 @@ function UserRewards() {
           <LoadingSpinner size={36} border={3} color="var(--primary)" />
         </div>
       ) : users.length === 0 ? (
-        <p className={styles["empty-state"]}>
-          {ADMIN_USER_REWARDS.emptyState}
-        </p>
+        <p className={styles["empty-state"]}>{ADMIN_USER_REWARDS.emptyState}</p>
       ) : (
         <div className={styles["table-wrapper"]}>
           <table className={styles["table"]}>

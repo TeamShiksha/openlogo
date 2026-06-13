@@ -11,12 +11,20 @@ import styles from "./LeaderboardView.module.css";
 function LeaderboardView({ onBack }) {
   const toast = useToast();
 
-  const { fetchRequest: fetchLeaderboard, data: leaderboardData, loading: leaderboardLoading } = useApi({
+  const {
+    fetchRequest: fetchLeaderboard,
+    data: leaderboardData,
+    loading: leaderboardLoading,
+  } = useApi({
     method: "GET",
     url: "/rewards/leaderboard?limit=10",
   });
 
-  const { fetchRequest: fetchRank, data: rankData, loading: rankLoading } = useApi({
+  const {
+    fetchRequest: fetchRank,
+    data: rankData,
+    loading: rankLoading,
+  } = useApi({
     method: "GET",
     url: "/rewards/leaderboard/rank",
   });
@@ -86,13 +94,13 @@ function LeaderboardView({ onBack }) {
                         <td>
                           <span
                             className={`${styles["rank-badge"]} ${
-                              entry.rank <= 3 ? styles[`rank-${entry.rank}`] : ""
+                              entry.rank <= 3
+                                ? styles[`rank-${entry.rank}`]
+                                : ""
                             }`}
                           >
-                            {entry.rank <= 3 ? (
-                              <Trophy size={14} />
-                            ) : null}
-                            #{entry.rank}
+                            {entry.rank <= 3 ? <Trophy size={14} /> : null}#
+                            {entry.rank}
                           </span>
                         </td>
                         <td>
@@ -144,7 +152,8 @@ function LeaderboardView({ onBack }) {
                 </div>
                 <div className={styles["position-stat"]}>
                   <span className={styles["position-value"]}>
-                    {userRank.rank} {LEADERBOARD_PAGE.outOf} {userRank.totalUsers}
+                    {userRank.rank} {LEADERBOARD_PAGE.outOf}{" "}
+                    {userRank.totalUsers}
                   </span>
                   <span className={styles["position-label"]}>
                     {LEADERBOARD_PAGE.users}

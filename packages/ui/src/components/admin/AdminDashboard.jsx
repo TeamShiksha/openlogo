@@ -3,7 +3,7 @@ import Analytics from "../../components/analytics/Analytics";
 import Catalog from "../catalog/Catalog.jsx";
 import SubscriptionPanel from "./SubscriptionPanel.jsx";
 
-import RewardPanel from './RewardPanel.jsx'
+import RewardPanel from "./RewardPanel.jsx";
 import PropTypes from "prop-types";
 import styles from "./AdminDashboard.module.css";
 

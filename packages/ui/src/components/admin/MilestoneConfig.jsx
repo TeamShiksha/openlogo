@@ -365,7 +365,11 @@ function MilestoneConfig({ embedded = false }) {
             {MILESTONE_CONFIG.subtitle}
           </p>
         </div>
-        <Button variant="primary" onClick={openCreateForm}>
+        <Button
+          variant="primary"
+          onClick={openCreateForm}
+          className={styles["create-btn"]}
+        >
           {MILESTONE_CONFIG.createButton}
         </Button>
       </div>

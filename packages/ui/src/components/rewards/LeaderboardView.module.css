@@ -30,7 +30,11 @@
 }
 
 .your-position-card {
-  background: linear-gradient(135deg, var(--primary-focus) 0%, var(--white) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-focus) 0%,
+    var(--white) 100%
+  );
   border: 2px solid var(--primary);
   border-radius: 12px;
   padding: 1.5rem;
