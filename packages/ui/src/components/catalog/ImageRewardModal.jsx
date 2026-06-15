@@ -29,9 +29,13 @@ function formatTransactionType(type) {
   return typeMap[type] || type;
 }
 
-function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
+function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
   const toast = useToast();
   const [page, setPage] = useState(1);
+  const [showBonusForm, setShowBonusForm] = useState(false);
+  const [bonusPoints, setBonusPoints] = useState("");
+  const [bonusReason, setBonusReason] = useState("");
+  const [bonusDescription, setBonusDescription] = useState("");
 
   const {
     fetchRequest: fetchSummary,
@@ -51,9 +55,15 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
     url: `/rewards/transactions/image/${imageId}?page=${page}&limit=${TRANSACTIONS_PER_PAGE}`,
   });
 
+  const { fetchRequest: awardBonus, loading: bonusSubmitting } = useApi({
+    method: "POST",
+    url: "/admin/rewards/bonus",
+  });
+
   useEffect(() => {
     if (isOpen && imageId) {
       setPage(1);
+      setShowBonusForm(false);
       fetchSummary().then(({ success, error }) => {
         if (!success && error) {
           toast.error(IMAGE_REWARD_MODAL.toasts.summaryError);
@@ -75,6 +85,37 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
+  const handleAwardBonus = async () => {
+    if (!bonusPoints || parseInt(bonusPoints) <= 0) {
+      toast.error(IMAGE_REWARD_MODAL.bonus.validation.pointsRequired);
+      return;
+    }
+    if (!bonusReason.trim()) {
+      toast.error(IMAGE_REWARD_MODAL.bonus.validation.reasonRequired);
+      return;
+    }
+    const { success, error } = await awardBonus({
+      data: {
+        imageId,
+        userId,
+        points: parseInt(bonusPoints),
+        reason: bonusReason.trim(),
+        description: bonusDescription.trim(),
+      },
+    });
+    if (success) {
+      toast.success(IMAGE_REWARD_MODAL.bonus.success);
+      setShowBonusForm(false);
+      setBonusPoints("");
+      setBonusReason("");
+      setBonusDescription("");
+      fetchSummary();
+      fetchTransactions();
+    } else {
+      toast.error(error || IMAGE_REWARD_MODAL.bonus.error);
+    }
+  };
+
   const summary = summaryData?.data;
   const transactions = transactionsData?.data?.data || [];
   const totalPages = transactionsData?.data?.totalPages || 1;
@@ -88,10 +129,23 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
     >
       <div className={styles["modal-content"]}>
         <div className={styles["modal-header"]}>
-          <h2 className={styles["modal-title"]}>{IMAGE_REWARD_MODAL.title}</h2>
-          <p className={styles["modal-subtitle"]}>
-            {imageName || IMAGE_REWARD_MODAL.subtitle}
-          </p>
+          <div className={styles["modal-header-left"]}>
+            <h2 className={styles["modal-title"]}>
+              {IMAGE_REWARD_MODAL.title}
+            </h2>
+            <p className={styles["modal-subtitle"]}>
+              {imageName || IMAGE_REWARD_MODAL.subtitle}
+            </p>
+          </div>
+          {userId && (
+            <button
+              type="button"
+              className={styles["bonus-btn"]}
+              onClick={() => setShowBonusForm((prev) => !prev)}
+            >
+              {showBonusForm ? "Cancel" : IMAGE_REWARD_MODAL.bonus.button}
+            </button>
+          )}
         </div>
 
         <div className={styles["summary-section"]}>
@@ -138,6 +192,81 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName }) {
             <p className={styles["empty-state"]}>No reward data available.</p>
           )}
         </div>
+
+        {showBonusForm && (
+          <div className={styles["bonus-section"]}>
+            <h3 className={styles["section-title"]}>
+              {IMAGE_REWARD_MODAL.bonus.confirmButton}
+            </h3>
+            <div className={styles["bonus-form"]}>
+              <div className={styles["bonus-field"]}>
+                <label className={styles["bonus-label"]}>
+                  {IMAGE_REWARD_MODAL.bonus.pointsLabel}
+                </label>
+                <input
+                  type="number"
+                  className={styles["bonus-input"]}
+                  value={bonusPoints}
+                  onChange={(e) => setBonusPoints(e.target.value)}
+                  placeholder="50"
+                  min="1"
+                />
+              </div>
+              <div className={styles["bonus-field"]}>
+                <label className={styles["bonus-label"]}>
+                  {IMAGE_REWARD_MODAL.bonus.reasonLabel}
+                </label>
+                <select
+                  className={styles["bonus-select"]}
+                  value={bonusReason}
+                  onChange={(e) => setBonusReason(e.target.value)}
+                  aria-label={IMAGE_REWARD_MODAL.bonus.reasonLabel}
+                >
+                  <option value="">
+                    {IMAGE_REWARD_MODAL.bonus.reasonPlaceholder}
+                  </option>
+                  {IMAGE_REWARD_MODAL.bonus.reasonOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={styles["bonus-field"]}>
+                <label className={styles["bonus-label"]}>
+                  {IMAGE_REWARD_MODAL.bonus.descriptionLabel}
+                </label>
+                <textarea
+                  className={styles["bonus-textarea"]}
+                  value={bonusDescription}
+                  onChange={(e) => setBonusDescription(e.target.value)}
+                  placeholder={IMAGE_REWARD_MODAL.bonus.descriptionPlaceholder}
+                  rows={3}
+                />
+              </div>
+              <div className={styles["bonus-actions"]}>
+                <button
+                  type="button"
+                  className={styles["bonus-cancel-btn"]}
+                  onClick={() => setShowBonusForm(false)}
+                  disabled={bonusSubmitting}
+                >
+                  {IMAGE_REWARD_MODAL.bonus.cancelButton}
+                </button>
+                <button
+                  type="button"
+                  className={styles["bonus-confirm-btn"]}
+                  onClick={handleAwardBonus}
+                  disabled={bonusSubmitting}
+                >
+                  {bonusSubmitting
+                    ? IMAGE_REWARD_MODAL.bonus.submittingText
+                    : IMAGE_REWARD_MODAL.bonus.confirmButton}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className={styles["transactions-section"]}>
           <h3 className={styles["section-title"]}>
@@ -222,6 +351,7 @@ ImageRewardModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   imageId: PropTypes.string,
   imageName: PropTypes.string,
+  userId: PropTypes.string,
 };
 
 export default ImageRewardModal;

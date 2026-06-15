@@ -43,7 +43,9 @@ function CatalogItem({ company, onUpdate, onViewRewards }) {
       <div className={styles["catalog-item-column-last"]}>
         <div className={styles["action-buttons"]}>
           <Button
-            onClick={() => onViewRewards(company._id, company.company_name)}
+            onClick={() =>
+              onViewRewards(company._id, company.company_name, company.user_id)
+            }
             variant="secondary"
             className={styles["rewards-btn"]}
           >
@@ -71,6 +73,7 @@ CatalogItem.propTypes = {
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
     imageUrl: PropTypes.string,
+    user_id: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onViewRewards: PropTypes.func.isRequired,

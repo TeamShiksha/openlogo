@@ -931,6 +931,28 @@ export const IMAGE_REWARD_MODAL = {
     headers: ["Type", "Points", "User", "Reason", "Date"],
     emptyState: "No transactions found for this image.",
   },
+  bonus: {
+    button: "Award Bonus",
+    pointsLabel: "Points",
+    reasonLabel: "Reason",
+    reasonPlaceholder: "Select a reason...",
+    descriptionLabel: "Description (optional)",
+    descriptionPlaceholder: "Additional details...",
+    confirmButton: "Award Points",
+    cancelButton: "Cancel",
+    submittingText: "Awarding...",
+    success: "Bonus points awarded successfully.",
+    error: "Failed to award bonus points.",
+    validation: {
+      pointsRequired: "Please enter a valid positive number of points.",
+      reasonRequired: "Please select a reason for the bonus.",
+    },
+    reasonOptions: [
+      { value: "PROMOTION", label: "Promotion" },
+      { value: "MANUAL_CORRECTION", label: "Manual Correction" },
+      { value: "SUSPICIOUS_ACTIVITY", label: "Suspicious Activity" },
+    ],
+  },
   toasts: {
     summaryError: "Failed to load reward summary.",
     transactionsError: "Failed to load transactions.",

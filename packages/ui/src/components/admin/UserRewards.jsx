@@ -5,7 +5,7 @@ import LoadingSpinner from "../common/loadingspinner/LoadingSpinner.jsx";
 import CustomInput from "../common/input/CustomInput.jsx";
 import Modal from "../common/modal/Modal.jsx";
 import { ADMIN_USER_REWARDS } from "../../utils/Constants.js";
-import { ChevronLeft, ChevronRight, Eye, Plus, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, RotateCcw } from "lucide-react";
 import styles from "./UserRewards.module.css";
 
 const ITEMS_PER_PAGE = 10;
@@ -59,12 +59,6 @@ function UserRewards() {
   const [txTotalPages, setTxTotalPages] = useState(1);
   const [txLoading, setTxLoading] = useState(false);
 
-  const [showBonusModal, setShowBonusModal] = useState(false);
-  const [bonusPoints, setBonusPoints] = useState("");
-  const [bonusReason, setBonusReason] = useState("");
-  const [bonusDescription, setBonusDescription] = useState("");
-  const [bonusSubmitting, setBonusSubmitting] = useState(false);
-
   const [showReverseModal, setShowReverseModal] = useState(false);
   const [reverseTransaction, setReverseTransaction] = useState(null);
   const [reverseReason, setReverseReason] = useState("");
@@ -81,11 +75,6 @@ function UserRewards() {
   const { fetchRequest: fetchTransactions } = useApi({
     method: "GET",
     url: `/admin/rewards/transactions/search?userId=${selectedUser?._id}&page=${txPage}&limit=${TRANSACTIONS_PER_PAGE}`,
-  });
-
-  const { fetchRequest: awardBonus } = useApi({
-    method: "POST",
-    url: "/admin/rewards/bonus",
   });
 
   const { fetchRequest: reverseTx } = useApi({
@@ -151,48 +140,6 @@ function UserRewards() {
     setTxPage(1);
   };
 
-  const handleOpenBonusModal = () => {
-    setBonusPoints("");
-    setBonusReason("");
-    setBonusDescription("");
-    setShowBonusModal(true);
-  };
-
-  const handleCloseBonusModal = () => {
-    setShowBonusModal(false);
-    setBonusPoints("");
-    setBonusReason("");
-    setBonusDescription("");
-  };
-
-  const handleAwardBonus = async () => {
-    if (!bonusPoints || parseInt(bonusPoints) <= 0) {
-      toast.error(ADMIN_USER_REWARDS.bonusModal.validation.pointsRequired);
-      return;
-    }
-    if (!bonusReason.trim()) {
-      toast.error(ADMIN_USER_REWARDS.bonusModal.validation.reasonRequired);
-      return;
-    }
-    setBonusSubmitting(true);
-    const { success, error } = await awardBonus({
-      data: {
-        userId: selectedUser._id,
-        points: parseInt(bonusPoints),
-        reason: bonusReason.trim(),
-        description: bonusDescription.trim(),
-      },
-    });
-    setBonusSubmitting(false);
-    if (success) {
-      toast.success(ADMIN_USER_REWARDS.bonusModal.success);
-      handleCloseBonusModal();
-      loadTransactions();
-    } else {
-      toast.error(error || ADMIN_USER_REWARDS.bonusModal.error);
-    }
-  };
-
   const handleOpenReverseModal = (tx) => {
     setReverseTransaction(tx);
     setReverseReason("");
@@ -243,14 +190,6 @@ function UserRewards() {
               </h3>
               <p className={styles["user-email"]}>{selectedUser.email}</p>
             </div>
-            <button
-              type="button"
-              className={styles["bonus-btn"]}
-              onClick={handleOpenBonusModal}
-            >
-              <Plus size={16} aria-hidden="true" />
-              {ADMIN_USER_REWARDS.detail.awardBonus}
-            </button>
           </div>
 
           {txLoading ? (
@@ -347,81 +286,6 @@ function UserRewards() {
             </>
           )}
         </div>
-
-        <Modal isOpen={showBonusModal} onClose={handleCloseBonusModal}>
-          <div className={styles["modal-body"]}>
-            <h3 className={styles["modal-title"]}>
-              {ADMIN_USER_REWARDS.bonusModal.title}
-            </h3>
-            <div className={styles["modal-field"]}>
-              <label className={styles["modal-label"]}>
-                {ADMIN_USER_REWARDS.bonusModal.pointsLabel}
-              </label>
-              <input
-                type="number"
-                className={styles["modal-input"]}
-                value={bonusPoints}
-                onChange={(e) => setBonusPoints(e.target.value)}
-                placeholder="50"
-                min="1"
-              />
-            </div>
-            <div className={styles["modal-field"]}>
-              <label className={styles["modal-label"]}>
-                {ADMIN_USER_REWARDS.bonusModal.reasonLabel}
-              </label>
-              <select
-                className={styles["modal-select"]}
-                value={bonusReason}
-                onChange={(e) => setBonusReason(e.target.value)}
-                aria-label={ADMIN_USER_REWARDS.bonusModal.reasonLabel}
-              >
-                <option value="">
-                  {ADMIN_USER_REWARDS.bonusModal.reasonPlaceholder}
-                </option>
-                {ADMIN_USER_REWARDS.bonusModal.reasonOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={styles["modal-field"]}>
-              <label className={styles["modal-label"]}>
-                {ADMIN_USER_REWARDS.bonusModal.descriptionLabel}
-              </label>
-              <textarea
-                className={styles["modal-textarea"]}
-                value={bonusDescription}
-                onChange={(e) => setBonusDescription(e.target.value)}
-                placeholder={
-                  ADMIN_USER_REWARDS.bonusModal.descriptionPlaceholder
-                }
-                rows={3}
-              />
-            </div>
-            <div className={styles["modal-actions"]}>
-              <button
-                type="button"
-                className={styles["modal-cancel-btn"]}
-                onClick={handleCloseBonusModal}
-                disabled={bonusSubmitting}
-              >
-                {ADMIN_USER_REWARDS.bonusModal.cancelButton}
-              </button>
-              <button
-                type="button"
-                className={styles["modal-confirm-btn"]}
-                onClick={handleAwardBonus}
-                disabled={bonusSubmitting}
-              >
-                {bonusSubmitting
-                  ? ADMIN_USER_REWARDS.bonusModal.submittingText
-                  : ADMIN_USER_REWARDS.bonusModal.confirmButton}
-              </button>
-            </div>
-          </div>
-        </Modal>
 
         <Modal isOpen={showReverseModal} onClose={handleCloseReverseModal}>
           <div className={styles["modal-body"]}>

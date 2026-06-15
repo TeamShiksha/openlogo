@@ -328,27 +328,6 @@
   color: var(--success);
 }
 
-.bonus-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background-color: var(--primary);
-  color: var(--white);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--bradius);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-left: auto;
-  transition: opacity 0.15s;
-  white-space: nowrap;
-}
-
-.bonus-btn:hover {
-  opacity: 0.9;
-}
-
 .action-cell {
   width: 3rem;
   text-align: center;

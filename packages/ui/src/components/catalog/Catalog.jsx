@@ -32,6 +32,7 @@ function Catalog() {
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
   const [rewardImageId, setRewardImageId] = useState(null);
   const [rewardImageName, setRewardImageName] = useState("");
+  const [rewardUserId, setRewardUserId] = useState(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -271,9 +272,10 @@ function Catalog() {
     setUpdatedImageCompanyUri(companyuri);
   };
 
-  const handleViewRewardsClick = (id, imageName) => {
+  const handleViewRewardsClick = (id, imageName, userId) => {
     setRewardImageId(id);
     setRewardImageName(imageName);
+    setRewardUserId(userId);
     setIsRewardModalOpen(true);
   };
 
@@ -464,9 +466,11 @@ function Catalog() {
           setIsRewardModalOpen(false);
           setRewardImageId(null);
           setRewardImageName("");
+          setRewardUserId(null);
         }}
         imageId={rewardImageId}
         imageName={rewardImageName}
+        userId={rewardUserId}
       />
     </div>
   );
