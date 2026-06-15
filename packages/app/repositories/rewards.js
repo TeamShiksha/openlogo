@@ -49,6 +49,21 @@ class RewardsRepository extends BaseRepository {
   }
 
   /**
+   * Update rewards record by image ID
+   * @param {string} imageId - The image ID
+   * @param {Object} updateData - The update operations (e.g. $inc)
+   * @param {Object} [options] - Additional options
+   * @returns {Promise<Object>} - Updated reward record
+   */
+  async updateByImageId(imageId, updateData, options = {}) {
+    return await this.model.findOneAndUpdate(
+      { image_id: imageId },
+      updateData,
+      { ...options, new: true }
+    );
+  }
+
+  /**
    * Get aggregated leaderboard ranked by total points per user
    * @param {number} limit - Number of top users to return
    * @returns {Promise<Array>} - Aggregated leaderboard entries

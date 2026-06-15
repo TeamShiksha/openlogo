@@ -457,6 +457,119 @@ describe("Reward System", () => {
     });
   });
 
+  describe("RewardsService.awardBonusPoints", () => {
+    it("should throw if imageId is missing", async () => {
+      await expect(
+        rewardsService.awardBonusPoints(null, MOCK_USERS[0]._id, 50)
+      ).rejects.toThrow("Image ID is required");
+    });
+
+    it("should throw if image not found", async () => {
+      jest
+        .spyOn(rewardsService.imagesRepository, "getById")
+        .mockResolvedValue(null);
+
+      await expect(
+        rewardsService.awardBonusPoints(
+          new mongoose.Types.ObjectId(),
+          MOCK_USERS[0]._id,
+          50
+        )
+      ).rejects.toThrow("Image not found");
+    });
+
+    it("should throw if user not found", async () => {
+      jest.spyOn(rewardsService.imagesRepository, "getById").mockResolvedValue({
+        _id: new mongoose.Types.ObjectId(),
+        user_id: MOCK_USERS[0]._id,
+      });
+      jest
+        .spyOn(rewardsService.usersRepository, "getById")
+        .mockResolvedValue(null);
+
+      await expect(
+        rewardsService.awardBonusPoints(
+          new mongoose.Types.ObjectId(),
+          MOCK_USERS[0]._id,
+          50
+        )
+      ).rejects.toThrow("User not found");
+    });
+
+    it("should award bonus points, update rewards doc, user, and create transaction", async () => {
+      const imageId = new mongoose.Types.ObjectId();
+      const userId = MOCK_REWARD_CREATOR_USER._id;
+      const points = 50;
+      const reason = "PROMOTION";
+      const description = "Bonus award";
+
+      const mockRewardRecord = createMockRewardRecordEmpty();
+
+      jest.spyOn(rewardsService.imagesRepository, "getById").mockResolvedValue({
+        _id: imageId,
+        user_id: userId,
+      });
+      jest
+        .spyOn(rewardsService.rewardsRepository, "findOrCreateByImageId")
+        .mockResolvedValue(mockRewardRecord);
+      jest.spyOn(rewardsService.rewardsRepository, "update").mockResolvedValue({
+        ...mockRewardRecord,
+        total_points_awarded: points,
+      });
+      jest
+        .spyOn(rewardsService.usersRepository, "getById")
+        .mockResolvedValue(MOCK_REWARD_CREATOR_USER);
+      jest
+        .spyOn(rewardsService.usersRepository, "update")
+        .mockResolvedValue({});
+      const createTransactionSpy = jest
+        .spyOn(rewardsService.rewardTransactionsRepository, "createTransaction")
+        .mockResolvedValue({
+          _id: new mongoose.Types.ObjectId(),
+          image_id: imageId,
+          user_id: userId,
+          transaction_type: "BONUS",
+          points_awarded: points,
+        });
+
+      const result = await rewardsService.awardBonusPoints(
+        imageId,
+        userId,
+        points,
+        reason,
+        description
+      );
+
+      expect(result.transaction_type).toBe("BONUS");
+      expect(result.points_awarded).toBe(points);
+
+      // Verify rewards doc was updated
+      expect(rewardsService.rewardsRepository.update).toHaveBeenCalledWith(
+        mockRewardRecord._id,
+        expect.objectContaining({
+          $inc: { total_points_awarded: points },
+        })
+      );
+
+      // Verify user was updated
+      expect(rewardsService.usersRepository.update).toHaveBeenCalledWith(
+        userId,
+        expect.objectContaining({
+          reward_points_current: points,
+          reward_points_lifetime: points,
+        })
+      );
+
+      // Verify transaction was created
+      expect(createTransactionSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transaction_type: "BONUS",
+          points_awarded: points,
+        })
+      );
+    });
+  });
+
   describe("RewardsService.reverseTransaction", () => {
     it("should reverse a reward transaction and update user points", async () => {
       const adminId = new mongoose.Types.ObjectId();
@@ -483,6 +596,9 @@ describe("Reward System", () => {
       jest
         .spyOn(rewardsService.rewardTransactionsRepository, "createTransaction")
         .mockResolvedValue({});
+      const updateByImageIdSpy = jest
+        .spyOn(rewardsService.rewardsRepository, "updateByImageId")
+        .mockResolvedValue({});
 
       const result = await rewardsService.reverseTransaction(
         transactionId,
@@ -494,6 +610,69 @@ describe("Reward System", () => {
       expect(result.points_awarded).toBeDefined();
       expect(result.points_awarded).toBe(
         MOCK_UNREVERSED_TRANSACTION.points_awarded
+      );
+
+      // MILESTONE_REWARD reversal should NOT update rewards doc
+      expect(updateByImageIdSpy).not.toHaveBeenCalled();
+    });
+
+    it("should also decrement rewards doc when reversing a BONUS transaction", async () => {
+      const adminId = new mongoose.Types.ObjectId();
+      const imageId = new mongoose.Types.ObjectId();
+      const bonusTransaction = {
+        ...MOCK_UNREVERSED_TRANSACTION,
+        transaction_type: "BONUS",
+        image_id: imageId,
+        points_awarded: 50,
+      };
+      const reversedBonusTransaction = {
+        ...bonusTransaction,
+        is_reversed: true,
+        reversed_at: new Date(),
+        reversal_reason: "Admin correction",
+      };
+      const transactionId = bonusTransaction._id;
+
+      jest
+        .spyOn(
+          rewardsService.rewardTransactionsRepository,
+          "getTransactionById"
+        )
+        .mockResolvedValue(bonusTransaction);
+      jest
+        .spyOn(
+          rewardsService.rewardTransactionsRepository,
+          "reverseTransaction"
+        )
+        .mockResolvedValue(reversedBonusTransaction);
+      jest.spyOn(rewardsService.usersRepository, "getById").mockResolvedValue({
+        ...MOCK_REWARD_CREATOR_USER,
+        reward_points_current: 100,
+      });
+      jest
+        .spyOn(rewardsService.usersRepository, "update")
+        .mockResolvedValue({});
+      jest
+        .spyOn(rewardsService.rewardTransactionsRepository, "createTransaction")
+        .mockResolvedValue({});
+      const updateByImageIdSpy = jest
+        .spyOn(rewardsService.rewardsRepository, "updateByImageId")
+        .mockResolvedValue({});
+
+      const result = await rewardsService.reverseTransaction(
+        transactionId,
+        adminId,
+        "Admin correction"
+      );
+
+      expect(result.is_reversed).toBe(true);
+
+      // BONUS reversal SHOULD update rewards doc
+      expect(updateByImageIdSpy).toHaveBeenCalledWith(
+        imageId,
+        expect.objectContaining({
+          $inc: { total_points_awarded: -50 },
+        })
       );
     });
   });

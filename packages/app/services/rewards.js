@@ -468,10 +468,31 @@ class RewardsService {
    */
   async awardBonusPoints(imageId, userId, points, reason, description) {
     try {
+      if (!imageId) {
+        throw new Error("Image ID is required");
+      }
+
+      const image = await this.imagesRepository.getById(imageId);
+      if (!image) {
+        throw new Error("Image not found");
+      }
+
       const user = await this.usersRepository.getById(userId);
       if (!user) {
         throw new Error("User not found");
       }
+
+      // Find or create rewards record for this image
+      const reward = await this.rewardsRepository.findOrCreateByImageId(
+        imageId,
+        userId
+      );
+
+      // Update rewards document
+      await this.rewardsRepository.update(reward._id, {
+        $inc: { total_points_awarded: points },
+        $set: { updated_at: new Date() },
+      });
 
       const previousTotal = user.reward_points_current || 0;
       const newTotal = previousTotal + points;
@@ -547,9 +568,18 @@ class RewardsService {
         updated_at: new Date(),
       });
 
+      // If reversing a BONUS transaction, also decrement the rewards document
+      const imageId = transaction.image_id?._id ?? transaction.image_id;
+      if (transaction.transaction_type === "BONUS" && imageId) {
+        await this.rewardsRepository.updateByImageId(imageId, {
+          $inc: { total_points_awarded: -transaction.points_awarded },
+          $set: { updated_at: new Date() },
+        });
+      }
+
       // Create a reversal transaction record
       await this.rewardTransactionsRepository.createTransaction({
-        image_id: transaction.image_id?._id ?? transaction.image_id,
+        image_id: imageId,
         user_id: transaction.user_id,
         transaction_type: "REVERSAL",
         points_awarded: 0,

@@ -275,9 +275,9 @@ async function awardBonusPointsController(req, res, next) {
     const { imageId, userId, points, reason, description } = req.body;
 
     // Validation
-    if (!userId || !points) {
+    if (!imageId || !userId || !points) {
       return res.status(400).json({
-        message: "Missing required fields: userId, points",
+        message: "Missing required fields: imageId, userId, points",
         statusCode: 400,
         error: STATUS_CODES[400],
       });
