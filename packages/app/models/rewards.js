@@ -48,21 +48,6 @@ const rewardSchema = new mongoose.Schema(
 // Indexes for efficient querying
 rewardSchema.index({ user_id: 1, createdAt: -1 });
 rewardSchema.index({ createdAt: -1 });
-
-rewardSchema.methods.data = function () {
-  return {
-    _id: this._id,
-    image_id: this.image_id,
-    user_id: this.user_id,
-    unique_pro_users: this.unique_pro_users,
-    unique_pro_users_count: this.unique_pro_users_count,
-    milestones_achieved: this.milestones_achieved,
-    total_points_awarded: this.total_points_awarded,
-    created_at: this._id.getTimestamp(),
-    updated_at: this.updated_at,
-  };
-};
-
 const Rewards = mongoose.model("rewards", rewardSchema);
 
 module.exports = Rewards;

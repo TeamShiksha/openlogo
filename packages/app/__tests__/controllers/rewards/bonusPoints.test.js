@@ -92,6 +92,26 @@ describe("Rewards Controller - Bonus Points", () => {
       expect(response.body.message).toContain("Missing required fields");
     });
 
+    it("400 - Missing imageId", async () => {
+      const adminSession = { userId: MOCK_USERS[2] };
+
+      jest
+        .spyOn(UserSessionService.prototype, "validateSession")
+        .mockResolvedValue(adminSession);
+
+      const response = await request(app)
+        .post(endpoint)
+        .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
+        .send({
+          userId: MOCK_USERS[0]._id.toString(),
+          points: 50,
+          // missing imageId
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain("Missing required fields");
+    });
+
     it("400 - Points must be greater than 0", async () => {
       const adminSession = {
         userId: MOCK_USERS[2], // Admin user

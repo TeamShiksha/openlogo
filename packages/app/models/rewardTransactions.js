@@ -86,30 +86,6 @@ const rewardTransactionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-rewardTransactionSchema.methods.data = function () {
-  return {
-    _id: this._id,
-    image_id: this.image_id,
-    user_id: this.user_id,
-    transaction_type: this.transaction_type,
-    milestone: this.milestone,
-    points_awarded: this.points_awarded,
-    points_reversed: this.points_reversed,
-    description: this.description,
-    reason: this.reason,
-    previous_total: this.previous_total,
-    new_total: this.new_total,
-    is_reversed: this.is_reversed,
-    reversed_at: this.reversed_at,
-    reversed_by: this.reversed_by,
-    reversal_reason: this.reversal_reason,
-    metadata: this.metadata,
-    created_at: this._id.getTimestamp(),
-    updated_at: this.updated_at,
-  };
-};
-
 const RewardTransactions = mongoose.model(
   "reward_transactions",
   rewardTransactionSchema
