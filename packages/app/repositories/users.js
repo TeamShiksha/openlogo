@@ -64,6 +64,7 @@ class UsersRepository extends BaseRepository {
   async findUsersWithSubscription({ search, page, limit, includeDeleted }) {
     const matchStage = {
       role: "CUSTOMER",
+      reward_points_current: { $gt: 0 },
     };
 
     if (!includeDeleted) {
