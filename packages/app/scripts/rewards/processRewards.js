@@ -15,9 +15,9 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const MilestoneConfigRepository = require("../repositories/milestoneConfig");
-const ImagesRepository = require("../repositories/images");
-const RewardsService = require("../services/rewards");
+const MilestoneConfigRepository = require("../../repositories/milestoneConfig");
+const ImagesRepository = require("../../repositories/images");
+const RewardsService = require("../../services/rewards");
 
 const MONGO_URL = process.env.MONGO_URL;
 

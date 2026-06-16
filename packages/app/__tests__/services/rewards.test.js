@@ -415,6 +415,406 @@ describe("Reward System", () => {
     });
   });
 
+  describe("RewardsService internal helpers", () => {
+    describe("_computeNewUsers", () => {
+      it("returns all eligible requests as new when reward has no users", () => {
+        const { newUsers, previousCount, newCount } =
+          rewardsService._computeNewUsers(
+            MOCK_ELIGIBLE_LOG_ENTRIES_5,
+            createMockRewardRecordEmpty()
+          );
+        expect(newUsers).toHaveLength(5);
+        expect(newUsers.map((u) => u.toString())).toEqual(
+          REWARD_TEST_PRO_USER_IDS_10.slice(0, 5).map((u) => u.toString())
+        );
+        expect(previousCount).toBe(0);
+        expect(newCount).toBe(5);
+      });
+
+      it("returns only delta users when some already tracked", () => {
+        const eligibleRequests = [
+          ...MOCK_ELIGIBLE_LOG_ENTRIES_5,
+          ...MOCK_ELIGIBLE_LOG_ENTRIES_5_SECOND,
+        ];
+        const { newUsers, previousCount, newCount } =
+          rewardsService._computeNewUsers(
+            eligibleRequests,
+            createMockRewardRecord5Achieved()
+          );
+        expect(newUsers).toHaveLength(5);
+        expect(newUsers.map((u) => u.toString())).toEqual(
+          REWARD_TEST_PRO_USER_IDS_10.slice(5, 10).map((u) => u.toString())
+        );
+        expect(previousCount).toBe(5);
+        expect(newCount).toBe(10);
+      });
+
+      it("returns empty when all eligible requests already tracked", () => {
+        const { newUsers, previousCount, newCount } =
+          rewardsService._computeNewUsers(
+            MOCK_ELIGIBLE_LOG_ENTRIES_5,
+            createMockRewardRecord5Achieved()
+          );
+        expect(newUsers).toHaveLength(0);
+        expect(previousCount).toBe(5);
+        expect(newCount).toBe(5);
+      });
+
+      it("returns empty when eligible requests is empty", () => {
+        const { newUsers, previousCount, newCount } =
+          rewardsService._computeNewUsers([], createMockRewardRecordEmpty());
+        expect(newUsers).toHaveLength(0);
+        expect(previousCount).toBe(0);
+        expect(newCount).toBe(0);
+      });
+    });
+
+    describe("_computeNewMilestones", () => {
+      it("returns milestones when newCount passes thresholds and none achieved", () => {
+        const milestones = rewardsService._computeNewMilestones(
+          15,
+          createMockRewardRecordEmpty(),
+          MOCK_MILESTONE_CONFIG
+        );
+        expect(milestones).toHaveLength(3);
+        expect(milestones.map((m) => m.milestone)).toEqual([5, 10, 15]);
+        expect(milestones.map((m) => m.points_awarded)).toEqual([10, 10, 10]);
+      });
+
+      it("returns only unachieved milestones when some already earned", () => {
+        const milestones = rewardsService._computeNewMilestones(
+          15,
+          createMockRewardRecord5Achieved(),
+          MOCK_MILESTONE_CONFIG
+        );
+        expect(milestones).toHaveLength(2);
+        expect(milestones.map((m) => m.milestone)).toEqual([10, 15]);
+      });
+
+      it("returns empty when newCount below first threshold", () => {
+        const milestones = rewardsService._computeNewMilestones(
+          3,
+          createMockRewardRecordEmpty(),
+          MOCK_MILESTONE_CONFIG
+        );
+        expect(milestones).toHaveLength(0);
+      });
+
+      it("returns empty when all milestones already achieved", () => {
+        const rewardWithAllMilestones = {
+          ...createMockRewardRecord5Achieved(),
+          unique_pro_users_count: 100,
+          milestones_achieved: [5, 10, 15, 20, 25, 50, 100].map((at) => ({
+            milestone: at,
+            achieved_at: new Date(),
+            points_awarded: 10,
+          })),
+        };
+        const milestones = rewardsService._computeNewMilestones(
+          150,
+          rewardWithAllMilestones,
+          MOCK_MILESTONE_CONFIG
+        );
+        expect(milestones).toHaveLength(0);
+      });
+
+      it("handles exact boundary at threshold value", () => {
+        const milestones = rewardsService._computeNewMilestones(
+          5,
+          createMockRewardRecordEmpty(),
+          MOCK_MILESTONE_CONFIG
+        );
+        expect(milestones).toHaveLength(1);
+        expect(milestones[0].milestone).toBe(5);
+      });
+    });
+
+    describe("_buildResult", () => {
+      const imageId = REWARD_TEST_IMAGE_ID;
+      const creatorId = REWARD_TEST_CREATOR_ID;
+
+      it("returns no-new-users shape when newUsers is empty", () => {
+        const result = rewardsService._buildResult(
+          imageId,
+          creatorId,
+          5,
+          5,
+          [],
+          [],
+          0
+        );
+        expect(result).toEqual({
+          success: true,
+          imageId,
+          creatorId,
+          newUsersAdded: 0,
+          newMilestones: [],
+          totalPointsAwarded: 0,
+          message: "No new users found",
+        });
+      });
+
+      it("includes message when newUsers exist but no milestones", () => {
+        const result = rewardsService._buildResult(
+          imageId,
+          creatorId,
+          0,
+          5,
+          [1, 2, 3, 4, 5],
+          [],
+          0
+        );
+        expect(result).toMatchObject({
+          success: true,
+          imageId,
+          creatorId,
+          newUsersAdded: 5,
+          previousUniqueCount: 0,
+          newUniqueCount: 5,
+          newMilestones: [],
+          totalPointsAwarded: 0,
+          message: "Added 5 new users, no milestones reached",
+        });
+      });
+
+      it("returns milestone details with no message when milestones present", () => {
+        const milestones = [
+          { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        ];
+        const result = rewardsService._buildResult(
+          imageId,
+          creatorId,
+          0,
+          5,
+          [1, 2, 3, 4, 5],
+          milestones,
+          10
+        );
+        expect(result).toMatchObject({
+          success: true,
+          imageId,
+          creatorId,
+          newUsersAdded: 5,
+          previousUniqueCount: 0,
+          newUniqueCount: 5,
+          newMilestones: milestones,
+          totalPointsAwarded: 10,
+        });
+        expect(result.message).toBeUndefined();
+      });
+    });
+
+    describe("_loadRewardData", () => {
+      const mockSession = {};
+
+      it("loads all data successfully", async () => {
+        jest
+          .spyOn(rewardsService.milestoneConfigRepository, "findActive")
+          .mockResolvedValue(MOCK_MILESTONE_CONFIG);
+        jest
+          .spyOn(rewardsService.imagesRepository, "getById")
+          .mockResolvedValue({
+            _id: REWARD_TEST_IMAGE_ID,
+            user_id: REWARD_TEST_CREATOR_ID,
+          });
+        jest
+          .spyOn(rewardsService.logoRequestLogsRepository, "find")
+          .mockResolvedValue(MOCK_ELIGIBLE_LOG_ENTRIES_5);
+        jest
+          .spyOn(rewardsService.rewardsRepository, "findOrCreateByImageId")
+          .mockResolvedValue(createMockRewardRecordEmpty());
+
+        const result = await rewardsService._loadRewardData(
+          REWARD_TEST_IMAGE_ID,
+          mockSession
+        );
+
+        expect(result).toHaveProperty("milestoneConfig");
+        expect(result).toHaveProperty("image");
+        expect(result).toHaveProperty("eligibleRequests");
+        expect(result).toHaveProperty("reward");
+      });
+
+      it("throws when milestoneConfig not found", async () => {
+        jest
+          .spyOn(rewardsService.milestoneConfigRepository, "findActive")
+          .mockResolvedValue(null);
+
+        await expect(
+          rewardsService._loadRewardData(REWARD_TEST_IMAGE_ID, mockSession)
+        ).rejects.toThrow("No active MilestoneConfig found. Aborting.");
+      });
+
+      it("throws when image not found", async () => {
+        jest
+          .spyOn(rewardsService.milestoneConfigRepository, "findActive")
+          .mockResolvedValue(MOCK_MILESTONE_CONFIG);
+        jest
+          .spyOn(rewardsService.imagesRepository, "getById")
+          .mockResolvedValue(null);
+
+        await expect(
+          rewardsService._loadRewardData(REWARD_TEST_IMAGE_ID, mockSession)
+        ).rejects.toThrow("Image not found");
+      });
+    });
+
+    describe("_applyRewardUpdates", () => {
+      const creatorId = REWARD_TEST_CREATOR_ID;
+      const session = {};
+      let rewardsUpdateSpy;
+      let usersUpdateSpy;
+      let imagesUpdateSpy;
+
+      beforeEach(() => {
+        rewardsUpdateSpy = jest
+          .spyOn(rewardsService.rewardsRepository, "update")
+          .mockResolvedValue({});
+        usersUpdateSpy = jest
+          .spyOn(rewardsService.usersRepository, "update")
+          .mockResolvedValue({});
+        imagesUpdateSpy = jest
+          .spyOn(rewardsService.imagesRepository, "update")
+          .mockResolvedValue({});
+      });
+
+      it("updates reward and image when no milestones", async () => {
+        const reward = createMockRewardRecordEmpty();
+        const newUsers = REWARD_TEST_PRO_USER_IDS_10.slice(0, 5);
+
+        await rewardsService._applyRewardUpdates(
+          reward,
+          creatorId,
+          REWARD_TEST_IMAGE_ID,
+          newUsers,
+          [],
+          0,
+          session
+        );
+
+        expect(rewardsUpdateSpy).toHaveBeenCalledWith(
+          reward._id,
+          expect.objectContaining({
+            $push: { unique_pro_users: { $each: newUsers } },
+            $inc: { unique_pro_users_count: 5 },
+          }),
+          { session }
+        );
+        expect(rewardsUpdateSpy.mock.calls[0][1].$addToSet).toBeUndefined();
+        expect(usersUpdateSpy).not.toHaveBeenCalled();
+        expect(imagesUpdateSpy).toHaveBeenCalled();
+      });
+
+      it("updates reward, user, and image when milestones present", async () => {
+        const reward = createMockRewardRecordEmpty();
+        const newUsers = REWARD_TEST_PRO_USER_IDS_10.slice(0, 5);
+        const newMilestones = [
+          { milestone: 5, achieved_at: new Date(), points_awarded: 10 },
+        ];
+
+        await rewardsService._applyRewardUpdates(
+          reward,
+          creatorId,
+          REWARD_TEST_IMAGE_ID,
+          newUsers,
+          newMilestones,
+          10,
+          session
+        );
+
+        expect(rewardsUpdateSpy).toHaveBeenCalledWith(
+          reward._id,
+          expect.objectContaining({
+            $push: { unique_pro_users: { $each: newUsers } },
+            $inc: {
+              unique_pro_users_count: 5,
+              total_points_awarded: 10,
+            },
+            $addToSet: {
+              milestones_achieved: { $each: newMilestones },
+            },
+          }),
+          { session }
+        );
+        expect(usersUpdateSpy).toHaveBeenCalledWith(
+          creatorId,
+          expect.objectContaining({
+            $inc: {
+              reward_points_current: 10,
+              reward_points_lifetime: 10,
+            },
+          }),
+          { session }
+        );
+        expect(imagesUpdateSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe("_createMilestoneTransactions", () => {
+      it("creates correct transactions for multiple milestones", async () => {
+        const reward = { total_points_awarded: 10 };
+        const newMilestones = [
+          { milestone: 5, points_awarded: 10 },
+          { milestone: 10, points_awarded: 10 },
+        ];
+        const spy = jest
+          .spyOn(
+            rewardsService.rewardTransactionsRepository,
+            "createTransaction"
+          )
+          .mockResolvedValue({});
+
+        await rewardsService._createMilestoneTransactions(
+          REWARD_TEST_IMAGE_ID,
+          REWARD_TEST_CREATOR_ID,
+          reward,
+          newMilestones,
+          5,
+          15,
+          {}
+        );
+
+        expect(spy).toHaveBeenCalledTimes(2);
+        expect(spy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            milestone: 5,
+            previous_total: 10,
+            new_total: 20,
+            metadata: expect.objectContaining({
+              unique_pro_users_count: 15,
+            }),
+          }),
+          expect.any(Object)
+        );
+        expect(spy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            milestone: 10,
+            previous_total: 20,
+            new_total: 30,
+            metadata: expect.objectContaining({
+              unique_pro_users_count: 15,
+            }),
+          }),
+          expect.any(Object)
+        );
+      });
+    });
+
+    describe("_markImageCompleted", () => {
+      it("updates image has_pending_reward to false", async () => {
+        const spy = jest
+          .spyOn(rewardsService.imagesRepository, "update")
+          .mockResolvedValue({});
+        await rewardsService._markImageCompleted(REWARD_TEST_IMAGE_ID, {});
+        expect(spy).toHaveBeenCalledWith(
+          REWARD_TEST_IMAGE_ID,
+          { has_pending_reward: false },
+          { session: {} }
+        );
+      });
+    });
+  });
+
   describe("RewardsService.getUserRewardData", () => {
     it("should return user reward data with correct point totals", async () => {
       jest
