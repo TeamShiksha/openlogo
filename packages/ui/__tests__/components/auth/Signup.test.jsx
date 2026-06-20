@@ -486,6 +486,145 @@ describe("SignUpForm UI and Functionality Tests", () => {
       expect(submitButton).toBeDisabled();
     });
   });
+
+  it("shows password strength card when password is typed", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "abc" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("Password strength")).toBeInTheDocument();
+    });
+  });
+
+  it("shows weak strength level for a weak password", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "abc" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("weak")).toBeInTheDocument();
+    });
+  });
+
+  it("shows medium strength level for a medium password", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "Abc1" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("medium")).toBeInTheDocument();
+    });
+  });
+
+  it("shows strong strength level for a strong password", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "Abcdef1!" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("strong")).toBeInTheDocument();
+    });
+  });
+
+  it("shows needs text with unmet criteria", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "abc" } });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Needs:/)).toBeInTheDocument();
+    });
+  });
+
+  it("hides strength card when all conditions are met", async () => {
+    const authContext = mockAuthContext(false);
+    render(
+      <BrowserRouter>
+        <AuthContext.Provider value={authContext}>
+          <ThemeProvider>
+            <ToastProvider>
+              <SignUpForm toggleForm={vi.fn()} />
+            </ToastProvider>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    fireEvent.focus(passwordInput);
+    fireEvent.change(passwordInput, { target: { value: "Abcdef1!" } });
+
+    await waitFor(() => {
+      const card = screen.getByText("Password strength").closest("div");
+      expect(card).not.toHaveClass("strength-card-visible");
+    });
+  });
 });
 
 it("renders the disclaimer with Terms and Privacy links", () => {
