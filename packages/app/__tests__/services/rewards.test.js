@@ -43,7 +43,7 @@ const createMockRewardRecord5Achieved = () => ({
   _id: new mongoose.Types.ObjectId(),
   image_id: REWARD_TEST_IMAGE_ID,
   user_id: REWARD_TEST_CREATOR_ID,
-  unique_pro_users: [...REWARD_TEST_PRO_USER_IDS_10.slice(0, 5)],
+  unique_pro_users: REWARD_TEST_PRO_USER_IDS_10.slice(0, 5),
   unique_pro_users_count: 5,
   milestones_achieved: [
     { milestone: 5, achieved_at: new Date(), points_awarded: 10 },

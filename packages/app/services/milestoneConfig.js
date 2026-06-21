@@ -93,6 +93,30 @@ class MilestoneConfigService {
     return activated;
   }
 
+  _validateThresholds(thresholds) {
+    if (!Array.isArray(thresholds) || thresholds.length === 0) {
+      throw new Error("thresholds must be a non-empty array");
+    }
+    for (const t of thresholds) {
+      if (typeof t.at !== "number" || t.at < 1) {
+        throw new Error(
+          'Each threshold must have a positive numeric "at" value'
+        );
+      }
+      if (typeof t.points !== "number" || t.points < 1) {
+        throw new Error(
+          'Each threshold must have a positive numeric "points" value'
+        );
+      }
+    }
+  }
+
+  _validateName(name) {
+    if (typeof name !== "string" || !name.trim()) {
+      throw new Error("name must be a non-empty string");
+    }
+  }
+
   /**
    * Update an inactive config's name and/or thresholds.
    * Throws if the config is active (read-only) or not found.
@@ -116,28 +140,12 @@ class MilestoneConfigService {
     const updates = {};
 
     if (data.name !== undefined) {
-      if (typeof data.name !== "string" || !data.name.trim()) {
-        throw new Error("name must be a non-empty string");
-      }
+      this._validateName(data.name);
       updates.name = data.name.trim();
     }
 
     if (data.thresholds !== undefined) {
-      if (!Array.isArray(data.thresholds) || data.thresholds.length === 0) {
-        throw new Error("thresholds must be a non-empty array");
-      }
-      for (const t of data.thresholds) {
-        if (typeof t.at !== "number" || t.at < 1) {
-          throw new Error(
-            'Each threshold must have a positive numeric "at" value'
-          );
-        }
-        if (typeof t.points !== "number" || t.points < 1) {
-          throw new Error(
-            'Each threshold must have a positive numeric "points" value'
-          );
-        }
-      }
+      this._validateThresholds(data.thresholds);
       updates.thresholds = data.thresholds;
     }
 

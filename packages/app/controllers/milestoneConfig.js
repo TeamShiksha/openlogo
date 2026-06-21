@@ -1,5 +1,6 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const MilestoneConfigService = require("../services/milestoneConfig");
+const { RewardMessages } = require("../utils/constants");
 
 /**
  * GET /api/admin/milestones
@@ -32,7 +33,7 @@ async function getMilestoneConfigController(req, res, next) {
     if (!config) {
       return res.status(404).json({
         statusCode: 404,
-        message: "MilestoneConfig not found",
+        message: RewardMessages.MILESTONE_NOT_FOUND,
         error: STATUS_CODES[404],
       });
     }
@@ -59,7 +60,7 @@ async function createMilestoneConfigController(req, res, next) {
     if (!name) {
       return res.status(422).json({
         statusCode: 422,
-        message: "name is required",
+        message: RewardMessages.NAME_REQUIRED,
         error: STATUS_CODES[422],
       });
     }
@@ -67,7 +68,7 @@ async function createMilestoneConfigController(req, res, next) {
     if (!thresholds || !Array.isArray(thresholds) || thresholds.length === 0) {
       return res.status(422).json({
         statusCode: 422,
-        message: "thresholds must be a non-empty array",
+        message: RewardMessages.THRESHOLDS_REQUIRED,
         error: STATUS_CODES[422],
       });
     }
@@ -82,8 +83,7 @@ async function createMilestoneConfigController(req, res, next) {
     if (hasInvalidThreshold) {
       return res.status(422).json({
         statusCode: 422,
-        message:
-          'Each threshold must have positive numeric "at" and "points" values',
+        message: RewardMessages.THRESHOLD_INVALID,
         error: STATUS_CODES[422],
       });
     }
@@ -93,7 +93,7 @@ async function createMilestoneConfigController(req, res, next) {
 
     return res.status(201).json({
       statusCode: 201,
-      message: "MilestoneConfig created successfully",
+      message: RewardMessages.MILESTONE_CREATED,
       data: config,
     });
   } catch (error) {
@@ -112,8 +112,7 @@ async function activateMilestoneConfigController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      message:
-        "MilestoneConfig activated — takes effect on the next worker run",
+      message: RewardMessages.MILESTONE_ACTIVATED,
       data: config,
     });
   } catch (error) {
@@ -149,7 +148,7 @@ async function updateMilestoneConfigController(req, res, next) {
     if (name === undefined && thresholds === undefined) {
       return res.status(422).json({
         statusCode: 422,
-        message: "At least one of name or thresholds must be provided",
+        message: RewardMessages.NAME_OR_THRESHOLDS_REQUIRED,
         error: STATUS_CODES[422],
       });
     }
@@ -158,7 +157,7 @@ async function updateMilestoneConfigController(req, res, next) {
       if (!Array.isArray(thresholds) || thresholds.length === 0) {
         return res.status(422).json({
           statusCode: 422,
-          message: "thresholds must be a non-empty array",
+          message: RewardMessages.THRESHOLDS_REQUIRED,
           error: STATUS_CODES[422],
         });
       }
@@ -173,8 +172,7 @@ async function updateMilestoneConfigController(req, res, next) {
       if (hasInvalidThreshold) {
         return res.status(422).json({
           statusCode: 422,
-          message:
-            'Each threshold must have positive numeric "at" and "points" values',
+          message: RewardMessages.THRESHOLD_INVALID,
           error: STATUS_CODES[422],
         });
       }
@@ -188,7 +186,7 @@ async function updateMilestoneConfigController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      message: "MilestoneConfig updated successfully",
+      message: RewardMessages.MILESTONE_UPDATED,
       data: config,
     });
   } catch (error) {
@@ -223,7 +221,7 @@ async function deleteMilestoneConfigController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
-      message: "MilestoneConfig deleted successfully",
+      message: RewardMessages.MILESTONE_DELETED,
       data: config,
     });
   } catch (error) {

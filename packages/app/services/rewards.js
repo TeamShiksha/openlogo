@@ -378,7 +378,7 @@ class RewardsService {
 
       const rewardsWithImages = rewards.map((r) => {
         let imageUrl = null;
-        if (r.image_id && r.image_id.company_name && r.image_id.extension) {
+        if (r.image_id?.company_name && r.image_id?.extension) {
           const imagePath = `${r.image_id.extension}/${r.image_id.company_name}.${r.image_id.extension}`;
           const signedUrlResult = cloudFrontSignedURL(`/${imagePath}`);
           imageUrl = signedUrlResult.success ? signedUrlResult.data : null;
@@ -667,8 +667,9 @@ class RewardsService {
 
       return reversedTransaction;
     } catch (error) {
+      const safeTransactionId = String(transactionId).replace(/[^\w-]/g, "");
       console.error(
-        `[RewardsService] Error reversing transaction ${transactionId}:`,
+        `[RewardsService] Error reversing transaction ${safeTransactionId}:`,
         error
       );
       throw error;
@@ -686,8 +687,9 @@ class RewardsService {
         userId
       );
     } catch (error) {
+      const safeUserId = String(userId).replace(/[^\w-]/g, "");
       console.error(
-        `[RewardsService] Error retrieving transaction stats for user ${userId}:`,
+        `[RewardsService] Error retrieving transaction stats for user ${safeUserId}:`,
         error
       );
       throw error;

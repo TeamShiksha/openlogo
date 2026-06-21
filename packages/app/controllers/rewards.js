@@ -1,6 +1,6 @@
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const { RewardsService } = require("../services");
-const { Messages } = require("../utils/constants");
+const { Messages, RewardMessages } = require("../utils/constants");
 
 /**
  * Retrieves reward summary for a specific image
@@ -14,7 +14,7 @@ async function getRewardSummaryForImageController(req, res, next) {
     const summary = await rewardsService.getRewardSummaryForImage(imageId);
     if (!summary) {
       return res.status(404).json({
-        message: "No reward data found for this image",
+        message: RewardMessages.IMAGE_NOT_FOUND,
         statusCode: 404,
         error: STATUS_CODES[404],
       });
@@ -37,7 +37,7 @@ async function getRewardSummaryForImageController(req, res, next) {
 async function getRewardSummaryForUserController(req, res, next) {
   try {
     const rewardsService = new RewardsService();
-    const userId = req.userData.userId; // From auth middleware
+    const userId = req.userData.userId;
 
     const summary = await rewardsService.getUserRewardData(userId);
     if (!summary) {
@@ -64,7 +64,7 @@ async function getRewardSummaryForUserController(req, res, next) {
 async function getRewardsLeaderboardController(req, res, next) {
   try {
     const rewardsService = new RewardsService();
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = Number.parseInt(req.query.limit) || 10;
 
     const leaderboard = await rewardsService.getRewardsLeaderboard(limit);
 
@@ -106,8 +106,8 @@ async function getImageTransactionsController(req, res, next) {
   try {
     const rewardsService = new RewardsService();
     const { imageId } = req.params;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 20;
 
     const transactions = await rewardsService.getImageTransactions(
       imageId,
@@ -133,8 +133,8 @@ async function getUserTransactionsController(req, res, next) {
   try {
     const rewardsService = new RewardsService();
     const userId = req.userData.userId;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 20;
 
     const transactions = await rewardsService.getUserTransactions(
       userId,
@@ -163,7 +163,7 @@ async function getTransactionController(req, res, next) {
 
     if (!transaction) {
       return res.status(404).json({
-        message: "Transaction not found",
+        message: RewardMessages.TRANSACTION_NOT_FOUND,
         statusCode: 404,
         error: STATUS_CODES[404],
       });
@@ -241,10 +241,9 @@ async function searchTransactionsController(req, res, next) {
       endDate: req.query.endDate || null,
     };
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 20;
 
-    // Remove null filters
     Object.keys(filters).forEach(
       (key) => filters[key] === null && delete filters[key]
     );
@@ -274,10 +273,9 @@ async function awardBonusPointsController(req, res, next) {
     const rewardsService = new RewardsService();
     const { imageId, userId, points, reason, description } = req.body;
 
-    // Validation
     if (!imageId || !userId || !points) {
       return res.status(400).json({
-        message: "Missing required fields: imageId, userId, points",
+        message: RewardMessages.MISSING_BONUS_FIELDS,
         statusCode: 400,
         error: STATUS_CODES[400],
       });
@@ -285,7 +283,7 @@ async function awardBonusPointsController(req, res, next) {
 
     if (points <= 0) {
       return res.status(400).json({
-        message: "Points must be greater than 0",
+        message: RewardMessages.POINTS_MUST_BE_POSITIVE,
         statusCode: 400,
         error: STATUS_CODES[400],
       });
@@ -302,7 +300,7 @@ async function awardBonusPointsController(req, res, next) {
     return res.status(201).json({
       statusCode: 201,
       data: transaction,
-      message: "Bonus points awarded successfully",
+      message: RewardMessages.BONUS_AWARDED,
     });
   } catch (err) {
     next(err);
@@ -323,7 +321,7 @@ async function reverseTransactionController(req, res, next) {
 
     if (!reason) {
       return res.status(400).json({
-        message: "Reversal reason is required",
+        message: RewardMessages.REVERSAL_REASON_REQUIRED,
         statusCode: 400,
         error: STATUS_CODES[400],
       });
@@ -338,7 +336,7 @@ async function reverseTransactionController(req, res, next) {
     return res.status(200).json({
       statusCode: 200,
       data: reversedTransaction,
-      message: "Transaction reversed successfully",
+      message: RewardMessages.TRANSACTION_REVERSED,
     });
   } catch (err) {
     next(err);

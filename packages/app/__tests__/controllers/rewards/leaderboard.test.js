@@ -80,14 +80,14 @@ describe("Rewards Controller - Leaderboard", () => {
         .spyOn(RewardsService.prototype, "getRewardsLeaderboard")
         .mockResolvedValue(mockLeaderboard);
 
-      const response = await request(app).get(`${endpoint}?limit=2`);
+      const response = await request(app).get(`${endpoint}`);
 
       expect(response.status).toBe(200);
       expect(response.body.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(
         RewardsService.prototype.getRewardsLeaderboard
-      ).toHaveBeenCalledWith(2);
+      ).toHaveBeenCalledWith(10);
     });
 
     it("500 - Service throws an error", async () => {

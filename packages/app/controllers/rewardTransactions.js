@@ -1,4 +1,5 @@
 const RewardTrackingService = require("../services/rewardTransactions");
+const { RewardMessages } = require("../utils/constants");
 
 /**
  * RewardTransactions Controller
@@ -13,19 +14,16 @@ async function validateAndLogRequestController(req, res, next) {
   try {
     const { imageId, userId, creatorId, keyId, subscription } = req.body;
 
-    // Validate required fields
     if (!imageId || !userId || !creatorId || !keyId || !subscription) {
       return res.status(422).json({
         success: false,
-        error:
-          "Missing required fields: imageId, userId, creatorId, keyId, subscription",
+        error: RewardMessages.MISSING_REQUEST_FIELDS,
         statusCode: 422,
       });
     }
 
     const rewardTrackingService = new RewardTrackingService();
 
-    // Validate request parameters
     const validation = rewardTrackingService.validateRequestParams({
       imageId,
       userId,
@@ -43,7 +41,6 @@ async function validateAndLogRequestController(req, res, next) {
       });
     }
 
-    // Validate and log the request
     const logEntry = await rewardTrackingService.validateAndLogRequest({
       imageId,
       userId,
@@ -55,7 +52,7 @@ async function validateAndLogRequestController(req, res, next) {
     return res.status(200).json({
       success: true,
       data: logEntry,
-      message: `Request logged for reward eligibility: ${logEntry.is_reward_eligible ? "ELIGIBLE" : "INELIGIBLE"}`,
+      message: `${RewardMessages.REQUEST_LOGGED}: ${logEntry.is_reward_eligible ? "ELIGIBLE" : "INELIGIBLE"}`,
       statusCode: 200,
     });
   } catch (error) {
