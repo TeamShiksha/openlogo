@@ -12,12 +12,6 @@ const HeroSection = ({ onPrimaryButtonClick, isAuthenticated }) => {
       <div className={`container ${styles["hero-inner"]}`}>
         <div className={styles["hero-content"]}>
           <div className={styles["text-section"]}>
-            {HERO_SECTION.eyebrow && (
-              <div className={styles["eyebrow-badge"]}>
-                <span className={styles["badge-dot"]}></span>
-                {HERO_SECTION.eyebrow}
-              </div>
-            )}
             <h1>
               {HERO_SECTION.tagLine}{" "}
               <span className={styles.highlight}>

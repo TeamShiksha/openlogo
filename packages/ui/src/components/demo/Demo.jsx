@@ -26,9 +26,18 @@ const Demo = ({ openAuthModal }) => {
     if (errorMsg || !data?.data || !showResults) {
       return [];
     }
+    const cleanSearchTerm = searchTerm
+      .replace(/^(https?:\/\/)?(www\.)?/, "")
+      .split(".")[0]
+      .toLowerCase();
+
+    if (!cleanSearchTerm) {
+      return [];
+    }
+
     return data.data
       .filter(({ companyName }) =>
-        companyName.toLowerCase().includes(searchTerm.toLowerCase())
+        companyName.toLowerCase().includes(cleanSearchTerm)
       )
       .slice(0, 3);
   }, [errorMsg, data, showResults, searchTerm]);
@@ -36,7 +45,7 @@ const Demo = ({ openAuthModal }) => {
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      if (!loading && searchTerm.length > 1) {
+      if (searchTerm.length > 1) {
         makeRequest();
       }
     }, 500);

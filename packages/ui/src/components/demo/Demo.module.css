@@ -266,6 +266,10 @@ form {
 }
 
 @media only screen and (max-width: 780px) {
+  .demo-wrapper {
+    padding: 3rem 0;
+  }
+
   .demo-container {
     grid-template-columns: 1fr;
     gap: 2.5rem;

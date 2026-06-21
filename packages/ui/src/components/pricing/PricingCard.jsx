@@ -23,10 +23,11 @@ function PricingCard({
     buttonText = "Upgrade to Pro";
   }
 
-  const isDisabled = isPlanActive;
+  const isDisabled = isPlanActive || isPro;
 
   return (
     <div className={`${styles.card} ${isPro ? styles.dark : styles.light}`}>
+      {isPro && <div className={styles.ribbon}>Coming Soon</div>}
       <p className={styles["plan-name"]}>{name}</p>
 
       <div className={styles["price-row"]}>

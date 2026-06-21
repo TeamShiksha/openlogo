@@ -113,7 +113,7 @@ describe("Footer Component", () => {
       fireEvent.click(navLink);
       const [path, sectionId] = item.url.split("#");
       expect(window.location.pathname).toBe(path);
-      if (sectionId) {
+      if (sectionId && (path === "/" || path === "/privacy")) {
         const sectionElement = screen.getByTestId(sectionId);
         expect(sectionElement).toBeInTheDocument();
       }

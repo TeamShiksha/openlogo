@@ -164,19 +164,31 @@ export const FOOTER_SECTIONS = [
   {
     title: "Resources",
     items: [
-      { name: "documentation", title: "Documentation", url: "#" },
-      { name: "directory", title: "Directory", url: "#" },
-      { name: "api_access", title: "API Access", url: "#" },
-      { name: "guides", title: "Guides", url: "#" },
+      { name: "documentation", title: "Documentation", url: "/docs" },
+      { name: "directory", title: "Directory", url: "/#demo" },
+      { name: "api_access", title: "API Access", url: "/docs#logo-retrieval" },
+      { name: "guides", title: "Guides", url: "/docs" },
     ],
   },
   {
     title: "Community",
     items: [
-      { name: "github", title: "GitHub", url: "#" },
-      { name: "discord", title: "Discord", url: "#" },
-      { name: "twitter", title: "Twitter / X", url: "#" },
-      { name: "contribute", title: "Contribute", url: "#" },
+      {
+        name: "github",
+        title: "GitHub",
+        url: "https://github.com/TeamShiksha/openlogo",
+      },
+      { name: "discord", title: "Discord", url: "https://discord.com" },
+      {
+        name: "twitter",
+        title: "Twitter / X",
+        url: "https://twitter.com/team_shiksha",
+      },
+      {
+        name: "contribute",
+        title: "Contribute",
+        url: "https://github.com/TeamShiksha/openlogo",
+      },
     ],
   },
   {
@@ -192,7 +204,11 @@ export const FOOTER_SECTIONS = [
         title: "Terms of Service",
         url: "/privacy#terms",
       },
-      { name: "license", title: "License", url: "#" },
+      {
+        name: "license",
+        title: "License",
+        url: "https://github.com/TeamShiksha/openlogo/blob/main/LICENSE",
+      },
     ],
   },
 ];
@@ -451,7 +467,6 @@ export const HERO_SECTION = {
     "Access hundreds of high-quality company logos instantly through our simple API. Built for developers, trusted by designers. Stop searching Google Images.",
   illustractionSrc: "/hero.png",
   illustractionSrcAlt: "Openlogo Illustration",
-  eyebrow: "Now in public beta",
   code: {
     fileName: "demo.js",
     lines: [

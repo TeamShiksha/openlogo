@@ -6,6 +6,8 @@
   display: flex;
   flex-direction: column;
   text-align: left;
+  position: relative;
+  overflow: hidden;
 }
 
 .light {
@@ -14,8 +16,25 @@
 }
 
 .dark {
-  background: rgb(15, 20, 40);
-  box-shadow: 0 20px 40px rgba(15, 20, 40, 0.3);
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+  box-shadow: 0 20px 40px rgba(79, 70, 229, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="dark"] .dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.dark .tick-icon {
+  filter: brightness(0) invert(1);
+}
+
+.dark button:disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .plan-name {
@@ -23,12 +42,31 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 1.2rem;
   color: var(--black);
+  margin-bottom: 1.2rem;
 }
 
 .dark .plan-name {
   color: #fff;
+}
+
+.ribbon {
+  position: absolute;
+  top: 16px;
+  right: -33px;
+  width: 125px;
+  background-color: var(--primary);
+  color: #fff;
+  text-align: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transform: rotate(45deg);
+  padding: 0.3rem 0;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .price-row {

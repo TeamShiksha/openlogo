@@ -37,18 +37,31 @@ function Footer() {
                   {section.title}
                 </h4>
                 <div className={styles["footer-items"]}>
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.name}
-                      className={styles["footer-item"]}
-                      to={item.url}
-                      onClick={(event) =>
-                        handleNavigation(event, item.url, navigate)
-                      }
-                    >
-                      {item.title}
-                    </Link>
-                  ))}
+                  {section.items.map((item) => {
+                    const isExternal = item.url.startsWith("http");
+                    return isExternal ? (
+                      <a
+                        key={item.name}
+                        className={styles["footer-item"]}
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.title}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.name}
+                        className={styles["footer-item"]}
+                        to={item.url}
+                        onClick={(event) =>
+                          handleNavigation(event, item.url, navigate)
+                        }
+                      >
+                        {item.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -69,10 +82,20 @@ function Footer() {
             .
           </div>
           <div className={styles["footer-social"]}>
-            <a href="#" aria-label="Twitter">
+            <a
+              href="https://twitter.com/team_shiksha"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+            >
               <Twitter size={18} color="var(--description)" />
             </a>
-            <a href="#" aria-label="GitHub">
+            <a
+              href="https://github.com/TeamShiksha/openlogo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
               <Github size={18} color="var(--description)" />
             </a>
           </div>

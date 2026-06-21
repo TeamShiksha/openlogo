@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import Table from "../../components/common/table/Table.jsx";
 import { DOCUMENTATION } from "../../utils/Constants";
 import styles from "./Documentation.module.css";
@@ -53,9 +52,9 @@ const Documentation = () => {
       <div className={styles.card} style={{ marginTop: "2rem" }}>
         <p className={styles.text}>
           {DOCUMENTATION.customerSupportText[0]}
-          <Link className={styles.link} onClick={openModal}>
+          <button className={styles.link} onClick={openModal}>
             contact us
-          </Link>
+          </button>
           {DOCUMENTATION.customerSupportText[1]}
         </p>
       </div>

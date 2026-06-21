@@ -4,6 +4,26 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  transition:
+    padding-top 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-bottom 0.3s ease;
+}
+
+.block.scrolled {
+  padding-top: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(177, 179, 183, 0.15);
+}
+
+[data-theme="dark"] .block.scrolled {
+  background-color: rgba(17, 24, 39, 0.8);
+  border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .header {
@@ -12,7 +32,16 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 2rem 0 1rem 0;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  transition:
+    padding-top 0.3s ease,
+    padding-bottom 0.3s ease;
+}
+
+.block.scrolled .header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .brand {
@@ -108,7 +137,8 @@
 
 @media (max-width: 1024px) {
   .header {
-    padding: 1.5rem 0 0.75rem 0;
+    padding-top: 1.5rem;
+    padding-bottom: 0.75rem;
   }
 
   .brand-img {

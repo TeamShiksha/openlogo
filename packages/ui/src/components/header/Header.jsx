@@ -29,9 +29,20 @@ const Header = ({ openAuthModal }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuIcon = showMenu ? CROSS : HAMBURGER;
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { isAuthenticated } = useContext(AuthContext);
   const NAVBAR_ITEMS = isAuthenticated ? LOGGEDIN_ITEMS : HEADER_ITEMS;
   const sectionIds = extractSectionIds(NAVBAR_ITEMS);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    // Call once initially
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -46,7 +57,10 @@ const Header = ({ openAuthModal }) => {
   }, [sectionIds]);
 
   return (
-    <div data-testid="header" className={styles.block}>
+    <div
+      data-testid="header"
+      className={`${styles.block} ${isScrolled ? styles.scrolled : ""}`}
+    >
       <header className={`container ${styles.header}`}>
         {/* Brand */}
         <button
