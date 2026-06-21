@@ -65,7 +65,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       const label = screen.getByLabelText(item.label);
       expect(label).toBeInTheDocument();
     }
-    const footerText = screen.getByText(SIGNUP.footerText);
+    const footerText = screen.getByText(SIGNUP.signinToggleButtonText);
     expect(footerText).toBeInTheDocument();
   });
 
@@ -84,7 +84,7 @@ describe("SignUpForm UI and Functionality Tests", () => {
       </BrowserRouter>
     );
 
-    const switchButton = screen.getByText(SIGNUP.footerText);
+    const switchButton = screen.getByText(SIGNUP.signinToggleButtonText);
     fireEvent.click(switchButton);
     expect(toggleFormMock).toHaveBeenCalled();
   });
@@ -343,14 +343,13 @@ describe("SignUpForm UI and Functionality Tests", () => {
 
     await waitFor(() => {
       expect(mockedMakeRequest).toHaveBeenCalled();
+      expect(signUpButton).toBeEnabled();
     });
 
     expect(nameInput.value).toBe("Test User");
     expect(emailInput.value).toBe("testuser@example.com");
     expect(passwordInput.value).toBe("Password@123");
     expect(confirmPasswordInput.value).toBe("Password@123");
-
-    expect(signUpButton).toBeEnabled();
   });
 
   it("connectivity test passed", async () => {

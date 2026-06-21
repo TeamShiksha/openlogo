@@ -6,6 +6,7 @@ import { Twitter, Github } from "lucide-react";
 
 function Footer() {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   return (
     <div data-testid="footer" className={styles.block}>

@@ -1,12 +1,8 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../contexts/Contexts.jsx";
 import ApiKeyForm from "../../components/apikeyform/ApiKeyForm";
-import CurrentPlan from "../../components/currentplan/CurrentPlan";
 import Usage from "../../components/usage/Usage";
-import ChangePassword from "../../components/changepassword/ChangePassword";
-import UserInfo from "../../components/userinfo/UserInfo";
 import styles from "./Dashboard.module.css";
-import SettingCard from "../../components/settings/SettingCard";
 import Table from "../../components/common/table/Table.jsx";
 import { formatDate } from "../../utils/Helpers.js";
 import { API_KEY, API_KEY_TABLE, BUTTON_TEXT } from "../../utils/Constants.js";
@@ -123,7 +119,7 @@ function Dashboard() {
     }
 
     checkOldKeys();
-  }, []);
+  }, [toast, updateOldKeysRequest]);
 
   const handleKeyNameChange = (e) => {
     setConfirmKeyName(e.target.value);
@@ -152,10 +148,15 @@ function Dashboard() {
   if (loading) {
     return (
       <div
-        data-testid="loading-spinner"
-        className={styles["spinner-container"]}
+        className={styles["dashboard-container"]}
+        data-testid="testid-dashboard"
       >
-        <LoadingSpinner size={40} border={4} color={`gray`} />
+        <div
+          data-testid="loading-spinner"
+          className={styles["spinner-container"]}
+        >
+          <LoadingSpinner size={40} border={4} color="var(--primary)" />
+        </div>
       </div>
     );
   }
@@ -217,7 +218,6 @@ function Dashboard() {
             isDropdownOpen={isDropdownOpen}
             setIsDropdownOpen={setIsDropdownOpen}
             handleRoleSelect={handleRoleSelect}
-            styles={styles}
           />
         </div>
       ) : selectedDashboard === "OPERATOR" ? (
@@ -298,14 +298,6 @@ function Dashboard() {
                 >
                   API Keys
                 </button>
-                <button
-                  className={`${styles["tab"]} ${
-                    activeTab === "settings" ? styles["active-tab"] : ""
-                  }`}
-                  onClick={() => setActiveTab("settings")}
-                >
-                  Settings
-                </button>
               </div>
             </div>
           </div>
@@ -315,10 +307,11 @@ function Dashboard() {
               <div className={styles["analytics-content"]}>
                 <div className={styles["analytics-grid"]}>
                   <div className={styles["analytics-card"]}>
-                    <Graph />
+                    <Graph isGuest={isGuest} />
                   </div>
                   <div className={styles["analytics-card"]}>
                     <Usage
+                      isGuest={isGuest}
                       usageCount={userData?.subscription.usage_count || 0}
                       usageLimit={userData?.subscription.usage_limit || 0}
                     />
@@ -358,31 +351,6 @@ function Dashboard() {
                       emptyMessage={API_KEY_TABLE.emptyMessage}
                     />
                   </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "settings" && (
-              <div className={styles["settings-grid"]}>
-                <div className={styles["card"]}>
-                  <h3 className={styles["card-title"]}>User Info</h3>
-                  <UserInfo
-                    name={userData?.name || ""}
-                    email={userData?.email || ""}
-                    isGuest={isGuest}
-                  />
-                </div>
-                <div className={styles["card"]}>
-                  <h3 className={styles["card-title"]}>Change Password</h3>
-                  <ChangePassword isGuest={isGuest} />
-                </div>
-                <div className={styles["card"]}>
-                  <h3 className={styles["card-title"]}>Plan</h3>
-                  <CurrentPlan isGuest={isGuest} />
-                </div>
-                <div className={styles["card"]}>
-                  <h3 className={styles["card-title"]}>Settings</h3>
-                  <SettingCard isGuest={isGuest} />
                 </div>
               </div>
             )}

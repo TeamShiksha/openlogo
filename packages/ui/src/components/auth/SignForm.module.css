@@ -2,54 +2,79 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
+  max-width: 600px;
   padding-bottom: 1rem;
 }
 
 .title {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--black);
-  margin-bottom: 1rem;
+  margin-bottom: 0.15rem;
+}
+
+.description {
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+  color: var(--description);
 }
 
 .guest-sign-in {
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 0.9rem;
   color: var(--description);
+  opacity: 0.5;
   font-weight: 500;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   text-align: center;
   margin: 10px 0;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .guest-sign-in:hover {
-  color: var(--primary);
+  color: var(--description);
+  opacity: 0.8;
   transition: all 0.3s ease;
 }
 
 .switch {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--description);
+  opacity: 0.8;
   font-weight: 500;
   text-align: center;
   margin: 10px 0;
-  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.switch:hover {
+.toggler {
+  margin-left: 6px;
+  cursor: pointer;
   color: var(--primary);
-  transition: all 0.3s ease;
+  font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.toggler:hover {
+  text-decoration: underline;
 }
 
 .forgot-password {
   margin-left: auto;
   color: var(--primary);
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 12px;
   cursor: pointer;
-  opacity: 0.7;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 }
 
@@ -59,18 +84,19 @@
 }
 
 .form-width {
-  width: 245px;
+  width: 380px;
 }
 
 .logo {
-  width: 100px;
+  width: 50px;
   height: auto;
 }
 
 .separator {
-  border-top: 2px solid var(--description);
-  opacity: 0.3;
+  border-top: 1px solid var(--description);
+  opacity: 0.2;
   width: 100%;
+  margin: 0.35rem 0;
 }
 
 .cross {
@@ -132,8 +158,8 @@
 
 .eye-button {
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 8px;
+  top: 10px;
   background: none;
   border: none;
   cursor: pointer;
@@ -150,4 +176,155 @@
 
 .eye-button:hover {
   color: var(--primary);
+}
+
+.submit-button {
+  width: 400px;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-bottom);
+}
+
+.footer-wrapper {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.strength-card {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.3rem 0.65rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.1rem;
+  width: 400px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.strength-bar {
+  height: 5px;
+  flex: 1;
+  border-radius: 9999px;
+  background-color: var(--black);
+  opacity: 0.1;
+  transition: background-color 0.35s ease;
+}
+
+.strength-bar-active {
+  opacity: 1;
+  background-color: var(--success);
+}
+
+.criteria-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--black);
+  opacity: 0.5;
+  font-weight: 600;
+  width: calc(50% - 0.3rem);
+  transition: color 0.3s ease;
+}
+
+.criteria-item.met {
+  opacity: 1;
+  color: var(--success);
+}
+
+.criteria-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--primary);
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.criteria-item.met .criteria-icon {
+  color: var(--success);
+}
+
+.signup-divider {
+  position: relative;
+  margin: 0.2rem 0;
+}
+
+.signup-divider-line {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.guest-button:hover {
+  background-color: var(--primary-focus);
+}
+
+.signup-footer-terms {
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--label-color);
+  margin-top: 0.1rem;
+  line-height: 1.5;
+}
+
+.signup-footer-terms a {
+  text-decoration: underline;
+  color: var(--label-color);
+  transition: color 0.2s ease;
+}
+
+.signup-footer-terms a:hover {
+  color: var(--description);
+}
+
+@media only screen and (max-width: 564px) {
+  .form-width {
+    width: 350px;
+  }
+
+  .submit-button {
+    width: 350px;
+  }
+
+  .strength-card {
+    width: 350px;
+  }
+
+  .footer-wrapper {
+    width: 350px;
+  }
+}
+
+@media only screen and (max-width: 445px) {
+  .form-width {
+    width: 300px;
+  }
+
+  .submit-button {
+    width: 300px;
+  }
+
+  .strength-card {
+    width: 300px;
+  }
+
+  .footer-wrapper {
+    width: 300px;
+  }
+
+  .switch {
+    font-size: 0.8rem;
+  }
 }

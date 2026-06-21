@@ -4,22 +4,22 @@ import rapidLogo from "../assets/rapid.svg";
 import searchLogo from "../assets/search.svg";
 import databaseLogo from "../assets/database.svg";
 import dragAndDropBg from "../assets/DragAndDropBg.svg";
-import apple from "../assets/apple.png";
-import amazon from "../assets/amazon.png";
-import united_healthcare from "../assets/united_healthcare.png";
 import microsoft from "../assets/microsoft.png";
-import nvidia from "../assets/nvidia.png";
-import mastercard from "../assets/mastercard.png";
 import target from "../assets/target.png";
 import ford from "../assets/ford.png";
 import adobe from "../assets/adobe.png";
 import ibm from "../assets/ibm.png";
 import alphabet from "../assets/alphabet.png";
-import nike from "../assets/nike.png";
 import tesla from "../assets/tesla.png";
 import walmart from "../assets/walmart.png";
 import salesforce from "../assets/salesforce.png";
-import meta from "../assets/meta.png";
+import airbnb from "../assets/airbnb.png";
+import bmw from "../assets/bmw.png";
+import byd from "../assets/byd.png";
+import google from "../assets/google.png";
+import sap from "../assets/sap.png";
+import slack from "../assets/slack.png";
+import spotify from "../assets/spotify.png";
 import jsLogo from "../assets/js.png";
 import pythonLogo from "../assets/python.png";
 import javaLogo from "../assets/java.png";
@@ -153,6 +153,12 @@ export const LOGGEDIN_MOBILE_ITEMS = [
     url: "/dashboard",
     type: "route",
   },
+  {
+    name: "settings",
+    title: "Settings",
+    url: "/settings",
+    type: "route",
+  },
   LOGGEDIN_ITEMS.find((i) => i.name === "docs"),
   LOGGEDIN_ITEMS.find((i) => i.name === "explore"),
   LOGGEDIN_ITEMS.find((i) => i.name === "features"),
@@ -273,22 +279,22 @@ export const ABOUT = {
   DESCRIPTION:
     "From startups to enterprises, our platform offers an extensive collection of company logos, enabling smooth integration and consistent branding. Our APIs are designed to make logo retrieval effortless, providing scalable solutions that adapt to your business's evolving branding requirements.",
   INTEGRATIONS: [
-    { id: 1, src: apple, alt: "Apple" },
-    { id: 2, src: amazon, alt: "Amazon" },
-    { id: 3, src: united_healthcare, alt: "United Health Care" },
+    { id: 1, src: airbnb, alt: "Airbnb" },
+    { id: 2, src: bmw, alt: "BMW" },
+    { id: 3, src: byd, alt: "BYD" },
     { id: 4, src: alphabet, alt: "Alphabet" },
     { id: 5, src: adobe, alt: "Adobe" },
-    { id: 6, src: meta, alt: "Meta" },
-    { id: 7, src: ibm, alt: "Ibm" },
-    { id: 8, src: target, alt: "target" },
-    { id: 9, src: nike, alt: "Nike" },
+    { id: 6, src: google, alt: "Google" },
+    { id: 7, src: ibm, alt: "IBM" },
+    { id: 8, src: target, alt: "Target" },
+    { id: 9, src: sap, alt: "SAP" },
     { id: 10, src: salesforce, alt: "Salesforce" },
-    { id: 11, src: mastercard, alt: "Master Card" },
+    { id: 11, src: slack, alt: "Slack" },
     { id: 12, src: ford, alt: "Ford" },
-    { id: 13, src: nvidia, alt: "Google Calendar" },
-    { id: 14, src: microsoft, alt: "microsoft" },
-    { id: 15, src: tesla, alt: "tesla" },
-    { id: 16, src: walmart, alt: "walmart" },
+    { id: 13, src: spotify, alt: "Spotify" },
+    { id: 14, src: microsoft, alt: "Microsoft" },
+    { id: 15, src: tesla, alt: "Tesla" },
+    { id: 16, src: walmart, alt: "Walmart" },
   ],
 };
 
@@ -423,7 +429,7 @@ export const BUTTON_TEXT = {
   signIn: "Sign In",
   signOut: "Sign Out",
   changePasswordLabel: "Change password",
-  forgotPassword: "Forgot Password ?",
+  forgotPassword: "Forgot password?",
   cross: `×`,
   sendMessage: "Send message",
   delete: "Delete",
@@ -447,6 +453,8 @@ export const BUTTON_TEXT = {
 
 export const BRANDING = {
   imageSrc: "openlogo.svg",
+  imageSrcDark: "openlogo-white.svg",
+  imageAlt: "Brand Logo",
   brandName: "Openlogo",
   poweredByText: "Powered by TeamShiksha",
   poweredByLink: "https://team.shiksha",
@@ -552,6 +560,7 @@ export const PRIVACY_AND_TERMS = [
 
 export const SIGNUP = {
   title: "Sign up for free",
+  description: "Create your account and start integrating in seconds",
   termsUrl: "/privacy#terms",
   privacyUrl: "/privacy#privacy",
   fields: [
@@ -571,6 +580,7 @@ export const SIGNUP = {
     },
   ],
   footerText: "Already have an account ?",
+  signinToggleButtonText: "Login",
   initialValues: {
     name: "",
     email: "",
@@ -580,7 +590,8 @@ export const SIGNUP = {
 };
 
 export const SIGNIN = {
-  title: "Go to dashboard",
+  title: "Sign in to your account",
+  description: "Welcome back! Please enter your details",
   fields: [
     { type: "email", name: "email", label: "Email" },
     {
@@ -592,6 +603,7 @@ export const SIGNIN = {
   ],
   guestAccount: "Continue as Guest",
   footerText: "Don't have an account ?",
+  signupToggleButtonText: "Create an account",
   initialValues: { email: "", password: "" },
 };
 
@@ -622,99 +634,85 @@ export const LOGOUPLOAD = {
   },
 };
 
-const CODE_EXAMPLE_SEARCH = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
+export const CODE_EXAMPLE_SEARCH = (baseUrl) => ({
+  curl: `curl --request GET \\
+  --url '${baseUrl}/logo/search?key=goo&API_KEY=YOUR_API_KEY'`,
 
-  python: `# import package
-import requests
-# send GET request
-response = requests.get("api/logo/search",
-  params={
-    "key": "{prefix}",
-    "API_KEY": '{YOUR_API_KEY}'
-  },
-  headers={
-    "Content-Type": "application/json"
+  javascript: `const response = await fetch(
+  "${baseUrl}/logo/search?key=goo&API_KEY=YOUR_API_KEY",
+  {
+    method: "GET",
   }
-)`,
+);
 
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo/search?key={prefix}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();
-// send GET request
-HttpResponse<String> response = client.send(request,
-  HttpResponse.BodyHandlers.ofString());`,
-};
+const data = await response.json();`,
 
-const CODE_EXAMPLE = {
-  javascript: `// use fetch to send GET request
-fetch("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})`,
+  python: `import requests
 
-  python: `# import package
-import requests
-# send GET request
-response = requests.get("api/logo",
-  params={
-    "domain": "{domain}",
-    "API_KEY": "{YOUR_API_KEY}"
-  },
-  headers={
-    "Content-Type": "application/json"
+response = requests.get(
+  "${baseUrl}/logo/search",
+  params={"key": "goo", "API_KEY": "YOUR_API_KEY"},
+)
+
+data = response.json()`,
+});
+
+export const CODE_EXAMPLE = (baseUrl) => ({
+  curl: `curl --request GET \\
+  --url '${baseUrl}/logo?key=google.com&API_KEY=YOUR_API_KEY'`,
+
+  javascript: `const response = await fetch(
+  "${baseUrl}/logo?key=google.com&API_KEY=YOUR_API_KEY",
+  {
+    method: "GET",
   }
-)`,
+);
 
-  java: `// create http client instance
-HttpClient client = HttpClient.newHttpClient();
-// build http request
-HttpRequest request = HttpRequest.newBuilder()
-  .uri(URI.create("/api/logo?key={domain}&API_KEY={YOUR_API_KEY}"))
-  .header("Content-Type", "application/json")
-  .GET()
-  .build();
-// send GET request
-HttpResponse<String> response = client.send(request,
-  HttpResponse.BodyHandlers.ofString());`,
-};
+const data = await response.json();`,
+
+  python: `import requests
+
+response = requests.get(
+  "${baseUrl}/logo",
+  params={"key": "google.com", "API_KEY": "YOUR_API_KEY"},
+)
+
+data = response.json()`,
+});
 
 export const DOCUMENTATION = {
   introduction: {
     heading: "Introduction",
-    text: "The documentation provides a comprehensive guide to our logo retrieval API, detailing endpoints for fetching company logos by domain name and searching logos by domain prefixes. We offer features like exact search, bulk logo retrieval, high-resolution logos, request logo with easy integration. Whether you need a logo for branding or marketing, we're here to help. Contact us anytime!",
+    text: "Welcome to the Openlogo API documentation. Openlogo is a high-performance, real-time logo retrieval service designed to help you integrate brand assets directly into your applications.",
   },
   tableDataHeaders: ["Parameter", "Type", "Description", "Required"],
   apiDocs: [
     {
       heading: "Logo Retrieval",
-      text: "Integrate this API for precise logo searches using a company's domain name. This free API allows up to 500 calls per month and returns logos in PNG format. Support for additional formats will be available in the future.",
-      endPoint: "Endpoint: /logo?key=google&API_KEY=YOUR_API_KEY",
+      text: "Fetch the official logo for any company using their domain name. Our system automatically detects the best quality asset, including high-resolution SVGs and PNGs.",
+      endPoint: "Endpoint: /logo?key={domain}&API_KEY={YOUR_API_KEY}",
       tableDataContent: [
-        ["key", "string", "The domain name of the company.", "Yes"],
+        [
+          "key",
+          "string",
+          "The domain name of the company (e.g., apple.com).",
+          "Yes",
+        ],
         ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
       ],
       codeExample: CODE_EXAMPLE,
     },
     {
-      heading: "Search (Now Available)",
-      text: "The Logo Search API allows users to retrieve a list of logo URLs that begin with specified characters, making it useful for identifying logos based on a domain name's prefix. This service is currently free but will be subject to charges in the future. The API has a monthly usage limit of 5000 requests.",
-      endPoint: "Endpoint: /logo/search?key=go&API_KEY=YOUR_API_KEY",
+      heading: "Search Logos",
+      text: "Find logos by brand keyword or domain fragment. This endpoint returns matching logos for faster discovery workflows.",
+      endPoint: "Endpoint: /logo/search?key={query}&API_KEY={YOUR_API_KEY}",
       tableDataContent: [
-        ["key", "string", "Prefix of the domain name to filter logos.", "Yes"],
+        [
+          "key",
+          "string",
+          "Search query (brand name or domain fragment).",
+          "Yes",
+        ],
         ["API_KEY", "string", "Generated API Key from the dashboard.", "Yes"],
       ],
       codeExample: CODE_EXAMPLE_SEARCH,
@@ -735,9 +733,8 @@ export const API_KEY_TABLE = {
     "Your api keys will be visible here, click on generate key to add new api key",
 };
 
-export const DASHBOARD_CARDS_TITLE = [
-  "Usage",
-  "Generate New API Key",
+export const DASHBOARD_CARDS_TITLE = ["Usage", "Generate New API Key"];
+export const USER_SETTINGS_TITLE = [
   "Plan",
   "User Info",
   "Change Password",
@@ -771,7 +768,8 @@ export const EMAIL_DOES_NOT_EXIST = {
 
 export const NOT_FOUND_PAGE = {
   TITLE: "404 - Page Not Found",
-  MESSAGE: "The page you are looking for does not exist.",
+  MESSAGE:
+    "The page you are looking for doesn't exist. It might have been moved, deleted, or perhaps the URL is incorrect.",
 };
 
 export const VERIFICATION = {
@@ -953,12 +951,134 @@ export const RELEASE_PAGE = {
     ],
   },
 
-  versions: ["0.7.0 version", "0.6.0 version", "Previous version"],
-  latestVersion: "0.7.0 version",
+  versions: [
+    "0.8.0 version",
+    "0.7.0 version",
+    "0.6.0 version",
+    "Previous version",
+  ],
+  latestVersion: "0.8.0 version",
   changelog: {
     title: "Changelog",
     description: "Changelog with often recorded's versions",
     versionsData: [
+      {
+        versionName: "0.8.0 version",
+        releaseDate: "May 2026",
+        imgSrc: version07,
+        releaseNotes: [
+          {
+            releaseNote: "Revamp USER dashboard according to the design.",
+            contributors: [
+              {
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
+          },
+          {
+            releaseNote: "Enhancing the UI of the admin dashboard.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Add 2FA section in user settings.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Implementing a dedicated settings page for MFA.",
+            contributors: [
+              {
+                contributorName: "L-Tarun-Aditya",
+                contributorGithubLink: "https://github.com/L-Tarun-Aditya",
+              },
+            ],
+          },
+          {
+            releaseNote: "Multi factor authentication.",
+            contributors: [
+              {
+                contributorName: "MukeshAbhi",
+                contributorGithubLink: "https://github.com/MukeshAbhi",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Prevent Users From Reusing Old Password During Password Reset.",
+            contributors: [
+              {
+                contributorName: "rishang14",
+                contributorGithubLink: "https://github.com/rishang14",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Fix bugs on createLogo page and allow users to access this page without authentication.",
+            contributors: [
+              {
+                contributorName: "AryaDharkar",
+                contributorGithubLink: "https://github.com/AryaDharkar",
+              },
+            ],
+          },
+          {
+            releaseNote: "Feature for user session management.",
+            contributors: [
+              {
+                contributorName: "kadamsahil2511",
+                contributorGithubLink: "https://github.com/kadamsahil2511",
+              },
+              {
+                contributorName: "DeepAkdotcom",
+                contributorGithubLink: "https://github.com/DeepAkdotcom",
+              },
+            ],
+          },
+          {
+            releaseNote:
+              "Feature to enforce branch & PR naming conventions via husky + GitHub Actions.",
+            contributors: [
+              {
+                contributorName: "Smayur0",
+                contributorGithubLink: "https://github.com/Smayur0",
+              },
+            ],
+          },
+          {
+            releaseNote: "Redesign documentation page.",
+            contributors: [
+              {
+                contributorName: "Dhirenderchoudhary",
+                contributorGithubLink: "https://github.com/Dhirenderchoudhary",
+              },
+            ],
+          },
+          {
+            releaseNote: "Revamp sign in and sign up form",
+            contributors: [
+              {
+                contributorName: "0-mstrmind",
+                contributorGithubLink: "https://github.com/0-mstrmind",
+              },
+              {
+                contributorName: "kunjesh360",
+                contributorGithubLink: "https://github.com/kunjesh360",
+              },
+            ],
+          },
+        ],
+      },
       {
         versionName: "0.7.0 version",
         releaseDate: "Mar 2026",

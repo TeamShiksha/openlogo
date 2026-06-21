@@ -5,7 +5,7 @@ import {
 } from "./Constants";
 
 const PASSWORD_RULES = {
-  minLength: 6,
+  minLength: 8,
   maxLength: 20,
   requiresUppercase: true,
   requiresLowercase: true,
@@ -62,6 +62,31 @@ export const isValidPassword = (password) => {
 
   return Object.keys(errors).length === 0 ? {} : errors;
 };
+
+export const getPasswordCriteria = (password) => [
+  {
+    label: `${PASSWORD_RULES.minLength}+ characters`,
+    met: password.length >= PASSWORD_RULES.minLength,
+  },
+  {
+    label: "Uppercase",
+    met: !PASSWORD_RULES.requiresUppercase || /[A-Z]/.test(password),
+  },
+  {
+    label: "Lowercase",
+    met: !PASSWORD_RULES.requiresLowercase || /[a-z]/.test(password),
+  },
+  {
+    label: "Number (0-9)",
+    met: !PASSWORD_RULES.requiresDigit || /\d/.test(password),
+  },
+  {
+    label: "Special character",
+    met:
+      !PASSWORD_RULES.requiresSpecialChar ||
+      PASSWORD_RULES.specialCharRegex.test(password),
+  },
+];
 
 export const isValidEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
