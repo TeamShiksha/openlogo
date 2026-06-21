@@ -7,11 +7,16 @@
   animation: fadeIn 0.25s ease forwards;
 }
 
+.overlay.closing {
+  animation: fadeOut 0.25s ease forwards;
+}
+
 /* Slide-in drawer */
 .drawer {
   position: fixed;
   top: 0;
   right: 0;
+  height: 100vh;
   height: 100dvh;
   width: 75vw;
   max-width: 320px;
@@ -22,6 +27,12 @@
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.drawer.closing {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Close button */
@@ -81,10 +92,14 @@
   padding-top: 1rem;
   border-top: 1px solid var(--border-color, #e5e7eb);
   margin-top: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .logout-btn {
+  display: block;
   width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   border: 1px solid #fca5a5;
@@ -111,11 +126,29 @@
   }
 }
 
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

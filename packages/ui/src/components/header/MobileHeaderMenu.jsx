@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { HEADER_ITEMS, LOGGEDIN_MOBILE_ITEMS } from "../../utils/Constants";
@@ -22,12 +23,29 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
   const [activeSection, setActiveSection] = useState("");
   const currentPath = location.pathname;
 
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const [animateClose, setAnimateClose] = useState(false);
+
   const handleLogout = () => {
     logout();
     setUserData(null);
     closeMenu(false);
     navigate("/");
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsRendered(true);
+      setAnimateClose(false);
+    } else if (isRendered) {
+      setAnimateClose(true);
+      const timer = setTimeout(() => {
+        setIsRendered(false);
+        setAnimateClose(false);
+      }, 300); // matches slideOut duration (0.3s)
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, isRendered]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,21 +63,24 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
 
   // Lock body scroll when menu is open
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    document.body.style.overflow = isRendered ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isRendered]);
 
-  if (!isOpen) return null;
+  if (!isRendered) return null;
 
-  return (
+  return createPortal(
     <div
       data-testid="mobile-menu"
-      className={styles.overlay}
+      className={`${styles.overlay} ${animateClose ? styles.closing : ""}`}
       onClick={() => closeMenu(false)}
     >
-      <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`${styles.drawer} ${animateClose ? styles.closing : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close button */}
         <button
           className={styles["close-btn"]}
@@ -101,7 +122,8 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
