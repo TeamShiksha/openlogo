@@ -24,6 +24,7 @@ function SignUp({ toggleForm, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordRules, setShowPasswordRules] = useState(false);
+  const [keepShowingStrength, setKeepShowingStrength] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isDarkMode } = useTheme();
   const { makeRequest, errorMsg } = useApi({
@@ -95,6 +96,18 @@ function SignUp({ toggleForm, onClose }) {
     return "strong";
   };
 
+  useEffect(() => {
+    if (allConditionsMet) {
+      setKeepShowingStrength(true);
+
+      const timer = setTimeout(() => {
+        setKeepShowingStrength(false);
+      }, 1100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [allConditionsMet]);
+
   const strengthLevel = getStrengthLevel(strengthCount);
   return (
     <>
@@ -121,7 +134,7 @@ function SignUp({ toggleForm, onClose }) {
                 <div key={field.name} className={styles["password-container"]}>
                   <div className={styles["password-wrapper"]}>
                     <CustomInput
-                      error={formErrors[field.name]}
+                      error=""
                       type={showPassword ? "text" : "password"}
                       name={field.name}
                       label={field.label}
@@ -161,7 +174,7 @@ function SignUp({ toggleForm, onClose }) {
                     className={`${styles["strength-card"]} ${
                       showPasswordRules &&
                       formValues.password.length > 0 &&
-                      !allConditionsMet
+                      (!allConditionsMet || keepShowingStrength)
                         ? styles["strength-card-visible"]
                         : ""
                     }`}

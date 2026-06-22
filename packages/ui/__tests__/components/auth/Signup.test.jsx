@@ -7,10 +7,7 @@ import {
 } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import SignUpForm from "../../../src/components/auth/Signup";
-import {
-  SIGNUP,
-  PASSWORD_VALIDATION_MESSAGES,
-} from "../../../src/utils/Constants";
+import { SIGNUP } from "../../../src/utils/Constants";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContext } from "../../../src/contexts/Contexts";
 import { ToastProvider } from "../../../src/contexts/ToastContext";
@@ -140,16 +137,12 @@ describe("SignUpForm UI and Functionality Tests", () => {
     fireEvent.blur(emailInput);
 
     fireEvent.focus(passwordInput);
+
     await waitFor(() => {
-      const passwordError = screen.getByText(
-        PASSWORD_VALIDATION_MESSAGES.required
-      );
-      expect(passwordError).toBeInTheDocument();
-      fireEvent.blur(passwordInput);
-      expect(
-        screen.queryByText(PASSWORD_VALIDATION_MESSAGES.required)
-      ).not.toBeInTheDocument();
+      expect(screen.getByText("Password strength")).toBeInTheDocument();
     });
+
+    fireEvent.blur(passwordInput);
   });
 
   it("renders an eye icon button for the password field", () => {
