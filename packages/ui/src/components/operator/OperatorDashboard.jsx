@@ -580,41 +580,71 @@ const Operator = ({
       </div>
 
       <div className={operatorStyles["operator-container"]}>
-        <div className={operatorStyles["catalog-search"]}>
-          <CustomInput
-            name="search"
-            type="search"
-            label="Search"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-          />
-          <Button
-            onClick={() => {
-              setPreSelectedFile(null);
-              setPreFilledUri("");
-              setIsUploadModalOpen(true);
-            }}
-            variant="primary"
-            className={operatorStyles["catalog-add-image-btn"]}
-          >
-            Add image
-          </Button>
-          <ImageUploadModal
-            isOpen={isUploadModalOpen}
-            onClose={() => {
-              setIsUploadModalOpen(false);
-              setPreSelectedFile(null);
-              setPreFilledUri("");
-              setUpdateImageId(null);
-              setUpdatedImageCompanyUri(null);
-            }}
-            onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
-            isUpdate={!!updateImageId}
-            isLoading={uploadLoading}
-            initialFile={preSelectedFile}
-            initialCompanyUri={preFilledUri}
-          />
+        <div className={operatorStyles["controls-header"]}>
+          <div className={operatorStyles["controls-left"]}>
+            <div className={operatorStyles["catalog-search"]}>
+              <CustomInput
+                name="search"
+                type="search"
+                label="Search"
+                value={searchTerm}
+                onChange={handleSearchTermChange}
+              />
+              <Button
+                onClick={() => {
+                  setPreSelectedFile(null);
+                  setPreFilledUri("");
+                  setIsUploadModalOpen(true);
+                }}
+                variant="primary"
+                className={operatorStyles["catalog-add-image-btn"]}
+              >
+                Add image
+              </Button>
+            </div>
+          </div>
+          <div className={operatorStyles["controls-right"]}>
+            <div className={operatorStyles["tabs-container"]}>
+              <button
+                type="button"
+                className={`${operatorStyles["tab-button"]} ${activeTab === "active" ? operatorStyles["active-tab"] : ""}`}
+                onClick={() => handleTabChange("active")}
+                aria-pressed={activeTab === "active"}
+              >
+                Active
+              </button>
+              <button
+                type="button"
+                className={`${operatorStyles["tab-button"]} ${activeTab === "archived" ? operatorStyles["active-tab"] : ""}`}
+                onClick={() => handleTabChange("archived")}
+                aria-pressed={activeTab === "archived"}
+              >
+                Archived
+              </button>
+            </div>
+            <Dropdown
+              options={OperatorDashboardDropdownOptions}
+              selectedOption={searchType}
+              setSelectedOption={setSearchType}
+              className={operatorStyles["type-selector"]}
+            />
+          </div>
         </div>
+        <ImageUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => {
+            setIsUploadModalOpen(false);
+            setPreSelectedFile(null);
+            setPreFilledUri("");
+            setUpdateImageId(null);
+            setUpdatedImageCompanyUri(null);
+          }}
+          onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
+          isUpdate={!!updateImageId}
+          isLoading={uploadLoading}
+          initialFile={preSelectedFile}
+          initialCompanyUri={preFilledUri}
+        />
         {searchLoading && (
           <div
             className={operatorStyles["loading-container"]}
@@ -752,35 +782,12 @@ const Operator = ({
               </div>
             </div>
           )}
-
-        <div className={operatorStyles.header}>
-          <div className={operatorStyles["tabs-container"]}>
-            <button
-              className={`${operatorStyles["tab-button"]} ${activeTab === "active" ? operatorStyles["active-tab"] : ""}`}
-              onClick={() => handleTabChange("active")}
-            >
-              Active
-            </button>
-            <button
-              className={`${operatorStyles["tab-button"]} ${activeTab === "archived" ? operatorStyles["active-tab"] : ""}`}
-              onClick={() => handleTabChange("archived")}
-            >
-              Archived
-            </button>
-          </div>
-          <Dropdown
-            options={OperatorDashboardDropdownOptions}
-            selectedOption={searchType}
-            setSelectedOption={setSearchType}
-            className={operatorStyles["type-selector"]}
-          />
-        </div>
-
         {contentToRender}
 
         {totalPages > 1 && (
           <div className={operatorStyles.pagination}>
             <button
+              type="button"
               className={operatorStyles["page-button"]}
               disabled={currentPage === 1 || loading}
               onClick={goToPreviousPage}
@@ -791,6 +798,7 @@ const Operator = ({
               Page {currentPage} of {totalPages}
             </span>
             <button
+              type="button"
               className={operatorStyles["page-button"]}
               disabled={currentPage === totalPages || loading}
               onClick={goToNextPage}
