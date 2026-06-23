@@ -199,6 +199,69 @@ describe("MilestoneConfigService", () => {
         expect.objectContaining({ name: "Padded Name" })
       );
     });
+
+    it("should throw when 'at' values are not in strictly ascending order", async () => {
+      await expect(
+        service.createConfig(
+          {
+            name: "Test",
+            thresholds: [
+              { at: 10, points: 20 },
+              { at: 5, points: 30 },
+            ],
+          },
+          adminId
+        )
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when 'at' values have duplicates", async () => {
+      await expect(
+        service.createConfig(
+          {
+            name: "Test",
+            thresholds: [
+              { at: 5, points: 10 },
+              { at: 5, points: 20 },
+            ],
+          },
+          adminId
+        )
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when 'points' values are not in ascending order", async () => {
+      await expect(
+        service.createConfig(
+          {
+            name: "Test",
+            thresholds: [
+              { at: 5, points: 50 },
+              { at: 10, points: 20 },
+            ],
+          },
+          adminId
+        )
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when 'at' value is not an integer", async () => {
+      await expect(
+        service.createConfig(
+          { name: "Test", thresholds: [{ at: 5.5, points: 10 }] },
+          adminId
+        )
+      ).rejects.toThrow(/integer/);
+    });
+
+    it("should throw when 'points' value is not an integer", async () => {
+      await expect(
+        service.createConfig(
+          { name: "Test", thresholds: [{ at: 5, points: 10.5 }] },
+          adminId
+        )
+      ).rejects.toThrow(/integer/);
+    });
   });
 
   describe("activateConfig", () => {
@@ -374,6 +437,75 @@ describe("MilestoneConfigService", () => {
       ).rejects.toThrow();
 
       expect(updateSpy).not.toHaveBeenCalled();
+    });
+
+    it("should throw when updated 'at' values are not in strictly ascending order", async () => {
+      jest
+        .spyOn(MilestoneConfigRepository.prototype, "findById")
+        .mockResolvedValue(MOCK_MILESTONE_CONFIG_INACTIVE);
+
+      await expect(
+        service.updateConfig(MOCK_MILESTONE_CONFIG_INACTIVE._id, {
+          thresholds: [
+            { at: 20, points: 10 },
+            { at: 10, points: 20 },
+          ],
+        })
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when updated 'at' values have duplicates", async () => {
+      jest
+        .spyOn(MilestoneConfigRepository.prototype, "findById")
+        .mockResolvedValue(MOCK_MILESTONE_CONFIG_INACTIVE);
+
+      await expect(
+        service.updateConfig(MOCK_MILESTONE_CONFIG_INACTIVE._id, {
+          thresholds: [
+            { at: 10, points: 10 },
+            { at: 10, points: 20 },
+          ],
+        })
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when updated 'points' values are not in ascending order", async () => {
+      jest
+        .spyOn(MilestoneConfigRepository.prototype, "findById")
+        .mockResolvedValue(MOCK_MILESTONE_CONFIG_INACTIVE);
+
+      await expect(
+        service.updateConfig(MOCK_MILESTONE_CONFIG_INACTIVE._id, {
+          thresholds: [
+            { at: 5, points: 50 },
+            { at: 10, points: 20 },
+          ],
+        })
+      ).rejects.toThrow(/ascending order/);
+    });
+
+    it("should throw when updated 'at' value is not an integer", async () => {
+      jest
+        .spyOn(MilestoneConfigRepository.prototype, "findById")
+        .mockResolvedValue(MOCK_MILESTONE_CONFIG_INACTIVE);
+
+      await expect(
+        service.updateConfig(MOCK_MILESTONE_CONFIG_INACTIVE._id, {
+          thresholds: [{ at: 5.5, points: 10 }],
+        })
+      ).rejects.toThrow(/integer/);
+    });
+
+    it("should throw when updated 'points' value is not an integer", async () => {
+      jest
+        .spyOn(MilestoneConfigRepository.prototype, "findById")
+        .mockResolvedValue(MOCK_MILESTONE_CONFIG_INACTIVE);
+
+      await expect(
+        service.updateConfig(MOCK_MILESTONE_CONFIG_INACTIVE._id, {
+          thresholds: [{ at: 5, points: 10.5 }],
+        })
+      ).rejects.toThrow(/integer/);
     });
   });
 

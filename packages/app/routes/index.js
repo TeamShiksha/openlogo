@@ -63,5 +63,10 @@ router.use(
   adminUsersRouter
 );
 
-router.use("/admin/milestones", baseLimiter, adminMilestonesRouter);
+router.use(
+  "/admin/milestones",
+  baseLimiter,
+  cors(privateRouteCORS),
+  adminMilestonesRouter
+);
 module.exports = router;

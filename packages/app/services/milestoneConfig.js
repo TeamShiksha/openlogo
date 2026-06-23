@@ -47,16 +47,33 @@ class MilestoneConfigService {
       throw new Error("thresholds must be a non-empty array");
     }
 
-    for (const t of thresholds) {
-      if (typeof t.at !== "number" || t.at < 1) {
+    for (let i = 0; i < thresholds.length; i++) {
+      const t = thresholds[i];
+      if (typeof t.at !== "number" || t.at < 1 || !Number.isInteger(t.at)) {
         throw new Error(
-          'Each threshold must have a positive numeric "at" value'
+          'Each threshold must have a positive integer "at" value'
         );
       }
-      if (typeof t.points !== "number" || t.points < 1) {
+      if (
+        typeof t.points !== "number" ||
+        t.points < 1 ||
+        !Number.isInteger(t.points)
+      ) {
         throw new Error(
-          'Each threshold must have a positive numeric "points" value'
+          'Each threshold must have a positive integer "points" value'
         );
+      }
+      if (i > 0) {
+        if (t.at <= thresholds[i - 1].at) {
+          throw new Error(
+            'Threshold "at" values must be in strictly ascending order'
+          );
+        }
+        if (t.points < thresholds[i - 1].points) {
+          throw new Error(
+            'Threshold "points" values must be in ascending order'
+          );
+        }
       }
     }
 
@@ -93,24 +110,6 @@ class MilestoneConfigService {
     return activated;
   }
 
-  _validateThresholds(thresholds) {
-    if (!Array.isArray(thresholds) || thresholds.length === 0) {
-      throw new Error("thresholds must be a non-empty array");
-    }
-    for (const t of thresholds) {
-      if (typeof t.at !== "number" || t.at < 1) {
-        throw new Error(
-          'Each threshold must have a positive numeric "at" value'
-        );
-      }
-      if (typeof t.points !== "number" || t.points < 1) {
-        throw new Error(
-          'Each threshold must have a positive numeric "points" value'
-        );
-      }
-    }
-  }
-
   _validateName(name) {
     if (typeof name !== "string" || !name.trim()) {
       throw new Error("name must be a non-empty string");
@@ -145,7 +144,38 @@ class MilestoneConfigService {
     }
 
     if (data.thresholds !== undefined) {
-      this._validateThresholds(data.thresholds);
+      if (!Array.isArray(data.thresholds) || data.thresholds.length === 0) {
+        throw new Error("thresholds must be a non-empty array");
+      }
+      for (let i = 0; i < data.thresholds.length; i++) {
+        const t = data.thresholds[i];
+        if (typeof t.at !== "number" || t.at < 1 || !Number.isInteger(t.at)) {
+          throw new Error(
+            'Each threshold must have a positive integer "at" value'
+          );
+        }
+        if (
+          typeof t.points !== "number" ||
+          t.points < 1 ||
+          !Number.isInteger(t.points)
+        ) {
+          throw new Error(
+            'Each threshold must have a positive integer "points" value'
+          );
+        }
+        if (i > 0) {
+          if (t.at <= data.thresholds[i - 1].at) {
+            throw new Error(
+              'Threshold "at" values must be in strictly ascending order'
+            );
+          }
+          if (t.points < data.thresholds[i - 1].points) {
+            throw new Error(
+              'Threshold "points" values must be in ascending order'
+            );
+          }
+        }
+      }
       updates.thresholds = data.thresholds;
     }
 
