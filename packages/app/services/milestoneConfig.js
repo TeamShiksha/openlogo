@@ -110,6 +110,12 @@ class MilestoneConfigService {
     return activated;
   }
 
+  _validateName(name) {
+    if (typeof name !== "string" || !name.trim()) {
+      throw new Error("name must be a non-empty string");
+    }
+  }
+
   /**
    * Update an inactive config's name and/or thresholds.
    * Throws if the config is active (read-only) or not found.
@@ -133,9 +139,7 @@ class MilestoneConfigService {
     const updates = {};
 
     if (data.name !== undefined) {
-      if (typeof data.name !== "string" || !data.name.trim()) {
-        throw new Error("name must be a non-empty string");
-      }
+      this._validateName(data.name);
       updates.name = data.name.trim();
     }
 

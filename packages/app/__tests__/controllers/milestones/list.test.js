@@ -5,7 +5,7 @@
  */
 
 const request = require("supertest");
-const { STATUS_CODES } = require("http");
+const { STATUS_CODES } = require("node:http");
 const { MilestoneConfigService } = require("../../../services");
 const { UserSessionService } = require("../../../services");
 const {
