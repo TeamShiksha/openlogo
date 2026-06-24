@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { BUTTON_TEXT } from "../../../utils/Constants";
 import styles from "./Modal.module.css";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 const Modal = ({
   isOpen,
@@ -34,7 +35,7 @@ const Modal = ({
     }
   };
 
-  return (
+  return createPortal(
     <div
       data-testid="modal-overlay"
       className={styles["modal-overlay"]}
@@ -55,7 +56,8 @@ const Modal = ({
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

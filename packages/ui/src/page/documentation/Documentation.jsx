@@ -122,16 +122,7 @@ const Documentation = () => {
               {DOCUMENTATION.customerSupportText[1]}
             </p>
           </div>
-        );
-      })}
-      <div className={styles.card} style={{ marginTop: "2rem" }}>
-        <p className={styles.text}>
-          {DOCUMENTATION.customerSupportText[0]}
-          <button className={styles.link} onClick={openModal}>
-            contact us
-          </button>
-          {DOCUMENTATION.customerSupportText[1]}
-        </p>
+        </main>
       </div>
 
       {isModalOpen && <ContactForm closeModal={closeModal} />}

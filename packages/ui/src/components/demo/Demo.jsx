@@ -1,7 +1,12 @@
 import { useContext, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircleCheck } from "lucide-react";
-import { SVGS, BUTTON_TEXT, DEMO } from "../../utils/Constants.js";
+import { CircleCheck, Search, BadgeCheck } from "lucide-react";
+import {
+  BUTTON_TEXT,
+  DEMO,
+  BRAND_SUGGESTIONS,
+  TILTED_BRANDS,
+} from "../../utils/Constants.js";
 import styles from "./Demo.module.css";
 import Button from "../common/button/Button.jsx";
 import PropTypes from "prop-types";
@@ -79,21 +84,50 @@ const Demo = ({ openAuthModal }) => {
             {/* Search Area Box */}
             <div className={styles.searchBox}>
               <div className={styles.searchContent}>
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <button type="submit" className={styles.searchButton}>
-                    <img src={SVGS.searchIcon} alt="Search" />
-                  </button>
+                {/* Redesigned Search Form */}
+                <form
+                  onSubmit={(e) => e.preventDefault()}
+                  className={styles.searchForm}
+                >
+                  <Search className={styles.searchIcon} size={20} />
                   <input
                     name="search"
                     type="text"
                     value={searchTerm}
                     onChange={handleInputChange}
                     className={styles.searchInput}
-                    placeholder="Search for a domain (e.g. google.com)"
+                    placeholder="Type a brand name or URL to search"
                   />
                 </form>
 
-                {/* RESULT CARD */}
+                {/* Suggestions Bar */}
+                <div className={styles.suggestionsRow}>
+                  {BRAND_SUGGESTIONS.map((brand) => (
+                    <button
+                      key={brand.name}
+                      type="button"
+                      className={styles.suggestionPill}
+                      onClick={() => setSearchTerm(brand.name.toLowerCase())}
+                    >
+                      <img
+                        src={brand.logo}
+                        alt={brand.name}
+                        className={styles.suggestionLogo}
+                      />
+                      <span className={styles.suggestionName}>
+                        {brand.name}
+                      </span>
+                      {brand.verified && (
+                        <BadgeCheck
+                          className={styles.verifiedBadge}
+                          size={15}
+                        />
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* RESULT CARD OR DECK */}
                 {showResults ? (
                   <div className={styles.resultContainer}>
                     {loading && (
@@ -138,37 +172,38 @@ const Demo = ({ openAuthModal }) => {
                                 {firstLetterCapitalString(company.companyName)}
                               </h3>
                             </div>
-
-                            <div className={styles.formatBox}>
-                              <p>Format</p>
-                              <div className={styles.formatButtons}>
-                                <button>SVG</button>
-                                <button>PNG</button>
-                              </div>
-                            </div>
                           </div>
                         ))}
                       </>
                     )}
                   </div>
                 ) : (
-                  /* Static demo preview — shown when no search is active */
-                  <div className={styles.resultContainer}>
-                    <div className={styles.resultCard}>
-                      <div className={styles.resultHeader}>
-                        <img
-                          src="https://www.google.com/favicon.ico"
-                          alt="Google logo"
-                        />
-                        <h3>Google</h3>
-                      </div>
-                      <div className={styles.formatBox}>
-                        <p>Format</p>
-                        <div className={styles.formatButtons}>
-                          <button>SVG</button>
-                          <button>PNG</button>
+                  /* Redesigned Tilted Cards Deck shown when empty */
+                  <div className={styles.deckSection}>
+                    <div className={styles.deckContainer}>
+                      {TILTED_BRANDS.map((brand) => (
+                        <div
+                          key={brand.name}
+                          className={`${styles.deckCard} ${brand.featured ? styles.featuredCard : ""}`}
+                          style={{
+                            backgroundColor: brand.bgColor,
+                            color: brand.textColor,
+                            transform: `rotate(${brand.tilt}) translateY(${brand.nudge})`,
+                          }}
+                          onClick={() =>
+                            setSearchTerm(brand.name.toLowerCase())
+                          }
+                        >
+                          <div className={styles.cardLogoWrapper}>
+                            <img
+                              src={brand.logo}
+                              alt={brand.name}
+                              className={styles.cardLogo}
+                            />
+                          </div>
+                          <span className={styles.cardName}>{brand.name}</span>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 )}

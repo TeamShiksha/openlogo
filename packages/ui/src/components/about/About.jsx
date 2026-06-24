@@ -15,8 +15,11 @@ const About = () => {
           <div className={styles["marquee-fade-right"]} />
           <div className={styles["marquee-track"]}>
             {[...ABOUT.INTEGRATIONS, ...ABOUT.INTEGRATIONS].map(
-              (integration) => (
-                <div key={integration.id} className={styles["logo-card"]}>
+              (integration, index) => (
+                <div
+                  key={`${integration.id}-${index}`}
+                  className={styles["logo-card"]}
+                >
                   <img src={integration.src} alt={integration.alt} />
                 </div>
               )

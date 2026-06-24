@@ -6,6 +6,11 @@ const ScrollReveal = ({ children, className = "" }) => {
   const ref = useRef(null);
 
   useEffect(() => {
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -22,6 +27,7 @@ const ScrollReveal = ({ children, className = "" }) => {
       if (currentRef) {
         observer.unobserve(currentRef);
       }
+      observer.disconnect();
     };
   }, []);
 

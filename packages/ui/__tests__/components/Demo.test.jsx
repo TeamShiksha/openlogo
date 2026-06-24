@@ -33,7 +33,7 @@ const mockToastContext = {
 
 describe("Demo Component", () => {
   const mockOpenAuthModal = vi.fn();
-  const searchPlaceholder = /search for a domain/i;
+  const searchPlaceholder = /type a brand name/i;
 
   beforeEach(() => {
     vi.clearAllMocks();

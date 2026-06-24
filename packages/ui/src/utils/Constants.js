@@ -13,6 +13,13 @@ import alphabet from "../assets/alphabet.png";
 import tesla from "../assets/tesla.png";
 import walmart from "../assets/walmart.png";
 import salesforce from "../assets/salesforce.png";
+import nvidia from "../assets/nvidia.png";
+import meta from "../assets/meta.png";
+import united_healthcare from "../assets/united_healthcare.png";
+import nike from "../assets/nike.png";
+import mastercard from "../assets/mastercard.png";
+import apple from "../assets/apple.png";
+import amazon from "../assets/amazon.png";
 import airbnb from "../assets/airbnb.png";
 import bmw from "../assets/bmw.png";
 import byd from "../assets/byd.png";
@@ -166,6 +173,19 @@ export const LOGGEDIN_MOBILE_ITEMS = [
   LOGGEDIN_ITEMS.find((i) => i.name === "about"),
 ].filter(Boolean);
 
+export const FOOTER_SOCIAL_LOGOS = {
+  github: {
+    type: "lucide",
+    iconName: "github",
+  },
+  twitter: {
+    type: "svg",
+    title: "X",
+    viewBox: "0 0 16 16",
+    path: "M9.332 6.925 14.544 1h-1.235L8.783 6.145 5.17 1H1l5.466 7.78L1 14.993h1.235l4.78-5.433 3.816 5.433H15L9.332 6.925ZM7.64 8.848l-.554-.775L2.68 1.91h1.897l3.556 4.975.554.775 4.622 6.466h-1.897L7.64 8.848Z",
+  },
+};
+
 export const FOOTER_SECTIONS = [
   {
     title: "Resources",
@@ -182,18 +202,20 @@ export const FOOTER_SECTIONS = [
       {
         name: "github",
         title: "GitHub",
-        url: "https://github.com/TeamShiksha/openlogo",
+        url: "https://github.com/TeamShiksha",
+        logo: FOOTER_SOCIAL_LOGOS.github,
       },
       { name: "discord", title: "Discord", url: "https://discord.com" },
       {
         name: "twitter",
         title: "Twitter / X",
-        url: "https://twitter.com/team_shiksha",
+        url: "https://twitter.com/TeamShiksha",
+        logo: FOOTER_SOCIAL_LOGOS.twitter,
       },
       {
-        name: "contribute",
-        title: "Contribute",
-        url: "https://github.com/TeamShiksha/openlogo",
+        name: "join team shiksha",
+        title: "Join Team Shiksha",
+        url: "https://team.shiksha",
       },
     ],
   },
@@ -1413,3 +1435,55 @@ export const RELEASE_PAGE = {
     ],
   },
 };
+
+export const BRAND_SUGGESTIONS = [
+  { name: "Microsoft", logo: microsoft, verified: true },
+  { name: "Nvidia", logo: nvidia, verified: true },
+  { name: "Nike", logo: nike, verified: false },
+  { name: "Apple", logo: apple, verified: true },
+  { name: "Amazon", logo: amazon, verified: false },
+];
+
+export const TILTED_BRANDS = [
+  {
+    name: "Meta",
+    logo: meta,
+    bgColor: "#0064e0",
+    textColor: "#ffffff",
+    tilt: "-6deg",
+    nudge: "20px",
+  },
+  {
+    name: "Tesla",
+    logo: tesla,
+    bgColor: "#cc0000",
+    textColor: "#ffffff",
+    tilt: "-3deg",
+    nudge: "5px",
+  },
+  {
+    name: "Google",
+    logo: google,
+    bgColor: "#ffffff",
+    textColor: "#1f2937",
+    tilt: "2deg",
+    nudge: "-10px",
+    featured: true,
+  },
+  {
+    name: "Slack",
+    logo: slack,
+    bgColor: "#4a154b",
+    textColor: "#ffffff",
+    tilt: "4deg",
+    nudge: "5px",
+  },
+  {
+    name: "Spotify",
+    logo: spotify,
+    bgColor: "#1db954",
+    textColor: "#ffffff",
+    tilt: "6deg",
+    nudge: "20px",
+  },
+];

@@ -2,11 +2,54 @@ import { BRANDING, FOOTER_SECTIONS } from "../../utils/Constants";
 import styles from "./Footer.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { handleNavigation } from "../../utils/Helpers";
-import { Twitter, Github } from "lucide-react";
+import { Github } from "lucide-react";
+import PropTypes from "prop-types";
+
+const LUCIDE_LOGOS = {
+  github: Github,
+};
+
+function FooterLogo({ logo, size = 18 }) {
+  if (!logo) {
+    return null;
+  }
+
+  if (logo.type === "lucide") {
+    const Icon = LUCIDE_LOGOS[logo.iconName];
+    return Icon ? <Icon size={size} color="currentColor" /> : null;
+  }
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox={logo.viewBox}
+      width={size}
+      height={size}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path fill="currentColor" d={logo.path} />
+    </svg>
+  );
+}
+
+FooterLogo.propTypes = {
+  logo: PropTypes.shape({
+    type: PropTypes.string,
+    iconName: PropTypes.string,
+    viewBox: PropTypes.string,
+    path: PropTypes.string,
+  }),
+  size: PropTypes.number,
+};
 
 function Footer() {
   const navigate = useNavigate();
-  const { isDarkMode } = useTheme();
+  const socialLinks =
+    FOOTER_SECTIONS.find(
+      (section) => section.title === "Community"
+    )?.items.filter((item) => item.logo) ?? [];
 
   return (
     <div data-testid="footer" className={styles.block}>
@@ -19,7 +62,7 @@ function Footer() {
               onClick={() => navigate("/")}
             >
               <img
-                alt={BRANDING.imageSrc}
+                alt={BRANDING.imageAlt}
                 src={BRANDING.imageSrc}
                 width={30}
                 height={30}
@@ -71,7 +114,7 @@ function Footer() {
         <div className={styles["footer-bottom"]}>
           <div className={styles["footer-copyright"]}>
             © {new Date().getFullYear()} {BRANDING.brandName}. All rights
-            reserved. Powered by{" "}
+            reserved.{" "}
             <a
               href={BRANDING.poweredByLink}
               target="_blank"
@@ -83,22 +126,19 @@ function Footer() {
             .
           </div>
           <div className={styles["footer-social"]}>
-            <a
-              href="https://twitter.com/team_shiksha"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-            >
-              <Twitter size={18} color="var(--description)" />
-            </a>
-            <a
-              href="https://github.com/TeamShiksha/openlogo"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <Github size={18} color="var(--description)" />
-            </a>
+            {socialLinks.map((item) => {
+              return (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.title}
+                >
+                  <FooterLogo logo={item.logo} size={18} />
+                </a>
+              );
+            })}
           </div>
         </div>
       </footer>
