@@ -33,6 +33,22 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     navigate("/");
   };
 
+  const handleKeyDown = (event) => {
+    if (
+      event.target === event.currentTarget &&
+      (event.key === "Enter" || event.key === " ")
+    ) {
+      event.preventDefault();
+      closeMenu(false);
+    }
+  };
+
+  const handleOverlayClick = (event) => {
+    if (event.target === event.currentTarget) {
+      closeMenu(false);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       setIsRendered(true);
@@ -75,12 +91,13 @@ const MobileHeaderMenu = ({ closeMenu, isOpen }) => {
     <div
       data-testid="mobile-menu"
       className={`${styles.overlay} ${animateClose ? styles.closing : ""}`}
-      onClick={() => closeMenu(false)}
+      onClick={handleOverlayClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label="Close mobile menu overlay"
     >
-      <div
-        className={`${styles.drawer} ${animateClose ? styles.closing : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className={`${styles.drawer} ${animateClose ? styles.closing : ""}`}>
         {/* Close button */}
         <button
           className={styles["close-btn"]}

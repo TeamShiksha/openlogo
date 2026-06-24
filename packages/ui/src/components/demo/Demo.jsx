@@ -139,9 +139,9 @@ const Demo = ({ openAuthModal }) => {
                     {!loading && apiResults.length === 0 ? (
                       <div className={styles.noResult}>
                         <p>
-                          Your search &ldquo;
+                          {"Your search “"}
                           <b className={styles.searchTerm}>{searchTerm}</b>
-                          &rdquo; did not match any logo.
+                          {"” did not match any logo."}
                         </p>
 
                         <div className={styles.noResultButtons}>
@@ -182,8 +182,9 @@ const Demo = ({ openAuthModal }) => {
                   <div className={styles.deckSection}>
                     <div className={styles.deckContainer}>
                       {TILTED_BRANDS.map((brand) => (
-                        <div
+                        <button
                           key={brand.name}
+                          type="button"
                           className={`${styles.deckCard} ${brand.featured ? styles.featuredCard : ""}`}
                           style={{
                             backgroundColor: brand.bgColor,
@@ -202,7 +203,7 @@ const Demo = ({ openAuthModal }) => {
                             />
                           </div>
                           <span className={styles.cardName}>{brand.name}</span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>

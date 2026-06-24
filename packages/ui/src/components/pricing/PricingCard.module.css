@@ -90,11 +90,11 @@
 .price-period {
   font-size: 1rem;
   font-weight: 400;
-  color: var(--description);
+  color: #334155;
 }
 
 .dark .price-period {
-  color: rgba(255, 255, 255, 0.55);
+  color: #cbd5e1;
 }
 
 .keypoints {
@@ -113,11 +113,11 @@
   gap: 0.75rem;
   font-size: 0.975rem;
   font-weight: 400;
-  color: var(--description);
+  color: #334155;
 }
 
 .dark .keypoints li {
-  color: rgba(255, 255, 255, 0.85);
+  color: #f1f5f9;
 }
 
 .tick-icon {

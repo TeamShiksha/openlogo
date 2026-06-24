@@ -6,7 +6,10 @@ const ScrollReveal = ({ children, className = "" }) => {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !window.IntersectionObserver) {
+    if (
+      typeof globalThis.window === "undefined" ||
+      !globalThis.window.IntersectionObserver
+    ) {
       setIsVisible(true);
       return;
     }

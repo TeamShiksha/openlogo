@@ -35,11 +35,26 @@ const Modal = ({
     }
   };
 
+  const handleKeyDown = (keyEvent) => {
+    if (
+      keyEvent.target === keyEvent.currentTarget &&
+      (keyEvent.key === "Enter" || keyEvent.key === " ") &&
+      closeOnOverlayClick
+    ) {
+      keyEvent.preventDefault();
+      onClose();
+    }
+  };
+
   return createPortal(
     <div
       data-testid="modal-overlay"
       className={styles["modal-overlay"]}
       onClick={handleOverlayClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label="Close modal overlay"
     >
       <div
         data-testid="dialog"
