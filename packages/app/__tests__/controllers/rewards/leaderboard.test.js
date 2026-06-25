@@ -59,7 +59,7 @@ describe("Rewards Controller - Leaderboard", () => {
       expect(response.body.statusCode).toBe(200);
       expect(response.body.data).toBeDefined();
       expect(Array.isArray(response.body.data)).toBe(true);
-      expect(response.body.data.length).toBe(2);
+      expect(response.body.data).toHaveLength(2);
       expect(response.body.data[0].rank).toBe(1);
       expect(response.body.data[0].totalPointsAwarded).toBe(500);
       expect(
