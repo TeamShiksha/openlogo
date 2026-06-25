@@ -258,7 +258,7 @@ describe("RewardTrackingService", () => {
       const result = rewardTrackingService.validateRequestParams(params);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.length).toBe(5);
+      expect(result.errors).toHaveLength(5);
     });
 
     it("should validate with undefined values", () => {
@@ -273,7 +273,7 @@ describe("RewardTrackingService", () => {
       const result = rewardTrackingService.validateRequestParams(params);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.length).toBe(5);
+      expect(result.errors).toHaveLength(5);
     });
   });
 
