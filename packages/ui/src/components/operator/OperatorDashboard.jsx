@@ -14,6 +14,13 @@ import CustomInput from "../common/input/CustomInput";
 import { useApi } from "../../hooks/useApi";
 import axios from "axios";
 import PropTypes from "prop-types";
+import {
+  Archive,
+  CheckCircle2,
+  Inbox,
+  Search,
+  UploadCloud,
+} from "lucide-react";
 
 const createPayload = (searchType, responseText, responseAction) => {
   const status = responseAction === "respond" ? "RESOLVED" : "REJECTED";
@@ -46,13 +53,21 @@ const showSuccessToast = (toast, searchType, responseAction) => {
   }
 };
 
+const queueLabels = {
+  messages: "Messages",
+  requests: "Requests",
+  logos: "Logo requests",
+};
+
+const getStatusCount = (items, statuses) =>
+  items.filter((item) => statuses.includes(item.status)).length;
+
 const Operator = ({
   selectedDashboard,
   dashboardDropdownOptions,
   isDropdownOpen,
   setIsDropdownOpen,
   handleRoleSelect,
-  headerStyles,
 }) => {
   const [activeTab, setActiveTab] = useState("active");
   const [searchType, setSearchType] = useState("messages");
@@ -297,6 +312,19 @@ const Operator = ({
   };
 
   const filteredData = getFilteredData();
+  const currentQueueItems =
+    searchType === "messages"
+      ? messages
+      : searchType === "requests"
+        ? requests
+        : logos;
+  const openItems = getStatusCount(currentQueueItems, ["PENDING"]);
+  const archivedItems = getStatusCount(currentQueueItems, [
+    "COMPLETED",
+    "RESOLVED",
+    "REJECTED",
+  ]);
+  const currentQueueLabel = queueLabels[searchType];
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -531,20 +559,20 @@ const Operator = ({
 
   return (
     <div>
-      <div className={headerStyles["page-header"]}>
-        <div className={headerStyles["title-section"]}>
-          <h1 className={headerStyles["dashboard-title"]}>
+      <div className={operatorStyles["page-header"]}>
+        <div className={operatorStyles["title-section"]}>
+          <h1 className={operatorStyles["dashboard-title"]}>
             Operator Dashboard
           </h1>
-          <p className={headerStyles["dashboard-subtitle"]}>
+          <p className={operatorStyles["dashboard-subtitle"]}>
             Monitor operations and manage system resources.
           </p>
         </div>
 
-        <div className={headerStyles["header-right"]}>
-          <div className={headerStyles["dropdown-wrapper"]}>
+        <div className={operatorStyles["header-right"]}>
+          <div className={operatorStyles["dropdown-wrapper"]}>
             <button
-              className={headerStyles["dropdown"]}
+              className={operatorStyles["dropdown"]}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               {selectedDashboard}
@@ -563,11 +591,11 @@ const Operator = ({
             </button>
 
             {isDropdownOpen && (
-              <div className={headerStyles["dropdown-menu"]}>
+              <div className={operatorStyles["dropdown-menu"]}>
                 {dashboardDropdownOptions.map((option) => (
                   <div
                     key={option}
-                    className={headerStyles["dropdown-item"]}
+                    className={operatorStyles["dropdown-item"]}
                     onClick={() => handleRoleSelect(option)}
                   >
                     {option}
@@ -580,8 +608,43 @@ const Operator = ({
       </div>
 
       <div className={operatorStyles["operator-container"]}>
-        <div className={operatorStyles["controls-header"]}>
-          <div className={operatorStyles["controls-left"]}>
+        <section className={operatorStyles["workbench-hero"]}>
+          <div>
+            <p className={operatorStyles["eyebrow"]}>Operator Workbench</p>
+            <h2 className={operatorStyles["section-title"]}>
+              Triage requests, resolve queues, and maintain catalog assets.
+            </h2>
+          </div>
+
+          <div className={operatorStyles["metric-grid"]}>
+            <div className={operatorStyles["metric-card"]}>
+              <Inbox size={18} />
+              <span>Open items</span>
+              <strong>{openItems}</strong>
+            </div>
+            <div className={operatorStyles["metric-card"]}>
+              <Archive size={18} />
+              <span>Archived items</span>
+              <strong>{archivedItems}</strong>
+            </div>
+            <div className={operatorStyles["metric-card"]}>
+              <CheckCircle2 size={18} />
+              <span>Current queue</span>
+              <strong>{currentQueueLabel}</strong>
+            </div>
+          </div>
+        </section>
+
+        <div className={operatorStyles["dashboard-grid"]}>
+          <aside className={operatorStyles["catalog-panel"]}>
+            <div className={operatorStyles["panel-heading"]}>
+              <div>
+                <p className={operatorStyles["eyebrow"]}>Catalog Operations</p>
+                <h3>Find or upload logos</h3>
+              </div>
+              <Search size={18} />
+            </div>
+
             <div className={operatorStyles["catalog-search"]}>
               <CustomInput
                 name="search"
@@ -599,214 +662,255 @@ const Operator = ({
                 variant="primary"
                 className={operatorStyles["catalog-add-image-btn"]}
               >
+                <UploadCloud size={16} />
                 Add image
               </Button>
             </div>
-          </div>
-          <div className={operatorStyles["controls-right"]}>
-            <div className={operatorStyles["tabs-container"]}>
-              <button
-                type="button"
-                className={`${operatorStyles["tab-button"]} ${activeTab === "active" ? operatorStyles["active-tab"] : ""}`}
-                onClick={() => handleTabChange("active")}
-                aria-pressed={activeTab === "active"}
-              >
-                Active
-              </button>
-              <button
-                type="button"
-                className={`${operatorStyles["tab-button"]} ${activeTab === "archived" ? operatorStyles["active-tab"] : ""}`}
-                onClick={() => handleTabChange("archived")}
-                aria-pressed={activeTab === "archived"}
-              >
-                Archived
-              </button>
+          </aside>
+
+          <section className={operatorStyles["queue-panel"]}>
+            <div className={operatorStyles["queue-panel-header"]}>
+              <div>
+                <p className={operatorStyles["eyebrow"]}>Queue Workbench</p>
+                <h3>{currentQueueLabel}</h3>
+              </div>
+              <div className={operatorStyles["controls-right"]}>
+                <div className={operatorStyles["tabs-container"]}>
+                  <button
+                    type="button"
+                    className={`${operatorStyles["tab-button"]} ${activeTab === "active" ? operatorStyles["active-tab"] : ""}`}
+                    onClick={() => handleTabChange("active")}
+                    aria-pressed={activeTab === "active"}
+                  >
+                    Active
+                  </button>
+                  <button
+                    type="button"
+                    className={`${operatorStyles["tab-button"]} ${activeTab === "archived" ? operatorStyles["active-tab"] : ""}`}
+                    onClick={() => handleTabChange("archived")}
+                    aria-pressed={activeTab === "archived"}
+                  >
+                    Archived
+                  </button>
+                </div>
+                <Dropdown
+                  options={OperatorDashboardDropdownOptions}
+                  selectedOption={searchType}
+                  setSelectedOption={setSearchType}
+                  className={operatorStyles["type-selector"]}
+                />
+              </div>
             </div>
-            <Dropdown
-              options={OperatorDashboardDropdownOptions}
-              selectedOption={searchType}
-              setSelectedOption={setSearchType}
-              className={operatorStyles["type-selector"]}
+
+            <div className={operatorStyles["queue-meta"]}>
+              <span>{activeTab === "active" ? "Active" : "Archived"} view</span>
+              <span>{filteredData.length} visible</span>
+              <span>Page {currentPage}</span>
+            </div>
+
+            <ImageUploadModal
+              isOpen={isUploadModalOpen}
+              onClose={() => {
+                setIsUploadModalOpen(false);
+                setPreSelectedFile(null);
+                setPreFilledUri("");
+                setUpdateImageId(null);
+                setUpdatedImageCompanyUri(null);
+              }}
+              onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
+              isUpdate={!!updateImageId}
+              isLoading={uploadLoading}
+              initialFile={preSelectedFile}
+              initialCompanyUri={preFilledUri}
             />
-          </div>
-        </div>
-        <ImageUploadModal
-          isOpen={isUploadModalOpen}
-          onClose={() => {
-            setIsUploadModalOpen(false);
-            setPreSelectedFile(null);
-            setPreFilledUri("");
-            setUpdateImageId(null);
-            setUpdatedImageCompanyUri(null);
-          }}
-          onUpload={updateImageId ? handleUpdateImage : handleImageUpload}
-          isUpdate={!!updateImageId}
-          isLoading={uploadLoading}
-          initialFile={preSelectedFile}
-          initialCompanyUri={preFilledUri}
-        />
-        {searchLoading && (
-          <div
-            className={operatorStyles["loading-container"]}
-            style={{ marginTop: "20px" }}
-          >
-            <LoadingSpinner size={20} color="rgba(45, 8, 193, 1)" />
-          </div>
-        )}
-        {showWebCatalog && searchData?.source === "web-search" && (
-          <div className={operatorStyles["catalog-search-modal"]}>
-            <div className={operatorStyles["catalog-search-modal-header"]}>
-              <div className={operatorStyles["catalog-search-modal-title"]}>
-                Image Not Found in DB
-              </div>
+            {searchLoading && (
               <div
-                className={operatorStyles["catalog-search-modal-cross"]}
-                onClick={() => setShowWebCatalog(false)}
+                className={operatorStyles["loading-container"]}
+                style={{ marginTop: "20px" }}
               >
-                ✕
+                <LoadingSpinner size={20} color="rgba(45, 8, 193, 1)" />
               </div>
-            </div>
-            <div className={operatorStyles["web-search-catalog-body"]}>
-              <p>We could not find this image in our catalog database.</p>
-              <div className={operatorStyles["web-search-actions"]}>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    setPreSelectedFile(null);
-                    setPreFilledUri("");
-                    setIsUploadModalOpen(true);
-                  }}
-                >
-                  ADD IMAGE
-                </Button>
-                <Button variant="secondary" onClick={handleSearchOnWeb}>
-                  Search on Web
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showWebResults &&
-          searchData?.source === "web-search" &&
-          searchData?.data?.length > 0 && (
-            <div className={operatorStyles["catalog-table-wrapper"]}>
-              <div className={operatorStyles["catalog-table-header"]}>
-                <div className={operatorStyles["catalog-table-column-first"]}>
-                  Image
-                </div>
-                <div
-                  className={operatorStyles["catalog-table-column-last"]}
-                ></div>
-              </div>
-
-              <div className={operatorStyles["operator-catalog-list"]}>
-                {searchData.data.map((img, index) => (
-                  <div
-                    key={img.companyUri || img.url || index}
-                    className={operatorStyles["operator-catalog-row"]}
-                  >
-                    <div className={operatorStyles["operator-catalog-left"]}>
-                      <div className={operatorStyles["catalog-item-img"]}>
-                        <img src={img.url} alt={img.companyName || "image"} />
-                      </div>
-                      <div className={operatorStyles["operator-catalog-name"]}>
-                        {(img.companyName || "unknown").toLowerCase()}
-                      </div>
-                    </div>
-                    <div className={operatorStyles["operator-catalog-actions"]}>
-                      <Button
-                        onClick={() => handleWebResultUpload(img)}
-                        variant="primary"
-                        className={operatorStyles["reupload-btn"]}
-                      >
-                        Upload
-                      </Button>
-                    </div>
+            )}
+            {showWebCatalog && searchData?.source === "web-search" && (
+              <div className={operatorStyles["catalog-search-modal"]}>
+                <div className={operatorStyles["catalog-search-modal-header"]}>
+                  <div className={operatorStyles["catalog-search-modal-title"]}>
+                    Image Not Found in DB
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-        {showDbResults &&
-          searchData?.source === "db-search" &&
-          searchData?.data?.data?.length > 0 && (
-            <div className={operatorStyles["catalog-table-wrapper"]}>
-              <div className={operatorStyles["catalog-table-header"]}>
-                <div className={operatorStyles["catalog-table-column-first"]}>
-                  Images
-                </div>
-                <div
-                  className={operatorStyles["catalog-table-column-last"]}
-                ></div>
-              </div>
-
-              <div className={operatorStyles["operator-catalog-list"]}>
-                {searchData.data.data.map((company) => (
                   <div
-                    key={company._id}
-                    className={operatorStyles["operator-catalog-row"]}
+                    className={operatorStyles["catalog-search-modal-cross"]}
+                    onClick={() => setShowWebCatalog(false)}
                   >
-                    <div className={operatorStyles["operator-catalog-left"]}>
-                      <div className={operatorStyles["catalog-item-img"]}>
+                    ✕
+                  </div>
+                </div>
+                <div className={operatorStyles["web-search-catalog-body"]}>
+                  <p>We could not find this image in our catalog database.</p>
+                  <div className={operatorStyles["web-search-actions"]}>
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setPreSelectedFile(null);
+                        setPreFilledUri("");
+                        setIsUploadModalOpen(true);
+                      }}
+                    >
+                      ADD IMAGE
+                    </Button>
+                    <Button variant="secondary" onClick={handleSearchOnWeb}>
+                      Search on Web
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showWebResults &&
+              searchData?.source === "web-search" &&
+              searchData?.data?.length > 0 && (
+                <div className={operatorStyles["catalog-table-wrapper"]}>
+                  <div className={operatorStyles["catalog-table-header"]}>
+                    <div
+                      className={operatorStyles["catalog-table-column-first"]}
+                    >
+                      Image
+                    </div>
+                    <div
+                      className={operatorStyles["catalog-table-column-last"]}
+                    ></div>
+                  </div>
+
+                  <div className={operatorStyles["operator-catalog-list"]}>
+                    {searchData.data.map((img, index) => (
+                      <div
+                        key={img.companyUri || img.url || index}
+                        className={operatorStyles["operator-catalog-row"]}
+                      >
                         <div
-                          className={operatorStyles["catalog-item-initials"]}
+                          className={operatorStyles["operator-catalog-left"]}
                         >
-                          {company.company_name
-                            ? company.company_name[0].toUpperCase()
-                            : "#"}
+                          <div className={operatorStyles["catalog-item-img"]}>
+                            <img
+                              src={img.url}
+                              alt={img.companyName || "image"}
+                            />
+                          </div>
+                          <div
+                            className={operatorStyles["operator-catalog-name"]}
+                          >
+                            {(img.companyName || "unknown").toLowerCase()}
+                          </div>
+                        </div>
+                        <div
+                          className={operatorStyles["operator-catalog-actions"]}
+                        >
+                          <Button
+                            onClick={() => handleWebResultUpload(img)}
+                            variant="primary"
+                            className={operatorStyles["reupload-btn"]}
+                          >
+                            Upload
+                          </Button>
                         </div>
                       </div>
-                      <div className={operatorStyles["operator-catalog-name"]}>
-                        {company.company_name.toLowerCase()}.{company.extension}
-                      </div>
-                    </div>
-                    <div className={operatorStyles["operator-catalog-actions"]}>
-                      <Button
-                        onClick={() => {
-                          setPreSelectedFile(null);
-                          setPreFilledUri(company.company_uri || "");
-                          setUpdateImageId(company._id);
-                          setUpdatedImageCompanyUri(company.company_uri || "");
-                          setIsUploadModalOpen(true);
-                        }}
-                        variant="primary"
-                        className={operatorStyles["reupload-btn"]}
-                      >
-                        Reupload
-                      </Button>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        {contentToRender}
+                </div>
+              )}
 
-        {totalPages > 1 && (
-          <div className={operatorStyles.pagination}>
-            <button
-              type="button"
-              className={operatorStyles["page-button"]}
-              disabled={currentPage === 1 || loading}
-              onClick={goToPreviousPage}
-            >
-              &laquo;
-            </button>
-            <span className={operatorStyles["page-indicator"]}>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              type="button"
-              className={operatorStyles["page-button"]}
-              disabled={currentPage === totalPages || loading}
-              onClick={goToNextPage}
-            >
-              &raquo;
-            </button>
-          </div>
-        )}
+            {showDbResults &&
+              searchData?.source === "db-search" &&
+              searchData?.data?.data?.length > 0 && (
+                <div className={operatorStyles["catalog-table-wrapper"]}>
+                  <div className={operatorStyles["catalog-table-header"]}>
+                    <div
+                      className={operatorStyles["catalog-table-column-first"]}
+                    >
+                      Images
+                    </div>
+                    <div
+                      className={operatorStyles["catalog-table-column-last"]}
+                    ></div>
+                  </div>
+
+                  <div className={operatorStyles["operator-catalog-list"]}>
+                    {searchData.data.data.map((company) => (
+                      <div
+                        key={company._id}
+                        className={operatorStyles["operator-catalog-row"]}
+                      >
+                        <div
+                          className={operatorStyles["operator-catalog-left"]}
+                        >
+                          <div className={operatorStyles["catalog-item-img"]}>
+                            <div
+                              className={
+                                operatorStyles["catalog-item-initials"]
+                              }
+                            >
+                              {company.company_name
+                                ? company.company_name[0].toUpperCase()
+                                : "#"}
+                            </div>
+                          </div>
+                          <div
+                            className={operatorStyles["operator-catalog-name"]}
+                          >
+                            {company.company_name.toLowerCase()}.
+                            {company.extension}
+                          </div>
+                        </div>
+                        <div
+                          className={operatorStyles["operator-catalog-actions"]}
+                        >
+                          <Button
+                            onClick={() => {
+                              setPreSelectedFile(null);
+                              setPreFilledUri(company.company_uri || "");
+                              setUpdateImageId(company._id);
+                              setUpdatedImageCompanyUri(
+                                company.company_uri || ""
+                              );
+                              setIsUploadModalOpen(true);
+                            }}
+                            variant="primary"
+                            className={operatorStyles["reupload-btn"]}
+                          >
+                            Reupload
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            {contentToRender}
+
+            {totalPages > 1 && (
+              <div className={operatorStyles.pagination}>
+                <button
+                  type="button"
+                  className={operatorStyles["page-button"]}
+                  disabled={currentPage === 1 || loading}
+                  onClick={goToPreviousPage}
+                >
+                  &laquo;
+                </button>
+                <span className={operatorStyles["page-indicator"]}>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  className={operatorStyles["page-button"]}
+                  disabled={currentPage === totalPages || loading}
+                  onClick={goToNextPage}
+                >
+                  &raquo;
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
 
         <Modal
           isOpen={isModalOpen}
@@ -874,7 +978,6 @@ Operator.propTypes = {
   isDropdownOpen: PropTypes.bool.isRequired,
   setIsDropdownOpen: PropTypes.func.isRequired,
   handleRoleSelect: PropTypes.func.isRequired,
-  headerStyles: PropTypes.object.isRequired,
 };
 
 export default Operator;
