@@ -283,7 +283,11 @@ function UserRewards() {
           )}
         </div>
 
-        <Modal isOpen={showReverseModal} onClose={handleCloseReverseModal}>
+        <Modal
+          isOpen={showReverseModal}
+          onClose={handleCloseReverseModal}
+          customWidth="480px"
+        >
           <div className={styles["modal-body"]}>
             <h3 className={styles["modal-title"]}>
               {ADMIN_USER_REWARDS.reverseModal.title}

@@ -29,6 +29,19 @@ function formatTransactionType(type) {
   return typeMap[type] || type;
 }
 
+function formatTransactionReason(reason) {
+  if (!reason) return "—";
+  const reasonMap = {
+    NORMAL_MILESTONE: "Normal Milestone",
+    DUPLICATE_REMOVAL: "Duplicate Removal",
+    SUSPICIOUS_ACTIVITY: "Suspicious Activity",
+    MANUAL_CORRECTION: "Manual Correction",
+    PROMOTION: "Promotion",
+    SYSTEM_ERROR: "System Error",
+  };
+  return reasonMap[reason] || reason;
+}
+
 function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
   const toast = useToast();
   const [page, setPage] = useState(1);
@@ -322,7 +335,7 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
                           <td>
                             {tx.user_id?.name || tx.user_id?.email || "—"}
                           </td>
-                          <td>{tx.reason || "—"}</td>
+                          <td>{formatTransactionReason(tx.reason)}</td>
                           <td>{formatDate(tx.createdAt)}</td>
                         </tr>
                       ))}

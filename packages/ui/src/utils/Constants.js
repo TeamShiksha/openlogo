@@ -950,7 +950,6 @@ export const IMAGE_REWARD_MODAL = {
     reasonOptions: [
       { value: "PROMOTION", label: "Promotion" },
       { value: "MANUAL_CORRECTION", label: "Manual Correction" },
-      { value: "SUSPICIOUS_ACTIVITY", label: "Suspicious Activity" },
     ],
   },
   toasts: {

@@ -20,7 +20,7 @@ function formatThresholds(thresholds) {
     .map((t) => `${t.at}→${t.points}pts`)
     .join(", ");
   const suffix = count > 3 ? ` +${count - 3} more` : "";
-  return `${count} tier${count !== 1 ? "s" : ""}: ${preview}${suffix}`;
+  return `${count} tier${count === 1 ? "" : "s"}: ${preview}${suffix}`;
 }
 
 let thresholdKeyCounter = 0;
