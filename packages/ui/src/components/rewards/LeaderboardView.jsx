@@ -76,8 +76,8 @@ function LeaderboardView({ onBack }) {
                 <table className={styles["table"]}>
                   <thead>
                     <tr>
-                      {LEADERBOARD_PAGE.headers.map((h, i) => (
-                        <th key={i}>{h}</th>
+                      {LEADERBOARD_PAGE.headers.map((h) => (
+                        <th key={h}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -163,7 +163,7 @@ function LeaderboardView({ onBack }) {
             </div>
           )}
 
-          {userRank && userRank.rank === null && (
+          {userRank?.rank === null && (
             <div className={styles["not-ranked-card"]}>
               <p className={styles["not-ranked-text"]}>
                 {LEADERBOARD_PAGE.notRanked}

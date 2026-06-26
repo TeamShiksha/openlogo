@@ -13,7 +13,7 @@ import { MoreVertical, Plus, Trash2 } from "lucide-react";
 import PropTypes from "prop-types";
 
 function formatThresholds(thresholds) {
-  if (!thresholds || thresholds.length === 0) return "No thresholds";
+  if (!thresholds?.length) return "No thresholds";
   const count = thresholds.length;
   const preview = thresholds
     .slice(0, 3)
@@ -22,6 +22,13 @@ function formatThresholds(thresholds) {
   const suffix = count > 3 ? ` +${count - 3} more` : "";
   return `${count} tier${count !== 1 ? "s" : ""}: ${preview}${suffix}`;
 }
+
+let thresholdKeyCounter = 0;
+const makeThreshold = (at = "", points = "") => ({
+  _key: ++thresholdKeyCounter,
+  at,
+  points,
+});
 
 function MilestoneConfig({ embedded = false }) {
   const toast = useToast();
@@ -32,9 +39,7 @@ function MilestoneConfig({ embedded = false }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingConfig, setEditingConfig] = useState(null);
   const [formName, setFormName] = useState("");
-  const [formThresholds, setFormThresholds] = useState([
-    { at: "", points: "" },
-  ]);
+  const [formThresholds, setFormThresholds] = useState([makeThreshold()]);
   const [isSaving, setIsSaving] = useState(false);
 
   const [activateTarget, setActivateTarget] = useState(null);
@@ -80,7 +85,7 @@ function MilestoneConfig({ embedded = false }) {
 
   const resetForm = () => {
     setFormName("");
-    setFormThresholds([{ at: "", points: "" }]);
+    setFormThresholds([makeThreshold()]);
     setEditingConfig(null);
     setIsFormOpen(false);
   };
@@ -88,7 +93,7 @@ function MilestoneConfig({ embedded = false }) {
   const openCreateForm = () => {
     setEditingConfig(null);
     setFormName("");
-    setFormThresholds([{ at: "", points: "" }]);
+    setFormThresholds([makeThreshold()]);
     setIsFormOpen(true);
   };
 
@@ -96,10 +101,9 @@ function MilestoneConfig({ embedded = false }) {
     setEditingConfig(config);
     setFormName(config.name);
     setFormThresholds(
-      config.thresholds.map((t) => ({
-        at: String(t.at),
-        points: String(t.points),
-      }))
+      config.thresholds.map((t) =>
+        makeThreshold(String(t.at), String(t.points))
+      )
     );
     setIsFormOpen(true);
   };
@@ -118,7 +122,7 @@ function MilestoneConfig({ embedded = false }) {
       );
       return;
     }
-    setFormThresholds((prev) => [...prev, { at: "", points: "" }]);
+    setFormThresholds((prev) => [...prev, makeThreshold()]);
   };
 
   const removeThreshold = (index) => {
@@ -133,9 +137,14 @@ function MilestoneConfig({ embedded = false }) {
       const t = formThresholds[i];
       const at = Number(t.at);
       const points = Number(t.points);
-      if (!t.at || isNaN(at) || at < 1 || !Number.isInteger(at))
+      if (!t.at || Number.isNaN(at) || at < 1 || !Number.isInteger(at))
         return "Each threshold must have a positive integer 'at' value.";
-      if (!t.points || isNaN(points) || points < 1 || !Number.isInteger(points))
+      if (
+        !t.points ||
+        Number.isNaN(points) ||
+        points < 1 ||
+        !Number.isInteger(points)
+      )
         return "Each threshold must have a positive integer 'points' value.";
       if (i > 0) {
         const prevAt = Number(formThresholds[i - 1].at);
@@ -260,8 +269,8 @@ function MilestoneConfig({ embedded = false }) {
         <table className={styles.table}>
           <thead>
             <tr>
-              {MILESTONE_CONFIG.tableHeaders.map((h, i) => (
-                <th key={i}>{h}</th>
+              {MILESTONE_CONFIG.tableHeaders.map((h) => (
+                <th key={h}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -405,7 +414,7 @@ function MilestoneConfig({ embedded = false }) {
             </span>
             <div className={styles["thresholds-list"]}>
               {formThresholds.map((threshold, index) => (
-                <div key={index} className={styles["threshold-row"]}>
+                <div key={threshold._key} className={styles["threshold-row"]}>
                   <div className={styles["threshold-input"]}>
                     <label>{MILESTONE_CONFIG.modal.atLabel}</label>
                     <input
@@ -477,19 +486,22 @@ function MilestoneConfig({ embedded = false }) {
             <h2 className={styles["modal-title"]}>{viewingConfig?.name}</h2>
             <p className={styles["modal-subtitle"]}>
               {viewingConfig?.thresholds?.length ?? 0} threshold
-              {(viewingConfig?.thresholds?.length ?? 0) !== 1 ? "s" : ""}
+              {(viewingConfig?.thresholds?.length ?? 0) === 1 ? "" : "s"}
             </p>
           </div>
 
           <div className={styles["view-thresholds-list"]}>
-            {viewingConfig?.thresholds?.map((t, i) => (
-              <div key={i} className={styles["view-threshold-row"]}>
+            {viewingConfig?.thresholds?.map((t) => (
+              <div
+                key={`${t.at}-${t.points}`}
+                className={styles["view-threshold-row"]}
+              >
                 <span className={styles["view-threshold-at"]}>
-                  {t.at} submission{t.at !== 1 ? "s" : ""}
+                  {t.at} submission{t.at === 1 ? "" : "s"}
                 </span>
                 <span className={styles["view-threshold-arrow"]}>&rarr;</span>
                 <span className={styles["view-threshold-points"]}>
-                  {t.points} point{t.points !== 1 ? "s" : ""}
+                  {t.points} point{t.points === 1 ? "" : "s"}
                 </span>
               </div>
             ))}

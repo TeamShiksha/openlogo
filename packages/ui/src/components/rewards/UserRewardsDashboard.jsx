@@ -137,14 +137,10 @@ function UserRewardsDashboard() {
       ) : (
         <>
           <div className={styles["stats-grid"]}>
-            <div
+            <button
+              type="button"
               className={`${styles["stat-card"]} ${styles["stat-card-clickable"]}`}
               onClick={() => setShowTxModal(true)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") setShowTxModal(true);
-              }}
             >
               <div className={styles["stat-icon-wrapper"]}>
                 <Star size={24} className={styles["stat-icon"]} />
@@ -157,16 +153,12 @@ function UserRewardsDashboard() {
                   {USER_REWARDS_DASHBOARD.stats.currentPoints}
                 </span>
               </div>
-            </div>
+            </button>
 
-            <div
+            <button
+              type="button"
               className={`${styles["stat-card"]} ${styles["stat-card-clickable"]}`}
               onClick={() => setShowTxModal(true)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") setShowTxModal(true);
-              }}
             >
               <div className={styles["stat-icon-wrapper"]}>
                 <Trophy size={24} className={styles["stat-icon"]} />
@@ -179,7 +171,7 @@ function UserRewardsDashboard() {
                   {USER_REWARDS_DASHBOARD.stats.lifetimePoints}
                 </span>
               </div>
-            </div>
+            </button>
 
             <div className={styles["stat-card"]}>
               <div className={styles["stat-icon-wrapper"]}>
@@ -279,77 +271,89 @@ function UserRewardsDashboard() {
               <h3 className={styles["tx-modal-title"]}>
                 {USER_REWARDS_DASHBOARD.history.title}
               </h3>
-              {txLoading ? (
-                <div className={styles["loading-container"]}>
-                  <LoadingSpinner size={32} border={3} color="var(--primary)" />
-                </div>
-              ) : transactions.length > 0 ? (
-                <>
-                  <div className={styles["table-wrapper"]}>
-                    <table className={styles["table"]}>
-                      <thead>
-                        <tr>
-                          {USER_REWARDS_DASHBOARD.history.headers.map(
-                            (h, i) => (
-                              <th key={i}>{h}</th>
-                            )
-                          )}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactions.map((tx) => (
-                          <tr key={tx._id}>
-                            <td>
-                              <span className={styles["type-badge"]}>
-                                {formatTransactionType(tx.transaction_type)}
-                              </span>
-                            </td>
-                            <td className={styles["points-cell"]}>
-                              {tx.points_awarded > 0 ? "+" : ""}
-                              {tx.points_awarded}
-                            </td>
-                            <td>{tx.image_id?.company_name || "—"}</td>
-                            <td>{formatTransactionReason(tx.reason)}</td>
-                            <td>{formatDate(tx.createdAt)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {txTotalPages > 1 && (
-                    <div className={styles["pagination"]}>
-                      <button
-                        type="button"
-                        className={styles["page-btn"]}
-                        disabled={txPage === 1 || txLoading}
-                        onClick={() => setTxPage((p) => Math.max(1, p - 1))}
-                        aria-label="Previous page"
-                      >
-                        <ChevronLeft size={16} aria-hidden="true" />
-                      </button>
-                      <span className={styles["page-indicator"]}>
-                        Page {txPage} of {txTotalPages}
-                      </span>
-                      <button
-                        type="button"
-                        className={styles["page-btn"]}
-                        disabled={txPage === txTotalPages || txLoading}
-                        onClick={() =>
-                          setTxPage((p) => Math.min(txTotalPages, p + 1))
-                        }
-                        aria-label="Next page"
-                      >
-                        <ChevronRight size={16} aria-hidden="true" />
-                      </button>
+              {(() => {
+                if (txLoading) {
+                  return (
+                    <div className={styles["loading-container"]}>
+                      <LoadingSpinner
+                        size={32}
+                        border={3}
+                        color="var(--primary)"
+                      />
                     </div>
-                  )}
-                </>
-              ) : (
-                <p className={styles["empty-state"]}>
-                  {USER_REWARDS_DASHBOARD.history.emptyState}
-                </p>
-              )}
+                  );
+                }
+                if (transactions.length > 0) {
+                  return (
+                    <>
+                      <div className={styles["table-wrapper"]}>
+                        <table className={styles["table"]}>
+                          <thead>
+                            <tr>
+                              {USER_REWARDS_DASHBOARD.history.headers.map(
+                                (h) => (
+                                  <th key={h}>{h}</th>
+                                )
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {transactions.map((tx) => (
+                              <tr key={tx._id}>
+                                <td>
+                                  <span className={styles["type-badge"]}>
+                                    {formatTransactionType(tx.transaction_type)}
+                                  </span>
+                                </td>
+                                <td className={styles["points-cell"]}>
+                                  {tx.points_awarded > 0 ? "+" : ""}
+                                  {tx.points_awarded}
+                                </td>
+                                <td>{tx.image_id?.company_name || "—"}</td>
+                                <td>{formatTransactionReason(tx.reason)}</td>
+                                <td>{formatDate(tx.createdAt)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {txTotalPages > 1 && (
+                        <div className={styles["pagination"]}>
+                          <button
+                            type="button"
+                            className={styles["page-btn"]}
+                            disabled={txPage === 1 || txLoading}
+                            onClick={() => setTxPage((p) => Math.max(1, p - 1))}
+                            aria-label="Previous page"
+                          >
+                            <ChevronLeft size={16} aria-hidden="true" />
+                          </button>
+                          <span className={styles["page-indicator"]}>
+                            Page {txPage} of {txTotalPages}
+                          </span>
+                          <button
+                            type="button"
+                            className={styles["page-btn"]}
+                            disabled={txPage === txTotalPages || txLoading}
+                            onClick={() =>
+                              setTxPage((p) => Math.min(txTotalPages, p + 1))
+                            }
+                            aria-label="Next page"
+                          >
+                            <ChevronRight size={16} aria-hidden="true" />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  );
+                }
+                return (
+                  <p className={styles["empty-state"]}>
+                    {USER_REWARDS_DASHBOARD.history.emptyState}
+                  </p>
+                );
+              })()}
             </div>
           </Modal>
         </>

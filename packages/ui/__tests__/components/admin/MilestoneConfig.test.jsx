@@ -148,8 +148,8 @@ describe("MilestoneConfig", () => {
       const inactiveBadges = screen.getAllByText(
         MILESTONE_CONFIG.status.inactive
       );
-      expect(activeBadges.length).toBe(1);
-      expect(inactiveBadges.length).toBe(1);
+      expect(activeBadges).toHaveLength(1);
+      expect(inactiveBadges).toHaveLength(1);
     });
   });
 
@@ -250,7 +250,7 @@ describe("MilestoneConfig", () => {
 
     // Initially one threshold row
     const atInputs = screen.getAllByPlaceholderText("5");
-    expect(atInputs.length).toBe(1);
+    expect(atInputs).toHaveLength(1);
 
     // Fill in the first row
     fireEvent.change(atInputs[0], { target: { value: "5" } });
@@ -262,7 +262,7 @@ describe("MilestoneConfig", () => {
 
     // Now should have two threshold rows
     const newAtInputs = screen.getAllByPlaceholderText("5");
-    expect(newAtInputs.length).toBe(2);
+    expect(newAtInputs).toHaveLength(2);
   });
 
   it("prevents adding threshold when previous row is empty", async () => {
@@ -285,7 +285,7 @@ describe("MilestoneConfig", () => {
 
     // Should still have only one row
     const atInputs = screen.getAllByPlaceholderText("5");
-    expect(atInputs.length).toBe(1);
+    expect(atInputs).toHaveLength(1);
   });
 
   it("removes a threshold row when remove button is clicked", async () => {
@@ -308,7 +308,7 @@ describe("MilestoneConfig", () => {
     fireEvent.click(screen.getByText(MILESTONE_CONFIG.modal.addThreshold));
 
     // Should have two rows
-    expect(screen.getAllByPlaceholderText("5").length).toBe(2);
+    expect(screen.getAllByPlaceholderText("5")).toHaveLength(2);
 
     // Remove the second row
     const removeButtons = screen.getAllByTitle(
@@ -317,7 +317,7 @@ describe("MilestoneConfig", () => {
     fireEvent.click(removeButtons[1]);
 
     // Should have one row again
-    expect(screen.getAllByPlaceholderText("5").length).toBe(1);
+    expect(screen.getAllByPlaceholderText("5")).toHaveLength(1);
   });
 
   it("validates form before saving - name required", async () => {

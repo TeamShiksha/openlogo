@@ -353,13 +353,13 @@
 
 .reverse-btn:hover {
   background-color: #fef2f2;
-  color: #dc2626;
+  color: #991b1b;
   border-color: #fecaca;
 }
 
 [data-theme="dark"] .reverse-btn:hover {
   background-color: rgba(220, 38, 38, 0.1);
-  color: #f87171;
+  color: #fca5a5;
   border-color: rgba(220, 38, 38, 0.3);
 }
 

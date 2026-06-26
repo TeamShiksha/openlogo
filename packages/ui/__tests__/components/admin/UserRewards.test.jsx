@@ -163,7 +163,7 @@ describe("UserRewards", () => {
 
       await waitFor(() => {
         const viewButtons = screen.getAllByLabelText("View rewards");
-        expect(viewButtons.length).toBe(2);
+        expect(viewButtons).toHaveLength(2);
       });
     });
   });

@@ -197,93 +197,89 @@ function UserRewards() {
               <LoadingSpinner size={36} border={3} color="var(--primary)" />
             </div>
           ) : (
-            <>
-              <div className={styles["history-section"]}>
-                <h4 className={styles["history-title"]}>
-                  {ADMIN_USER_REWARDS.detail.historyTitle}
-                </h4>
-                {transactions.length === 0 ? (
-                  <p className={styles["empty-state"]}>
-                    {ADMIN_USER_REWARDS.detail.emptyHistory}
-                  </p>
-                ) : (
-                  <>
-                    <div className={styles["table-wrapper"]}>
-                      <table className={styles["table"]}>
-                        <thead>
-                          <tr>
-                            {ADMIN_USER_REWARDS.detail.historyHeaders.map(
-                              (h, i) => (
-                                <th key={i}>{h}</th>
-                              )
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {transactions.map((tx) => (
-                            <tr key={tx._id}>
-                              <td>
-                                <span className={styles["type-badge"]}>
-                                  {formatTransactionType(tx.transaction_type)}
-                                </span>
-                              </td>
-                              <td className={styles["points-cell"]}>
-                                {tx.points_awarded > 0 ? "+" : ""}
-                                {tx.points_awarded}
-                              </td>
-                              <td>{formatTransactionReason(tx.reason)}</td>
-                              <td>{formatDate(tx.createdAt)}</td>
-                              <td className={styles["action-cell"]}>
-                                {!tx.is_reversed &&
-                                  tx.transaction_type !== "REVERSAL" && (
-                                    <button
-                                      type="button"
-                                      className={styles["reverse-btn"]}
-                                      onClick={() => handleOpenReverseModal(tx)}
-                                      aria-label="Reverse transaction"
-                                      title="Reverse transaction"
-                                    >
-                                      <RotateCcw size={14} aria-hidden="true" />
-                                    </button>
-                                  )}
-                              </td>
-                            </tr>
+            <div className={styles["history-section"]}>
+              <h4 className={styles["history-title"]}>
+                {ADMIN_USER_REWARDS.detail.historyTitle}
+              </h4>
+              {transactions.length === 0 ? (
+                <p className={styles["empty-state"]}>
+                  {ADMIN_USER_REWARDS.detail.emptyHistory}
+                </p>
+              ) : (
+                <>
+                  <div className={styles["table-wrapper"]}>
+                    <table className={styles["table"]}>
+                      <thead>
+                        <tr>
+                          {ADMIN_USER_REWARDS.detail.historyHeaders.map((h) => (
+                            <th key={h}>{h}</th>
                           ))}
-                        </tbody>
-                      </table>
-                    </div>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {transactions.map((tx) => (
+                          <tr key={tx._id}>
+                            <td>
+                              <span className={styles["type-badge"]}>
+                                {formatTransactionType(tx.transaction_type)}
+                              </span>
+                            </td>
+                            <td className={styles["points-cell"]}>
+                              {tx.points_awarded > 0 ? "+" : ""}
+                              {tx.points_awarded}
+                            </td>
+                            <td>{formatTransactionReason(tx.reason)}</td>
+                            <td>{formatDate(tx.createdAt)}</td>
+                            <td className={styles["action-cell"]}>
+                              {!tx.is_reversed &&
+                                tx.transaction_type !== "REVERSAL" && (
+                                  <button
+                                    type="button"
+                                    className={styles["reverse-btn"]}
+                                    onClick={() => handleOpenReverseModal(tx)}
+                                    aria-label="Reverse transaction"
+                                    title="Reverse transaction"
+                                  >
+                                    <RotateCcw size={14} aria-hidden="true" />
+                                  </button>
+                                )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
 
-                    {txTotalPages > 1 && (
-                      <div className={styles["pagination"]}>
-                        <button
-                          type="button"
-                          className={styles["page-btn"]}
-                          disabled={txPage === 1 || txLoading}
-                          onClick={() => setTxPage((p) => Math.max(1, p - 1))}
-                          aria-label="Previous page"
-                        >
-                          <ChevronLeft size={16} aria-hidden="true" />
-                        </button>
-                        <span className={styles["page-indicator"]}>
-                          Page {txPage} of {txTotalPages}
-                        </span>
-                        <button
-                          type="button"
-                          className={styles["page-btn"]}
-                          disabled={txPage === txTotalPages || txLoading}
-                          onClick={() =>
-                            setTxPage((p) => Math.min(txTotalPages, p + 1))
-                          }
-                          aria-label="Next page"
-                        >
-                          <ChevronRight size={16} aria-hidden="true" />
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </>
+                  {txTotalPages > 1 && (
+                    <div className={styles["pagination"]}>
+                      <button
+                        type="button"
+                        className={styles["page-btn"]}
+                        disabled={txPage === 1 || txLoading}
+                        onClick={() => setTxPage((p) => Math.max(1, p - 1))}
+                        aria-label="Previous page"
+                      >
+                        <ChevronLeft size={16} aria-hidden="true" />
+                      </button>
+                      <span className={styles["page-indicator"]}>
+                        Page {txPage} of {txTotalPages}
+                      </span>
+                      <button
+                        type="button"
+                        className={styles["page-btn"]}
+                        disabled={txPage === txTotalPages || txLoading}
+                        onClick={() =>
+                          setTxPage((p) => Math.min(txTotalPages, p + 1))
+                        }
+                        aria-label="Next page"
+                      >
+                        <ChevronRight size={16} aria-hidden="true" />
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           )}
         </div>
 
@@ -368,61 +364,71 @@ function UserRewards() {
         </div>
       </div>
 
-      {loading || !initialized ? (
-        <div className={styles["loading-container"]}>
-          <LoadingSpinner size={36} border={3} color="var(--primary)" />
-        </div>
-      ) : users.length === 0 ? (
-        <p className={styles["empty-state"]}>{ADMIN_USER_REWARDS.emptyState}</p>
-      ) : (
-        <div className={styles["table-wrapper"]}>
-          <table className={styles["table"]}>
-            <thead>
-              <tr>
-                {ADMIN_USER_REWARDS.tableHeaders.map((h, i) => (
-                  <th key={i}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td>
-                    <p className={styles["user-name"]}>{user.name ?? "—"}</p>
-                    <p className={styles["user-email"]}>{user.email}</p>
-                  </td>
-                  <td>
-                    <span
-                      className={`${styles["plan-badge"]} ${
-                        user.subscription?.type === "PRO"
-                          ? styles["plan-badge-pro"]
-                          : styles["plan-badge-hobby"]
-                      }`}
-                    >
-                      {user.subscription?.type ?? "HOBBY"}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={styles["points-text"]}>
-                      {user.reward_points_current ?? 0}
-                    </span>
-                  </td>
-                  <td className={styles["menu-cell"]}>
-                    <button
-                      className={styles["view-btn"]}
-                      aria-label="View rewards"
-                      title="View rewards"
-                      onClick={() => handleSelectUser(user)}
-                    >
-                      <Eye size={16} aria-hidden="true" />
-                    </button>
-                  </td>
+      {(() => {
+        if (loading || !initialized) {
+          return (
+            <div className={styles["loading-container"]}>
+              <LoadingSpinner size={36} border={3} color="var(--primary)" />
+            </div>
+          );
+        }
+        if (users.length === 0) {
+          return (
+            <p className={styles["empty-state"]}>
+              {ADMIN_USER_REWARDS.emptyState}
+            </p>
+          );
+        }
+        return (
+          <div className={styles["table-wrapper"]}>
+            <table className={styles["table"]}>
+              <thead>
+                <tr>
+                  {ADMIN_USER_REWARDS.tableHeaders.map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user._id}>
+                    <td>
+                      <p className={styles["user-name"]}>{user.name ?? "—"}</p>
+                      <p className={styles["user-email"]}>{user.email}</p>
+                    </td>
+                    <td>
+                      <span
+                        className={`${styles["plan-badge"]} ${
+                          user.subscription?.type === "PRO"
+                            ? styles["plan-badge-pro"]
+                            : styles["plan-badge-hobby"]
+                        }`}
+                      >
+                        {user.subscription?.type ?? "HOBBY"}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={styles["points-text"]}>
+                        {user.reward_points_current ?? 0}
+                      </span>
+                    </td>
+                    <td className={styles["menu-cell"]}>
+                      <button
+                        className={styles["view-btn"]}
+                        aria-label="View rewards"
+                        title="View rewards"
+                        onClick={() => handleSelectUser(user)}
+                      >
+                        <Eye size={16} aria-hidden="true" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })()}
 
       {totalPages > 1 && (
         <div className={styles["pagination"]}>

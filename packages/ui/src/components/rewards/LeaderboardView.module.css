@@ -180,17 +180,17 @@
 
 .rank-1 {
   background-color: #fef3c7;
-  color: #d97706;
+  color: #92400e;
 }
 
 .rank-2 {
   background-color: #e5e7eb;
-  color: #6b7280;
+  color: #374151;
 }
 
 .rank-3 {
   background-color: #fed7aa;
-  color: #c2410c;
+  color: #9a3412;
 }
 
 [data-theme="dark"] .rank-1 {
@@ -200,12 +200,12 @@
 
 [data-theme="dark"] .rank-2 {
   background-color: rgba(107, 114, 128, 0.2);
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 [data-theme="dark"] .rank-3 {
   background-color: rgba(194, 65, 12, 0.2);
-  color: #fb923c;
+  color: #fdba74;
 }
 
 .user-info {

@@ -86,7 +86,7 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
   }, [page]);
 
   const handleAwardBonus = async () => {
-    if (!bonusPoints || parseInt(bonusPoints) <= 0) {
+    if (!bonusPoints || Number.parseInt(bonusPoints) <= 0) {
       toast.error(IMAGE_REWARD_MODAL.bonus.validation.pointsRequired);
       return;
     }
@@ -98,7 +98,7 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
       data: {
         imageId,
         userId,
-        points: parseInt(bonusPoints),
+        points: Number.parseInt(bonusPoints),
         reason: bonusReason.trim(),
         description: bonusDescription.trim(),
       },
@@ -149,48 +149,56 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
         </div>
 
         <div className={styles["summary-section"]}>
-          {summaryLoading ? (
-            <div className={styles["loading-container"]}>
-              <LoadingSpinner size={32} border={3} color="var(--primary)" />
-            </div>
-          ) : summary ? (
-            <div className={styles["summary-grid"]}>
-              <div className={styles["stat-card"]}>
-                <span className={styles["stat-value"]}>
-                  {summary.uniqueProUsersCount || 0}
-                </span>
-                <span className={styles["stat-label"]}>
-                  {IMAGE_REWARD_MODAL.summary.proUsers}
-                </span>
-              </div>
-              <div className={styles["stat-card"]}>
-                <span className={styles["stat-value"]}>
-                  {summary.totalPointsAwarded || 0}
-                </span>
-                <span className={styles["stat-label"]}>
-                  {IMAGE_REWARD_MODAL.summary.totalPoints}
-                </span>
-              </div>
-              <div className={styles["stat-card"]}>
-                <span className={styles["stat-value"]}>
-                  {summary.milestonesAchieved?.length || 0}
-                </span>
-                <span className={styles["stat-label"]}>
-                  {IMAGE_REWARD_MODAL.summary.milestones}
-                </span>
-              </div>
-              <div className={styles["stat-card"]}>
-                <span className={styles["stat-value"]}>
-                  {summary.nextMilestone || "—"}
-                </span>
-                <span className={styles["stat-label"]}>
-                  {IMAGE_REWARD_MODAL.summary.nextMilestone}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <p className={styles["empty-state"]}>No reward data available.</p>
-          )}
+          {(() => {
+            if (summaryLoading) {
+              return (
+                <div className={styles["loading-container"]}>
+                  <LoadingSpinner size={32} border={3} color="var(--primary)" />
+                </div>
+              );
+            }
+            if (summary) {
+              return (
+                <div className={styles["summary-grid"]}>
+                  <div className={styles["stat-card"]}>
+                    <span className={styles["stat-value"]}>
+                      {summary.uniqueProUsersCount || 0}
+                    </span>
+                    <span className={styles["stat-label"]}>
+                      {IMAGE_REWARD_MODAL.summary.proUsers}
+                    </span>
+                  </div>
+                  <div className={styles["stat-card"]}>
+                    <span className={styles["stat-value"]}>
+                      {summary.totalPointsAwarded || 0}
+                    </span>
+                    <span className={styles["stat-label"]}>
+                      {IMAGE_REWARD_MODAL.summary.totalPoints}
+                    </span>
+                  </div>
+                  <div className={styles["stat-card"]}>
+                    <span className={styles["stat-value"]}>
+                      {summary.milestonesAchieved?.length || 0}
+                    </span>
+                    <span className={styles["stat-label"]}>
+                      {IMAGE_REWARD_MODAL.summary.milestones}
+                    </span>
+                  </div>
+                  <div className={styles["stat-card"]}>
+                    <span className={styles["stat-value"]}>
+                      {summary.nextMilestone || "—"}
+                    </span>
+                    <span className={styles["stat-label"]}>
+                      {IMAGE_REWARD_MODAL.summary.nextMilestone}
+                    </span>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <p className={styles["empty-state"]}>No reward data available.</p>
+            );
+          })()}
         </div>
 
         {showBonusForm && (
@@ -273,73 +281,85 @@ function ImageRewardModal({ isOpen, onClose, imageId, imageName, userId }) {
             {IMAGE_REWARD_MODAL.transactions.title}
           </h3>
 
-          {transactionsLoading ? (
-            <div className={styles["loading-container"]}>
-              <LoadingSpinner size={32} border={3} color="var(--primary)" />
-            </div>
-          ) : transactions.length === 0 ? (
-            <p className={styles["empty-state"]}>
-              {IMAGE_REWARD_MODAL.transactions.emptyState}
-            </p>
-          ) : (
-            <>
-              <div className={styles["table-wrapper"]}>
-                <table className={styles["table"]}>
-                  <thead>
-                    <tr>
-                      {IMAGE_REWARD_MODAL.transactions.headers.map((h, i) => (
-                        <th key={i}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {transactions.map((tx) => (
-                      <tr key={tx._id}>
-                        <td>
-                          <span className={styles["type-badge"]}>
-                            {formatTransactionType(tx.transaction_type)}
-                          </span>
-                        </td>
-                        <td className={styles["points-cell"]}>
-                          {tx.points_awarded > 0 ? "+" : ""}
-                          {tx.points_awarded}
-                        </td>
-                        <td>{tx.user_id?.name || tx.user_id?.email || "—"}</td>
-                        <td>{tx.reason || "—"}</td>
-                        <td>{formatDate(tx.createdAt)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {totalPages > 1 && (
-                <div className={styles["pagination"]}>
-                  <button
-                    type="button"
-                    className={styles["page-btn"]}
-                    disabled={page === 1 || transactionsLoading}
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    aria-label="Previous page"
-                  >
-                    <ChevronLeft size={16} aria-hidden="true" />
-                  </button>
-                  <span className={styles["page-indicator"]}>
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles["page-btn"]}
-                    disabled={page === totalPages || transactionsLoading}
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    aria-label="Next page"
-                  >
-                    <ChevronRight size={16} aria-hidden="true" />
-                  </button>
+          {(() => {
+            if (transactionsLoading) {
+              return (
+                <div className={styles["loading-container"]}>
+                  <LoadingSpinner size={32} border={3} color="var(--primary)" />
                 </div>
-              )}
-            </>
-          )}
+              );
+            }
+            if (transactions.length === 0) {
+              return (
+                <p className={styles["empty-state"]}>
+                  {IMAGE_REWARD_MODAL.transactions.emptyState}
+                </p>
+              );
+            }
+            return (
+              <>
+                <div className={styles["table-wrapper"]}>
+                  <table className={styles["table"]}>
+                    <thead>
+                      <tr>
+                        {IMAGE_REWARD_MODAL.transactions.headers.map((h) => (
+                          <th key={h}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions.map((tx) => (
+                        <tr key={tx._id}>
+                          <td>
+                            <span className={styles["type-badge"]}>
+                              {formatTransactionType(tx.transaction_type)}
+                            </span>
+                          </td>
+                          <td className={styles["points-cell"]}>
+                            {tx.points_awarded > 0 ? "+" : ""}
+                            {tx.points_awarded}
+                          </td>
+                          <td>
+                            {tx.user_id?.name || tx.user_id?.email || "—"}
+                          </td>
+                          <td>{tx.reason || "—"}</td>
+                          <td>{formatDate(tx.createdAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {totalPages > 1 && (
+                  <div className={styles["pagination"]}>
+                    <button
+                      type="button"
+                      className={styles["page-btn"]}
+                      disabled={page === 1 || transactionsLoading}
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      aria-label="Previous page"
+                    >
+                      <ChevronLeft size={16} aria-hidden="true" />
+                    </button>
+                    <span className={styles["page-indicator"]}>
+                      Page {page} of {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      className={styles["page-btn"]}
+                      disabled={page === totalPages || transactionsLoading}
+                      onClick={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      aria-label="Next page"
+                    >
+                      <ChevronRight size={16} aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </Modal>
