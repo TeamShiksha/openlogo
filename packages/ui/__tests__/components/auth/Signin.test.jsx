@@ -44,6 +44,8 @@ describe("SignInForm UI and Functionality Tests", () => {
     localStorageMock.setItem.mockClear();
     localStorageMock.removeItem.mockClear();
     localStorageMock.clear.mockClear();
+    mockedFetchRequest.mockReset();
+    mockedMakeRequest.mockReset();
   });
   it("renders all form elements correctly", () => {
     const authContext = mockAuthContext(false);
@@ -349,9 +351,9 @@ describe("SignInForm UI and Functionality Tests", () => {
     fireEvent.click(guestSignInButton);
 
     await waitFor(() => {
-      expect(
-        screen.getAllByText(MESSAGES.GUEST_SIGN_IN_SUCCESS)
-      ).toHaveLength(1);
+      expect(screen.getAllByText(MESSAGES.GUEST_SIGN_IN_SUCCESS)).toHaveLength(
+        1
+      );
     });
   });
 

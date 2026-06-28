@@ -87,6 +87,20 @@ const renderOperator = () =>
   );
 
 describe("Operator Page", () => {
+  it("renders operator workbench summary and catalog operations sections", async () => {
+    renderOperator();
+
+    await waitFor(() => {
+      expect(screen.getByText("Operator Workbench")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Open items")).toBeInTheDocument();
+    expect(screen.getByText("Archived items")).toBeInTheDocument();
+    expect(screen.getByText("Current queue")).toBeInTheDocument();
+    expect(screen.getByText("Queue Workbench")).toBeInTheDocument();
+    expect(screen.getByText("Catalog Operations")).toBeInTheDocument();
+  });
+
   it("renders and fetches messages by default", async () => {
     renderOperator();
 

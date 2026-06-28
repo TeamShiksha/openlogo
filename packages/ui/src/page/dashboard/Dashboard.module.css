@@ -1,10 +1,10 @@
 .dashboard-container {
   position: relative;
   min-height: 100vh;
-  background-color: var(--white);
-  padding: 3% 8%;
+  background-color: #f9fafb;
+  padding: 40px 24px;
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 1200px;
   overflow-x: hidden;
   box-sizing: border-box;
 }
@@ -27,9 +27,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .title-section {
@@ -38,16 +38,16 @@
 }
 
 .dashboard-title {
-  font-size: 1.875rem;
+  font-size: 30px;
   font-weight: 700;
-  color: var(--black);
-  margin: 0 0 0.5rem 0;
+  color: #111827;
+  margin: 0 0 8px 0;
   line-height: 1.2;
 }
 
 .dashboard-subtitle {
-  color: var(--description);
-  font-size: 1rem;
+  color: #6b7280;
+  font-size: 16px;
   margin: 0;
   line-height: 1.5;
 }
@@ -56,7 +56,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .dropdown-wrapper {
@@ -65,66 +65,68 @@
 }
 
 .dropdown {
-  background: var(--white);
-  border: var(--border);
-  padding: 0.5rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 8px 16px;
   border-radius: 8px;
-  font-size: 0.875rem;
-  color: var(--description);
+  font-size: 14px;
+  color: #374151;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   transition: border-color 0.2s;
 }
 
 .dropdown:hover {
-  border-color: var(--border-color);
+  border-color: #d1d5db;
 }
 
 .dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 0.5rem;
-  background: var(--white);
-  border: var(--border);
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: var(--shadow);
+  box-shadow:
+    0 4px 6px -1px #0000001a,
+    0 2px 4px -1px #0000000f;
   min-width: 120px;
   z-index: 50;
-  padding: 0.25rem;
+  padding: 4px;
 }
 
 .dropdown-item {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  color: var(--description);
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #374151;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
 .dropdown-item:hover {
-  background-color: var(--table-background);
-  color: var(--black);
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 .tabs {
-  background-color: var(--table-background);
-  padding: 0.25rem;
+  background-color: #f3f4f6;
+  padding: 4px;
   border-radius: 12px;
   display: flex;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .tab {
   flex: 1;
   white-space: nowrap;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--description);
+  color: #6b7280;
   border: none;
   background: none;
   cursor: pointer;
@@ -135,12 +137,12 @@
 }
 
 .tab:hover {
-  color: var(--black);
+  color: #374151;
 }
 
 .active-tab {
-  background-color: var(--white);
-  color: var(--primary);
+  background-color: #fff;
+  color: #4f46e5;
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -152,15 +154,15 @@
 .analytics-grid {
   display: grid;
   grid-template-columns: 1fr minmax(0, 350px);
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .analytics-card {
-  background: var(--white);
-  border: var(--border);
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
+  padding: 24px;
+  box-shadow: 0 1px 2px #0000000d;
   min-width: 0;
   overflow: hidden;
 }
@@ -168,14 +170,14 @@
 .api-keys-grid {
   display: grid;
   grid-template-columns: 350px 1fr;
-  gap: 1.5rem;
+  gap: 24px;
   align-items: start;
 }
 
 .left-column {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .security-tip {
@@ -218,11 +220,11 @@
 }
 
 .card {
-  background: var(--white);
-  border: var(--border);
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
+  padding: 24px;
+  box-shadow: 0 1px 2px #0000000d;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -230,9 +232,9 @@
 }
 
 .card-title {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
-  color: var(--black);
+  color: #111827;
   margin: 0;
 }
 
@@ -243,9 +245,9 @@
 }
 
 .badge {
-  background: var(--table-background);
-  color: var(--description);
-  font-size: 0.6875rem;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 11px;
   font-weight: 600;
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
@@ -253,9 +255,9 @@
 }
 
 .subtext {
-  color: var(--label-color);
-  font-size: 0.8125rem;
-  margin: 0 0 1.5rem 0;
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 0 0 24px 0;
 }
 
 .table-wrapper {
