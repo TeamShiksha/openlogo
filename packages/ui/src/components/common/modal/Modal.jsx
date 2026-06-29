@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { X } from "lucide-react";
 import { BUTTON_TEXT } from "../../../utils/Constants";
 import styles from "./Modal.module.css";
 import { useEffect } from "react";
@@ -65,8 +66,13 @@ const Modal = ({
         }}
       >
         {showCloseButton && (
-          <button className={styles["close-button"]} onClick={onClose}>
-            {BUTTON_TEXT.cross}
+          <button
+            className={styles["close-button"]}
+            onClick={onClose}
+            aria-label={BUTTON_TEXT.cross}
+          >
+            <X size={18} />
+            <span className={styles["sr-only"]}>{BUTTON_TEXT.cross}</span>
           </button>
         )}
         {children}

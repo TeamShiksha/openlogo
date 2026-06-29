@@ -84,7 +84,7 @@
   border-radius: 9999px;
   border: 2px solid #e2e8f0;
   background: var(--white);
-  padding: 0 4.5rem 0 3.5rem;
+  padding: 0 1.5rem 0 3.5rem;
   font-size: 1.05rem;
   color: var(--black);
   outline: none;
@@ -484,5 +484,129 @@
 
   .noResultButtons button {
     width: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .searchBox {
+    padding: 1.5rem;
+  }
+
+  .deckContainer {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .deckCard {
+    width: 68px;
+    height: 95px;
+    border-radius: 10px;
+  }
+
+  .featuredCard {
+    width: 78px;
+    height: 107px;
+  }
+
+  .cardLogoWrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+  }
+
+  .featuredCard .cardLogoWrapper {
+    width: 46px;
+    height: 46px;
+  }
+
+  .cardLogo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .featuredCard .cardLogo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cardName {
+    font-size: 0.65rem;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .searchBox {
+    padding: 1.25rem 1rem;
+  }
+
+  .searchIcon {
+    left: 1.2rem;
+  }
+
+  .searchInput {
+    padding: 0 1.25rem 0 3rem;
+    font-size: 0.95rem;
+    height: 3.5rem;
+  }
+
+  .suggestionsRow {
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .suggestionPill {
+    padding: 0.35rem 0.6rem;
+  }
+
+  .suggestionName {
+    font-size: 0.75rem;
+  }
+
+  .deckContainer {
+    gap: 0.3rem;
+    padding: 0 0.25rem;
+  }
+
+  .deckCard {
+    width: 50px;
+    height: 72px;
+    border-radius: 8px;
+  }
+
+  .featuredCard {
+    width: 58px;
+    height: 82px;
+  }
+
+  .cardLogoWrapper {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    margin-bottom: 0.35rem;
+  }
+
+  .featuredCard .cardLogoWrapper {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cardLogo {
+    width: 16px;
+    height: 16px;
+  }
+
+  .featuredCard .cardLogo {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cardName {
+    font-size: 0.58rem;
+  }
+
+  .resultCard {
+    padding: 1rem;
+    border-radius: 12px;
   }
 }
