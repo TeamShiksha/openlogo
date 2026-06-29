@@ -8,41 +8,58 @@ function PricingCard({
   name,
   tagline,
   index,
+  pricing,
   keypoints,
   activePlan,
   openAuthModal,
 }) {
+  const isPro = index === 1;
   const isPlanActive = activePlan === name;
+
   let buttonText = BUTTON_TEXT.getStarted;
   if (isPlanActive) {
     buttonText = BUTTON_TEXT.active;
-  } else if (index === 1) {
-    buttonText = BUTTON_TEXT.commingSoon;
+  } else if (isPro) {
+    buttonText = "Upgrade to Pro";
   }
-  const isDisabled = isPlanActive || index === 1;
+
+  const isDisabled = isPlanActive || isPro;
 
   return (
-    <div className={styles.card}>
-      <div className={styles.intro}>
-        <h1 className={styles["plan-name"]}>{name}</h1>
-        <p className={styles["tag-line"]}>{tagline}</p>
-        <ul className={styles.point}>
-          {keypoints.map((keypoint, idx) => (
-            <li key={keypoint + idx}>
-              <img alt="Tick Icon" src={tickIcon} className={styles.point} />
-              <p>{keypoint}</p>
-            </li>
-          ))}
-        </ul>
-        <Button
-          variant={"primary"}
-          className={styles.width}
-          disabled={isDisabled}
-          onClick={openAuthModal}
-        >
-          {buttonText}
-        </Button>
+    <div className={`${styles.card} ${isPro ? styles.dark : styles.light}`}>
+      {isPro && <div className={styles.ribbon}>Coming Soon</div>}
+      <p className={styles["plan-name"]}>{name}</p>
+
+      <div className={styles["price-row"]}>
+        <span className={styles.price}>
+          {pricing === 0 ? "Free" : `$${pricing}`}
+        </span>
+        <span className={styles["price-period"]}>
+          {pricing === 0 ? "forever" : tagline.replace(`$${pricing} `, "")}
+        </span>
       </div>
+
+      <ul className={styles.keypoints}>
+        {keypoints.map((keypoint, idx) => (
+          <li key={keypoint + idx}>
+            <img
+              alt="Tick Icon"
+              src={tickIcon}
+              className={styles["tick-icon"]}
+            />
+            <p>{keypoint}</p>
+          </li>
+        ))}
+      </ul>
+
+      <Button
+        variant={isPro ? "primary" : "secondary"}
+        className={styles["btn-full"]}
+        disabled={isDisabled}
+        onClick={openAuthModal}
+      >
+        {buttonText}
+      </Button>
     </div>
   );
 }
@@ -51,6 +68,7 @@ PricingCard.propTypes = {
   name: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   tagline: PropTypes.string.isRequired,
+  pricing: PropTypes.number.isRequired,
   keypoints: PropTypes.arrayOf(PropTypes.string).isRequired,
   activePlan: PropTypes.string,
   openAuthModal: PropTypes.func.isRequired,

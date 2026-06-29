@@ -6,6 +6,14 @@ import { expect, describe, it, vi } from "vitest";
 
 const openCloseAuthModal = vi.fn();
 
+const getPriceParts = (plan) => ({
+  price: plan.pricing === 0 ? "Free" : `$${plan.pricing}`,
+  period:
+    plan.pricing === 0
+      ? "forever"
+      : plan.tagline.replace(`$${plan.pricing} `, ""),
+});
+
 describe("Pricing Component", () => {
   it("renders Pricing component with heading and summary", () => {
     render(<Pricing openAuthModal={openCloseAuthModal} />);
@@ -24,10 +32,11 @@ describe("Pricing Component", () => {
 
     PRICING.plans.forEach((plan) => {
       const titleElement = screen.getByText(plan.name);
-      const taglineElement = screen.getByText(plan.tagline);
+      const { price, period } = getPriceParts(plan);
 
-      expect(taglineElement).toBeInTheDocument();
       expect(titleElement).toBeInTheDocument();
+      expect(screen.getByText(price)).toBeInTheDocument();
+      expect(screen.getByText(period)).toBeInTheDocument();
       plan.keypoints.forEach((keypoint) => {
         const plan_keypoint = screen.getByText(keypoint);
         expect(plan_keypoint).toBeInTheDocument();
