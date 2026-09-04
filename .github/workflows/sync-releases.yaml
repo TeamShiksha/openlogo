@@ -14,13 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
-      - name: Install backend dependencies
-        run: pnpm --filter app install --frozen-lockfile
+      - name: Install dependencies
+        run: npm install mongoose --legacy-peer-deps
 
       - name: Run release sync script
         working-directory: packages/app
