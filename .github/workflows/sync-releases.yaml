@@ -1,0 +1,32 @@
+name: Sync GitHub Release to MongoDB
+
+on:
+  release:
+    types: [published, edited]
+
+jobs:
+  sync:
+    name: Sync release ${{ github.event.release.tag_name }} to MongoDB
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Install backend dependencies
+        run: pnpm --filter app install --frozen-lockfile
+
+      - name: Run release sync script
+        working-directory: packages/app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/syncReleases.js

@@ -174,7 +174,355 @@ const TEMPORARY_SESSION_TYPES = {
   MFA: "MFA",
 };
 
+/**
+ * OLD_RELEASES: Historical archived release data (pre-MongoDB era).
+ *
+ * @description
+ * This array contains release data for versions published BEFORE the automated
+ * GitHub → MongoDB release sync pipeline was implemented.
+ *
+ * ─── WHY THIS EXISTS ─────────────────────────────────────────────────────────
+ * The MongoDB `releases` collection is strictly for new releases synced from GitHub
+ * via `scripts/syncReleases.js`. Historical releases lack required fields like
+ * `githubReleaseId`, `githubReleaseUrl`, and `prNumber` — so they cannot be stored
+ * in the database without violating the schema.
+ *
+ * ─── HOW IT IS SERVED ────────────────────────────────────────────────────────
+ * • GET /api/releases       → included as `archivedReleases` in the response.
+ *                             NOTE: Pagination does NOT apply to this array.
+ * • GET /api/releases/:version → `ReleaseService.getReleaseByVersion()` checks
+ *                             this array FIRST before querying MongoDB.
+ *
+ * ─── ADDING NEW RELEASES ──────────────────────────────────────────────────────
+ * DO NOT add new releases here. All new releases should be published on GitHub
+ * and synced to MongoDB via the sync script / GitHub Action.
+ *
+ * @readonly
+ */
+const OLD_RELEASES = [
+  {
+    version: "0.8.0 version",
+    releaseDate: "May 2026",
+    entries: [
+      {
+        title: "Revamp USER dashboard according to the design.",
+        category: "Enhancement",
+        contributor: {
+          username: "AryaDharkar",
+        },
+      },
+      {
+        title: "Enhancing the UI of the admin dashboard.",
+        category: "Enhancement",
+        contributor: {
+          username: "L-Tarun-Aditya",
+        },
+      },
+      {
+        title: "Add 2FA section in user settings.",
+        category: "Enhancement",
+        contributor: {
+          username: "L-Tarun-Aditya",
+        },
+      },
+      {
+        title: "Implementing a dedicated settings page for MFA.",
+        category: "Enhancement",
+        contributor: {
+          username: "L-Tarun-Aditya",
+        },
+      },
+      {
+        title: "Multi factor authentication.",
+        category: "Enhancement",
+        contributor: {
+          username: "MukeshAbhi",
+        },
+      },
+      {
+        title: "Prevent Users From Reusing Old Password During Password Reset.",
+        category: "Enhancement",
+        contributor: {
+          username: "rishang14",
+        },
+      },
+      {
+        title:
+          "Fix bugs on createLogo page and allow users to access this page without authentication.",
+        category: "Enhancement",
+        contributor: {
+          username: "AryaDharkar",
+        },
+      },
+      {
+        title: "Feature for user session management.",
+        category: "Enhancement",
+        contributor: {
+          username: "kadamsahil2511",
+        },
+      },
+      {
+        title:
+          "Feature to enforce branch & PR naming conventions via husky + GitHub Actions.",
+        category: "Enhancement",
+        contributor: {
+          username: "Smayur0",
+        },
+      },
+      {
+        title: "Redesign documentation page.",
+        category: "Enhancement",
+        contributor: {
+          username: "Dhirenderchoudhary",
+        },
+      },
+      {
+        title: "Revamp sign in and sign up form",
+        category: "Enhancement",
+        contributor: {
+          username: "0-mstrmind",
+        },
+      },
+    ],
+  },
+  {
+    version: "0.7.0 version",
+    releaseDate: "Mar 2026",
+    entries: [
+      {
+        title:
+          "Authentication has been migrated from JWT to a secure session-based system, improving overall security and simplifying token management.",
+        category: "Enhancement",
+        contributor: {
+          username: "Mantu01",
+        },
+      },
+      {
+        title:
+          "You can now switch between Light and Dark themes to personalize your experience.",
+        category: "Enhancement",
+        contributor: {
+          username: "sachinkmrsin",
+        },
+      },
+      {
+        title:
+          "Notifications are now available for important events such as API expiry and usage limit being reached, so you never miss critical updates.",
+        category: "Enhancement",
+        contributor: {
+          username: "YashDevani-source",
+        },
+      },
+      {
+        title:
+          "You can now create and use your own custom logo image directly within the platform.",
+        category: "Enhancement",
+        contributor: {
+          username: "biplab-sutradhar",
+        },
+      },
+      {
+        title:
+          "API keys are now securely hidden to prevent accidental exposure and enhance account security.",
+        category: "Enhancement",
+        contributor: {
+          username: "L-Tarun-Aditya",
+        },
+      },
+    ],
+  },
+  {
+    version: "0.6.0 version",
+    releaseDate: "Dec 2025",
+    entries: [
+      {
+        title:
+          "You can now view a simple graph on your dashboard that helps you understand how much you’re using the API, including how many requests you’ve made and how much data you’ve used.",
+        category: "Enhancement",
+        contributor: {
+          username: "L-Tarun-Aditya",
+        },
+      },
+      {
+        title:
+          "API keys now expire automatically to keep accounts more secure. Users can set a custom expiry date, and existing API keys will expire after one year by default.",
+        category: "Enhancement",
+        contributor: {
+          username: "biplab-sutradhar",
+        },
+      },
+      {
+        title:
+          "Catalogs are now created automatically, so you don’t need to set them up manually anymore.",
+        category: "Enhancement",
+        contributor: {
+          username: "BansalAbhinav",
+        },
+      },
+      {
+        title:
+          "A new Release Page is now available, where you can easily see what’s new in each version and who helped build it.",
+        category: "Enhancement",
+        contributor: {
+          username: "abhishek-2k23",
+        },
+      },
+      {
+        title:
+          "If you don’t receive your verification email, you can now resend it easily and continue without getting stuck.",
+        category: "Enhancement",
+        contributor: {
+          username: "MukeshAbhi",
+        },
+      },
+    ],
+  },
+  {
+    version: "Previous version",
+    releaseDate: "Oct 2024",
+    entries: [
+      {
+        title:
+          "Dates are now displayed in a consistent and clear format across the entire platform.",
+        category: "Enhancement",
+        contributor: {
+          username: "Sumitgitup",
+        },
+      },
+      {
+        title:
+          "You can now easily download a copy of your data from the platform whenever you need it.",
+        category: "Enhancement",
+        contributor: {
+          username: "Sumitgitup",
+        },
+      },
+      {
+        title:
+          "Navigation has been simplified by grouping Dashboard and Sign Out options under a single profile menu.",
+        category: "Enhancement",
+        contributor: {
+          username: "abhishek-2k23",
+        },
+      },
+      {
+        title:
+          "Updates made by admins now show up instantly, so users always see the latest content without delays.",
+        category: "Enhancement",
+        contributor: {
+          username: "MukeshAbhi",
+        },
+      },
+      {
+        title:
+          "Image uploads are now faster and more stable, especially when uploading large files.",
+        category: "Enhancement",
+        contributor: {
+          username: "printgourav",
+        },
+      },
+      {
+        title:
+          "If you miss the verification email, you can now resend it directly without any hassle.",
+        category: "Enhancement",
+        contributor: {
+          username: "MukeshAbhi",
+        },
+      },
+      {
+        title:
+          "Admins can now quickly see how many images are stored in the system from the dashboard.",
+        category: "Enhancement",
+        contributor: {
+          username: "printgourav",
+        },
+      },
+      {
+        title:
+          "The platform moved from Firebase to MongoDB to better support growth and handle data more efficiently.",
+        category: "Enhancement",
+        contributor: {
+          username: "amankumarsingh77",
+        },
+      },
+      {
+        title:
+          "Testing was improved by switching to a faster and more reliable testing setup.",
+        category: "Enhancement",
+        contributor: {
+          username: "Ayushsanjdev",
+        },
+      },
+      {
+        title:
+          "A new Operator dashboard was added to make it easier to manage and respond to customer queries.",
+        category: "Enhancement",
+        contributor: {
+          username: "asharma991",
+        },
+      },
+      {
+        title:
+          "Admins gained the ability to re-upload images with checks to ensure correct file names and formats.",
+        category: "Enhancement",
+        contributor: {
+          username: "Soumava-221B",
+        },
+      },
+      {
+        title:
+          "Subscription usage limits are now reset automatically every month, removing the need for manual updates.",
+        category: "Enhancement",
+        contributor: {
+          username: "DeltaDynamo",
+        },
+      },
+      {
+        title:
+          "Several visual and usability improvements were made across the footer, About page, and sign-in experience.",
+        category: "Enhancement",
+        contributor: {
+          username: "AryaDharkar",
+        },
+      },
+      {
+        title:
+          "A new logo search feature was added, making it easier to find and retrieve logos securely.",
+        category: "Enhancement",
+        contributor: {
+          username: "DeltaDynamo",
+        },
+      },
+      {
+        title:
+          "Navigation behavior was improved so pages smoothly return to the top when links are clicked.",
+        category: "Enhancement",
+        contributor: {
+          username: "Asin-Junior-Honore",
+        },
+      },
+      {
+        title:
+          "An extra confirmation step was added before deleting API keys to help prevent accidental deletions.",
+        category: "Enhancement",
+        contributor: {
+          username: "anandbaraik",
+        },
+      },
+      {
+        title:
+          "API keys can now be viewed or copied only once, improving overall account security.",
+        category: "Enhancement",
+        contributor: {
+          username: "Sharathxct",
+        },
+      },
+    ],
+  },
+];
+
 module.exports = {
+  OLD_RELEASES,
   EmailValidationRegex,
   ExtractCompanyNameFromUrlRegex,
   UserTokenTypes,
