@@ -11,6 +11,7 @@ const CreateLogoRequestRepository = require("./createLogoRequest");
 const RewardsRepository = require("./rewards");
 const RewardTransactionsRepository = require("./rewardTransactions");
 const MilestoneConfigRepository = require("./milestoneConfig");
+const ReleaseRepository = require("./release");
 
 module.exports = {
   ContactUsRepository,
@@ -26,4 +27,5 @@ module.exports = {
   RewardsRepository,
   RewardTransactionsRepository,
   MilestoneConfigRepository,
+  ReleaseRepository,
 };

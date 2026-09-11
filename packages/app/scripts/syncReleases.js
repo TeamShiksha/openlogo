@@ -15,7 +15,7 @@
  *
  * Exit codes:
  *   0 - Success
- *   1 - Fatal error (DB failure, GitHub API failure, missing env vars)
+ *   1 - Fatal error (DB failure, GitHub API failure, missing env vars, validation failure)
  */
 
 "use strict";
@@ -29,10 +29,6 @@ const Release = require("../models/release");
 
 function log(msg) {
   console.log(`[sync-releases] ${msg}`);
-}
-
-function warn(msg) {
-  console.warn(`[sync-releases][WARN] ${msg}`);
 }
 
 function error(msg) {
@@ -76,7 +72,7 @@ function getConfig() {
 
 /**
  * Wraps fetch with GitHub API defaults and error handling.
- * Throws on non-2xx responses — callers decide whether to abort or continue.
+ * Throws on non-2xx responses.
  */
 async function githubFetch(path, token) {
   const url = `https://api.github.com${path}`;
@@ -108,23 +104,6 @@ async function fetchRelease(owner, repo, tag, token) {
   );
 }
 
-/**
- * Fetch a single pull request.
- * Returns null (and logs a warning) instead of throwing if the PR is not found
- * or if the API call fails — the caller will keep the entry without contributor data.
- */
-async function fetchPullRequest(owner, repo, prNumber, token) {
-  try {
-    return await githubFetch(
-      `/repos/${owner}/${repo}/pulls/${prNumber}`,
-      token
-    );
-  } catch (err) {
-    warn(`Could not fetch PR #${prNumber}: ${err.message}`);
-    return null;
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Release note parser
 // ---------------------------------------------------------------------------
@@ -134,86 +113,288 @@ const CATEGORY_MAP = {
   enhancements: "Enhancement",
   "bug fixes": "Bug Fix",
   security: "Security",
+  others: "Other",
 };
 
 /**
  * Parse release body into structured category sections and entries.
- *
- * Returns an array of raw entry objects:
- *   { category, prNumber, title, description }
- *
- * Invalid / malformed entries are skipped with a warning.
+ * Returns { entries: Array, errors: Array }
  */
 function parseReleaseBody(body) {
   const entries = [];
+  const errors = [];
 
-  // Split on H2 headings (## Section Name)
-  // Each segment: [ fullMatch, headingText, sectionContent ]
-  const sectionRegex = /##\s+(.+?)\s*\n([\s\S]*?)(?=\n##\s|\s*$)/gi;
-  let sectionMatch;
+  if (!body || typeof body !== "string") {
+    return { entries, errors };
+  }
 
-  while ((sectionMatch = sectionRegex.exec(body)) !== null) {
-    const headingRaw = sectionMatch[1].trim().toLowerCase();
-    const sectionContent = sectionMatch[2];
+  // Remove HTML comments (like template guidance)
+  const cleanBody = body.replace(/<!--[\s\S]*?-->/g, "");
 
-    const category = CATEGORY_MAP[headingRaw];
-    if (!category) continue; // Skip Hero Image and any unknown sections
+  // Find all H2 headers: ## Header
+  const h2Regex = /^##\s+(.+)$/gm;
+  let match;
+  const sectionIndices = [];
+  while ((match = h2Regex.exec(cleanBody)) !== null) {
+    sectionIndices.push({
+      header: match[1].trim(),
+      index: match.index,
+      headerLength: match[0].length,
+    });
+  }
 
-    // Split section on H3 headings (### #NNNN | Title)
-    const entryRegex =
-      /###\s+#(\d+)\s*\|\s*(.+?)\s*\n([\s\S]*?)(?=\n###\s|\s*$)/gi;
-    let entryMatch;
+  for (let i = 0; i < sectionIndices.length; i++) {
+    const sectionHeader = sectionIndices[i].header;
+    const categoryKey = sectionHeader.toLowerCase();
+    const category = CATEGORY_MAP[categoryKey];
 
-    while ((entryMatch = entryRegex.exec(sectionContent)) !== null) {
-      const prNumberRaw = entryMatch[1];
-      const title = entryMatch[2].trim();
-      const description = entryMatch[3].trim();
+    // Ignore unsupported sections such as ## Hero Image
+    if (!category) continue;
 
-      const prNumber = parseInt(prNumberRaw, 10);
-      if (isNaN(prNumber) || prNumber <= 0) {
-        warn(
-          `Skipping entry with invalid PR number "#${prNumberRaw}" in section "${category}".`
-        );
-        continue;
+    const start = sectionIndices[i].index + sectionIndices[i].headerLength;
+    const end =
+      i + 1 < sectionIndices.length
+        ? sectionIndices[i + 1].index
+        : cleanBody.length;
+    const sectionContent = cleanBody.substring(start, end).trim();
+
+    if (!sectionContent) continue;
+
+    // Find all H3 headers inside this section
+    const h3Regex = /^###\s+(.+)$/gm;
+    let h3Match;
+    const h3Indices = [];
+    while ((h3Match = h3Regex.exec(sectionContent)) !== null) {
+      h3Indices.push({
+        headerLine: h3Match[1].trim(),
+        fullHeader: h3Match[0],
+        index: h3Match.index,
+        headerLength: h3Match[0].length,
+      });
+    }
+
+    if (h3Indices.length === 0) {
+      if (sectionContent.length > 0) {
+        errors.push({
+          section: category,
+          pr: null,
+          title: null,
+          message: `Malformed entry in section "${sectionHeader}". Expected heading starting with "### #<PR_NUMBER> | <TITLE>".`,
+        });
+      }
+      continue;
+    }
+
+    const textBeforeH3 = sectionContent.substring(0, h3Indices[0].index).trim();
+    if (textBeforeH3.length > 0) {
+      errors.push({
+        section: category,
+        pr: null,
+        title: null,
+        message: `Malformed content before entry in section "${sectionHeader}": "${textBeforeH3.substring(0, 40)}..."`,
+      });
+    }
+
+    for (let j = 0; j < h3Indices.length; j++) {
+      const h3Header = h3Indices[j].headerLine;
+      const blockStart = h3Indices[j].index + h3Indices[j].headerLength;
+      const blockEnd =
+        j + 1 < h3Indices.length
+          ? h3Indices[j + 1].index
+          : sectionContent.length;
+      const blockBody = sectionContent.substring(blockStart, blockEnd).trim();
+
+      // Validate header format: #<PR_NUMBER> | <TITLE>
+      const headerMatch = h3Header.match(/^#([^\s|]*)\s*\|\s*(.*)$/);
+      let prNumber = null;
+      let title = null;
+
+      if (!headerMatch) {
+        errors.push({
+          section: category,
+          pr: null,
+          title: h3Header,
+          message: `Invalid entry heading "### ${h3Header}". Expected format "### #<PR_NUMBER> | <TITLE>".`,
+        });
+      } else {
+        const prRaw = headerMatch[1].trim();
+        title = headerMatch[2].trim();
+
+        if (
+          !prRaw ||
+          isNaN(prRaw) ||
+          parseInt(prRaw, 10) <= 0 ||
+          !/^\d+$/.test(prRaw)
+        ) {
+          errors.push({
+            section: category,
+            pr: prRaw || null,
+            title: title || null,
+            message: `Invalid PR number "${prRaw}" in entry heading "### ${h3Header}". PR number must be a positive integer.`,
+          });
+        } else {
+          prNumber = parseInt(prRaw, 10);
+        }
+
+        if (!title) {
+          errors.push({
+            section: category,
+            pr: prNumber,
+            title: null,
+            message: `Missing or empty title in entry heading "### ${h3Header}".`,
+          });
+        }
       }
 
-      if (!title) {
-        warn(`Skipping PR #${prNumber} in section "${category}": empty title.`);
-        continue;
+      // Extract Contributors
+      const contribMatch = blockBody.match(/^\*\*Contributors:\*\*\s*(.*)$/im);
+      let contributors = [];
+
+      if (!contribMatch) {
+        errors.push({
+          section: category,
+          pr: prNumber,
+          title: title,
+          message: `Missing required Contributors field.`,
+        });
+      } else {
+        const contribLine = contribMatch[1].trim();
+        if (!contribLine) {
+          errors.push({
+            section: category,
+            pr: prNumber,
+            title: title,
+            message: `Empty Contributors field.`,
+          });
+        } else {
+          const tokens = contribLine.split(/\s+/).filter(Boolean);
+          const validContributors = [];
+
+          for (const token of tokens) {
+            if (!token.startsWith("@")) {
+              errors.push({
+                section: category,
+                pr: prNumber,
+                title: title,
+                message: `Invalid contributor "${token}". All contributor values must use GitHub username syntax beginning with "@".`,
+              });
+            } else {
+              const username = token.slice(1).trim();
+              if (!username) {
+                errors.push({
+                  section: category,
+                  pr: prNumber,
+                  title: title,
+                  message: `Invalid contributor username "${token}".`,
+                });
+              } else {
+                validContributors.push({ username });
+              }
+            }
+          }
+
+          if (validContributors.length > 0) {
+            contributors = validContributors;
+          }
+        }
       }
 
-      entries.push({ category, prNumber, title, description });
+      // Extract description
+      let description = "";
+      if (contribMatch) {
+        const contribIdx = blockBody.indexOf(contribMatch[0]);
+        description = blockBody.substring(0, contribIdx).trim();
+      } else {
+        description = blockBody.trim();
+      }
+
+      entries.push({
+        category,
+        prNumber,
+        title,
+        description,
+        contributors,
+      });
     }
   }
 
-  return entries;
+  return { entries, errors };
 }
 
 // ---------------------------------------------------------------------------
-// Contributor enrichment
+// GitHub Entity Validation (PR existence & User existence)
 // ---------------------------------------------------------------------------
 
-/**
- * Fetch PR data and extract contributor metadata.
- * Returns a contributor object — all fields are null on failure.
- */
-async function enrichEntryWithPR(entry, owner, repo, token) {
-  const pr = await fetchPullRequest(owner, repo, entry.prNumber, token);
+async function validateGitHubEntities(entries, owner, repo, token, cache = {}) {
+  const errors = [];
+  const prCache = cache.prCache || new Map();
+  const userCache = cache.userCache || new Map();
 
-  if (!pr) {
-    return {
-      ...entry,
-      contributor: { username: null },
-    };
+  // Validate PR numbers
+  for (const entry of entries) {
+    const { category, prNumber, title } = entry;
+    if (!prNumber) continue;
+
+    if (!prCache.has(prNumber)) {
+      try {
+        await githubFetch(`/repos/${owner}/${repo}/pulls/${prNumber}`, token);
+        prCache.set(prNumber, true);
+      } catch {
+        prCache.set(prNumber, false);
+      }
+    }
+
+    if (!prCache.get(prNumber)) {
+      errors.push({
+        section: category,
+        pr: prNumber,
+        title: title,
+        message: `PR #${prNumber} could not be found or fetched from repository "${owner}/${repo}".`,
+      });
+    }
   }
 
-  const user = pr.user || {};
-  return {
-    ...entry,
-    contributor: {
-      username: user.login || null,
-    },
-  };
+  // Validate Contributor Usernames
+  for (const entry of entries) {
+    const { category, prNumber, title, contributors } = entry;
+    if (!contributors) continue;
+
+    for (const c of contributors) {
+      const { username } = c;
+      if (!username) continue;
+
+      if (!userCache.has(username)) {
+        try {
+          await githubFetch(`/users/${encodeURIComponent(username)}`, token);
+          userCache.set(username, true);
+        } catch {
+          userCache.set(username, false);
+        }
+      }
+
+      if (!userCache.get(username)) {
+        errors.push({
+          section: category,
+          pr: prNumber,
+          title: title,
+          message: `Invalid contributor "@${username}". GitHub user could not be found.`,
+        });
+      }
+    }
+  }
+
+  return errors;
+}
+
+function formatValidationErrors(errors) {
+  let output = "Release validation failed:\n";
+  errors.forEach((err, idx) => {
+    const header = err.section
+      ? `${err.section} → ${err.pr ? `PR #${err.pr}` : err.title ? `Entry "${err.title}"` : "Entry"}`
+      : "Entry";
+    output += `\n${idx + 1}. ${header}\n   ${err.message}\n`;
+  });
+  return output;
 }
 
 // ---------------------------------------------------------------------------
@@ -244,30 +425,37 @@ async function syncRelease() {
 
     const body = ghRelease.body || "";
 
-    // 4. Parse release entries
-    const rawEntries = parseReleaseBody(body);
-    log(`Parsed ${rawEntries.length} release entries.`);
+    // 3. Parse release entries and structure
+    const { entries: parsedEntries, errors: parseErrors } =
+      parseReleaseBody(body);
 
-    // 5. Enrich entries with PR metadata (in parallel, failures are non-fatal)
-    const enrichedEntries = await Promise.all(
-      rawEntries.map((entry) =>
-        enrichEntryWithPR(entry, owner, repo, GITHUB_TOKEN)
-      )
+    // 4. Validate GitHub entities (PRs and users)
+    const githubErrors = await validateGitHubEntities(
+      parsedEntries,
+      owner,
+      repo,
+      GITHUB_TOKEN
     );
 
-    log(
-      `Enriched ${enrichedEntries.length} entries (some contributor fields may be null if PR fetch failed).`
-    );
+    const allErrors = [...parseErrors, ...githubErrors];
 
-    // 6. Build the release document payload
+    if (allErrors.length > 0) {
+      const formattedErr = formatValidationErrors(allErrors);
+      error(formattedErr);
+      throw new Error("Release validation failed.");
+    }
+
+    log(`Validated ${parsedEntries.length} release entries successfully.`);
+
+    // 5. Build release payload
     const releasePayload = {
       releaseDate: new Date(ghRelease.published_at),
       githubReleaseId: ghRelease.id,
       githubReleaseUrl: ghRelease.html_url,
-      entries: enrichedEntries,
+      entries: parsedEntries,
     };
 
-    // 7. Atomic upsert — single write, no partial persistence risk
+    // 6. Atomic upsert into MongoDB
     log(`Upserting release version="${RELEASE_TAG}" into MongoDB...`);
     const saved = await Release.findOneAndUpdate(
       { version: RELEASE_TAG },
@@ -279,7 +467,6 @@ async function syncRelease() {
       `Successfully synced release "${RELEASE_TAG}" (MongoDB _id: ${saved._id}).`
     );
   } finally {
-    // Always close the connection
     await mongoose.connection.close();
     log("MongoDB connection closed.");
   }
@@ -302,4 +489,10 @@ if (require.main === module) {
     });
 }
 
-module.exports = { syncRelease, parseReleaseBody };
+module.exports = {
+  syncRelease,
+  parseReleaseBody,
+  validateGitHubEntities,
+  formatValidationErrors,
+  CATEGORY_MAP,
+};

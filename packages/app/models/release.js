@@ -10,7 +10,11 @@ const mongoose = require("mongoose");
 
 const contributorSchema = new mongoose.Schema(
   {
-    username: { type: String, default: null },
+    username: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   { _id: false }
 );
@@ -19,13 +23,35 @@ const releaseEntrySchema = new mongoose.Schema(
   {
     category: {
       type: String,
-      enum: ["Feature", "Enhancement", "Bug Fix", "Security"],
+      enum: ["Feature", "Enhancement", "Bug Fix", "Security", "Other"],
       required: true,
     },
-    prNumber: { type: Number, required: true },
-    title: { type: String, required: true },
-    description: { type: String, default: "" },
-    contributor: { type: contributorSchema, default: () => ({}) },
+
+    prNumber: {
+      type: Number,
+      required: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    description: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    contributors: {
+      type: [contributorSchema],
+      required: true,
+      validate: {
+        validator: (value) => Array.isArray(value) && value.length > 0,
+        message: "At least one contributor is required",
+      },
+    },
   },
   { _id: false }
 );

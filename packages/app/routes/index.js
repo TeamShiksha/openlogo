@@ -13,6 +13,7 @@ const rewardsRouter = require("./rewards");
 const adminRewardsRouter = require("./admin/rewards");
 const adminMilestonesRouter = require("./admin/milestoneConfig");
 const adminUsersRouter = require("./admin");
+const releasesRouter = require("./releases");
 
 const privateRouteCORS = {
   origin: (origin, callback) => {
@@ -69,4 +70,6 @@ router.use(
   cors(privateRouteCORS),
   adminMilestonesRouter
 );
+router.use("/releases", releasesRouter);
+
 module.exports = router;
