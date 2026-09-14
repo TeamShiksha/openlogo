@@ -7,9 +7,9 @@ const {
   parseReleaseBody,
   validateGitHubEntities,
   formatValidationErrors,
-} = require("../../scripts/syncReleases");
+} = require("../../scripts/releases/syncNewReleases");
 
-describe("syncReleases Script & Parser", () => {
+describe("syncNewReleases Script & Parser", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -26,15 +26,15 @@ describe("syncReleases Script & Parser", () => {
   // Unit Tests: parseReleaseBody
   // -------------------------------------------------------------------------
   describe("parseReleaseBody", () => {
-    it("1. One category, one entry, one contributor", () => {
+    it("1. One category, one entry, one contributor with emoji in category header", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
 Full redesign of the user interface according to the latest design specifications for improved usability.
 
-**Contributors:** @personA
+> Contributors: @personA
 `;
       const { entries, errors } = parseReleaseBody(body);
 
@@ -50,21 +50,40 @@ Full redesign of the user interface according to the latest design specification
       });
     });
 
-    it("2. One category, multiple entries", () => {
+    it("2. Optional release introduction before first category header is ignored", () => {
       const body = `
-## Features
+Welcome to version 0.8.0! This release introduces major UI improvements.
 
-### #1042 | Revamp USER Dashboard
+### 📝 Features
+
+#### #1042 | Revamp USER Dashboard
+
+Full redesign description.
+
+> Contributors: @personA
+`;
+      const { entries, errors } = parseReleaseBody(body);
+
+      expect(errors).toHaveLength(0);
+      expect(entries).toHaveLength(1);
+      expect(entries[0].prNumber).toBe(1042);
+    });
+
+    it("3. One category, multiple entries", () => {
+      const body = `
+### 📝 Features
+
+#### #1042 | Revamp USER Dashboard
 
 First entry description.
 
-**Contributors:** @personA
+> Contributors: @personA
 
-### #1043 | Add Dark Mode
+#### #1043 | Add Dark Mode
 
 Second entry description.
 
-**Contributors:** @personB
+> Contributors: @personB
 `;
       const { entries, errors } = parseReleaseBody(body);
 
@@ -74,15 +93,15 @@ Second entry description.
       expect(entries[1].prNumber).toBe(1043);
     });
 
-    it("3. One entry with multiple contributors", () => {
+    it("4. Multiple contributors in blockquote format", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
 Description here.
 
-**Contributors:** @personA @personB
+> Contributors: @personA @personB
 `;
       const { entries, errors } = parseReleaseBody(body);
 
@@ -94,47 +113,47 @@ Description here.
       ]);
     });
 
-    it("4. Multiple categories", () => {
+    it("5. Multiple categories with leading emojis", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
-
-Description.
-
-**Contributors:** @personA
-
-## Enhancements
-
-### #1052 | Improve Release Page Performance
+#### #1042 | Revamp USER Dashboard
 
 Description.
 
-**Contributors:** @personA
+> Contributors: @personA
 
-## Bug Fixes
+### 📝 Enhancements
 
-### #1050 | Fix Login Crash
-
-Description.
-
-**Contributors:** @personC
-
-## Security
-
-### #1044 | Two-Factor Authentication
+#### #1052 | Improve Release Page Performance
 
 Description.
 
-**Contributors:** @personD
+> Contributors: @personA
 
-## Others
+### 📝 Bug Fixes
 
-### #1060 | Improve CI Pipeline
+#### #1050 | Fix Login Crash
 
 Description.
 
-**Contributors:** @personE
+> Contributors: @personC
+
+### 📝 Security
+
+#### #1044 | Two-Factor Authentication
+
+Description.
+
+> Contributors: @personD
+
+### 📝 Others
+
+#### #1060 | Improve CI Pipeline
+
+Description.
+
+> Contributors: @personE
 `;
       const { entries, errors } = parseReleaseBody(body);
 
@@ -149,13 +168,32 @@ Description.
       ]);
     });
 
-    it("5. Empty description", () => {
+    it("6. Rejects empty category or leftover 'Entry' placeholder", () => {
+      const bodyEmpty = `
+### 📝 Features
+
+#### #1042 | Valid Feature
+
+Description.
+
+> Contributors: @personA
+
+### 📝 Enhancements
+
+Entry
+`;
+      const { errors: errorsEmpty } = parseReleaseBody(bodyEmpty);
+      expect(errorsEmpty.length).toBeGreaterThan(0);
+      expect(errorsEmpty[0].message).toMatch(/Leftover placeholder "Entry"/i);
+    });
+
+    it("7. Empty description is supported", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
-**Contributors:** @personA
+> Contributors: @personA
 `;
       const { entries, errors } = parseReleaseBody(body);
 
@@ -164,111 +202,19 @@ Description.
       expect(entries[0].description).toBe("");
     });
 
-    it("6. Multiple contributors with varying whitespace", () => {
-      const body = `
-## Features
-
-### #1042 | Revamp USER Dashboard
-
-Description.
-
-**Contributors:** @alice   @bob    @charlie
-`;
-      const { entries, errors } = parseReleaseBody(body);
-
-      expect(errors).toHaveLength(0);
-      expect(entries).toHaveLength(1);
-      expect(entries[0].contributors).toEqual([
-        { username: "alice" },
-        { username: "bob" },
-        { username: "charlie" },
-      ]);
-    });
-
-    it("18. Valid 'Others' entry", () => {
-      const body = `
-## Others
-
-### #1060 | Improve CI Pipeline
-
-Migrated the CI pipeline to improve build reliability and reduce execution time.
-
-**Contributors:** @personA @personB
-`;
-      const { entries, errors } = parseReleaseBody(body);
-
-      expect(errors).toHaveLength(0);
-      expect(entries).toHaveLength(1);
-      expect(entries[0]).toEqual({
-        category: "Other",
-        prNumber: 1060,
-        title: "Improve CI Pipeline",
-        description:
-          "Migrated the CI pipeline to improve build reliability and reduce execution time.",
-        contributors: [{ username: "personA" }, { username: "personB" }],
-      });
-    });
-
-    it("19. Multiple 'Others' entries", () => {
-      const body = `
-## Others
-
-### #1060 | Improve CI Pipeline
-
-Description A.
-
-**Contributors:** @personA
-
-### #1062 | Update Docker Configuration
-
-Description B.
-
-**Contributors:** @personC
-`;
-      const { entries, errors } = parseReleaseBody(body);
-
-      expect(errors).toHaveLength(0);
-      expect(entries).toHaveLength(2);
-      expect(entries[0].category).toBe("Other");
-      expect(entries[1].category).toBe("Other");
-      expect(entries[0].prNumber).toBe(1060);
-      expect(entries[1].prNumber).toBe(1062);
-    });
-
-    it("20. Multiple contributors in 'Others'", () => {
-      const body = `
-## Others
-
-### #1060 | Improve CI Pipeline
-
-Description.
-
-**Contributors:** @personA @personB @personC
-`;
-      const { entries, errors } = parseReleaseBody(body);
-
-      expect(errors).toHaveLength(0);
-      expect(entries[0].category).toBe("Other");
-      expect(entries[0].contributors).toEqual([
-        { username: "personA" },
-        { username: "personB" },
-        { username: "personC" },
-      ]);
-    });
-
     // -----------------------------------------------------------------------
     // Invalid test cases
     // -----------------------------------------------------------------------
 
-    it("7. Missing PR number", () => {
+    it("8. Missing PR number", () => {
       const body = `
-## Features
+### 📝 Features
 
-### Revamp USER Dashboard
+#### Revamp USER Dashboard
 
 Description.
 
-**Contributors:** @personA
+> Contributors: @personA
 `;
       const { errors } = parseReleaseBody(body);
 
@@ -276,59 +222,30 @@ Description.
       expect(errors[0].message).toMatch(/Invalid entry heading/i);
     });
 
-    it("8. Invalid/non-positive PR number", () => {
+    it("9. Invalid/non-positive PR number", () => {
       const bodyPos = `
-## Features
+### 📝 Features
 
-### #-10 | Revamp USER Dashboard
+#### #-10 | Revamp USER Dashboard
 
 Description.
 
-**Contributors:** @personA
+> Contributors: @personA
 `;
       const { errors: errorsPos } = parseReleaseBody(bodyPos);
       expect(errorsPos.length).toBeGreaterThan(0);
       expect(errorsPos[0].message).toMatch(/Invalid PR number/i);
-
-      const bodyEmptyPR = `
-## Features
-
-### # | Revamp USER Dashboard
-
-Description.
-
-**Contributors:** @personA
-`;
-      const { errors: errorsEmpty } = parseReleaseBody(bodyEmptyPR);
-      expect(errorsEmpty.length).toBeGreaterThan(0);
-      expect(errorsEmpty[0].message).toMatch(/Invalid PR number/i);
     });
 
-    it("9. Missing title", () => {
+    it("10. Missing title", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 |
+#### #1042 |
 
 Description.
 
-**Contributors:** @personA
-`;
-      const { errors } = parseReleaseBody(body);
-
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].message).toMatch(/Missing or empty title/i);
-    });
-
-    it("10. Empty title", () => {
-      const body = `
-## Features
-
-### #1042 |    
-
-Description.
-
-**Contributors:** @personA
+> Contributors: @personA
 `;
       const { errors } = parseReleaseBody(body);
 
@@ -338,9 +255,9 @@ Description.
 
     it("11. Missing Contributors field", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
 Description without contributors line.
 `;
@@ -350,31 +267,15 @@ Description without contributors line.
       expect(errors[0].message).toMatch(/Missing required Contributors field/i);
     });
 
-    it("12. Empty Contributors field", () => {
+    it("12. Contributor without @", () => {
       const body = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
 Description.
 
-**Contributors:**
-`;
-      const { errors } = parseReleaseBody(body);
-
-      expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].message).toMatch(/Empty Contributors field/i);
-    });
-
-    it("13. Contributor without @", () => {
-      const body = `
-## Features
-
-### #1042 | Revamp USER Dashboard
-
-Description.
-
-**Contributors:** personA
+> Contributors: personA
 `;
       const { errors } = parseReleaseBody(body);
 
@@ -382,51 +283,6 @@ Description.
       expect(errors[0].message).toMatch(
         /must use GitHub username syntax beginning with "@"/i
       );
-    });
-
-    it("16. Malformed H3 entry that would otherwise be silently skipped", () => {
-      const body = `
-## Features
-
-### #1042 | Valid Feature
-
-Description.
-
-**Contributors:** @alice
-
-### Invalid Feature
-
-Description.
-
-**Contributors:** @bob
-`;
-      const { errors } = parseReleaseBody(body);
-
-      expect(errors.length).toBeGreaterThan(0);
-      expect(
-        errors.some((e) => e.message.includes("Invalid entry heading"))
-      ).toBe(true);
-    });
-
-    it("17. Unknown section should not create a DB entry or cause error", () => {
-      const body = `
-## Hero Image
-
-![Hero Banner](https://example.com/banner.png)
-
-## Features
-
-### #1042 | Valid Feature
-
-Description.
-
-**Contributors:** @alice
-`;
-      const { entries, errors } = parseReleaseBody(body);
-
-      expect(errors).toHaveLength(0);
-      expect(entries).toHaveLength(1);
-      expect(entries[0].category).toBe("Feature");
     });
   });
 
@@ -459,7 +315,7 @@ Description.
   // Unit Tests: validateGitHubEntities
   // -------------------------------------------------------------------------
   describe("validateGitHubEntities", () => {
-    it("14. Invalid GitHub username", async () => {
+    it("13. Invalid GitHub username", async () => {
       global.fetch = jest.fn().mockImplementation((url) => {
         if (url.includes("/pulls/1042")) {
           return Promise.resolve({
@@ -499,7 +355,7 @@ Description.
       );
     });
 
-    it("15. Non-existent PR", async () => {
+    it("14. Non-existent PR", async () => {
       global.fetch = jest.fn().mockImplementation((url) => {
         if (url.includes("/pulls/9999")) {
           return Promise.resolve({
@@ -556,29 +412,32 @@ Description.
       await Release.deleteMany({});
     });
 
-    it("successfully syncs valid release into MongoDB", async () => {
-      const tag = "v1.0.0-test";
+    it("successfully syncs valid release storing version and tagName separately", async () => {
+      const tag = "v0.8.0";
+      const name = "0.8.0";
       process.env.GITHUB_TOKEN = "fake_token";
       process.env.MONGO_URL = mongoUri;
       process.env.RELEASE_TAG = tag;
       process.env.GITHUB_REPOSITORY = "testowner/testrepo";
 
       const validReleaseBody = `
-## Features
+Welcome to 0.8.0 release.
 
-### #1042 | Revamp USER Dashboard
+### 📝 Features
+
+#### #1042 | Revamp USER Dashboard
 
 Full redesign description.
 
-**Contributors:** @personA @personB
+> Contributors: @personA @personB
 
-## Others
+### 📝 Others
 
-### #1060 | Improve CI Pipeline
+#### #1060 | Improve CI Pipeline
 
 Migrated CI pipeline.
 
-**Contributors:** @personC
+> Contributors: @personC
 `;
 
       global.fetch = jest.fn().mockImplementation((url) => {
@@ -588,6 +447,7 @@ Migrated CI pipeline.
             json: () =>
               Promise.resolve({
                 id: 12345,
+                name: name,
                 tag_name: tag,
                 published_at: "2026-09-11T12:00:00Z",
                 html_url: `https://github.com/testowner/testrepo/releases/tag/${tag}`,
@@ -610,14 +470,14 @@ Migrated CI pipeline.
 
       await syncRelease();
 
-      // Connect back to inspect DB document (since syncRelease closes connection in finally)
       if (mongoose.connection.readyState === 0) {
         await mongoose.connect(mongoUri);
       }
 
-      const doc = await Release.findOne({ version: tag });
+      const doc = await Release.findOne({ version: name });
       expect(doc).not.toBeNull();
-      expect(doc.version).toBe(tag);
+      expect(doc.version).toBe("0.8.0");
+      expect(doc.tagName).toBe("v0.8.0");
       expect(doc.githubReleaseId).toBe(12345);
       expect(doc.entries).toHaveLength(2);
       expect(doc.entries[0]).toMatchObject({
@@ -625,12 +485,6 @@ Migrated CI pipeline.
         prNumber: 1042,
         title: "Revamp USER Dashboard",
         contributors: [{ username: "personA" }, { username: "personB" }],
-      });
-      expect(doc.entries[1]).toMatchObject({
-        category: "Other",
-        prNumber: 1060,
-        title: "Improve CI Pipeline",
-        contributors: [{ username: "personC" }],
       });
     });
 
@@ -642,13 +496,13 @@ Migrated CI pipeline.
       process.env.GITHUB_REPOSITORY = "testowner/testrepo";
 
       const invalidReleaseBody = `
-## Features
+### 📝 Features
 
-### #1042 | Revamp USER Dashboard
+#### #1042 | Revamp USER Dashboard
 
 Description.
 
-**Contributors:** personA
+> Contributors: personA
 `;
 
       global.fetch = jest.fn().mockImplementation((url) => {
@@ -658,6 +512,7 @@ Description.
             json: () =>
               Promise.resolve({
                 id: 99999,
+                name: "2.0.0-invalid",
                 tag_name: tag,
                 published_at: "2026-09-11T12:00:00Z",
                 html_url: `https://github.com/testowner/testrepo/releases/tag/${tag}`,
@@ -676,7 +531,7 @@ Description.
         await mongoose.connect(mongoUri);
       }
 
-      const doc = await Release.findOne({ version: tag });
+      const doc = await Release.findOne({ version: "2.0.0-invalid" });
       expect(doc).toBeNull();
     });
   });

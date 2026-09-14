@@ -24,4 +24,4 @@ jobs:
           MONGO_URL: ${{ secrets.MONGO_URL }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: node scripts/syncReleases.js
+        run: node scripts/releases/syncNewReleases.js

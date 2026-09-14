@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require("node:http");
 const { ReleaseService } = require("../services");
-const { OLD_RELEASES } = require("../utils/constants");
 
 /**
  * GET /api/releases          → paginated list of all releases
@@ -50,8 +49,6 @@ async function getReleasesController(req, res, next) {
         totalPages: result.totalPages,
         limit,
       },
-      // Appended historical archive. Note: Pagination logic does not apply to this array.
-      archivedReleases: OLD_RELEASES,
     });
   } catch (err) {
     next(err);

@@ -1,11 +1,11 @@
 const { ReleaseRepository } = require("../repositories");
-const { OLD_RELEASES } = require("../utils/constants");
 
 /**
  * ReleaseService: Read-only service layer for the releases API.
  *
- * Write operations (sync from GitHub) are handled by scripts/syncReleases.js
- * which calls ReleaseRepository.upsertByVersion directly.
+ * Write operations (sync from GitHub or seeding historical data) are handled
+ * by scripts/releases/syncNewReleases.js and scripts/releases/seedHistoricalReleases.js
+ * which call ReleaseRepository directly.
  */
 class ReleaseService {
   constructor() {
@@ -24,18 +24,11 @@ class ReleaseService {
 
   /**
    * Returns a single release document matched by version tag, or null if not found.
-   * If not found in the database, checks the archived OLD_RELEASES constants.
-   * @param {string} version - e.g. "v1.2.0"
+   * Queries MongoDB directly.
+   * @param {string} version - e.g. "0.8.0" or "v1.2.0"
    * @returns {Promise<Object|null>}
    */
   async getReleaseByVersion(version) {
-    // 1. Check if the version is in the historical archive
-    const archivedRelease = OLD_RELEASES.find((r) => r.version === version);
-    if (archivedRelease) {
-      return archivedRelease;
-    }
-
-    // 2. Query MongoDB for newer releases
     return await this.releaseRepository.findByVersion(version);
   }
 }

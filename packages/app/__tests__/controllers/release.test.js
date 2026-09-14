@@ -3,7 +3,6 @@
 const request = require("supertest");
 const app = require("../../server");
 const ReleaseService = require("../../services/release");
-const { OLD_RELEASES } = require("../../utils/constants");
 
 jest.mock("../../services/release");
 
@@ -21,7 +20,7 @@ describe("Releases Controller & Routes (/api/releases)", () => {
   });
 
   describe("GET /api/releases", () => {
-    it("returns 200 with paginated releases data and archivedReleases", async () => {
+    it("returns 200 with paginated releases data", async () => {
       const mockResult = {
         data: [
           {
@@ -50,7 +49,7 @@ describe("Releases Controller & Routes (/api/releases)", () => {
         totalPages: 1,
         limit: 10,
       });
-      expect(res.body.archivedReleases).toEqual(OLD_RELEASES);
+      expect(res.body.archivedReleases).toBeUndefined();
       expect(mockGetAllReleases).toHaveBeenCalledWith(1, 10);
     });
 
@@ -109,18 +108,6 @@ describe("Releases Controller & Routes (/api/releases)", () => {
       expect(res.body.statusCode).toBe(200);
       expect(res.body.data).toEqual(releaseData);
       expect(mockGetReleaseByVersion).toHaveBeenCalledWith("v1.2.0");
-    });
-
-    it("returns 200 for archived release version tag", async () => {
-      const archivedRelease = OLD_RELEASES[0];
-      mockGetReleaseByVersion.mockResolvedValue(archivedRelease);
-
-      const res = await request(app).get(
-        `/api/releases/${encodeURIComponent(archivedRelease.version)}`
-      );
-
-      expect(res.status).toBe(200);
-      expect(res.body.data).toEqual(archivedRelease);
     });
 
     it("returns 404 when release version is not found", async () => {

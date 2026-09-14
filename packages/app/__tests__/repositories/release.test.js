@@ -31,6 +31,7 @@ describe("ReleaseRepository", () => {
     it("returns matching release document without __v field", async () => {
       await Release.create({
         version: "v1.0.0",
+        tagName: "v1.0.0",
         releaseDate: new Date("2026-09-01"),
         githubReleaseId: 100,
         githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.0.0",
@@ -62,6 +63,7 @@ describe("ReleaseRepository", () => {
   describe("upsertByVersion", () => {
     it("inserts a new release document when version does not exist", async () => {
       const payload = {
+        tagName: "v1.1.0",
         releaseDate: new Date("2026-09-05"),
         githubReleaseId: 200,
         githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.1.0",
@@ -88,6 +90,7 @@ describe("ReleaseRepository", () => {
     it("updates existing release document atomically when version already exists", async () => {
       await Release.create({
         version: "v1.2.0",
+        tagName: "v1.2.0",
         releaseDate: new Date("2026-09-10"),
         githubReleaseId: 300,
         githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.2.0",
@@ -95,6 +98,7 @@ describe("ReleaseRepository", () => {
       });
 
       const updatedPayload = {
+        tagName: "v1.2.0",
         releaseDate: new Date("2026-09-10"),
         githubReleaseId: 300,
         githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.2.0",
@@ -121,24 +125,27 @@ describe("ReleaseRepository", () => {
     it("returns releases in reverse-chronological order with pagination metadata", async () => {
       await Release.create([
         {
-          version: "v1.0.0",
+          version: "v1.0.0-p",
+          tagName: "v1.0.0-p",
           releaseDate: new Date("2026-08-01"),
-          githubReleaseId: 1,
-          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.0.0",
+          githubReleaseId: 1001,
+          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.0.0-p",
           entries: [],
         },
         {
-          version: "v2.0.0",
+          version: "v2.0.0-p",
+          tagName: "v2.0.0-p",
           releaseDate: new Date("2026-09-01"),
-          githubReleaseId: 2,
-          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v2.0.0",
+          githubReleaseId: 1002,
+          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v2.0.0-p",
           entries: [],
         },
         {
-          version: "v1.5.0",
+          version: "v1.5.0-p",
+          tagName: "v1.5.0-p",
           releaseDate: new Date("2026-08-15"),
-          githubReleaseId: 3,
-          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.5.0",
+          githubReleaseId: 1003,
+          githubReleaseUrl: "https://github.com/org/repo/releases/tag/v1.5.0-p",
           entries: [],
         },
       ]);
@@ -149,12 +156,12 @@ describe("ReleaseRepository", () => {
       expect(result.currentPage).toBe(1);
       expect(result.totalPages).toBe(2);
       expect(result.data).toHaveLength(2);
-      expect(result.data[0].version).toBe("v2.0.0");
-      expect(result.data[1].version).toBe("v1.5.0");
+      expect(result.data[0].version).toBe("v2.0.0-p");
+      expect(result.data[1].version).toBe("v1.5.0-p");
 
       const page2 = await repository.getPaginated(2, 2);
       expect(page2.data).toHaveLength(1);
-      expect(page2.data[0].version).toBe("v1.0.0");
+      expect(page2.data[0].version).toBe("v1.0.0-p");
     });
   });
 });

@@ -2,7 +2,6 @@
 
 const ReleaseService = require("../../services/release");
 const { ReleaseRepository } = require("../../repositories");
-const { OLD_RELEASES } = require("../../utils/constants");
 
 jest.mock("../../repositories");
 
@@ -23,16 +22,7 @@ describe("ReleaseService", () => {
   });
 
   describe("getReleaseByVersion", () => {
-    it("returns archived release from OLD_RELEASES if version matches historical tag", async () => {
-      const archivedTag = OLD_RELEASES[0].version; // e.g. "0.8.0 version"
-
-      const result = await releaseService.getReleaseByVersion(archivedTag);
-
-      expect(result).toEqual(OLD_RELEASES[0]);
-      expect(mockFindByVersion).not.toHaveBeenCalled();
-    });
-
-    it("queries ReleaseRepository for version when not found in historical archive", async () => {
+    it("queries ReleaseRepository for version", async () => {
       const dbRelease = {
         version: "v1.2.0",
         releaseDate: new Date("2026-09-01"),
@@ -47,7 +37,7 @@ describe("ReleaseService", () => {
       expect(result).toEqual(dbRelease);
     });
 
-    it("returns null when version is not in archive or database", async () => {
+    it("returns null when version is not in database", async () => {
       mockFindByVersion.mockResolvedValue(null);
 
       const result = await releaseService.getReleaseByVersion("v9.9.9");

@@ -29,7 +29,7 @@ const releaseEntrySchema = new mongoose.Schema(
 
     prNumber: {
       type: Number,
-      required: true,
+      default: null,
     },
 
     title: {
@@ -46,11 +46,7 @@ const releaseEntrySchema = new mongoose.Schema(
 
     contributors: {
       type: [contributorSchema],
-      required: true,
-      validate: {
-        validator: (value) => Array.isArray(value) && value.length > 0,
-        message: "At least one contributor is required",
-      },
+      default: null,
     },
   },
   { _id: false }
@@ -62,6 +58,11 @@ const releaseSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
+    },
+    tagName: {
+      type: String,
+      required: true,
       trim: true,
     },
     releaseDate: {

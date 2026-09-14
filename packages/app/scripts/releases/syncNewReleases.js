@@ -21,7 +21,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
-const Release = require("../models/release");
+const Release = require("../../models/release");
 
 // ---------------------------------------------------------------------------
 // Logging helpers — prefixed for easy scanning in GitHub Actions log output
@@ -131,11 +131,11 @@ function parseReleaseBody(body) {
   // Remove HTML comments (like template guidance)
   const cleanBody = body.replace(/<!--[\s\S]*?-->/g, "");
 
-  // Find all H2 headers: ## Header
-  const h2Regex = /^##\s+(.+)$/gm;
+  // Find all H3 headers: ### Header
+  const h3Regex = /^###\s+(.+)$/gm;
   let match;
   const sectionIndices = [];
-  while ((match = h2Regex.exec(cleanBody)) !== null) {
+  while ((match = h3Regex.exec(cleanBody)) !== null) {
     sectionIndices.push({
       header: match[1].trim(),
       index: match.index,
@@ -145,10 +145,14 @@ function parseReleaseBody(body) {
 
   for (let i = 0; i < sectionIndices.length; i++) {
     const sectionHeader = sectionIndices[i].header;
-    const categoryKey = sectionHeader.toLowerCase();
+    // Strip leading emojis and symbols (non-alphanumeric/non-space prefix)
+    const cleanHeaderName = sectionHeader
+      .replace(/^[\p{Extended_Pictographic}\s\W]+/u, "")
+      .trim();
+    const categoryKey = (cleanHeaderName || sectionHeader).toLowerCase();
     const category = CATEGORY_MAP[categoryKey];
 
-    // Ignore unsupported sections such as ## Hero Image
+    // Ignore unsupported sections
     if (!category) continue;
 
     const start = sectionIndices[i].index + sectionIndices[i].headerLength;
@@ -158,54 +162,80 @@ function parseReleaseBody(body) {
         : cleanBody.length;
     const sectionContent = cleanBody.substring(start, end).trim();
 
-    if (!sectionContent) continue;
-
-    // Find all H3 headers inside this section
-    const h3Regex = /^###\s+(.+)$/gm;
-    let h3Match;
-    const h3Indices = [];
-    while ((h3Match = h3Regex.exec(sectionContent)) !== null) {
-      h3Indices.push({
-        headerLine: h3Match[1].trim(),
-        fullHeader: h3Match[0],
-        index: h3Match.index,
-        headerLength: h3Match[0].length,
-      });
-    }
-
-    if (h3Indices.length === 0) {
-      if (sectionContent.length > 0) {
-        errors.push({
-          section: category,
-          pr: null,
-          title: null,
-          message: `Malformed entry in section "${sectionHeader}". Expected heading starting with "### #<PR_NUMBER> | <TITLE>".`,
-        });
-      }
-      continue;
-    }
-
-    const textBeforeH3 = sectionContent.substring(0, h3Indices[0].index).trim();
-    if (textBeforeH3.length > 0) {
+    // Check for empty categories or leftover "Entry" placeholder
+    if (!sectionContent) {
       errors.push({
         section: category,
         pr: null,
         title: null,
-        message: `Malformed content before entry in section "${sectionHeader}": "${textBeforeH3.substring(0, 40)}..."`,
+        message: `Empty section for category "${sectionHeader}". Unused categories must be removed.`,
+      });
+      continue;
+    }
+
+    if (/^Entry$/i.test(sectionContent)) {
+      errors.push({
+        section: category,
+        pr: null,
+        title: null,
+        message: `Leftover placeholder "Entry" found in section "${sectionHeader}". Unused categories must be removed.`,
+      });
+      continue;
+    }
+
+    // Find all H4 headers inside this section
+    const h4Regex = /^####\s+(.+)$/gm;
+    let h4Match;
+    const h4Indices = [];
+    while ((h4Match = h4Regex.exec(sectionContent)) !== null) {
+      h4Indices.push({
+        headerLine: h4Match[1].trim(),
+        fullHeader: h4Match[0],
+        index: h4Match.index,
+        headerLength: h4Match[0].length,
       });
     }
 
-    for (let j = 0; j < h3Indices.length; j++) {
-      const h3Header = h3Indices[j].headerLine;
-      const blockStart = h3Indices[j].index + h3Indices[j].headerLength;
+    if (h4Indices.length === 0) {
+      errors.push({
+        section: category,
+        pr: null,
+        title: null,
+        message: `Malformed or empty entry in section "${sectionHeader}". Expected heading starting with "#### #<PR_NUMBER> | <TITLE>".`,
+      });
+      continue;
+    }
+
+    const textBeforeH4 = sectionContent.substring(0, h4Indices[0].index).trim();
+    if (textBeforeH4.length > 0) {
+      if (/^Entry$/i.test(textBeforeH4)) {
+        errors.push({
+          section: category,
+          pr: null,
+          title: null,
+          message: `Leftover placeholder "Entry" found before entry in section "${sectionHeader}".`,
+        });
+      } else {
+        errors.push({
+          section: category,
+          pr: null,
+          title: null,
+          message: `Malformed content before entry in section "${sectionHeader}": "${textBeforeH4.substring(0, 40)}..."`,
+        });
+      }
+    }
+
+    for (let j = 0; j < h4Indices.length; j++) {
+      const h4Header = h4Indices[j].headerLine;
+      const blockStart = h4Indices[j].index + h4Indices[j].headerLength;
       const blockEnd =
-        j + 1 < h3Indices.length
-          ? h3Indices[j + 1].index
+        j + 1 < h4Indices.length
+          ? h4Indices[j + 1].index
           : sectionContent.length;
       const blockBody = sectionContent.substring(blockStart, blockEnd).trim();
 
       // Validate header format: #<PR_NUMBER> | <TITLE>
-      const headerMatch = h3Header.match(/^#([^\s|]*)\s*\|\s*(.*)$/);
+      const headerMatch = h4Header.match(/^#([^\s|]*)\s*\|\s*(.*)$/);
       let prNumber = null;
       let title = null;
 
@@ -213,8 +243,8 @@ function parseReleaseBody(body) {
         errors.push({
           section: category,
           pr: null,
-          title: h3Header,
-          message: `Invalid entry heading "### ${h3Header}". Expected format "### #<PR_NUMBER> | <TITLE>".`,
+          title: h4Header,
+          message: `Invalid entry heading "#### ${h4Header}". Expected format "#### #<PR_NUMBER> | <TITLE>".`,
         });
       } else {
         const prRaw = headerMatch[1].trim();
@@ -230,7 +260,7 @@ function parseReleaseBody(body) {
             section: category,
             pr: prRaw || null,
             title: title || null,
-            message: `Invalid PR number "${prRaw}" in entry heading "### ${h3Header}". PR number must be a positive integer.`,
+            message: `Invalid PR number "${prRaw}" in entry heading "#### ${h4Header}". PR number must be a positive integer.`,
           });
         } else {
           prNumber = parseInt(prRaw, 10);
@@ -241,13 +271,15 @@ function parseReleaseBody(body) {
             section: category,
             pr: prNumber,
             title: null,
-            message: `Missing or empty title in entry heading "### ${h3Header}".`,
+            message: `Missing or empty title in entry heading "#### ${h4Header}".`,
           });
         }
       }
 
-      // Extract Contributors
-      const contribMatch = blockBody.match(/^\*\*Contributors:\*\*\s*(.*)$/im);
+      // Extract Contributors (format: > Contributors: @user1 @user2 or **Contributors:** @user1 @user2)
+      const contribMatch = blockBody.match(
+        /^(?:>\s*)?(?:\*\*)?Contributors:(?:\*\*)?\s*(.*)$/im
+      );
       let contributors = [];
 
       if (!contribMatch) {
@@ -420,8 +452,17 @@ async function syncRelease() {
     );
 
     log(
-      `Fetched release: id=${ghRelease.id}, tag=${ghRelease.tag_name}, published=${ghRelease.published_at}`
+      `Fetched release: id=${ghRelease.id}, tag=${ghRelease.tag_name}, name=${ghRelease.name}, published=${ghRelease.published_at}`
     );
+
+    const tagName = (ghRelease.tag_name || RELEASE_TAG || "").trim();
+    const version = (ghRelease.name || RELEASE_TAG || "").trim();
+
+    if (!version || !tagName) {
+      throw new Error(
+        `Invalid release payload: version="${version}", tagName="${tagName}". Both version and tagName are required.`
+      );
+    }
 
     const body = ghRelease.body || "";
 
@@ -449,26 +490,32 @@ async function syncRelease() {
 
     // 5. Build release payload
     const releasePayload = {
+      version,
+      tagName,
       releaseDate: new Date(ghRelease.published_at),
       githubReleaseId: ghRelease.id,
       githubReleaseUrl: ghRelease.html_url,
       entries: parsedEntries,
     };
 
-    // 6. Atomic upsert into MongoDB
-    log(`Upserting release version="${RELEASE_TAG}" into MongoDB...`);
+    // 6. Atomic upsert into MongoDB using { version }
+    log(
+      `Upserting release version="${version}" (tagName="${tagName}") into MongoDB...`
+    );
     const saved = await Release.findOneAndUpdate(
-      { version: RELEASE_TAG },
-      { $set: { version: RELEASE_TAG, ...releasePayload } },
+      { version },
+      { $set: releasePayload },
       { upsert: true, new: true, runValidators: true }
     );
 
     log(
-      `Successfully synced release "${RELEASE_TAG}" (MongoDB _id: ${saved._id}).`
+      `Successfully synced release "${version}" (tagName="${tagName}") (MongoDB _id: ${saved._id}).`
     );
   } finally {
-    await mongoose.connection.close();
-    log("MongoDB connection closed.");
+    if (process.env.NODE_ENV !== "test") {
+      await mongoose.connection.close();
+      log("MongoDB connection closed.");
+    }
   }
 }
 
