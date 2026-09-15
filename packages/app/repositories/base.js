@@ -56,9 +56,11 @@ class BaseRepository {
     return await document.save();
   }
 
-  async update(id, data, { session } = {}) {
-    const options = session ? { session } : {};
-    return await this.model.findByIdAndUpdate(id, data, options);
+  async update(id, data, options = {}) {
+    return await this.model.findByIdAndUpdate(id, data, {
+      new: true,
+      ...options,
+    });
   }
 
   async findOneAndUpdate(filter, update, { session } = {}) {

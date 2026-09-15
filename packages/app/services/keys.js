@@ -66,6 +66,35 @@ class KeyService {
   }
 
   /**
+   * Checks if there exists a publishable key matching value
+   * @param {string} publishableKey - publishable key string
+   * @returns {Promise<Object|null>} - Key document or null
+   **/
+  async getPublishableKey(publishableKey) {
+    const keyRef = await this.keyRepository.getPublishableKey(publishableKey);
+    return keyRef;
+  }
+
+  /**
+   * Gets a key document by ID.
+   * @param {string} keyId - The Key ID.
+   * @returns {Promise<Object|null>} - The key document or null.
+   */
+  async getKeyById(keyId) {
+    return await this.keyRepository.getById(keyId);
+  }
+
+  /**
+   * Updates a key document by ID.
+   * @param {string} keyId - The Key ID.
+   * @param {Object} updateData - Fields to update.
+   * @returns {Promise<Object|null>} - Updated key document.
+   */
+  async updateKey(keyId, updateData) {
+    return await this.keyRepository.update(keyId, updateData);
+  }
+
+  /**
    * Finds and updates keys associated with `keyId` that lack an `expires_at` property.
    * . Retrieves all keys for `keyId`.
    * . Filters for keys without an expiry time.

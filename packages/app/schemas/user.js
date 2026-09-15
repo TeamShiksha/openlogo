@@ -1,5 +1,14 @@
 const Joi = require("joi");
 const { isValidObjectId } = require("mongoose");
+const { KeyTypes } = require("../utils/constants");
+
+const originItemSchema = Joi.string()
+  .trim()
+  .uri({ scheme: [/https?/] })
+  .messages({
+    "string.uriCustomScheme": "Each origin must be a valid http or https URL",
+    "string.uri": "Each origin must be a valid URL",
+  });
 
 const destroyKeyPayloadSchema = Joi.object({
   keyId: Joi.string()
@@ -34,7 +43,65 @@ const generateKeyPayloadSchema = Joi.object().keys({
     "any.only": "Expiry must be one of 7, 30, 90, 180, 365 days",
     "any.required": "Expiry is required",
   }),
+  key_type: Joi.string()
+    .valid(KeyTypes.SECRET, KeyTypes.PUBLISHABLE)
+    .default(KeyTypes.SECRET)
+    .messages({
+      "any.only": "key_type must be SECRET or PUBLISHABLE",
+    }),
+  is_origin_restricted: Joi.boolean().default(false),
+  allowed_origins: Joi.array()
+    .items(originItemSchema)
+    .default([])
+    .when("is_origin_restricted", {
+      is: true,
+      then: Joi.array()
+        .items(originItemSchema)
+        .min(1)
+        .required()
+        .messages({
+          "array.min":
+            "At least one allowed origin is required when origin restriction is enabled",
+          "any.required":
+            "allowed_origins is required when origin restriction is enabled",
+        }),
+    }),
 });
+
+const updateKeyPayloadSchema = Joi.object()
+  .keys({
+    key_description: Joi.string()
+      .trim()
+      .max(20)
+      .regex(/^[a-zA-Z\s]*$/)
+      .messages({
+        "string.base": "Description must be a string",
+        "string.max": "Description must be 20 characters or fewer",
+        "string.pattern.base":
+          "Description must contain only alphabets and spaces",
+      }),
+    is_origin_restricted: Joi.boolean(),
+    allowed_origins: Joi.array()
+      .items(originItemSchema)
+      .when("is_origin_restricted", {
+        is: true,
+        then: Joi.array()
+          .items(originItemSchema)
+          .min(1)
+          .required()
+          .messages({
+            "array.min":
+              "At least one allowed origin is required when origin restriction is enabled",
+            "any.required":
+              "allowed_origins is required when origin restriction is enabled",
+          }),
+      }),
+    is_active: Joi.boolean(),
+  })
+  .min(1)
+  .messages({
+    "object.min": "At least one field must be provided to update",
+  });
 
 const logoRequestPyaloadSchema = Joi.object({
   user_id: Joi.string().trim().required().hex().length(24).messages({
@@ -87,5 +154,6 @@ module.exports = {
   logoRequestPyaloadSchema,
   destroyKeyPayloadSchema,
   generateKeyPayloadSchema,
+  updateKeyPayloadSchema,
   changeNameEmailSchema,
 };
