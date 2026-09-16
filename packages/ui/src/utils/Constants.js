@@ -460,6 +460,7 @@ export const BUTTON_TEXT = {
   sendMessage: "Send message",
   delete: "Delete",
   generateKey: "Generate Key",
+  generatePublishableKey: "Generate Publishable Key",
   requestLogo: "Request Logo",
   createLogo: "Create Logo",
   goToHome: "Go to Home",

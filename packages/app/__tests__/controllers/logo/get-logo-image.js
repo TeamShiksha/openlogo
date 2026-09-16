@@ -22,7 +22,7 @@ describe("getLogoImageController", () => {
     process.env.BUCKET_NAME = "test-bucket";
     process.env.BUCKET_KEY = "logos";
   });
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

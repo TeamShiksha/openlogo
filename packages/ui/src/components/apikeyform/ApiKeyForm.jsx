@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useApi } from "../../hooks/useApi.js";
 import { useToast } from "../../hooks/useToast.js";
 import {
@@ -295,6 +295,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
 
   const isValidOrigins =
     !isPublishable ||
+    !isOriginRestricted ||
     (activeOrigins.length > 0 &&
       activeOrigins.every((o) => originRegex.test(o)));
 
@@ -519,7 +520,9 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
             <line x1="12" y1="8" x2="12" y2="16"></line>
             <line x1="8" y1="12" x2="16" y2="12"></line>
           </svg>
-          {isPublishable ? "Generate Publishable Key" : BUTTON_TEXT.generateKey}
+          {isPublishable
+            ? BUTTON_TEXT.generatePublishableKey
+            : BUTTON_TEXT.generateKey}
         </Button>
 
         <Modal

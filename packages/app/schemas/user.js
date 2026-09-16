@@ -55,16 +55,12 @@ const generateKeyPayloadSchema = Joi.object().keys({
     .default([])
     .when("is_origin_restricted", {
       is: true,
-      then: Joi.array()
-        .items(originItemSchema)
-        .min(1)
-        .required()
-        .messages({
-          "array.min":
-            "At least one allowed origin is required when origin restriction is enabled",
-          "any.required":
-            "allowed_origins is required when origin restriction is enabled",
-        }),
+      then: Joi.array().items(originItemSchema).min(1).required().messages({
+        "array.min":
+          "At least one allowed origin is required when origin restriction is enabled",
+        "any.required":
+          "allowed_origins is required when origin restriction is enabled",
+      }),
     }),
 });
 
@@ -85,16 +81,12 @@ const updateKeyPayloadSchema = Joi.object()
       .items(originItemSchema)
       .when("is_origin_restricted", {
         is: true,
-        then: Joi.array()
-          .items(originItemSchema)
-          .min(1)
-          .required()
-          .messages({
-            "array.min":
-              "At least one allowed origin is required when origin restriction is enabled",
-            "any.required":
-              "allowed_origins is required when origin restriction is enabled",
-          }),
+        then: Joi.array().items(originItemSchema).min(1).required().messages({
+          "array.min":
+            "At least one allowed origin is required when origin restriction is enabled",
+          "any.required":
+            "allowed_origins is required when origin restriction is enabled",
+        }),
       }),
     is_active: Joi.boolean(),
   })

@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Keys = require("../../models/keys");
 const { KeyTypes } = require("../../utils/constants");
 
