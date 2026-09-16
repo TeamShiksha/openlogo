@@ -144,4 +144,69 @@ describe("KeyService", () => {
     const result = await keyService.getApiKey("non-existent-key");
     expect(result).toBeNull();
   });
+
+  it("should return key if publishableKey exists", async () => {
+    const publishableKey = "pk_12345";
+    const mockKey = {
+      _id: "key_id_123",
+      publishable_key: publishableKey,
+      key_type: "PUBLISHABLE",
+      allowed_origins: ["https://example.com"],
+      is_active: true,
+    };
+
+    jest
+      .spyOn(KeysRepository.prototype, "getPublishableKey")
+      .mockResolvedValue(mockKey);
+
+    const result = await keyService.getPublishableKey(publishableKey);
+    expect(result.publishable_key).toBe(publishableKey);
+    expect(result.key_type).toBe("PUBLISHABLE");
+  });
+
+  it("should return null if publishableKey does not exist", async () => {
+    jest
+      .spyOn(KeysRepository.prototype, "getPublishableKey")
+      .mockResolvedValue(null);
+
+    const result = await keyService.getPublishableKey("non-existent-pk");
+    expect(result).toBeNull();
+  });
+
+  it("should get key by ID", async () => {
+    const mockKey = {
+      _id: "key_id_123",
+      key_type: "PUBLISHABLE",
+      is_origin_restricted: false,
+    };
+    jest.spyOn(KeysRepository.prototype, "getById").mockResolvedValue(mockKey);
+
+    const result = await keyService.getKeyById("key_id_123");
+    expect(result).toEqual(mockKey);
+  });
+
+  it("should update key and return freshly updated document", async () => {
+    const updatedKey = {
+      _id: "key_id_123",
+      key_type: "PUBLISHABLE",
+      is_origin_restricted: true,
+      allowed_origins: ["https://example.com"],
+    };
+    jest
+      .spyOn(KeysRepository.prototype, "update")
+      .mockResolvedValue(updatedKey);
+
+    const result = await keyService.updateKey("key_id_123", {
+      is_origin_restricted: true,
+      allowed_origins: ["https://example.com"],
+    });
+    expect(result).toEqual(updatedKey);
+    expect(KeysRepository.prototype.update).toHaveBeenCalledWith(
+      "key_id_123",
+      {
+        is_origin_restricted: true,
+        allowed_origins: ["https://example.com"],
+      }
+    );
+  });
 });

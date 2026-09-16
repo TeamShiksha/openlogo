@@ -17,6 +17,11 @@ const subscriptionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  publishable_key_limit: {
+    type: Number,
+    required: true,
+    default: 2,
+  },
   usage_limit: {
     type: Number,
     required: true,
@@ -43,6 +48,7 @@ subscriptionSchema.statics.NewSubscription = function () {
   return {
     subscriptionType: SubscriptionTypes.HOBBY,
     key_limit: 2,
+    publishable_key_limit: 2,
     usage_limit: 500,
     usage_count: 0,
     is_active: false,
@@ -55,6 +61,7 @@ subscriptionSchema.methods.data = function () {
     _id: this._id,
     type: this.type,
     key_limit: this.key_limit,
+    publishable_key_limit: this.publishable_key_limit ?? 2,
     usage_limit: this.usage_limit,
     usage_count: this.usage_count,
     is_active: this.is_active,

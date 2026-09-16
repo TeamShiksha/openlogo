@@ -331,4 +331,77 @@ describe("User Service", () => {
     expect(result.users).toEqual([]);
     expect(result.total).toBe(0);
   });
+
+  describe("updateUserKey", () => {
+    it("should return null if user does not own the key", async () => {
+      const mockUser = {
+        _id: "user_123",
+        keys: ["key_456"],
+      };
+      const result = await userService.updateUserKey(
+        "key_789",
+        { is_origin_restricted: true },
+        mockUser
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should return null if key does not exist", async () => {
+      const mockUser = {
+        _id: "user_123",
+        keys: ["key_123"],
+      };
+      jest.spyOn(KeyService.prototype, "getKeyById").mockResolvedValue(null);
+
+      const result = await userService.updateUserKey(
+        "key_123",
+        { is_origin_restricted: true },
+        mockUser
+      );
+      expect(result).toBeNull();
+    });
+
+    it("should update and return the key when owned and existing", async () => {
+      const mockUser = {
+        _id: "user_123",
+        keys: ["key_123"],
+      };
+      const existingKey = {
+        _id: "key_123",
+        key_type: "PUBLISHABLE",
+        is_origin_restricted: false,
+      };
+      const updatedKey = {
+        _id: "key_123",
+        key_type: "PUBLISHABLE",
+        is_origin_restricted: true,
+        allowed_origins: ["https://example.com"],
+      };
+
+      jest
+        .spyOn(KeyService.prototype, "getKeyById")
+        .mockResolvedValue(existingKey);
+      jest
+        .spyOn(KeyService.prototype, "updateKey")
+        .mockResolvedValue(updatedKey);
+
+      const result = await userService.updateUserKey(
+        "key_123",
+        {
+          is_origin_restricted: true,
+          allowed_origins: ["https://example.com"],
+        },
+        mockUser
+      );
+
+      expect(result).toEqual(updatedKey);
+      expect(KeyService.prototype.updateKey).toHaveBeenCalledWith(
+        "key_123",
+        expect.objectContaining({
+          is_origin_restricted: true,
+          allowed_origins: ["https://example.com"],
+        })
+      );
+    });
+  });
 });

@@ -176,4 +176,24 @@ describe("Image Service", () => {
     expect(result).toBe(image);
     expect(result.company_name).toBe(image.company_name);
   });
+
+  it("should return image stream from S3", async () => {
+    const mockImage = {
+      company_name: "GOOGLE",
+      extension: "png",
+      image_size: 2048,
+    };
+
+    const mockBody = "mock-stream-content";
+    jest.spyOn(imageService.s3, "send").mockResolvedValue({
+      Body: mockBody,
+      ContentType: "image/png",
+      ContentLength: 2048,
+    });
+
+    const result = await imageService.getImageStream(mockImage);
+    expect(result.stream).toBe(mockBody);
+    expect(result.contentType).toBe("image/png");
+    expect(result.contentLength).toBe(2048);
+  });
 });
