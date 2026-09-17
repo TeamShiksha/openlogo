@@ -195,78 +195,84 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
     }
   };
 
-  const handleGenerateKey = async (e) => {
-    e.preventDefault();
-    if (!description.trim()) {
-      toast.error(
-        isPublishable
-          ? PUBLISHABLE_KEY.generation.descriptionRequired
-          : API_KEY.generation.descriptionRequired
-      );
-      return;
+  const validateDescription = (desc, isPub) => {
+    const trimmed = desc.trim();
+    if (!trimmed) {
+      const msg = isPub
+        ? PUBLISHABLE_KEY.generation.descriptionRequired
+        : API_KEY.generation.descriptionRequired;
+      toast.error(msg);
+      return false;
     }
-    const validationErrors = validate({ description });
+
+    const validationErrors = validate({ description: desc });
     if (validationErrors.description) {
       setFormErrors({ apikey: validationErrors.description });
+      return false;
+    }
+
+    return true;
+  };
+
+  const resolveOrigins = (currentOrigins, rawInput) => {
+    const extra = rawInput.trim().replace(/^,+|,+$/g, "");
+    if (!extra) return [...currentOrigins];
+    if (currentOrigins.includes(extra)) return null; // indicates duplicate
+    return [...currentOrigins, extra];
+  };
+
+  const validateAllowedOrigins = (currentOrigins, rawInput) => {
+    const originsList = resolveOrigins(currentOrigins, rawInput);
+    const keyErrors = PUBLISHABLE_KEY.generation;
+
+    const fail = (message) => {
+      toast.error(message);
+      setFormErrors((prev) => ({ ...prev, allowedOrigins: message }));
+      return false;
+    };
+
+    if (!originsList || new Set(originsList).size !== originsList.length) {
+      return fail(keyErrors.duplicateOrigin);
+    }
+    if (originsList.length === 0) {
+      return fail(keyErrors.originRequired);
+    }
+    if (!originsList.every((o) => originRegex.test(o))) {
+      return fail(keyErrors.invalidOrigin);
+    }
+
+    return true;
+  };
+
+  const resetFormState = (isPub) => {
+    setShowApiKeyModal(true);
+    setDescription("");
+    setOrigins([]);
+    setOriginInputText("");
+    setIsOriginRestricted(true);
+    setFormErrors({});
+    setFocusedField(null);
+    toast.success(
+      isPub ? PUBLISHABLE_KEY.generation.success : API_KEY.generation.success
+    );
+  };
+
+  const handleGenerateKey = async (e) => {
+    e.preventDefault();
+
+    if (!validateDescription(description, isPublishable)) {
       return;
     }
 
     if (isPublishable && isOriginRestricted) {
-      let finalOrigins = [...origins];
-      if (originInputText.trim()) {
-        const extra = originInputText.trim().replace(/^,+|,+$/g, "");
-        if (extra) {
-          if (finalOrigins.includes(extra)) {
-            toast.error(PUBLISHABLE_KEY.generation.duplicateOrigin);
-            setFormErrors((prev) => ({
-              ...prev,
-              allowedOrigins: PUBLISHABLE_KEY.generation.duplicateOrigin,
-            }));
-            return;
-          }
-          finalOrigins.push(extra);
-        }
-      }
-      if (finalOrigins.length === 0) {
-        toast.error(PUBLISHABLE_KEY.generation.originRequired);
-        setFormErrors((prev) => ({
-          ...prev,
-          allowedOrigins: PUBLISHABLE_KEY.generation.originRequired,
-        }));
-        return;
-      }
-      if (new Set(finalOrigins).size !== finalOrigins.length) {
-        toast.error(PUBLISHABLE_KEY.generation.duplicateOrigin);
-        setFormErrors((prev) => ({
-          ...prev,
-          allowedOrigins: PUBLISHABLE_KEY.generation.duplicateOrigin,
-        }));
-        return;
-      }
-      if (!finalOrigins.every((o) => originRegex.test(o))) {
-        toast.error(PUBLISHABLE_KEY.generation.invalidOrigin);
-        setFormErrors((prev) => ({
-          ...prev,
-          allowedOrigins: PUBLISHABLE_KEY.generation.invalidOrigin,
-        }));
+      if (!validateAllowedOrigins(origins, originInputText)) {
         return;
       }
     }
 
     const success = await makeRequest();
     if (success) {
-      setShowApiKeyModal(true);
-      setDescription("");
-      setOrigins([]);
-      setOriginInputText("");
-      setIsOriginRestricted(true);
-      setFormErrors({});
-      setFocusedField(null);
-      toast.success(
-        isPublishable
-          ? PUBLISHABLE_KEY.generation.success
-          : API_KEY.generation.success
-      );
+      resetFormState(isPublishable);
     }
   };
 
