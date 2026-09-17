@@ -69,6 +69,7 @@ class SubscriptionService {
     const update = {
       type: planTemplate.type,
       key_limit: planTemplate.key_limit,
+      publishable_key_limit: planTemplate.publishable_key_limit ?? 2,
       usage_limit: planTemplate.usage_limit,
       is_active: planTemplate.is_active,
       updated_at: new Date(),

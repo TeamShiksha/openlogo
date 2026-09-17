@@ -6,6 +6,7 @@ const {
   deleteUserAccountController,
   generateKeyController,
   destroyKeyController,
+  updateKeyController,
   updatePasswordController,
   logoRequestController,
   updateOldKeysController,
@@ -16,6 +17,7 @@ router.get("/me", authMiddleware(), getUserDataController);
 router.patch("/me", authMiddleware(), updateProfileController);
 router.delete("/me", authMiddleware(), deleteUserAccountController);
 router.post("/api-key", authMiddleware(), generateKeyController);
+router.patch("/api-key/:keyId", authMiddleware(), updateKeyController);
 router.delete("/api-key/:keyId", authMiddleware(), destroyKeyController);
 router.put("/password", authMiddleware(), updatePasswordController);
 router.post("/request", authMiddleware(), logoRequestController);

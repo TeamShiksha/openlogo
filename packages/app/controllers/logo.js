@@ -9,6 +9,7 @@ const {
   getLogoQuerySchema,
   getSearchQuerySchema,
   getDemoSearchQuerySchema,
+  getLogoImageQuerySchema,
 } = require("../schemas/catalog");
 const { Messages } = require("../utils/constants");
 
@@ -219,8 +220,164 @@ async function demoSearchLogoController(req, res, next) {
   }
 }
 
+/**
+ * Handles public direct logo image retrieval via publishable key and exact origin validation.
+ * Streams binary image payload directly to client with appropriate CORS and Content-Type headers.
+ */
+async function getLogoImageController(req, res, next) {
+  try {
+    const imageService = new ImageService();
+    const keyService = new KeyService();
+    const subscriptionService = new SubscriptionService();
+    const userService = new UserService();
+
+    if (!req.query.PUBLISHABLE_KEY) {
+      return res.status(401).json({
+        message: Messages.INVALID_PUBLISHABLE_KEY,
+        statusCode: 401,
+        error: STATUS_CODES[401],
+      });
+    }
+
+    const { error, value } = getLogoImageQuerySchema.validate(req.query);
+    if (error) {
+      return res.status(422).json({
+        message: error.message,
+        statusCode: 422,
+        error: STATUS_CODES[422],
+      });
+    }
+    const { company, PUBLISHABLE_KEY } = value;
+
+    const keyRef = await keyService.getPublishableKey(PUBLISHABLE_KEY);
+    if (!keyRef || keyRef.is_active === false) {
+      return res.status(401).json({
+        message: Messages.INVALID_PUBLISHABLE_KEY,
+        statusCode: 401,
+        error: STATUS_CODES[401],
+      });
+    }
+
+    if (keyRef.expires_at && new Date() > new Date(keyRef.expires_at)) {
+      return res.status(401).json({
+        message: Messages.API_KEY_EXPIRED,
+        statusCode: 401,
+        error: STATUS_CODES[401],
+      });
+    }
+
+    // Origin validation
+    const requestOrigin = req.headers.origin || req.get("origin");
+    const normalizedRequestOrigin =
+      requestOrigin && typeof requestOrigin === "string"
+        ? requestOrigin.trim().replace(/\/+$/, "")
+        : null;
+
+    if (keyRef.is_origin_restricted) {
+      if (!normalizedRequestOrigin) {
+        return res.status(403).json({
+          message: Messages.ORIGIN_NOT_ALLOWED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
+
+      const allowedOrigins = Array.isArray(keyRef.allowed_origins)
+        ? keyRef.allowed_origins
+        : [];
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (!allowed || typeof allowed !== "string") return false;
+        return normalizedRequestOrigin === allowed.trim().replace(/\/+$/, "");
+      });
+
+      if (!isAllowed) {
+        return res.status(403).json({
+          message: Messages.ORIGIN_NOT_ALLOWED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
+    }
+
+    let userSubscription = null;
+    if (keyRef.subscription_id) {
+      userSubscription = await subscriptionService.getSubscription(
+        keyRef.subscription_id
+      );
+      if (
+        userSubscription &&
+        userSubscription.usage_count >= userSubscription.usage_limit
+      ) {
+        return res.status(403).json({
+          message: Messages.LIMIT_REACHED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
+    }
+
+    const imageDoc = await imageService.getImageByCompanyName(company);
+    if (!imageDoc) {
+      return res.status(404).json({
+        message: Messages.LOGO_NOT_FOUND,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    let imageStreamResult;
+    try {
+      imageStreamResult = await imageService.getImageStream(imageDoc);
+    } catch (streamErr) {
+      console.error(
+        "Failed to retrieve image from storage:",
+        streamErr.message
+      );
+      return res.status(404).json({
+        message: Messages.LOGO_NOT_FOUND,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    if (userSubscription) {
+      userService
+        .logLogoRequestEntry(company, userSubscription, keyRef)
+        .catch((err) => {
+          console.error("Failed to log logo request entry:", err.message);
+        });
+
+      subscriptionService.incrementUsageCount(userSubscription).catch((err) => {
+        console.error("Failed to increment usage count:", err.message);
+      });
+    }
+
+    res.setHeader("Content-Type", imageStreamResult.contentType);
+    if (normalizedRequestOrigin) {
+      res.setHeader("Access-Control-Allow-Origin", normalizedRequestOrigin);
+    }
+    res.setHeader("Vary", "Origin");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    if (imageStreamResult.contentLength) {
+      res.setHeader("Content-Length", imageStreamResult.contentLength);
+    }
+
+    if (
+      imageStreamResult.stream &&
+      typeof imageStreamResult.stream.pipe === "function"
+    ) {
+      return imageStreamResult.stream.pipe(res);
+    } else {
+      return res.status(200).send(imageStreamResult.stream);
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getLogoController,
   searchLogoController,
   demoSearchLogoController,
+  getLogoImageController,
 };
