@@ -128,6 +128,7 @@ describe("GETUSERDATA", () => {
         is_active: mockSubscriptionModel.is_active,
         usage_limit: mockSubscriptionModel.usage_limit,
         key_limit: mockSubscriptionModel.key_limit,
+        publishable_key_limit: mockSubscriptionModel.publishable_key_limit,
         usage_count: mockSubscriptionModel.usage_count,
         type: mockSubscriptionModel.type,
         updated_at: mockSubscriptionModel.updated_at.toISOString(),
@@ -141,5 +142,48 @@ describe("GETUSERDATA", () => {
         },
       ],
     });
+  });
+
+  it("200 - Returns publishable key with persisted is_origin_restricted and allowed_origins", async () => {
+    const mockUserModel = new Users(MOCK_USERS[1]);
+    const mockSubscriptionModel = new Subscriptions(MOCK_SUBSCRIPTION[0]);
+    jest
+      .spyOn(UserSessionService.prototype, "validateSession")
+      .mockResolvedValue(MOCK_USER_SESSIONS[0]);
+    jest
+      .spyOn(UserService.prototype, "getUser")
+      .mockResolvedValue(mockUserModel);
+    jest
+      .spyOn(SubscriptionService.prototype, "getSubscription")
+      .mockResolvedValue(mockSubscriptionModel);
+    jest.spyOn(KeyService.prototype, "getAllUserKeys").mockResolvedValue([
+      {
+        _id: "6826d68a0fbea0d79998ef44",
+        key_description: "Frontend Key",
+        subscription_id: mockSubscriptionModel._id.toString(),
+        key_type: "PUBLISHABLE",
+        publishable_key: "pk_abcdef123456",
+        is_origin_restricted: true,
+        allowed_origins: ["https://example.com"],
+        is_active: true,
+        created_at: "2026-09-01T00:00:00.000Z",
+        updated_at: "2026-09-06T00:00:00.000Z",
+        expires_at: "2026-12-01T00:00:00.000Z",
+      },
+    ]);
+
+    const response = await request(app)
+      .get("/api/user/me")
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.keys[0]).toEqual(
+      expect.objectContaining({
+        key_type: "PUBLISHABLE",
+        publishable_key: "pk_abcdef123456",
+        is_origin_restricted: true,
+        allowed_origins: ["https://example.com"],
+      })
+    );
   });
 });

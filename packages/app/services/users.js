@@ -113,18 +113,57 @@ class UserService {
    * @throws {Error} - Throws an error if the key creation or user update fails.
    */
   async createNewUserKey(newKey, user) {
-    const { key_description, subscription_id, expires_at } = newKey;
+    const {
+      key_description,
+      subscription_id,
+      expires_at,
+      key_type,
+      is_origin_restricted,
+      allowed_origins,
+    } = newKey;
     const keyValidity = expires_at;
     const today = new Date();
     const keyExpiry = today.setDate(today.getDate() + keyValidity);
-    const newUserKey = await this.keyService.createNewKey({
-      key_description: key_description,
-      subscription_id: subscription_id,
+    const keyPayload = {
+      key_description,
+      subscription_id,
       expires_at: keyExpiry,
-    });
+    };
+    if (key_type) keyPayload.key_type = key_type;
+    if (typeof is_origin_restricted === "boolean") {
+      keyPayload.is_origin_restricted = is_origin_restricted;
+    }
+    if (Array.isArray(allowed_origins)) {
+      keyPayload.allowed_origins = allowed_origins;
+    }
+
+    const newUserKey = await this.keyService.createNewKey(keyPayload);
     user.keys.push(newUserKey._id);
     await user.save();
     return newUserKey;
+  }
+
+  /**
+   * Updates a user key after verifying ownership.
+   * @param {string} keyId - The key ID to update.
+   * @param {Object} updateData - Fields to update.
+   * @param {Object} user - The user object.
+   * @returns {Promise<Object|null>} - The updated key or null if not found/not owned.
+   */
+  async updateUserKey(keyId, updateData, user) {
+    const isOwner = user.keys.some((k) => k.toString() === keyId.toString());
+    if (!isOwner) {
+      return null;
+    }
+    const existingKey = await this.keyService.getKeyById(keyId);
+    if (!existingKey) {
+      return null;
+    }
+    const updatedKey = await this.keyService.updateKey(keyId, {
+      ...updateData,
+      updated_at: Date.now(),
+    });
+    return updatedKey;
   }
 
   /**
