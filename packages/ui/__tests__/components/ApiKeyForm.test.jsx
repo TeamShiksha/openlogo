@@ -11,13 +11,18 @@ const mockApiData = {
   },
 };
 
+let capturedUseApiParams = null;
+
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: () => ({
-    makeRequest: mockedMakeRequest,
-    data: mockApiData,
-    loading: false,
-    errorMsg: null,
-  }),
+  useApi: (params) => {
+    capturedUseApiParams = params;
+    return {
+      makeRequest: mockedMakeRequest,
+      data: mockApiData,
+      loading: false,
+      errorMsg: null,
+    };
+  },
 }));
 
 const mockToast = {
@@ -402,5 +407,19 @@ describe("ApiKeyForm Component", () => {
     expect(mockToast.error).toHaveBeenCalledWith(
       "Duplicate origins are not allowed"
     );
+  });
+
+  it("does not include is_active in create payload when keyType is PUBLISHABLE", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    expect(capturedUseApiParams.data).not.toHaveProperty("is_active");
+    expect(capturedUseApiParams.data.key_type).toBe("PUBLISHABLE");
+  });
+
+  it("does not include is_active in create payload when keyType is SECRET", () => {
+    renderApiKeyForm({ keyType: "SECRET" });
+
+    expect(capturedUseApiParams.data).not.toHaveProperty("is_active");
+    expect(capturedUseApiParams.data.key_type).toBe("SECRET");
   });
 });

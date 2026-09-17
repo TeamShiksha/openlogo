@@ -39,5 +39,22 @@ describe("Keys Model", () => {
     expect(data.publishable_key).toBe(keyDoc.publishable_key);
     expect(data.publishable_key).toMatch(/^pk_[a-f0-9]{32}$/);
     expect(data.key_type).toBe(KeyTypes.PUBLISHABLE);
+    expect(data.is_active).toBe(true);
+  });
+
+  it("should default is_active to true for newly created keys", () => {
+    const pubKeyDoc = new Keys({
+      key_type: KeyTypes.PUBLISHABLE,
+      key_description: "Frontend Test Key",
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    expect(pubKeyDoc.is_active).toBe(true);
+
+    const secretKeyDoc = new Keys({
+      key_type: KeyTypes.SECRET,
+      key_description: "Backend Secret Key",
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    expect(secretKeyDoc.is_active).toBe(true);
   });
 });

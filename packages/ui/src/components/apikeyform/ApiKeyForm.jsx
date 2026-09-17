@@ -31,7 +31,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   const [focusedField, setFocusedField] = useState(null);
   const [copyMessage, setCopyMessage] = useState("");
   const [expiresInDays, setExpiresInDays] = useState(365);
-  const [isActive, setIsActive] = useState(true);
   const [isOriginRestricted, setIsOriginRestricted] = useState(true);
   const toast = useToast();
 
@@ -62,7 +61,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
         ? {
             allowed_origins: isOriginRestricted ? activeOrigins : [],
             is_origin_restricted: isOriginRestricted,
-            is_active: isActive,
           }
         : {}),
     },
@@ -261,7 +259,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
       setDescription("");
       setOrigins([]);
       setOriginInputText("");
-      setIsActive(true);
       setIsOriginRestricted(true);
       setFormErrors({});
       setFocusedField(null);
