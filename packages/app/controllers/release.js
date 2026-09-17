@@ -55,6 +55,24 @@ async function getReleasesController(req, res, next) {
   }
 }
 
+/**
+ * GET /api/releases/versions → lightweight list of all available releases
+ */
+async function getReleaseVersionsController(req, res, next) {
+  try {
+    const releaseService = new ReleaseService();
+    const versions = await releaseService.getReleaseVersions();
+
+    return res.status(200).json({
+      statusCode: 200,
+      data: versions,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getReleasesController,
+  getReleaseVersionsController,
 };

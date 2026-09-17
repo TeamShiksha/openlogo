@@ -56,6 +56,18 @@ class ReleaseRepository extends BaseRepository {
       totalPages: Math.ceil(total / limit),
     };
   }
+
+  /**
+   * Return a lightweight list of all releases containing only version and releaseDate in reverse-chronological order.
+   * @returns {Promise<Array<{ version: string, releaseDate: Date }>>}
+   */
+  async getAllVersions() {
+    return await this.model
+      .find({})
+      .sort({ releaseDate: -1 })
+      .select("version releaseDate -_id")
+      .lean();
+  }
 }
 
 module.exports = ReleaseRepository;

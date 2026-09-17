@@ -164,4 +164,34 @@ describe("ReleaseRepository", () => {
       expect(page2.data[0].version).toBe("v1.0.0-p");
     });
   });
+
+  describe("getAllVersions", () => {
+    it("returns version and releaseDate only, sorted in reverse chronological order", async () => {
+      await Release.create([
+        {
+          version: "0.7.0",
+          tagName: "0.7.0",
+          releaseDate: new Date("2026-03-20T00:00:00.000Z"),
+          githubReleaseId: 501,
+          githubReleaseUrl: "https://github.com/org/repo/releases/tag/0.7.0",
+          entries: [],
+        },
+        {
+          version: "0.8.0",
+          tagName: "0.8.0",
+          releaseDate: new Date("2026-05-15T00:00:00.000Z"),
+          githubReleaseId: 502,
+          githubReleaseUrl: "https://github.com/org/repo/releases/tag/0.8.0",
+          entries: [],
+        },
+      ]);
+
+      const result = await repository.getAllVersions();
+      expect(result).toHaveLength(2);
+      expect(result[0].version).toBe("0.8.0");
+      expect(result[1].version).toBe("0.7.0");
+      expect(result[0]._id).toBeUndefined();
+      expect(result[0].githubReleaseId).toBeUndefined();
+    });
+  });
 });

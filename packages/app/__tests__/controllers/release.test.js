@@ -9,14 +9,17 @@ jest.mock("../../services/release");
 describe("Releases Controller & Routes (/api/releases)", () => {
   let mockGetAllReleases;
   let mockGetReleaseByVersion;
+  let mockGetReleaseVersions;
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetAllReleases = jest.fn();
     mockGetReleaseByVersion = jest.fn();
+    mockGetReleaseVersions = jest.fn();
 
     ReleaseService.prototype.getAllReleases = mockGetAllReleases;
     ReleaseService.prototype.getReleaseByVersion = mockGetReleaseByVersion;
+    ReleaseService.prototype.getReleaseVersions = mockGetReleaseVersions;
   });
 
   describe("GET /api/releases", () => {
@@ -121,6 +124,32 @@ describe("Releases Controller & Routes (/api/releases)", () => {
         error: "Not Found",
         message: "Release v9.9.9 not found.",
       });
+    });
+  });
+
+  describe("GET /api/releases/versions", () => {
+    it("returns 200 with lightweight list of versions", async () => {
+      const versionsData = [
+        {
+          version: "0.8.0",
+          releaseDate: "2026-05-15T00:00:00.000Z",
+        },
+        {
+          version: "0.7.0",
+          releaseDate: "2026-03-20T00:00:00.000Z",
+        },
+      ];
+
+      mockGetReleaseVersions.mockResolvedValue(versionsData);
+
+      const res = await request(app).get("/api/releases/versions");
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        statusCode: 200,
+        data: versionsData,
+      });
+      expect(mockGetReleaseVersions).toHaveBeenCalled();
     });
   });
 });

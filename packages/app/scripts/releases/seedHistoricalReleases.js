@@ -14,6 +14,7 @@
 
 "use strict";
 
+require("dotenv").config();
 const mongoose = require("mongoose");
 const Release = require("../../models/release");
 const historicalReleases = require("./historicalReleasesData");

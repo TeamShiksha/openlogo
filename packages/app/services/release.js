@@ -31,6 +31,14 @@ class ReleaseService {
   async getReleaseByVersion(version) {
     return await this.releaseRepository.findByVersion(version);
   }
+
+  /**
+   * Returns a lightweight list of all releases (version & releaseDate only) in reverse-chronological order.
+   * @returns {Promise<Array<{ version: string, releaseDate: Date }>>}
+   */
+  async getReleaseVersions() {
+    return await this.releaseRepository.getAllVersions();
+  }
 }
 
 module.exports = ReleaseService;

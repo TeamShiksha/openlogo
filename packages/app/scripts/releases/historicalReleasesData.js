@@ -83,43 +83,49 @@ const historicalReleases = [
         category: "Bug Fix",
         prNumber: 339,
         title: "Navigation links scroll to top on click",
-        description: "",
+        description:
+          "Fixes page navigation behavior by automatically scrolling to the top whenever the route changes.",
         contributors: [{ username: "Asin-Junior-Honore" }],
       },
       {
         category: "Feature",
         prNumber: 344,
         title: "Show confirmation modal on click of delete API key button",
-        description: "",
+        description:
+          "Adds a confirmation modal before deleting an API key, allowing users to confirm or cancel the deletion.",
         contributors: [{ username: "anandbaraik" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 345,
         title: "Migrate database from Firestore to MongoDB",
-        description: "",
+        description:
+          "Migrates the application's database and services from Firestore to MongoDB, removes Firebase dependencies, updates the data models and services, and adds MongoDB setup documentation.",
         contributors: [{ username: "amankumarsingh77" }],
       },
       {
         category: "Enhancement",
         prNumber: 350,
         title: "Made usageCount functional",
-        description: "",
+        description:
+          "Makes subscription usage tracking functional by maintaining usageCount, enforcing API usage limits, and displaying usage data from the subscription on the user dashboard.",
         contributors: [{ username: "amankumarsingh77" }],
       },
       {
         category: "Feature",
         prNumber: 347,
         title: "One-time API Key View/Copy",
-        description: "",
+        description:
+          "Changes API key handling so the generated key is displayed and available for copying only once, while removing stored API key values from subsequent dashboard responses.",
         contributors: [{ username: "Sharathxct" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 358,
         title:
           "Add Automated Script to Reset Subscription Usage Count Every 30 Days",
-        description: "",
+        description:
+          "Adds a scheduled GitHub Actions workflow and MongoDB script that automatically resets subscription usage counts every 30 days based on the subscription creation date.",
         contributors: [{ username: "DeltaDynamo" }],
       },
       {
@@ -127,49 +133,56 @@ const historicalReleases = [
         prNumber: 360,
         title:
           "NaN in usageCount on user dashboard and remove duplicate userId in API response",
-        description: "",
+        description:
+          "Fixes usageCount displaying as NaN on the user dashboard and removes duplicated user information from key and subscription API responses.",
         contributors: [{ username: "amankumarsingh77" }],
       },
       {
         category: "Bug Fix",
         prNumber: 363,
         title: "Reset and forget password API",
-        description: "",
+        description:
+          "Fixes the reset and forgot password APIs by correctly deriving the user ID from the MongoDB user record and storing it in the reset-password session token.",
         contributors: [{ username: "amankumarsingh77" }],
       },
       {
         category: "Feature",
         prNumber: 365,
         title: "Admin Image Re-upload with Name & Extension Verification",
-        description: "",
+        description:
+          "Adds image re-upload functionality to the admin dashboard, allowing existing images to be replaced while enforcing matching image names and file extensions.",
         contributors: [{ username: "Soumava-221B" }],
       },
       {
         category: "Feature",
         prNumber: 357,
         title: "Operator UI + APIs",
-        description: "",
+        description:
+          "Adds an operator interface with APIs for viewing customer queries, paginating results, and sending responses back to customers.",
         contributors: [{ username: "asharma991" }],
       },
       {
         category: "Feature",
         prNumber: 366,
         title: "Logo Search API",
-        description: "",
+        description:
+          "Adds public and API-key-protected logo search endpoints that return logo URLs based on domain-name prefixes, with validation and test coverage.",
         contributors: [{ username: "DeltaDynamo" }],
       },
       {
         category: "Other",
         prNumber: 376,
         title: "Updates client test cases from Jest to Vitest",
-        description: "",
+        description:
+          "Migrates the client-side test suite from Jest to Vitest and updates test mocks, assertions, dependencies, and configuration for the new test runner.",
         contributors: [{ username: "Ayushsanjdev" }],
       },
       {
         category: "Enhancement",
         prNumber: 373,
         title: "Footer, Sign-in Card, and About Section UI Improvements",
-        description: "",
+        description:
+          "Improves the footer, sign-in form layout, and About page by reorganizing navigation elements, repositioning the forgot-password link, and restructuring content into cards.",
         contributors: [{ username: "AryaDharkar" }],
       },
     ],
@@ -185,220 +198,251 @@ const historicalReleases = [
 
     entries: [
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 389,
-        title: "First Contribution",
-        description: "",
+        title: "Add Repository Layer for Models",
+        description:
+          "Introduces a reusable BaseRepository with model-specific repositories for common database operations. Also adds user-specific key lookup support.",
         contributors: [{ username: "sujal111" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 397,
-        title: "First Contribution",
-        description: "",
+        title: "Add Documentation and Other Templates",
+        description:
+          "Adds dedicated GitHub issue templates for documentation and other issues, making reports easier to structure and classify.",
         contributors: [{ username: "ayush19sinha" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 413,
-        title: "First Contribution",
-        description: "",
+        title: "Add API Demo Section",
+        description:
+          "Adds a redesigned API demo section to the landing page with search-driven interaction and responsive styling.",
         contributors: [{ username: "Katsuya21" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 415,
-        title: "First Contribution",
-        description: "",
+        title: "Add Responsive Pricing Section",
+        description:
+          "Introduces a responsive pricing section with plan cards, key benefits, pricing details, and mobile-friendly layouts.",
         contributors: [{ username: "Hariom01010" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 448,
-        title: "First Contribution",
-        description: "",
+        title: "Add Site Footer Component",
+        description:
+          "Adds a responsive footer with navigation links, OpenLogo branding, copyright information, and TeamShiksha attribution.",
         contributors: [{ username: "001AM" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 462,
-        title: "First Contribution",
-        description: "",
+        title: "Refine Features Section Layout",
+        description:
+          "Updates the Features section spacing, typography, icon styling, and responsive behavior to better match the landing-page design.",
         contributors: [{ username: "abhishek-2k23" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 456,
-        title: "First Contribution",
-        description: "",
+        title: "Update Pricing Section UI",
+        description:
+          "Updates pricing cards with rupee pricing, new plan labels, improved styling, a pricing route, and homepage placement.",
         contributors: [{ username: "Chandanadsc" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 463,
-        title: "First Contribution",
-        description: "",
+        title: "Add Contact Form Modal",
+        description:
+          "Introduces a Get In Touch modal with name, email, and message fields, validation, success feedback, and responsive styling.",
         contributors: [{ username: "akshayaparida" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 450,
-        title: "First Contribution",
-        description: "",
+        title: "Add Signup Authentication Form",
+        description:
+          "Adds a responsive signup modal with input validation and backend API integration for account creation.",
         contributors: [{ username: "Ruchita3429" }],
       },
       {
-        category: "Other",
+        category: "Bug Fix",
         prNumber: 495,
-        title: "First Contribution",
-        description: "",
+        title: "Fix Get In Touch Overlay",
+        description:
+          "Fixes the Get In Touch dialog overlay by making the dialog position fixed so the modal displays correctly.",
         contributors: [{ username: "mridxl" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 515,
-        title: "First Contribution",
-        description: "",
+        title: "Add Reusable Dashboard Card Wrapper",
+        description:
+          "Introduces a reusable CardWrapper component and shared styling to standardize dashboard card layouts across multiple sections.",
         contributors: [{ username: "tanwarAalok" }],
       },
       {
         category: "Other",
         prNumber: 518,
-        title: "First Contribution",
-        description: "",
+        title: "Add Hero and Footer Tests",
+        description:
+          "Adds Vitest and React Testing Library coverage for HeroSection and Footer rendering, interactions, links, and modal behavior.",
         contributors: [{ username: "shafat730" }],
       },
       {
         category: "Other",
         prNumber: 546,
-        title: "First Contribution",
-        description: "",
+        title: "Add Authentication Component Tests",
+        description:
+          "Adds Vitest and React Testing Library tests for Auth, Signin, and Signup rendering, modal interactions, validation, and submission behavior.",
         contributors: [{ username: "iamalhera" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 611,
-        title: "First Contribution",
-        description: "",
+        title: "Smooth Auth Form Toggle",
+        description:
+          "Improves the Sign In and Sign Up switch with a smoother fade transition and updates tests for the delayed toggle behavior.",
         contributors: [{ username: "Drshnnn" }],
       },
       {
-        category: "Other",
+        category: "Security",
         prNumber: 597,
-        title: "First Contribution",
-        description: "",
+        title: "Add API Rate Limiting",
+        description:
+          "Adds request-rate limiting for public API routes, with stricter controls for logo endpoints to reduce abuse and excessive traffic.",
         contributors: [{ username: "farhan294sha" }],
       },
       {
-        category: "Other",
+        category: "Bug Fix",
         prNumber: 613,
-        title: "First Contribution",
-        description: "",
+        title: "Fix Admin Catalog UI Consistency",
+        description:
+          "Aligns the admin Catalog and CatalogItem UI styling and adds coverage for search, pagination, image actions, and modal behavior.",
         contributors: [{ username: "GautamRaj-1200" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 612,
-        title: "First Contribution",
-        description: "",
+        title: "Add Analytics Cards to Admin",
+        description:
+          "Adds responsive analytics cards to the admin dashboard, integrates them into the page, and covers the feature with automated tests.",
         contributors: [{ username: "theboyofdream" }],
       },
       {
         category: "Other",
         prNumber: 619,
-        title: "First Contribution",
-        description: "",
+        title: "Add Logo API Endpoint Tests",
+        description:
+          "Adds API tests for logo retrieval and upload, covering successful responses, missing users, upload failures, and server errors.",
         contributors: [{ username: "strawHat121" }],
       },
       {
         category: "Other",
         prNumber: 622,
-        title: "First Contribution",
-        description: "",
+        title: "Add Role and Logo Tests",
+        description:
+          "Adds endpoint tests for updating user roles and logos, including validation, error cases, and successful updates.",
         contributors: [{ username: "anshika282" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 638,
-        title: "First Contribution",
-        description: "",
+        title: "Upgrade React Router Dependency",
+        description:
+          "Updates the UI package from React Router 7.1.1 to 7.5.2 to incorporate upstream patches and improvements.",
         contributors: [{ username: "dependabot[bot]" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 658,
-        title: "First Contribution",
-        description: "",
+        title: "Add 404 Not Found Page",
+        description:
+          "Adds a dedicated 404 page for unmatched routes and a catch-all router entry with a link back to Home.",
         contributors: [{ username: "Idontnol" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 664,
-        title: "First Contribution",
-        description: "",
+        title: "Integrate User Info Update API",
+        description:
+          "Connects the User Info Save action to the backend update API, adding request handling, loading state, and related tests.",
         contributors: [{ username: "Allan2000-Git" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 642,
-        title: "First Contribution",
-        description: "",
+        title: "Add Forgot Password Flow",
+        description:
+          "Adds Forgot Password mode to the Sign In form with email validation, a password-reset API request, and a return-to-sign-in action.",
         contributors: [{ username: "keshrinandan99" }],
       },
       {
-        category: "Other",
+        category: "Security",
         prNumber: 673,
-        title: "First Contribution",
-        description: "",
+        title: "Remove Hardcoded Test Passwords",
+        description:
+          "Replaces hard-coded passwords across the test suite with cryptographically generated values using a shared password utility.",
         contributors: [{ username: "SushankSinha" }],
       },
       {
-        category: "Other",
+        category: "Bug Fix",
         prNumber: 676,
-        title: "First Contribution",
-        description: "",
+        title: "Fix Contact Form Textarea Overflow",
+        description:
+          "Constrains the Contact Us message field so it cannot grow beyond the viewport during vertical resizing across screen sizes.",
         contributors: [{ username: "RajeshPhayde" }],
       },
       {
-        category: "Other",
+        category: "Bug Fix",
         prNumber: 678,
-        title: "First Contribution",
-        description: "",
+        title: "Preserve Signup Data on Errors",
+        description:
+          "Prevents the signup form from resetting when the API request fails, preserving the user’s entered values for correction or retry.",
         contributors: [{ username: "ShlokMane" }],
       },
       {
-        category: "Other",
+        category: "Bug Fix",
         prNumber: 688,
-        title: "First Contribution",
-        description: "",
+        title: "Fix Footer Branding and Toast Tests",
+        description:
+          "Restores visible footer branding and fixes the Toast test infinite loop by improving timer handling and cleanup.",
         contributors: [{ username: "printgourav" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 690,
-        title: "First Contribution",
-        description: "",
+        title: "Highlight Active Navigation Page",
+        description:
+          "Adds active-state styling to desktop and mobile navigation so the current route or page section is clearly highlighted.",
         contributors: [{ username: "Ravisukhwal76" }],
       },
       {
-        category: "Other",
+        category: "Enhancement",
         prNumber: 667,
-        title: "First Contribution",
-        description: "",
+        title: "Improve API Key Management Modals",
+        description:
+          "Adds a modal to display newly generated API keys and a confirmation modal before users delete existing keys.",
         contributors: [{ username: "Aniketvish0" }],
       },
       {
         category: "Other",
         prNumber: 782,
-        title: "First Contribution",
-        description: "",
+        title: "Document Auth and User API Flows",
+        description:
+          "Adds Mermaid flow diagrams to the API documentation, covering authentication and user-management endpoint flows.",
         contributors: [{ username: "biplab-sutradhar" }],
       },
       {
         category: "Other",
         prNumber: 781,
-        title: "First Contribution",
-        description: "",
+        title: "Add Logo Controller Unit Tests",
+        description:
+          "Adds unit tests for the logo retrieval and search controllers, covering validation, authorization, limits, success, and error cases.",
         contributors: [{ username: "YashDevani-source" }],
       },
     ],
@@ -416,36 +460,41 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 864,
-        title: "Date Format Consistency",
-        description: "",
+        title: "Standardize Dashboard Date Formatting",
+        description:
+          "Fixes inconsistent date formatting between the admin and operator dashboards by introducing and reusing a common date formatting helper.",
         contributors: [{ username: "Sumitgitup" }],
       },
       {
         category: "Feature",
         prNumber: 878,
-        title: "Enabled download button & let user download their data",
-        description: "",
+        title: "Add User Data Download",
+        description:
+          "Adds a user data export feature that collects profile, generation history, usage statistics, and API key information and downloads it as a JSON file.",
         contributors: [{ username: "Sumitgitup" }],
       },
       {
         category: "Feature",
         prNumber: 879,
-        title: "Dashboard & signout within a single dropdown",
-        description: "",
+        title: "Add Dashboard and Sign Out Dropdown",
+        description:
+          "Adds a profile dropdown that combines Dashboard and Sign Out actions for authenticated users, with equivalent options in the mobile navigation menu.",
         contributors: [{ username: "abhishek-2k23" }, { username: "nazibul7" }],
       },
       {
-        category: "Enhancement",
+        category: "Bug Fix",
         prNumber: 884,
-        title: "Cache invalidation support",
-        description: "",
+        title: "Invalidate CloudFront Cache on Image Update",
+        description:
+          "Automatically invalidates the CloudFront cache after an existing logo is updated, ensuring the latest image is served and adding the required AWS permissions.",
         contributors: [{ username: "MukeshAbhi" }],
       },
       {
-        category: "Other",
+        category: "Feature",
         prNumber: 851,
-        title: "S3 upload flow update",
-        description: "",
+        title: "Enable Direct S3 Image Uploads",
+        description:
+          "Introduces presigned S3 URL uploads so admins and operators can upload images directly to S3 without routing files through the backend, reducing server bandwidth usage. Also refactors upload handling, metadata persistence, and S3 configuration.",
         contributors: [
           { username: "printgourav" },
           { username: "YashDevani-source" },
@@ -454,22 +503,25 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 876,
-        title: "Resend email verification",
-        description: "",
+        title: "Add Resend Verification Email Backend",
+        description:
+          "Adds backend support for resending email verification messages with token refresh and a limit of three resend requests per day, integrated into sign-in and email verification flows.",
         contributors: [{ username: "MukeshAbhi" }],
       },
       {
         category: "Feature",
         prNumber: 877,
-        title: "Resend email verification",
-        description: "",
+        title: "Add Resend Verification Email UI",
+        description:
+          "Integrates the resend verification flow into the frontend sign-in and verification screens with toast notifications, error handling, and updated request handling.",
         contributors: [{ username: "MukeshAbhi" }],
       },
       {
-        category: "Enhancement",
+        category: "Feature",
         prNumber: 859,
-        title: "Show total number of images available with admin",
-        description: "",
+        title: "Show Image Count in Admin Analytics",
+        description:
+          "Adds the total number of logos stored in the system to the admin analytics dashboard using a new image count service and repository method.",
         contributors: [{ username: "printgourav" }],
       },
     ],

@@ -10,13 +10,17 @@ describe("ReleaseService", () => {
   let mockFindByVersion;
   let mockGetPaginated;
 
+  let mockGetAllVersions;
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockFindByVersion = jest.fn();
     mockGetPaginated = jest.fn();
+    mockGetAllVersions = jest.fn();
 
     ReleaseRepository.prototype.findByVersion = mockFindByVersion;
     ReleaseRepository.prototype.getPaginated = mockGetPaginated;
+    ReleaseRepository.prototype.getAllVersions = mockGetAllVersions;
 
     releaseService = new ReleaseService();
   });
@@ -74,6 +78,21 @@ describe("ReleaseService", () => {
       await releaseService.getAllReleases();
 
       expect(mockGetPaginated).toHaveBeenCalledWith(1, 10);
+    });
+  });
+
+  describe("getReleaseVersions", () => {
+    it("delegates to ReleaseRepository.getAllVersions", async () => {
+      const mockVersions = [
+        { version: "0.8.0", releaseDate: "2026-05-15T00:00:00.000Z" },
+        { version: "0.7.0", releaseDate: "2026-03-20T00:00:00.000Z" },
+      ];
+      mockGetAllVersions.mockResolvedValue(mockVersions);
+
+      const result = await releaseService.getReleaseVersions();
+
+      expect(mockGetAllVersions).toHaveBeenCalled();
+      expect(result).toEqual(mockVersions);
     });
   });
 });
