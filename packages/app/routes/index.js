@@ -70,6 +70,6 @@ router.use(
   cors(privateRouteCORS),
   adminMilestonesRouter
 );
-router.use("/releases", releasesRouter);
+router.use("/releases", cors(privateRouteCORS), releasesRouter);
 
 module.exports = router;
