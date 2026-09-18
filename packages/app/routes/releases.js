@@ -15,7 +15,7 @@ const {
  * Query params: page (default: 1), limit (default: 10)
  *
  * GET /api/releases/:version
- * Returns a single release by version tag (e.g. "v1.2.0").
+ * Returns a single release by version tag (e.g. "1.2.0").
  * Returns 404 if the version does not exist.
  *
  * Public — no authentication required.
