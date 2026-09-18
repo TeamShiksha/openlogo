@@ -59,7 +59,8 @@
   border-radius: 0.5rem;
   box-shadow: var(--shadow-bottom);
   min-width: 13rem;
-  overflow: hidden;
+  max-height: 7.5rem;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }

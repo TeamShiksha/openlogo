@@ -89,9 +89,9 @@ describe("VersionCard component", () => {
     expect(screen.queryByRole("paragraph")).not.toBeInTheDocument();
   });
 
-  // ─── Missing category falls back to "Update" ─────────────────────────────────
+  // ─── Missing category ───────────────────────────────────────────────────────────
 
-  it("renders 'UPDATE' badge when category is missing", () => {
+  it("does not render category badge when category is missing", () => {
     const entry = {
       prNumber: 10,
       title: "Generic Change",
@@ -100,7 +100,8 @@ describe("VersionCard component", () => {
 
     render(<VersionCard entry={entry} />);
 
-    expect(screen.getByText("UPDATE")).toBeInTheDocument();
+    expect(screen.queryByText("UPDATE")).not.toBeInTheDocument();
+    expect(screen.getByText("Generic Change")).toBeInTheDocument();
   });
 
   // ─── Contributors section hidden when both fields are absent ─────────────────

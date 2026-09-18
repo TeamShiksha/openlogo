@@ -53,6 +53,7 @@
 .small .avatar-wrapper {
   margin-left: -0.5rem;
 }
+.small .avatar-wrapper:first-child,
 .small.single .avatar-wrapper {
   margin-left: 0;
 }

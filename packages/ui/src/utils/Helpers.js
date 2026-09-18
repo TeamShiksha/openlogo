@@ -2,7 +2,9 @@ import {
   DOCUMENTATION,
   CHANGE_PASSWORD,
   PASSWORD_VALIDATION_MESSAGES,
+  HERO_IMAGES,
 } from "./Constants";
+
 const PASSWORD_RULES = {
   minLength: 8,
   maxLength: 20,
@@ -401,4 +403,31 @@ export const processWebImage = async (
     };
     img_element.src = `data:${mimeType};base64,${bufferBase64}`;
   });
+};
+
+// Compare semantic versions numerically.
+const compareVersions = (versionA, versionB) => {
+  const partsA = versionA.split(".").map(Number);
+  const partsB = versionB.split(".").map(Number);
+
+  for (let i = 0; i < 3; i++) {
+    if (partsA[i] !== partsB[i]) {
+      return partsA[i] - partsB[i];
+    }
+  }
+
+  return 0;
+};
+
+// Return the latest hero image applicable to the selected release.
+export const getHeroImage = (selectedVersion) => {
+  if (!selectedVersion) {
+    return HERO_IMAGES[HERO_IMAGES.length - 1]?.image;
+  }
+
+  const matchingImage = HERO_IMAGES.filter(
+    ({ version }) => compareVersions(version, selectedVersion) <= 0
+  ).sort((a, b) => compareVersions(b.version, a.version))[0];
+
+  return matchingImage?.image || HERO_IMAGES[0]?.image;
 };

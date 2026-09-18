@@ -37,12 +37,29 @@
   border-radius: 0.25rem;
   background-color: rgba(156, 163, 175, 0.12);
   color: var(--label-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a.badge-pr:hover {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
 }
 
 /* Dynamic Category Colors */
 .badge-feature {
   background-color: rgba(79, 70, 229, 0.08);
   color: var(--primary);
+}
+
+.badge-enhancement {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+[data-theme="dark"] .badge-enhancement {
+  background-color: #3b185f;
+  color: #e9d5ff;
 }
 
 .badge-ui-update {
