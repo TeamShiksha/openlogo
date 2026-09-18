@@ -3,6 +3,7 @@
 
 Please follow this format when drafting the release notes.
 - The sync process validates the release body and will fail if the required format is not followed.
+- If this release changes the hero section of landing page, please put the relevant screenshot in /packages/ui/src/assets/release
 
 
 IMPORTANT:
@@ -45,11 +46,17 @@ Full redesign of the user interface according to the latest design specification
 
 ### 📝 Features
 
-#### #1042 | Revamp USER Dashboard
+#### #104 | Example Entry Title 1
+
+Description for example entry 1
+
+> Contributors: @personA @personB
+
+#### #102 | Revamp User Dashboard
 
 Full redesign of the user interface according to the latest design specifications for improved usability.
 
-> Contributors: @personA @personB
+> Contributors: @personC
 
 
 ### 📝 Enhancements

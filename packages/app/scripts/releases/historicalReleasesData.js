@@ -54,7 +54,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: null,
-        title: "Authentication",
+        title: "User Authentication System",
         description:
           "Includes signup, sign in, logout, and forgot-password functionality.",
         contributors: null,
@@ -62,7 +62,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: null,
-        title: "Profile Management",
+        title: "User Profile Management",
         description:
           "Users can update profile details, update their password, and delete their account.",
         contributors: null,
@@ -82,7 +82,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 339,
-        title: "Navigation links scroll to top on click",
+        title: "Navigation Links Scroll To Top",
         description:
           "Fixes page navigation behavior by automatically scrolling to the top whenever the route changes.",
         contributors: [{ username: "Asin-Junior-Honore" }],
@@ -90,7 +90,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 344,
-        title: "Show confirmation modal on click of delete API key button",
+        title: "Delete API Key Confirmation Modal",
         description:
           "Adds a confirmation modal before deleting an API key, allowing users to confirm or cancel the deletion.",
         contributors: [{ username: "anandbaraik" }],
@@ -98,7 +98,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 345,
-        title: "Migrate database from Firestore to MongoDB",
+        title: "Migrate Database From Firestore To MongoDB",
         description:
           "Migrates the application's database and services from Firestore to MongoDB, removes Firebase dependencies, updates the data models and services, and adds MongoDB setup documentation.",
         contributors: [{ username: "amankumarsingh77" }],
@@ -106,7 +106,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 350,
-        title: "Made usageCount functional",
+        title: "Make Usage Count Functional",
         description:
           "Makes subscription usage tracking functional by maintaining usageCount, enforcing API usage limits, and displaying usage data from the subscription on the user dashboard.",
         contributors: [{ username: "amankumarsingh77" }],
@@ -114,7 +114,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 347,
-        title: "One-time API Key View/Copy",
+        title: "One-Time API Key View And Copy",
         description:
           "Changes API key handling so the generated key is displayed and available for copying only once, while removing stored API key values from subsequent dashboard responses.",
         contributors: [{ username: "Sharathxct" }],
@@ -122,8 +122,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 358,
-        title:
-          "Add Automated Script to Reset Subscription Usage Count Every 30 Days",
+        title: "Automated Subscription Usage Reset Every 30 Days",
         description:
           "Adds a scheduled GitHub Actions workflow and MongoDB script that automatically resets subscription usage counts every 30 days based on the subscription creation date.",
         contributors: [{ username: "DeltaDynamo" }],
@@ -131,8 +130,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 360,
-        title:
-          "NaN in usageCount on user dashboard and remove duplicate userId in API response",
+        title: "Fix Usage Count And Duplicate User ID",
         description:
           "Fixes usageCount displaying as NaN on the user dashboard and removes duplicated user information from key and subscription API responses.",
         contributors: [{ username: "amankumarsingh77" }],
@@ -140,7 +138,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 363,
-        title: "Reset and forget password API",
+        title: "Reset And Forgot Password API",
         description:
           "Fixes the reset and forgot password APIs by correctly deriving the user ID from the MongoDB user record and storing it in the reset-password session token.",
         contributors: [{ username: "amankumarsingh77" }],
@@ -148,7 +146,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 365,
-        title: "Admin Image Re-upload with Name & Extension Verification",
+        title: "Admin Image Re-Upload With Verification",
         description:
           "Adds image re-upload functionality to the admin dashboard, allowing existing images to be replaced while enforcing matching image names and file extensions.",
         contributors: [{ username: "Soumava-221B" }],
@@ -156,7 +154,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 357,
-        title: "Operator UI + APIs",
+        title: "Operator UI And APIs",
         description:
           "Adds an operator interface with APIs for viewing customer queries, paginating results, and sending responses back to customers.",
         contributors: [{ username: "asharma991" }],
@@ -172,7 +170,7 @@ const historicalReleases = [
       {
         category: "Other",
         prNumber: 376,
-        title: "Updates client test cases from Jest to Vitest",
+        title: "Migrate Client Tests From Jest To Vitest",
         description:
           "Migrates the client-side test suite from Jest to Vitest and updates test mocks, assertions, dependencies, and configuration for the new test runner.",
         contributors: [{ username: "Ayushsanjdev" }],
@@ -180,7 +178,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 373,
-        title: "Footer, Sign-in Card, and About Section UI Improvements",
+        title: "Footer Sign-In And About UI Improvements",
         description:
           "Improves the footer, sign-in form layout, and About page by reorganizing navigation elements, repositioning the forgot-password link, and restructuring content into cards.",
         contributors: [{ username: "AryaDharkar" }],
@@ -200,7 +198,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 389,
-        title: "Add Repository Layer for Models",
+        title: "Add Repository Layer For Models",
         description:
           "Introduces a reusable BaseRepository with model-specific repositories for common database operations. Also adds user-specific key lookup support.",
         contributors: [{ username: "sujal111" }],
@@ -208,7 +206,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 397,
-        title: "Add Documentation and Other Templates",
+        title: "Add Documentation And Issue Templates",
         description:
           "Adds dedicated GitHub issue templates for documentation and other issues, making reports easier to structure and classify.",
         contributors: [{ username: "ayush19sinha" }],
@@ -288,7 +286,7 @@ const historicalReleases = [
       {
         category: "Other",
         prNumber: 518,
-        title: "Add Hero and Footer Tests",
+        title: "Add Hero And Footer Tests",
         description:
           "Adds Vitest and React Testing Library coverage for HeroSection and Footer rendering, interactions, links, and modal behavior.",
         contributors: [{ username: "shafat730" }],
@@ -304,7 +302,7 @@ const historicalReleases = [
       {
         category: "Enhancement",
         prNumber: 611,
-        title: "Smooth Auth Form Toggle",
+        title: "Smooth Authentication Form Toggle",
         description:
           "Improves the Sign In and Sign Up switch with a smoother fade transition and updates tests for the delayed toggle behavior.",
         contributors: [{ username: "Drshnnn" }],
@@ -328,7 +326,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 612,
-        title: "Add Analytics Cards to Admin",
+        title: "Add Analytics Cards To Admin",
         description:
           "Adds responsive analytics cards to the admin dashboard, integrates them into the page, and covers the feature with automated tests.",
         contributors: [{ username: "theboyofdream" }],
@@ -344,7 +342,7 @@ const historicalReleases = [
       {
         category: "Other",
         prNumber: 622,
-        title: "Add Role and Logo Tests",
+        title: "Add Role And Logo Tests",
         description:
           "Adds endpoint tests for updating user roles and logos, including validation, error cases, and successful updates.",
         contributors: [{ username: "anshika282" }],
@@ -400,7 +398,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 678,
-        title: "Preserve Signup Data on Errors",
+        title: "Preserve Signup Data On Errors",
         description:
           "Prevents the signup form from resetting when the API request fails, preserving the user’s entered values for correction or retry.",
         contributors: [{ username: "ShlokMane" }],
@@ -408,7 +406,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 688,
-        title: "Fix Footer Branding and Toast Tests",
+        title: "Fix Footer Branding And Toast Tests",
         description:
           "Restores visible footer branding and fixes the Toast test infinite loop by improving timer handling and cleanup.",
         contributors: [{ username: "printgourav" }],
@@ -432,7 +430,7 @@ const historicalReleases = [
       {
         category: "Other",
         prNumber: 782,
-        title: "Document Auth and User API Flows",
+        title: "Document Authentication And User API Flows",
         description:
           "Adds Mermaid flow diagrams to the API documentation, covering authentication and user-management endpoint flows.",
         contributors: [{ username: "biplab-sutradhar" }],
@@ -476,7 +474,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 879,
-        title: "Add Dashboard and Sign Out Dropdown",
+        title: "Add Dashboard And Sign-Out Dropdown",
         description:
           "Adds a profile dropdown that combines Dashboard and Sign Out actions for authenticated users, with equivalent options in the mobile navigation menu.",
         contributors: [{ username: "abhishek-2k23" }, { username: "nazibul7" }],
@@ -484,7 +482,7 @@ const historicalReleases = [
       {
         category: "Bug Fix",
         prNumber: 884,
-        title: "Invalidate CloudFront Cache on Image Update",
+        title: "Invalidate CloudFront Cache On Image Update",
         description:
           "Automatically invalidates the CloudFront cache after an existing logo is updated, ensuring the latest image is served and adding the required AWS permissions.",
         contributors: [{ username: "MukeshAbhi" }],
@@ -519,7 +517,7 @@ const historicalReleases = [
       {
         category: "Feature",
         prNumber: 859,
-        title: "Show Image Count in Admin Analytics",
+        title: "Show Image Count In Admin Analytics",
         description:
           "Adds the total number of logos stored in the system to the admin analytics dashboard using a new image count service and repository method.",
         contributors: [{ username: "printgourav" }],
@@ -538,10 +536,10 @@ const historicalReleases = [
     entries: [
       {
         category: "Feature",
-        prNumber: null,
+        prNumber: 896,
         title: "API Usage Graph",
         description:
-          "You can now view a simple graph on your dashboard that helps you understand how much you’re using the API, including how many requests you’ve made and how much data you’ve used.",
+          "Added a dashboard graph showing API request usage over weekly and monthly periods, along with a refresh action.",
         contributors: [
           { username: "L-Tarun-Aditya" },
           { username: "sachinkmrsin" },
@@ -550,10 +548,10 @@ const historicalReleases = [
       },
       {
         category: "Security",
-        prNumber: null,
+        prNumber: 893,
         title: "Automatic API Key Expiration",
         description:
-          "API keys now expire automatically to keep accounts more secure. Users can set a custom expiry date, and existing API keys will expire after one year by default.",
+          "Added API key expiration with configurable validity for new keys and one-year validity handling for existing keys, including expiry enforcement.",
         contributors: [
           { username: "biplab-sutradhar" },
           { username: "printgourav" },
@@ -561,10 +559,10 @@ const historicalReleases = [
       },
       {
         category: "Feature",
-        prNumber: null,
+        prNumber: 897,
         title: "Automatic Catalog Creation",
         description:
-          "Catalogs are now created automatically, so you don’t need to set them up manually anymore.",
+          "Added automatic catalog creation with web-search support, allowing missing logos to be fetched online and incorporated into the catalog.",
         contributors: [
           { username: "BansalAbhinav" },
           { username: "Saurabhupadhyay8170" },
@@ -572,18 +570,18 @@ const historicalReleases = [
       },
       {
         category: "Feature",
-        prNumber: null,
+        prNumber: 891,
         title: "Release Page",
         description:
-          "A new Release Page is now available, where you can easily see what’s new in each version and who helped build it.",
+          "Introduced a dedicated release page with version timelines, release information, contributors, and structured release notes.",
         contributors: [{ username: "abhishek-2k23" }],
       },
       {
         category: "Enhancement",
-        prNumber: null,
+        prNumber: 876,
         title: "Resend Verification Email",
         description:
-          "If you don’t receive your verification email, you can now resend it easily and continue without getting stuck.",
+          "Added backend support for resending verification emails, including token refresh, rate limiting, and integration with signin and verification flows.",
         contributors: [{ username: "MukeshAbhi" }],
       },
     ],
@@ -600,11 +598,10 @@ const historicalReleases = [
     entries: [
       {
         category: "Security",
-        prNumber: null,
-        title:
-          "Authentication migrated from JWT to a secure session-based system",
+        prNumber: 947,
+        title: "Migrate Authentication To Secure Sessions",
         description:
-          "Authentication has been migrated from JWT to a secure session-based system, improving overall security and simplifying token management.",
+          "Authentication was migrated from JWT-based authentication to server-managed sessions, including session creation, validation, and invalidation.",
         contributors: [
           { username: "Mantu01" },
           { username: "Smayur0" },
@@ -613,18 +610,18 @@ const historicalReleases = [
       },
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Dynamic Light and Dark themes",
+        prNumber: 934,
+        title: "Dynamic Light And Dark Themes",
         description:
-          "You can now switch between Light and Dark themes to personalize your experience.",
+          "Added a dark-mode theme system with a toggle and theme context, allowing users to switch between light and dark experiences.",
         contributors: [{ username: "sachinkmrsin" }],
       },
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Notifications for API expiry and usage limits",
+        prNumber: 948,
+        title: "Notifications For API Expiry And Usage Limits",
         description:
-          "Notifications are now available for important events such as API expiry and usage limit being reached.",
+          "Added toast notifications for API usage thresholds, warning users as they approach and reach their usage limits.",
         contributors: [
           { username: "YashDevani-source" },
           { username: "L-Tarun-Aditya" },
@@ -632,10 +629,10 @@ const historicalReleases = [
       },
       {
         category: "Feature",
-        prNumber: null,
+        prNumber: 935,
         title: "Custom Logo Creation",
         description:
-          "You can now create and use your own custom logo image directly within the platform.",
+          "Added a Fabric.js-based Create Logo editor with text, shapes, colors, image upload, layer controls, and export support.",
         contributors: [
           { username: "biplab-sutradhar" },
           { username: "mridul-giri" },
@@ -643,10 +640,10 @@ const historicalReleases = [
       },
       {
         category: "Security",
-        prNumber: null,
+        prNumber: 946,
         title: "API Key Masking",
         description:
-          "API keys are now securely hidden to prevent accidental exposure and enhance account security.",
+          "Removed the API key from the client-side user context so it could no longer be exposed through frontend state or console inspection.",
         contributors: [{ username: "L-Tarun-Aditya" }],
       },
     ],
@@ -663,59 +660,66 @@ const historicalReleases = [
     entries: [
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Revamp USER dashboard according to the design",
-        description: "",
+        prNumber: 965,
+        title: "Revamp User Dashboard Design",
+        description:
+          "Completely redesigned the USER dashboard with updated layouts, headers, settings cards, charts, and responsive UI to match the new design.",
         contributors: [{ username: "AryaDharkar" }],
       },
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Enhancing the UI of the admin dashboard",
-        description: "",
+        prNumber: 1000,
+        title: "Enhance Admin Dashboard UI",
+        description:
+          "Updated the admin dashboard UI with the new design system, including refreshed analytics, catalog layouts, and image previews.",
         contributors: [{ username: "L-Tarun-Aditya" }],
       },
       {
         category: "Security",
-        prNumber: null,
-        title: "Add 2FA section in user settings",
-        description: "",
+        prNumber: 1010,
+        title: "Add 2FA Section To User Settings",
+        description:
+          "Added Two-Factor Authentication controls to the user settings, allowing users to enable and disable 2FA.",
         contributors: [{ username: "L-Tarun-Aditya" }],
       },
       {
         category: "Security",
-        prNumber: null,
-        title: "Implementing a dedicated settings page for MFA",
-        description: "",
+        prNumber: 1010,
+        title: "Implement Dedicated MFA Settings Page",
+        description:
+          "Introduced a dedicated Settings page for account management and moved user-related controls out of the main dashboard.",
         contributors: [{ username: "L-Tarun-Aditya" }],
       },
       {
         category: "Security",
-        prNumber: null,
-        title: "Multi factor authentication",
-        description: "",
+        prNumber: 954,
+        title: "Multi-Factor Authentication",
+        description:
+          "Implemented TOTP-based multi-factor authentication with setup, verification, enable/disable flows, and login enforcement.",
         contributors: [{ username: "MukeshAbhi" }],
       },
       {
         category: "Security",
-        prNumber: null,
-        title: "Prevent Users From Reusing Old Password During Password Reset",
-        description: "",
+        prNumber: 977,
+        title: "Prevent Password Reuse During Reset",
+        description:
+          "Prevented users from setting their new password to the same value as the existing password during password reset and password update.",
         contributors: [{ username: "rishang14" }],
       },
       {
         category: "Feature",
-        prNumber: null,
-        title:
-          "Fix bugs on createLogo page and allow users to access this page without authentication",
-        description: "",
+        prNumber: 979,
+        title: "Fix CreateLogo Page And Authentication",
+        description:
+          "Fixed CreateLogo editing and upload issues and made the CreateLogo page publicly accessible while preserving the intended post-login redirect.",
         contributors: [{ username: "AryaDharkar" }],
       },
       {
         category: "Security",
-        prNumber: null,
-        title: "Feature for user session management",
-        description: "",
+        prNumber: 1016,
+        title: "Implement User Session Management",
+        description:
+          "Added per-device session management with active-session viewing, session revocation, sign-out-other-devices, and supporting authentication changes.",
         contributors: [
           { username: "kadamsahil2511" },
           { username: "DeepAkdotcom" },
@@ -723,24 +727,26 @@ const historicalReleases = [
       },
       {
         category: "Other",
-        prNumber: null,
-        title:
-          "Feature to enforce branch & PR naming conventions via husky + GitHub Actions",
-        description: "",
+        prNumber: 992,
+        title: "Enforce Branch And PR Naming Conventions",
+        description:
+          "Added Husky and GitHub Actions checks to enforce standardized branch names and pull request titles.",
         contributors: [{ username: "Smayur0" }],
       },
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Redesign documentation page",
-        description: "",
+        prNumber: 1020,
+        title: "Redesign Documentation Page",
+        description:
+          "Redesigned the documentation experience with improved endpoint presentation, quickstart sections, layout, and responsive styling.",
         contributors: [{ username: "Dhirenderchoudhary" }],
       },
       {
         category: "Enhancement",
-        prNumber: null,
-        title: "Revamp sign in and sign up form",
-        description: "",
+        prNumber: 974,
+        title: "Revamp Sign-In And Sign-Up Forms",
+        description:
+          "Revamped the sign-in and sign-up UI, including improved layouts and real-time password-strength feedback for registration.",
         contributors: [{ username: "0-mstrmind" }, { username: "kunjesh360" }],
       },
     ],
