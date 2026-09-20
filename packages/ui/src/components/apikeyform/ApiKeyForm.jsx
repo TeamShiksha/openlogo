@@ -18,7 +18,7 @@ import Modal from "../common/modal/Modal.jsx";
 import styles from "./ApiKeyForm.module.css";
 
 const originRegex =
-  /^https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
+  /^https?:\/\/[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
 
 const trimCommas = (str) => {
   if (!str || typeof str !== "string") return "";
@@ -502,7 +502,9 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
             {isOriginRestricted && (
               <div className={styles["form-group"]}>
                 <div className={styles["origins-list-header"]}>
-                  <label className={styles["label"]}>Allowed Origins</label>
+                  <label htmlFor="origin-tag-input" className={styles["label"]}>
+                    Allowed Origins
+                  </label>
                   <span className={styles["origins-count"]}>
                     {activeOrigins.length}{" "}
                     {activeOrigins.length === 1 ? "origin" : "origins"}
@@ -510,16 +512,16 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
                 </div>
                 <div className={styles["tag-input-box"]}>
                   {origins.map((origin, index) => (
-                    <span key={index} className={styles["origin-pill"]}>
+                    <span key={origin} className={styles["origin-pill"]}>
                       {editingPillIndex === index ? (
                         <input
+                          ref={(input) => input && input.focus()}
                           type="text"
                           className={styles["pill-edit-input"]}
                           value={editingPillValue}
                           onChange={(e) => setEditingPillValue(e.target.value)}
                           onKeyDown={(e) => handlePillEditKeyDown(e, index)}
                           onBlur={() => handleSaveEditPill(index)}
-                          autoFocus
                         />
                       ) : (
                         <>
@@ -557,6 +559,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
                     </span>
                   ))}
                   <input
+                    id="origin-tag-input"
                     type="text"
                     name="origin-tag-input"
                     className={styles["tag-input-field"]}

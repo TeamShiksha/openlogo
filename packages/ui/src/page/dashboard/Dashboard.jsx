@@ -28,7 +28,7 @@ import { formatDate } from "../../utils/Helpers";
 import styles from "./Dashboard.module.css";
 
 const originRegex =
-  /^https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
+  /^https?:\/\/[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
 
 const getFilteredApiKeys = (apiKeys, keyTypeTab) => {
   return apiKeys.filter((key) => {
@@ -364,7 +364,12 @@ function EditAllowedOriginsModal({
         {editIsOriginRestricted && (
           <div className={styles["form-group"]}>
             <div className={styles["origins-list-header"]}>
-              <label className={styles["label"]}>Allowed Origins</label>
+              <label
+                htmlFor="edit-origin-tag-input"
+                className={styles["label"]}
+              >
+                Allowed Origins
+              </label>
               <span className={styles["origins-count"]}>
                 {activeOriginsCount}{" "}
                 {activeOriginsCount === 1 ? "origin" : "origins"}
@@ -372,16 +377,16 @@ function EditAllowedOriginsModal({
             </div>
             <div className={styles["tag-input-box"]}>
               {editOrigins.map((origin, index) => (
-                <span key={index} className={styles["origin-pill"]}>
+                <span key={origin} className={styles["origin-pill"]}>
                   {editingEditPillIndex === index ? (
                     <input
+                      ref={(input) => input && input.focus()}
                       type="text"
                       className={styles["pill-edit-input"]}
                       value={editingEditPillValue}
                       onChange={(e) => setEditingEditPillValue(e.target.value)}
                       onKeyDown={(e) => handleEditPillKeyDown(e, index)}
                       onBlur={() => handleSaveEditEditPill(index)}
-                      autoFocus
                     />
                   ) : (
                     <>
@@ -419,6 +424,7 @@ function EditAllowedOriginsModal({
                 </span>
               ))}
               <input
+                id="edit-origin-tag-input"
                 type="text"
                 name="edit-origin-tag-input"
                 className={styles["tag-input-field"]}
