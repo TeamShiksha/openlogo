@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { instance } from "../../api/api_instance";
 import AdminDashboard from "../../components/admin/AdminDashboard.jsx";
@@ -29,24 +30,103 @@ import styles from "./Dashboard.module.css";
 const originRegex =
   /^https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
 
-function Dashboard() {
-  const { userData, loading, fetchUserData } = useContext(UserContext);
-  const [confirmKeyName, setConfirmKeyName] = useState("");
-  const [selectedDashboard, setSelectedDashboard] = useState("USER");
-  const [isGuest, setIsGuest] = useState(false);
-  const [selectedKey, setSelectedKey] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [apiKeys, setApiKeys] = useState([]);
-  const [showLoader, setShowLoader] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("api-keys");
-  const [keyTypeTab, setKeyTypeTab] = useState("SECRET");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+const getFilteredApiKeys = (apiKeys, keyTypeTab) => {
+  return apiKeys.filter((key) => {
+    const type = (key.key_type || "").toUpperCase();
+    return keyTypeTab === "PUBLISHABLE"
+      ? type === "PUBLISHABLE"
+      : type !== "PUBLISHABLE";
+  });
+};
 
-  // Edit Allowed Origins Modal State
-  const [editingKey, setEditingKey] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+const formatApiKeyTableData = (filteredApiKeys, keyTypeTab) => {
+  return filteredApiKeys.map((key) => {
+    const { key_description, allowed_origins, updated_at, expires_at } = key;
+    const expiryDate = new Date(expires_at);
+    const today = new Date();
+    const daysUntilExpiry = Math.floor(
+      (expiryDate - today) / (1000 * 60 * 60 * 24)
+    );
+    const isExpiringSoon = daysUntilExpiry <= 7;
+
+    const statusDisplay =
+      key.is_active !== false ? (
+        <span className={styles["badge-status-active"]}>Active</span>
+      ) : (
+        <span className={styles["badge-status-inactive"]}>Inactive</span>
+      );
+
+    const originsDisplay =
+      Array.isArray(allowed_origins) && allowed_origins.length > 0 ? (
+        allowed_origins.join(", ")
+      ) : (
+        <span className={styles["badge-off"]}>OFF (Disabled)</span>
+      );
+
+    const cells =
+      keyTypeTab === "PUBLISHABLE"
+        ? [
+            key_description,
+            statusDisplay,
+            originsDisplay,
+            formatDate(updated_at),
+            formatDate(expires_at),
+          ]
+        : [key_description, formatDate(updated_at), formatDate(expires_at)];
+
+    return {
+      cells,
+      rowClassName: isExpiringSoon ? styles["expiry-warning-row"] : "",
+    };
+  });
+};
+
+const getDashboardDropdownOptions = (role) => {
+  if (role === "ADMIN") {
+    return ["ADMIN", "OPERATOR", "USER"];
+  }
+  if (role === "OPERATOR") {
+    return ["OPERATOR", "USER"];
+  }
+  return [];
+};
+
+const validateEditOrigins = (editOrigins, editOriginInputText) => {
+  let finalOrigins = [...editOrigins];
+  if (editOriginInputText.trim()) {
+    const extra = editOriginInputText.trim().replace(/^,+|,+$/g, "");
+    if (extra) {
+      if (finalOrigins.includes(extra)) {
+        return { error: PUBLISHABLE_KEY.generation.duplicateOrigin };
+      }
+      finalOrigins.push(extra);
+    }
+  }
+
+  if (finalOrigins.length === 0) {
+    return { error: PUBLISHABLE_KEY.generation.originRequired };
+  }
+
+  if (new Set(finalOrigins).size !== finalOrigins.length) {
+    return { error: PUBLISHABLE_KEY.generation.duplicateOrigin };
+  }
+
+  if (!finalOrigins.every((o) => originRegex.test(o))) {
+    return { error: PUBLISHABLE_KEY.generation.invalidOrigin };
+  }
+
+  return { finalOrigins };
+};
+
+function EditAllowedOriginsModal({
+  isOpen,
+  onClose,
+  editingKey,
+  onKeyUpdated,
+  fetchUserKeys,
+  fetchUserData,
+  toast,
+}) {
   const [editOrigins, setEditOrigins] = useState([]);
   const [editOriginInputText, setEditOriginInputText] = useState("");
   const [editingEditPillIndex, setEditingEditPillIndex] = useState(null);
@@ -55,131 +135,30 @@ function Dashboard() {
   const [editIsActive, setEditIsActive] = useState(true);
   const [editIsOriginRestricted, setEditIsOriginRestricted] = useState(true);
 
-  const toast = useToast();
-
-  const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
-    method: "get",
-    url: "/user/me",
-  });
-
-  const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
-    method: "delete",
-    url: `/user/api-key/${selectedKey?._id}`,
-  });
-
-  const { fetchRequest: updateOldKeysRequest } = useApi({
-    method: "get",
-    url: "/user/update-old-keys",
-    withCredentials: true,
-  });
-
-  const filteredApiKeys = useMemo(() => {
-    return apiKeys.filter((key) => {
-      const type = (key.key_type || "").toUpperCase();
-      if (keyTypeTab === "PUBLISHABLE") {
-        return type === "PUBLISHABLE";
-      }
-      return type !== "PUBLISHABLE";
-    });
-  }, [apiKeys, keyTypeTab]);
-
-  const apiKeyTableData = useMemo(() => {
-    const result = filteredApiKeys.map((key) => {
-      const { key_description, allowed_origins, updated_at, expires_at } = key;
-      const expiryDate = new Date(expires_at);
-      const today = new Date();
-      const daysUntilExpiry = Math.floor(
-        (expiryDate - today) / (1000 * 60 * 60 * 24)
+  useEffect(() => {
+    if (editingKey) {
+      setEditOrigins(
+        editingKey.allowed_origins && editingKey.allowed_origins.length > 0
+          ? [...editingKey.allowed_origins]
+          : []
       );
-      const isExpiringSoon = daysUntilExpiry <= 7;
-
-      const statusDisplay =
-        key.is_active !== false ? (
-          <span className={styles["badge-status-active"]}>Active</span>
-        ) : (
-          <span className={styles["badge-status-inactive"]}>Inactive</span>
-        );
-
-      const originsDisplay =
-        Array.isArray(allowed_origins) && allowed_origins.length > 0 ? (
-          allowed_origins.join(", ")
-        ) : (
-          <span className={styles["badge-off"]}>OFF (Disabled)</span>
-        );
-
-      const cells =
-        keyTypeTab === "PUBLISHABLE"
-          ? [
-              key_description,
-              statusDisplay,
-              originsDisplay,
-              formatDate(updated_at),
-              formatDate(expires_at),
-            ]
-          : [key_description, formatDate(updated_at), formatDate(expires_at)];
-
-      return {
-        cells,
-        rowClassName: isExpiringSoon ? styles["expiry-warning-row"] : "",
-      };
-    });
-
-    return result;
-  }, [filteredApiKeys, keyTypeTab]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
-  useEffect(() => {
-    if (userData) {
-      setIsGuest(userData?.role == "GUEST");
-      const userKeys = userData?.keys || [];
-      setApiKeys(userKeys);
+      setEditOriginInputText("");
+      setEditErrors({});
+      setEditIsActive(
+        editingKey.is_active !== undefined ? editingKey.is_active : true
+      );
+      setEditIsOriginRestricted(
+        editingKey.is_origin_restricted !== undefined
+          ? editingKey.is_origin_restricted
+          : Boolean(
+              editingKey.allowed_origins &&
+                editingKey.allowed_origins.length > 0
+            )
+      );
     }
-  }, [userData]);
+  }, [editingKey]);
 
-  useEffect(() => {
-    if (userDataResponse?.data?.keys) {
-      const userKeys = userDataResponse.data.keys;
-      setApiKeys(userKeys);
-    }
-  }, [userDataResponse]);
-
-  useEffect(() => {
-    if (errorMsg) {
-      toast.error(errorMsg);
-    }
-  }, [errorMsg, toast]);
-
-  const handleDeleteClick = (index) => {
-    setSelectedKey(filteredApiKeys[index]);
-    setConfirmKeyName("");
-    setShowModal(true);
-  };
-
-  const handleEditClick = (index) => {
-    const keyToEdit = filteredApiKeys[index];
-    setEditingKey(keyToEdit);
-    setEditOrigins(
-      keyToEdit.allowed_origins && keyToEdit.allowed_origins.length > 0
-        ? [...keyToEdit.allowed_origins]
-        : []
-    );
-    setEditOriginInputText("");
-    setEditErrors({});
-    setEditIsActive(
-      keyToEdit.is_active !== undefined ? keyToEdit.is_active : true
-    );
-    setEditIsOriginRestricted(
-      keyToEdit.is_origin_restricted !== undefined
-        ? keyToEdit.is_origin_restricted
-        : Boolean(
-            keyToEdit.allowed_origins && keyToEdit.allowed_origins.length > 0
-          )
-    );
-    setShowEditModal(true);
-  };
+  if (!isOpen || !editingKey) return null;
 
   const addEditOriginTag = (rawText) => {
     const trimmed = rawText.trim().replace(/^,+|,+$/g, "");
@@ -197,18 +176,8 @@ function Dashboard() {
   };
 
   const handleEditOriginKeyDown = (e) => {
-    if (
-      e.key === "Enter" ||
-      e.key === "," ||
-      e.key === " " ||
-      e.key === "Tab"
-    ) {
-      if (e.key === "Tab") {
-        if (editOriginInputText.trim()) {
-          e.preventDefault();
-          addEditOriginTag(editOriginInputText);
-        }
-      } else {
+    if (["Enter", ",", " ", "Tab"].includes(e.key)) {
+      if (e.key !== "Tab" || editOriginInputText.trim()) {
         e.preventDefault();
         addEditOriginTag(editOriginInputText);
       }
@@ -252,7 +221,7 @@ function Dashboard() {
   };
 
   const handleEditPillKeyDown = (e, index) => {
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (["Enter", "Tab"].includes(e.key)) {
       e.preventDefault();
       handleSaveEditEditPill(index);
     } else if (e.key === "Escape") {
@@ -265,44 +234,13 @@ function Dashboard() {
   const handleSaveEditKey = async () => {
     let finalOrigins = [];
     if (editIsOriginRestricted) {
-      finalOrigins = [...editOrigins];
-      if (editOriginInputText.trim()) {
-        const extra = editOriginInputText.trim().replace(/^,+|,+$/g, "");
-        if (extra) {
-          if (finalOrigins.includes(extra)) {
-            setEditErrors({
-              allowedOrigins: PUBLISHABLE_KEY.generation.duplicateOrigin,
-            });
-            toast.error(PUBLISHABLE_KEY.generation.duplicateOrigin);
-            return;
-          }
-          finalOrigins.push(extra);
-        }
-      }
-
-      if (finalOrigins.length === 0) {
-        setEditErrors({
-          allowedOrigins: PUBLISHABLE_KEY.generation.originRequired,
-        });
-        toast.error(PUBLISHABLE_KEY.generation.originRequired);
+      const validation = validateEditOrigins(editOrigins, editOriginInputText);
+      if (validation.error) {
+        setEditErrors({ allowedOrigins: validation.error });
+        toast.error(validation.error);
         return;
       }
-
-      if (new Set(finalOrigins).size !== finalOrigins.length) {
-        setEditErrors({
-          allowedOrigins: PUBLISHABLE_KEY.generation.duplicateOrigin,
-        });
-        toast.error(PUBLISHABLE_KEY.generation.duplicateOrigin);
-        return;
-      }
-
-      if (!finalOrigins.every((o) => originRegex.test(o))) {
-        setEditErrors({
-          allowedOrigins: PUBLISHABLE_KEY.generation.invalidOrigin,
-        });
-        toast.error(PUBLISHABLE_KEY.generation.invalidOrigin);
-        return;
-      }
+      finalOrigins = validation.finalOrigins;
     }
 
     try {
@@ -312,28 +250,370 @@ function Dashboard() {
         is_active: editIsActive,
       });
 
-      setApiKeys((prevKeys) =>
-        prevKeys.map((key) =>
-          key._id === editingKey._id
-            ? {
-                ...key,
-                allowed_origins: editIsOriginRestricted ? finalOrigins : [],
-                is_origin_restricted: editIsOriginRestricted,
-                is_active: editIsActive,
-              }
-            : key
-        )
-      );
+      onKeyUpdated({
+        _id: editingKey._id,
+        allowed_origins: editIsOriginRestricted ? finalOrigins : [],
+        is_origin_restricted: editIsOriginRestricted,
+        is_active: editIsActive,
+      });
 
       toast.success(PUBLISHABLE_KEY.edit.success);
-      setShowEditModal(false);
-      setEditingKey(null);
+      onClose();
       await fetchUserKeys();
       fetchUserData();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update key");
     }
   };
+
+  const activeOriginsCount =
+    editOrigins.length +
+    (editOriginInputText.trim() &&
+    !editOrigins.includes(editOriginInputText.trim())
+      ? 1
+      : 0);
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} customWidth="540px">
+      <div className={styles["edit-modal-content"]}>
+        <div className={styles["edit-modal-header"]}>
+          <div className={styles["edit-modal-icon"]}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 className={styles["edit-modal-title"]}>
+              {PUBLISHABLE_KEY.edit.modal.title}
+            </h2>
+            <p className={styles["edit-modal-subtitle"]}>
+              {PUBLISHABLE_KEY.edit.modal.subtitle}
+            </p>
+          </div>
+        </div>
+
+        <div className={styles["form-group"]}>
+          <div className={styles["toggle-header"]}>
+            <label className={styles["label"]}>Key Status</label>
+            <button
+              type="button"
+              role="switch"
+              aria-label="Key Status"
+              aria-checked={editIsActive}
+              className={`${styles["toggle-switch"]} ${
+                editIsActive ? styles["toggle-active"] : ""
+              }`}
+              onClick={() => setEditIsActive((prev) => !prev)}
+            >
+              <span className={styles["toggle-thumb"]} />
+            </button>
+          </div>
+          <p className={styles["toggle-subtitle"]}>
+            {editIsActive
+              ? "Key is active and accepting requests"
+              : "Key is deactivated and rejecting requests"}
+          </p>
+        </div>
+
+        <div className={styles["form-group"]}>
+          <div className={styles["toggle-header"]}>
+            <label className={styles["label"]}>Origin Restriction</label>
+            <button
+              type="button"
+              role="switch"
+              aria-label="Origin Restriction"
+              aria-checked={editIsOriginRestricted}
+              className={`${styles["toggle-switch"]} ${
+                editIsOriginRestricted ? styles["toggle-active"] : ""
+              }`}
+              onClick={() => setEditIsOriginRestricted((prev) => !prev)}
+            >
+              <span className={styles["toggle-thumb"]} />
+            </button>
+          </div>
+          <p className={styles["toggle-subtitle"]}>
+            {editIsOriginRestricted
+              ? "Restrict key usage to specified origin domains"
+              : "Allow key usage from any origin domain"}
+          </p>
+        </div>
+
+        {editIsOriginRestricted && (
+          <div className={styles["form-group"]}>
+            <div className={styles["origins-list-header"]}>
+              <label className={styles["label"]}>Allowed Origins</label>
+              <span className={styles["origins-count"]}>
+                {activeOriginsCount}{" "}
+                {activeOriginsCount === 1 ? "origin" : "origins"}
+              </span>
+            </div>
+            <div className={styles["tag-input-box"]}>
+              {editOrigins.map((origin, index) => (
+                <span key={index} className={styles["origin-pill"]}>
+                  {editingEditPillIndex === index ? (
+                    <input
+                      type="text"
+                      className={styles["pill-edit-input"]}
+                      value={editingEditPillValue}
+                      onChange={(e) => setEditingEditPillValue(e.target.value)}
+                      onKeyDown={(e) => handleEditPillKeyDown(e, index)}
+                      onBlur={() => handleSaveEditEditPill(index)}
+                      autoFocus
+                    />
+                  ) : (
+                    <>
+                      <span
+                        className={styles["pill-text"]}
+                        onClick={() => handleStartEditEditPill(index, origin)}
+                        title="Click to edit origin"
+                      >
+                        {origin}
+                      </span>
+                      <button
+                        type="button"
+                        className={styles["pill-remove-btn"]}
+                        onClick={() => handleRemoveEditOriginTag(index)}
+                        aria-label={`Remove origin ${origin}`}
+                        title="Remove origin"
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                </span>
+              ))}
+              <input
+                type="text"
+                name="edit-origin-tag-input"
+                className={styles["tag-input-field"]}
+                placeholder={
+                  editOrigins.length === 0
+                    ? "e.g., https://example.com or http://localhost:8080"
+                    : "Add origin..."
+                }
+                value={editOriginInputText}
+                onChange={(e) => setEditOriginInputText(e.target.value)}
+                onKeyDown={handleEditOriginKeyDown}
+                onBlur={() => {
+                  if (editOriginInputText.trim()) {
+                    addEditOriginTag(editOriginInputText);
+                  }
+                }}
+              />
+            </div>
+
+            {editErrors.allowedOrigins && (
+              <p className={styles["error-message"]}>
+                {editErrors.allowedOrigins}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className={styles["modal-actions"]}>
+          <Button variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSaveEditKey}>
+            Save Changes
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+EditAllowedOriginsModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  editingKey: PropTypes.object,
+  onKeyUpdated: PropTypes.func.isRequired,
+  fetchUserKeys: PropTypes.func.isRequired,
+  fetchUserData: PropTypes.func.isRequired,
+  toast: PropTypes.object.isRequired,
+};
+
+function DeleteApiKeyModal({
+  isOpen,
+  onClose,
+  selectedKey,
+  deleteKeyRequest,
+  onDeleteSuccess,
+  toast,
+}) {
+  const [confirmKeyName, setConfirmKeyName] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setConfirmKeyName("");
+    }
+  }, [isOpen]);
+
+  if (!isOpen || !selectedKey) return null;
+
+  const handleDeleteKey = async () => {
+    if (!selectedKey?._id) {
+      toast.error(API_KEY.delete.invalidKey);
+      return;
+    }
+    setIsDeleting(true);
+    const success = await deleteKeyRequest();
+    if (success) {
+      toast.success(
+        selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE"
+          ? PUBLISHABLE_KEY.delete.success
+          : API_KEY.delete.success
+      );
+      onClose();
+      await onDeleteSuccess();
+    }
+    setIsDeleting(false);
+  };
+
+  const isPublishable = selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE";
+
+  return (
+    <div data-testid="delete-api-key-modal">
+      <ConfirmationModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleDeleteKey}
+        isConfirmDisabled={confirmKeyName !== selectedKey?.key_description}
+        isConfirmLoading={isDeleting}
+        confirmButtonContent={BUTTON_TEXT.delete}
+        customHeading={
+          isPublishable
+            ? PUBLISHABLE_KEY.delete.modal.title
+            : API_KEY.delete.modal.title
+        }
+        customDescription={
+          <div>
+            {isPublishable
+              ? PUBLISHABLE_KEY.delete.modal.description
+              : API_KEY.delete.modal.description}{" "}
+            <strong className={styles["deletekey-name"]}>
+              {selectedKey.key_description}
+            </strong>
+            ?{" "}
+            {isPublishable
+              ? PUBLISHABLE_KEY.delete.modal.warning
+              : API_KEY.delete.modal.warning}
+          </div>
+        }
+      >
+        <CustomInput
+          data-testid="api-key-confirm-input"
+          type="text"
+          name="apiKeyName"
+          label="API Key Name"
+          value={confirmKeyName}
+          onChange={(e) => setConfirmKeyName(e.target.value)}
+        />
+      </ConfirmationModal>
+    </div>
+  );
+}
+
+DeleteApiKeyModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  selectedKey: PropTypes.object,
+  deleteKeyRequest: PropTypes.func.isRequired,
+  onDeleteSuccess: PropTypes.func.isRequired,
+  toast: PropTypes.object.isRequired,
+};
+
+function Dashboard() {
+  const { userData, loading, fetchUserData } = useContext(UserContext);
+  const [selectedDashboard, setSelectedDashboard] = useState("USER");
+  const [isGuest, setIsGuest] = useState(false);
+  const [selectedKey, setSelectedKey] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [apiKeys, setApiKeys] = useState([]);
+  const [showLoader, setShowLoader] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("api-keys");
+  const [keyTypeTab, setKeyTypeTab] = useState("SECRET");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [editingKey, setEditingKey] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const toast = useToast();
+
+  const { makeRequest: fetchUserKeys, data: userDataResponse } = useApi({
+    method: "get",
+    url: "/user/me",
+  });
+
+  const { makeRequest: deleteKeyRequest, errorMsg } = useApi({
+    method: "delete",
+    url: `/user/api-key/${selectedKey?._id}`,
+  });
+
+  const { fetchRequest: updateOldKeysRequest } = useApi({
+    method: "get",
+    url: "/user/update-old-keys",
+    withCredentials: true,
+  });
+
+  const filteredApiKeys = useMemo(
+    () => getFilteredApiKeys(apiKeys, keyTypeTab),
+    [apiKeys, keyTypeTab]
+  );
+
+  const apiKeyTableData = useMemo(
+    () => formatApiKeyTableData(filteredApiKeys, keyTypeTab),
+    [filteredApiKeys, keyTypeTab]
+  );
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  useEffect(() => {
+    if (userData) {
+      setIsGuest(userData?.role == "GUEST");
+      const userKeys = userData?.keys || [];
+      setApiKeys(userKeys);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userDataResponse?.data?.keys) {
+      const userKeys = userDataResponse.data.keys;
+      setApiKeys(userKeys);
+    }
+  }, [userDataResponse]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      toast.error(errorMsg);
+    }
+  }, [errorMsg, toast]);
 
   useEffect(() => {
     async function checkOldKeys() {
@@ -356,32 +636,34 @@ function Dashboard() {
     checkOldKeys();
   }, [toast, updateOldKeysRequest]);
 
-  const handleKeyNameChange = (e) => {
-    setConfirmKeyName(e.target.value);
+  const handleDeleteClick = (index) => {
+    setSelectedKey(filteredApiKeys[index]);
+    setShowModal(true);
   };
 
-  const handleDeleteKey = async () => {
-    if (!selectedKey?._id) {
-      toast.error(API_KEY.delete.invalidKey);
-      return;
-    }
-    setIsDeleting(true);
-    const success = await deleteKeyRequest();
-    if (success) {
-      toast.success(
-        selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE"
-          ? PUBLISHABLE_KEY.delete.success
-          : API_KEY.delete.success
-      );
-      setShowModal(false);
-      await fetchUserKeys();
-    }
-    setIsDeleting(false);
+  const handleEditClick = (index) => {
+    setEditingKey(filteredApiKeys[index]);
+    setShowEditModal(true);
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-    setConfirmKeyName("");
+  const handleKeyUpdated = (updatedInfo) => {
+    setApiKeys((prevKeys) =>
+      prevKeys.map((key) =>
+        key._id === updatedInfo._id ? { ...key, ...updatedInfo } : key
+      )
+    );
+  };
+
+  const handleRoleSelect = (role) => {
+    setSelectedDashboard(role);
+    setIsDropdownOpen(false);
+  };
+
+  const handleKeyGenerated = async () => {
+    const success = await fetchUserKeys();
+    if (!success) {
+      toast.error("Failed to fetch updated API keys");
+    }
   };
 
   if (loading) {
@@ -400,24 +682,7 @@ function Dashboard() {
     );
   }
 
-  const handleKeyGenerated = async () => {
-    const success = await fetchUserKeys();
-    if (!success) {
-      toast.error("Failed to fetch updated API keys");
-    }
-  };
-
-  const dashboardDropdownOptions = [];
-  if (userData?.role === "ADMIN") {
-    dashboardDropdownOptions.push("ADMIN", "OPERATOR", "USER");
-  } else if (userData?.role === "OPERATOR") {
-    dashboardDropdownOptions.push("OPERATOR", "USER");
-  }
-
-  const handleRoleSelect = (role) => {
-    setSelectedDashboard(role);
-    setIsDropdownOpen(false);
-  };
+  const dashboardDropdownOptions = getDashboardDropdownOptions(userData?.role);
 
   return (
     <div
@@ -680,232 +945,30 @@ function Dashboard() {
         </>
       )}
 
-      {showEditModal && editingKey && (
-        <Modal
-          isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-          customWidth="540px"
-        >
-          <div className={styles["edit-modal-content"]}>
-            <div className={styles["edit-modal-header"]}>
-              <div className={styles["edit-modal-icon"]}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </div>
-              <div>
-                <h2 className={styles["edit-modal-title"]}>
-                  {PUBLISHABLE_KEY.edit.modal.title}
-                </h2>
-                <p className={styles["edit-modal-subtitle"]}>
-                  {PUBLISHABLE_KEY.edit.modal.subtitle}
-                </p>
-              </div>
-            </div>
+      <EditAllowedOriginsModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setEditingKey(null);
+        }}
+        editingKey={editingKey}
+        onKeyUpdated={handleKeyUpdated}
+        fetchUserKeys={fetchUserKeys}
+        fetchUserData={fetchUserData}
+        toast={toast}
+      />
 
-            <div className={styles["form-group"]}>
-              <div className={styles["toggle-header"]}>
-                <label className={styles["label"]}>Key Status</label>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-label="Key Status"
-                  aria-checked={editIsActive}
-                  className={`${styles["toggle-switch"]} ${
-                    editIsActive ? styles["toggle-active"] : ""
-                  }`}
-                  onClick={() => setEditIsActive((prev) => !prev)}
-                >
-                  <span className={styles["toggle-thumb"]} />
-                </button>
-              </div>
-              <p className={styles["toggle-subtitle"]}>
-                {editIsActive
-                  ? "Key is active and accepting requests"
-                  : "Key is deactivated and rejecting requests"}
-              </p>
-            </div>
-
-            <div className={styles["form-group"]}>
-              <div className={styles["toggle-header"]}>
-                <label className={styles["label"]}>Origin Restriction</label>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-label="Origin Restriction"
-                  aria-checked={editIsOriginRestricted}
-                  className={`${styles["toggle-switch"]} ${
-                    editIsOriginRestricted ? styles["toggle-active"] : ""
-                  }`}
-                  onClick={() => setEditIsOriginRestricted((prev) => !prev)}
-                >
-                  <span className={styles["toggle-thumb"]} />
-                </button>
-              </div>
-              <p className={styles["toggle-subtitle"]}>
-                {editIsOriginRestricted
-                  ? "Restrict key usage to specified origin domains"
-                  : "Allow key usage from any origin domain"}
-              </p>
-            </div>
-
-            {editIsOriginRestricted && (
-              <div className={styles["form-group"]}>
-                <div className={styles["origins-list-header"]}>
-                  <label className={styles["label"]}>Allowed Origins</label>
-                  <span className={styles["origins-count"]}>
-                    {editOrigins.length +
-                      (editOriginInputText.trim() &&
-                      !editOrigins.includes(editOriginInputText.trim())
-                        ? 1
-                        : 0)}{" "}
-                    {editOrigins.length === 1 ? "origin" : "origins"}
-                  </span>
-                </div>
-                <div className={styles["tag-input-box"]}>
-                  {editOrigins.map((origin, index) => (
-                    <span key={index} className={styles["origin-pill"]}>
-                      {editingEditPillIndex === index ? (
-                        <input
-                          type="text"
-                          className={styles["pill-edit-input"]}
-                          value={editingEditPillValue}
-                          onChange={(e) =>
-                            setEditingEditPillValue(e.target.value)
-                          }
-                          onKeyDown={(e) => handleEditPillKeyDown(e, index)}
-                          onBlur={() => handleSaveEditEditPill(index)}
-                          autoFocus
-                        />
-                      ) : (
-                        <>
-                          <span
-                            className={styles["pill-text"]}
-                            onClick={() =>
-                              handleStartEditEditPill(index, origin)
-                            }
-                            title="Click to edit origin"
-                          >
-                            {origin}
-                          </span>
-                          <button
-                            type="button"
-                            className={styles["pill-remove-btn"]}
-                            onClick={() => handleRemoveEditOriginTag(index)}
-                            aria-label={`Remove origin ${origin}`}
-                            title="Remove origin"
-                          >
-                            <svg
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                          </button>
-                        </>
-                      )}
-                    </span>
-                  ))}
-                  <input
-                    type="text"
-                    name="edit-origin-tag-input"
-                    className={styles["tag-input-field"]}
-                    placeholder={
-                      editOrigins.length === 0
-                        ? "e.g., https://example.com or http://localhost:8080"
-                        : "Add origin..."
-                    }
-                    value={editOriginInputText}
-                    onChange={(e) => setEditOriginInputText(e.target.value)}
-                    onKeyDown={handleEditOriginKeyDown}
-                    onBlur={() => {
-                      if (editOriginInputText.trim()) {
-                        addEditOriginTag(editOriginInputText);
-                      }
-                    }}
-                  />
-                </div>
-
-                {editErrors.allowedOrigins && (
-                  <p className={styles["error-message"]}>
-                    {editErrors.allowedOrigins}
-                  </p>
-                )}
-              </div>
-            )}
-
-            <div className={styles["modal-actions"]}>
-              <Button
-                variant="secondary"
-                onClick={() => setShowEditModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={handleSaveEditKey}>
-                Save Changes
-              </Button>
-            </div>
-          </div>
-        </Modal>
-      )}
-
-      {showModal && (
-        <div data-testid="delete-api-key-modal">
-          <ConfirmationModal
-            isOpen={showModal}
-            onClose={handleModalClose}
-            onConfirm={handleDeleteKey}
-            isConfirmDisabled={confirmKeyName !== selectedKey?.key_description}
-            isConfirmLoading={isDeleting}
-            confirmButtonContent={BUTTON_TEXT.delete}
-            customHeading={
-              selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE"
-                ? PUBLISHABLE_KEY.delete.modal.title
-                : API_KEY.delete.modal.title
-            }
-            customDescription={
-              <div>
-                {selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE"
-                  ? PUBLISHABLE_KEY.delete.modal.description
-                  : API_KEY.delete.modal.description}{" "}
-                <strong className={styles["deletekey-name"]}>
-                  {selectedKey.key_description}
-                </strong>
-                ?{" "}
-                {selectedKey?.key_type?.toUpperCase() === "PUBLISHABLE"
-                  ? PUBLISHABLE_KEY.delete.modal.warning
-                  : API_KEY.delete.modal.warning}
-              </div>
-            }
-          >
-            <CustomInput
-              data-testid="api-key-confirm-input"
-              type="text"
-              name="apiKeyName"
-              label="API Key Name"
-              value={confirmKeyName}
-              onChange={handleKeyNameChange}
-            />
-          </ConfirmationModal>
-        </div>
-      )}
+      <DeleteApiKeyModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setSelectedKey(null);
+        }}
+        selectedKey={selectedKey}
+        deleteKeyRequest={deleteKeyRequest}
+        onDeleteSuccess={fetchUserKeys}
+        toast={toast}
+      />
     </div>
   );
 }

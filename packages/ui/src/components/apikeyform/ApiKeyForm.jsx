@@ -20,6 +20,199 @@ import styles from "./ApiKeyForm.module.css";
 const originRegex =
   /^https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
 
+const computeActiveOrigins = (
+  isPublishable,
+  isOriginRestricted,
+  origins,
+  originInputText
+) => {
+  if (!isPublishable || !isOriginRestricted) return [];
+  const trimmed = originInputText.trim();
+  const extra =
+    trimmed && !origins.includes(trimmed)
+      ? [trimmed.replace(/^,+|,+$/g, "")]
+      : [];
+  return [...origins, ...extra].filter(Boolean);
+};
+
+const resolveOrigins = (currentOrigins, rawInput) => {
+  const extra = rawInput.trim().replace(/^,+|,+$/g, "");
+  if (!extra) return [...currentOrigins];
+  if (currentOrigins.includes(extra)) return null;
+  return [...currentOrigins, extra];
+};
+
+const getOriginValidationError = (origins, originInputText) => {
+  const originsList = resolveOrigins(origins, originInputText);
+  const keyErrors = PUBLISHABLE_KEY.generation;
+
+  if (!originsList || new Set(originsList).size !== originsList.length) {
+    return keyErrors.duplicateOrigin;
+  }
+  if (originsList.length === 0) {
+    return keyErrors.originRequired;
+  }
+  if (!originsList.every((o) => originRegex.test(o))) {
+    return keyErrors.invalidOrigin;
+  }
+  return null;
+};
+
+const getDescriptionValidationError = (desc, isPub) => {
+  const trimmed = desc.trim();
+  if (!trimmed) {
+    return {
+      toastMsg: isPub
+        ? PUBLISHABLE_KEY.generation.descriptionRequired
+        : API_KEY.generation.descriptionRequired,
+    };
+  }
+  const validationErrors = validate({ description: desc });
+  if (validationErrors.description) {
+    return { formError: validationErrors.description };
+  }
+  return null;
+};
+
+const validateFieldsOnFocus = (description, isPublishable, activeOrigins) => {
+  const validationErrors = validate({ description });
+  const errors = { apikey: validationErrors.description || "" };
+
+  if (isPublishable) {
+    if (activeOrigins.length === 0) {
+      errors.allowedOrigins = PUBLISHABLE_KEY.generation.originRequired;
+    } else if (!activeOrigins.every((o) => originRegex.test(o))) {
+      errors.allowedOrigins = PUBLISHABLE_KEY.generation.invalidOrigin;
+    }
+  }
+
+  return errors;
+};
+
+const checkFieldValid = (formErrors, description) =>
+  Object.values(formErrors).every((error) => !error) ||
+  Object.values(description).some((val) => !val);
+
+const checkOriginsValid = (isPublishable, isOriginRestricted, activeOrigins) =>
+  !isPublishable ||
+  !isOriginRestricted ||
+  (activeOrigins.length > 0 && activeOrigins.every((o) => originRegex.test(o)));
+
+function CardHeader({ isPublishable }) {
+  return (
+    <div className={styles["card-header"]}>
+      <div
+        className={`${styles["key-icon"]} ${
+          isPublishable ? styles["publishable-icon"] : ""
+        }`}
+      >
+        {isPublishable ? (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        ) : (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+          </svg>
+        )}
+      </div>
+      <h2 className={styles["card-title"]}>
+        {isPublishable ? "Generate Publishable Key" : "Generate Key"}
+      </h2>
+    </div>
+  );
+}
+
+CardHeader.propTypes = {
+  isPublishable: PropTypes.bool.isRequired,
+};
+
+function ApiKeyDisplayModal({
+  isOpen,
+  onClose,
+  isPublishable,
+  data,
+  copyMessage,
+  onCopyKey,
+}) {
+  const keyValue = data?.data?.publishable_key || data?.data?.api_key;
+  const expiresAt = data?.data?.expires_at;
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} customWidth="500px">
+      <div className={styles["api-key-modal"]}>
+        <h2>
+          {isPublishable
+            ? PUBLISHABLE_KEY.generation.modal.title
+            : API_KEY.generation.modal.title}
+        </h2>
+        <p>
+          {isPublishable
+            ? PUBLISHABLE_KEY.generation.modal.warning
+            : API_KEY.generation.modal.warning}
+        </p>
+        <div className={styles["key-display"]}>
+          <code>{keyValue}</code>
+          <div className={styles["icon-wrapper"]}>
+            <button
+              type="button"
+              className={styles["icon-button"]}
+              onClick={onCopyKey}
+              aria-label="Copy API key"
+            >
+              <img
+                src={copyMessage ? TICK.src : COPY.src}
+                className={styles["copy-icon"]}
+                alt="Copy API key"
+              />
+            </button>
+          </div>
+        </div>
+
+        {expiresAt && (
+          <div className={styles["expiry-info"]}>
+            <p>
+              {isPublishable
+                ? PUBLISHABLE_KEY.generation.modal.expiryLabel
+                : API_KEY.generation.modal.expiryLabel}{" "}
+              {formatDate(expiresAt)}
+            </p>
+          </div>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
+ApiKeyDisplayModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isPublishable: PropTypes.bool.isRequired,
+  data: PropTypes.object,
+  copyMessage: PropTypes.string,
+  onCopyKey: PropTypes.func.isRequired,
+};
+
 function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   const [description, setDescription] = useState("");
   const [origins, setOrigins] = useState([]);
@@ -38,15 +231,12 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
 
   const activeOrigins = useMemo(
     () =>
-      isPublishable && isOriginRestricted
-        ? [
-            ...origins,
-            ...(originInputText.trim() &&
-            !origins.includes(originInputText.trim())
-              ? [originInputText.trim().replace(/^,+|,+$/g, "")]
-              : []),
-          ].filter(Boolean)
-        : [],
+      computeActiveOrigins(
+        isPublishable,
+        isOriginRestricted,
+        origins,
+        originInputText
+      ),
     [isPublishable, isOriginRestricted, origins, originInputText]
   );
 
@@ -67,23 +257,14 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   });
 
   useEffect(() => {
-    if (focusedField !== "apikey" && focusedField !== "originInputs") {
+    if (!["apikey", "originInputs"].includes(focusedField)) {
       setFormErrors({});
       return;
     }
     const timer = setTimeout(() => {
-      const validationErrors = validate({ description });
-      const errors = { apikey: validationErrors.description || "" };
-
-      if (isPublishable) {
-        if (activeOrigins.length === 0) {
-          errors.allowedOrigins = PUBLISHABLE_KEY.generation.originRequired;
-        } else if (!activeOrigins.every((o) => originRegex.test(o))) {
-          errors.allowedOrigins = PUBLISHABLE_KEY.generation.invalidOrigin;
-        }
-      }
-
-      setFormErrors(errors);
+      setFormErrors(
+        validateFieldsOnFocus(description, isPublishable, activeOrigins)
+      );
     }, 500);
     return () => clearTimeout(timer);
   }, [
@@ -122,18 +303,8 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   };
 
   const handleOriginKeyDown = (e) => {
-    if (
-      e.key === "Enter" ||
-      e.key === "," ||
-      e.key === " " ||
-      e.key === "Tab"
-    ) {
-      if (e.key === "Tab") {
-        if (originInputText.trim()) {
-          e.preventDefault();
-          addOriginTag(originInputText);
-        }
-      } else {
+    if (["Enter", ",", " ", "Tab"].includes(e.key)) {
+      if (e.key !== "Tab" || originInputText.trim()) {
         e.preventDefault();
         addOriginTag(originInputText);
       }
@@ -185,7 +356,7 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   };
 
   const handlePillEditKeyDown = (e, index) => {
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (["Enter", "Tab"].includes(e.key)) {
       e.preventDefault();
       handleSaveEditPill(index);
     } else if (e.key === "Escape") {
@@ -193,55 +364,6 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
       setEditingPillIndex(null);
       setEditingPillValue("");
     }
-  };
-
-  const validateDescription = (desc, isPub) => {
-    const trimmed = desc.trim();
-    if (!trimmed) {
-      const msg = isPub
-        ? PUBLISHABLE_KEY.generation.descriptionRequired
-        : API_KEY.generation.descriptionRequired;
-      toast.error(msg);
-      return false;
-    }
-
-    const validationErrors = validate({ description: desc });
-    if (validationErrors.description) {
-      setFormErrors({ apikey: validationErrors.description });
-      return false;
-    }
-
-    return true;
-  };
-
-  const resolveOrigins = (currentOrigins, rawInput) => {
-    const extra = rawInput.trim().replace(/^,+|,+$/g, "");
-    if (!extra) return [...currentOrigins];
-    if (currentOrigins.includes(extra)) return null; // indicates duplicate
-    return [...currentOrigins, extra];
-  };
-
-  const validateAllowedOrigins = (currentOrigins, rawInput) => {
-    const originsList = resolveOrigins(currentOrigins, rawInput);
-    const keyErrors = PUBLISHABLE_KEY.generation;
-
-    const fail = (message) => {
-      toast.error(message);
-      setFormErrors((prev) => ({ ...prev, allowedOrigins: message }));
-      return false;
-    };
-
-    if (!originsList || new Set(originsList).size !== originsList.length) {
-      return fail(keyErrors.duplicateOrigin);
-    }
-    if (originsList.length === 0) {
-      return fail(keyErrors.originRequired);
-    }
-    if (!originsList.every((o) => originRegex.test(o))) {
-      return fail(keyErrors.invalidOrigin);
-    }
-
-    return true;
   };
 
   const resetFormState = (isPub) => {
@@ -260,12 +382,18 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
   const handleGenerateKey = async (e) => {
     e.preventDefault();
 
-    if (!validateDescription(description, isPublishable)) {
+    const descErr = getDescriptionValidationError(description, isPublishable);
+    if (descErr) {
+      if (descErr.toastMsg) toast.error(descErr.toastMsg);
+      if (descErr.formError) setFormErrors({ apikey: descErr.formError });
       return;
     }
 
     if (isPublishable && isOriginRestricted) {
-      if (!validateAllowedOrigins(origins, originInputText)) {
+      const originErr = getOriginValidationError(origins, originInputText);
+      if (originErr) {
+        toast.error(originErr);
+        setFormErrors((prev) => ({ ...prev, allowedOrigins: originErr }));
         return;
       }
     }
@@ -292,58 +420,16 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
     }
   };
 
-  const isFieldValid =
-    Object.values(formErrors).every((error) => !error) ||
-    Object.values(description).some((val) => !val);
-
-  const isValidOrigins =
-    !isPublishable ||
-    !isOriginRestricted ||
-    (activeOrigins.length > 0 &&
-      activeOrigins.every((o) => originRegex.test(o)));
+  const isFieldValid = checkFieldValid(formErrors, description);
+  const isValidOrigins = checkOriginsValid(
+    isPublishable,
+    isOriginRestricted,
+    activeOrigins
+  );
 
   return (
     <>
-      <div className={styles["card-header"]}>
-        <div
-          className={`${styles["key-icon"]} ${
-            isPublishable ? styles["publishable-icon"] : ""
-          }`}
-        >
-          {isPublishable ? (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="2" y1="12" x2="22" y2="12"></line>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-          ) : (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
-            </svg>
-          )}
-        </div>
-        <h2 className={styles["card-title"]}>
-          {isPublishable ? "Generate Publishable Key" : "Generate Key"}
-        </h2>
-      </div>
+      <CardHeader isPublishable={isPublishable} />
 
       <p className={styles["card-description"]}>
         {isPublishable
@@ -528,52 +614,14 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
             : BUTTON_TEXT.generateKey}
         </Button>
 
-        <Modal
+        <ApiKeyDisplayModal
           isOpen={showApiKeyModal}
           onClose={handleCloseModal}
-          customWidth="500px"
-        >
-          <div className={styles["api-key-modal"]}>
-            <h2>
-              {isPublishable
-                ? PUBLISHABLE_KEY.generation.modal.title
-                : API_KEY.generation.modal.title}
-            </h2>
-            <p>
-              {isPublishable
-                ? PUBLISHABLE_KEY.generation.modal.warning
-                : API_KEY.generation.modal.warning}
-            </p>
-            <div className={styles["key-display"]}>
-              <code>{data?.data?.publishable_key || data?.data?.api_key}</code>
-              <div className={styles["icon-wrapper"]}>
-                <button
-                  type="button"
-                  className={styles["icon-button"]}
-                  onClick={handleCopyKey}
-                  aria-label="Copy API key"
-                >
-                  <img
-                    src={copyMessage ? TICK.src : COPY.src}
-                    className={styles["copy-icon"]}
-                    alt="Copy API key"
-                  />
-                </button>
-              </div>
-            </div>
-
-            {data?.data?.expires_at && (
-              <div className={styles["expiry-info"]}>
-                <p>
-                  {isPublishable
-                    ? PUBLISHABLE_KEY.generation.modal.expiryLabel
-                    : API_KEY.generation.modal.expiryLabel}{" "}
-                  {formatDate(data.data.expires_at)}
-                </p>
-              </div>
-            )}
-          </div>
-        </Modal>
+          isPublishable={isPublishable}
+          data={data}
+          copyMessage={copyMessage}
+          onCopyKey={handleCopyKey}
+        />
       </form>
     </>
   );

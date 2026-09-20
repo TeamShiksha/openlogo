@@ -184,10 +184,7 @@ async function generateKeyController(req, res, next) {
       user.subscription_id
     );
 
-    const existingKeys =
-      user.keys && user.keys.length > 0
-        ? await keyService.getAllUserKeys(user.keys)
-        : [];
+    const existingKeys = await keyService.getAllUserKeys(user.keys || []);
 
     if (key_type === KeyTypes.PUBLISHABLE) {
       const publishableKeysCount = existingKeys.filter(
