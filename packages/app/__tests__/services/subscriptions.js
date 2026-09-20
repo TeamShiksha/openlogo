@@ -27,6 +27,7 @@ describe("Subscription Service", () => {
 
     expect(result).toBeDefined();
     expect(result.key_limit).toBe(2);
+    expect(result.publishable_key_limit).toBe(2);
   });
 
   it("get a subscription", async () => {
@@ -38,6 +39,7 @@ describe("Subscription Service", () => {
     const result = await subscriptionService.getSubscription(subscription.id);
     expect(result).toBeDefined();
     expect(result.key_limit).toBe(2);
+    expect(result.publishable_key_limit).toBe(2);
     expect(result.usage_limit).toBe(5000);
     expect(spy).toHaveBeenCalledWith(subscription.id, { session: undefined });
   });
@@ -92,6 +94,7 @@ describe("Subscription Service", () => {
       ...MOCK_SUBSCRIPTION[0],
       type: ProSubscriptionPlan.type,
       key_limit: ProSubscriptionPlan.key_limit,
+      publishable_key_limit: ProSubscriptionPlan.publishable_key_limit,
       usage_limit: ProSubscriptionPlan.usage_limit,
       is_active: ProSubscriptionPlan.is_active,
     };
@@ -106,6 +109,9 @@ describe("Subscription Service", () => {
 
     expect(result.type).toBe("PRO");
     expect(result.key_limit).toBe(ProSubscriptionPlan.key_limit);
+    expect(result.publishable_key_limit).toBe(
+      ProSubscriptionPlan.publishable_key_limit
+    );
     expect(result.usage_limit).toBe(ProSubscriptionPlan.usage_limit);
     expect(spy).toHaveBeenCalledWith(
       { _id: subscriptionId },
@@ -113,6 +119,7 @@ describe("Subscription Service", () => {
         $set: expect.objectContaining({
           type: ProSubscriptionPlan.type,
           key_limit: ProSubscriptionPlan.key_limit,
+          publishable_key_limit: ProSubscriptionPlan.publishable_key_limit,
           usage_limit: ProSubscriptionPlan.usage_limit,
         }),
       }),
@@ -126,6 +133,7 @@ describe("Subscription Service", () => {
       ...MOCK_SUBSCRIPTION[1],
       type: DefaultSubscriptionPlan.type,
       key_limit: DefaultSubscriptionPlan.key_limit,
+      publishable_key_limit: DefaultSubscriptionPlan.publishable_key_limit,
       usage_limit: DefaultSubscriptionPlan.usage_limit,
     };
     jest
@@ -139,6 +147,9 @@ describe("Subscription Service", () => {
 
     expect(result.type).toBe("HOBBY");
     expect(result.key_limit).toBe(DefaultSubscriptionPlan.key_limit);
+    expect(result.publishable_key_limit).toBe(
+      DefaultSubscriptionPlan.publishable_key_limit
+    );
   });
 
   it("should create a subscription audit log", async () => {

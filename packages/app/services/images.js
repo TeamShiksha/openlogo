@@ -1,7 +1,12 @@
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { ImagesRepository } = require("../repositories");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { grabCompanyLogos } = require("../utils/webLogoSearch");
+const { EXTENSION_TO_MIME } = require("../utils/constants");
 
 class ImageServices {
   constructor() {
@@ -173,6 +178,30 @@ class ImageServices {
 
   async getImageByCompanyName(companyName) {
     return await this.imageRepository.fetchImage(companyName);
+  }
+
+  /**
+   * Retrieves an image readable stream directly from S3.
+   * @param {Object} imageData - Image metadata from database.
+   * @returns {Promise<{ stream: import('stream').Readable, contentType: string, contentLength: number }>}
+   */
+  async getImageStream(imageData) {
+    const extension = (imageData.extension || "png").toLowerCase();
+    const s3Key = `${this.s3BucketKey}/${extension}/${imageData.company_name}.${extension}`;
+    const command = new GetObjectCommand({
+      Bucket: process.env.BUCKET_NAME,
+      Key: s3Key,
+    });
+    const s3Response = await this.s3.send(command);
+    const contentType =
+      s3Response.ContentType ||
+      EXTENSION_TO_MIME[extension] ||
+      "application/octet-stream";
+    return {
+      stream: s3Response.Body,
+      contentType,
+      contentLength: s3Response.ContentLength || imageData.image_size,
+    };
   }
 
   /**

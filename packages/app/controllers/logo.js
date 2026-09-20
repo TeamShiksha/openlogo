@@ -9,6 +9,7 @@ const {
   getLogoQuerySchema,
   getSearchQuerySchema,
   getDemoSearchQuerySchema,
+  getLogoImageQuerySchema,
 } = require("../schemas/catalog");
 const { Messages } = require("../utils/constants");
 
@@ -219,8 +220,221 @@ async function demoSearchLogoController(req, res, next) {
   }
 }
 
+const normalizeOrigin = (requestOrigin) => {
+  if (!requestOrigin || typeof requestOrigin !== "string") return null;
+  try {
+    const parsed = new URL(requestOrigin.trim());
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.origin;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+};
+
+const validatePublishableKeyOrigin = (keyRef, requestOrigin) => {
+  const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
+
+  if (keyRef.is_origin_restricted) {
+    if (!normalizedRequestOrigin) {
+      return { isValid: false, allowedOrigin: null };
+    }
+
+    const allowedOrigins = Array.isArray(keyRef.allowed_origins)
+      ? keyRef.allowed_origins
+      : [];
+
+    const matched = allowedOrigins.find((allowed) => {
+      const normalizedAllowed = normalizeOrigin(allowed);
+      return (
+        normalizedAllowed !== null &&
+        normalizedRequestOrigin === normalizedAllowed
+      );
+    });
+
+    if (!matched) {
+      return { isValid: false, allowedOrigin: null };
+    }
+
+    return { isValid: true, allowedOrigin: normalizeOrigin(matched) };
+  }
+
+  if (!requestOrigin) {
+    return { isValid: true, allowedOrigin: null };
+  }
+
+  return { isValid: true, allowedOrigin: normalizedRequestOrigin };
+};
+
+const getPublishableKeyError = (keyRef) => {
+  if (!keyRef || keyRef.is_active === false) {
+    return {
+      message: Messages.INVALID_PUBLISHABLE_KEY,
+      statusCode: 401,
+    };
+  }
+  if (keyRef.expires_at && new Date() > new Date(keyRef.expires_at)) {
+    return {
+      message: Messages.API_KEY_EXPIRED,
+      statusCode: 401,
+    };
+  }
+  return null;
+};
+
+const setLogoImageHeaders = (
+  res,
+  imageStreamResult,
+  allowedOrigin
+) => {
+  res.setHeader("Content-Type", imageStreamResult.contentType);
+  if (allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  }
+  res.setHeader("Vary", "Origin");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  if (imageStreamResult.contentLength) {
+    res.setHeader("Content-Length", imageStreamResult.contentLength);
+  }
+};
+
+const logRequestAndUsage = (
+  userService,
+  subscriptionService,
+  company,
+  userSubscription,
+  keyRef
+) => {
+  if (!userSubscription) return;
+
+  userService
+    .logLogoRequestEntry(company, userSubscription, keyRef)
+    .catch((err) => {
+      console.error("Failed to log logo request entry:", err.message);
+    });
+
+  subscriptionService.incrementUsageCount(userSubscription).catch((err) => {
+    console.error("Failed to increment usage count:", err.message);
+  });
+};
+
+/**
+ * Handles public direct logo image retrieval via publishable key and exact origin validation.
+ * Streams binary image payload directly to client with appropriate CORS and Content-Type headers.
+ */
+async function getLogoImageController(req, res, next) {
+  try {
+    const imageService = new ImageService();
+    const keyService = new KeyService();
+    const subscriptionService = new SubscriptionService();
+    const userService = new UserService();
+
+    if (!req.query.PUBLISHABLE_KEY) {
+      return res.status(401).json({
+        message: Messages.INVALID_PUBLISHABLE_KEY,
+        statusCode: 401,
+        error: STATUS_CODES[401],
+      });
+    }
+
+    const { error, value } = getLogoImageQuerySchema.validate(req.query);
+    if (error) {
+      return res.status(422).json({
+        message: error.message,
+        statusCode: 422,
+        error: STATUS_CODES[422],
+      });
+    }
+    const { company, PUBLISHABLE_KEY } = value;
+
+    const keyRef = await keyService.getPublishableKey(PUBLISHABLE_KEY);
+    const keyError = getPublishableKeyError(keyRef);
+    if (keyError) {
+      return res.status(keyError.statusCode).json({
+        message: keyError.message,
+        statusCode: keyError.statusCode,
+        error: STATUS_CODES[keyError.statusCode],
+      });
+    }
+
+    // Origin validation
+    const { isValid: isOriginValid, allowedOrigin } =
+      validatePublishableKeyOrigin(keyRef, req.headers.origin);
+    if (!isOriginValid) {
+      return res.status(403).json({
+        message: Messages.ORIGIN_NOT_ALLOWED,
+        statusCode: 403,
+        error: STATUS_CODES[403],
+      });
+    }
+
+    let userSubscription = null;
+    if (keyRef.subscription_id) {
+      userSubscription = await subscriptionService.getSubscription(
+        keyRef.subscription_id
+      );
+      if (
+        userSubscription &&
+        userSubscription.usage_count >= userSubscription.usage_limit
+      ) {
+        return res.status(403).json({
+          message: Messages.LIMIT_REACHED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
+    }
+
+    const imageDoc = await imageService.getImageByCompanyName(company);
+    if (!imageDoc) {
+      return res.status(404).json({
+        message: Messages.LOGO_NOT_FOUND,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    let imageStreamResult;
+    try {
+      imageStreamResult = await imageService.getImageStream(imageDoc);
+    } catch (streamErr) {
+      console.error(
+        "Failed to retrieve image from storage:",
+        streamErr.message
+      );
+      return res.status(404).json({
+        message: Messages.LOGO_NOT_FOUND,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    logRequestAndUsage(
+      userService,
+      subscriptionService,
+      company,
+      userSubscription,
+      keyRef
+    );
+
+    setLogoImageHeaders(res, imageStreamResult, allowedOrigin);
+
+    if (
+      imageStreamResult.stream &&
+      typeof imageStreamResult.stream.pipe === "function"
+    ) {
+      return imageStreamResult.stream.pipe(res);
+    }
+    return res.status(200).send(imageStreamResult.stream);
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getLogoController,
   searchLogoController,
   demoSearchLogoController,
+  getLogoImageController,
 };

@@ -8,12 +8,13 @@ const {
 const {
   changeNameEmailSchema,
   generateKeyPayloadSchema,
+  updateKeyPayloadSchema,
   destroyKeyPayloadSchema,
   updatePasswordPayloadSchema,
   logoRequestPyaloadSchema,
 } = require("../schemas/user");
 const { listUsersQuerySchema } = require("../schemas/admin");
-const { Messages, getIsProduction } = require("../utils/constants");
+const { Messages, getIsProduction, KeyTypes } = require("../utils/constants");
 
 /**
  * This controller fetches the authenticated user's data from the database
@@ -150,11 +151,7 @@ async function generateKeyController(req, res, next) {
     const userService = new UserService();
     const subscriptionService = new SubscriptionService();
 
-    const { key_description, expires_at } = req.body;
-    const { error } = generateKeyPayloadSchema.validate({
-      key_description,
-      expires_at,
-    });
+    const { error, value } = generateKeyPayloadSchema.validate(req.body);
 
     if (error) {
       return res.status(422).json({
@@ -163,6 +160,14 @@ async function generateKeyController(req, res, next) {
         error: STATUS_CODES[422],
       });
     }
+
+    const {
+      key_description,
+      expires_at,
+      key_type,
+      is_origin_restricted,
+      allowed_origins,
+    } = value;
 
     const { userId } = req.userData;
     const user = await userService.getUser(userId);
@@ -174,22 +179,46 @@ async function generateKeyController(req, res, next) {
       });
     }
 
+    const keyService = new KeyService();
     const subscription = await subscriptionService.getSubscription(
       user.subscription_id
     );
 
-    if (user.keys.length >= subscription.key_limit) {
-      return res.status(403).json({
-        message: Messages.LIMIT_REACHED,
-        statusCode: 403,
-        error: STATUS_CODES[403],
-      });
+    const existingKeys = await keyService.getAllUserKeys(user.keys || []);
+
+    if (key_type === KeyTypes.PUBLISHABLE) {
+      const publishableKeysCount = existingKeys.filter(
+        (k) => k.key_type === KeyTypes.PUBLISHABLE
+      ).length;
+      const publishableLimit = subscription?.publishable_key_limit ?? 2;
+      if (publishableKeysCount >= publishableLimit) {
+        return res.status(403).json({
+          message: Messages.LIMIT_REACHED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
+    } else {
+      const secretKeysCount = existingKeys.filter(
+        (k) => k.key_type !== KeyTypes.PUBLISHABLE
+      ).length;
+      const secretLimit = subscription?.key_limit ?? 2;
+      if (secretKeysCount >= secretLimit) {
+        return res.status(403).json({
+          message: Messages.LIMIT_REACHED,
+          statusCode: 403,
+          error: STATUS_CODES[403],
+        });
+      }
     }
 
     const newKey = {
-      key_description: req.body.key_description,
+      key_description,
       subscription_id: subscription._id,
-      expires_at: expires_at,
+      expires_at,
+      key_type,
+      is_origin_restricted,
+      allowed_origins,
     };
     const newUserKey = await userService.createNewUserKey(newKey, user);
     return res.status(200).json({
@@ -233,6 +262,92 @@ async function destroyKeyController(req, res, next) {
 
     return res.status(200).json({
       statusCode: 200,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Updates an existing key's description, origin restriction toggle, or allowed origins list.
+ */
+async function updateKeyController(req, res, next) {
+  try {
+    const userService = new UserService();
+    const keyService = new KeyService();
+
+    const { error: paramError, value: paramValue } =
+      destroyKeyPayloadSchema.validate(req.params);
+    if (paramError) {
+      return res.status(422).json({
+        message: paramError.message,
+        statusCode: 422,
+        error: STATUS_CODES[422],
+      });
+    }
+
+    const { error: bodyError, value: bodyValue } =
+      updateKeyPayloadSchema.validate(req.body);
+    if (bodyError) {
+      return res.status(422).json({
+        message: bodyError.message,
+        statusCode: 422,
+        error: STATUS_CODES[422],
+      });
+    }
+
+    const { userId } = req.userData;
+    const user = await userService.getUser(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        error: STATUS_CODES[404],
+        message: Messages.USER_NOT_FOUND,
+      });
+    }
+
+    const { keyId } = paramValue;
+    const isOwner = user.keys.some((k) => k.toString() === keyId.toString());
+    if (!isOwner) {
+      return res.status(404).json({
+        message: Messages.INVALID_KEY,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    const existingKey = await keyService.getKeyById(keyId);
+    if (!existingKey) {
+      return res.status(404).json({
+        message: Messages.INVALID_KEY,
+        statusCode: 404,
+        error: STATUS_CODES[404],
+      });
+    }
+
+    const willBeRestricted =
+      bodyValue.is_origin_restricted !== undefined
+        ? bodyValue.is_origin_restricted
+        : existingKey.is_origin_restricted;
+
+    const finalOrigins =
+      bodyValue.allowed_origins !== undefined
+        ? bodyValue.allowed_origins
+        : existingKey.allowed_origins || [];
+
+    if (willBeRestricted && (!finalOrigins || finalOrigins.length === 0)) {
+      return res.status(422).json({
+        message:
+          "At least one allowed origin is required when origin restriction is enabled",
+        statusCode: 422,
+        error: STATUS_CODES[422],
+      });
+    }
+
+    const updatedKey = await userService.updateUserKey(keyId, bodyValue, user);
+    return res.status(200).json({
+      statusCode: 200,
+      data: updatedKey.data ? updatedKey.data() : updatedKey,
     });
   } catch (err) {
     next(err);
@@ -447,6 +562,7 @@ module.exports = {
   deleteUserAccountController,
   generateKeyController,
   destroyKeyController,
+  updateKeyController,
   updatePasswordController,
   logoRequestController,
   updateOldKeysController,
