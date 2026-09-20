@@ -30,13 +30,13 @@ const computeActiveOrigins = (
   const trimmed = originInputText.trim();
   const extra =
     trimmed && !origins.includes(trimmed)
-      ? [trimmed.replace(/^,+|,+$/g, "")]
+      ? [trimmed.replace(/^,+/, "").replace(/,+$/, "")]
       : [];
   return [...origins, ...extra].filter(Boolean);
 };
 
 const resolveOrigins = (currentOrigins, rawInput) => {
-  const extra = rawInput.trim().replace(/^,+|,+$/g, "");
+  const extra = rawInput.trim().replace(/^,+/, "").replace(/,+$/, "");
   if (!extra) return [...currentOrigins];
   if (currentOrigins.includes(extra)) return null;
   return [...currentOrigins, extra];

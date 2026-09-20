@@ -229,12 +229,20 @@ async function demoSearchLogoController(req, res, next) {
 const escapeRegex = (str) =>
   typeof str === "string" ? str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") : "";
 
+const stripTrailingSlashes = (str) => {
+  if (typeof str !== "string") return "";
+  let end = str.length;
+  while (end > 0 && str[end - 1] === "/") {
+    end--;
+  }
+  return str.slice(0, end);
+};
+
 const normalizeOrigin = (requestOrigin) => {
   if (!requestOrigin || typeof requestOrigin !== "string") return null;
-  const sanitized = requestOrigin
-    .replace(/[\r\n\t\0]/g, "")
-    .trim()
-    .replace(/\/+$/, "");
+  const sanitized = stripTrailingSlashes(
+    requestOrigin.replace(/[\r\n\t\0]/g, "").trim()
+  );
   return sanitized || null;
 };
 
@@ -248,7 +256,7 @@ const validatePublishableKeyOrigin = (keyRef, normalizedRequestOrigin) => {
 
   return allowedOrigins.some((allowed) => {
     if (!allowed || typeof allowed !== "string") return false;
-    return normalizedRequestOrigin === allowed.trim().replace(/\/+$/, "");
+    return normalizedRequestOrigin === stripTrailingSlashes(allowed.trim());
   });
 };
 

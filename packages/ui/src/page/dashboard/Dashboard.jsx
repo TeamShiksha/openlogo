@@ -94,7 +94,10 @@ const getDashboardDropdownOptions = (role) => {
 const validateEditOrigins = (editOrigins, editOriginInputText) => {
   let finalOrigins = [...editOrigins];
   if (editOriginInputText.trim()) {
-    const extra = editOriginInputText.trim().replace(/^,+|,+$/g, "");
+    const extra = editOriginInputText
+      .trim()
+      .replace(/^,+/, "")
+      .replace(/,+$/, "");
     if (extra) {
       if (finalOrigins.includes(extra)) {
         return { error: PUBLISHABLE_KEY.generation.duplicateOrigin };
