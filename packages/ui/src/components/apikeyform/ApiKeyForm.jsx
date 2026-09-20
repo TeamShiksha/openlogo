@@ -512,13 +512,14 @@ function ApiKeyForm({ isGuest, onKeyGenerated, keyType = "SECRET" }) {
                         />
                       ) : (
                         <>
-                          <span
+                          <button
+                            type="button"
                             className={styles["pill-text"]}
                             onClick={() => handleStartEditPill(index, origin)}
                             title="Click to edit origin"
                           >
                             {origin}
-                          </span>
+                          </button>
                           <button
                             type="button"
                             className={styles["pill-remove-btn"]}

@@ -372,13 +372,14 @@ function EditAllowedOriginsModal({
                     />
                   ) : (
                     <>
-                      <span
+                      <button
+                        type="button"
                         className={styles["pill-text"]}
                         onClick={() => handleStartEditEditPill(index, origin)}
                         title="Click to edit origin"
                       >
                         {origin}
-                      </span>
+                      </button>
                       <button
                         type="button"
                         className={styles["pill-remove-btn"]}

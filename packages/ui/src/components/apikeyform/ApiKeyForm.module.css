@@ -186,6 +186,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
 }
 
 .pill-edit-input {

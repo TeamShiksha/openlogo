@@ -331,8 +331,7 @@ async function getLogoImageController(req, res, next) {
     }
 
     // Origin validation
-    const requestOrigin = req.headers.origin || req.get("origin");
-    const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
+    const normalizedRequestOrigin = normalizeOrigin(req.headers.origin);
 
     const isOriginValid = validatePublishableKeyOrigin(
       keyRef,
