@@ -91,13 +91,23 @@ const getDashboardDropdownOptions = (role) => {
   return [];
 };
 
+const trimCommas = (str) => {
+  if (!str || typeof str !== "string") return "";
+  let start = 0;
+  let end = str.length;
+  while (start < end && str[start] === ",") {
+    start++;
+  }
+  while (end > start && str[end - 1] === ",") {
+    end--;
+  }
+  return str.slice(start, end);
+};
+
 const validateEditOrigins = (editOrigins, editOriginInputText) => {
   let finalOrigins = [...editOrigins];
   if (editOriginInputText.trim()) {
-    const extra = editOriginInputText
-      .trim()
-      .replace(/^,+/, "")
-      .replace(/,+$/, "");
+    const extra = trimCommas(editOriginInputText.trim());
     if (extra) {
       if (finalOrigins.includes(extra)) {
         return { error: PUBLISHABLE_KEY.generation.duplicateOrigin };

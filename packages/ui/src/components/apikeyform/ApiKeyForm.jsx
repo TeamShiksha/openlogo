@@ -20,6 +20,19 @@ import styles from "./ApiKeyForm.module.css";
 const originRegex =
   /^https?:\/\/(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?$|^https?:\/\/localhost(?::\d+)?$|^https?:\/\/127\.0\.0\.1(?::\d+)?$/;
 
+const trimCommas = (str) => {
+  if (!str || typeof str !== "string") return "";
+  let start = 0;
+  let end = str.length;
+  while (start < end && str[start] === ",") {
+    start++;
+  }
+  while (end > start && str[end - 1] === ",") {
+    end--;
+  }
+  return str.slice(start, end);
+};
+
 const computeActiveOrigins = (
   isPublishable,
   isOriginRestricted,
@@ -29,14 +42,12 @@ const computeActiveOrigins = (
   if (!isPublishable || !isOriginRestricted) return [];
   const trimmed = originInputText.trim();
   const extra =
-    trimmed && !origins.includes(trimmed)
-      ? [trimmed.replace(/^,+/, "").replace(/,+$/, "")]
-      : [];
+    trimmed && !origins.includes(trimmed) ? [trimCommas(trimmed)] : [];
   return [...origins, ...extra].filter(Boolean);
 };
 
 const resolveOrigins = (currentOrigins, rawInput) => {
-  const extra = rawInput.trim().replace(/^,+/, "").replace(/,+$/, "");
+  const extra = trimCommas(rawInput.trim());
   if (!extra) return [...currentOrigins];
   if (currentOrigins.includes(extra)) return null;
   return [...currentOrigins, extra];
