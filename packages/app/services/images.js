@@ -88,6 +88,7 @@ class ImageServices {
         dataList.push({
           companyName: company.company_name.split(".")[0],
           image: signedUrl,
+          extension: company.extension,
         });
       }
     }

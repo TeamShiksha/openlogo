@@ -481,6 +481,21 @@ describe("Generate User Key", () => {
     expect(response.status).toBe(403);
     expect(response.body.message).toBe(Messages.LIMIT_REACHED);
   });
+
+  it("422 - Fails when is_active is sent in create payload", async () => {
+    const response = await request(app)
+      .post("/api/user/api-key")
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
+      .send({
+        key_description: "Frontend Key",
+        expires_at: 30,
+        key_type: "PUBLISHABLE",
+        is_active: true,
+      });
+
+    expect(response.status).toBe(422);
+    expect(response.body.message).toBe('"is_active" is not allowed');
+  });
 });
 
 describe("Update User Key (PATCH /api/user/api-key/:keyId)", () => {
@@ -656,5 +671,56 @@ describe("Update User Key (PATCH /api/user/api-key/:keyId)", () => {
     expect(firstPatchResponse.body.data.allowed_origins).toEqual([
       "https://example.com",
     ]);
+  });
+
+  it("200 - Successfully updates is_active status on a key", async () => {
+    const mockuser = {
+      ...MOCK_USERS[1],
+      keys: [validKeyId],
+    };
+    jest.spyOn(UserService.prototype, "getUser").mockResolvedValue(mockuser);
+    jest.spyOn(KeyService.prototype, "getKeyById").mockResolvedValue({
+      _id: validKeyId,
+      key_type: "PUBLISHABLE",
+      is_origin_restricted: false,
+      allowed_origins: [],
+      is_active: true,
+    });
+
+    const updatedKeyResult = {
+      _id: validKeyId,
+      key_description: "My Key",
+      key_type: "PUBLISHABLE",
+      publishable_key: "pk_test123",
+      is_active: false,
+      data: () => ({
+        _id: validKeyId,
+        key_description: "My Key",
+        key_type: "PUBLISHABLE",
+        publishable_key: "pk_test123",
+        is_active: false,
+      }),
+    };
+
+    const updateSpy = jest
+      .spyOn(UserService.prototype, "updateUserKey")
+      .mockResolvedValue(updatedKeyResult);
+
+    const response = await request(app)
+      .patch(`/api/user/api-key/${validKeyId}`)
+      .set("Cookie", `sessionId=${MOCK_SESSION_ID}`)
+      .send({
+        is_active: false,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.is_active).toBe(false);
+    expect(updateSpy).toHaveBeenCalledWith(
+      validKeyId,
+      expect.objectContaining({
+        is_active: false,
+      }),
+      mockuser
+    );
   });
 });

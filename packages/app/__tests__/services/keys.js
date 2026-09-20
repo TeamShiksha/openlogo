@@ -201,12 +201,9 @@ describe("KeyService", () => {
       allowed_origins: ["https://example.com"],
     });
     expect(result).toEqual(updatedKey);
-    expect(KeysRepository.prototype.update).toHaveBeenCalledWith(
-      "key_id_123",
-      {
-        is_origin_restricted: true,
-        allowed_origins: ["https://example.com"],
-      }
-    );
+    expect(KeysRepository.prototype.update).toHaveBeenCalledWith("key_id_123", {
+      is_origin_restricted: true,
+      allowed_origins: ["https://example.com"],
+    });
   });
 });

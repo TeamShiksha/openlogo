@@ -7,8 +7,8 @@ class KeyService {
 
   /**
    * Gets Key by Id.
-   * @param {string} keyId
-   * @returns {Object} - Key Object.
+   * @param {Array<string>} keyIds
+   * @returns {Promise<Array<Object>>} - Key Object Array.
    */
   async getAllUserKeys(keyIds) {
     if (keyIds.length === 0) {
@@ -28,8 +28,8 @@ class KeyService {
 
   /**
    * Create a New Key.
-   * @param {string} keyDescription - The Key Description of the user.
-   * @returns {Object} - Newly created Key.
+   * @param {Object} keyData - The key data object.
+   * @returns {Promise<Object>} - Newly created Key.
    */
   async createNewKey(keyData) {
     return await this.keyRepository.create(keyData);
@@ -38,7 +38,7 @@ class KeyService {
   /**
    * Destroy a Key.
    * @param {string} keyId - The Key Id to destroy.
-   * @returns {Object} - The destroyed key object.
+   * @returns {Promise<Object>} - The destroyed key object.
    */
   async destroyKey(keyId) {
     return await this.keyRepository.delete(keyId);
