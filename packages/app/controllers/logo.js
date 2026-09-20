@@ -222,21 +222,49 @@ async function demoSearchLogoController(req, res, next) {
 
 const normalizeOrigin = (requestOrigin) => {
   if (!requestOrigin || typeof requestOrigin !== "string") return null;
-  return requestOrigin.trim().replace(/\/+$/, "");
+  try {
+    const parsed = new URL(requestOrigin.trim());
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.origin;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 };
 
-const validatePublishableKeyOrigin = (keyRef, normalizedRequestOrigin) => {
-  if (!keyRef.is_origin_restricted) return true;
-  if (!normalizedRequestOrigin) return false;
+const validatePublishableKeyOrigin = (keyRef, requestOrigin) => {
+  const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
 
-  const allowedOrigins = Array.isArray(keyRef.allowed_origins)
-    ? keyRef.allowed_origins
-    : [];
+  if (keyRef.is_origin_restricted) {
+    if (!normalizedRequestOrigin) {
+      return { isValid: false, allowedOrigin: null };
+    }
 
-  return allowedOrigins.some((allowed) => {
-    if (!allowed || typeof allowed !== "string") return false;
-    return normalizedRequestOrigin === allowed.trim().replace(/\/+$/, "");
-  });
+    const allowedOrigins = Array.isArray(keyRef.allowed_origins)
+      ? keyRef.allowed_origins
+      : [];
+
+    const matched = allowedOrigins.find((allowed) => {
+      const normalizedAllowed = normalizeOrigin(allowed);
+      return (
+        normalizedAllowed !== null &&
+        normalizedRequestOrigin === normalizedAllowed
+      );
+    });
+
+    if (!matched) {
+      return { isValid: false, allowedOrigin: null };
+    }
+
+    return { isValid: true, allowedOrigin: normalizeOrigin(matched) };
+  }
+
+  if (!requestOrigin) {
+    return { isValid: true, allowedOrigin: null };
+  }
+
+  return { isValid: true, allowedOrigin: normalizedRequestOrigin };
 };
 
 const getPublishableKeyError = (keyRef) => {
@@ -258,11 +286,11 @@ const getPublishableKeyError = (keyRef) => {
 const setLogoImageHeaders = (
   res,
   imageStreamResult,
-  normalizedRequestOrigin
+  allowedOrigin
 ) => {
   res.setHeader("Content-Type", imageStreamResult.contentType);
-  if (normalizedRequestOrigin) {
-    res.setHeader("Access-Control-Allow-Origin", normalizedRequestOrigin);
+  if (allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   }
   res.setHeader("Vary", "Origin");
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -331,12 +359,8 @@ async function getLogoImageController(req, res, next) {
     }
 
     // Origin validation
-    const normalizedRequestOrigin = normalizeOrigin(req.headers.origin);
-
-    const isOriginValid = validatePublishableKeyOrigin(
-      keyRef,
-      normalizedRequestOrigin
-    );
+    const { isValid: isOriginValid, allowedOrigin } =
+      validatePublishableKeyOrigin(keyRef, req.headers.origin);
     if (!isOriginValid) {
       return res.status(403).json({
         message: Messages.ORIGIN_NOT_ALLOWED,
@@ -394,7 +418,7 @@ async function getLogoImageController(req, res, next) {
       keyRef
     );
 
-    setLogoImageHeaders(res, imageStreamResult, normalizedRequestOrigin);
+    setLogoImageHeaders(res, imageStreamResult, allowedOrigin);
 
     if (
       imageStreamResult.stream &&
