@@ -158,7 +158,10 @@ async function searchLogoController(req, res, next) {
       });
     }
 
-    const regexPattern = new RegExp(`^${companyNameBeginsWith}`, "i");
+    const regexPattern = new RegExp(
+      `^${escapeRegex(companyNameBeginsWith)}`,
+      "i"
+    );
     const companyList = await imageServices.fetchCompanyList(regexPattern);
     if (companyList.length === 0) {
       return res.status(404).json({
@@ -199,7 +202,10 @@ async function demoSearchLogoController(req, res, next) {
     }
     const { companyNameBeginsWith } = value;
 
-    const regexPattern = new RegExp(`^${companyNameBeginsWith}`, "i");
+    const regexPattern = new RegExp(
+      `^${escapeRegex(companyNameBeginsWith)}`,
+      "i"
+    );
     const companyList = await imageServices.fetchCompanyList(regexPattern);
     if (companyList.length === 0) {
       return res.status(404).json({
@@ -220,9 +226,16 @@ async function demoSearchLogoController(req, res, next) {
   }
 }
 
+const escapeRegex = (str) =>
+  typeof str === "string" ? str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") : "";
+
 const normalizeOrigin = (requestOrigin) => {
   if (!requestOrigin || typeof requestOrigin !== "string") return null;
-  return requestOrigin.trim().replace(/\/+$/, "");
+  const sanitized = requestOrigin
+    .replace(/[\r\n\t\0]/g, "")
+    .trim()
+    .replace(/\/+$/, "");
+  return sanitized || null;
 };
 
 const validatePublishableKeyOrigin = (keyRef, normalizedRequestOrigin) => {
