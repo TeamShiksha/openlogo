@@ -77,9 +77,33 @@ const companyUrlSchema = Joi.string()
     "string.pattern.base": "Invalid companyUrl",
   });
 
+const getLogoImageQuerySchema = Joi.object({
+  key: Joi.string()
+    .regex(/^[A-Za-z0-9&:.-/]+$/)
+    .required()
+    .messages({
+      "any.required": "key is required",
+      "string.pattern.base": "Invalid key",
+    }),
+  PUBLISHABLE_KEY: Joi.string().required().messages({
+    "any.required": "PUBLISHABLE_KEY is required",
+  }),
+}).custom((value, helpers) => {
+  const { key } = value;
+  const company = key
+    .replace(/^(https?:\/\/)?(www\.)?/, "")
+    .replace(/(\.[A-Za-z]{2,})+$/, "")
+    .toUpperCase();
+  if (company == "") {
+    return helpers.error("key cannot be empty");
+  }
+  return { ...value, company };
+});
+
 module.exports = {
   getLogoQuerySchema,
   getSearchQuerySchema,
   companyUrlSchema,
   getDemoSearchQuerySchema,
+  getLogoImageQuerySchema,
 };

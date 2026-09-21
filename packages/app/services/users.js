@@ -29,7 +29,7 @@ class UserService {
   /**
    * Compiles all data for a user download.
    * @param {string} userId - The user's ID.
-   * @returns {Object|null} - The compiled data object or null if user not found.
+   * @returns {Promise<Object|null>} - The compiled data object or null if user not found.
    */
   async getUserDataForDownload(userId) {
     const userData = await this.getUser(userId);
@@ -89,9 +89,9 @@ class UserService {
 
   /**
    * Update User by userId.
-   * @param {string, string} {firstName, lastName} - First and Last Name of the User.
+   * @param {string} updatedName - Updated name of the User.
    * @param {String} userId - The userId of the user.
-   * @returns {boolean} - True if User Details are updated successfully else false.
+   * @returns {Promise<boolean>} - True if User Details are updated successfully else false.
    */
   async updateUser(updatedName, userId) {
     const updatedData = {
@@ -109,29 +109,68 @@ class UserService {
    *
    * @param {Object} newKey - The new key details to be created.
    * @param {Object} user - The user object to which the new key should be associated.
-   * @returns {Object|null} - Returns the created key object on success, or null if creation failed.
+   * @returns {Promise<Object|null>} - Returns the created key object on success, or null if creation failed.
    * @throws {Error} - Throws an error if the key creation or user update fails.
    */
   async createNewUserKey(newKey, user) {
-    const { key_description, subscription_id, expires_at } = newKey;
+    const {
+      key_description,
+      subscription_id,
+      expires_at,
+      key_type,
+      is_origin_restricted,
+      allowed_origins,
+    } = newKey;
     const keyValidity = expires_at;
     const today = new Date();
     const keyExpiry = today.setDate(today.getDate() + keyValidity);
-    const newUserKey = await this.keyService.createNewKey({
-      key_description: key_description,
-      subscription_id: subscription_id,
+    const keyPayload = {
+      key_description,
+      subscription_id,
       expires_at: keyExpiry,
-    });
+    };
+    if (key_type) keyPayload.key_type = key_type;
+    if (typeof is_origin_restricted === "boolean") {
+      keyPayload.is_origin_restricted = is_origin_restricted;
+    }
+    if (Array.isArray(allowed_origins)) {
+      keyPayload.allowed_origins = allowed_origins;
+    }
+
+    const newUserKey = await this.keyService.createNewKey(keyPayload);
     user.keys.push(newUserKey._id);
     await user.save();
     return newUserKey;
   }
 
   /**
+   * Updates a user key after verifying ownership.
+   * @param {string} keyId - The key ID to update.
+   * @param {Object} updateData - Fields to update.
+   * @param {Object} user - The user object.
+   * @returns {Promise<Object|null>} - The updated key or null if not found/not owned.
+   */
+  async updateUserKey(keyId, updateData, user) {
+    const isOwner = user.keys.some((k) => k.toString() === keyId.toString());
+    if (!isOwner) {
+      return null;
+    }
+    const existingKey = await this.keyService.getKeyById(keyId);
+    if (!existingKey) {
+      return null;
+    }
+    const updatedKey = await this.keyService.updateKey(keyId, {
+      ...updateData,
+      updated_at: Date.now(),
+    });
+    return updatedKey;
+  }
+
+  /**
    * Updates the user's password and saves the changes to the database.
    * @param {Object} user - The user object whose password is to be updated.
    * @param {string} newPassword - The new hashed password to replace the existing one.
-   * @returns {boolean} - Returns `true` if the password was successfully updated, otherwise `false`.
+   * @returns {Promise<boolean>} - Returns `true` if the password was successfully updated, otherwise `false`.
    */
   async updateUserPassword(user, newPassword) {
     user.password = await bcrypt.hash(newPassword, 10);
@@ -143,8 +182,8 @@ class UserService {
   /**
    * Destroy a User Key.
    * @param {string} keyId - The Key Id to destroy.
-   * @param {string} user - The user Object.
-   * @returns {boolean} - true if key was successfully destroyed.
+   * @param {Object} user - The user Object.
+   * @returns {Promise<Object|null>} - Destroyed key object.
    */
   async destroyUserKey(keyId, user) {
     const destroyedKey = await this.keyService.destroyKey(keyId);
@@ -158,7 +197,7 @@ class UserService {
   /*
    * Marks `is_deleted` attribute of the user to true and adds deleted_at timestamp.
    * @param {string} userId - The user id to soft delete.
-   * @returns {boolean} - true if user was successfully soft deleted.
+   * @returns {Promise<boolean>} - true if user was successfully soft deleted.
    */
   async markDeleteUser(userId) {
     const deletedUser = await this.userRepository.update(userId, {
@@ -170,7 +209,7 @@ class UserService {
   /*
    * Delete a User Account.
    * @param {string} userId - The user id to delete.
-   * @returns {boolean} - true if user was successfully deleted.
+   * @returns {Promise<boolean>} - true if user was successfully deleted.
    */
   async deleteUserAccount(userId) {
     const deletedUser = await this.userRepository.delete(userId);

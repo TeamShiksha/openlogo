@@ -22,7 +22,9 @@ class KeysRepository extends BaseRepository {
       .find({
         _id: { $in: keyIds },
       })
-      .select("key_description subscription_id updated_at expires_at _id");
+      .select(
+        "key_description subscription_id updated_at expires_at key_type publishable_key allowed_origins is_origin_restricted is_active _id"
+      );
   }
 
   /**
@@ -61,6 +63,16 @@ class KeysRepository extends BaseRepository {
    */
   async getApiKey(apiKey) {
     const keyRef = await Keys.findOne({ api_key: apiKey });
+    return keyRef;
+  }
+
+  /**
+   * Gets a given Publishable key from the database.
+   * @param {string} publishableKey - Publishable key to check.
+   * @returns {Promise<Object|null>} - Matching key document or null.
+   */
+  async getPublishableKey(publishableKey) {
+    const keyRef = await Keys.findOne({ publishable_key: publishableKey });
     return keyRef;
   }
 

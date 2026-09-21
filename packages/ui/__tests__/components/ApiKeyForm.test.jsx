@@ -11,13 +11,18 @@ const mockApiData = {
   },
 };
 
+let capturedUseApiParams = null;
+
 vi.mock("../../src/hooks/useApi", () => ({
-  useApi: () => ({
-    makeRequest: mockedMakeRequest,
-    data: mockApiData,
-    loading: false,
-    errorMsg: null,
-  }),
+  useApi: (params) => {
+    capturedUseApiParams = params;
+    return {
+      makeRequest: mockedMakeRequest,
+      data: mockApiData,
+      loading: false,
+      errorMsg: null,
+    };
+  },
 }));
 
 const mockToast = {
@@ -277,5 +282,144 @@ describe("ApiKeyForm Component", () => {
 
     const generateButton = screen.getByRole("button", { name: /Generate Key/ });
     expect(generateButton).toBeInTheDocument();
+  });
+
+  it("renders Publishable Key form titles and Allowed Origins input", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    expect(
+      screen.getByRole("heading", { name: "Generate Publishable Key" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("e.g., Web App Publishable Key")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Allowed Origins")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(
+        "e.g., https://example.com or http://localhost:8080"
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("disables generate button when publishable key description is provided but origin is empty", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Web App Publishable Key"
+    );
+    fireEvent.change(descriptionInput, { target: { value: "My Client App" } });
+
+    const generateBtn = screen.getByRole("button", {
+      name: "Generate Publishable Key",
+    });
+    expect(generateBtn).toBeDisabled();
+  });
+
+  it("validates origin format when origin is entered in tag input", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const descriptionInput = screen.getByPlaceholderText(
+      "e.g., Web App Publishable Key"
+    );
+    fireEvent.change(descriptionInput, { target: { value: "My Client App" } });
+
+    const generateBtn = screen.getByRole("button", {
+      name: "Generate Publishable Key",
+    });
+
+    const originInput = screen.getByPlaceholderText(
+      "e.g., https://example.com or http://localhost:8080"
+    );
+    fireEvent.change(originInput, { target: { value: "invalid-domain" } });
+
+    expect(generateBtn).toBeDisabled();
+
+    fireEvent.change(originInput, { target: { value: "https://example.com" } });
+    expect(generateBtn).not.toBeDisabled();
+  });
+
+  it("allows adding origin tags via Enter key and removing origin pills via cross button", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const originInput = screen.getByPlaceholderText(
+      "e.g., https://example.com or http://localhost:8080"
+    );
+    fireEvent.change(originInput, { target: { value: "https://example.com" } });
+    fireEvent.keyDown(originInput, { key: "Enter", code: "Enter" });
+
+    expect(screen.getByText("https://example.com")).toBeInTheDocument();
+
+    const removeBtn = screen.getByRole("button", {
+      name: "Remove origin https://example.com",
+    });
+    fireEvent.click(removeBtn);
+
+    expect(screen.queryByText("https://example.com")).not.toBeInTheDocument();
+  });
+
+  it("allows inline editing an origin pill tag when clicked", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const originInput = screen.getByPlaceholderText(
+      "e.g., https://example.com or http://localhost:8080"
+    );
+    fireEvent.change(originInput, { target: { value: "https://example.com" } });
+    fireEvent.keyDown(originInput, { key: "Enter", code: "Enter" });
+
+    const pillText = screen.getByText("https://example.com");
+    fireEvent.click(pillText);
+
+    const editInput = screen.getByDisplayValue("https://example.com");
+    fireEvent.change(editInput, { target: { value: "https://updated.com" } });
+    fireEvent.keyDown(editInput, { key: "Enter", code: "Enter" });
+
+    expect(screen.getByText("https://updated.com")).toBeInTheDocument();
+    expect(screen.queryByText("https://example.com")).not.toBeInTheDocument();
+  });
+
+  it("allows adding origin tags via Tab key without shifting focus away", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const originInput = screen.getByPlaceholderText(
+      "e.g., https://example.com or http://localhost:8080"
+    );
+    fireEvent.change(originInput, {
+      target: { value: "https://tabexample.com" },
+    });
+    fireEvent.keyDown(originInput, { key: "Tab", code: "Tab" });
+
+    expect(screen.getByText("https://tabexample.com")).toBeInTheDocument();
+  });
+
+  it("shows error when attempting to add a duplicate origin", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    const originInput = screen.getByPlaceholderText(
+      "e.g., https://example.com or http://localhost:8080"
+    );
+    fireEvent.change(originInput, { target: { value: "https://example.com" } });
+    fireEvent.keyDown(originInput, { key: "Enter", code: "Enter" });
+
+    fireEvent.change(originInput, { target: { value: "https://example.com" } });
+    fireEvent.keyDown(originInput, { key: "Enter", code: "Enter" });
+
+    expect(screen.getAllByText("https://example.com")).toHaveLength(1);
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Duplicate origins are not allowed"
+    );
+  });
+
+  it("does not include is_active in create payload when keyType is PUBLISHABLE", () => {
+    renderApiKeyForm({ keyType: "PUBLISHABLE" });
+
+    expect(capturedUseApiParams.data).not.toHaveProperty("is_active");
+    expect(capturedUseApiParams.data.key_type).toBe("PUBLISHABLE");
+  });
+
+  it("does not include is_active in create payload when keyType is SECRET", () => {
+    renderApiKeyForm({ keyType: "SECRET" });
+
+    expect(capturedUseApiParams.data).not.toHaveProperty("is_active");
+    expect(capturedUseApiParams.data.key_type).toBe("SECRET");
   });
 });

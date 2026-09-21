@@ -43,6 +43,7 @@ const TAB_OPTIONS = {
 const DefaultSubscriptionPlan = {
   type: SubscriptionTypes.HOBBY,
   key_limit: 2,
+  publishable_key_limit: 2,
   usage_limit: 500,
   usage_count: 0,
   is_active: true,
@@ -51,6 +52,7 @@ const DefaultSubscriptionPlan = {
 const ProSubscriptionPlan = {
   type: SubscriptionTypes.PRO,
   key_limit: 5,
+  publishable_key_limit: 5,
   usage_limit: 15000,
   is_active: true,
 };
@@ -125,6 +127,24 @@ const Messages = {
     "Cannot revoke current session. Use signout instead.",
   SESSION_LIMIT_EXCEEDED: "Maximum number of active sessions exceeded.",
   INVALID_ID: "Invalid ID format.",
+  ORIGIN_NOT_ALLOWED: "Origin header is missing or not allowed.",
+  INVALID_PUBLISHABLE_KEY: "Invalid, missing, or expired publishable key.",
+  INACTIVE_PUBLISHABLE_KEY: "This publishable key is inactive.",
+};
+
+const KeyTypes = {
+  SECRET: "SECRET",
+  PUBLISHABLE: "PUBLISHABLE",
+};
+
+const EXTENSION_TO_MIME = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  svg: "image/svg+xml",
+  webp: "image/webp",
+  ico: "image/x-icon",
+  gif: "image/gif",
 };
 
 const MAX_SESSIONS_PER_USER = 5;
@@ -193,4 +213,6 @@ module.exports = {
   TEMPORARY_SESSION_TYPES,
   MAX_SESSIONS_PER_USER,
   RewardMessages,
+  KeyTypes,
+  EXTENSION_TO_MIME,
 };
