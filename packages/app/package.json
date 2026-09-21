@@ -10,6 +10,7 @@
     "lint:fix": "eslint --fix .",
     "test": "jest --watchAll=false",
     "coverage": "jest --coverage --watchAll=false",
+    "seed:releases": "node scripts/releases/seedHistoricalReleases.js",
     "format": "prettier --write .",
     "check": "prettier --check ."
   },

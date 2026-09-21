@@ -1,0 +1,24 @@
+name: Seed Historical Releases
+
+on:
+  workflow_dispatch:
+
+jobs:
+  seed:
+    name: Seed historical releases to MongoDB
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install app dependencies
+      working-directory: packages/app
+      run: npm install --legacy-peer-deps
+
+    - name: Run release seed script
+      working-directory: packages/app
+      env:
+        MONGO_URL: ${{ secrets.MONGO_URL }}
+      run: npm run seed:releases
